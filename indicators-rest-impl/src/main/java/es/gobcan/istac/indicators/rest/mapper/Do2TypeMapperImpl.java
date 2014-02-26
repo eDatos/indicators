@@ -77,35 +77,32 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL  = "UNIT_MEAS_DETAIL";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE      = "UNIT_MEASURE";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MULT         = "UNIT_MULT";
-    private static String                                        PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL = "UNIT_MEAS_DETAIL";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE     = "UNIT_MEASURE";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MULT        = "UNIT_MULT";
+    private static String                                        PROP_ATTRIBUTE_OBS_CONF         = "OBS_CONF";
 
-    private static String                                        REQUEST_CACHE_DATASOURCE         = "REQUEST_CACHE_DATASOURCE";
-    private static String                                        REQUEST_CACHE_UNITMULTIPLIER     = "REQUEST_CACHE_UNITMULTIPLIER";
-    private static String                                        REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                    = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                      @Override
-                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                          return new HashMap<String, Map<String, Object>>();
-                                                                                                      }
+                                                                                                     @Override
+                                                                                                     protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                         return new HashMap<String, Map<String, Object>>();
+                                                                                                     }
 
-                                                                                                      ;
-                                                                                                  };
+                                                                                                     ;
+                                                                                                 };
 
     @Autowired
-    private final IndicatorsApiService                           indicatorsApiService             = null;
+    private final IndicatorsApiService                           indicatorsApiService            = null;
 
     @Autowired
-    private final StatisticalOperationsRestInternalFacade        statisticalOperations            = null;
+    private final StatisticalOperationsRestInternalFacade        statisticalOperations           = null;
 
-    private static final List<String>                            measuresOrder                    = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
-                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    private static final List<String>                            measuresOrder                   = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                                                                                                         MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                                                                                                         MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                                                                                                         MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                                                                                                         MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -429,47 +426,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
         }
         return null;
-    }
-
-    private DataSource retrieveDatasource(String uuid) {
-        try {
-            Assert.notNull(uuid, "UUID is required");
-
-            Map<String, Object> datasourceCache = getRequestCache(REQUEST_CACHE_DATASOURCE);
-            DataSource dataSource = (DataSource) datasourceCache.get(uuid);
-            if (dataSource == null) {
-                dataSource = indicatorsApiService.retrieveDataSource(uuid);
-                datasourceCache.put(uuid, dataSource);
-            }
-            return dataSource;
-        } catch (Exception e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
-
-    private UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierId) {
-        try {
-            Assert.notNull(unitMultiplierId, "unitMultiplierId is required");
-
-            Map<String, Object> unitMultiplierCache = getRequestCache(REQUEST_CACHE_UNITMULTIPLIER);
-            UnitMultiplier unitMultiplier = (UnitMultiplier) unitMultiplierCache.get(unitMultiplierId.toString());
-            if (unitMultiplier == null) {
-                unitMultiplier = indicatorsApiService.retrieveUnitMultiplier(unitMultiplierId);
-                unitMultiplierCache.put(unitMultiplierId.toString(), unitMultiplier);
-            }
-            return unitMultiplier;
-        } catch (Exception e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
-
-    private Map<String, Object> getRequestCache(String name) {
-        Map<String, Object> requestCacheInstance = requestCache.get().get(name);
-        if (requestCacheInstance == null) {
-            requestCacheInstance = new HashMap<String, Object>();
-            requestCache.get().put(name, requestCacheInstance);
-        }
-        return requestCacheInstance;
     }
 
     private QuantityType quantityDoToBaseType(final Quantity source, final String baseURL) throws MetamacException {
