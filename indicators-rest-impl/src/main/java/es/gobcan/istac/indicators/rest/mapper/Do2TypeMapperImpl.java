@@ -78,9 +78,7 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_EN = "Observation confidenciality";
-
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_ES = "Confidencialidad de la observación";
-
     private static String                                        PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
 
     private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
