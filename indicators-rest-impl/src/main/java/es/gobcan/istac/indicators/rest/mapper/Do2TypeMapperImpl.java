@@ -96,10 +96,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                                                                                                   };
 
     @Autowired
-    private IndicatorsApiService                                 indicatorsApiService             = null;
+    private final IndicatorsApiService                           indicatorsApiService             = null;
 
     @Autowired
-    private StatisticalOperationsRestInternalFacade              statisticalOperations            = null;
+    private final StatisticalOperationsRestInternalFacade        statisticalOperations            = null;
 
     private static final List<String>                            measuresOrder                    = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
                                                                                                           MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
@@ -610,7 +610,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
-        // ATTRIBUTES 
+        // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
@@ -853,6 +853,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
         });
     }
+
     private Quantity getQuantityForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
         switch (measure) {
             case ABSOLUTE:
@@ -871,7 +872,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             switch (measure) {
                 case ANNUAL_PERCENTAGE_RATE:
                     if (datasource.getAnnualPercentageRate() != null) {
-                        return datasource.getAnnualPercentageRate();
+                        RateDerivation rateDerivation = datasource.getAnnualPercentageRate();
+                        rateDerivation.getQuantity().setUnitMultiplier(null);
+                        return rateDerivation;
                     }
                     break;
                 case ANNUAL_PUNTUAL_RATE:
@@ -881,7 +884,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     break;
                 case INTERPERIOD_PERCENTAGE_RATE:
                     if (datasource.getInterperiodPercentageRate() != null) {
-                        return datasource.getInterperiodPercentageRate();
+                        RateDerivation rateDerivation = datasource.getInterperiodPercentageRate();
+                        rateDerivation.getQuantity().setUnitMultiplier(null);
+                        return rateDerivation;
                     }
                     break;
                 case INTERPERIOD_PUNTUAL_RATE:
