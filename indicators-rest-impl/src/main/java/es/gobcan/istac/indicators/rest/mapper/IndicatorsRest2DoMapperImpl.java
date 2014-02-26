@@ -24,7 +24,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 @Component
 public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
 
-    private RestCriteria2SculptorCriteria<IndicatorVersion> parser;
+    private final RestCriteria2SculptorCriteria<IndicatorVersion> parser;
 
     public IndicatorsRest2DoMapperImpl() {
         parser = new RestCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, IndicatorsPropertyOrder.class, IndicatorsPropertyRestriction.class, new IndicatorsCriteriaCallback());
@@ -78,6 +78,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             throw createInvalidParameterException("q");
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public Property retrievePropertyOrder(MetamacRestOrder order) throws RestException {
             IndicatorsPropertyOrder propertyNameCriteria = IndicatorsPropertyOrder.valueOf(order.getPropertyName());
@@ -92,6 +93,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             throw createInvalidParameterException("order");
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public Property retrievePropertyOrderDefault() throws RestException {
             return IndicatorVersionProperties.id();
