@@ -122,7 +122,7 @@
         renderChart : function (chartData) {
             var $chartContainer = $('<div id="chart"></div>');
             $chartContainer.css('width', this.width - 20);
-            $chartContainer.css('height', 350);
+            $chartContainer.css('height', 250);
             this.contentContainer.html($chartContainer);
 
             var highchartsOptions = {
