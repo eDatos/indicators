@@ -148,7 +148,10 @@
                     }
                 },
                 legend : {
-                    enabled : false
+                    enabled : false,
+                    itemStyle: {
+                    	   fontSize: '10px'
+                    }
                 },
                 credits : {
                     enabled : false
