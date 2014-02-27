@@ -160,7 +160,7 @@
             ]
         },
         {
-            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances",
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances",
             "description" : "Buscar instancias de un sistema de indicadores",
             "operations" : [
                 {
@@ -212,7 +212,7 @@
             ]
         },
         {
-            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances/{indicatorInstanceCode}",
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}",
             "description" : "Instancia de un sistema de indicadores",
             "operations" : [
                 {
@@ -241,7 +241,7 @@
             ]
         },
         {
-            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances/{indicatorInstanceCode}/data",
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}/data",
             "description" : "Datos de una instancias de indicadores",
             "operations" : [
                 {
