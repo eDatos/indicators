@@ -9,6 +9,8 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.smartgwt.client.widgets.form.fields.HiddenItem;
+
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -71,13 +73,16 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
         numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
 
-        ViewTextItem isPercentange = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
+        HiddenItem isPercentange = new HiddenItem(IndicatorDS.QUANTITY_IS_PERCENTAGE);
+
+        ViewTextItem isPercentangeText = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(getIsPercentageIfFunction());
 
         ViewTextItem percentageOf = new ViewTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
-        setFields(methodType, methodTypeText, method, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf);
+        setFields(methodType, methodTypeText, method, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange,
+                isPercentangeText, percentageOf);
     }
 
     public void setValue(RateDerivationDto rateDerivationDto) {
@@ -129,7 +134,9 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
                 }
             }
 
-            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
+            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage() : false);
+
+            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
                     .getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }

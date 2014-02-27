@@ -192,7 +192,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
             QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
             if (IndicatorUtils.isRatioOrExtension(type)) {
-                boolean isPercentage = (Boolean)form.getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE);
+                boolean isPercentage = (Boolean) form.getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE);
                 if (isPercentage) {
                     return true;
                 }
@@ -200,7 +200,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return false;
     }
-    
+
     protected FormItemIfFunction getIndexBaseTypeIfFunction() {
         return new FormItemIfFunction() {
 
@@ -297,7 +297,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return new String();
     }
-    
+
     private void sortQuantityUnits(List<QuantityUnitDto> units) {
         Collections.sort(units, new Comparator<QuantityUnitDto>() {
 

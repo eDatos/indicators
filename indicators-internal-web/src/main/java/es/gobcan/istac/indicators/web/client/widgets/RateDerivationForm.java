@@ -261,7 +261,11 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         setValue(IndicatorDS.QUANTITY_TYPE, quantityType.toString());
         setValue(IndicatorDS.QUANTITY_TYPE_TEXT, getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()));
         setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
-        setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
+        if (quantityDto.getUnitMultiplier() != null) {
+            setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
+        } else {
+            clearValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER);
+        }
         if (quantityDto.getSignificantDigits() != null) {
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
         }
