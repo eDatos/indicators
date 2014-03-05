@@ -271,12 +271,16 @@ public class DataSourcePanel extends VLayout {
             dataSourceDto.setAbsoluteMethod(dataEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
         }
 
-        dataSourceDto.setTimeVariable(dataStructureDtoEdition.getTemporalVariable());
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.setTimeVariable(dataStructureDtoEdition.getTemporalVariable());
+        }
 
-        if (generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE).isVisible()) {
-            dataSourceDto.setGeographicalVariable(generalEditionForm.getValueAsString(DataSourceDS.GEO_VARIABLE));
-        } else {
-            dataSourceDto.setGeographicalVariable(null);
+        if (generalEditionForm.isVisible()) {
+            if (generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE).isVisible()) {
+                dataSourceDto.setGeographicalVariable(generalEditionForm.getValueAsString(DataSourceDS.GEO_VARIABLE));
+            } else {
+                dataSourceDto.setGeographicalVariable(null);
+            }
         }
 
         if (generalEditionForm.isVisible()) {
