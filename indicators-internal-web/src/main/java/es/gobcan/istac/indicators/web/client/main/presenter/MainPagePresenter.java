@@ -86,7 +86,6 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     protected void onBind() {
         super.onBind();
         addRegisteredHandler(ShowMessageEvent.getType(), this);
-        // TODO Is this the proper place to load value lists?
         loadQuantityUnits();
         loadGeographicalGranularities();
     }
