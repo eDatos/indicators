@@ -25,7 +25,7 @@
 	</bean>
 
 	<!-- SpringBeanProvider GWTP -->
-	<context:component-scan base-package="com.gwtplatform.dispatch.server.spring,es.gobcan.istac.indicators.web.server" />
+	<context:component-scan base-package="com.gwtplatform.dispatch.server.spring,es.gobcan.istac.indicators.web.server,org.siemac.metamac.web.common.server.handlers" />
 
     <!-- Activates annotation-based bean configuration -->
 	<context:annotation-config/>
