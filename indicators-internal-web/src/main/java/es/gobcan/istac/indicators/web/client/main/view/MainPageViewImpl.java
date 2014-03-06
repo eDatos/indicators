@@ -4,6 +4,7 @@ import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.widgets.MessagePanel;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
+import org.siemac.metamac.web.common.client.widgets.VersionFooter;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -18,7 +19,6 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
-import es.gobcan.istac.indicators.web.client.widgets.VersionFooter;
 
 public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainView {
 
@@ -57,7 +57,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         // Footer
         footerLayout = new VLayout();
         footerLayout.addMember(messagePanel);
-        footerLayout.addMember(new VersionFooter());
+        footerLayout.addMember(new VersionFooter(IndicatorsWeb.getProjectVersion()));
 
         // Set user name
         masterHead.getUserNameLabel().setContents(getUserName());
