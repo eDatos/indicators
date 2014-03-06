@@ -1,16 +1,22 @@
 package es.gobcan.istac.indicators.web.server;
 
+import org.siemac.metamac.web.common.server.handlers.CloseSessionActionHandler;
+import org.siemac.metamac.web.common.server.handlers.GetLoginPageUrlActionHandler;
 import org.siemac.metamac.web.common.server.handlers.GetNavigationBarUrlActionHandler;
+import org.siemac.metamac.web.common.server.handlers.LoadConfigurationPropertiesActionHandler;
 import org.siemac.metamac.web.common.server.handlers.MockCASUserActionHandler;
+import org.siemac.metamac.web.common.shared.CloseSessionAction;
+import org.siemac.metamac.web.common.shared.GetLoginPageUrlAction;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
+import org.siemac.metamac.web.common.shared.LoadConfigurationPropertiesAction;
 import org.siemac.metamac.web.common.shared.MockCASUserAction;
+import org.siemac.metamac.web.common.shared.ValidateTicketAction;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.spring.HandlerModule;
 
 import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorsSystemActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.CloseSessionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
@@ -33,7 +39,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetEditionLanguagesActionHandlers;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesPaginatedListActionHandler;
@@ -52,7 +57,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewUrlActi
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetLoginPageUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
@@ -86,7 +90,6 @@ import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionH
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
@@ -109,7 +112,6 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
-import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListAction;
@@ -128,7 +130,6 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
-import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
@@ -157,7 +158,6 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionVal
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
-import es.gobcan.istac.indicators.web.shared.ValidateTicketAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 
@@ -272,10 +272,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
         bindHandler(GetNavigationBarUrlAction.class, GetNavigationBarUrlActionHandler.class);
+        bindHandler(LoadConfigurationPropertiesAction.class, LoadConfigurationPropertiesActionHandler.class);
 
         bindHandler(GetUserGuideUrlAction.class, GetUserGuideUrlActionHandler.class);
-
-        bindHandler(GetEditionLanguagesAction.class, GetEditionLanguagesActionHandlers.class);
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);
