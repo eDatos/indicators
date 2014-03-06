@@ -15,13 +15,14 @@ public class IndicatorsCheckTranslationsTest extends CheckTranslationsTestBase {
     @Override
     @SuppressWarnings("rawtypes")
     public Class[] getServiceExceptionParameterClasses() {
-        // We don't need to check nothing because the parameters translation is in the internal-web project
-        return new Class[]{};
+        return new Class[]{ServiceExceptionParameters.class};
     }
 
     @Override
     public Locale[] getLocalesToTranslate() {
-        return LOCALES_TO_TRANSLATE;
+        // We do not use the one defined in CoreCommon because in future it is going to have Portuguese
+        // and this application does not need translation for this language
+        return new Locale[]{Locale.ENGLISH, new Locale("es")};
     }
 
 }
