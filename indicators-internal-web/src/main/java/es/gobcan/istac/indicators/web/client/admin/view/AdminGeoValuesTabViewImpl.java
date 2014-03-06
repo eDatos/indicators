@@ -28,6 +28,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -44,7 +45,7 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValuesUiHandlers> implements AdminGeoValuesTabView {
 
-    private VLayout                panel;
+    private HLayout                panel;
 
     private PaginatedCheckListGrid listGrid;
 
@@ -97,7 +98,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
             }
         });
 
-        listGrid.setHeight(150);
+        listGrid.setHeight100();
         ListGridField uuidField = new ListGridField(GeoValueDS.UUID, IndicatorsWeb.getConstants().geoValueUuid());
         ListGridField codeField = new ListGridField(GeoValueDS.CODE, IndicatorsWeb.getConstants().geoValueCode());
         ListGridField titleField = new ListGridField(GeoValueDS.TITLE, IndicatorsWeb.getConstants().geoValueTitle());
@@ -128,10 +129,14 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         geoValuePanel = new GeoValuePanel();
         geoValuePanel.hide();
 
-        panel = new VLayout();
+        VLayout listPanel = new VLayout();
+        listPanel.addMember(toolStrip);
+        listPanel.addMember(listGrid);
+
+        panel = new HLayout();
         panel.setMargin(15);
-        panel.addMember(toolStrip);
-        panel.addMember(listGrid);
+        panel.setMembersMargin(5);
+        panel.addMember(listPanel);
         panel.addMember(geoValuePanel);
 
     }
@@ -254,12 +259,13 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
                 }
             });
 
+            mainFormLayout.setStyleName("mainFormSide");
+
             createViewForm();
             createEditionForm();
 
             addMember(mainFormLayout);
         }
-
         public void setEditionMode() {
             mainFormLayout.setEditionMode();
         }

@@ -1,19 +1,14 @@
 package es.gobcan.istac.indicators.web.client.main.view;
 
-import java.util.List;
-
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
-import org.siemac.metamac.web.common.client.widgets.ErrorMessagePanel;
+import org.siemac.metamac.web.common.client.widgets.MessagePanel;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
-import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
 
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -37,14 +32,12 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private VLayout                    footerLayout;
 
     private final IndicatorsMasterHead masterHead;
-    private final SuccessMessagePanel  successMessagePanel;
-    private final ErrorMessagePanel    errorMessagePanel;
+    private final MessagePanel         messagePanel;
 
     @Inject
-    public MainPageViewImpl(IndicatorsMasterHead masterHead, SuccessMessagePanel successMessagePanel, ErrorMessagePanel errorMessagePanel) {
+    public MainPageViewImpl(IndicatorsMasterHead masterHead, MessagePanel messagePanel) {
         this.masterHead = masterHead;
-        this.successMessagePanel = successMessagePanel;
-        this.errorMessagePanel = errorMessagePanel;
+        this.messagePanel = messagePanel;
 
         panel = new VLayout();
         panel.setWidth100();
@@ -63,8 +56,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
 
         // Footer
         footerLayout = new VLayout();
-        footerLayout.addMember(successMessagePanel);
-        footerLayout.addMember(errorMessagePanel);
+        footerLayout.addMember(messagePanel);
         footerLayout.addMember(new VersionFooter());
 
         // Set user name
@@ -99,6 +91,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         panel.addMember(footerLayout);
     }
 
+    @Override
     public Widget asWidget() {
         return panel;
     }
@@ -136,30 +129,12 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     @Override
     public void showMessage(Throwable throwable, String message, MessageTypeEnum type) {
         // Hide messages before showing the new ones
-        hideMessages();
-        if (MessageTypeEnum.SUCCESS.equals(type)) {
-            successMessagePanel.showMessage(message);
-            Timer timer = new Timer() {
-
-                @Override
-                public void run() {
-                    successMessagePanel.animateHide(AnimationEffect.FADE);
-                }
-            };
-            timer.schedule(12000);
-        } else if (MessageTypeEnum.ERROR.equals(type)) {
-            if (throwable != null) {
-                errorMessagePanel.showMessage(throwable);
-            } else {
-                errorMessagePanel.showMessage(message);
-            }
-        }
+        messagePanel.showMessage(throwable, message, type);
     }
 
     @Override
     public void hideMessages() {
-        successMessagePanel.hide();
-        errorMessagePanel.hide();
+        messagePanel.hide();
     }
 
     @Override

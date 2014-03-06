@@ -10,8 +10,8 @@ import org.siemac.metamac.web.common.client.enums.ApplicationOrganisationEnum;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.ApplicationOrganisation;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlResult;
 import org.siemac.metamac.web.common.shared.MockCASUserAction;
@@ -38,7 +38,7 @@ import es.gobcan.istac.indicators.web.shared.ValidateTicketResult;
  */
 public class IndicatorsWeb extends MetamacEntryPoint {
 
-    private static final boolean             SECURITY_ENABLED = true;
+    private static final boolean             SECURITY_ENABLED = false;
     private static Logger                    logger           = Logger.getLogger(IndicatorsWeb.class.getName());
 
     private static MetamacPrincipal          principal;

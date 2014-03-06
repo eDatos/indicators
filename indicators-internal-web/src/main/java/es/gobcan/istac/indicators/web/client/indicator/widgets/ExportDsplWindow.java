@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.web.client.indicator.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
-import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 
 import com.smartgwt.client.widgets.Label;

@@ -12,7 +12,7 @@ public class PublishToolStripButton extends ToolStripButton {
         setShowRollOver(true);
         setShowDisabled(true);
         setShowDown(true);
-        setTitleStyle("publishButton");
+        setTitleStyle("mainFormLayoutButton");
     }
 
 }

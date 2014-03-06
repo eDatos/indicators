@@ -2,8 +2,6 @@ package es.gobcan.istac.indicators.web.client.utils;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;

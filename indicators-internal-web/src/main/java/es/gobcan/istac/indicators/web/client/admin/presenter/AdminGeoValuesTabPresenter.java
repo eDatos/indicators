@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.admin.presenter;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -17,7 +19,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import static es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.*;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -26,10 +27,9 @@ import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoValuesU
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalValuesEvent;
-import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;

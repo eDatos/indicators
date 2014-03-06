@@ -5,7 +5,6 @@ import java.util.List;
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 
 public interface AdminGeoGranularitiesUiHandlers extends UiHandlers {
 

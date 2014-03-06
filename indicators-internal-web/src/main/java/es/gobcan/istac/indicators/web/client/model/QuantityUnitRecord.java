@@ -2,9 +2,7 @@ package es.gobcan.istac.indicators.web.client.model;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
-import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.QuantityUnitDS;
 
 public class QuantityUnitRecord extends ListGridRecord {

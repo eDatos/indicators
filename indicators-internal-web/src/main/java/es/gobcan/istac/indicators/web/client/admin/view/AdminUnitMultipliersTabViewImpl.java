@@ -25,6 +25,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -39,7 +41,7 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUnitMultipliersUiHandlers> implements AdminUnitMultipliersTabView {
 
-    private VLayout                panel;
+    private Layout                 panel;
 
     private PaginatedCheckListGrid listGrid;
 
@@ -91,7 +93,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
             }
         });
 
-        listGrid.setHeight(150);
+        listGrid.setHeight100();
         ListGridField uuidField = new ListGridField(UnitMultiplierDS.UUID, IndicatorsWeb.getConstants().unitMultiplierUuid());
         ListGridField titleField = new ListGridField(UnitMultiplierDS.TITLE, IndicatorsWeb.getConstants().unitMultiplierTitle());
         ListGridField multiplierField = new ListGridField(UnitMultiplierDS.MULTIPLIER, IndicatorsWeb.getConstants().unitMultiplierMultiplier());
@@ -119,10 +121,14 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
         unitMultiplierPanel = new UnitMultiplierPanel();
         unitMultiplierPanel.hide();
 
-        panel = new VLayout();
+        VLayout listPanel = new VLayout();
+        listPanel.addMember(toolStrip);
+        listPanel.addMember(listGrid);
+
+        panel = new HLayout();
         panel.setMargin(15);
-        panel.addMember(toolStrip);
-        panel.addMember(listGrid);
+        panel.setMembersMargin(5);
+        panel.addMember(listPanel);
         panel.addMember(unitMultiplierPanel);
 
     }
@@ -240,6 +246,8 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
                     generalEditionForm.setTranslationsShowed(translationsShowed);
                 }
             });
+
+            mainFormLayout.setStyleName("mainFormSide");
 
             createViewForm();
             createEditionForm();

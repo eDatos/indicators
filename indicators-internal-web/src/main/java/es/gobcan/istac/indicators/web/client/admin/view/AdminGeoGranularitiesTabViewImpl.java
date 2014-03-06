@@ -26,6 +26,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -39,7 +40,7 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGeoGranularitiesUiHandlers> implements AdminGeoGranularitiesTabView {
 
-    private VLayout                panel;
+    private HLayout                panel;
 
     private PaginatedCheckListGrid listGrid;
 
@@ -91,7 +92,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
             }
         });
 
-        listGrid.setHeight(150);
+        listGrid.setHeight100();
         ListGridField uuidField = new ListGridField(GeoGranularityDS.UUID, IndicatorsWeb.getConstants().geoGranularityUuid());
         ListGridField codeField = new ListGridField(GeoGranularityDS.CODE, IndicatorsWeb.getConstants().geoGranularityCode());
         ListGridField titleField = new ListGridField(GeoGranularityDS.TITLE, IndicatorsWeb.getConstants().geoGranularityTitle());
@@ -120,10 +121,14 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
         geoGranularityPanel = new GeoGranularityPanel();
         geoGranularityPanel.hide();
 
-        panel = new VLayout();
+        VLayout listPanel = new VLayout();
+        listPanel.addMember(toolStrip);
+        listPanel.addMember(listGrid);
+
+        panel = new HLayout();
         panel.setMargin(15);
-        panel.addMember(toolStrip);
-        panel.addMember(listGrid);
+        panel.setMembersMargin(5);
+        panel.addMember(listPanel);
         panel.addMember(geoGranularityPanel);
 
     }
@@ -240,6 +245,8 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
                     generalEditionForm.setTranslationsShowed(translationsShowed);
                 }
             });
+
+            mainFormLayout.setStyleName("mainFormSide");
 
             createViewForm();
             createEditionForm();

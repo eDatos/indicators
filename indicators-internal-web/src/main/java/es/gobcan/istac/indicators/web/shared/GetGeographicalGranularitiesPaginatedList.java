@@ -7,7 +7,6 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 @GenDispatch(isSecure = false)
 public class GetGeographicalGranularitiesPaginatedList {

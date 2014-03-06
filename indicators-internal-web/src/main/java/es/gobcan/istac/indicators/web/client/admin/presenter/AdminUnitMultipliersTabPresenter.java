@@ -2,8 +2,10 @@ package es.gobcan.istac.indicators.web.client.admin.presenter;
 
 import java.util.List;
 
-import com.google.web.bindery.event.shared.EventBus;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -20,13 +22,10 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUnitMultipliersUiHandlers;
-import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersResult;
-import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.SaveUnitMultiplierAction;
 import es.gobcan.istac.indicators.web.shared.SaveUnitMultiplierResult;
 

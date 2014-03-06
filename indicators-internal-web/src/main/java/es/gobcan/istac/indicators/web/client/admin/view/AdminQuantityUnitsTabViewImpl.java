@@ -36,6 +36,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
@@ -51,7 +52,7 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuantityUnitsUiHandlers> implements AdminQuantityUnitsTabView {
 
-    private VLayout                panel;
+    private HLayout                panel;
 
     private PaginatedCheckListGrid listGrid;
 
@@ -102,7 +103,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                 getUiHandlers().retrieveQuantityUnits(firstResult, maxResults);
             }
         });
-        listGrid.setHeight(150);
+        listGrid.setHeight100();
         ListGridField uuidField = new ListGridField(QuantityUnitDS.UUID, IndicatorsWeb.getConstants().quantityUnitUuid());
         ListGridField titleField = new ListGridField(QuantityUnitDS.TITLE, IndicatorsWeb.getConstants().quantityUnitTitle());
         listGrid.getListGrid().setFields(uuidField, titleField);
@@ -129,14 +130,17 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         quantityUnitPanel = new QuantityUnitPanel();
         quantityUnitPanel.hide();
 
-        panel = new VLayout();
+        VLayout listPanel = new VLayout();
+        listPanel.addMember(toolStrip);
+        listPanel.addMember(listGrid);
+
+        panel = new HLayout();
         panel.setMargin(15);
-        panel.addMember(toolStrip);
-        panel.addMember(listGrid);
+        panel.setMembersMargin(5);
+        panel.addMember(listPanel);
         panel.addMember(quantityUnitPanel);
 
     }
-
     // UTILS
     private List<String> getSelectedQuantityUnits() {
         List<String> codes = new ArrayList<String>();
@@ -210,6 +214,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         private QuantityUnitDto             quantityUnitDto;
 
         public QuantityUnitPanel() {
+
             mainFormLayout = new InternationalMainFormLayout(ClientSecurityUtils.canEditQuantityUnit());
             mainFormLayout.setTitleLabelContents(getConstants().quantityUnit());
 
@@ -251,6 +256,8 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                     generalEditionForm.setTranslationsShowed(translationsShowed);
                 }
             });
+
+            mainFormLayout.setStyleName("mainFormSide");
 
             createViewForm();
             createEditionForm();

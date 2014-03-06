@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesAction;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersResult;
 

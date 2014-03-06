@@ -9,7 +9,6 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
-import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
 public class SystemDiffusionMainFormLayout extends InternationalViewMainFormLayout {
 

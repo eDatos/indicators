@@ -8,8 +8,8 @@ import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent.LoginAuthenticatedEventHandler;
 
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.Gatekeeper;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
