@@ -27,4 +27,14 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX, Boolean.TRUE);
     }
 
+    @Override
+    public String retrieveIndicatorsDocsPath() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_DOCS_PATH, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveIndicatorsUserGuideFilename() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME, Boolean.TRUE);
+    }
+
 }
