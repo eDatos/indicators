@@ -181,30 +181,21 @@
     </dependencies>
 
     <build>
+    
+        <!-- Generate compiled stuff in the folder used for developing mode -->
+        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+        <finalName>indicators-internal-${project.version}</finalName>
         <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.gwt.xml</include>
-                    <include>**/*.css</include>
-                    <include>**/*.png</include>
-                    <include>**/*.gif</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
 
-        <!-- Generate compiled stuff in the folder used for developing mode -->
-        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-        <finalName>indicators-internal-${project.version}</finalName>
         <plugins>
 
             <!-- Maven Compiler Plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
@@ -267,28 +258,20 @@
                 </executions>
                 <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
-                    <runTarget>IndicatorsWeb.html</runTarget>
+					<extraJvmArgs>-Xms512M -Xmx1024M -XX:MaxPermSize=512M</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <noServer>true</noServer>
-                    <runTarget>http://localhost:8080/indicators-internal-web/IndicatorsWeb.html</runTarget>
+                    <runTarget>http://localhost:8090/indicators-internal/IndicatorsWeb.html</runTarget>
                     <debugPort>9997</debugPort>
-                    <inplace>true</inplace>
-                    <!-- <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle> -->
-                    <!-- <i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle> -->
-                    <!-- <i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle> -->
-                    <compileSourcesArtifacts>
+					<compileSourcesArtifacts>
                         <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
                         <artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
                         <artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
                         <artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
                     </compileSourcesArtifacts>
+                    <inplace>true</inplace>
                 </configuration>
             </plugin>
-
-            <!-- Copy static web files before executing gwt:run -->
-            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <version>2.1.1</version> <executions> <execution>
-                <phase>compile</phase> <goals> <goal>exploded</goal> </goals> </execution> </executions> <configuration> <webappDirectory>${webappDirectory}</webappDirectory>
-                </configuration> </plugin> -->
 
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
