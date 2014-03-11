@@ -21,7 +21,6 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -32,11 +31,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -46,10 +43,6 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
-import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
-import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
@@ -103,11 +96,7 @@ import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
-public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy>
-        implements
-            IndicatorUiHandler,
-            UpdateQuantityUnitsHandler,
-            UpdateGeographicalGranularitiesHandler {
+public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
     private Logger                   logger = Logger.getLogger(IndicatorPresenter.class.getName());
 
@@ -145,8 +134,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
         void setSubjectsList(List<SubjectDto> subjectDtos);
-        void setQuantityUnits(List<QuantityUnitDto> units);
-        void setGeographicalGranularities(List<GeographicalGranularityDto> granularityDtos);
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
@@ -238,12 +225,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         });
     }
 
-    @ProxyEvent
-    @Override
-    public void onUpdateQuantityUnits(UpdateQuantityUnitsEvent event) {
-        getView().setQuantityUnits(event.getQuantityUnits());
-    }
-
     @Override
     public void retrieveSubjects() {
         dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
@@ -255,14 +236,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         });
     }
 
-    @ProxyEvent
     @Override
-    public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
-        getView().setGeographicalGranularities(event.getGeographicalGranularities());
-    }
-
-    @Override
-    public void retrieveGeographicalValues(final String geographicalGranularityUuid) {
+    public void retrieveGeographicalValuesByGranularity(final String geographicalGranularityUuid) {
         Builder builder = new Builder();
         GetGeographicalValuesAction action = builder.geographicalGranularityUuid(geographicalGranularityUuid).build();
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {

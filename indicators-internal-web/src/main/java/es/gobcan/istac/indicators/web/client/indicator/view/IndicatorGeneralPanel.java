@@ -26,11 +26,9 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -256,6 +254,7 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
+        needsUpdate.setWidth("*");
         identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
 
         // Content Classifiers Form
@@ -566,11 +565,6 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setUiHandlers(uiHandlers);
     }
 
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        quantityForm.setQuantityUnits(units);
-        quantityEditionForm.setQuantityUnits(units);
-    }
-
     public void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators) {
         quantityEditionForm.setIndicatorListQuantityDenominator(indicators);
     }
@@ -591,10 +585,6 @@ public class IndicatorGeneralPanel extends VLayout {
 
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
         quantityEditionForm.setUnitMultipliers(unitMultiplierDtos);
-    }
-
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        quantityEditionForm.setGeographicalGranularities(geographicalGranularityDtos);
     }
 
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {

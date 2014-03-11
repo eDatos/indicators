@@ -40,15 +40,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
@@ -187,11 +186,6 @@ public class DataSourcePanel extends VLayout {
         addMember(mainFormLayout);
     }
 
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
-        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoGranularitiesValueMap(valueMap);
-    }
-
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         generalForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
         generalStaticEditionForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
@@ -237,17 +231,6 @@ public class DataSourcePanel extends VLayout {
                 annualPercentageRateEditionForm.setDenominatorIndicator(indicatorDto);
             }
         }
-    }
-
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        interperiodPuntualRateForm.setQuantityUnits(units);
-        interperiodPuntualRateEditionForm.setQuantityUnits(units);
-        interperiodPercentageRateForm.setQuantityUnits(units);
-        interperiodPercentageRateEditionForm.setQuantityUnits(units);
-        annualPuntualRateForm.setQuantityUnits(units);
-        annualPuntualRateEditionForm.setQuantityUnits(units);
-        annualPercentageRateForm.setQuantityUnits(units);
-        annualPercentageRateEditionForm.setQuantityUnits(units);
     }
 
     public DataSourceDto getDataSourceDto() {
@@ -571,6 +554,7 @@ public class DataSourcePanel extends VLayout {
         });
 
         final GeographicalSelectItem geographicalValueMulti = new GeographicalSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        geographicalValueMulti.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
         geographicalValueMulti.setRequired(true);
         geographicalValueMulti.setShowIfCondition(new FormItemIfFunction() {
 
@@ -588,7 +572,7 @@ public class DataSourcePanel extends VLayout {
                 geographicalValueMulti.setGeoValue(new String());
                 // Set values with selected granularity
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    DataSourcePanel.this.uiHandlers.retrieveGeographicalValues(event.getValue().toString());
+                    DataSourcePanel.this.uiHandlers.retrieveGeographicalValuesByGranularity(event.getValue().toString());
                 }
             }
         });

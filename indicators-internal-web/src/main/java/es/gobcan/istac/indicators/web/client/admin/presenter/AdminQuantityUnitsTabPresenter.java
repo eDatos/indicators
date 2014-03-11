@@ -20,10 +20,10 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminQuantityUnitsUiHandlers;
-import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.shared.DeleteQuantityUnitsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteQuantityUnitsResult;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
@@ -149,7 +149,7 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
 
             @Override
             public void onWaitSuccess(GetQuantityUnitsListResult result) {
-                UpdateQuantityUnitsEvent.fire(AdminQuantityUnitsTabPresenter.this, result.getQuantityUnits());
+                IndicatorsValues.setQuantityUnits(result.getQuantityUnits());
             }
         });
     }

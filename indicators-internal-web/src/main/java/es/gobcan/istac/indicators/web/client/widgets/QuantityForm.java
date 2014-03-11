@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -67,6 +68,8 @@ public class QuantityForm extends BaseQuantityForm {
         type.setValidators(getQuantityRequiredIfValidator());
 
         CustomSelectItem unitUuid = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(IndicatorsValues.getQuantityUnits());
+        unitUuid.setValueMap(valueMap);
         unitUuid.setValidators(getQuantityRequiredIfValidator());
 
         CustomSelectItem unitMultiplier = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
@@ -130,6 +133,7 @@ public class QuantityForm extends BaseQuantityForm {
         final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setRequired(true);
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
+        baseLocation.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
         baseLocation.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
 
             @Override
@@ -140,7 +144,7 @@ public class QuantityForm extends BaseQuantityForm {
                 // Set values with selected granularity
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                     if (uiHandlers instanceof IndicatorUiHandler) {
-                        ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(event.getValue().toString());
+                        ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesByGranularity(event.getValue().toString());
                     }
                 }
             }
@@ -272,13 +276,6 @@ public class QuantityForm extends BaseQuantityForm {
         }
     }
 
-    @Override
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        super.setQuantityUnits(units);
-        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(units);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
-    }
-
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
     }
@@ -299,10 +296,6 @@ public class QuantityForm extends BaseQuantityForm {
         ((CustomSelectItem) getItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)).setValueMap(CommonUtils.getUnitMultiplierValueMap(unitMultiplierDtos));
     }
 
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> granularityDtos) {
-        ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(granularityDtos));
-    }
-
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
     }
@@ -313,7 +306,7 @@ public class QuantityForm extends BaseQuantityForm {
             ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(granularityDto != null ? granularityDto.getUuid() : null);
             // Make sure value map is set properly
             if (uiHandlers instanceof IndicatorUiHandler) {
-                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(granularityDto != null ? granularityDto.getUuid() : null);
+                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesByGranularity(granularityDto != null ? granularityDto.getUuid() : null);
             }
         }
     }

@@ -4,19 +4,23 @@ import java.util.logging.Logger;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 
 import com.google.gwt.core.client.GWT;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
+import es.gobcan.istac.indicators.web.shared.GetValuesListsAction;
+import es.gobcan.istac.indicators.web.shared.GetValuesListsResult;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IndicatorsWeb extends MetamacSecurityEntryPoint {
 
-    private static final boolean             SECURITY_ENABLED = true;
+    private static final boolean             SECURITY_ENABLED = false;
     private static Logger                    logger           = Logger.getLogger(IndicatorsWeb.class.getName());
 
     private static MetamacPrincipal          principal;
@@ -31,6 +35,27 @@ public class IndicatorsWeb extends MetamacSecurityEntryPoint {
         setUncaughtExceptionHandler();
 
         prepareApplication(SECURITY_ENABLED);
+    }
+
+    @Override
+    protected void onBeforeLoadApplication() {
+
+        ginjector.getDispatcher().execute(new GetValuesListsAction(), new WaitingAsyncCallback<GetValuesListsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireWarningMessageWithError(IndicatorsWeb.this, getMessages().errorLoadingValuesLists(), caught);
+                loadApplication();
+            }
+
+            @Override
+            public void onWaitSuccess(GetValuesListsResult result) {
+                IndicatorsValues.setQuantityUnits(result.getQuantityUnits());
+                IndicatorsValues.setUnitMultipliers(result.getUnitMultiplers());
+                IndicatorsValues.setGeographicalGranularities(result.getGeoGranularities());
+                loadApplication();
+            }
+        });
     }
 
     @Override

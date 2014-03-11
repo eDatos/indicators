@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
@@ -173,6 +174,8 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem typeText = new ViewTextItem(IndicatorDS.QUANTITY_TYPE_TEXT, getConstants().indicQuantityType());
 
         RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(IndicatorsValues.getQuantityUnits());
+        unitUuid.setValueMap(valueMap);
         unitUuid.setShowIfCondition(getFormItemShowIfApplicable());
 
         RequiredSelectItem unitMultiplier = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
@@ -414,13 +417,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         };
         validator.setErrorMessage(getMessages().validatorErrorDecimalPlaces(String.valueOf(10)));
         return validator;
-    }
-
-    @Override
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        super.setQuantityUnits(units);
-        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(units);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
 
     /**

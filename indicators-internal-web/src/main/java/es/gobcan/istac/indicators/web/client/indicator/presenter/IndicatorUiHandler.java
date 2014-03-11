@@ -17,7 +17,7 @@ public interface IndicatorUiHandler extends UiHandlers {
     void saveIndicator(IndicatorDto indicator);
 
     void retrieveSubjects();
-    void retrieveGeographicalValues(String geographicalGranularityUuid);
+    void retrieveGeographicalValuesByGranularity(String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
 
     void sendToProductionValidation(String uuid);

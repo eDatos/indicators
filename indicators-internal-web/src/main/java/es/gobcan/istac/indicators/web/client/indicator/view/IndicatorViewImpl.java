@@ -17,11 +17,9 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
@@ -103,20 +101,8 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        generalPanel.setQuantityUnits(units);
-        dataSourcesPanel.setQuantityUnits(units);
-    }
-
-    @Override
     public void setSubjectsList(List<SubjectDto> subjectDtos) {
         generalPanel.setSubjectsList(subjectDtos);
-    }
-
-    @Override
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        generalPanel.setGeographicalGranularities(geographicalGranularityDtos);
-        dataSourcesPanel.setGeographicalGranularities(geographicalGranularityDtos);
     }
 
     @Override

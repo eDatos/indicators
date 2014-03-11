@@ -270,14 +270,6 @@ public class DataSourcesPanel extends VLayout {
         return datasourcePanel.getDataSourceDto();
     }
 
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        datasourcePanel.setQuantityUnits(units);
-    }
-
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        datasourcePanel.setGeographicalGranularities(geographicalGranularityDtos);
-    }
-
     public void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
         datasourcePanel.setRateIndicator(indicatorDto, rateDerivationTypeEnum, indicatorCalculationTypeEnum);
     }

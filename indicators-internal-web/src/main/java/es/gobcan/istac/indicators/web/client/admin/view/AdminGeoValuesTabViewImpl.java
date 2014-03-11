@@ -33,6 +33,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter.AdminGeoValuesTabView;
@@ -198,11 +199,6 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
     }
 
     @Override
-    public void setGeoGranularities(List<GeographicalGranularityDto> geographicalGranularities) {
-        geoValuePanel.setGeoGranularities(geographicalGranularities);
-    }
-
-    @Override
     public Widget asWidget() {
         return panel;
     }
@@ -294,6 +290,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
             MultiLanguageTextItem title = new MultiLanguageTextItem(GeoValueDS.TITLE, getConstants().geoValueTitle());
             title.setRequired(true);
             CustomSelectItem granularity = new CustomSelectItem(GeoValueDS.GRANULARITY, getConstants().geoValueGranularity());
+            granularity.setValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
             granularity.setRequired(true);
             CustomFloatItem latitude = new CustomFloatItem(GeoValueDS.LATITUDE, getConstants().geoValueLatitude());
             latitude.setRequired(true);
@@ -369,11 +366,6 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
             geoValueDto.setLatitude(Double.valueOf(generalEditionForm.getValueAsString(GeoValueDS.LATITUDE)));
             geoValueDto.setLongitude(Double.valueOf(generalEditionForm.getValueAsString(GeoValueDS.LONGITUDE)));
             return geoValueDto;
-        }
-
-        public void setGeoGranularities(List<GeographicalGranularityDto> granularities) {
-            SelectItem item = (SelectItem) generalEditionForm.getItem(GeoValueDS.GRANULARITY);
-            item.setValueMap(CommonUtils.getGeographicalGranularituesValueMap(granularities));
         }
     }
 }

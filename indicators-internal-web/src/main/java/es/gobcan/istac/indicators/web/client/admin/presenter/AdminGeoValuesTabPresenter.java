@@ -12,34 +12,24 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoValuesUiHandlers;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalValuesEvent;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.SaveGeoValueAction;
 import es.gobcan.istac.indicators.web.shared.SaveGeoValueResult;
 
-public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPresenter.AdminGeoValuesTabView, AdminGeoValuesTabPresenter.AdminGeoValuesTabProxy>
-        implements
-            AdminGeoValuesUiHandlers,
-            UpdateGeographicalGranularitiesHandler {
+public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPresenter.AdminGeoValuesTabView, AdminGeoValuesTabPresenter.AdminGeoValuesTabProxy> implements AdminGeoValuesUiHandlers {
 
     public static final int MAX_RESULTS = 30;
 
@@ -50,7 +40,6 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
         void onGeoValueCreated(GeographicalValueDto dto);
         void onGeoValueUpdated(GeographicalValueDto dto);
         void setGeoValues(int firstResult, List<GeographicalValueDto> dtos, int maxResults);
-        void setGeoGranularities(List<GeographicalGranularityDto> geographicalGranularities);
     }
 
     @ProxyCodeSplit
@@ -98,7 +87,6 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
             @Override
             public void onWaitSuccess(DeleteGeoValuesResult result) {
                 reloadGeoValues();
-                reloadGeoValuesCache();
             }
         });
     }
@@ -139,31 +127,13 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
                         }
                     }
                 });
-                reloadGeoValuesCache();
             }
         });
 
-    }
-
-    @ProxyEvent
-    @Override
-    public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
-        getView().setGeoGranularities(event.getGeographicalGranularities());
     }
 
     private void reloadGeoValues() {
         retrieveGeoValues(0);
-    }
-
-    private void reloadGeoValuesCache() {
-        Builder builder = new Builder();
-        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValuesResult result) {
-                UpdateGeographicalValuesEvent.fire(AdminGeoValuesTabPresenter.this, result.getGeographicalValueDtos());
-            }
-        });
     }
 
     private static interface Action {

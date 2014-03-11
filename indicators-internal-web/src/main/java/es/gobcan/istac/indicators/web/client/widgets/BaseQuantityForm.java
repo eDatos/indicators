@@ -2,10 +2,7 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -19,21 +16,16 @@ import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
+import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class BaseQuantityForm extends GroupDynamicForm {
 
-    protected List<QuantityUnitDto> quantityUnitDtos;
-    protected UiHandlers            uiHandlers;
+    protected UiHandlers uiHandlers;
 
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
-    }
-
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        sortQuantityUnits(units);
-        this.quantityUnitDtos = units;
     }
 
     public void setUiHandlers(UiHandlers uiHandlers) {
@@ -289,7 +281,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
     protected String getQuantityUnitTitle(String unitUuid) {
         if (unitUuid != null) {
-            for (QuantityUnitDto unit : quantityUnitDtos) {
+            for (QuantityUnitDto unit : IndicatorsValues.getQuantityUnits()) {
                 if (unitUuid.equals(unit.getUuid())) {
                     return InternationalStringUtils.getLocalisedString(unit.getTitle());
                 }
@@ -298,15 +290,4 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new String();
     }
 
-    private void sortQuantityUnits(List<QuantityUnitDto> units) {
-        Collections.sort(units, new Comparator<QuantityUnitDto>() {
-
-            @Override
-            public int compare(QuantityUnitDto first, QuantityUnitDto second) {
-                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
-                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
-                return firstText.compareTo(secondText);
-            }
-        });
-    }
 }
