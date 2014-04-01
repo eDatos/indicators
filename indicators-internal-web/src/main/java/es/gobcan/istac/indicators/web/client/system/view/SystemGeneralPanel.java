@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.web.client.system.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
 import org.siemac.metamac.web.common.client.utils.DateUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -268,8 +267,8 @@ public class SystemGeneralPanel extends VLayout {
         // Identifiers
         identifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
-        identifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
-        identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
+        identifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
+        identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
         identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
 
         // Production Descriptors
@@ -282,8 +281,8 @@ public class SystemGeneralPanel extends VLayout {
         diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_USER, indicatorSystemDto.getDiffusionValidationUser());
 
         // Content Descriptors
-        contentForm.setValue(IndicatorsSystemsDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getDescription()));
-        contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getObjective()));
+        contentForm.setValue(IndicatorsSystemsDS.DESCRIPTION, indicatorSystemDto.getDescription());
+        contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, indicatorSystemDto.getObjective());
 
         // Publication Descriptors
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
@@ -301,8 +300,8 @@ public class SystemGeneralPanel extends VLayout {
         // Identifiers
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
-        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
-        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
 
         diffusionMainFormLayout.show();

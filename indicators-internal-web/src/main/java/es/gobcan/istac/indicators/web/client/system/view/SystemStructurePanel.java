@@ -18,7 +18,6 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -779,11 +778,11 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setDimensionView(DimensionDto dim) {
-            form.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+            form.setValue(DimensionDS.TITLE, dim.getTitle());
         }
 
         private void setDimensionEdit(DimensionDto dim) {
-            editForm.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+            editForm.setValue(DimensionDS.TITLE, dim.getTitle());
         }
 
         private void createViewForm() {
@@ -1020,7 +1019,7 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
-            form.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+            form.setValue(IndicatorInstanceDS.TITLE, indInst.getTitle());
 
             form.setValue(IndicatorInstanceDS.IND_TEXT, new String()); // Indicator title set in setIndicator method
             uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());
@@ -1047,7 +1046,7 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
-            editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+            editionForm.setValue(IndicatorInstanceDS.TITLE, indInst.getTitle());
 
             editionForm.setValue(IndicatorInstanceDS.IND_TEXT, new String()); // Indicator title set in setIndicator method
             uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());

@@ -6,7 +6,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -73,8 +72,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
 
-        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue,
-                baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, indexBaseType,
+                indexBaseTypeText, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
     }
 
     public void setValue(QuantityDto quantityDto) {
@@ -83,7 +82,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : "");
             setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityDto.getType() != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityDto.getType().toString()) : "");
             setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitTitle(quantityDto.getUnitUuid()));
-            setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, RecordUtils.getInternationalStringRecord(quantityDto.getUnitMultiplierLabel()));
+            setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplierLabel());
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits() != null ? quantityDto.getSignificantDigits().toString() : "");
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum() != null ? quantityDto.getMinimum().toString() : "");
@@ -125,7 +124,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
                 }
             }
 
-            setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
+            setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, quantityDto.getPercentageOf());
         }
     }
 

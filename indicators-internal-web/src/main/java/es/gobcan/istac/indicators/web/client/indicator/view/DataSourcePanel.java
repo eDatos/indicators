@@ -303,7 +303,7 @@ public class DataSourcePanel extends VLayout {
 
         return dataSourceDto;
     }
-    public void setDataStructureEdition(DataStructureDto dataStructureDto) {
+    public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
         this.dataStructureDtoEdition = dataStructureDto;
 
         // Source survey code
@@ -439,6 +439,11 @@ public class DataSourcePanel extends VLayout {
             setEditionQueryMode();
         } else {
             setViewQueryMode();
+        }
+
+        // Load data structure (common)
+        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
+            this.uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
         }
 
         setDataSourceViewMode(dataSourceDto);
@@ -808,11 +813,6 @@ public class DataSourcePanel extends VLayout {
     }
 
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
-        // Load data structure
-        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
-            this.uiHandlers.retrieveDataStructureView(dataSourceDto.getDataGpeUuid());
-        }
-
         generalForm.setValue(dataSourceDto);
 
         if (dataSourceDto.getInterperiodPuntualRate() != null) {
@@ -841,11 +841,7 @@ public class DataSourcePanel extends VLayout {
     }
 
     private void setDataSourceEditionMode(DataSourceDto dataSourceDto) {
-        // Clear and load data structure
         dataStructureDtoEdition = null;
-        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
-            this.uiHandlers.retrieveDataStructureEdition(dataSourceDto.getDataGpeUuid());
-        }
 
         generalStaticEditionForm.setValue(dataSourceDto);
 
@@ -891,8 +887,8 @@ public class DataSourcePanel extends VLayout {
 
     private void clearQueryDependentFields() {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
-        ((ViewMultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
-        ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
+        generalEditionForm.clearValue(DataSourceDS.SOURCE_SURVEY_TITLE);
+        generalEditionForm.clearValue(DataSourceDS.SOURCE_SURVEY_ACRONYM);
         ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
         ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).clearValue();
@@ -920,7 +916,6 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
         ((ViewTextItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
     }
-
     private void redrawForms() {
         generalForm.markForRedraw();
         generalStaticEditionForm.markForRedraw();

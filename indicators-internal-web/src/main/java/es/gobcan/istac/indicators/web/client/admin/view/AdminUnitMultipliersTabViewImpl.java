@@ -298,7 +298,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
         private void fillViewForm(UnitMultiplierDto dto) {
             generalForm.setValue(UnitMultiplierDS.UUID, dto.getUuid());
             generalForm.setValue(UnitMultiplierDS.MULTIPLIER, dto.getUnitMultiplier() != null ? dto.getUnitMultiplier().toString() : null);
-            generalForm.setValue(UnitMultiplierDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalForm.setValue(UnitMultiplierDS.TITLE, dto.getTitle());
         }
 
         private void fillEditForm(UnitMultiplierDto dto) {
@@ -308,12 +308,11 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
             } else {
                 generalEditionForm.clearValue(UnitMultiplierDS.MULTIPLIER);
             }
-            generalEditionForm.setValue(UnitMultiplierDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalEditionForm.setValue(UnitMultiplierDS.TITLE, dto.getTitle());
         }
 
         private UnitMultiplierDto getUnitMultiplierDto() {
-            MultiLanguageTextItem titleItem = (MultiLanguageTextItem) generalEditionForm.getItem(UnitMultiplierDS.TITLE);
-            unitMultiplierDto.setTitle(titleItem.getValue());
+            unitMultiplierDto.setTitle(generalEditionForm.getValueAsInternationalStringDto(UnitMultiplierDS.TITLE));
 
             String multiplierStr = generalEditionForm.getValueAsString(UnitMultiplierDS.MULTIPLIER);
             unitMultiplierDto.setUnitMultiplier(Integer.valueOf(multiplierStr));

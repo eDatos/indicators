@@ -296,18 +296,17 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
         private void fillViewForm(GeographicalGranularityDto dto) {
             generalForm.setValue(GeoGranularityDS.UUID, dto.getUuid());
             generalForm.setValue(GeoGranularityDS.CODE, dto.getCode());
-            generalForm.setValue(GeoGranularityDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalForm.setValue(GeoGranularityDS.TITLE, dto.getTitle());
         }
 
         private void fillEditForm(GeographicalGranularityDto dto) {
             generalEditionForm.setValue(GeoGranularityDS.UUID, dto.getUuid());
             generalEditionForm.setValue(GeoGranularityDS.CODE, dto.getCode());
-            generalEditionForm.setValue(GeoGranularityDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalEditionForm.setValue(GeoGranularityDS.TITLE, dto.getTitle());
         }
 
         private GeographicalGranularityDto getGeoGranularityDto() {
-            MultiLanguageTextItem titleItem = (MultiLanguageTextItem) generalEditionForm.getItem(GeoGranularityDS.TITLE);
-            geoGranularityDto.setTitle(titleItem.getValue());
+            geoGranularityDto.setTitle(generalEditionForm.getValueAsInternationalStringDto(GeoGranularityDS.TITLE));
             geoGranularityDto.setCode(generalEditionForm.getValueAsString(GeoGranularityDS.CODE));
             return geoGranularityDto;
         }

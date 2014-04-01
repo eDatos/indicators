@@ -23,7 +23,6 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
@@ -317,9 +316,8 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         private void fillViewForm(GeographicalValueDto dto) {
             generalForm.setValue(GeoValueDS.UUID, dto.getUuid());
             generalForm.setValue(GeoValueDS.CODE, dto.getCode());
-            generalForm.setValue(GeoValueDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
-            generalForm.setValue(GeoValueDS.GRANULARITY_TITLE,
-                    org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getGranularity() != null ? dto.getGranularity().getTitle() : null));
+            generalForm.setValue(GeoValueDS.TITLE, dto.getTitle());
+            generalForm.setValue(GeoValueDS.GRANULARITY_TITLE, dto.getGranularity() != null ? dto.getGranularity().getTitle() : null);
             if (dto.getLatitude() != null) {
                 generalForm.setValue(GeoValueDS.LATITUDE, dto.getLatitude());
             } else {
@@ -337,7 +335,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         private void fillEditForm(GeographicalValueDto dto) {
             generalEditionForm.setValue(GeoValueDS.UUID, dto.getUuid());
             generalEditionForm.setValue(GeoValueDS.CODE, dto.getCode());
-            generalEditionForm.setValue(GeoValueDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalEditionForm.setValue(GeoValueDS.TITLE, dto.getTitle());
             generalEditionForm.setValue(GeoValueDS.GRANULARITY, dto.getGranularity() != null ? dto.getGranularity().getUuid() : null);
             if (dto.getLatitude() != null) {
                 generalEditionForm.setValue(GeoValueDS.LATITUDE, dto.getLatitude());
@@ -353,8 +351,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         }
 
         private GeographicalValueDto getGeoValueDto() {
-            MultiLanguageTextItem titleItem = (MultiLanguageTextItem) generalEditionForm.getItem(GeoValueDS.TITLE);
-            geoValueDto.setTitle(titleItem.getValue());
+            geoValueDto.setTitle(generalEditionForm.getValueAsInternationalStringDto(GeoValueDS.TITLE));
             geoValueDto.setCode(generalEditionForm.getValueAsString(GeoValueDS.CODE));
             geoValueDto.setOrder(generalEditionForm.getValueAsString(GeoValueDS.ORDER));
 

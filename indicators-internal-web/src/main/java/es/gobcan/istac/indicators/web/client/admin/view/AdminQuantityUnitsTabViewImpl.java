@@ -338,20 +338,18 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
             } else {
                 generalForm.setValue(QuantityUnitDS.SYMBOL_POSITION, (String) null);
             }
-            generalForm.setValue(QuantityUnitDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalForm.setValue(QuantityUnitDS.TITLE, dto.getTitle());
         }
 
         private void fillEditForm(QuantityUnitDto dto) {
             generalEditionForm.setValue(QuantityUnitDS.UUID, dto.getUuid());
             generalEditionForm.setValue(QuantityUnitDS.SYMBOL, dto.getSymbol());
             generalEditionForm.setValue(QuantityUnitDS.SYMBOL_POSITION, dto.getSymbolPosition() != null ? dto.getSymbolPosition().name() : null);
-            generalEditionForm.setValue(QuantityUnitDS.TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dto.getTitle()));
+            generalEditionForm.setValue(QuantityUnitDS.TITLE, dto.getTitle());
         }
 
         private QuantityUnitDto getQuantityUnitDto() {
-            MultiLanguageTextItem titleItem = (MultiLanguageTextItem) generalEditionForm.getItem(QuantityUnitDS.TITLE);
-            quantityUnitDto.setTitle(titleItem.getValue());
-
+            quantityUnitDto.setTitle(generalEditionForm.getValueAsInternationalStringDto(QuantityUnitDS.TITLE));
             quantityUnitDto.setSymbol(generalEditionForm.getValueAsString(QuantityUnitDS.SYMBOL));
             if (generalEditionForm.getItem(QuantityUnitDS.SYMBOL_POSITION).isVisible()) {
                 try {

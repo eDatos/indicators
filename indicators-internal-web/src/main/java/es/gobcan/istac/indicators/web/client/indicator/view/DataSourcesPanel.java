@@ -21,12 +21,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -251,13 +249,15 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setUnitMultipliers(unitMultiplierDtos);
     }
 
-    public void setDataStructureView(DataStructureDto dataStructureDto) {
+    public void setDataStructure(DataStructureDto dataStructureDto) {
         datasourcePanel.setDataStructureView(dataStructureDto);
+        datasourcePanel.setDataStructureForEdition(dataStructureDto);
     }
 
-    public void setDataStructureEdition(DataStructureDto dataStructureDto) {
-        datasourcePanel.setDataStructureEdition(dataStructureDto);
+    public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
+        datasourcePanel.setDataStructureForEdition(dataStructureDto);
     }
+
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         datasourcePanel.setGeographicalValues(geographicalValueDtos);
     }

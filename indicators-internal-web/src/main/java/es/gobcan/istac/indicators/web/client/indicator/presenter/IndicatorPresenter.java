@@ -142,8 +142,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setDataDefinitionsOperationCodes(List<String> operationCodes);
         void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
         void setDataDefinition(DataDefinitionDto dataDefinitionDto);
-        void setDataStructureView(DataStructureDto dataStructureDto);
-        void setDataStructureEdition(DataStructureDto dataStructureDto);
+        void setDataStructure(DataStructureDto dataStructureDto);
+        void setDataStructureForEdition(DataStructureDto dataStructureDto);
 
         void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
@@ -379,12 +379,12 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveDataStructureView(String uuid) {
+    public void retrieveDataStructure(String uuid) {
         dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallbackHandlingError<GetDataStructureResult>(this) {
 
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
-                getView().setDataStructureView(result.getDataStructureDto());
+                getView().setDataStructure(result.getDataStructureDto());
             }
         });
     }
@@ -395,7 +395,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
-                getView().setDataStructureEdition(result.getDataStructureDto());
+                getView().setDataStructureForEdition(result.getDataStructureDto());
             }
         });
     }
