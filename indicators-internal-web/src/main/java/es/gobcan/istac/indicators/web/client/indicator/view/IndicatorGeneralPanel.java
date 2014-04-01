@@ -13,7 +13,7 @@ import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -385,8 +385,8 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Annotations Form
         annotationsEditionForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
-        MultilanguageRichTextEditorItem notes = new MultilanguageRichTextEditorItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
-        MultilanguageRichTextEditorItem comments = new MultilanguageRichTextEditorItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
+        MultiLanguageRichTextEditorItem notes = new MultiLanguageRichTextEditorItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
+        MultiLanguageRichTextEditorItem comments = new MultiLanguageRichTextEditorItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
         annotationsEditionForm.setFields(notes, comments);
 
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
