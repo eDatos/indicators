@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
@@ -773,7 +772,7 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private DimensionDto fillDimension(DimensionDto dim) {
-            dim.setTitle((InternationalStringDto) (editForm.getValue(DimensionDS.TITLE)));
+            dim.setTitle(editForm.getValueAsInternationalStringDto(DimensionDS.TITLE));
             return dim;
         }
 
@@ -942,7 +941,7 @@ public class SystemStructurePanel extends HLayout {
 
         private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
             if (indicatorInstanceDto.getUuid() == null) {
-                indicatorInstanceDto.setTitle((InternationalStringDto) (creationForm.getValue(IndicatorInstanceDS.TITLE)));
+                indicatorInstanceDto.setTitle(creationForm.getValueAsInternationalStringDto(IndicatorInstanceDS.TITLE));
                 indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(creationForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
                 indicatorInstanceDto.setTimeGranularity(creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(creationForm
                         .getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
@@ -955,7 +954,7 @@ public class SystemStructurePanel extends HLayout {
                         .getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUES)).getSelectedValues() : null);
             } else {
                 // Only instance title can be edited
-                indicatorInstanceDto.setTitle((InternationalStringDto) (editionForm.getValue(IndicatorInstanceDS.TITLE)));
+                indicatorInstanceDto.setTitle(editionForm.getValueAsInternationalStringDto(IndicatorInstanceDS.TITLE));
             }
             return indicatorInstanceDto;
         }

@@ -6,14 +6,13 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -542,13 +541,13 @@ public class IndicatorGeneralPanel extends VLayout {
     private void saveIndicator() {
         if (identifiersEditionForm.validate(false) && contentClassifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && quantityEditionForm.validate(false)) {
             // Identifiers
-            indicator.setTitle((InternationalStringDto) identifiersEditionForm.getValue(IndicatorDS.TITLE));
-            indicator.setAcronym((InternationalStringDto) identifiersEditionForm.getValue(IndicatorDS.ACRONYM));
+            indicator.setTitle(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.TITLE));
+            indicator.setAcronym(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.ACRONYM));
             // Content Classifiers
             indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT));
             indicator.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT)));
             // Content Descriptors
-            indicator.setConceptDescription((InternationalStringDto) contentDescriptorsEditionForm.getValue(IndicatorDS.CONCEPT_DESCRIPTION));
+            indicator.setConceptDescription(contentDescriptorsEditionForm.getValueAsInternationalStringDto(IndicatorDS.CONCEPT_DESCRIPTION));
             // Quantity
             indicator.setQuantity(quantityEditionForm.getValue());
             // Annotations

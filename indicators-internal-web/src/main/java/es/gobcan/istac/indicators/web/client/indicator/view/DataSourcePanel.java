@@ -244,7 +244,7 @@ public class DataSourcePanel extends VLayout {
         dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
                 dataStructureDtoEdition.getSurveyTitle()));
         if (generalEditionForm.isVisible()) {
-            dataSourceDto.setSourceSurveyAcronym((InternationalStringDto) generalEditionForm.getValue(DataSourceDS.SOURCE_SURVEY_ACRONYM));
+            dataSourceDto.setSourceSurveyAcronym(generalEditionForm.getValueAsInternationalStringDto(DataSourceDS.SOURCE_SURVEY_ACRONYM));
             dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
         }
 
@@ -312,7 +312,7 @@ public class DataSourcePanel extends VLayout {
         // Source survey title
         InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
                 dataStructureDto.getSurveyTitle());
-        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(internationalStringDto));
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, internationalStringDto);
 
         // Publishers
         generalEditionForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataStructureDto.getPublishers()));
