@@ -831,7 +831,7 @@
                                             <dependency>com.arte.libs</dependency>
                                         </dependencies>
                                         <shouldfail>true</shouldfail>
-                                        <checkConvergenceOnMayorVersions>false</checkConvergenceOnMayorVersions>
+                                        <checkConvergenceOnMayorVersions>true</checkConvergenceOnMayorVersions>
                                     </CustomizedDependecyConvergence>
                                 </rules>
                             </configuration>
