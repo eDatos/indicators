@@ -10,10 +10,10 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -32,7 +32,6 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
-import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
@@ -129,10 +128,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             }
             @Override
             public void onWaitSuccess(GetUserGuideUrlResult result) {
-                StringBuffer url = new StringBuffer();
-                url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
-                url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(result.getUserGuideUrl()));
-                Window.open(url.toString(), "_blank", "");
+                CommonWebUtils.showDownloadFileWindow(SharedTokens.FILE_DOWNLOAD_DIR_PATH, SharedTokens.PARAM_DOC, result.getUserGuideUrl());
             }
         });
     }

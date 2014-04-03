@@ -1,100 +1,48 @@
 package es.gobcan.istac.indicators.web.server.servlet;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.cxf.common.util.StringUtils;
+import org.opensaml.artifact.InvalidArgumentException;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.web.common.server.servlet.FileDownloadServletBase;
+import org.siemac.metamac.web.common.shared.utils.SharedTokens;
 
-import com.google.inject.Singleton;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 
-import es.gobcan.istac.indicators.web.shared.SharedTokens;
+public class FileDownloadServlet extends FileDownloadServletBase {
 
-@Singleton
-@SuppressWarnings("serial")
-public class FileDownloadServlet extends HttpServlet {
-
-    // private static Logger logger = Logger.getLogger(FileDownloadServlet.class.getName());
-    //
-    // private File tmpDir;
-    // private File destinationDir;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        // logger.info("FileDownload Servlet");
-        // tmpDir = new File(((File) getServletContext().getAttribute("javax.servlet.context.tempdir")).toString());
-        // if (!tmpDir.isDirectory()) {
-        // throw new ServletException(tmpDir.toString() + " is not a directory");
-        // }
-        // logger.info("tmpDir: " + tmpDir.toString());
-        // String realPath = getServletContext().getRealPath("/" + SharedTokens.FILE_DOWNLOAD_DIR_PATH);
-        // destinationDir = new File(realPath);
-        // if (!destinationDir.isDirectory()) {
-        // throw new ServletException(SharedTokens.FILE_DOWNLOAD_DIR_PATH + " is not a directory");
-        // }
-        // logger.info("destinationDir: " + destinationDir.toString());
-    }
+    /**
+     * 
+     */
+    private static final long              serialVersionUID = 6267996624034326676L;
+    private IndicatorsConfigurationService configurationService;
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.process(request, response);
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.process(request, response);
-    }
-
-    private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Check that we have a file upload request
-        if (ServletFileUpload.isMultipartContent(request)) {
-            processFiles(request, response);
+    protected File getFileToDownload(HttpServletRequest request) throws Exception {
+        if (!StringUtils.isEmpty(request.getParameter(SharedTokens.PARAM_DOC))) {
+            return getFileFromDocs(request.getParameter(SharedTokens.PARAM_DOC));
+        } else if (!StringUtils.isEmpty(request.getParameter(SharedTokens.PARAM_FILE_NAME))) {
+            return getFileFromTempDir(request.getParameter(SharedTokens.PARAM_FILE_NAME));
         } else {
-            processQuery(request, response);
-        }
-    }
-
-    private void processFiles(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    }
-
-    private void processQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String fileName = request.getParameter(SharedTokens.PARAM_FILE_NAME);
-        File file = new File(fileName);
-        ServletOutputStream outputStream = response.getOutputStream();
-        response.setContentType(request.getContentType());
-        response.setContentLength((int) file.length());
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-
-        byte[] buffer = new byte[8 * 1024]; // 8k buffer
-        DataInputStream inputStream = new DataInputStream(new FileInputStream(file));
-        int length = 0;
-
-        try {
-            while ((inputStream != null) && ((length = inputStream.read(buffer)) != -1)) {
-                outputStream.write(buffer, 0, length);
-            }
-        } catch (Exception e) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            e.printStackTrace(printWriter);
-            response.getOutputStream().print(stringWriter.toString());
-        } finally {
-            inputStream.close();
-            outputStream.flush();
-            outputStream.close();
+            throw new InvalidArgumentException("You must specify some action");
         }
 
+    }
+
+    private File getFileFromDocs(String fileName) throws Exception {
+        checkValidFileName(fileName);
+        String docsPath = getConfigurationService().retrieveIndicatorsDocsPath();
+        return new File(docsPath + File.separatorChar + fileName);
+    }
+
+    private IndicatorsConfigurationService getConfigurationService() {
+        if (configurationService == null) {
+            configurationService = ApplicationContextProvider.getApplicationContext().getBean(IndicatorsConfigurationService.class);
+        }
+        return configurationService;
     }
 
 }
