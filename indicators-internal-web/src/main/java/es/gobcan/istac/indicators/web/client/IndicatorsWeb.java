@@ -20,7 +20,7 @@ import es.gobcan.istac.indicators.web.shared.GetValuesListsResult;
  */
 public class IndicatorsWeb extends MetamacSecurityEntryPoint {
 
-    private static final boolean             SECURITY_ENABLED = false;
+    private static final boolean             SECURITY_ENABLED = true;
     private static Logger                    logger           = Logger.getLogger(IndicatorsWeb.class.getName());
 
     private static MetamacPrincipal          principal;
