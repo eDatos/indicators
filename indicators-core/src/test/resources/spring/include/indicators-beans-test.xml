@@ -7,13 +7,7 @@
         
 		<property name="systemConfigurationFile"><value>classpath:data/indicators/environment.xml</value></property>
 	</bean>
-	
-	<bean id="propertyPlaceholderConfigurer" class="org.siemac.metamac.core.common.conf.ConfigurationServicePropertyPlaceholderConfigurer">
-		<property name="configurationService">
-			<ref bean="configurationService" />
-		</property>
-	</bean>
-	
+
 	<bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider"/>
 
 
