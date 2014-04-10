@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -25,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
@@ -56,7 +56,7 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
     private IndicatorsDataService            indicatorsDataService;
 
     @Autowired
-    private ConfigurationService             configurationService;
+    private IndicatorsConfigurationService   configurationService;
 
     private DsplTransformerTimeTranslator    dsplTransformer;
 
