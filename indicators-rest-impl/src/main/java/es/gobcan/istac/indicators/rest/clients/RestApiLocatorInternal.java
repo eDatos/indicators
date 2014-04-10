@@ -4,22 +4,21 @@ import javax.annotation.PostConstruct;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 
 public class RestApiLocatorInternal {
 
     @Autowired
-    private ConfigurationService      configurationService;
+    private IndicatorsConfigurationService             configurationService;
 
     private StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10 = null;
 
     @PostConstruct
     public void initService() throws Exception {
-        String baseApi = configurationService.getProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
+        String baseApi = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
         statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(baseApi, StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread safe
     }
 
