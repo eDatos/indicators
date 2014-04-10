@@ -15,12 +15,12 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 
 /**
@@ -74,6 +74,11 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
  * 
  * 
  * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * StdSchedulerFactory factory = (StdSchedulerFactory) ctx.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
  * </pre>
  * <p>
@@ -91,15 +96,15 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
  */
 public class QuartzInitializerListener implements ServletContextListener {
 
-    public static final String   QUARTZ_FACTORY_KEY          = "org.quartz.impl.StdSchedulerFactory.KEY";
+    public static final String             QUARTZ_FACTORY_KEY   = "org.quartz.impl.StdSchedulerFactory.KEY";
 
-    private boolean              performShutdown             = true;
-    private boolean              waitOnShutdown              = false;
+    private boolean                        performShutdown      = true;
+    private boolean                        waitOnShutdown       = false;
 
-    private Scheduler            scheduler                   = null;
-    private ConfigurationService configurationService        = null;
+    private Scheduler                      scheduler            = null;
+    private IndicatorsConfigurationService configurationService = null;
 
-    private final Logger         log                         = LoggerFactory.getLogger(getClass());
+    private final Logger                   log                  = LoggerFactory.getLogger(getClass());
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,7 +122,7 @@ public class QuartzInitializerListener implements ServletContextListener {
         try {
 
             // Config
-            configurationService = (ConfigurationService) ApplicationContextProvider.getApplicationContext().getBean("configurationService");
+            configurationService = (IndicatorsConfigurationService) ApplicationContextProvider.getApplicationContext().getBean("configurationService");
             Properties quartzProperties = configurationService.getProperties();
 
             String shutdownPref = servletContext.getInitParameter("quartz:shutdown-on-unload");
@@ -196,6 +201,8 @@ public class QuartzInitializerListener implements ServletContextListener {
                 scheduleRegularJob();
             } catch (SchedulerException e) {
                 log.error("Error Scheduling INDICATORS QUARTZ");
+            } catch (MetamacException e) {
+                log.error("Error Scheduling INDICATORS QUARTZ ", e);
             }
 
         } catch (Exception e) {
@@ -204,10 +211,10 @@ public class QuartzInitializerListener implements ServletContextListener {
         }
     }
 
-    private void scheduleRegularJob() throws SchedulerException {
+    private void scheduleRegularJob() throws SchedulerException, MetamacException {
         JobDetail job = JobBuilder.newJob(IndicatorsUpdateJob.class).withIdentity("update_indicators_job", "cron_jobs").build();
 
-        String cronExpr = configurationService.getConfig().getString(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
+        String cronExpr = configurationService.retrieveQuartzExpressionUpdateIndicators();
 
         CronTrigger trigger = newTrigger().withIdentity("triger_update_indicators", "cron_jobs").withSchedule(CronScheduleBuilder.cronSchedule(cronExpr)).build();
 

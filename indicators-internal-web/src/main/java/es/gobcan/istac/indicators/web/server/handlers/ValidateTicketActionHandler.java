@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.siemac.metamac.sso.validation.ValidateTicket;
@@ -21,32 +21,32 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 
 @Component
 public class ValidateTicketActionHandler extends AbstractActionHandler<ValidateTicketAction, ValidateTicketResult> {
 
-    protected static Logger             log                  = LoggerFactory.getLogger(ValidateTicketActionHandler.class);
+    protected static Logger                log                  = LoggerFactory.getLogger(ValidateTicketActionHandler.class);
 
-    protected static final String       TICKET_PARAMETER     = "ticket";
-    protected static final String       TICKET_QUERY_STRING  = "&ticket=";
+    protected static final String          TICKET_PARAMETER     = "ticket";
+    protected static final String          TICKET_QUERY_STRING  = "&ticket=";
 
     @Autowired
-    private ConfigurationService        configurationService = null;
+    private IndicatorsConfigurationService configurationService = null;
 
-    protected ValidateTicket            validateTicket       = null;
+    protected ValidateTicket               validateTicket       = null;
 
-    protected HttpServletRequestWrapper requestWrapper       = null;
+    protected HttpServletRequestWrapper    requestWrapper       = null;
 
     public ValidateTicketActionHandler() {
         super(ValidateTicketAction.class);
     }
 
     @PostConstruct
-    public void initActionHandler() {
-        String casServerUrlPrefix = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_CAS_SERVER_URL_PREFIX);
-        String tolerance = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_TOLERANCE); // ms
+    public void initActionHandler() throws MetamacException {
+        String casServerUrlPrefix = configurationService.retrieveSecurityCasServerUrlPrefix();
+        String tolerance = configurationService.retrieveSecurityTolerance();
 
         validateTicket = new ValidateTicket(casServerUrlPrefix);
         validateTicket.setTolerance(Long.valueOf(tolerance));
