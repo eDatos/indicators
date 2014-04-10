@@ -8,5 +8,5 @@
    <entry key="environment.metamac.configuration.db.driver_name">oracle.jdbc.OracleDriver</entry>
    <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@oracle-dev:1521:XE</entry>
    <entry key="environment.metamac.configuration.db.username">jenkins_indicators</entry>
-   <entry key="environment.metamac.configuration.db.password">jenkins_indicators</entry>
+   <entry key="environment.metamac.configuration.db.password">CgYO/3dE/Wsb/LhROvbo803JDIK/9IJ64CjL8ofparU=</entry>
 </properties>
