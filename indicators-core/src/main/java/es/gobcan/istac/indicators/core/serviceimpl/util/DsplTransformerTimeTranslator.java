@@ -2,57 +2,35 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.BidiMap;
-import org.apache.commons.collections.bidimap.TreeBidiMap;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
-import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dspl.DsplConcept;
-import es.gobcan.istac.indicators.core.dspl.DsplConceptAttribute;
-import es.gobcan.istac.indicators.core.dspl.DsplData;
-import es.gobcan.istac.indicators.core.dspl.DsplData.DateColumn;
-import es.gobcan.istac.indicators.core.dspl.DsplData.FloatColumn;
-import es.gobcan.istac.indicators.core.dspl.DsplData.Row;
-import es.gobcan.istac.indicators.core.dspl.DsplData.TextColumn;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplInfo;
 import es.gobcan.istac.indicators.core.dspl.DsplInstanceData;
-import es.gobcan.istac.indicators.core.dspl.DsplLocalisedValue;
-import es.gobcan.istac.indicators.core.dspl.DsplSimpleAttribute;
 import es.gobcan.istac.indicators.core.dspl.DsplSlice;
-import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -60,14 +38,13 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 public class DsplTransformerTimeTranslator extends DsplTransformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DsplTransformerTimeTranslator.class);
 
     public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsService indicatorsService,
-            ConfigurationService configurationService) {
+            IndicatorsConfigurationService configurationService) {
         super(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
     }
     @Override

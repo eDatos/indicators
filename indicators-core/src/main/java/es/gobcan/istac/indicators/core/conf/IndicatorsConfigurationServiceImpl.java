@@ -37,4 +37,49 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return retrieveProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME, Boolean.TRUE);
     }
 
+    @Override
+    public String retrieveDsplIndicatorsSystemUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDsplProviderName() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_NAME, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDsplProviderDescription() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_DESCRIPTION, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDsplProviderUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_URL, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDbDataViewsRole() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DB_DATA_VIEWS_ROLE, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDbSubjectsColumnCode() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDbSubjectsColumnTitle() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDbSubjectsTable() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveJaxiLocalUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL, Boolean.TRUE);
+    }
+
 }

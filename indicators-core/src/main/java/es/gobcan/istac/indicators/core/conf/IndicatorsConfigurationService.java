@@ -5,15 +5,34 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 public interface IndicatorsConfigurationService extends ConfigurationService {
 
-    public String retrieveJaxiRemoteUrl() throws MetamacException;
+    String retrieveJaxiRemoteUrl() throws MetamacException;
 
-    public String retrieveWidgetsTypeListUrl() throws MetamacException;
+    String retrieveWidgetsTypeListUrl() throws MetamacException;
 
-    public String retrieveWidgetsQueryToolsUrl() throws MetamacException;
+    String retrieveWidgetsQueryToolsUrl() throws MetamacException;
 
-    public String retrieveWidgetsSparklineMax() throws MetamacException;
+    String retrieveWidgetsSparklineMax() throws MetamacException;
 
-    public String retrieveIndicatorsDocsPath() throws MetamacException;
+    String retrieveIndicatorsDocsPath() throws MetamacException;
 
-    public String retrieveIndicatorsUserGuideFilename() throws MetamacException;
+    String retrieveIndicatorsUserGuideFilename() throws MetamacException;
+
+    String retrieveDsplIndicatorsSystemUrl() throws MetamacException;
+
+    String retrieveDsplProviderName() throws MetamacException;
+
+    String retrieveDsplProviderDescription() throws MetamacException;
+
+    String retrieveDsplProviderUrl() throws MetamacException;
+
+    String retrieveDbDataViewsRole() throws MetamacException;
+
+    String retrieveDbSubjectsColumnCode() throws MetamacException;
+
+    String retrieveDbSubjectsColumnTitle() throws MetamacException;
+
+    String retrieveDbSubjectsTable() throws MetamacException;
+
+    String retrieveJaxiLocalUrl() throws MetamacException;
+
 }

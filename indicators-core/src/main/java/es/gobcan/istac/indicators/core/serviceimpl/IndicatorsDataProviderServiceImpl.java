@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 
@@ -25,7 +24,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProviderService {
 
     @Autowired
-    private ConfigurationService configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     public IndicatorsDataProviderServiceImpl() {
     }
@@ -69,7 +68,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         return result;
     }
 
-    private String getJaxiUrl() {
-        return configurationService.getConfig().getString(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
+    private String getJaxiUrl() throws MetamacException {
+        return configurationService.retrieveJaxiLocalUrl();
     }
 }

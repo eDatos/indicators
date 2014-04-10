@@ -13,7 +13,6 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -24,7 +23,7 @@ import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -63,27 +62,27 @@ import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 public class DsplTransformer {
 
-    private static final Logger        LOG                               = LoggerFactory.getLogger(DsplTransformer.class);
-    protected IndicatorsSystemsService indicatorsSystemsService;
-    protected IndicatorsDataService    indicatorsDataService;
-    protected IndicatorsService        indicatorsService;
-    protected ConfigurationService     configurationService;
+    private static final Logger              LOG                               = LoggerFactory.getLogger(DsplTransformer.class);
+    protected IndicatorsSystemsService       indicatorsSystemsService;
+    protected IndicatorsDataService          indicatorsDataService;
+    protected IndicatorsService              indicatorsService;
+    protected IndicatorsConfigurationService configurationService;
 
-    private static final String        GEO_CONCEPT_BASE                  = "geo:location";
-    private static final String        UNIT_CONCEPT_BASE                 = "unit:unit";
-    private static final String        GEO_CONCEPT_PREFIX                = "geo_";
+    private static final String              GEO_CONCEPT_BASE                  = "geo:location";
+    private static final String              UNIT_CONCEPT_BASE                 = "unit:unit";
+    private static final String              GEO_CONCEPT_PREFIX                = "geo_";
 
-    private static final String        QUANTITY_CONCEPT_BASE             = "quantity:quantity";
-    private static final String        QUANTITY_AMOUNT_CONCEPT_BASE      = "quantity:amount";
-    private static final String        QUANTITY_MAGNITUDE_CONCEPT_BASE   = "quantity:magnitude";
-    private static final String        QUANTITY_FRACTION_CONCEPT_BASE    = "quantity:fraction";
-    private static final String        QUANTITY_RATE_CONCEPT_BASE        = "quantity:rate";
-    private static final String        QUANTITY_RATIO_CONCEPT_BASE       = "quantity:ratio";
-    private static final String        QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
-    private static final String        QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
+    private static final String              QUANTITY_CONCEPT_BASE             = "quantity:quantity";
+    private static final String              QUANTITY_AMOUNT_CONCEPT_BASE      = "quantity:amount";
+    private static final String              QUANTITY_MAGNITUDE_CONCEPT_BASE   = "quantity:magnitude";
+    private static final String              QUANTITY_FRACTION_CONCEPT_BASE    = "quantity:fraction";
+    private static final String              QUANTITY_RATE_CONCEPT_BASE        = "quantity:rate";
+    private static final String              QUANTITY_RATIO_CONCEPT_BASE       = "quantity:ratio";
+    private static final String              QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
+    private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
     public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsService indicatorsService,
-            ConfigurationService configurationService) {
+            IndicatorsConfigurationService configurationService) {
         this.indicatorsSystemsService = indicatorsSystemsService;
         this.indicatorsDataService = indicatorsDataService;
         this.indicatorsService = indicatorsService;
@@ -196,8 +195,8 @@ public class DsplTransformer {
         return text.getLabel() + " (" + granularitySuffix + ")";
     }
 
-    private String buildLocalisedSystemUrl(IndicatorsSystemVersion systemVersion, String locale) {
-        String systemUrlBase = configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
+    private String buildLocalisedSystemUrl(IndicatorsSystemVersion systemVersion, String locale) throws MetamacException {
+        String systemUrlBase = configurationService.retrieveDsplIndicatorsSystemUrl();
         String url = systemUrlBase.replaceAll("\\[SYSTEM\\]", systemVersion.getIndicatorsSystem().getCode());
         return url + "?language=" + locale;
     }
@@ -467,7 +466,8 @@ public class DsplTransformer {
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances(Set<IndicatorVersion> usedIndicators, List<IndicatorInstance> instances) {
-        //Referenced quantities seem not to work in data explorer, if they are this method should be implemented creating concepts associated to used quantities, but those quantities can't be instances quantities.
+        // Referenced quantities seem not to work in data explorer, if they are this method should be implemented creating concepts associated to used quantities, but those quantities can't be
+        // instances quantities.
         return new HashSet<DsplConcept>();
     }
 
@@ -901,15 +901,15 @@ public class DsplTransformer {
         return getIdForGeoConcept(granularity) + "_table";
     }
 
-    private String getProviderName() {
-        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_NAME);
+    private String getProviderName() throws MetamacException {
+        return configurationService.retrieveDsplProviderName();
     }
 
-    private String getProviderDescription() {
-        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_DESCRIPTION);
+    private String getProviderDescription() throws MetamacException {
+        return configurationService.retrieveDsplProviderDescription();
     }
 
-    private String getProviderUrl() {
-        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_URL);
+    private String getProviderUrl() throws MetamacException {
+        return configurationService.retrieveDsplProviderUrl();
     }
 }

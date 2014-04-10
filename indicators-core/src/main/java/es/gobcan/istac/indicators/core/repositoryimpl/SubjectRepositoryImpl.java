@@ -6,8 +6,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 
@@ -26,23 +25,19 @@ import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 public class SubjectRepositoryImpl implements SubjectRepository {
 
     @Autowired
-    private ConfigurationService configurationService;
+    private IndicatorsConfigurationService configurationService;
 
-    private final Logger         LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
+    private final Logger                   LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
 
     @Autowired
     @Qualifier("dataSourceSubjects")
-    private DataSource           dataSource;
-
-    private String               codeColumn;
-    private String               titleColumn;
-    private String               tableName;
+    private DataSource                     dataSource;
 
     public SubjectRepositoryImpl() {
     }
 
     @Override
-    public Subject retrieveSubject(String code) {
+    public Subject retrieveSubject(String code) throws MetamacException {
         JdbcTemplate template = new JdbcTemplate(dataSource);
         List<Subject> result = template.query("select " + getCodeColumnName() + "," + getTitleColumnName() + " from " + getTableName() + " where " + getCodeColumnName() + " = ?", new Object[]{code},
                 new SubjectRowMapper());
@@ -55,40 +50,21 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<Subject> findSubjects() {
+    public List<Subject> findSubjects() throws MetamacException {
         JdbcTemplate select = new JdbcTemplate(dataSource);
         return select.query("select " + getCodeColumnName() + "," + getTitleColumnName() + " from " + getTableName() + " order by " + getCodeColumnName(), new SubjectRowMapper());
     }
 
-    public String getCodeColumnName() {
-        if (codeColumn == null) {
-            codeColumn = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
-        }
-        return codeColumn;
+    public String getCodeColumnName() throws MetamacException {
+        return configurationService.retrieveDbSubjectsColumnCode();
     }
 
-    public String getTitleColumnName() {
-        if (titleColumn == null) {
-            titleColumn = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
-        }
-        return titleColumn;
+    public String getTitleColumnName() throws MetamacException {
+        return configurationService.retrieveDbSubjectsColumnTitle();
     }
 
-    public String getTableName() {
-        if (tableName == null) {
-            tableName = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
-        }
-        return tableName;
-    }
-
-    private String getRequiredProperty(String propertyName) {
-        String value = configurationService.getProperty(propertyName);
-        if (!StringUtils.isEmpty(value)) {
-            return value;
-        } else {
-            LOG.error("The required DATA property " + propertyName + " has not been set or is empty");
-            throw new IllegalStateException("The required DATA property " + propertyName + " has not been set or is empty");
-        }
+    public String getTableName() throws MetamacException {
+        return configurationService.retrieveDbSubjectsTable();
     }
 
     private class SubjectRowMapper implements RowMapper<Subject> {
@@ -96,8 +72,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
         @Override
         public Subject mapRow(ResultSet rs, int rowNum) throws SQLException {
             Subject subject = new Subject();
-            subject.setId(rs.getString(getCodeColumnName()));
-            subject.setTitle(rs.getString(getTitleColumnName()));
+            try {
+                subject.setId(rs.getString(getCodeColumnName()));
+                subject.setTitle(rs.getString(getTitleColumnName()));
+            } catch (MetamacException e) {
+                LOG.error("Properties not found", e);
+            }
             return subject;
         }
     }

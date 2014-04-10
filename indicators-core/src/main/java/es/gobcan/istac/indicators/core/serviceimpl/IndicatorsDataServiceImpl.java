@@ -21,7 +21,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
@@ -90,7 +89,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    ConfigurationService                     configurationService;
+    private IndicatorsConfigurationService   configurationService;
 
     private final Logger                     LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
@@ -374,14 +373,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) {
+    private void manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
             createOrReplaceLastVersionDatabaseView(indicatorVersion);
             assignIndicatorDataOracleRolePermissionsToView(indicatorVersion.getIndicator().getViewCode());
         }
     }
 
-    private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) {
+    private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) throws MetamacException {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
         } catch (Exception e) {
@@ -2252,8 +2251,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return target;
     }
 
-    private String getDataViewsRole() {
-        return configurationService.getProperty(IndicatorsConfigurationConstants.DB_DATA_VIEWS_ROLE);
+    private String getDataViewsRole() throws MetamacException {
+        return configurationService.retrieveDbDataViewsRole();
     }
 
 }
