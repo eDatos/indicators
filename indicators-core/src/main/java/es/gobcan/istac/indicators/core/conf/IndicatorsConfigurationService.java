@@ -35,4 +35,10 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveJaxiLocalUrl() throws MetamacException;
 
+    String retrieveJaxiLocalUrlIndicator() throws MetamacException;
+
+    String retrieveJaxiLocalUrlInstance() throws MetamacException;
+
+    String retrieveQuartzExpressionUpdateIndicators() throws MetamacException;
+
 }

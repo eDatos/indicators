@@ -82,4 +82,18 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL, Boolean.TRUE);
     }
 
+    @Override
+    public String retrieveJaxiLocalUrlIndicator() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INDICATOR, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveJaxiLocalUrlInstance() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INSTANCE, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveQuartzExpressionUpdateIndicators() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS, Boolean.TRUE);
+    }
 }
