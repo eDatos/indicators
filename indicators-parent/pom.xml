@@ -118,7 +118,7 @@
         <statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
-        <metamac-core-common.version>1.9.3-SNAPSHOT</metamac-core-common.version>
+        <metamac-core-common.version>2.0.0-SNAPSHOT</metamac-core-common.version>
         <metamac-web-common.version>2.0.0-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations-rest-internal-api.version>1.5.2-SNAPSHOT</metamac-statistical-operations-rest-internal-api.version>
         <metamac-statistical-operations-rest-external-api.version>1.6.5-SNAPSHOT</metamac-statistical-operations-rest-external-api.version>
