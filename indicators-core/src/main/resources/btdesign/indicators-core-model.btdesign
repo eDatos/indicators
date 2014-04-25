@@ -549,15 +549,6 @@ Application Indicators {
 	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data"
 	    	updateIndicatorsData() throws MetamacException;
-	    	//Data finders
-	    	"Find Published Indicator's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator Instance's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator Instance's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"

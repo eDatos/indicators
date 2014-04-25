@@ -1277,58 +1277,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
     }
 
-    @Override
-    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        Map<String, ObservationDto> observations = getIndicatorsDataService().findObservationsByDimensionsInIndicatorPublished(ctx, indicatorUuid, conditions);
-
-        return observations;
-    }
-
-    @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions)
-            throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorPublished(ctx, indicatorUuid, conditions);
-
-        return observations;
-    }
-
-    @Override
-    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
-            throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        Map<String, ObservationDto> observations = getIndicatorsDataService().findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstanceUuid, conditions);
-
-        return observations;
-    }
-
-    @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid,
-            List<ConditionDimensionDto> conditions) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstanceUuid,
-                conditions);
-
-        return observations;
-    }
-
     // -------------------------------------------------------------------------------------------
     // GEOGRAPHICAL VALUES
     // -------------------------------------------------------------------------------------------
