@@ -45,9 +45,21 @@
         },
 
         _representation : function (options) {
-            this._validateOneOrMore(options.geographicalValues);
-            var geographicalRepresentation = options.geographicalValues.join("|");
-            return "&representation=GEOGRAPHICAL[" + geographicalRepresentation + "]";
+            var geographicalRepresentation = this._geographicalRepresentation(options.geographicalValues);
+            var measureRepresentation = this._measureRepresentation(options.measures);
+            return "&representation=" + geographicalRepresentation+","+measureRepresentation;
+        },
+        
+        _geographicalRepresentation : function(geoValues) {
+        	this._validateOneOrMore(geoValues);
+        	var geographicalRepresentation = geoValues.join("|");
+        	return "GEOGRAPHICAL[" + geographicalRepresentation + "]";
+        },
+        
+        _measureRepresentation : function(measureValues) {
+        	this._validateOneOrMore(measureValues);
+        	var measureRepresentation = measureValues.join("|");
+        	return "MEASURE[" + measureRepresentation + "]";
         },
 
         _granularity : function (options) {
