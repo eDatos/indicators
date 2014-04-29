@@ -19,6 +19,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -28,6 +30,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -42,6 +45,12 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
+
+    @Autowired
+    private IndicatorsService         indicatorsService;
+
+    @Autowired
+    private Do2DtoMapper              do2DtoMapper;
 
     private static String             NOT_EXISTS                   = "not-exists";
 
@@ -188,16 +197,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     }
 
     @Test
-    public void testRetrieveIndicatorPublished() throws Exception {
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextTecnicoProduccion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextTecnicoDifusion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1);
-    }
-
-    @Test
     public void testRetrieveIndicatorByCode() throws Exception {
         indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContextAdministrador(), INDICATOR_1_CODE, null);
         indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1_CODE, null);
@@ -205,16 +204,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1_CODE, null);
         indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContextTecnicoDifusion(), INDICATOR_1_CODE, null);
         indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1_CODE, null);
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedByCode() throws Exception {
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextAdministrador(), INDICATOR_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextTecnicoProduccion(), INDICATOR_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextTecnicoDifusion(), INDICATOR_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1_CODE);
     }
 
     @Test
@@ -528,16 +517,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     }
 
     @Test
-    public void testFindIndicatorsPublished() throws Exception {
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), null);
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextTecnicoSistemaIndicadores(), null);
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextTecnicoProduccion(), null);
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextTecnicoApoyoProduccion(), null);
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextTecnicoDifusion(), null);
-        indicatorsServiceFacade.findIndicatorsPublished(getServiceContextTecnicoApoyoProduccion(), null);
-    }
-
-    @Test
     public void testCreateDataSource() throws Exception {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setDataGpeUuid("queryGpe1");
@@ -668,16 +647,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     }
 
     @Test
-    public void testRetrieveQuantityUnit() throws Exception {
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextTecnicoSistemaIndicadores(), QUANTITY_UNIT_1);
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextTecnicoProduccion(), QUANTITY_UNIT_1);
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextTecnicoApoyoProduccion(), QUANTITY_UNIT_1);
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextTecnicoDifusion(), QUANTITY_UNIT_1);
-        indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextTecnicoApoyoDifusion(), QUANTITY_UNIT_1);
-    }
-
-    @Test
     public void testRetrieveQuantityUnits() throws Exception {
         indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextAdministrador());
         indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoSistemaIndicadores());
@@ -734,7 +703,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testUpdateQuantityUnit() throws Exception {
-        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
+        QuantityUnit quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
+        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
 
         // With access
         quantityUnitDto = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
@@ -829,16 +799,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     }
 
     @Test
-    public void testRetrieveSubject() throws Exception {
-        indicatorsServiceFacade.retrieveSubject(getServiceContextAdministrador(), SUBJECT_1);
-        indicatorsServiceFacade.retrieveSubject(getServiceContextTecnicoSistemaIndicadores(), SUBJECT_1);
-        indicatorsServiceFacade.retrieveSubject(getServiceContextTecnicoProduccion(), SUBJECT_1);
-        indicatorsServiceFacade.retrieveSubject(getServiceContextTecnicoApoyoProduccion(), SUBJECT_1);
-        indicatorsServiceFacade.retrieveSubject(getServiceContextTecnicoDifusion(), SUBJECT_1);
-        indicatorsServiceFacade.retrieveSubject(getServiceContextTecnicoApoyoDifusion(), SUBJECT_1);
-    }
-
-    @Test
     public void testRetrieveSubjects() throws Exception {
         indicatorsServiceFacade.retrieveSubjects(getServiceContextAdministrador());
         indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoSistemaIndicadores());
@@ -847,26 +807,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoDifusion());
         indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoApoyoDifusion());
 
-    }
-
-    @Test
-    public void testRetrieveSubjectsInPublishedIndicators() throws Exception {
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextAdministrador());
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextTecnicoSistemaIndicadores());
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextTecnicoProduccion());
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextTecnicoApoyoProduccion());
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextTecnicoDifusion());
-        indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextTecnicoApoyoDifusion());
-    }
-
-    @Test
-    public void testRetrieveUnitMultiplier() throws Exception {
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoSistemaIndicadores(), UNIT_MULTIPLIER_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoProduccion(), UNIT_MULTIPLIER_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoProduccion(), UNIT_MULTIPLIER_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoDifusion(), UNIT_MULTIPLIER_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoDifusion(), UNIT_MULTIPLIER_1);
     }
 
     @Test
@@ -926,7 +866,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testUpdateUnitMultiplier() throws Exception {
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
 
         // With access
         unitMultiplierDto = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);

@@ -33,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
@@ -51,6 +53,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
@@ -69,6 +72,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
+
+    @Autowired
+    private IndicatorsService         indicatorsService;
+
+    @Autowired
+    private Do2DtoMapper              do2DtoMapper;
 
     private static String             NOT_EXISTS                   = "not-exists";
 
@@ -265,77 +274,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testRetrieveIndicatorPublished() throws Exception {
-
-        String uuid = INDICATOR_3;
-
-        IndicatorDto indicatorDtoPublished = indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), uuid);
-        assertEquals(uuid, indicatorDtoPublished.getUuid());
-        assertEquals("11.033", indicatorDtoPublished.getVersionNumber());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoPublished.getProcStatus());
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedWhenHasVersionProduction() throws Exception {
-
-        String uuid = INDICATOR_1;
-
-        IndicatorDto indicatorDtoPublished = indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), uuid);
-        assertEquals(uuid, indicatorDtoPublished.getUuid());
-        assertEquals("1.000", indicatorDtoPublished.getVersionNumber());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoPublished.getProcStatus());
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedErrorOnlyProduction() throws Exception {
-
-        String uuid = INDICATOR_2;
-
-        try {
-            indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), uuid);
-            fail("No published");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedErrorParameterRequired() throws Exception {
-
-        String uuid = null;
-
-        try {
-            indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), uuid);
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedErrorNotExists() throws Exception {
-
-        String uuid = NOT_EXISTS;
-
-        try {
-            indicatorsServiceFacade.retrieveIndicatorPublished(getServiceContextAdministrador(), uuid);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
     public void testRetrieveIndicatorByCode() throws Exception {
 
         String code = "CODE-1";
@@ -380,54 +318,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedByCode() throws Exception {
-
-        String code = "CODE-1";
-        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextAdministrador(), code);
-
-        assertNotNull(indicatorDto);
-        assertEquals(INDICATOR_1, indicatorDto.getUuid());
-        assertEquals(indicatorDto.getPublishedVersion(), indicatorDto.getVersionNumber());
-        assertEquals("2.000", indicatorDto.getProductionVersion());
-        assertEquals("1.000", indicatorDto.getPublishedVersion());
-        assertNull(indicatorDto.getArchivedVersion());
-        assertEquals("CODE-1", indicatorDto.getCode());
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedByCodeErrorNotExists() throws Exception {
-
-        String code = "CODE_NOT_EXISTS";
-
-        try {
-            indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextAdministrador(), code);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorPublishedByCodeErrorNotExistsInDiffusion() throws Exception {
-
-        String code = "CODE-2";
-
-        try {
-            indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContextAdministrador(), code);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATOR_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -3301,70 +3191,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindIndicatorsPublished() throws Exception {
-
-        MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), null);
-        assertEquals(4, result.getResults().size());
-        List<IndicatorSummaryDto> indicatorsDto = result.getResults();
-
-        assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
-        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProductionVersion().getProcStatus());
-
-        assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
-        assertNull(indicatorsDto.get(1).getProductionVersion());
-
-        assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
-        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
-
-        assertEquals(INDICATOR_12, indicatorsDto.get(3).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(3).getDiffusionVersion().getProcStatus());
-        assertNull(indicatorsDto.get(3).getProductionVersion());
-    }
-
-    @Test
-    public void testFindIndicatorsPublishedByCriteria() throws Exception {
-
-        {
-            // Retrieve published with subject 1
-            MetamacCriteria criteria = new MetamacCriteria();
-            MetamacCriteriaConjunctionRestriction conjunction = new MetamacCriteriaConjunctionRestriction();
-            conjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
-            criteria.setRestriction(conjunction);
-
-            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
-            assertEquals(3, result.getResults().size());
-            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
-
-            assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
-
-            assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
-
-            assertEquals(INDICATOR_12, indicatorsDto.get(2).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
-        }
-        {
-            // Retrieve by title
-            MetamacCriteria criteria = new MetamacCriteria();
-
-            MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Educación", OperationType.LIKE));
-            criteria.setRestriction(conjuction);
-
-            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
-            assertEquals(3, result.getResults().size());
-            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
-            assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-            assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-            assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
-        }
-    }
-
-    @Test
     public void testRetrieveDataSource() throws Exception {
 
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V2);
@@ -4360,49 +4186,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testRetrieveQuantityUnit() throws Exception {
-        String uuid = QUANTITY_UNIT_1;
-        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
-
-        assertNotNull(quantityUnitDto);
-        assertEquals(uuid, quantityUnitDto.getUuid());
-        assertEquals("km", quantityUnitDto.getSymbol());
-        assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnitDto.getSymbolPosition());
-        IndicatorsAsserts.assertEqualsInternationalString(quantityUnitDto.getTitle(), "es", "Kilómetros", "en", "Kilometers");
-    }
-
-    @Test
-    public void testRetrieveQuantityUnitErrorParameterRequired() throws Exception {
-        String uuid = null;
-
-        try {
-            indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveQuantityUnitErrorNotExists() throws Exception {
-
-        String uuid = NOT_EXISTS;
-
-        try {
-            indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
     public void testRetrieveQuantityUnits() throws Exception {
 
         List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextAdministrador());
@@ -4485,7 +4268,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testUpdateQuantityUnit() throws Exception {
         String uuid = QUANTITY_UNIT_1;
 
-        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        QuantityUnit quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
 
         quantityUnitDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         quantityUnitDto.setSymbol(IndicatorsMocks.mockString(3));
@@ -4502,7 +4286,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Test
     public void testUpdateQuantityUnitNotExists() throws Exception {
-        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
+
+        QuantityUnit quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
+        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
+
         quantityUnitDto.setUuid(NOT_EXISTS);
         try {
             indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
@@ -4520,10 +4307,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = QUANTITY_UNIT_1;
 
-        QuantityUnitDto quantityUnitDtoSession1 = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        QuantityUnit quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        QuantityUnitDto quantityUnitDtoSession1 = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
         assertEquals(Long.valueOf(1), quantityUnitDtoSession1.getOptimisticLockingVersion());
 
-        QuantityUnitDto quantityUnitDtoSession2 = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        QuantityUnitDto quantityUnitDtoSession2 = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
         assertEquals(Long.valueOf(1), quantityUnitDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
@@ -4558,7 +4347,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validation
         try {
-            indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+            indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
             fail("Quantity unit deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -4601,48 +4390,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testRetrieveSubject() throws Exception {
-        String code = SUBJECT_1;
-        SubjectDto subjectDto = indicatorsServiceFacade.retrieveSubject(getServiceContextAdministrador(), code);
-
-        assertNotNull(subjectDto);
-        assertEquals(code, subjectDto.getCode());
-        IndicatorsAsserts.assertEqualsInternationalString(subjectDto.getTitle(), "es", "Área temática 1", null, null);
-    }
-
-    @Test
-    public void testRetrieveSubjectErrorParameterRequired() throws Exception {
-
-        String uuid = null;
-
-        try {
-            indicatorsServiceFacade.retrieveSubject(getServiceContextAdministrador(), uuid);
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveSubjectErrorNotExists() throws Exception {
-
-        String uuid = NOT_EXISTS;
-
-        try {
-            indicatorsServiceFacade.retrieveSubject(getServiceContextAdministrador(), uuid);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SUBJECT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
     public void testRetrieveSubjects() throws Exception {
 
         List<SubjectDto> subjects = indicatorsServiceFacade.retrieveSubjects(getServiceContextAdministrador());
@@ -4658,18 +4405,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(3).getTitle(), "es", "Área temática 4", null, null);
         assertEquals(SUBJECT_5, subjects.get(4).getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(4).getTitle(), "es", "Área temática 5", null, null);
-    }
-
-    @Test
-    public void testRetrieveSubjectsInPublishedIndicators() throws Exception {
-
-        List<SubjectDto> subjects = indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContextAdministrador());
-        assertEquals(2, subjects.size());
-
-        assertEquals(SUBJECT_1, subjects.get(0).getCode());
-        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
-        assertEquals(SUBJECT_3, subjects.get(1).getCode());
-        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(1).getTitle(), "es", "Área temática 3", null, null);
     }
 
     @Test
@@ -4725,17 +4460,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             List<UnitMultiplierDto> unitMultipliers = unitMultipliersResult.getResults();
             assertEquals(UNIT_MULTIPLIER_3, unitMultipliers.get(0).getUuid());
         }
-    }
-
-    @Test
-    public void testRetrieveUnitMultiplier() throws Exception {
-        String uuid = UNIT_MULTIPLIER_1;
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
-
-        assertNotNull(unitMultiplierDto);
-        assertEquals(uuid, unitMultiplierDto.getUuid());
-        assertEquals(Integer.valueOf(1), unitMultiplierDto.getUnitMultiplier());
-        IndicatorsAsserts.assertEqualsInternationalString(unitMultiplierDto.getTitle(), "es", "Unidades", null, null);
     }
 
     @Test
@@ -4837,7 +4561,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testUpdateUnitMultiplier() throws Exception {
         String uuid = UNIT_MULTIPLIER_1;
 
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
 
         unitMultiplierDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         unitMultiplierDto.setUnitMultiplier(2);
@@ -4853,7 +4578,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Test
     public void testUpdateUnitMultiplierNotExists() throws Exception {
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+
+        UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
+
         unitMultiplierDto.setUuid(NOT_EXISTS);
         try {
             indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
@@ -4869,7 +4597,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testUpdateUnitMultiplierValueDuplicated() throws Exception {
         Integer value = 10;
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), 1);
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
         unitMultiplierDto.setUnitMultiplier(value);
         try {
             indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
@@ -4887,10 +4616,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = UNIT_MULTIPLIER_1;
 
-        UnitMultiplierDto unitMultiplierDtoSession1 = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        UnitMultiplierDto unitMultiplierDtoSession1 = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
         assertEquals(Long.valueOf(1), unitMultiplierDtoSession1.getOptimisticLockingVersion());
 
-        UnitMultiplierDto unitMultiplierDtoSession2 = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        unitMultiplier = indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        UnitMultiplierDto unitMultiplierDtoSession2 = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
         assertEquals(Long.valueOf(1), unitMultiplierDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
@@ -4925,7 +4656,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validation
         try {
-            indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), unitMultiplierUuid);
+            indicatorsService.retrieveUnitMultiplier(getServiceContextAdministrador(), unitMultiplierUuid);
             fail("Unit multiplier deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

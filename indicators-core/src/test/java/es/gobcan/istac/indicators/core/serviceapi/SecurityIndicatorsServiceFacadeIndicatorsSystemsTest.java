@@ -9,7 +9,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,28 +77,11 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         try {
             ServiceContext ctx = getServiceContextAdministrador();
             ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
-            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
+            indicatorsServiceFacade.createIndicatorsSystem(ctx, null);
             fail("principal required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testErrorPrincipalWithoutRoleIndicators() throws Exception {
-
-        try {
-            ServiceContext ctx = getServiceContextAdministrador();
-            assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
-            MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
-            access.setApplication(NOT_EXISTS);
-            access.setRole(RoleEnum.TECNICO_APOYO_DIFUSION.getName());
-            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
-            fail("principal without role");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
 
@@ -196,28 +178,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testRetrieveIndicatorsSystem() throws Exception {
-        // With access
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, null);
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1, null);
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1, null);
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1, null);
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1, null);
-        indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1, null);
-    }
-
-    @Test
-    public void testRetrieveIndicatorsSystemPublished() throws Exception {
-        // With access
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextAdministrador(), INDICATORS_SYSTEM_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1);
-    }
-
-    @Test
     public void testRetrieveIndicatorsSystemByCode() throws Exception {
         // With access
         indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), INDICATORS_SYSTEM_1_CODE, null);
@@ -226,17 +186,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1_CODE, null);
         indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1_CODE, null);
         indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1_CODE, null);
-    }
-
-    @Test
-    public void testRetrieveIndicatorsSystemPublishedByCode() throws Exception {
-        // With access
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextAdministrador(), INDICATORS_SYSTEM_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1_CODE);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1_CODE);
     }
 
     @Test
@@ -664,16 +613,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testFindIndicatorsSystemsPublished() throws Exception {
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextAdministrador(), null);
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextTecnicoSistemaIndicadores(), null);
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextTecnicoProduccion(), null);
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextTecnicoApoyoProduccion(), null);
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextTecnicoDifusion(), null);
-        indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextTecnicoApoyoProduccion(), null);
-    }
-
-    @Test
     public void testRetrieveIndicatorsSystemStructure() throws Exception {
         indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, null);
         indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1, null);
@@ -681,16 +620,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1, null);
         indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1, null);
         indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextTecnicoApoyoDifusion(), INDICATORS_SYSTEM_1, null);
-    }
-
-    @Test
-    public void testRetrieveIndicatorsSystemPublishedForIndicator() throws Exception {
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextAdministrador(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextTecnicoProduccion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1);
-        indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1);
     }
 
     @Test
@@ -931,16 +860,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
-    }
-
-    @Test
-    public void testRetrieveDimensionsByIndicatorsSystem() throws Exception {
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContextTecnicoApoyoDifusion(), INDICATORS_SYSTEM_1, "1.000");
     }
 
     @Test
@@ -1208,16 +1127,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
-    }
-
-    @Test
-    public void testRetrieveIndicatorsInstancesByIndicatorsSystem() throws Exception {
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextTecnicoApoyoProduccion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_1, "1.000");
-        indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContextTecnicoApoyoDifusion(), INDICATORS_SYSTEM_1, "1.000");
     }
 
     @Test

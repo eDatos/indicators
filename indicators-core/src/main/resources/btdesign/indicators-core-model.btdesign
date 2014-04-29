@@ -337,14 +337,10 @@ Application Indicators {
 	    	// INDICATORS SYSTEMS
 	    	"Creates an indicators system"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-	    	"Retrieves an indicators system. If versionNumber is not provided, retrieves last version"
-	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
-	    	"Retrieves an indicators system published"
-	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	"Retrieves an indicators system by code. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
-	    	"Retrieves an indicators system by code. Retrieves diffusion version"
-	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
+	    	
+	    	
 	    	"Deletes a version of an indicators system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Sends indicators system to production validation"
@@ -363,16 +359,12 @@ Application Indicators {
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems by criteria in any state, returning last versions"
 	    	MetamacCriteriaResult<@IndicatorsSystemSummaryDto> findIndicatorsSystems(MetamacCriteria criteria) throws MetamacException;
-	    	"Finds indicators systems by criteria, returning only has any version published"
-	    	MetamacCriteriaResult<@IndicatorsSystemSummaryDto> findIndicatorsSystemsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
-	    	"Retrieves all indicators system published where indicator is"
-	    	List<@IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	"Export a published Indicators System as a set of dspl zip files"
 	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
-	    	"Export a published Indicators System as a dspl zip file"
-	    	String exportIndicatorsSystemPublishedToDsplFilesMergeTimeGranularities(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
+	    	
+	    	
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"
@@ -385,8 +377,6 @@ Application Indicators {
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"
 	    	deleteDimension(String uuid) throws MetamacException;
-	    	"Retrieves all dimensions of a indicators system regardless of the level"
-	    	List<@DimensionDto> retrieveDimensionsByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// INDICATORS INSTANCES	    	
 	    	"Creates a indicator instance"
@@ -397,28 +387,16 @@ Application Indicators {
 	    	@IndicatorInstanceDto updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	"Retrieves indicator instance"
 	    	@IndicatorInstanceDto retrieveIndicatorInstance(String uuid) throws MetamacException;
-	    	"Retrieves indicator instance published by code"
-	    	@IndicatorInstanceDto retrieveIndicatorInstancePublishedByCode(String code) throws MetamacException;
 	    	"Deletes indicator instance"
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
-	    	"Retrieves all indicators instances of a indicators system regardless of the level"
-	    	List<@IndicatorInstanceDto> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 
 	    	// GEOGRAPHICAL VALUES
 	    	"Retrieves geographical value"
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
-	    	"Retrieves geographical value by code"
-	    	@GeographicalValueDto retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values with granularity in the publidhed indicator"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values in the indicator instance"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves geographic values in the indicator instance"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Create a geographical value"
 	    	@GeographicalValueDto createGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
 	    	"Update a geographical value"
@@ -429,16 +407,12 @@ Application Indicators {
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
-	    	"Retrieves geographical granularity by code"
-	    	@GeographicalGranularityDto retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	"Find geographical granularities by criteria"
 	    	MetamacCriteriaResult<@GeographicalGranularityDto> findGeographicalGranularities(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves all geographical granularities"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves geographic granularities in the published indicator"
-	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Create a geographical granularity"
 	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
 	    	"Update a geographical granularity"
@@ -447,24 +421,12 @@ Application Indicators {
 	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
-	    	"Retrieves time granularity"
-	    	@TimeGranularityDto retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	"Retrieves time granularities in the indicator"
 	    	List<@TimeGranularityDto> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves time granularities in the published indicator"
-	    	List<@TimeGranularityDto> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	
 	    	// TIME VALUES
-	    	"Retrieves time value"
-	    	@TimeValueDto retrieveTimeValue(String timeValue) throws MetamacException;
 	    	"Retrieves time values granularities in the indicator"
 	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
-	    	"Retrieves time values granularities in the publidhed indicator"
-	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
-	    	"Retrieves time values in the indicator"
-	    	List<@TimeValueDto> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves time values in the publidhed indicator"
-	    	List<@TimeValueDto> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -473,12 +435,8 @@ Application Indicators {
 	    	@IndicatorDto updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
 	    	"Retrieves an indicator. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorDto retrieveIndicator(String uuid, String versionNumber) throws MetamacException;
-	    	"Retrieves an indicator published"
-	    	@IndicatorDto retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    	"Retrieves an indicator by code. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorDto retrieveIndicatorByCode(String code, String versionNumber) throws MetamacException;
-	    	"Retrieves an indicator by code. Retrieves diffusion version"
-	    	@IndicatorDto retrieveIndicatorPublishedByCode(String code) throws MetamacException;
 	    	"Deletes a version of an indicator. Version to remove must be not published nor archived"
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	"Sends indicator to production validation"
@@ -497,8 +455,6 @@ Application Indicators {
 	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators by criteria in any state, returning last versions"
 	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
-	    	"Finds indicators by criteria, returning only has any version published"
-	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicatorsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
@@ -513,8 +469,6 @@ Application Indicators {
 	    	List<@DataSourceDto> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
 	    	// QUANTITY UNITS
-	    	"Retrieves quantity unit"
-	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	"Find quantity units by criteria"
 	    	MetamacCriteriaResult<@QuantityUnitDto> findQuantityUnits(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieve all quantity units"
@@ -527,12 +481,8 @@ Application Indicators {
 	    	deleteQuantityUnit(String uuid) throws MetamacException;
 	    	
 			// SUBJECTS
-			"Retrieves subject. Important! Do not invoke this operation from public web application"
-	    	@SubjectDto retrieveSubject(String code) throws MetamacException;
 	    	"Retrieves all subjects. Important! Do not invoke this operation from public web application"
 	    	List<@SubjectDto> retrieveSubjects() throws MetamacException;
-	    	"Retrieves all subjects in published indicators"
-	    	List<@SubjectDto> retrieveSubjectsInPublishedIndicators() throws MetamacException;
 	    	
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
@@ -555,10 +505,6 @@ Application Indicators {
 	    	List<@UnitMultiplierDto> retrieveUnitsMultipliers() throws MetamacException;
 	    	"Find unit multipliers by criteria"
 	    	MetamacCriteriaResult<@UnitMultiplierDto> findUnitMultipliers(MetamacCriteria criteria) throws MetamacException;
-	    	"Retrieves unit multiplier using uuid"
-	    	@UnitMultiplierDto retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
-	    	"Retrieves unit multiplier"
-	    	@UnitMultiplierDto retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
 	    	"Create a unit multiplier"
 	    	@UnitMultiplierDto createUnitMultiplier(@UnitMultiplierDto unitMultiplierDto) throws MetamacException;
 	    	"Update a unit multiplier"

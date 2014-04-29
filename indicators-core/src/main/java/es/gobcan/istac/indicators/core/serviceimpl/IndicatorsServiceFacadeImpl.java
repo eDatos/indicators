@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
@@ -19,10 +18,6 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
@@ -67,7 +62,6 @@ import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
 import es.gobcan.istac.indicators.core.mapper.SculptorCriteria2MetamacCriteriaMapper;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.security.SecurityUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 
@@ -111,34 +105,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorsSystemDto retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, versionNumber);
-
-        // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
-    }
-
-    @Override
-    public IndicatorsSystemDto retrieveIndicatorsSystemPublished(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, uuid);
-
-        // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
-    }
-
-    @Override
     public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Security
@@ -146,20 +112,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemByCode(ctx, code, versionNumber);
-
-        // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
-    }
-
-    @Override
-    public IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublishedByCode(ctx, code);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -312,42 +264,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public MetamacCriteriaResult<IndicatorsSystemSummaryDto> findIndicatorsSystemsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-
-        // Find
-        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
-
-        // Transform
-        MetamacCriteriaResult<IndicatorsSystemSummaryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystemSummary(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
-    }
-
-    @Override
-    public List<IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublishedForIndicator(ctx, indicatorUuid);
-
-        // Transform
-        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
-        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
-            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
-        }
-
-        return indicatorsSystemsDto;
-    }
-
-    @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
 
         // Security (role and access to this indicators system)
@@ -389,24 +305,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Delete
         getIndicatorsSystemsService().deleteDimension(ctx, uuid);
-    }
-
-    @Override
-    public List<DimensionDto> retrieveDimensionsByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve dimensions
-        List<Dimension> dimensions = getIndicatorsSystemsService().retrieveDimensionsByIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
-
-        // Transform
-        List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
-        for (Dimension dimension : dimensions) {
-            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
-        }
-
-        return dimensionsDto;
     }
 
     @Override
@@ -477,20 +375,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorInstanceDto retrieveIndicatorInstancePublishedByCode(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstancePublishedByCode(ctx, uuid);
-
-        // Transform
-        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-        return indicatorInstanceDto;
-    }
-
-    @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security (role and access to this indicators system)
@@ -500,24 +384,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Delete
         getIndicatorsSystemsService().deleteIndicatorInstance(ctx, uuid);
-    }
-
-    @Override
-    public List<IndicatorInstanceDto> retrieveIndicatorsInstancesByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve indicators instances
-        List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().retrieveIndicatorsInstancesByIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
-
-        // Transform
-        List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
-        for (IndicatorInstance indicatorInstance : indicatorsInstances) {
-            indicatorsInstancesDto.add(do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance));
-        }
-
-        return indicatorsInstancesDto;
     }
 
     @Override
@@ -571,25 +437,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public String exportIndicatorsSystemPublishedToDsplFilesMergeTimeGranularities(ServiceContext ctx, String indicatorsSystemUuid, InternationalStringDto title, InternationalStringDto description)
-            throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        InternationalString intTitle = dto2DoMapper.internationalStringDtoToDo(ctx, title, null);
-        InternationalString intDescription = dto2DoMapper.internationalStringDtoToDo(ctx, description, null);
-
-        // Service call
-        List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorsSystemUuid, intTitle, intDescription, true);
-        if (files.size() > 0) {
-            return files.get(0);
-        }
-        return null;
-    }
-
-    @Override
     public List<GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
             throws MetamacException {
 
@@ -598,55 +445,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
-
-        // Transform
-        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
-        for (GeographicalValue geoValue : geographicalValues) {
-            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
-        }
-        return geographicalValueDtos;
-    }
-
-    @Override
-    public List<GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularityUuid);
-
-        // Transform
-        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
-        for (GeographicalValue geoValue : geographicalValues) {
-            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
-        }
-        return geographicalValueDtos;
-    }
-
-    @Override
-    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-
-        // Transform
-        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
-        for (GeographicalValue geoValue : geographicalValues) {
-            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
-        }
-        return geographicalValueDtos;
-    }
-
-    @Override
-    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicatorPublished(ctx, indicatorUuid);
 
         // Transform
         List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
@@ -675,52 +473,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicatorPublished(ctx, indicatorUuid);
-
-        // Transform
-        List<GeographicalGranularityDto> geographicalGranularityDtos = new ArrayList<GeographicalGranularityDto>();
-        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
-            geographicalGranularityDtos.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
-        }
-
-        return geographicalGranularityDtos;
-    }
-
-    @Override
-    public TimeGranularityDto retrieveTimeGranularity(ServiceContext ctx, TimeGranularityEnum timeGranularity) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        TimeGranularity timeGranularityDo = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, timeGranularity);
-
-        // Transform
-        TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(timeGranularityDo);
-        return timeGranularityDto;
-    }
-
-    @Override
-    public TimeValueDto retrieveTimeValue(ServiceContext ctx, String timeValue) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        TimeValue timeValueDo = getIndicatorsSystemsService().retrieveTimeValue(ctx, timeValue);
-
-        // Transform
-        TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValueDo);
-        return timeValueDto;
-    }
-
-    @Override
     public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         // Security
@@ -728,24 +480,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-
-        // Transform
-        List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
-        for (TimeGranularity granularity : timeGranularities) {
-            TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(granularity);
-            timeGranularitiesDtos.add(timeGranularityDto);
-        }
-        return timeGranularitiesDtos;
-    }
-
-    @Override
-    public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorUuid);
 
         // Transform
         List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
@@ -765,60 +499,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
-
-        // Transform
-        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
-        for (TimeValue timeValue : timeValues) {
-            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
-            timeValuesDtos.add(timeValueDto);
-        }
-        return timeValuesDtos;
-    }
-
-    @Override
-    public List<TimeValueDto> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
-
-        // Transform
-        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
-        for (TimeValue timeValue : timeValues) {
-            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
-            timeValuesDtos.add(timeValueDto);
-        }
-        return timeValuesDtos;
-    }
-
-    @Override
-    public List<TimeValueDto> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-
-        // Transform
-        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
-        for (TimeValue timeValue : timeValues) {
-            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
-            timeValuesDtos.add(timeValueDto);
-        }
-        return timeValuesDtos;
-    }
-
-    @Override
-    public List<TimeValueDto> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorPublished(ctx, indicatorUuid);
 
         // Transform
         List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
@@ -861,20 +541,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorDto retrieveIndicatorPublished(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorPublished(ctx, uuid);
-
-        // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
-    }
-
-    @Override
     public IndicatorDto retrieveIndicatorByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Security
@@ -882,20 +548,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorByCode(ctx, code, versionNumber);
-
-        // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
-    }
-
-    @Override
-    public IndicatorDto retrieveIndicatorPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorPublishedByCode(ctx, code);
 
         // Transform to Dto
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
@@ -1043,24 +695,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public MetamacCriteriaResult<IndicatorSummaryDto> findIndicatorsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-
-        // Find
-        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicatorsPublished(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
-
-        // Transform
-        MetamacCriteriaResult<IndicatorSummaryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
-    }
-
-    @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
         // Security
@@ -1137,20 +771,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public SubjectDto retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        Subject subject = getIndicatorsService().retrieveSubject(ctx, code);
-
-        // Transform
-        SubjectDto subjectDto = do2DtoMapper.subjectDoToDto(subject);
-        return subjectDto;
-    }
-
-    @Override
     public List<SubjectDto> retrieveSubjects(ServiceContext ctx) throws MetamacException {
 
         // Security
@@ -1162,24 +782,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Transform
         List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
         for (Subject subject : subjects) {
-            subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
-        }
-
-        return subjectsDto;
-    }
-
-    @Override
-    public List<SubjectDto> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve subjects
-        List<SubjectIndicatorResult> subjects = getIndicatorsService().retrieveSubjectsInPublishedIndicators(ctx);
-
-        // Transform
-        List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
-        for (SubjectIndicatorResult subject : subjects) {
             subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
         }
 
@@ -1289,20 +891,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValue(ctx, uuid);
-
-        // Transform
-        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-        return geographicalValueDto;
-    }
-
-    @Override
-    public GeographicalValueDto retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, code);
 
         // Transform
         GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
@@ -1428,20 +1016,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public GeographicalGranularityDto retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularityByCode(ctx, code);
-
-        // Transform
-        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-        return geographicalGranularityDto;
-    }
-
-    @Override
     public List<GeographicalGranularityDto> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
 
         // Security
@@ -1526,19 +1100,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Transform
         MetamacCriteriaResult<QuantityUnitDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuantiyUnit(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
-    }
-
-    @Override
-    public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        QuantityUnit quantityUnit = getIndicatorsService().retrieveQuantityUnit(ctx, uuid);
-
-        // Transform
-        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-        return quantityUnitDto;
     }
 
     @Override
@@ -1643,32 +1204,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
 
         return unitsMultipliersDto;
-    }
-
-    @Override
-    public UnitMultiplierDto retrieveUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        UnitMultiplier unitMultiplier = getIndicatorsService().retrieveUnitMultiplier(ctx, unitMultiplierValue);
-
-        // Transform
-        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
-        return unitMultiplierDto;
-    }
-
-    @Override
-    public UnitMultiplierDto retrieveUnitMultiplier(ServiceContext ctx, String unitMultiplierUuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        UnitMultiplier unitMultiplier = getIndicatorsService().retrieveUnitMultiplier(ctx, unitMultiplierUuid);
-
-        // Transform
-        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
-        return unitMultiplierDto;
     }
 
     @Override
