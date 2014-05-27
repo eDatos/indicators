@@ -2,9 +2,7 @@ package es.gobcan.istac.indicators.rest.serviceimpl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -12,11 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.http.HttpStatus;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -24,43 +18,47 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 
-
 public class IndicatorsExternalApiServiceImpl extends IndicatorsApiServiceBaseImpl implements IndicatorsApiService {
-    
+
     @Override
     public List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException {
         return indicatorsService.retrieveSubjectsInPublishedIndicators(RestConstants.SERVICE_CONTEXT);
     }
-    
+
     @Override
     public PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         return indicatorsService.findIndicatorsPublished(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
     }
-    
+
     @Override
     public IndicatorVersion retrieveIndicatorByCode(String code) throws MetamacException {
         return indicatorsService.retrieveIndicatorPublishedByCode(RestConstants.SERVICE_CONTEXT, code);
     }
-    
+
     @Override
     public IndicatorVersion retrieveIndicator(String uuid) throws MetamacException {
         return indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid);
     }
-    
+
     @Override
     public PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
         return indicatorsSystemsService.findIndicatorsSystemsPublished(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
     }
-    
+
     @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException {
         return indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorSystem);
     }
-    
+
     @Override
     public PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
         return indicatorsSystemsService.findIndicatorsInstancesInPublishedIndicatorsSystems(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
@@ -77,66 +75,60 @@ public class IndicatorsExternalApiServiceImpl extends IndicatorsApiServiceBaseIm
         }
         return indicatorInstance;
     }
-    
-    @Override
-    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
-    }
-    
-    @Override
-    public List<GeographicalValue> retrieveGeographicalValuesInIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsDataService.retrieveGeographicalValuesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
-    }
-    
+
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsDataService.retrieveTimeGranularitiesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
+        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
     }
-    
-    @Override
-    public List<TimeValue> retrieveTimeValuesInIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsDataService.retrieveTimeValuesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
-    }
-    
-    @Override
-    public List<MeasureValue> retrieveMeasureValuesInIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsDataService.retrieveMeasureValuesInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorUuid);
-    }
-    
+
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
-    
+
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsDataService.retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+    public List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
+        return indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
-    
+
+    @Override
+    public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
+        return indicatorsCoverageService.retrieveGeographicalCodesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+    }
+
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
-    
+
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsDataService.retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsDataService.retrieveMeasureValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
-    }
-    
-    @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
-        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, conditions);
+        return indicatorsCoverageService.retrieveMeasureValuesInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
-    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
-        return indicatorsDataService.findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, conditions);
+    public IndicatorObservationsExtendedVO findObservationsExtendedInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
+        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
     }
 
+    @Override
+    public IndicatorObservationsVO findObservationsInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
+        return indicatorsDataService.findObservationsInIndicatorInstanceWithPublishedIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
+    }
+
+    @Override
+    public IndicatorObservationsExtendedVO findObservationsExtendedInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
+        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid, dataFilter);
+    }
+
+    @Override
+    public IndicatorObservationsVO findObservationsInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
+        return indicatorsDataService.findObservationsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid, dataFilter);
+    }
 
 }

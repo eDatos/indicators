@@ -6,38 +6,34 @@ import java.util.Map;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.MeasureValue;
-import es.gobcan.istac.indicators.core.domain.TimeValue;
 
 public class DataTypeRequest {
 
-    private IndicatorInstance                   indicatorInstance  = null;
-    private IndicatorVersion                    indicatorVersion   = null;
-    private List<GeographicalValue>             geographicalValues = null;
-    private List<TimeValue>                     timeValues         = null;
-    private List<MeasureValue>                  measureValues      = null;
-    private Map<String, ? extends ObservationDto> observationMap     = null;
+    private IndicatorInstance                     indicatorInstance = null;
+    private IndicatorVersion                      indicatorVersion  = null;
+    private List<String>                          geographicalCodes = null;
+    private List<String>                          timeCodes         = null;
+    private List<String>                          measureCodes      = null;
+    private Map<String, ? extends ObservationDto> observationMap    = null;
 
-    public DataTypeRequest(IndicatorInstance indicatorInstance, List<GeographicalValue> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues,
-                           Map<String, ? extends ObservationDto> observationMap) {
+    public DataTypeRequest(IndicatorInstance indicatorInstance, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues,
+            Map<String, ? extends ObservationDto> observationMap) {
         super();
         this.indicatorInstance = indicatorInstance;
-        this.geographicalValues = geographicalValues;
-        this.timeValues = timeValues;
-        this.measureValues = measureValues;
+        this.geographicalCodes = geographicalCodes;
+        this.timeCodes = timeValues;
+        this.measureCodes = measureValues;
         this.observationMap = observationMap;
     }
 
-    public DataTypeRequest(IndicatorVersion indicatorVersion, List<GeographicalValue> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues,
-                           Map<String, ? extends ObservationDto> observationMap) {
+    public DataTypeRequest(IndicatorVersion indicatorVersion, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues, Map<String, ? extends ObservationDto> observationMap) {
         super();
         this.indicatorVersion = indicatorVersion;
-        this.geographicalValues = geographicalValues;
-        this.timeValues = timeValues;
-        this.measureValues = measureValues;
+        this.geographicalCodes = geographicalCodes;
+        this.timeCodes = timeValues;
+        this.measureCodes = measureValues;
         this.observationMap = observationMap;
     }
 
@@ -57,28 +53,28 @@ public class DataTypeRequest {
         this.indicatorInstance = indicatorInstance;
     }
 
-    public List<GeographicalValue> getGeographicalValues() {
-        return geographicalValues;
+    public List<String> getGeographicalCodes() {
+        return geographicalCodes;
     }
 
-    public void setGeographicalValues(List<GeographicalValue> geographicalValues) {
-        this.geographicalValues = geographicalValues;
+    public void setGeographicalCodes(List<String> geographicalCodes) {
+        this.geographicalCodes = geographicalCodes;
     }
 
-    public List<TimeValue> getTimeValues() {
-        return timeValues;
+    public List<String> getTimeCodes() {
+        return timeCodes;
     }
 
-    public void setTimeValues(List<TimeValue> timeValues) {
-        this.timeValues = timeValues;
+    public void setTimeCodes(List<String> timeCodes) {
+        this.timeCodes = timeCodes;
     }
 
-    public List<MeasureValue> getMeasureValues() {
-        return measureValues;
+    public List<String> getMeasureCodes() {
+        return measureCodes;
     }
 
-    public void setMeasureValues(List<MeasureValue> measureValues) {
-        this.measureValues = measureValues;
+    public void setMeasureCodes(List<String> measureCodes) {
+        this.measureCodes = measureCodes;
     }
 
     public Map<String, ? extends ObservationDto> getObservationMap() {

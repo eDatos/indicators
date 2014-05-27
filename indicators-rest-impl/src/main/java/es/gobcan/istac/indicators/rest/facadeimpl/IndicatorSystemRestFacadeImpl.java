@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,16 +17,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.MeasureValue;
-import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
@@ -186,6 +185,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     public PagedResultType<IndicatorInstanceBaseType> retrievePaginatedIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, Integer limit, Integer offset,
             String fields, Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws Exception {
 
+        long timeInit = System.currentTimeMillis();
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, limit, offset);
         ConditionalCriteria systemCondition = ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem);
@@ -205,6 +205,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         // Fields filter. Only support for +metadata, +data
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
+        long timeBeforeMetadata = System.currentTimeMillis();
+        logger.info("Tiempo instancias: " + (timeBeforeMetadata - timeInit));
         if (fieldsToAdd.contains("+metadata")) {
             for (int i = 0; i < result.getItems().size(); i++) {
                 IndicatorInstanceBaseType baseType = result.getItems().get(i);
@@ -215,6 +217,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                 baseType.setMetadata(metadataType);
             }
         }
+        long timeAfterMetadata = System.currentTimeMillis();
+        logger.info("Tiempo metadata: " + (timeAfterMetadata - timeBeforeMetadata));
 
         if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
@@ -224,7 +228,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                 type.setData(dataType);
             }
         }
+        long timeAfterData = System.currentTimeMillis();
+        logger.info("Tiempo data: " + (timeAfterData - timeAfterMetadata));
 
+        logger.info("Tiempo total: " + (timeAfterData - timeInit));
         return result;
     }
 
@@ -240,24 +247,42 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
-        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
-        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(indicatorInstance.getUuid());
-        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(indicatorInstance.getUuid());
+        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.filterTimeDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
 
-        List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
-        geographicalValues = ConditionUtil.filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
-        timeValues = ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
-        measureValues = ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(geoFilter);
+        dataFilter.setTimeFilter(timeFilter);
+        dataFilter.setMeasureFilter(measureFilter);
 
-        Map<String, ? extends ObservationDto> observationMap;
+        DataType dataType;
+        long timeInit = System.currentTimeMillis();
         if (includeObservationMetadata) {
-            observationMap = indicatorsApiService.findObservationsExtendedByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
+            IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
+            long timeObs = System.currentTimeMillis();
+            logger.info("   Time obs " + (timeObs - timeInit));
+
+            DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
+                    instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
+            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+
+            long timeMapper = System.currentTimeMillis();
+            logger.info("   Time mapper " + (timeMapper - timeObs));
         } else {
-            observationMap = indicatorsApiService.findObservationsByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
+            IndicatorObservationsVO instanceObservations = indicatorsApiService.findObservationsInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
+            long timeObs = System.currentTimeMillis();
+            logger.info("   Time obs " + (timeObs - timeInit));
+
+            DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
+                    instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
+            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+
+            long timeMapper = System.currentTimeMillis();
+            logger.info("   Time mapper " + (timeMapper - timeObs));
         }
 
-        DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
-        return dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+        return dataType;
     }
 
 }

@@ -19,8 +19,9 @@ import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropert
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
@@ -30,7 +31,7 @@ import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestFacade {
 
     @Autowired
-    private IndicatorsDataService                  indicatorsDataService;
+    private IndicatorsCoverageService              indicatorsCoverageService;
 
     @Autowired
     private IndicatorsSystemsService               indicatorsSystemsService;
@@ -49,9 +50,9 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(RestConstants.SERVICE_CONTEXT,
+        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(RestConstants.SERVICE_CONTEXT,
                 indicatorsSystemCode, granularityUuid);
-        List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
+        List<GeographicalValueType> types = mapper.geographicalValuesVOToType(geographicalValues);
         return types;
     }
 
@@ -90,9 +91,9 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT, subjectCode,
+        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT, subjectCode,
                 granularityUuid);
-        List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
+        List<GeographicalValueType> types = mapper.geographicalValuesVOToType(geographicalValues);
         return types;
     }
 

@@ -13,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -44,6 +46,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
@@ -77,6 +80,7 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
+    private final Logger                                         LOG                              = LoggerFactory.getLogger(Do2TypeMapperImpl.class);
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_EN = "Observation confidenciality";
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_ES = "Confidencialidad de la observación";
     private static String                                        PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
@@ -267,6 +271,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return result;
     }
 
+    @Override
+    public List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues) {
+        List<GeographicalValueType> result = new ArrayList<GeographicalValueType>();
+
+        for (GeographicalValueVO geographicalValue : geographicalValues) {
+            GeographicalValueType type = new GeographicalValueType();
+            type.setCode(geographicalValue.getCode());
+            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            type.setGranularityCode(geographicalValue.getGranularity().getCode());
+            result.add(type);
+        }
+
+        return result;
+    }
+
     private void _subjectDoToBaseType(SubjectIndicatorResult subject, SubjectBaseType subjectBaseType, String baseUrl) {
         subjectBaseType.setId(subject.getId());
         subjectBaseType.setCode(subject.getId());
@@ -305,13 +324,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
         requestCache.remove(); // Remove All Cache
         try {
-            List<GeographicalValue> geographicalValues = dataTypeRequest.getGeographicalValues();
-            List<TimeValue> timeValues = dataTypeRequest.getTimeValues();
-            List<MeasureValue> measureValues = dataTypeRequest.getMeasureValues();
+            List<String> geographicalCodes = dataTypeRequest.getGeographicalCodes();
+            List<String> timeValues = dataTypeRequest.getTimeCodes();
+            List<String> measureValues = dataTypeRequest.getMeasureCodes();
             Map<String, ? extends ObservationDto> observationMap = dataTypeRequest.getObservationMap();
 
             // TRANSFORM
-            Integer size = geographicalValues.size() * timeValues.size() * measureValues.size();
+            Integer size = geographicalCodes.size() * timeValues.size() * measureValues.size();
 
             List<String> format = new ArrayList<String>();
             Map<String, DataDimensionType> dimension = new LinkedHashMap<String, DataDimensionType>();
@@ -323,7 +342,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             format.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
 
             DataRepresentationType dataRepresentationTypeGeographical = new DataRepresentationType();
-            dataRepresentationTypeGeographical.setSize(geographicalValues.size());
+            dataRepresentationTypeGeographical.setSize(geographicalCodes.size());
             dataRepresentationTypeGeographical.setIndex(new LinkedHashMap<String, Integer>());
             DataDimensionType dataDimensionTypeGeographical = new DataDimensionType();
             dataDimensionTypeGeographical.setRepresentation(dataRepresentationTypeGeographical);
@@ -343,22 +362,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
-            for (int i = 0; i < geographicalValues.size(); i++) {
-                GeographicalValue geographicalValue = geographicalValues.get(i);
-                dataRepresentationTypeGeographical.getIndex().put(geographicalValue.getCode(), i);
+            long time = System.currentTimeMillis();
+            for (int i = 0; i < geographicalCodes.size(); i++) {
+                String geographicalCode = geographicalCodes.get(i);
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
 
                 for (int j = 0; j < timeValues.size(); j++) {
-                    TimeValue timeValue = timeValues.get(j);
-                    String timeValueCode = timeValue.getTimeValue();
+                    String timeValueCode = timeValues.get(j);
                     dataRepresentationTypeTime.getIndex().put(timeValueCode, j);
 
                     for (int k = 0; k < measureValues.size(); k++) {
-                        MeasureValue measureValue = measureValues.get(k);
-                        String measureValueCode = measureValue.getMeasureValue().name();
+                        String measureValueCode = measureValues.get(k);
                         dataRepresentationTypeMeasure.getIndex().put(measureValueCode, k);
 
                         // Observation ID: Be careful!!! don't change order of ids
-                        String geographicalValueCode = geographicalValue.getCode();
+                        String geographicalValueCode = geographicalCode;
                         String id = geographicalValueCode + "#" + timeValueCode + "#" + measureValueCode;
 
                         ObservationDto observationDto = observationMap.get(id);
@@ -380,6 +398,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
+            long timeLoop = System.currentTimeMillis();
+
+            LOG.info("Tiempo loop " + (timeLoop - time));
 
             DataType dataType = new DataType();
             dataType.setFormat(format);
@@ -506,31 +527,46 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws Exception {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+        long time = System.currentTimeMillis();
         // GEOGRAPHICAL
-        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicator(source.getIndicator().getUuid());
-        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicator(source.getIndicator().getUuid());
+        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
+        long timeGra = System.currentTimeMillis();
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        long timeVal = System.currentTimeMillis();
+        LOG.info("Time metadata geo gra :" + (timeGra - time));
+        LOG.info("Time metadata geo val :" + (timeVal - timeGra));
 
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+        long timeGeo = System.currentTimeMillis();
+        LOG.info("Time metadata geo:" + (timeGeo - time));
 
         // TIME
         List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicator(source.getIndicator().getUuid());
-        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicator(source.getIndicator().getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
 
         MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
+        long timeTemp = System.currentTimeMillis();
+        LOG.info("Time metadata temp:" + (timeTemp - timeGeo));
 
         // MEASURE
-        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
+        long timeMeasuresBase = System.currentTimeMillis();
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
+        long timeMeasures = System.currentTimeMillis();
+        LOG.info("Time metadata meas create:" + (timeMeasures - timeMeasuresBase));
+        LOG.info("Time metadata meas:" + (timeMeasures - timeTemp));
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
+        long timeAttributes = System.currentTimeMillis();
+        LOG.info("Time metadata attrs:" + (timeAttributes - timeMeasures));
 
         target.setAttribute(metadataAttributes);
     }
@@ -541,21 +577,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
-        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicator(source.getIndicator().getUuid());
-        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicator(source.getIndicator().getUuid());
+        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
 
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
         List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicator(source.getIndicator().getUuid());
-        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicator(source.getIndicator().getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
 
         MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
 
         // MEASURE
-        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
@@ -622,12 +658,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+            long timeInit = System.currentTimeMillis();
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
-            List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
+            List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+
+            long timeGeo = System.currentTimeMillis();
+            LOG.info("  Time metadata geo: " + (timeGeo - timeInit));
 
             // TIME
             List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicatorInstance(source.getUuid());
@@ -636,11 +676,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
             target.getDimension().put(timeDimension.getCode(), timeDimension);
 
+            long timeTemporal = System.currentTimeMillis();
+            LOG.info("  Time metadata temporal: " + (timeTemporal - timeGeo));
+
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
+            long timeMeasure = System.currentTimeMillis();
+            LOG.info("  Time metadata measure query : " + (timeMeasure - timeTemporal));
 
             MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, baseURL);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
+
+            long timeMeasure2 = System.currentTimeMillis();
+            LOG.info("  Time metadata measure dimension: " + (timeMeasure2 - timeMeasure));
+
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
@@ -657,7 +706,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
-            List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
+            List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
@@ -701,7 +750,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return measureDimension;
     }
 
-    private MetadataDimensionType _createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValue> geographicalValues) {
+    private MetadataDimensionType _createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues) {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
@@ -717,16 +766,26 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return timeDimension;
     }
 
-    private List<MetadataRepresentationType> _geographicalValuesDoToType(List<GeographicalValue> geographicalValues) {
+    private List<MetadataRepresentationType> _geographicalValuesDoToType(List<GeographicalValueVO> geographicalValues) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
-        for (GeographicalValue geographicalValue : geographicalValues) {
-            MetadataRepresentationType metadataRepresentationType = _geographicalValueDoToType(geographicalValue);
+        for (GeographicalValueVO geographicalValue : geographicalValues) {
+            MetadataRepresentationType metadataRepresentationType = _geographicalValueVOToType(geographicalValue);
             geographicalValueTypes.add(metadataRepresentationType);
         }
         return geographicalValueTypes;
+    }
+
+    protected MetadataRepresentationType _geographicalValueVOToType(GeographicalValueVO geographicalValue) {
+        MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+        metadataRepresentationType.setCode(geographicalValue.getCode());
+        metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
+        metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+        metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
+        return metadataRepresentationType;
     }
 
     protected MetadataRepresentationType _geographicalValueDoToType(GeographicalValue geographicalValue) {
@@ -774,7 +833,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
             measureValueTypes.add(metadataRepresentationType);
         }
-
         sortMeasureValuesTypes(measureValueTypes);
         return measureValueTypes;
     }

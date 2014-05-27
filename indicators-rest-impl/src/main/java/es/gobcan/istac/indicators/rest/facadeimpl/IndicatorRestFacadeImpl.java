@@ -1,12 +1,9 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
@@ -15,13 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.MeasureValue;
-import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
@@ -40,23 +37,21 @@ import es.gobcan.istac.indicators.rest.util.RequestUtil;
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
+    protected Logger                logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper dto2TypeMapper;
+    private Do2TypeMapper           dto2TypeMapper;
 
     @Autowired
-    protected IndicatorsApiService indicatorsApiService;
-
-    @Autowired
-    private IndicatorsDataService indicatorsDataService;
+    protected IndicatorsApiService  indicatorsApiService;
 
     @Autowired
     private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
 
     @Override
-    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation) throws Exception {
-
+    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
+            throws Exception {
+        long timeInit = System.currentTimeMillis();
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorsRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
 
@@ -69,9 +64,12 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         // Mapping to type
         List<IndicatorBaseType> result = dto2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues(), baseUrl);
 
+        long timeBeforeMetadata = System.currentTimeMillis();
+        logger.info("Tiempo find " + (timeBeforeMetadata - timeInit));
+
         // Fields filter. Only support for +metadata, +data
-        if(fieldsToAdd.contains("+metadata")) {
-            for(int i = 0; i < result.size(); i++) {
+        if (fieldsToAdd.contains("+metadata")) {
+            for (int i = 0; i < result.size(); i++) {
                 IndicatorBaseType baseType = result.get(i);
                 IndicatorVersion indicatorVersion = indicatorsVersions.getValues().get(i);
 
@@ -80,15 +78,19 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 baseType.setMetadata(metadataType);
             }
         }
+        long timeAfterMetadata = System.currentTimeMillis();
+        logger.info("Tiempo metadata " + (timeAfterMetadata - timeBeforeMetadata));
 
-        if(fieldsToAdd.contains("+data")) {
+        if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
-            for(IndicatorBaseType indicatorType : result) {
+            for (IndicatorBaseType indicatorType : result) {
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
                 DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), representation, selectedGranularities, includeObservationsAttributes);
                 indicatorType.setData(dataType);
             }
         }
+        long timeAfterData = System.currentTimeMillis();
+        logger.info("Tiempo data " + (timeAfterData - timeAfterMetadata));
 
         // Pagegd result
         PagedResultType<IndicatorBaseType> resultType = new PagedResultType<IndicatorBaseType>();
@@ -98,6 +100,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         resultType.setTotal(indicatorsVersions.getTotalRows());
         resultType.setItems(result);
 
+        logger.info("Tiempo total " + (System.currentTimeMillis() - timeInit));
         return resultType;
     }
 
@@ -117,27 +120,47 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception {
+    public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            boolean includeObservationMetadata) throws Exception {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        long time = System.currentTimeMillis();
 
-        List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
-        ConditionUtil.filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
-        ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
-        ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
+        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.filterTimeDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
 
-        Map<String, ? extends ObservationDto> observationMap;
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(geoFilter);
+        dataFilter.setTimeFilter(timeFilter);
+        dataFilter.setMeasureFilter(measureFilter);
 
-        if(includeObservationMetadata) {
-            observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
+        long timeDimensions = System.currentTimeMillis();
+
+        DataType dataType;
+        if (includeObservationMetadata) {
+            IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
+            long timeData = System.currentTimeMillis();
+            logger.info("Data dimensiones " + (timeDimensions - time));
+            logger.info("Data repository " + (timeData - timeDimensions));
+
+            DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservationsExtended.getGeographicalCodes(), indicatorObservationsExtended.getTimeCodes(),
+                    indicatorObservationsExtended.getMeasureCodes(), indicatorObservationsExtended.getObservations());
+            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            long timeOutput = System.currentTimeMillis();
+            logger.info("Data output " + (timeOutput - timeData));
         } else {
-            observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
-        }
+            IndicatorObservationsVO indicatorObservations = indicatorsApiService.findObservationsInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
+            long timeData = System.currentTimeMillis();
+            logger.info("Data dimensiones " + (timeDimensions - time));
+            logger.info("Data repository " + (timeData - timeDimensions));
 
-        DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, geographicalValues, timeValues, measureValues, observationMap);
-        return dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservations.getGeographicalCodes(), indicatorObservations.getTimeCodes(),
+                    indicatorObservations.getMeasureCodes(), indicatorObservations.getObservations());
+            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            long timeOutput = System.currentTimeMillis();
+            logger.info("Data output " + (timeOutput - timeData));
+        }
+        return dataType;
     }
 }
