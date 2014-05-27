@@ -400,6 +400,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Populate data
         try {
             getIndicatorsDataService().populateIndicatorVersionData(ctx, uuid, indicatorInProduction.getVersionNumber());
+
+            // Last value cache must be rebuilt after publishing
             getIndicatorsDataService().buildLastValuesCache(ctx, indicatorInProduction);
         } catch (MetamacException e) {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);

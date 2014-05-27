@@ -56,6 +56,9 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
     private IndicatorsDataService            indicatorsDataService;
 
     @Autowired
+    private IndicatorsCoverageService        indicatorsCoverageService;
+
+    @Autowired
     private IndicatorsConfigurationService   configurationService;
 
     private DsplTransformerTimeTranslator    dsplTransformer;
@@ -114,7 +117,7 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
 
     @Before
     public void createTransformer() {
-        dsplTransformer = new DsplTransformerTimeTranslator(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
+        dsplTransformer = new DsplTransformerTimeTranslator(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
     }
 
     @Test

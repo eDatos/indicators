@@ -15,4 +15,5 @@ public class IndicatorVersion extends IndicatorVersionBase {
 
     public IndicatorVersion() {
     }
+
 }

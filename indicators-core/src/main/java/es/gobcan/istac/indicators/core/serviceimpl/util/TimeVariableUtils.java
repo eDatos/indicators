@@ -16,13 +16,18 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.util.TimeUtils;
-import org.springframework.util.Assert;
 
 import com.ibm.icu.util.Calendar;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -374,4 +379,109 @@ public class TimeVariableUtils extends TimeUtils {
         year = year - 1;
         return value.replaceFirst(yearStr, year.toString());
     }
+
+    public static TimeValue buildTimeValue(String timeCode, Translation translation) throws MetamacException {
+        TimeValue timeValue = parseTimeValue(timeCode);
+        if (translation != null) {
+            timeValue.setTitle(replaceTranslationPlaceHolder(timeValue, translation.getTitle()));
+            if (translation.getTitleSummary() != null) {
+                timeValue.setTitleSummary(replaceTranslationPlaceHolder(timeValue, translation.getTitleSummary()));
+            } else {
+                timeValue.setTitleSummary(replaceTranslationPlaceHolder(timeValue, translation.getTitle()));
+            }
+        } else {
+            timeValue = TimeVariableUtils.parseTimeValue(timeCode);
+            timeValue.setTitle(ServiceUtils.generateInternationalStringInDefaultLocales(timeCode));
+            timeValue.setTitleSummary(ServiceUtils.generateInternationalStringInDefaultLocales(timeCode));
+        }
+        return timeValue;
+    }
+
+    public static TimeGranularity buildTimeGranularity(TimeGranularityEnum timeGranularityEnum, Translation translation) throws MetamacException {
+        TimeGranularity timeGranularity = new TimeGranularity();
+        timeGranularity.setGranularity(timeGranularityEnum);
+
+        if (translation != null) {
+            timeGranularity.setTitle(translateTimeGranularity(translation.getTitle()));
+            if (translation.getTitleSummary() != null) {
+                timeGranularity.setTitleSummary(translateTimeGranularity(translation.getTitleSummary()));
+            } else {
+                timeGranularity.setTitleSummary(translation.getTitle());
+            }
+        } else {
+            timeGranularity.setTitle(ServiceUtils.generateInternationalStringInDefaultLocales(timeGranularityEnum.name()));
+            timeGranularity.setTitleSummary(ServiceUtils.generateInternationalStringInDefaultLocales(timeGranularityEnum.name()));
+        }
+        return timeGranularity;
+    }
+
+    private static InternationalString translateTimeGranularity(InternationalString sourceTranslation) {
+        InternationalString target = new InternationalString();
+        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(localisedStringTranslation.getLabel());
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            target.addText(localisedString);
+        }
+        return target;
+    }
+
+    private static InternationalString replaceTranslationPlaceHolder(TimeValue timeValue, InternationalString sourceTranslation) {
+        InternationalString target = new InternationalString();
+        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
+            String label = localisedStringTranslation.getLabel();
+            if (timeValue.getYear() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValue.getYear());
+            }
+            if (timeValue.getMonth() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValue.getMonth());
+            }
+            if (timeValue.getWeek() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValue.getWeek());
+            }
+            if (timeValue.getDay() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValue.getDay());
+            }
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(label);
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            target.addText(localisedString);
+        }
+        return target;
+    }
+
+    public static String getTimeValueTranslationCode(String timeCode) throws MetamacException {
+        TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeCode);
+        return getTimeValueTranslationCode(timeValueDo);
+    }
+
+    public static String getTimeGranularityTranslationCode(TimeGranularityEnum timeGranularity) {
+        return new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
+    }
+
+    public static String getTimeValueTranslationCode(TimeValue timeValueDo) throws MetamacException {
+        String translationCode = null;
+        switch (timeValueDo.getGranularity()) {
+            case YEARLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_YEARLY;
+                break;
+            case DAILY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
+                break;
+            case WEEKLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_WEEKLY;
+                break;
+            case BIYEARLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_BIYEARLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case QUARTERLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_QUARTERLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case MONTHLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+        }
+        return translationCode;
+    }
+
 }

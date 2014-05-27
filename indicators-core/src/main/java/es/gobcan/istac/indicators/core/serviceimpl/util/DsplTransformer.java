@@ -19,7 +19,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
@@ -55,16 +54,22 @@ import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 
 public class DsplTransformer {
 
     private static final Logger              LOG                               = LoggerFactory.getLogger(DsplTransformer.class);
     protected IndicatorsSystemsService       indicatorsSystemsService;
     protected IndicatorsDataService          indicatorsDataService;
+    protected IndicatorsCoverageService      indicatorsCoverageService;
     protected IndicatorsService              indicatorsService;
     protected IndicatorsConfigurationService configurationService;
 
@@ -81,10 +86,11 @@ public class DsplTransformer {
     private static final String              QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
     private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
-    public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsService indicatorsService,
-            IndicatorsConfigurationService configurationService) {
+    public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
         this.indicatorsSystemsService = indicatorsSystemsService;
         this.indicatorsDataService = indicatorsDataService;
+        this.indicatorsCoverageService = indicatorsCoverageService;
         this.indicatorsService = indicatorsService;
         this.configurationService = configurationService;
     }
@@ -221,7 +227,7 @@ public class DsplTransformer {
         Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = new HashMap<TimeGranularityEnum, List<IndicatorInstance>>();
 
         for (IndicatorInstance instance : instances) {
-            List<TimeGranularity> granularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
+            List<TimeGranularity> granularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
 
             for (TimeGranularity granularity : granularities) {
                 List<IndicatorInstance> instancesWithGranularity = instancesByGranularity.get(granularity.getGranularity());
@@ -286,7 +292,7 @@ public class DsplTransformer {
         Set<GeographicalGranularity> granularitiesUsed = new HashSet<GeographicalGranularity>();
 
         for (IndicatorInstance instance : instances) {
-            granularitiesUsed.addAll(indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid()));
+            granularitiesUsed.addAll(indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid()));
         }
         return granularitiesUsed;
     }
@@ -650,7 +656,7 @@ public class DsplTransformer {
     }
 
     private boolean indicatorInstanceUsesGeoGranularity(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity) throws MetamacException {
-        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
+        List<GeographicalGranularity> granularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
         return granularities.contains(geoGranularity);
     }
 
@@ -740,17 +746,20 @@ public class DsplTransformer {
 
     protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) throws MetamacException {
 
-        List<String> geoCodes = getCodesForInstanceGeoValuesInGranularity(ctx, instance, geoGranularity);
-        List<String> timeCodes = getCodesForInstanceTimeValuesInGranularity(ctx, instance, timeGranularity);
-        String measureCode = MeasureDimensionTypeEnum.ABSOLUTE.name();
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(IndicatorsDataGeoDimensionFilterVO.buildGeoGranularityFilter(geoGranularity.getCode()));
+        dataFilter.setTimeFilter(IndicatorsDataTimeDimensionFilterVO.buildTimeGranularityFilter(timeGranularity.name()));
 
-        Map<String, ObservationDto> observations = findObservationsForIndicatorInstance(ctx, instance, geoCodes, timeCodes, measureCode);
+        String measureCode = MeasureDimensionTypeEnum.ABSOLUTE.name();
+        dataFilter.setMeasureFilter(IndicatorsDataMeasureDimensionFilterVO.buildCodesFilter(measureCode));
+
+        IndicatorObservationsVO indicatorsObservations = findObservationsForIndicatorInstance(ctx, instance, dataFilter);
 
         DsplInstanceData data = new DsplInstanceData();
-        for (String geoCode : geoCodes) {
-            for (String timeCode : timeCodes) {
+        for (String geoCode : indicatorsObservations.getGeographicalCodes()) {
+            for (String timeCode : indicatorsObservations.getTimeCodes()) {
                 String observationKey = DtoUtils.generateUniqueKeyWithCodes(Arrays.asList(geoCode, timeCode, measureCode));
-                ObservationDto obs = observations.get(observationKey);
+                ObservationDto obs = indicatorsObservations.getObservations().get(observationKey);
 
                 if (obs != null) {
                     data.put(geoCode, timeCode, obs.getPrimaryMeasure());
@@ -777,56 +786,8 @@ public class DsplTransformer {
         return compatTimeValue.getTimeValue();
     }
 
-    protected Map<String, ObservationDto> findObservationsForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, List<String> geoCodes, List<String> timeCodes, String measureCode)
-            throws MetamacException {
-        List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
-
-        ConditionDimensionDto geoCondition = new ConditionDimensionDto();
-        geoCondition.setDimensionId(IndicatorsDataServiceImpl.GEO_DIMENSION);
-        geoCondition.setCodesDimension(geoCodes);
-        conditions.add(geoCondition);
-
-        ConditionDimensionDto timeCondition = new ConditionDimensionDto();
-        timeCondition.setDimensionId(IndicatorsDataServiceImpl.TIME_DIMENSION);
-        timeCondition.setCodesDimension(timeCodes);
-        conditions.add(timeCondition);
-
-        ConditionDimensionDto measureCondition = new ConditionDimensionDto();
-        measureCondition.setDimensionId(IndicatorsDataServiceImpl.MEASURE_DIMENSION);
-        measureCondition.setCodesDimension(Arrays.asList(measureCode));
-        conditions.add(measureCondition);
-
-        return indicatorsDataService.findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid(), conditions);
-    }
-
-    protected List<String> getCodesForInstanceGeoValuesInGranularity(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity) throws MetamacException {
-        List<GeographicalValue> geoValues = calculateGeoValuesByGranularityInIndicatorInstance(ctx, instance, geoGranularity);
-
-        List<String> codes = new ArrayList<String>();
-
-        for (GeographicalValue geoValue : geoValues) {
-            codes.add(geoValue.getCode());
-        }
-        return codes;
-    }
-
-    private List<GeographicalValue> calculateGeoValuesByGranularityInIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity granularity) throws MetamacException {
-        return indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(ctx, instance.getUuid(), granularity.getUuid());
-    }
-
-    private List<String> getCodesForInstanceTimeValuesInGranularity(ServiceContext ctx, IndicatorInstance instance, TimeGranularityEnum timeGranularity) throws MetamacException {
-        List<TimeValue> timeValues = calculateTimeValuesByGranularityInIndicatorInstance(ctx, instance, timeGranularity);
-
-        List<String> codes = new ArrayList<String>();
-
-        for (TimeValue timeValue : timeValues) {
-            codes.add(timeValue.getTimeValue());
-        }
-        return codes;
-    }
-
-    private List<TimeValue> calculateTimeValuesByGranularityInIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, TimeGranularityEnum granularity) throws MetamacException {
-        return indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorInstance(ctx, instance.getUuid(), granularity);
+    protected IndicatorObservationsVO findObservationsForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, IndicatorsDataFilterVO dataFilter) throws MetamacException {
+        return indicatorsDataService.findObservationsInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid(), dataFilter);
     }
 
     private DateColumn getColumnForTime(TimeGranularityEnum timeGranularity) {

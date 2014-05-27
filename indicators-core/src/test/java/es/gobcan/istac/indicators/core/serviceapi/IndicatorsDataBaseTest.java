@@ -53,6 +53,7 @@ import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
@@ -289,6 +290,17 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         List<String> codes = new ArrayList<String>();
         for (GeographicalValue geoValue : geoValues) {
+            codes.add(geoValue.getCode());
+        }
+        return codes;
+    }
+
+    protected List<String> getGeographicalValuesVOCodes(List<GeographicalValueVO> geoValues) {
+        if (geoValues == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (GeographicalValueVO geoValue : geoValues) {
             codes.add(geoValue.getCode());
         }
         return codes;

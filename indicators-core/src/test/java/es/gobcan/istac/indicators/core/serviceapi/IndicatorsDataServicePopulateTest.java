@@ -1146,7 +1146,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NO_DATA.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_POPULATED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(INDICATOR1_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(INDICATOR1_VERSION, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }

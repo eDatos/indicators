@@ -54,9 +54,9 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
         DsplTransformer transformer = null;
         if (mergeTimeGranularities) {
-            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
         } else {
-            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
         }
 
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);

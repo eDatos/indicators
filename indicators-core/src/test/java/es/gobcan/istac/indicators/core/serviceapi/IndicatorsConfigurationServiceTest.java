@@ -28,4 +28,5 @@ public class IndicatorsConfigurationServiceTest extends AbstractDbUnitJpaTests i
     public void testSetLastSuccessfulGpeQueryDate() throws Exception {
         fail("testSetLastSuccessfulGpeQueryDate not implemented");
     }
+
 }

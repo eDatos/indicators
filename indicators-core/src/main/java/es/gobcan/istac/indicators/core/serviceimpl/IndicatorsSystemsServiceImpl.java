@@ -1002,93 +1002,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkRetrieveTimeValue(timeValue, null);
 
         // Translate
-        TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeValue);
-        String translationCode = getTimeValueTranslationCode(timeValue);
+        String translationCode = TimeVariableUtils.getTimeValueTranslationCode(timeValue);
 
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translation == null) {
-            // Put code as title
-            InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
-            timeValueDo.setTitle(title);
-            timeValueDo.setTitleSummary(title);
-        } else {
-            timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
-            if (translation.getTitleSummary() != null) {
-                timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
-            } else {
-                timeValueDo.setTitleSummary(timeValueDo.getTitle());
-            }
-        }
 
-        return timeValueDo;
-    }
-
-    @Override
-    public List<TimeValue> retrieveTimeValues(ServiceContext ctx, List<String> timeValues) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveTimeValues(timeValues, null);
-
-        List<String> translationCodes = new ArrayList<String>();
-        for (String timeValue : timeValues) {
-            String translationCode = getTimeValueTranslationCode(timeValue);
-            translationCodes.add(translationCode);
-        }
-
-        Map<String, Translation> translations = getTranslationRepository().findTranslationsByCodes(translationCodes);
-
-        List<TimeValue> timeValuesDo = new ArrayList<TimeValue>();
-        for (String timeValue : timeValues) {
-            TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeValue);
-            String translationCode = getTimeValueTranslationCode(timeValue);
-            Translation translation = translations.get(translationCode);
-            if (translation == null) {
-                // Put code as title
-                InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
-                timeValueDo.setTitle(title);
-                timeValueDo.setTitleSummary(title);
-            } else {
-                timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
-                if (translation.getTitleSummary() != null) {
-                    timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
-                } else {
-                    timeValueDo.setTitleSummary(timeValueDo.getTitle());
-                }
-            }
-            timeValuesDo.add(timeValueDo);
-        }
-
-        return timeValuesDo;
-    }
-
-    private String getTimeValueTranslationCode(String timeCode) throws MetamacException {
-        TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeCode);
-        String translationCode = null;
-        switch (timeValueDo.getGranularity()) {
-            case YEARLY:
-                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_YEARLY;
-                break;
-            case DAILY:
-                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
-                break;
-            case WEEKLY:
-                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_WEEKLY;
-                break;
-            case BIYEARLY:
-                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_BIYEARLY).append(".").append(timeValueDo.getSubperiod()).toString();
-                break;
-            case QUARTERLY:
-                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_QUARTERLY).append(".").append(timeValueDo.getSubperiod()).toString();
-                break;
-            case MONTHLY:
-                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
-                break;
-        }
-        return translationCode;
+        return TimeVariableUtils.buildTimeValue(timeValue, translation);
     }
 
     // --------------------------------------------------------------------------------------------
-    // TIME GRANULARTIE
+    // TIME GRANULARITY
     // --------------------------------------------------------------------------------------------
 
     @Override
@@ -1097,27 +1019,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRetrieveTimeGranularity(timeGranularity, null);
 
-        TimeGranularity timeGranularityDo = new TimeGranularity();
-        timeGranularityDo.setGranularity(timeGranularity);
-
         // Translate
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translation == null) {
-            // Put code as title
-            String timeGranularityCode = timeGranularity.getName();
-            InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeGranularityCode);
-            timeGranularityDo.setTitle(title);
-            timeGranularityDo.setTitleSummary(title);
-        } else {
-            timeGranularityDo.setTitle(translateTimeGranularity(translation.getTitle()));
-            if (translation.getTitleSummary() != null) {
-                timeGranularityDo.setTitleSummary(translateTimeGranularity(translation.getTitleSummary()));
-            } else {
-                timeGranularityDo.setTitleSummary(timeGranularityDo.getTitle());
-            }
-        }
-        return timeGranularityDo;
+
+        return TimeVariableUtils.buildTimeGranularity(timeGranularity, translation);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1155,7 +1061,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             measureValueDo.setTitle(title);
             measureValueDo.setTitleSummary(measureValueDo.getTitle());
         } else {
-            measureValueDo.setTitle(translateTimeGranularity(translation.getTitle()));
+            measureValueDo.setTitle(translateMeasureValue(translation.getTitle()));
             if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
                 measureValueDo.setTitleSummary(translateMeasureValue(translation.getTitleSummary()));
             } else {
@@ -1660,41 +1566,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
         return getElementLevelRepository().save(elementLevel);
-    }
-
-    private InternationalString translateTimeValue(TimeValue timeValueDo, InternationalString sourceTranslation) {
-        InternationalString target = new InternationalString();
-        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
-            String label = localisedStringTranslation.getLabel();
-            if (timeValueDo.getYear() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValueDo.getYear());
-            }
-            if (timeValueDo.getMonth() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValueDo.getMonth());
-            }
-            if (timeValueDo.getWeek() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValueDo.getWeek());
-            }
-            if (timeValueDo.getDay() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValueDo.getDay());
-            }
-            LocalisedString localisedString = new LocalisedString();
-            localisedString.setLabel(label);
-            localisedString.setLocale(localisedStringTranslation.getLocale());
-            target.addText(localisedString);
-        }
-        return target;
-    }
-
-    private InternationalString translateTimeGranularity(InternationalString sourceTranslation) {
-        InternationalString target = new InternationalString();
-        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
-            LocalisedString localisedString = new LocalisedString();
-            localisedString.setLabel(localisedStringTranslation.getLabel());
-            localisedString.setLocale(localisedStringTranslation.getLocale());
-            target.addText(localisedString);
-        }
-        return target;
     }
 
     private InternationalString translateMeasureValue(InternationalString sourceTranslation) {

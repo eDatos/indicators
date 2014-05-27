@@ -1,3 +1,4 @@
+
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
 
@@ -90,8 +91,6 @@ Application Indicators {
 			// Time values
 	    	TimeValue retrieveTimeValue(String timeValue) throws MetamacException;
 
-	    	 List<TimeValue> retrieveTimeValues(List<String> timeValues) throws MetamacException;
-
 	    	// Time granularities
 	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	
@@ -165,6 +164,7 @@ Application Indicators {
     	"Provides access to indicators data"
     	Service IndicatorsDataService {
     		> @IndicatorsDataProviderService
+    		> @IndicatorsCoverageService
     		> @IndicatorsConfigurationService
     		> @IndicatorsSystemsService
     		> @IndicatorRepository
@@ -179,6 +179,10 @@ Application Indicators {
     		> @DataSourceRepository
     		> @IndicatorVersionLastValueCacheRepository
     		> @IndicatorInstanceLastValueCacheRepository
+	   		> @IndicatorVersionTimeCoverageRepository
+        	> @IndicatorVersionMeasureCoverageRepository
+        	> @IndicatorVersionGeoCoverageRepository
+        	> @TranslationRepository
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -198,42 +202,84 @@ Application Indicators {
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	updateIndicatorsData() throws MetamacException;
+
+	    	//Data finders
+	    	"Find Published Indicator's Observations by dimensions"
+	    	IndicatorObservationsVO findObservationsInIndicatorPublished(String indicatorUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Last version Indicator's Observations by dimensions"
+	    	IndicatorObservationsVO findObservationsInIndicatorLastVersion(String indicatorUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Published Indicator's Extended Observations by dimensions"
+	    	IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Last version Indicator's Extended Observations by dimensions"
+	    	IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorLastVersion(String indicatorUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Published Indicator Instance's Observations by dimensions"
+	    	IndicatorObservationsVO findObservationsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Last version Indicator Instance's Observations by dimensions"
+	    	IndicatorObservationsVO findObservationsInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Published Indicator Instance's Extended Observations by dimensions"
+	    	IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+	    	"Find Last version Indicator Instance's Extended Observations by dimensions"
+	    	IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 	    	
+	    	//Find indicators/indicatorInstance based on code dimensions
+	    	List<@IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode) throws MetamacException;
+			List<IndicatorVersionLastValue> findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
+			List<IndicatorVersionLastValue> findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
+			buildIndicatorVersionLatestValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
+			
+			List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode) throws MetamacException;
+			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
+			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
+			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
+			
+			buildLastValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
+    	}
+    	
+    	"Provides access to indicators coverage"
+    	Service IndicatorsCoverageService {
+    		> @IndicatorInstanceRepository
+    		> @IndicatorVersionRepository
+    		> @IndicatorVersionTimeCoverageRepository
+        	> @IndicatorVersionMeasureCoverageRepository
+        	> @IndicatorVersionGeoCoverageRepository
+    		> @IndicatorRepository
+    		> @IndicatorsSystemsService
+
 	    	//Geographic Values and granularities related to Indicator data
 	    	"Retrieves geographic granularities in the indicator"
-	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves geographic granularities in the published indicator"
-	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator instance with published indicator"
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator instance with last version indicator"
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values with granularity in the publidhed indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values with granularity in the indicator instance"
-	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic values in the published indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance with published indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance with last version indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	
+	    	"Retrieves geographic values in the indicator instance with published indicator"
+	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	"Retrieves geographic values in the indicator instance with last version indicator"
+	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	"Retrieves geographic codes in the indicator instance with provided indicator version"
+	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
+	    	"Retrieves geographic codes in the indicator instance with published indicator filtered by granularity"
+	    	List<GeographicalCodeVO> retrieveGeographicalCodesByGranularityInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
+	    	
 	    	"Retrieves geographic granularities in all indicators with a subject Code "
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode) throws MetamacException;
 	    	"Retrieves geographic values in all indicators with a subject Code by granularity"
-	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values in all indicators with a subject Code"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode(String subjectCode) throws MetamacException;
+	    	List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic granularities in all indicators instances in a indicators System"
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(String systemCode) throws MetamacException;
 	    	"Retrieves geographic values in all indicators instances in a published indicators System by granularity"
-	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values in all indicators instances in a published indicators System"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode) throws MetamacException;
+	    	List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, String granularityUuid) throws MetamacException;
 	    	
 	    	//Time Values and granularities related to Indicator data
 	    	"Retrieves time granularities in the indicator"
@@ -251,55 +297,23 @@ Application Indicators {
 	    	"Retrieves time values with granularity in the indicator instance"
 	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values in the indicator"
-	    	List<TimeValue> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves time values in the publidhed indicator"
-	    	List<TimeValue> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves time values in the indicator instance with published indicator"
 	    	List<TimeValue> retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves time values in the indicator instance with last version indicator"
 	    	List<TimeValue> retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
+	    	"Retrieves time values in the indicator instance with provided indicator version"
+	    	List<TimeValue> retrieveTimeValuesInIndicatorInstanceWithIndicatorVersion(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
 	    	
 	    	//Measure values
-	    	"Retrieves measure values in indicator instance"
-	    	List<MeasureValue> retrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves measure values in indicator instance"
-	    	List<MeasureValue> retrieveMeasureValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	"Retrieves measure values in indicator version"
+	    	List<MeasureValue> retrieveMeasureValuesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves measure values in indicator instance with published Indicator"
 	    	List<MeasureValue> retrieveMeasureValuesInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves measure values in indicator instance with last versionIndicator"
 	    	List<MeasureValue> retrieveMeasureValuesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
-	    	
-	    	//Data finders
-	    	"Find Published Indicator's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Last version Indicator's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorLastVersion(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Last version Indicator's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorLastVersion(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator Instance's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Last version Indicator Instance's Observations by dimensions"
-	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Published Indicator Instance's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	"Find Last version Indicator Instance's Extended Observations by dimensions"
-	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
-	    	
-	    	//Find indicators/indicatorInstance based on code dimensions
-	    	List<@IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode) throws MetamacException;
-			List<IndicatorVersionLastValue> findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
-			List<IndicatorVersionLastValue> findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
-			buildIndicatorVersionLatestValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
-			
-			List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode) throws MetamacException;
-			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
-			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
-			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
-			
-			buildLastValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
     	}
+    	
     	
     	"Provides access to indicators data from Jaxi"
     	Service IndicatorsDataProviderService {
@@ -321,6 +335,7 @@ Application Indicators {
     	Service DsplExporterService {
     		> @IndicatorsSystemsService
     		> @IndicatorsDataService
+    		> @IndicatorsCoverageService
     		> @IndicatorsService
     		
     		"Export Indicators System as a DSPL zip file"
@@ -333,6 +348,7 @@ Application Indicators {
 			> @DsplExporterService
     		> @IndicatorsService
     		> @IndicatorsDataService
+    		> @IndicatorsCoverageService
 	    	
 	    	// INDICATORS SYSTEMS
 	    	"Creates an indicators system"
@@ -1188,10 +1204,10 @@ Application Indicators {
         	!auditable
         	!optimisticLocking
         	
-			"Geographical value"
-			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
 			"Indicator instance"
 			- @IndicatorInstance indicatorInstance not nullable key cascade="none" databaseColumn="INDICATOR_INSTANCE_FK"  <-> lastValuesCache;
+			"Geographical code"
+			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
 			"Last time value"
 			String lastTimeValue not nullable;
 			"Last time the object was updated"
@@ -1205,6 +1221,89 @@ Application Indicators {
 				List<@IndicatorInstance> findLastNIndicatorsInstancesWithGeoCodeInIndicatorsSystemOrderedByLastUpdate(String systemCode, String geoCode, int n);
 				@IndicatorInstanceLastValueCache retrieveLastValueCacheForIndicatorInstanceWithGeoCode(String indicatorInstanceUuid, String geoCode);
 				deleteWithIndicatorInstance(String indicatorInstanceUuid);
+			}
+        }
+
+        "Table for improving access to geo coverages"
+        Entity IndicatorVersionGeoCoverage {
+        	databaseTable = "TB_IND_VERSION_GEO_COV"
+        	hint="idSequence=IND_VERSION_GEO_COV"
+        	!auditable
+        	!optimisticLocking
+        	
+        	"Geographical value"
+			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			"Indicator Version"
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+			
+			Repository IndicatorVersionGeoCoverageRepository {
+				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
+				@IndicatorVersionGeoCoverage save(@IndicatorVersionGeoCoverage entity);
+				List<@IndicatorVersionGeoCoverage> findByQuery;
+				List<@GeographicalGranularity> retrieveGranularityCoverage(@IndicatorVersion indicatorVersion);
+				
+				List<GeographicalCodeVO> retrieveCodeCoverage(@IndicatorVersion indicatorVersion);
+				List<GeographicalCodeVO> retrieveCodeCoverageFilteredByGranularity(@IndicatorVersion indicatorVersion, String geographicalGranularityUuid);
+				List<GeographicalCodeVO> retrieveCodeCoverageFilteredByInstanceGeoValues(@IndicatorVersion indicatorVersion, String indicatorInstanceUuid);
+				List<GeographicalCodeVO> retrieveCodeCoverageFilteredByInstanceGeoValuesByGranularity(@IndicatorVersion indicatorVersion, String indicatorInstanceUuid, String geographicalGranularityUuid);
+				
+				List<GeographicalValueVO> retrieveCoverage(@IndicatorVersion indicatorVersion);
+				List<GeographicalValueVO> retrieveCoverageFilteredByGranularity(@IndicatorVersion indicatorVersion, String geographicalGranularityUuid);
+				List<GeographicalValueVO> retrieveCoverageFilteredByInstanceGeoValues(@IndicatorVersion indicatorVersion, String indicatorInstanceUuid);
+				List<GeographicalValueVO> retrieveCoverageFilteredByInstanceGeoValuesByGranularity(@IndicatorVersion indicatorVersion, String indicatorInstanceUuid, String geographicalGranularityUuid);
+				
+				List<@GeographicalValue> retrieveValueCoverageFilteredByGranularity(@IndicatorVersion indicatorVersion, String geographicalGranularityUuid);
+			}
+        }
+
+        "Table for improving access to measure coverages"
+        Entity IndicatorVersionMeasureCoverage {
+        	databaseTable = "TB_IND_VERSION_MEAS_COV"
+        	hint="idSequence=IND_VERSION_MEAS_COV"
+        	
+        	!auditable
+        	!optimisticLocking
+        	
+			"Indicator Version"
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+        	"Geographical value"
+			String measureCode not nullable key;
+			
+			- @Translation translation nullable;
+			
+			Repository IndicatorVersionMeasureCoverageRepository {
+				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
+				@IndicatorVersionMeasureCoverage save(@IndicatorVersionMeasureCoverage entity);
+				List<@IndicatorVersionMeasureCoverage> findByQuery;
+				List<MeasureValue> retrieveCoverage(@IndicatorVersion indicatorVersion);
+			}
+        }
+        
+        "Table for improving access to measure coverages"
+        Entity IndicatorVersionTimeCoverage {
+        	databaseTable = "TB_IND_VERSION_TIME_COV"
+        	hint="idSequence=IND_VERSION_TIME_COV"
+        	
+        	!auditable
+        	!optimisticLocking
+        	
+			"Indicator Version"
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+        	"Geographical value"
+			String timeValue not nullable key;
+			String timeGranularity not nullable;
+			- @Translation translation nullable; // not null?
+			- @Translation granularityTranslation nullable; // not null?
+			
+			Repository IndicatorVersionTimeCoverageRepository {
+				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
+				@IndicatorVersionTimeCoverage save(@IndicatorVersionTimeCoverage entity);
+				List<@IndicatorVersionTimeCoverage> findByQuery;
+				List<TimeValue> retrieveCoverage(@IndicatorVersion indicatorVersion) throws MetamacException;
+				List<TimeValue> retrieveCoverageByGranularity(@IndicatorVersion indicatorVersion, String timeGranularityCode) throws MetamacException;
+				List<TimeValue> retrieveCoverageFilteredByInstanceTimeValues(@IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException;
+				List<TimeGranularity> retrieveGranularityCoverage(@IndicatorVersion indicatorVersion);
+				List<TimeGranularity> retrieveGranularityCoverageFilteredByInstanceTimeValues(@IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException;
 			}
         }
         

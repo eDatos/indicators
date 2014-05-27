@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Instance of indicator
  */
@@ -37,4 +36,21 @@ public class IndicatorInstance extends IndicatorInstanceBase {
         }
         return timeValuesList;
     }
+
+    public boolean isFilteredByGeographicalValues() {
+        return getGeographicalValues() != null && getGeographicalValues().size() > 0;
+    }
+
+    public boolean isFilteredByGeographicalGranularity() {
+        return getGeographicalGranularity() != null;
+    }
+
+    public boolean isFilteredByTimeValues() {
+        return !StringUtils.isEmpty(getTimeValues());
+    }
+
+    public boolean isFilteredByTimeGranularity() {
+        return getTimeGranularity() != null;
+    }
+
 }

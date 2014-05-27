@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
     IndicatorsDataServiceDataGpeTest.class,
     IndicatorsDataServicePopulateTest.class,
     IndicatorsDataServiceLastValueTest.class,
-    IndicatorsDataServiceRetrieveGeoTimeTest.class,
+    IndicatorsCoverageServiceTest.class,
     IndicatorsServiceFacadeDataTest.class,
     IndicatorsServiceFacadeIndicatorsSystemsTest.class,
     IndicatorsServiceFacadeIndicatorsTest.class,

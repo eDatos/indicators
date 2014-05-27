@@ -54,6 +54,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     private IndicatorsDataService                                               indicatorsDataService;
 
     @Autowired
+    private IndicatorsCoverageService                                           indicatorsCoverageService;
+
+    @Autowired
     private es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
 
     private DsplTransformer                                                     dsplTransformer;
@@ -112,7 +115,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Before
     public void createTransformer() {
-        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
+        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
     }
 
     @Test

@@ -35,17 +35,22 @@ import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 
 public class DsplTransformerTimeTranslator extends DsplTransformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DsplTransformerTimeTranslator.class);
 
-    public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsService indicatorsService,
-            IndicatorsConfigurationService configurationService) {
-        super(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
+    public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
+        super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
     }
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
@@ -113,7 +118,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     private Set<TimeGranularityEnum> getIndicatorsInstancesTimeGranularities(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
         Set<TimeGranularityEnum> granularities = new HashSet<TimeGranularityEnum>();
         for (IndicatorInstance instance : instances) {
-            List<TimeGranularity> instanceGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
+            List<TimeGranularity> instanceGranularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
 
             for (TimeGranularity granularity : instanceGranularities) {
                 granularities.add(granularity.getGranularity());
@@ -143,21 +148,22 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     @Override
     protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) throws MetamacException {
 
-        List<String> geoCodes = getCodesForInstanceGeoValuesInGranularity(ctx, instance, geoGranularity);
-        List<String> timeCodes = getCodesForInstanceTimeValues(ctx, instance);
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(IndicatorsDataGeoDimensionFilterVO.buildGeoGranularityFilter(geoGranularity.getCode()));
         String measureCode = MeasureDimensionTypeEnum.ABSOLUTE.name();
+        dataFilter.setMeasureFilter(IndicatorsDataMeasureDimensionFilterVO.buildCodesFilter());
 
-        Map<String, ObservationDto> observations = findObservationsForIndicatorInstance(ctx, instance, geoCodes, timeCodes, measureCode);
+        IndicatorObservationsVO indicatorsObservations = findObservationsForIndicatorInstance(ctx, instance, dataFilter);
 
-        Map<String, String> validTimeValuesTransformed = transformTimeValuesOnlyIfValid(timeCodes, timeGranularity);
+        Map<String, String> validTimeValuesTransformed = transformTimeValuesOnlyIfValid(indicatorsObservations.getTimeCodes(), timeGranularity);
 
         DsplInstanceData data = new DsplInstanceData();
-        for (String geoCode : geoCodes) {
-            for (String timeCode : timeCodes) {
+        for (String geoCode : indicatorsObservations.getGeographicalCodes()) {
+            for (String timeCode : indicatorsObservations.getTimeCodes()) {
                 String transformedTimeCode = validTimeValuesTransformed.get(timeCode);
                 if (transformedTimeCode != null) {
                     String observationKey = DtoUtils.generateUniqueKeyWithCodes(Arrays.asList(geoCode, timeCode, measureCode));
-                    ObservationDto obs = observations.get(observationKey);
+                    ObservationDto obs = indicatorsObservations.getObservations().get(observationKey);
 
                     if (obs != null) {
                         data.put(geoCode, transformedTimeCode, obs.getPrimaryMeasure());
@@ -169,6 +175,16 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         }
         return data;
     }
+
+    /**
+     * This piece of code transform all time values to the same granularity, in case of two different values are translated to the same
+     * value we'll keep the value with lower original granularity.
+     * 
+     * @param timeCodes
+     * @param timeGranularity
+     * @return
+     * @throws MetamacException
+     */
     private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, TimeGranularityEnum timeGranularity) throws MetamacException {
         BiMap<String, String> mapping = new HashBiMap<String, String>();
         for (String timeCode : timeCodes) {
@@ -254,21 +270,6 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         String monthStr = month < 10 ? "0" + month : String.valueOf(month);
         String dayStr = day < 10 ? "0" + day : String.valueOf(day);
         return year + monthStr + dayStr;
-    }
-
-    private List<String> getCodesForInstanceTimeValues(ServiceContext ctx, IndicatorInstance instance) throws MetamacException {
-        List<TimeValue> timeValues = calculateTimeValuesInIndicatorInstance(ctx, instance);
-
-        List<String> codes = new ArrayList<String>();
-
-        for (TimeValue timeValue : timeValues) {
-            codes.add(timeValue.getTimeValue());
-        }
-        return codes;
-    }
-
-    private List<TimeValue> calculateTimeValuesInIndicatorInstance(ServiceContext ctx, IndicatorInstance instance) throws MetamacException {
-        return indicatorsDataService.retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
     }
 
 }

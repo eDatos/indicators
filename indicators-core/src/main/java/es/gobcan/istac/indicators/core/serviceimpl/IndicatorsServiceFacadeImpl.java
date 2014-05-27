@@ -444,7 +444,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
+        List<GeographicalValue> geographicalValues = getIndicatorsCoverageService().retrieveGeographicalValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
 
         // Transform
         List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
@@ -461,7 +461,9 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+
+        List<GeographicalGranularity> geographicalGranularities = getIndicatorsCoverageService().retrieveGeographicalGranularitiesInIndicatorVersion(ctx, indicatorVersion);
 
         // Transform
         List<GeographicalGranularityDto> geographicalGranularityDtos = new ArrayList<GeographicalGranularityDto>();
@@ -479,7 +481,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        List<TimeGranularity> timeGranularities = getIndicatorsCoverageService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
 
         // Transform
         List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
@@ -498,7 +500,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
 
         // Transform
         List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
