@@ -916,33 +916,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-        List<GeographicalCodeVO> geoCodes = getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion);
+        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
         List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
 
-        // FIXME: ONLY TEST
+        List<String> geoCodesLeft = geoCodes;
 
-        List<GeographicalValue> geoValues = new ArrayList<GeographicalValue>();
-
-        // *****************************************
-        List<GeographicalValue> test = new ArrayList<GeographicalValue>();
-        for (GeographicalCodeVO geoCode : geoCodes) {
-            test.add(getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, geoCode.getCode()));
-        }
-        geoValues = test;
-        // *******************************************
-
-        List<GeographicalValue> geoValuesLeft = geoValues;
-
-        while (!geoValuesLeft.isEmpty() && !timeValues.isEmpty()) {
+        while (!geoCodesLeft.isEmpty() && !timeValues.isEmpty()) {
             TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValues);
             timeValues.remove(lastTimeValue);
 
-            Set<GeographicalValue> foundGeoValues = getGeoValuesInObservations(indicatorVersion, geoValuesLeft, lastTimeValue.getTimeValue());
+            Set<String> foundGeoCodes = getGeoValuesInObservations(indicatorVersion, geoCodesLeft, lastTimeValue.getTimeValue());
 
-            for (GeographicalValue geoValue : foundGeoValues) {
-                geoValuesLeft.remove(geoValue);
+            for (String geoCode : foundGeoCodes) {
+                geoCodesLeft.remove(geoCode);
 
-                IndicatorVersionLastValueCache cacheEntry = new IndicatorVersionLastValueCache(geoValue, indicatorVersion);
+                IndicatorVersionLastValueCache cacheEntry = new IndicatorVersionLastValueCache(geoCode, indicatorVersion);
                 cacheEntry.setLastTimeValue(lastTimeValue.getTimeValue());
                 cacheEntry.setLastDataUpdated(indicatorVersion.getLastPopulateDate());
                 getIndicatorVersionLastValueCacheRepository().save(cacheEntry);
@@ -958,33 +946,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public void buildIndicatorInstanceLatestValuesCache(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorInstance.getIndicator().getUuid());
 
-        List<GeographicalCodeVO> geoCodes = getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion);
+        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
 
         List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstance.getUuid());
 
-        // FIXME: ONLY TEST
+        List<String> geoValuesLeft = geoCodes;
 
-        List<GeographicalValue> geoValues = new ArrayList<GeographicalValue>();
-        // *****************************************
-        List<GeographicalValue> test = new ArrayList<GeographicalValue>();
-        for (GeographicalCodeVO geoValue : geoCodes) {
-            test.add(getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, geoValue.getCode()));
-        }
-        geoValues = test;
-        // *******************************************
-
-        List<GeographicalValue> geoValuesLeft = geoValues;
-
-        while (!geoValues.isEmpty() && !timeValues.isEmpty()) {
+        while (!geoValuesLeft.isEmpty() && !timeValues.isEmpty()) {
             TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValues);
             timeValues.remove(lastTimeValue);
 
-            Set<GeographicalValue> foundGeoValues = getGeoValuesInObservations(indicatorVersion, geoValuesLeft, lastTimeValue.getTimeValue());
+            Set<String> foundGeoCodes = getGeoValuesInObservations(indicatorVersion, geoValuesLeft, lastTimeValue.getTimeValue());
 
-            for (GeographicalValue geoValue : foundGeoValues) {
-                geoValuesLeft.remove(geoValue);
+            for (String geoCode : foundGeoCodes) {
+                geoValuesLeft.remove(geoCode);
 
-                IndicatorInstanceLastValueCache cacheEntry = new IndicatorInstanceLastValueCache(indicatorInstance, geoValue);
+                IndicatorInstanceLastValueCache cacheEntry = new IndicatorInstanceLastValueCache(geoCode, indicatorInstance);
                 cacheEntry.setLastTimeValue(lastTimeValue.getTimeValue());
                 cacheEntry.setLastDataUpdated(indicatorVersion.getLastPopulateDate());
                 getIndicatorInstanceLastValueCacheRepository().save(cacheEntry);
@@ -1156,14 +1133,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private Set<GeographicalValue> getGeoValuesInObservations(IndicatorVersion indicatorVersion, List<GeographicalValue> geoValues, String timeValue) throws MetamacException {
+    private Set<String> getGeoValuesInObservations(IndicatorVersion indicatorVersion, List<String> geoCodes, String timeValue) throws MetamacException {
 
         List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
 
-        List<String> geoCodes = new ArrayList<String>();
-        for (GeographicalValue geoValue : geoValues) {
-            geoCodes.add(geoValue.getCode());
-        }
         ConditionDimensionDto geoCondition = new ConditionDimensionDto();
         geoCondition.setDimensionId(GEO_DIMENSION);
         geoCondition.setCodesDimension(geoCodes);
@@ -1178,7 +1151,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             String datasetId = indicatorVersion.getDataRepositoryId();
             observations = datasetRepositoriesServiceFacade.findObservationsByDimensions(datasetId, conditions);
-            Set<GeographicalValue> foundGeoCodes = new HashSet<GeographicalValue>();
+            Set<String> foundGeoCodes = new HashSet<String>();
             for (ObservationDto obs : observations.values()) {
                 String geoCode = null;
                 for (CodeDimensionDto codeDim : obs.getCodesDimension()) {
@@ -1186,8 +1159,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         geoCode = codeDim.getCodeDimensionId();
                     }
                 }
-                int indexFound = geoCodes.indexOf(geoCode);
-                foundGeoCodes.add(geoValues.get(indexFound));
+                foundGeoCodes.add(geoCode);
             }
             return foundGeoCodes;
         } catch (ApplicationException e) {
@@ -1241,48 +1213,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
-    private List<ConditionDimensionDto> filterConditionsByValues(List<ConditionDimensionDto> conditions, List<GeographicalCodeVO> geoCodes, List<TimeValue> timeValues) {
-        List<ConditionDimensionDto> rawConditions = new ArrayList<ConditionDimensionDto>();
-        if (conditions != null) {
-            rawConditions = conditions;
-        }
-
-        ConditionDimensionDto geoCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL, rawConditions, getCodesInGeographicalCodes(geoCodes));
-        ConditionDimensionDto timeCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.TIME, rawConditions, getCodesInTimeValues(timeValues));
-        ConditionDimensionDto measureCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.MEASURE, rawConditions, getCodesInMeasureValues(MeasureDimensionTypeEnum.values()));
-        return Arrays.asList(geoCondition, timeCondition, measureCondition);
-    }
-
-    private ConditionDimensionDto filterConditionsByType(IndicatorDataDimensionTypeEnum type, List<ConditionDimensionDto> rawConditions, List<String> dimensionCodes) {
-
-        Set<String> selectedCodes = new HashSet<String>();
-        for (ConditionDimensionDto condition : rawConditions) {
-            if (type.name().equals(condition.getDimensionId())) {
-                for (String code : condition.getCodesDimension()) {
-                    selectedCodes.add(code);
-                }
-            }
-        }
-
-        selectedCodes.retainAll(dimensionCodes);
-
-        if (selectedCodes.isEmpty()) {
-            selectedCodes.addAll(dimensionCodes);
-        }
-
-        ConditionDimensionDto newCondition = new ConditionDimensionDto();
-        newCondition.setDimensionId(type.name());
-        newCondition.setCodesDimension(new ArrayList<String>(selectedCodes));
-        return newCondition;
-    }
-
-    private List<String> getCodesInGeographicalValues(List<GeographicalValue> geoValues) {
-        List<String> geoCodes = new ArrayList<String>();
-        for (GeographicalValue geoValue : geoValues) {
-            geoCodes.add(geoValue.getCode());
-        }
-        return geoCodes;
-    }
 
     private List<String> getCodesInGeographicalCodes(List<GeographicalCodeVO> geoValueCodes) {
         List<String> geoCodes = new ArrayList<String>();
@@ -1307,15 +1237,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return codes;
     }
-
-    private List<String> getCodesInMeasureValues(MeasureDimensionTypeEnum[] values) {
-        List<String> codes = new ArrayList<String>();
-        for (MeasureDimensionTypeEnum measure : values) {
-            codes.add(measure.getName());
-        }
-        return codes;
-    }
-
     /* Private methods */
 
     private List<String> findCodesForDimensionInIndicator(IndicatorVersion indicatorVersion, IndicatorDataDimensionTypeEnum dimension) throws ApplicationException {

@@ -4787,8 +4787,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testDeleteGeographicalValueBeingUsed() throws Exception {
-        String uuid = GEOGRAPHICAL_VALUE_1;
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
 
+        String uuid = GEOGRAPHICAL_VALUE_1;
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
         try {
             indicatorsServiceFacade.deleteGeographicalValue(getServiceContextAdministrador(), uuid);
             fail("Geographical value being used");

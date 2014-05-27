@@ -179,7 +179,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystems() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code()).eq("ES").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -196,7 +196,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code()).eq("ES611").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES611").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -213,7 +213,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystemsFilteredBySystem() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_1).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -227,7 +227,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_3).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -242,7 +242,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_10).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 

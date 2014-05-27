@@ -216,7 +216,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsByCriteria() throws Exception {
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code())
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
                     .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
@@ -230,7 +230,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_3, indicatorsVersion.getValues().get(2).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code())
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
                     .eq("FR").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
@@ -243,7 +243,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_12, indicatorsVersion.getValues().get(1).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code())
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
                     .eq("ES-MD").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);

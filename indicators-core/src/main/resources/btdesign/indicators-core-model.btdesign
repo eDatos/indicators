@@ -1178,7 +1178,7 @@ Application Indicators {
         	!optimisticLocking
         	
         	"Geographical value"
-			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			String geographicalCode not nullable key;
 			"Indicator Version"
 			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK" <-> lastValuesCache ;
 			"Last time value"
@@ -1207,7 +1207,7 @@ Application Indicators {
 			"Indicator instance"
 			- @IndicatorInstance indicatorInstance not nullable key cascade="none" databaseColumn="INDICATOR_INSTANCE_FK"  <-> lastValuesCache;
 			"Geographical code"
-			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			String geographicalCode not nullable key;
 			"Last time value"
 			String lastTimeValue not nullable;
 			"Last time the object was updated"
