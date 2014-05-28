@@ -202,6 +202,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
             } catch (MetamacException e) {
+                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersion().getVersionNumber(), e);
                 exceptionItems.addAll(e.getExceptionItems());
             }
         }
@@ -209,6 +210,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersion().getVersionNumber());
             } catch (MetamacException e) {
+                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersion().getVersionNumber(), e);
                 exceptionItems.addAll(e.getExceptionItems());
             }
         }
