@@ -550,9 +550,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUnitMultiplier(source.getUnitMultiplier());
         if (source.getUnitMultiplier() != null) {
             UnitMultiplier unitMultiplier = unitMultiplierRepository.retrieveUnitMultiplier(source.getUnitMultiplier());
-            if (unitMultiplier != null) {
-                target.setUnitMultiplierLabel(internationalStringToDto(unitMultiplier.getTitle()));
-            }
+            target.setUnitMultiplierLabel(internationalStringToDto(unitMultiplier.getTitle()));
         }
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());
