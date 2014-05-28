@@ -45,7 +45,6 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
 
     @Override
     public void addToSlot(Object slot, Widget content) {
-        System.out.println();
     }
 
     @Override
@@ -60,7 +59,6 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
 
     @Override
     public void setInSlot(Object slot, Widget content) {
-        System.out.println();
     }
 
     @Override

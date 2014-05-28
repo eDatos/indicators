@@ -86,7 +86,6 @@ public class VariableListItem extends CustomCanvasItem {
 
             @Override
             public void onEditorEnter(EditorEnterEvent event) {
-                System.out.println();
             }
         });
         categoryField.addEditorExitHandler(new EditorExitHandler() {

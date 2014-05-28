@@ -525,7 +525,6 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         long timeRetrieve = System.currentTimeMillis();
         TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
         long timeSort = System.currentTimeMillis();
-        System.out.println("Rtrieve: " + (timeRetrieve - time) + " sort: " + (timeSort - timeRetrieve));
         return timeValues;
     }
 
