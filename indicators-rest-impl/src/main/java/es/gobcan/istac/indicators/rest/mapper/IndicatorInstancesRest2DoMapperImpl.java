@@ -72,7 +72,7 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
                 }
 
                 case geographicalValue: {
-                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.lastValuesCache().geographicalValue().code(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
                 }
 
             }
