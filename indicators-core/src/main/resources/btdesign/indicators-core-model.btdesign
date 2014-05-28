@@ -872,7 +872,7 @@ Application Indicators {
 	    	"Type"
 			- @QuantityTypeEnum quantityType nullable;
 			"Multiplier of percentage"
-			Integer unitMultiplier required;
+			- @UnitMultiplier unitMultiplier required cascade="none" databaseColumn="UNIT_MULTIPLIER_FK";
 			"Number of significant digits to use when displaying the values of a metric concept"
 			Integer significantDigits nullable;
 			"Number of decimal places to use for displaying the values of a metric concept"

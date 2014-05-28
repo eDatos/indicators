@@ -746,7 +746,6 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
      */
     @Test
     public void testPopulateIndicatorDataMultiDataSource() throws Exception {
-        long time = System.currentTimeMillis();
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS1_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA1);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS2_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA2);
 
@@ -774,7 +773,6 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         checkDataDimensions(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION, data);
-        System.out.println(System.currentTimeMillis() - time);
     }
 
     /*

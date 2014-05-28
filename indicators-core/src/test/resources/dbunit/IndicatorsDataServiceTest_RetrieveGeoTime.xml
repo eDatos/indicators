@@ -14,6 +14,55 @@
         VERSION="0"
 	/>
   
+  
+      
+     <TB_LIS_UNITS_MULTIPLIERS
+        ID="1"
+        UNIT_MULTIPLIER="1"
+        TITLE_FK="41"
+        UUID="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
+    
+    <TB_LIS_UNITS_MULTIPLIERS
+        ID="2"
+        UNIT_MULTIPLIER="10"
+        TITLE_FK="42"
+        UUID="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
+    
+    <TB_LIS_UNITS_MULTIPLIERS
+        ID="3"
+        UNIT_MULTIPLIER="100"
+        TITLE_FK="50"
+        UUID="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
+    
+  
+  
   	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->
 	<!-- ************************************************************************************ -->
@@ -222,7 +271,7 @@
 				  	ID="111"
   					UUID="Quantity-111"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="10"
+  					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
 					UNIT_FK="1"
@@ -343,7 +392,7 @@
 				  	ID="121"
   					UUID="Quantity-121"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="10"
+  					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
 					UNIT_FK="1"
@@ -489,7 +538,7 @@
 				  	ID="211"
   					UUID="Quantity-211"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="10"
+  					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
 					UNIT_FK="1"
@@ -636,7 +685,7 @@
 				  	ID="311"
   					UUID="Quantity-311"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="10"
+  					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
 					UNIT_FK="1"
@@ -781,7 +830,7 @@
 				  	ID="411"
   					UUID="Quantity-411"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="10"
+  					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
 					UNIT_FK="1"
@@ -847,7 +896,7 @@
 						  	ID="411111"
 		  					UUID="Quantity-411111"
 							QUANTITY_TYPE="CHANGE_RATE"
-		  					UNIT_MULTIPLIER="100"
+		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
 							UNIT_FK="1"
@@ -962,7 +1011,7 @@
                     ID="511"
                     UUID="Quantity-511"
                     QUANTITY_TYPE="QUANTITY"
-                    UNIT_MULTIPLIER="10"
+                    UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
                     UNIT_FK="1"
@@ -1716,7 +1765,43 @@
 		INTERNATIONAL_STRING_FK="9"
 		VERSION="1"
 	/>
-			
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="41"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="52"
+        LABEL="Unidades" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="41"
+        VERSION="1"
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="42"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="53"
+        LABEL="Decenas" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="42"
+        VERSION="1"
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="50"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="63"
+        LABEL="Centenas" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="50"
+        VERSION="1"
+    />
+
             <TB_INTERNATIONAL_STRINGS
         ID="51"
         VERSION="1"

@@ -69,6 +69,7 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
@@ -1723,7 +1724,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
-                calculatedValue = ((currentValue - previousValue) / previousValue) * quantity.getUnitMultiplier();
+                UnitMultiplier unitMultiplier = quantity.getUnitMultiplier();
+                calculatedValue = ((currentValue - previousValue) / previousValue) * unitMultiplier.getUnitMultiplier();
             } else if (dataOperation.isPuntualMethod()) {
                 calculatedValue = currentValue - previousValue;
             } else {

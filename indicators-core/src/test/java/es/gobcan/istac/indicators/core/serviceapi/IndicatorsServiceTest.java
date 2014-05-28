@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -43,21 +44,24 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
-    protected IndicatorsService      indicatorService;
+    protected IndicatorsService        indicatorService;
 
     @Autowired
-    protected QuantityUnitRepository quantityUnitRepository;
+    protected QuantityUnitRepository   quantityUnitRepository;
+
+    @Autowired
+    protected UnitMultiplierRepository unitMultiplierRepository;
 
     // Indicators
-    private static String            INDICATOR_1         = "Indicator-1";
-    private static String            INDICATOR_3         = "Indicator-3";
-    private static String            INDICATOR_3_VERSION = "11.033";
-    private static String            INDICATOR_5         = "Indicator-5";
-    private static String            INDICATOR_12        = "Indicator-12";
-    private static String            INDICATOR_13        = "Indicator-13";
+    private static String              INDICATOR_1         = "Indicator-1";
+    private static String              INDICATOR_3         = "Indicator-3";
+    private static String              INDICATOR_3_VERSION = "11.033";
+    private static String              INDICATOR_5         = "Indicator-5";
+    private static String              INDICATOR_12        = "Indicator-12";
+    private static String              INDICATOR_13        = "Indicator-13";
 
     // Quantity units
-    private static String            QUANTITY_UNIT_1     = "1";
+    private static String              QUANTITY_UNIT_1     = "1";
 
     @Test
     public void testCreateIndicator() throws Exception {
@@ -71,7 +75,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
-        indicatorVersion.getQuantity().setUnitMultiplier(Integer.valueOf(1));
+        indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
 
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
@@ -99,7 +103,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
-        indicatorVersion.getQuantity().setUnitMultiplier(Integer.valueOf(1));
+        indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
 
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);

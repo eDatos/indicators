@@ -485,7 +485,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
         if (source.getUnitMultiplier() != null) {
             UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(ctx, source.getUnitMultiplier()); // only to check exists
-            target.setUnitMultiplier(unitMultiplier.getUnitMultiplier());
+            target.setUnitMultiplier(unitMultiplier);
         }
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());

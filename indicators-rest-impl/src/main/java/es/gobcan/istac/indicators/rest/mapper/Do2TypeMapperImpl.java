@@ -41,7 +41,6 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -459,8 +458,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             quantityType.setUnitSymbolPosition(source.getUnit().getSymbolPosition());
         }
         if (source.getUnitMultiplier() != null) {
-            UnitMultiplier unitMultiplier = indicatorsApiService.retrieveUnitMultiplier(source.getUnitMultiplier());
-            quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
+            quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle()));
         }
         quantityType.setSignificantDigits(source.getSignificantDigits());
         quantityType.setDecimalPlaces(source.getDecimalPlaces());

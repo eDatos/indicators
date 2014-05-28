@@ -547,12 +547,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         QuantityDto target = new QuantityDto();
         target.setType(source.getQuantityType());
         target.setUnitUuid(source.getUnit() != null ? source.getUnit().getUuid() : null);
-        target.setUnitMultiplier(source.getUnitMultiplier());
-        if (source.getUnitMultiplier() != null) {
-            UnitMultiplier unitMultiplier = unitMultiplierRepository.retrieveUnitMultiplier(source.getUnitMultiplier());
-            if (unitMultiplier != null) {
-                target.setUnitMultiplierLabel(internationalStringToDto(unitMultiplier.getTitle()));
-            }
+        UnitMultiplier unitMultiplier = source.getUnitMultiplier();
+        if (unitMultiplier != null) {
+            target.setUnitMultiplier(unitMultiplier.getUnitMultiplier());
+            target.setUnitMultiplierLabel(internationalStringToDto(unitMultiplier.getTitle()));
         }
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());
