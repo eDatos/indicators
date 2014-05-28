@@ -401,6 +401,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
         } catch (Exception e) {
+            // IDEA: Would be nice to be notified when this happens INDISTAC-861
             LOG.error("Error assigning SELECT permission to " + getDataViewsRole() + " over " + viewCode);
         }
     }
@@ -409,6 +410,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
         } catch (Exception e) {
+            // IDEA: Would be nice to be notified when this happens INDISTAC-861
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
                     + " related with indicatorVersionUuid " + indicatorVersion.getUuid());
         }
@@ -1407,6 +1409,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
             } catch (ApplicationException e) {
+                // IDEA: send some kind of notification to get noticed when the old dataset repository couldn't be deleted INDISTAC-861
                 LOG.error("Old dataset repository could not be deleted", e);
             }
         }

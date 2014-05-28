@@ -103,6 +103,9 @@ Application Indicators {
     	Service IndicatorsService {
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
+    		> @IndicatorVersionGeoCoverageRepository
+    		> @IndicatorVersionTimeCoverageRepository
+    		> @IndicatorVersionMeasureCoverageRepository
     		> @DataSourceRepository
     		> @QuantityUnitRepository
     		> @IndicatorInstanceRepository

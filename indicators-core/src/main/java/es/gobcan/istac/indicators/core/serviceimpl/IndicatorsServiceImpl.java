@@ -257,10 +257,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicator.setProductionVersion(null);
             indicator.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
 
+            clearIndicatorVersionCoverageCaches(indicatorVersion);
+
             // Update
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorVersion);
         }
+    }
+
+    private void clearIndicatorVersionCoverageCaches(IndicatorVersion indicatorVersion) {
+        getIndicatorVersionGeoCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
+        getIndicatorVersionTimeCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
+        getIndicatorVersionMeasureCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
     }
 
     @Override
