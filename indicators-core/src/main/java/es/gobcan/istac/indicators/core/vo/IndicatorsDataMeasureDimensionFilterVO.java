@@ -9,6 +9,9 @@ public class IndicatorsDataMeasureDimensionFilterVO {
     private List<String> codes = new ArrayList<String>();
 
     public List<String> getCodes() {
+        if (codes == null) {
+            return new ArrayList<String>();
+        }
         return codes;
     }
 
