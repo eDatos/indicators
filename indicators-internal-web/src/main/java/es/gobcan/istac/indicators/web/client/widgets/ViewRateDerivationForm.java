@@ -77,7 +77,7 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem isPercentangeText = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(getIsPercentageIfFunction());
 
-        ViewTextItem percentageOf = new ViewTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
+        ViewMultiLanguageTextItem percentageOf = new ViewMultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
         setFields(methodType, methodTypeText, method, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange,
