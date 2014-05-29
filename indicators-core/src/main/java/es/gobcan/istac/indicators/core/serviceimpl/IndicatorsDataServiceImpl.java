@@ -1424,41 +1424,63 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<String> geoValues = getGeographicValue(dataOperation, data);
         List<String> timeValues = getTimeValue(dataOperation, data);
 
+        if (RateDerivationMethodTypeEnum.LOAD.equals(dataOperation.getMethodType())) {
+            return createObservationsFromDataOperationJson(dataOperation, data, geoValues, timeValues);
+        } else if (RateDerivationMethodTypeEnum.CALCULATE.equals(dataOperation.getMethodType())) {
+            return createObservationsFromCalculation(dataOperation, datasetId, geoValues, timeValues);
+        } else {
+            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
+        }
+    }
+
+    private List<ObservationExtendedDto> createObservationsFromCalculation(DataOperation dataOperation, String datasetId, List<String> geoValues, List<String> timeValues) throws MetamacException {
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
         for (String geoVal : geoValues) {
+
             for (String timeVal : timeValues) {
-                // Map for querying the data from the json
-                Map<String, String> varCodesForQuery = new HashMap<String, String>();
+                ObservationExtendedDto observation = getCalculatedValue(dataOperation, datasetId, geoVal, timeVal);
 
-                // Only include geographical and time values if a variable has been selected
-                if (dataOperation.hasGeographicalVariable()) {
-                    varCodesForQuery.put(dataOperation.getGeographicalVariable(), geoVal);
-                }
-                if (dataOperation.hasTimeVariable()) {
-                    varCodesForQuery.put(dataOperation.getTimeVariable(), timeVal);
-                }
-                for (DataSourceVariable var : dataOperation.getOtherVariables()) {
-                    varCodesForQuery.put(var.getVariable(), var.getCategory());
-                }
+                checkMaxObservationValueLength(dataOperation, observation);
 
-                ObservationExtendedDto observation = null;
-                if (RateDerivationMethodTypeEnum.LOAD.equals(dataOperation.getMethodType())) {
-                    observation = getObservationValue(dataOperation, data, varCodesForQuery, geoVal, timeVal);
-                } else if (RateDerivationMethodTypeEnum.CALCULATE.equals(dataOperation.getMethodType())) {
-                    observation = getCalculatedValue(dataOperation, datasetId, geoVal, timeVal);
-                } else {
-                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
-                }
-
-                // check observation length
-                if (observation.getPrimaryMeasure() != null && observation.getPrimaryMeasure().length() > MAX_MEASURE_LENGTH) {
-                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH, dataOperation.getDataSourceUuid(), observation.getPrimaryMeasure(),
-                            MAX_MEASURE_LENGTH);
-                }
                 observations.add(observation);
             }
         }
         return observations;
+    }
+
+    private List<ObservationExtendedDto> createObservationsFromDataOperationJson(DataOperation dataOperation, Data data, List<String> geoValues, List<String> timeValues) throws MetamacException {
+        List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+        for (String geoVal : geoValues) {
+            for (String timeVal : timeValues) {
+                // Map for querying the data from the json
+                Map<String, String> varCodesForQueryJson = new HashMap<String, String>();
+
+                // Only include geographical and time values if a variable has been selected
+                if (dataOperation.hasGeographicalVariable()) {
+                    varCodesForQueryJson.put(dataOperation.getGeographicalVariable(), geoVal);
+                }
+                if (dataOperation.hasTimeVariable()) {
+                    varCodesForQueryJson.put(dataOperation.getTimeVariable(), timeVal);
+                }
+                for (DataSourceVariable var : dataOperation.getOtherVariables()) {
+                    varCodesForQueryJson.put(var.getVariable(), var.getCategory());
+                }
+
+                ObservationExtendedDto observation = getObservationValue(dataOperation, data, varCodesForQueryJson, geoVal, timeVal);
+
+                checkMaxObservationValueLength(dataOperation, observation);
+
+                observations.add(observation);
+            }
+        }
+        return observations;
+    }
+
+    protected void checkMaxObservationValueLength(DataOperation dataOperation, ObservationExtendedDto observation) throws MetamacException {
+        // check observation length
+        if (observation.getPrimaryMeasure() != null && observation.getPrimaryMeasure().length() > MAX_MEASURE_LENGTH) {
+            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH, dataOperation.getDataSourceUuid(), observation.getPrimaryMeasure(), MAX_MEASURE_LENGTH);
+        }
     }
 
     private void deleteDatasetRepositoryIfExists(DatasetRepositoryDto datasetRepositoryDto) {

@@ -58,4 +58,21 @@ public class GeographicalValueVO {
     public void setGranularity(GeographicalGranularityVO granularity) {
         this.granularity = granularity;
     }
+
+    @Override
+    public int hashCode() {
+        return getCode().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof GeographicalValueVO)) {
+            return false;
+        }
+        GeographicalValueVO other = (GeographicalValueVO) obj;
+        return getCode().equals(other.getCode());
+    }
 }
