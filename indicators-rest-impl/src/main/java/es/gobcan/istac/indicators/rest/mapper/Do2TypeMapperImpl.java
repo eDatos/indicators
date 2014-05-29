@@ -795,11 +795,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
             if (quantity != null) {
                 metadataRepresentationType.setQuantity(quantityDoToBaseType(quantity, baseURL));
+
+                removeUnitMultiplierIfRate(measureValue, metadataRepresentationType);
             }
             measureValueTypes.add(metadataRepresentationType);
         }
         sortMeasureValuesTypes(measureValueTypes);
         return measureValueTypes;
+    }
+
+    private void removeUnitMultiplierIfRate(MeasureValue measureValue, MetadataRepresentationType metadataRepresentationType) {
+        // INDISTAC-831 Las tasas no deben tener públicamente el metadato multiplicador de la unidad
+        if (measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE) || measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE)) {
+            metadataRepresentationType.getQuantity().setUnitMultiplier(null);
+        }
     }
 
     private void sortMeasureValuesTypes(List<MetadataRepresentationType> measureValueTypes) {
@@ -839,7 +848,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 case ANNUAL_PERCENTAGE_RATE:
                     if (datasource.getAnnualPercentageRate() != null) {
                         RateDerivation rateDerivation = datasource.getAnnualPercentageRate();
-                        rateDerivation.getQuantity().setUnitMultiplier(null);
                         return rateDerivation;
                     }
                     break;
@@ -851,7 +859,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 case INTERPERIOD_PERCENTAGE_RATE:
                     if (datasource.getInterperiodPercentageRate() != null) {
                         RateDerivation rateDerivation = datasource.getInterperiodPercentageRate();
-                        rateDerivation.getQuantity().setUnitMultiplier(null);
                         return rateDerivation;
                     }
                     break;
