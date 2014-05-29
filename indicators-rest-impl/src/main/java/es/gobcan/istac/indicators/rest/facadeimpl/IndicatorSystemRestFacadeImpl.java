@@ -204,7 +204,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         // Fields filter. Only support for +metadata, +data
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
-        logger.info("Tiempo instancias: " + (timeBeforeMetadata - timeInit));
         if (fieldsToAdd.contains("+metadata")) {
             for (int i = 0; i < result.getItems().size(); i++) {
                 IndicatorInstanceBaseType baseType = result.getItems().get(i);
