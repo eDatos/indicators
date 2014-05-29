@@ -361,7 +361,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
-            long time = System.currentTimeMillis();
             for (int i = 0; i < geographicalCodes.size(); i++) {
                 String geographicalCode = geographicalCodes.get(i);
                 dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
@@ -397,10 +396,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
-            long timeLoop = System.currentTimeMillis();
-
-            LOG.info("Tiempo loop " + (timeLoop - time));
-
             DataType dataType = new DataType();
             dataType.setFormat(format);
             dataType.setDimension(dimension);
@@ -525,19 +520,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws Exception {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
-        long time = System.currentTimeMillis();
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
-        long timeGra = System.currentTimeMillis();
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
-        long timeVal = System.currentTimeMillis();
-        LOG.info("Time metadata geo gra :" + (timeGra - time));
-        LOG.info("Time metadata geo val :" + (timeVal - timeGra));
 
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
-        long timeGeo = System.currentTimeMillis();
-        LOG.info("Time metadata geo:" + (timeGeo - time));
 
         // TIME
         List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicator(source.getIndicator().getUuid());
@@ -545,26 +533,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
-        long timeTemp = System.currentTimeMillis();
-        LOG.info("Time metadata temp:" + (timeTemp - timeGeo));
 
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
-        long timeMeasuresBase = System.currentTimeMillis();
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
-        long timeMeasures = System.currentTimeMillis();
-        LOG.info("Time metadata meas create:" + (timeMeasures - timeMeasuresBase));
-        LOG.info("Time metadata meas:" + (timeMeasures - timeTemp));
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
-        long timeAttributes = System.currentTimeMillis();
-        LOG.info("Time metadata attrs:" + (timeAttributes - timeMeasures));
 
         target.setAttribute(metadataAttributes);
     }
@@ -656,16 +636,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
-            long timeInit = System.currentTimeMillis();
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
-
-            long timeGeo = System.currentTimeMillis();
-            LOG.info("  Time metadata geo: " + (timeGeo - timeInit));
 
             // TIME
             List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicatorInstance(source.getUuid());
@@ -674,20 +650,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
             target.getDimension().put(timeDimension.getCode(), timeDimension);
 
-            long timeTemporal = System.currentTimeMillis();
-            LOG.info("  Time metadata temporal: " + (timeTemporal - timeGeo));
-
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
-            long timeMeasure = System.currentTimeMillis();
-            LOG.info("  Time metadata measure query : " + (timeMeasure - timeTemporal));
 
             MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, baseURL);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
-
-            long timeMeasure2 = System.currentTimeMillis();
-            LOG.info("  Time metadata measure dimension: " + (timeMeasure2 - timeMeasure));
-
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }

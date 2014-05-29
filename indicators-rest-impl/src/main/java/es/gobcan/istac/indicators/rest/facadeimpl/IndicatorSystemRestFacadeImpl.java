@@ -185,7 +185,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     public PagedResultType<IndicatorInstanceBaseType> retrievePaginatedIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, Integer limit, Integer offset,
             String fields, Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws Exception {
 
-        long timeInit = System.currentTimeMillis();
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, limit, offset);
         ConditionalCriteria systemCondition = ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem);
@@ -205,7 +204,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         // Fields filter. Only support for +metadata, +data
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
-        long timeBeforeMetadata = System.currentTimeMillis();
         logger.info("Tiempo instancias: " + (timeBeforeMetadata - timeInit));
         if (fieldsToAdd.contains("+metadata")) {
             for (int i = 0; i < result.getItems().size(); i++) {
@@ -217,8 +215,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                 baseType.setMetadata(metadataType);
             }
         }
-        long timeAfterMetadata = System.currentTimeMillis();
-        logger.info("Tiempo metadata: " + (timeAfterMetadata - timeBeforeMetadata));
 
         if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
@@ -228,10 +224,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                 type.setData(dataType);
             }
         }
-        long timeAfterData = System.currentTimeMillis();
-        logger.info("Tiempo data: " + (timeAfterData - timeAfterMetadata));
-
-        logger.info("Tiempo total: " + (timeAfterData - timeInit));
         return result;
     }
 
@@ -257,29 +249,18 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         dataFilter.setMeasureFilter(measureFilter);
 
         DataType dataType;
-        long timeInit = System.currentTimeMillis();
         if (includeObservationMetadata) {
             IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
-            long timeObs = System.currentTimeMillis();
-            logger.info("   Time obs " + (timeObs - timeInit));
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
-
-            long timeMapper = System.currentTimeMillis();
-            logger.info("   Time mapper " + (timeMapper - timeObs));
         } else {
             IndicatorObservationsVO instanceObservations = indicatorsApiService.findObservationsInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
-            long timeObs = System.currentTimeMillis();
-            logger.info("   Time obs " + (timeObs - timeInit));
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
-
-            long timeMapper = System.currentTimeMillis();
-            logger.info("   Time mapper " + (timeMapper - timeObs));
         }
 
         return dataType;

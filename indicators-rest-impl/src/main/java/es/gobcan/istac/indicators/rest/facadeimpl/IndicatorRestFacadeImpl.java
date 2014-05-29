@@ -51,7 +51,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
             throws Exception {
-        long timeInit = System.currentTimeMillis();
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorsRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
 
@@ -64,9 +63,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         // Mapping to type
         List<IndicatorBaseType> result = dto2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues(), baseUrl);
 
-        long timeBeforeMetadata = System.currentTimeMillis();
-        logger.info("Tiempo find " + (timeBeforeMetadata - timeInit));
-
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
             for (int i = 0; i < result.size(); i++) {
@@ -78,8 +74,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 baseType.setMetadata(metadataType);
             }
         }
-        long timeAfterMetadata = System.currentTimeMillis();
-        logger.info("Tiempo metadata " + (timeAfterMetadata - timeBeforeMetadata));
 
         if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
@@ -89,8 +83,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 indicatorType.setData(dataType);
             }
         }
-        long timeAfterData = System.currentTimeMillis();
-        logger.info("Tiempo data " + (timeAfterData - timeAfterMetadata));
 
         // Pagegd result
         PagedResultType<IndicatorBaseType> resultType = new PagedResultType<IndicatorBaseType>();
@@ -100,7 +92,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         resultType.setTotal(indicatorsVersions.getTotalRows());
         resultType.setItems(result);
 
-        logger.info("Tiempo total " + (System.currentTimeMillis() - timeInit));
         return resultType;
     }
 
@@ -124,8 +115,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             boolean includeObservationMetadata) throws Exception {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
-        long time = System.currentTimeMillis();
-
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.filterTimeDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
@@ -135,31 +124,20 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         dataFilter.setTimeFilter(timeFilter);
         dataFilter.setMeasureFilter(measureFilter);
 
-        long timeDimensions = System.currentTimeMillis();
 
         DataType dataType;
         if (includeObservationMetadata) {
             IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
-            long timeData = System.currentTimeMillis();
-            logger.info("Data dimensiones " + (timeDimensions - time));
-            logger.info("Data repository " + (timeData - timeDimensions));
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservationsExtended.getGeographicalCodes(), indicatorObservationsExtended.getTimeCodes(),
                     indicatorObservationsExtended.getMeasureCodes(), indicatorObservationsExtended.getObservations());
             dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
-            long timeOutput = System.currentTimeMillis();
-            logger.info("Data output " + (timeOutput - timeData));
         } else {
             IndicatorObservationsVO indicatorObservations = indicatorsApiService.findObservationsInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
-            long timeData = System.currentTimeMillis();
-            logger.info("Data dimensiones " + (timeDimensions - time));
-            logger.info("Data repository " + (timeData - timeDimensions));
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservations.getGeographicalCodes(), indicatorObservations.getTimeCodes(),
                     indicatorObservations.getMeasureCodes(), indicatorObservations.getObservations());
             dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
-            long timeOutput = System.currentTimeMillis();
-            logger.info("Data output " + (timeOutput - timeData));
         }
         return dataType;
     }
