@@ -520,11 +520,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
     private List<TimeValue> retrieveTimeCoverageFromCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        long time = System.currentTimeMillis();
         List<TimeValue> timeValues = getIndicatorVersionTimeCoverageRepository().retrieveCoverage(indicatorVersion);
-        long timeRetrieve = System.currentTimeMillis();
         TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
-        long timeSort = System.currentTimeMillis();
         return timeValues;
     }
 
