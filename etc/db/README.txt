@@ -13,5 +13,5 @@
     - IMPORTANTE: NO ejecutar los scripts de la carpeta "99-local", ya que las vistas ya estarán creadas.
     
 3) RELEASES:
-    - Ejecutar los scripts de la carpeta "03-updates-in-release"
+    - Ejecutar los scripts de la carpeta "changes-from-release" en su versión correspondiente
     

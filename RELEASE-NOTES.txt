@@ -15,6 +15,78 @@ Por favor, consulta nuestro gestor de incidencia para obtener más información
 de las incidencias con el id [INDISTAC-xxx].
 http://jira.arte-consultores.com/browse/INDISTAC
 
+
+------------------------------------------------------------------------------
+Release 3.4.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - Versión 3.4.0
+
+** Error
+    * [INDISTAC-822] - [WEB] La tabla de unidades de medida es demasiado pequeña
+    * [INDISTAC-828] - Detectado error en los roles que pueden llevar a cabo la validación de producción de un sistema de indicadores
+    * [INDISTAC-830] - Actualización del manual por errata en la tabla de acciones asociada a cada rol
+    * [INDISTAC-831] - Las tasas no deben tener públicamente el metadato multiplicador de la unidad
+    * [INDISTAC-837] - [WIDGET] El tamaño del widget temporal, tras cambiar a Highcharts, es demasiado grande
+    * [INDISTAC-855] - [Widgets] Problemas en la carga de datos
+    * [INDISTAC-856] - [WIDGET] NO se visualizan todas las instancias de indicador publicadas
+    * [INDISTAC-865] - Las propiedades de configuración de las apps no se comprueban correctamente y eso provoca errores en el incio
+
+** Mejora
+    * [INDISTAC-818] - [API] Modificar las URL en las que se muestran la documentación para que estén acorde con la norma ISTAC
+    * [INDISTAC-824] - [Configuración] Todas las propiedades de tipo password no deben almacenarse en texto plano
+    * [INDISTAC-857] - Añadir tablas de coverage para mejorar el rendimiento de la consulta de datos
+
+
+** Soporte
+    * [INDISTAC-781] - [SISTEMAS] Tareas a realizar cuando se prepara paquete de instlación y/o se sacara release
+    * [INDISTAC-810] - En AbstractRestController controlar los not found de todos los recursos y devolver 404
+    * [INDISTAC-815] - Cambio de los nombres de los war
+    * [INDISTAC-817] - [API] La imagen del snipper que se muestra cuando se carga la documentación no se visualiza correctamente
+    * [INDISTAC-819] - [API] En la cabecera de la petición raíz de la versión faltan enlaces a recursos a los que se puede acceder.
+    * [INDISTAC-821] - [CORE] El script de insertar datos en el esquema common-metadata pide valores de variables
+    * [INDISTAC-823] - No se ha incluido la propiedad del nombre del rol del esquema de data en lso scripts de actualziación
+    * [INDISTAC-825] - Error al descargar el manual de ayuda
+    * [INDISTAC-826] - El servlet de descarga nos permite descargar cualquier fichero del servidor al especificar la ruta
+    * [INDISTAC-827] - Cambiar driver de oracle de tests al 11 para que funcione en jenkins
+    * [INDISTAC-829] - Corregir problema con factorypathentry para el gwtplatform 0.6
+    * [INDISTAC-832] - Eliminar métodos innecesarios en el mapper de la implementación de la API
+    * [INDISTAC-833] - Eliminar de la API los atributos de unidades que aparecen a nivel de observación
+    * [INDISTAC-834] - [API] La definición del indicador no está devolviendo el atributo "OBS_CONF"
+    * [INDISTAC-835] - Alberto solicita el envío del algoritmo de generación de colores de widgets
+    * [INDISTAC-836] - Comprobar que todos los mensajes de error y los parámetros tienen sus correspondientes traducciones
+    * [INDISTAC-838] - En ocasiones, se produce un error cuando se trata de versionar un indicador
+    * [INDISTAC-839] - Error al editar la fuente de datos porque dice que son requeridos metadatos que se han cumplimentado
+    * [INDISTAC-840] - Comprobar que los errores del CORE se están traduciendo
+    * [INDISTAC-841] - [API] El widget de últimos indicadores actualizados no está haciendo caso de la propiedad "número de indicadores recientes"
+    * [INDISTAC-842] - [Swagger] Error en el método "/indicatorsSystems/{code}/indicatorsInstances" porque el nombre está mal escrito
+    * [INDISTAC-843] - Error al editar visualizar un datasource, da un type cast exception
+    * [INDISTAC-844] - [WEB] Eliminar el serviceContext del baseController de la web externa
+    * [INDISTAC-846] - Limpiar CSS aplicación interna
+    * [INDISTAC-847] - Añadir despliegue en estadisticas desde el jenkins
+    * [INDISTAC-850] - La carga de quantity units y otros listados de valores no están bien cargados al acceder a páginas de detalle de indicadores
+    * [INDISTAC-851] - [Documento] Crear diagrama del entorno de indicadores y sus interacciones para enviar a Alfonso
+    * [INDISTAC-852] - Mejorando los componentes de international string
+    * [INDISTAC-853] - [CORE] Buscar método de manejo de versiones incompatibles entre librerías
+    * [INDISTAC-858] - Eliminar los métodos a nivel de fachada que no se estén utilizando
+    * [INDISTAC-859] - Los filtros sobre los datos deben llevarse hasta nivel de servicio y allí crear las conditiondimension
+    * [INDISTAC-860] - La tabla de cache de ultimos valores debe cambiar la asociacion a valores geograficos por codigos
+    * [INDISTAC-862] - Relacionar el quantityUnit de la entidad quantity con la tabla de QuantityUnit
+    * [INDISTAC-863] - Evitar que el unitMultiplier pueda ser nulo en BBDD
+    * [INDISTAC-864] - Percentage of en modo lectura de los rates aparece como OBJECT
+    * [INDISTAC-866] - Paquete de instalación v3.4.0
+
+** Tarea
+    * [INDISTAC-662] - [Widget Serie temporal] Leyenda de categorías: Se debería reducir el tamaño de la tipografía.
+    * [INDISTAC-816] - [Logs] Añadir al nombre del fichero el identificador del nodo del clúster
+
+
+** Tarea Técnica
+    * [INDISTAC-630] - Activar seguridad para los proximos paquetes
+    * [INDISTAC-752] - Revisar mensajes de error que no falten en la web
+    * [INDISTAC-753] - [WEB] Modificar que el footer de la web interna se actualice automáticamente.
+
+
 ------------------------------------------------------------------------------
 Release 3.3.2
 ------------------------------------------------------------------------------
