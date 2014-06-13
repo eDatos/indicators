@@ -5,7 +5,7 @@
     <parent>
         <groupId>es.gobcan.istac.indicators</groupId>
         <artifactId>indicators-parent</artifactId>
-        <version>3.4.1-SNAPSHOT</version>
+        <version>3.4.1</version>
         <relativePath>indicators-parent/pom.xml</relativePath>
     </parent>
 
@@ -15,9 +15,9 @@
     <name>INDICATORS</name>
 
     <scm>
-        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</connection>
-        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</developerConnection>
-        <url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/trunk/</url>
+        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/tags/20140613-0800-v3.4.1</connection>
+        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/tags/20140613-0800-v3.4.1</developerConnection>
+        <url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/tags/20140613-0800-v3.4.1</url>
     </scm>
 
     <modules>
