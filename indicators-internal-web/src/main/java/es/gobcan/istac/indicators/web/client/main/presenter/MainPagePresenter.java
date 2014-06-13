@@ -12,6 +12,8 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.shared.CloseSessionAction;
+import org.siemac.metamac.web.common.shared.CloseSessionResult;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -34,8 +36,6 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
-import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
-import es.gobcan.istac.indicators.web.shared.CloseSessionResult;
 import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlResult;
 import es.gobcan.istac.indicators.web.shared.SharedTokens;
@@ -52,7 +52,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
 
         void showMessage(Throwable throwable, String message, MessageTypeEnum type);
+
         void hideMessages();
+
         void setTitle(String title);
     }
 
@@ -107,6 +109,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
                 logger.log(Level.SEVERE, "Error closing session");
                 ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
             }
+
             @Override
             public void onSuccess(CloseSessionResult result) {
                 Window.Location.assign(result.getLogoutPageUrl());
@@ -126,6 +129,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
             }
+
             @Override
             public void onWaitSuccess(GetUserGuideUrlResult result) {
                 CommonWebUtils.showDownloadFileWindow(SharedTokens.FILE_DOWNLOAD_DIR_PATH, SharedTokens.PARAM_DOC, result.getUserGuideUrl());

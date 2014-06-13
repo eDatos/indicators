@@ -273,6 +273,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetIndicatorPreviewUrlAction.class, GetIndicatorPreviewUrlActionHandler.class);
         bindHandler(GetIndicatorInstancePreviewUrlAction.class, GetIndicatorInstancePreviewUrlActionHandler.class);
 
+        // Other
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
