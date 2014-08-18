@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.web.client;
 
-import java.util.logging.Logger;
-
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -21,7 +19,6 @@ import es.gobcan.istac.indicators.web.shared.GetValuesListsResult;
 public class IndicatorsWeb extends MetamacSecurityEntryPoint {
 
     private static final boolean             SECURITY_ENABLED = true;
-    private static Logger                    logger           = Logger.getLogger(IndicatorsWeb.class.getName());
 
     private static MetamacPrincipal          principal;
     private static IndicatorsWebMessages     messages;
