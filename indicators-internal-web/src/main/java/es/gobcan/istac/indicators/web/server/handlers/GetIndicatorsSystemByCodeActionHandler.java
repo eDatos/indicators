@@ -33,7 +33,7 @@ public class GetIndicatorsSystemByCodeActionHandler extends SecurityActionHandle
     @Override
     public GetIndicatorsSystemByCodeResult executeSecurityAction(GetIndicatorsSystemByCodeAction action) throws ActionException {
         // Retrieve operation from WS
-        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getCode());
+        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), action.getCode());
         // Check if operation (indicators system) exists in the DB
         try {
             // If exists, updates indicators system
@@ -44,5 +44,4 @@ public class GetIndicatorsSystemByCodeActionHandler extends SecurityActionHandle
             return new GetIndicatorsSystemByCodeResult(DtoUtils.createIndicatorsSystemDtoWeb(operation));
         }
     }
-
 }

@@ -42,7 +42,7 @@ public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<
             // If does not exist, create a new indicators system and set operation values
             try {
                 // Retrieve operation from WS
-                Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getIndicatorsSystem().getCode());
+                Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystem().getCode());
                 // Set values to indicators system
                 indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operation);
                 // Create indicators system

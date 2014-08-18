@@ -38,6 +38,8 @@
  
     <bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider"/>
 	
+	<bean id="restExceptionUtils" class="org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils" />
+
     <bean id="webTranslateExceptions" class="org.siemac.metamac.web.common.server.utils.WebTranslateExceptions">
         <property name="bundleName" value="messages-indicators-internal-web" />
     </bean>

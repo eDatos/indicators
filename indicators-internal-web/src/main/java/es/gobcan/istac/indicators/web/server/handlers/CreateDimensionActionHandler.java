@@ -43,7 +43,7 @@ public class CreateDimensionActionHandler extends SecurityActionHandler<CreateDi
             // If does not exist, create a new indicators system and set operation values
             try {
                 // Retrieve operation from WS
-                Operation operationBase = statisticalOperationsRestInternalFacade.retrieveOperation(action.getIndicatorsSystem().getCode());
+                Operation operationBase = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystem().getCode());
                 // Set values to indicators system
                 indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operationBase);
                 // Create indicators system

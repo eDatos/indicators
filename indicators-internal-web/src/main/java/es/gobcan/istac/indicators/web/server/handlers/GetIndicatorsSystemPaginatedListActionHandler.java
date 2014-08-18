@@ -47,7 +47,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
-        Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
+        Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), action.getFirstResult(), action.getMaxResults());
         if (result != null && result.getOperations() != null) {
             totalResults = result.getTotal().intValue();
             for (Resource resource : result.getOperations()) {
