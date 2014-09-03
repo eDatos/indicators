@@ -130,6 +130,10 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
         </dependency>
+       	<dependency>
+			<groupId>p2.osgi.bundle</groupId>
+			<artifactId>com.google.collect</artifactId>
+		</dependency>
 
         <!-- LOGGING -->
         <dependency>
