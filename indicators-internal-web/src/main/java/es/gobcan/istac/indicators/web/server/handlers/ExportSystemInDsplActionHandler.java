@@ -29,7 +29,7 @@ public class ExportSystemInDsplActionHandler extends SecurityActionHandler<Expor
     public ExportSystemInDsplResult executeSecurityAction(ExportSystemInDsplAction action) throws ActionException {
         try {
             List<String> files = indicatorsServiceFacade.exportIndicatorsSystemPublishedToDsplFiles(ServiceContextHolder.getCurrentServiceContext(), action.getSystemUuid(), action.getSystemTitle(),
-                    action.getSystemDescription());
+                    action.getSystemDescription(), action.isMergeTimeGranularities());
             return new ExportSystemInDsplResult(files);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
