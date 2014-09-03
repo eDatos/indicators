@@ -381,7 +381,7 @@ Application Indicators {
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	"Export a published Indicators System as a set of dspl zip files"
-	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
+	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description, boolean mergeTimeGranularities) throws MetamacException;
 	    	
 	    	
 	    	
