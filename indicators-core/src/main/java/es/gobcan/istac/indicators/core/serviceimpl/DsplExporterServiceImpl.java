@@ -115,7 +115,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 zos.close();
             }
         }
-        return zipFile.getAbsolutePath();
+        return zipFile.getName();
     }
 
     private File createTempDirectory() throws IOException {
