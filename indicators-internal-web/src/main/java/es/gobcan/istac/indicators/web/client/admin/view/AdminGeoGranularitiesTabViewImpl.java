@@ -125,13 +125,21 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
         listPanel.addMember(toolStrip);
         listPanel.addMember(listGrid);
 
+        HLayout leftLayout = new HLayout();
+        leftLayout.setWidth("50%");
+        leftLayout.addMember(listPanel);
+
+        HLayout rightLayout = new HLayout();
+        rightLayout.setWidth("50%");
+        rightLayout.addMember(geoGranularityPanel);
+
         panel = new HLayout();
         panel.setMargin(15);
         panel.setMembersMargin(5);
-        panel.addMember(listPanel);
-        panel.addMember(geoGranularityPanel);
-
+        panel.addMember(leftLayout);
+        panel.addMember(rightLayout);
     }
+
     // UTILS
     private List<String> getSelectedGeoGranularities() {
         List<String> codes = new ArrayList<String>();
