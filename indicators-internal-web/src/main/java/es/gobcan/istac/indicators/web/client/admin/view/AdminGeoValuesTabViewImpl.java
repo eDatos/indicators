@@ -84,11 +84,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
             @Override
             public void onClick(ClickEvent event) {
-                int firstResult = 0;
-                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
-                    firstResult = listGrid.getFirstResult();
-                }
-                getUiHandlers().deleteGeoValues(getSelectedGeoValues(), firstResult);
+                getUiHandlers().deleteGeoValues(getSelectedGeoValues(), CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
             }
         });
 
@@ -226,6 +222,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
         public GeoValuePanel() {
             mainFormLayout = new InternationalMainFormLayout(ClientSecurityUtils.canEditGeographicalValue());
+            mainFormLayout.setCanDelete(ClientSecurityUtils.canDeleteGeoValue());
             mainFormLayout.setTitleLabelContents(getConstants().geoValue());
 
             // Edit: Add a custom handler to check indicator status before start editing
@@ -244,6 +241,16 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
                     if (generalEditionForm.validate(false)) {
                         getUiHandlers().saveGeoValue(listGrid.getFirstResult(), getGeoValueDto());
                     }
+                }
+            });
+
+            mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    List<String> uuids = new ArrayList<String>();
+                    uuids.add(geoValueDto.getUuid());
+                    getUiHandlers().deleteGeoValues(uuids, CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
                 }
             });
 

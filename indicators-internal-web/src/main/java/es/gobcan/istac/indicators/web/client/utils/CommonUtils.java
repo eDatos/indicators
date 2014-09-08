@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -336,5 +337,13 @@ public class CommonUtils {
                 return firstText.compareTo(secondText);
             }
         });
+    }
+
+    public static int getFirstResultToReloadAfterDeletion(PaginatedCheckListGrid listGrid) {
+        int firstResult = 0;
+        if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
+            firstResult = listGrid.getFirstResult();
+        }
+        return firstResult;
     }
 }

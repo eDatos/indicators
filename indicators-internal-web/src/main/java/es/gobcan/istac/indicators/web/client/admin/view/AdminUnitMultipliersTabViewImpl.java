@@ -37,6 +37,7 @@ import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUnitMultip
 import es.gobcan.istac.indicators.web.client.model.UnitMultiplierRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.UnitMultiplierDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUnitMultipliersUiHandlers> implements AdminUnitMultipliersTabView {
@@ -79,11 +80,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
             @Override
             public void onClick(ClickEvent event) {
-                int firstResult = 0;
-                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
-                    firstResult = listGrid.getFirstResult();
-                }
-                getUiHandlers().deleteUnitMultipliers(getSelectedUnitMultipliers(), firstResult);
+                getUiHandlers().deleteUnitMultipliers(getSelectedUnitMultipliers(), CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
             }
         });
 
@@ -218,6 +215,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
         public UnitMultiplierPanel() {
             mainFormLayout = new InternationalMainFormLayout(ClientSecurityUtils.canEditUnitMultiplier());
+            mainFormLayout.setCanDelete(ClientSecurityUtils.canDeleteUnitMultiplier());
             mainFormLayout.setTitleLabelContents(getConstants().unitMultiplier());
 
             // Edit: Add a custom handler to check indicator status before start editing
@@ -236,6 +234,16 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
                     if (generalEditionForm.validate(false)) {
                         getUiHandlers().saveUnitMultiplier(listGrid.getFirstResult(), getUnitMultiplierDto());
                     }
+                }
+            });
+
+            mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    List<String> uuids = new ArrayList<String>();
+                    uuids.add(unitMultiplierDto.getUuid());
+                    getUiHandlers().deleteUnitMultipliers(uuids, CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
                 }
             });
 

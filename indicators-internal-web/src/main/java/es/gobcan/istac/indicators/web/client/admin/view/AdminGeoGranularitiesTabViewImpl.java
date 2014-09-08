@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoGranula
 import es.gobcan.istac.indicators.web.client.model.GeoGranularityRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.GeoGranularityDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGeoGranularitiesUiHandlers> implements AdminGeoGranularitiesTabView {
@@ -78,11 +79,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
             @Override
             public void onClick(ClickEvent event) {
-                int firstResult = 0;
-                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
-                    firstResult = listGrid.getFirstResult();
-                }
-                getUiHandlers().deleteGeoGranularities(getSelectedGeoGranularities(), firstResult);
+                getUiHandlers().deleteGeoGranularities(getSelectedGeoGranularities(), CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
             }
         });
 
@@ -217,6 +214,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
         public GeoGranularityPanel() {
             mainFormLayout = new InternationalMainFormLayout(ClientSecurityUtils.canEditGeographicalGranularity());
+            mainFormLayout.setCanDelete(ClientSecurityUtils.canDeleteGeoGranularity());
             mainFormLayout.setTitleLabelContents(getConstants().geoGranularity());
 
             // Edit: Add a custom handler to check indicator status before start editing
@@ -235,6 +233,16 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
                     if (generalEditionForm.validate(false)) {
                         getUiHandlers().saveGeoGranularity(listGrid.getFirstResult(), getGeoGranularityDto());
                     }
+                }
+            });
+
+            mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    List<String> uuids = new ArrayList<String>();
+                    uuids.add(geoGranularityDto.getUuid());
+                    getUiHandlers().deleteGeoGranularities(uuids, CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
                 }
             });
 
@@ -294,6 +302,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
             mainFormLayout.addEditionCanvas(generalEditionForm);
         }
+
         public void setGeoGranularityDto(GeographicalGranularityDto dto) {
             this.geoGranularityDto = dto;
 

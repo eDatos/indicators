@@ -90,11 +90,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
             @Override
             public void onClick(ClickEvent event) {
-                int firstResult = 0;
-                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
-                    firstResult = listGrid.getFirstResult();
-                }
-                getUiHandlers().deleteQuantityUnits(getSelectedQuantityUnits(), firstResult);
+                getUiHandlers().deleteQuantityUnits(getSelectedQuantityUnits(), CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
             }
         });
 
@@ -153,7 +149,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         panel.addMember(rightLayout);
 
     }
-    
+
     // UTILS
     private List<String> getSelectedQuantityUnits() {
         List<String> codes = new ArrayList<String>();
@@ -228,6 +224,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         public QuantityUnitPanel() {
 
             mainFormLayout = new InternationalMainFormLayout(ClientSecurityUtils.canEditQuantityUnit());
+            mainFormLayout.setCanDelete(ClientSecurityUtils.canDeleteQuantityUnit());
             mainFormLayout.setTitleLabelContents(getConstants().quantityUnit());
 
             // Edit: Add a custom handler to check indicator status before start editing
@@ -246,6 +243,16 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                     if (generalEditionForm.validate(false)) {
                         getUiHandlers().saveQuantityUnit(listGrid.getFirstResult(), getQuantityUnitDto());
                     }
+                }
+            });
+
+            mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    List<String> uuids = new ArrayList<String>();
+                    uuids.add(quantityUnitDto.getUuid());
+                    getUiHandlers().deleteQuantityUnits(uuids, CommonUtils.getFirstResultToReloadAfterDeletion(listGrid));
                 }
             });
 
