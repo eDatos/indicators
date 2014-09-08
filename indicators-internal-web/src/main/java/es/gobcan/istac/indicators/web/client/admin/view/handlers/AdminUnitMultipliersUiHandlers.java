@@ -8,7 +8,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 public interface AdminUnitMultipliersUiHandlers extends UiHandlers {
 
-    void deleteUnitMultipliers(List<String> uuids);
+    void deleteUnitMultipliers(List<String> uuids, int firstResult);
 
     void saveUnitMultiplier(int currentPage, UnitMultiplierDto dto);
 

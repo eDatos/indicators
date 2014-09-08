@@ -70,24 +70,24 @@ public class AdminUnitMultipliersTabPresenter extends Presenter<AdminUnitMultipl
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        reloadUnitMultipliers();
+        reloadUnitMultipliers(0);
     }
 
     // ACTIONS
 
     @Override
-    public void deleteUnitMultipliers(List<String> uuids) {
+    public void deleteUnitMultipliers(List<String> uuids, final int firstResult) {
         dispatcher.execute(new DeleteUnitMultipliersAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteUnitMultipliersResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                reloadUnitMultipliers();
+                reloadUnitMultipliers(firstResult);
             }
 
             @Override
             public void onWaitSuccess(DeleteUnitMultipliersResult result) {
-                reloadUnitMultipliers();
+                reloadUnitMultipliers(firstResult);
             }
         });
     }
@@ -110,8 +110,8 @@ public class AdminUnitMultipliersTabPresenter extends Presenter<AdminUnitMultipl
         });
     }
 
-    private void reloadUnitMultipliers() {
-        retrieveUnitMultipliers(0);
+    private void reloadUnitMultipliers(int firstResult) {
+        retrieveUnitMultipliers(firstResult);
     }
 
     @Override

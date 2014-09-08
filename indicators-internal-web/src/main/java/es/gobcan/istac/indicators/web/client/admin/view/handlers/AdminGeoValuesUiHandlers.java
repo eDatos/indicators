@@ -8,7 +8,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 public interface AdminGeoValuesUiHandlers extends UiHandlers {
 
-    void deleteGeoValues(List<String> uuids);
+    void deleteGeoValues(List<String> uuids, int firstResult);
 
     void saveGeoValue(int currentPage, GeographicalValueDto dto);
 

@@ -79,7 +79,11 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteUnitMultipliers(getSelectedUnitMultipliers());
+                int firstResult = 0;
+                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
+                    firstResult = listGrid.getFirstResult();
+                }
+                getUiHandlers().deleteUnitMultipliers(getSelectedUnitMultipliers(), firstResult);
             }
         });
 
@@ -132,7 +136,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
         HLayout rightLayout = new HLayout();
         rightLayout.setWidth("50%");
         rightLayout.addMember(unitMultiplierPanel);
-        
+
         panel = new HLayout();
         panel.setMargin(15);
         panel.setMembersMargin(5);
@@ -140,6 +144,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
         panel.addMember(rightLayout);
 
     }
+
     // UTILS
     private List<String> getSelectedUnitMultipliers() {
         List<String> codes = new ArrayList<String>();
@@ -189,7 +194,6 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
     @Override
     public void onUnitMultiplierCreated(UnitMultiplierDto dto) {
-        listGrid.goToLastPage();
         selectUnitMultiplier(dto);
     }
 
@@ -230,7 +234,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
                 @Override
                 public void onClick(ClickEvent event) {
                     if (generalEditionForm.validate(false)) {
-                        getUiHandlers().saveUnitMultiplier(listGrid.getPageNumber(), getUnitMultiplierDto());
+                        getUiHandlers().saveUnitMultiplier(listGrid.getFirstResult(), getUnitMultiplierDto());
                     }
                 }
             });
@@ -292,6 +296,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
             mainFormLayout.addEditionCanvas(generalEditionForm);
         }
+
         public void setUnitMultiplierDto(UnitMultiplierDto dto) {
             this.unitMultiplierDto = dto;
 

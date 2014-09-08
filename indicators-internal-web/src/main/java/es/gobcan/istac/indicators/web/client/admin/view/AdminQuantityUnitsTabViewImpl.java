@@ -90,7 +90,11 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteQuantityUnits(getSelectedQuantityUnits());
+                int firstResult = 0;
+                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
+                    firstResult = listGrid.getFirstResult();
+                }
+                getUiHandlers().deleteQuantityUnits(getSelectedQuantityUnits(), firstResult);
             }
         });
 
@@ -141,7 +145,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         HLayout rightLayout = new HLayout();
         rightLayout.setWidth("50%");
         rightLayout.addMember(quantityUnitPanel);
-        
+
         panel = new HLayout();
         panel.setMargin(15);
         panel.setMembersMargin(5);
@@ -149,6 +153,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         panel.addMember(rightLayout);
 
     }
+    
     // UTILS
     private List<String> getSelectedQuantityUnits() {
         List<String> codes = new ArrayList<String>();
@@ -198,7 +203,6 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
     @Override
     public void onQuantityUnitCreated(QuantityUnitDto dto) {
-        listGrid.goToLastPage();
         selectQuantityUnit(dto);
     }
 
@@ -240,7 +244,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                 @Override
                 public void onClick(ClickEvent event) {
                     if (generalEditionForm.validate(false)) {
-                        getUiHandlers().saveQuantityUnit(listGrid.getPageNumber(), getQuantityUnitDto());
+                        getUiHandlers().saveQuantityUnit(listGrid.getFirstResult(), getQuantityUnitDto());
                     }
                 }
             });
@@ -327,6 +331,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
             mainFormLayout.addEditionCanvas(generalEditionForm);
         }
+
         public void setQuantityUnitDto(QuantityUnitDto quantityUnitDto) {
             this.quantityUnitDto = quantityUnitDto;
 

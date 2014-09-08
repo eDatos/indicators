@@ -84,7 +84,11 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteGeoValues(getSelectedGeoValues());
+                int firstResult = 0;
+                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
+                    firstResult = listGrid.getFirstResult();
+                }
+                getUiHandlers().deleteGeoValues(getSelectedGeoValues(), firstResult);
             }
         });
 
@@ -140,7 +144,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         HLayout rightLayout = new HLayout();
         rightLayout.setWidth("50%");
         rightLayout.addMember(geoValuePanel);
-        
+
         panel = new HLayout();
         panel.setMargin(15);
         panel.setMembersMargin(5);
@@ -148,6 +152,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         panel.addMember(rightLayout);
 
     }
+
     // UTILS
     private List<String> getSelectedGeoValues() {
         List<String> codes = new ArrayList<String>();
@@ -197,7 +202,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
     @Override
     public void onGeoValueCreated(GeographicalValueDto dto) {
-        listGrid.goToLastPageAfterCreate();
+        selectGeoGranularity(dto);
     }
 
     @Override
@@ -237,7 +242,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
                 @Override
                 public void onClick(ClickEvent event) {
                     if (generalEditionForm.validate(false)) {
-                        getUiHandlers().saveGeoValue(listGrid.getPageNumber(), getGeoValueDto());
+                        getUiHandlers().saveGeoValue(listGrid.getFirstResult(), getGeoValueDto());
                     }
                 }
             });

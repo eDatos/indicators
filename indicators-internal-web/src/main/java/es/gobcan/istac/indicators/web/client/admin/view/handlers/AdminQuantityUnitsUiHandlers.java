@@ -8,7 +8,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 
 public interface AdminQuantityUnitsUiHandlers extends UiHandlers {
 
-    void deleteQuantityUnits(List<String> quantityUnitsUuids);
+    void deleteQuantityUnits(List<String> quantityUnitsUuids, int firstResult);
 
     void saveQuantityUnit(int currentPage, QuantityUnitDto quantityUnitDto);
 

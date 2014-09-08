@@ -8,7 +8,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 
 public interface AdminGeoGranularitiesUiHandlers extends UiHandlers {
 
-    void deleteGeoGranularities(List<String> uuids);
+    void deleteGeoGranularities(List<String> uuids, int firstResult);
 
     void saveGeoGranularity(int currentPage, GeographicalGranularityDto dto);
 

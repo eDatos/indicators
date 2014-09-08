@@ -78,7 +78,11 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().deleteGeoGranularities(getSelectedGeoGranularities());
+                int firstResult = 0;
+                if (listGrid.getListGrid().getRecords() != null && listGrid.getListGrid().getRecords().length > 1) {
+                    firstResult = listGrid.getFirstResult();
+                }
+                getUiHandlers().deleteGeoGranularities(getSelectedGeoGranularities(), firstResult);
             }
         });
 
@@ -189,7 +193,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
     @Override
     public void onGeoGranularityCreated(GeographicalGranularityDto dto) {
-        listGrid.goToLastPageAfterCreate();
+        selectGeoGranularity(dto);
     }
 
     @Override
@@ -229,7 +233,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
                 @Override
                 public void onClick(ClickEvent event) {
                     if (generalEditionForm.validate(false)) {
-                        getUiHandlers().saveGeoGranularity(listGrid.getPageNumber(), getGeoGranularityDto());
+                        getUiHandlers().saveGeoGranularity(listGrid.getFirstResult(), getGeoGranularityDto());
                     }
                 }
             });

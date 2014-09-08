@@ -75,24 +75,24 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        reloadQuantityUnits();
+        reloadQuantityUnits(0);
     }
 
     // ACTIONS
 
     @Override
-    public void deleteQuantityUnits(List<String> quantityUnitsUuids) {
+    public void deleteQuantityUnits(List<String> quantityUnitsUuids, final int firstResult) {
         dispatcher.execute(new DeleteQuantityUnitsAction(quantityUnitsUuids), new WaitingAsyncCallbackHandlingError<DeleteQuantityUnitsResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                reloadQuantityUnits();
+                reloadQuantityUnits(firstResult);
             }
 
             @Override
             public void onWaitSuccess(DeleteQuantityUnitsResult result) {
-                reloadQuantityUnits();
+                reloadQuantityUnits(firstResult);
                 reloadQuantityUnitsCache();
             }
         });
@@ -140,8 +140,8 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
         });
     }
 
-    private void reloadQuantityUnits() {
-        retrieveQuantityUnits(0, MAX_RESULTS);
+    private void reloadQuantityUnits(int firstResult) {
+        retrieveQuantityUnits(firstResult, MAX_RESULTS);
     }
 
     private void reloadQuantityUnitsCache() {

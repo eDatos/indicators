@@ -74,24 +74,24 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        reloadGeoGranularities();
+        reloadGeoGranularities(0);
     }
 
     // ACTIONS
 
     @Override
-    public void deleteGeoGranularities(List<String> uuids) {
+    public void deleteGeoGranularities(List<String> uuids, final int firstResult) {
         dispatcher.execute(new DeleteGeoGranularitiesAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteGeoGranularitiesResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                reloadGeoGranularities();
+                reloadGeoGranularities(firstResult);
             }
 
             @Override
             public void onWaitSuccess(DeleteGeoGranularitiesResult result) {
-                reloadGeoGranularities();
+                reloadGeoGranularities(firstResult);
                 reloadGeoGranularitiesCache();
             }
         });
@@ -139,8 +139,8 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
 
     }
 
-    private void reloadGeoGranularities() {
-        retrieveGeoGranularities(0);
+    private void reloadGeoGranularities(int firstResult) {
+        retrieveGeoGranularities(firstResult);
     }
 
     private void reloadGeoGranularitiesCache() {

@@ -69,24 +69,23 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        reloadGeoValues();
+        reloadGeoValues(0);
     }
 
     // ACTIONS
 
     @Override
-    public void deleteGeoValues(List<String> uuids) {
+    public void deleteGeoValues(List<String> uuids, final int firstResult) {
         dispatcher.execute(new DeleteGeoValuesAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteGeoValuesResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                reloadGeoValues();
+                reloadGeoValues(firstResult);
             }
-
             @Override
             public void onWaitSuccess(DeleteGeoValuesResult result) {
-                reloadGeoValues();
+                reloadGeoValues(firstResult);
             }
         });
     }
@@ -132,8 +131,8 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
 
     }
 
-    private void reloadGeoValues() {
-        retrieveGeoValues(0);
+    private void reloadGeoValues(int firstResult) {
+        retrieveGeoValues(firstResult);
     }
 
     private static interface Action {
