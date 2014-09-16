@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>es.gobcan.istac.indicators</groupId>
+        <artifactId>indicators-parent</artifactId>
+        <version>3.4.2-SNAPSHOT</version>
+        <relativePath>../indicators-parent/pom.xml</relativePath>
+    </parent>
+
+    <groupId>es.gobcan.istac.indicators</groupId>
+    <artifactId>indicators-external-api-web</artifactId>
+    <name>INDICATORS :: WEB :: EXTERNAL :: API</name>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        
+        <!-- INDICATORS -->
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-core</artifactId>
+            <classifier>client</classifier>
+        </dependency>
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-rest-impl</artifactId>
+        </dependency>
+
+        <!-- WEB -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+        <!-- json, xml -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+            
+    </dependencies>
+
+    <build>
+        <finalName>indicators-${project.version}</finalName>
+    </build>
+</project>
