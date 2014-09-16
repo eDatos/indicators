@@ -2,7 +2,7 @@
 <!DOCTYPE configuration>
 <configuration>
 
-    <property name="LOGS_HOME" value="/data/istac/indicators-visualizations/logs" />
+    <property name="LOGS_HOME" value="/data/istac/indicators/logs" />
 
 
 
