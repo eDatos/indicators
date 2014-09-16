@@ -1,8 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
-import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
-import es.gobcan.istac.indicators.rest.types.ElementLevelType;
-import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +13,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import es.gobcan.istac.indicators.rest.types.ElementLevelType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
-
-import java.util.List;
+import es.gobcan.istac.indicators.web.rest.clients.RestApiLocatorExternal;
 
 @Controller
 public class IndicatorsSystemsController extends BaseController {
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ConfigurationService   configurationService;
 
     @Autowired
-    private IndicatorSystemRestFacade indicatorSystemRestFacade = null;
+    private RestApiLocatorExternal restApiLocatorExternal;
 
     // Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
@@ -42,9 +42,7 @@ public class IndicatorsSystemsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
 
-
-        String baseURL = uriComponentsBuilder.build().toUriString();
-        IndicatorsSystemType indicator = indicatorSystemRestFacade.retrieveIndicatorsSystem(baseURL, code);
+        IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 
@@ -73,7 +71,7 @@ public class IndicatorsSystemsController extends BaseController {
     private int countIndicatorInstances(List<ElementLevelType> elements) {
         int total = 0;
         if (elements != null) {
-            for(ElementLevelType element : elements){
+            for (ElementLevelType element : elements) {
                 if ("indicators#indicatorInstance".equals(element.getKind())) {
                     total += 1;
                 } else {

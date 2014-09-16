@@ -75,9 +75,8 @@
     <!-- Imports user-defined @Controller beans that process client requests -->
     <import resource="applicationContext-web-controllers.xml" />
     <import resource="applicationContext-web-resources.xml" />
-
-    <!-- Rest API -->
-    <import resource="classpath:/spring/indicators-rest-external-applicationContext.xml" />
-    <import resource="classpath:/spring/include/application-controller-cache.xml" />
+    
+    <!-- API Locator -->
+	<bean class="es.gobcan.istac.indicators.web.rest.clients.RestApiLocatorExternal"/>
 
 </beans>

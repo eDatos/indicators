@@ -9,25 +9,15 @@ public class ApplicationStartup extends ApplicationStartupListener {
 
     @Override
     public String projectName() {
-        return "indicators";
+        return "indicators-visualizations";
     }
 
     @Override
     public void checkApplicationProperties() throws MetamacException {
-        // Datasource
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_INDICATORS_URL);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_INDICATORS_DRIVER_NAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_INDICATORS_USERNAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_INDICATORS_PASSWORD);
-
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_URL);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_DRIVER_NAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_USERNAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
-
         // Other
         checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
+        checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_API);
 
         // Widgets
         checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);

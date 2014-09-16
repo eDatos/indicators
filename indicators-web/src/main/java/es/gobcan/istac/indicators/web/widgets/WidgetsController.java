@@ -1,21 +1,25 @@
 package es.gobcan.istac.indicators.web.widgets;
 
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
-import es.gobcan.istac.indicators.web.diffusion.BaseController;
-import es.gobcan.istac.indicators.web.diffusion.WebConstants;
-import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.web.diffusion.BaseController;
+import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 
 @Controller
 public class WidgetsController extends BaseController {
