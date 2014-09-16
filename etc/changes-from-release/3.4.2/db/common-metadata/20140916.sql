@@ -1,5 +1,5 @@
 -- -----------------------------------------------------------------------------------------
--- INDISTAC-825 - Error al descargar el manual de ayuda
+-- INDISTAC-870 - Separar el WAR de la APP externa en dos WAR: APP y API
 -- -----------------------------------------------------------------------------------------
 
 SET DEFINE OFF
