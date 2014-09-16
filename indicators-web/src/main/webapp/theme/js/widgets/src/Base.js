@@ -77,11 +77,11 @@
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));
-                //this.titleLink = $('');
+                this.titleText = $('');
                 this.titleContainer = $('');
             } else {
                 this.el.html(this._containerTemplate(templateOptions));
-                //this.titleLink = this.el.find('.istac-widget-title-text');
+                this.titleText = this.el.find('.istac-widget-title-text');
                 this.titleContainer = this.el.find('.istac-widget-title');
             }
 
@@ -221,11 +221,11 @@
                 title = this._getDefaultTitle();
             }
 
-            var $link = this.titleContainer.find('a');
+            var $link = this.titleText.find('a');
             if ($link.length > 0) {
                 $link.text(title);
             } else {
-                this.titleContainer.text(title);
+                this.titleText.text(title);
             }
             this.title = title;
         },
@@ -249,11 +249,11 @@
 
 
             if (url) {
-                this.titleContainer.html('<a class="istac-widget-title-text" href="' + url + '" target="_blank"></a>');
+                this.titleText.html('<a href="' + url + '" target="_blank"></a>');
                 this.setTitle(this.title);
                 this.setHeaderColor(this.headerColor);
             } else {
-                this.titleContainer.html('');
+                this.titleText.html('');
                 this.setTitle(this.title);
                 this.setHeaderColor(this.headerColor);
             }
