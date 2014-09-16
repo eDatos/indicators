@@ -96,4 +96,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveQuartzExpressionUpdateIndicators() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
     }
+
+    @Override
+    public String retrieveIndicatorsExternalApiUrlBase() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_API);
+    }
 }

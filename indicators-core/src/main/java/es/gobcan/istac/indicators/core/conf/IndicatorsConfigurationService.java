@@ -41,4 +41,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveQuartzExpressionUpdateIndicators() throws MetamacException;
 
+    String retrieveIndicatorsExternalApiUrlBase() throws MetamacException;
+
 }
