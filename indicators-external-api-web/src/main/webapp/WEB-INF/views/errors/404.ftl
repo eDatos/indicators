@@ -1,9 +1,9 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
-[@template.base]
-	
-<div class="error">
-	<p style="font-weight: bold;">[@apph.messageEscape 'page.error.page-not-found'/]</p>
-</div>
-
-[/@template.base]
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	</head>
+	<body>
+		No services found
+	</body>
+</html>
