@@ -9,7 +9,7 @@
         model : App.models.IndicatorSystem,
 
         url : function () {
-            return apiContext + '/indicatorsSystems/';
+            return apiUrl + '/indicatorsSystems/';
         },
 
         parse : function (response) {

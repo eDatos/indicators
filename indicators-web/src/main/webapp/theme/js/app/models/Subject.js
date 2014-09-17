@@ -4,7 +4,7 @@
     App.models.Subject = Backbone.Model.extend({
 
         urlRoot : function () {
-            return apiContext + '/subjects';
+            return apiUrl + '/subjects';
         },
 
         parse : function (response) {

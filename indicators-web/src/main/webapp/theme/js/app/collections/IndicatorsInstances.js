@@ -7,7 +7,7 @@
 
         url : function () {
             if (this.systemId) {
-                return apiContext + "/indicatorsSystems/" + this.systemId + "/indicatorsInstances";
+                return apiUrl + "/indicatorsSystems/" + this.systemId + "/indicatorsInstances";
             }
         },
 

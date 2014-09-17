@@ -55,7 +55,7 @@
         <div class="h2top"></div>
         <div class="h2content" style="min-height: 15px; margin-top: 3px;">
             [@localizeTitle indicator.title/]
-            <a href="[@spring.url "/"/]/api/indicators/v1.0/indicatorsSystems/${indicator.code}" target="_blank"
+            <a href="${indicatorsExternalApiUrlBase}/v1.0/indicatorsSystems/${indicator.code}" target="_blank"
                class="metadata" title="Metadatos en JSON">
                 <i class="icon-metadata"></i>
             </a>

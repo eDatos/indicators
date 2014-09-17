@@ -30,7 +30,7 @@
     });
 
     Handlebars.registerHelper('context', function (context) {
-        return apiBaseUrl;
+        return baseUrl;
     });
     
 }());

@@ -6,7 +6,7 @@
         model : App.models.GeographicalGranularity,
 
         url : function () {
-            return apiContext + "/geographicGranularities/";
+            return apiUrl + "/geographicGranularities/";
         },
 
         fetchByIndicatorSystemCode : function (systemCode) {

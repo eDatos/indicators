@@ -61,7 +61,7 @@
 
             // urls
             this.url = options.url || "";
-            this.apiUrl = this.url + "/api/indicators/v1.0";
+            this.apiUrl = options.apiUrl || "";
             this.jaxiUrl = options.jaxiUrl || "";
 
             // Request builder

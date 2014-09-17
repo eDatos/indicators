@@ -14,7 +14,8 @@
             }
             var widgetOptions = this.model.toJSON();
             widgetOptions.el = this.el;
-            widgetOptions.url = apiBaseUrl;
+            widgetOptions.url = baseUrl;
+            widgetOptions.apiUrl = apiUrl; 
 
             var self = this;
 

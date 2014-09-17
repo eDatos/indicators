@@ -95,8 +95,8 @@
 
 <script>
 
-    var apiBaseUrl = "[@spring.url ""/]";
-    var apiContext = apiBaseUrl + "/api/indicators/v1.0";
+    var baseUrl = "[@spring.url ""/]";
+    var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";
     var jaxiUrl = "${jaxiUrlBase}";
     var metamacPortalUrl = "${metamacPortalUrlBase}";
     var metamacPortalPermalinksEndpoint = "${metamacPortalPermalinksEndpoint}"

@@ -6,7 +6,7 @@
         model : App.models.Indicator,
 
         url : function () {
-            return apiContext + "/indicators/";
+            return apiUrl + "/indicators/";
         },
 
         parse : function (response) {

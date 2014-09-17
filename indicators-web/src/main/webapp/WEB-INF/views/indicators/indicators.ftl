@@ -17,7 +17,7 @@
 <script>
 	var IndicatorsCollection = Backbone.Collection.extend({
 		
-		url: apiContext + '/indicators/?limit=1000',
+		url: apiUrl + '/indicators/?limit=1000',
 
 		initialize : function(){
 			this.fetch();

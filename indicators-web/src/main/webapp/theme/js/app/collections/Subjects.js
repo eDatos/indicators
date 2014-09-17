@@ -6,7 +6,7 @@
         model : App.models.Subject,
 
         url : function () {
-            return apiContext + '/subjects/';
+            return apiUrl + '/subjects/';
         }
 
     });

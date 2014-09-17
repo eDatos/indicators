@@ -22,7 +22,8 @@
             var code = _.extend(this.model.toJSON(), {
                 el : "#istac-widget",
                 url : url,
-                jaxiUrl : jaxiUrl
+                jaxiUrl : jaxiUrl,
+                apiUrl : apiUrl
             });
             return code;
         },

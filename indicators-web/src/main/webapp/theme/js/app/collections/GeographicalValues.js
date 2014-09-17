@@ -4,7 +4,7 @@
     App.collections.GeographicalValues = Backbone.Collection.extend({
 
         url : function () {
-            return apiContext + "/geographicalValues";
+            return apiUrl + "/geographicalValues";
         },
 
         model : App.models.GeographicalValue,
