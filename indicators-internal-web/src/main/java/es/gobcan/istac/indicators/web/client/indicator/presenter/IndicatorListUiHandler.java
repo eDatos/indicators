@@ -20,5 +20,6 @@ public interface IndicatorListUiHandler extends UiHandlers {
     void onResultSetFirstButtonClicked();
     void onResultSetLastButtonClicked();
     void onResultSetPreviousButtonClicked();
-
+    
+    void retrieveIndicators();
 }

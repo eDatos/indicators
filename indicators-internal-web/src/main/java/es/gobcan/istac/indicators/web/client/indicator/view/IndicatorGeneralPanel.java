@@ -437,7 +437,7 @@ public class IndicatorGeneralPanel extends VLayout {
         diffusionIdentifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
         diffusionIdentifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         diffusionIdentifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
-        diffusionIdentifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
+        diffusionIdentifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatusName(indicatorDto));
         diffusionIdentifiersForm.setValue(IndicatorDS.TITLE, indicatorDto.getTitle());
         diffusionIdentifiersForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         diffusionIdentifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
@@ -452,7 +452,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.VIEW_CODE, indicatorDto.getViewCode());
         identifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
-        identifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
+        identifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatusName(indicatorDto));
         identifiersForm.setValue(IndicatorDS.TITLE, indicatorDto.getTitle());
         identifiersForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         identifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
@@ -497,7 +497,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.setValue(IndicatorDS.VIEW_CODE, indicatorDto.getViewCode());
         identifiersEditionForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersEditionForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
-        identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
+        identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatusName(indicatorDto));
         identifiersEditionForm.setValue(IndicatorDS.TITLE, indicatorDto.getTitle());
         identifiersEditionForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         identifiersEditionForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());

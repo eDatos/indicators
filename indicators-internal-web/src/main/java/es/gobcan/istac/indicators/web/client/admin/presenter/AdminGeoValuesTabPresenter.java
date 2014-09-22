@@ -28,6 +28,7 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListA
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.SaveGeoValueAction;
 import es.gobcan.istac.indicators.web.shared.SaveGeoValueResult;
+import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 
 public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPresenter.AdminGeoValuesTabView, AdminGeoValuesTabPresenter.AdminGeoValuesTabProxy> implements AdminGeoValuesUiHandlers {
 
@@ -40,6 +41,10 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
         void onGeoValueCreated(GeographicalValueDto dto);
         void onGeoValueUpdated(GeographicalValueDto dto);
         void setGeoValues(int firstResult, List<GeographicalValueDto> dtos, int maxResults);
+
+        // Search
+        void clearSearchSection();
+        GeoValueCriteria getGeoValueCriteria();
     }
 
     @ProxyCodeSplit
@@ -69,6 +74,7 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
+        getView().clearSearchSection();
         reloadGeoValues(0);
     }
 
@@ -91,16 +97,16 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     }
 
     @Override
-    public void retrieveGeoValues(final int firstResult) {
-        retrieveGeoValuesWithAction(firstResult, null);
+    public void retrieveGeoValues(GeoValueCriteria criteria) {
+        retrieveGeoValuesWithAction(criteria, null);
     }
 
-    private void retrieveGeoValuesWithAction(final int firstResult, final Action action) {
-        dispatcher.execute(new GetGeographicalValuesPaginatedListAction(MAX_RESULTS, firstResult), new WaitingAsyncCallbackHandlingError<GetGeographicalValuesPaginatedListResult>(this) {
+    private void retrieveGeoValuesWithAction(final GeoValueCriteria criteria, final Action action) {
+        dispatcher.execute(new GetGeographicalValuesPaginatedListAction(criteria), new WaitingAsyncCallbackHandlingError<GetGeographicalValuesPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetGeographicalValuesPaginatedListResult result) {
-                getView().setGeoValues(firstResult, result.getDtos(), result.getTotalResults());
+                getView().setGeoValues(criteria.getFirstResult(), result.getDtos(), result.getTotalResults());
                 if (action != null) {
                     action.run();
                 }
@@ -109,13 +115,17 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     }
 
     @Override
-    public void saveGeoValue(final int currentPage, GeographicalValueDto dto) {
+    public void saveGeoValue(final int firstResult, GeographicalValueDto dto) {
         final boolean creation = dto.getUuid() == null;
         dispatcher.execute(new SaveGeoValueAction(dto), new WaitingAsyncCallbackHandlingError<SaveGeoValueResult>(this) {
 
             @Override
             public void onWaitSuccess(final SaveGeoValueResult result) {
-                retrieveGeoValuesWithAction(currentPage, new Action() {
+                GeoValueCriteria criteria = getView().getGeoValueCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(MAX_RESULTS);
+
+                retrieveGeoValuesWithAction(criteria, new Action() {
 
                     @Override
                     public void run() {
@@ -132,7 +142,10 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     }
 
     private void reloadGeoValues(int firstResult) {
-        retrieveGeoValues(firstResult);
+        GeoValueCriteria criteria = getView().getGeoValueCriteria();
+        criteria.setFirstResult(firstResult);
+        criteria.setMaxResults(MAX_RESULTS);
+        retrieveGeoValues(criteria);
     }
 
     private static interface Action {

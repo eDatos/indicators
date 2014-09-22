@@ -39,22 +39,26 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorsSearchSectionStack;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPresenter> implements IndicatorListPresenter.IndicatorListView {
 
-    private IndicatorListUiHandler   uiHandlers;
+    private IndicatorListUiHandler       uiHandlers;
 
-    private VLayout                  panel;
+    private VLayout                      panel;
 
-    private ToolStripButton          newIndicatorActor;
-    private ToolStripButton          deleteIndicatorActor;
+    private ToolStripButton              newIndicatorActor;
+    private ToolStripButton              deleteIndicatorActor;
 
-    private BaseCustomListGrid       indicatorList;
+    private IndicatorsSearchSectionStack searchSectionStack;
 
-    private DeleteConfirmationWindow deleteConfirmationWindow;
+    private BaseCustomListGrid           indicatorList;
 
-    private NewIndicatorWindow       window;
+    private DeleteConfirmationWindow     deleteConfirmationWindow;
+
+    private NewIndicatorWindow           window;
 
     @Inject
     public IndicatorListViewImpl(StatusBar statusBar) {
@@ -97,6 +101,10 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         toolStrip.addButton(newIndicatorActor);
         toolStrip.addButton(deleteIndicatorActor);
+
+        // Search
+
+        searchSectionStack = new IndicatorsSearchSectionStack();
 
         indicatorList = new BaseCustomListGrid();
         indicatorList.setHeight(680);
@@ -158,6 +166,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         panel = new VLayout();
         panel.addMember(toolStrip);
+        panel.addMember(searchSectionStack);
         panel.addMember(indicatorList);
         panel.addMember(statusBar);
 
@@ -208,6 +217,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     @Override
     public void setUiHandlers(IndicatorListPresenter uiHandlers) {
         this.uiHandlers = uiHandlers;
+        searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     public List<String> getUuidsFromSelected() {
@@ -225,6 +235,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
         }
     }
 
+    @Override
     public void refreshStatusBar() {
         // update Selected label e.g "0 of 50 selected"
         String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
@@ -236,12 +247,23 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
         getStatusBar().getPageNumberLabel().markForRedraw();
     }
 
+    @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
+    public IndicatorCriteria getIndicatorCriteria() {
+        return searchSectionStack.getIndicatorCriteria();
+    }
+
     protected void initStatusBar() {
 
         // "0 of 50 selected"
 
         getStatusBar().getResultSetFirstButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetFirstButtonClicked();
@@ -251,6 +273,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         getStatusBar().getResultSetPreviousButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetPreviousButtonClicked();
@@ -262,6 +285,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         getStatusBar().getResultSetNextButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetNextButtonClicked();
@@ -284,5 +308,4 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     public void removeSelectedData() {
         this.indicatorList.removeSelectedData();
     }
-
 }

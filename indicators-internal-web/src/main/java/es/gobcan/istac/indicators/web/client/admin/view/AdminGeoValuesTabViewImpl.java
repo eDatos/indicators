@@ -42,16 +42,20 @@ import es.gobcan.istac.indicators.web.client.model.ds.GeoValueDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.widgets.GeographicalValuesSearchSectionStack;
+import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 
 public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValuesUiHandlers> implements AdminGeoValuesTabView {
 
-    private HLayout                panel;
+    private HLayout                              panel;
 
-    private PaginatedCheckListGrid listGrid;
+    private PaginatedCheckListGrid               listGrid;
 
-    private ListGridToolStrip      toolStrip;
+    private ListGridToolStrip                    toolStrip;
 
-    private GeoValuePanel          geoValuePanel;
+    private GeographicalValuesSearchSectionStack searchSectionStack;
+
+    private GeoValuePanel                        geoValuePanel;
 
     public AdminGeoValuesTabViewImpl() {
         super();
@@ -88,13 +92,20 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
             }
         });
 
+        // Search
+
+        searchSectionStack = new GeographicalValuesSearchSectionStack();
+
         // ListGrid
 
         listGrid = new PaginatedCheckListGrid(AdminGeoValuesTabPresenter.MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrieveGeoValues(firstResult);
+                GeoValueCriteria criteria = getGeoValueCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(maxResults);
+                getUiHandlers().retrieveGeoValues(criteria);
             }
         });
 
@@ -131,6 +142,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
         VLayout listPanel = new VLayout();
         listPanel.addMember(toolStrip);
+        listPanel.addMember(searchSectionStack);
         listPanel.addMember(listGrid);
 
         HLayout leftLayout = new HLayout();
@@ -147,6 +159,12 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         panel.addMember(leftLayout);
         panel.addMember(rightLayout);
 
+    }
+
+    @Override
+    public void setUiHandlers(AdminGeoValuesUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     // UTILS
@@ -209,6 +227,16 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
     @Override
     public Widget asWidget() {
         return panel;
+    }
+
+    @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
+    public GeoValueCriteria getGeoValueCriteria() {
+        return searchSectionStack.getGeoValueCriteria();
     }
 
     public class GeoValuePanel extends VLayout {

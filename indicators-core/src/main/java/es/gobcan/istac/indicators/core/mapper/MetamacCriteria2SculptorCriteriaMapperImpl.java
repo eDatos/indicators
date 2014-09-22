@@ -4,6 +4,7 @@ import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -118,6 +119,14 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             switch (propertyNameCriteria) {
                 case GEOGRAPHICAL_GRANULARITY_UUID:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case GEOGRAPHICAL_GRANULARITY_CODE:
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case UUID:
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case CODE:
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case TITLE:
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -271,7 +280,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
     private class IndicatorVersionCriteriaCallback implements CriteriaCallback {
 
         @Override
-        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+        public SculptorPropertyCriteriaBase retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
             IndicatorCriteriaPropertyEnum propertyNameCriteria = IndicatorCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
@@ -280,6 +289,10 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case TITLE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case PRODUCTION_PROC_STATUS:
+                    // TODO INDISTAC-877
+                case DIFFUSION_PROC_STATUS:
+                    // TODO INDISTAC-877
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

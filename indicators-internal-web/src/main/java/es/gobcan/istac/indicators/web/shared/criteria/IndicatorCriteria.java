@@ -1,11 +1,17 @@
 package es.gobcan.istac.indicators.web.shared.criteria;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import org.siemac.metamac.web.common.shared.criteria.PaginationWebCriteria;
 
-public class IndicatorCriteria implements IsSerializable {
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 
-    private String code;
-    private String title;
+public class IndicatorCriteria extends PaginationWebCriteria {
+
+    private static final long       serialVersionUID = -6655051147299387214L;
+
+    private String                  code;
+    private String                  title;
+    private IndicatorProcStatusEnum productionVersionProcStatus;
+    private IndicatorProcStatusEnum diffusionVersionProcStatus;
 
     public String getCode() {
         return code;
@@ -23,4 +29,19 @@ public class IndicatorCriteria implements IsSerializable {
         this.title = title;
     }
 
+    public IndicatorProcStatusEnum getProductionVersionProcStatus() {
+        return productionVersionProcStatus;
+    }
+
+    public void setProductionVersionProcStatus(IndicatorProcStatusEnum productionVersionProcStatus) {
+        this.productionVersionProcStatus = productionVersionProcStatus;
+    }
+
+    public IndicatorProcStatusEnum getDiffusionVersionProcStatus() {
+        return diffusionVersionProcStatus;
+    }
+
+    public void setDiffusionVersionProcStatus(IndicatorProcStatusEnum diffusionVersionProcStatus) {
+        this.diffusionVersionProcStatus = diffusionVersionProcStatus;
+    }
 }

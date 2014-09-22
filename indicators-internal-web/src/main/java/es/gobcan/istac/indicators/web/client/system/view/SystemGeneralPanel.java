@@ -269,7 +269,7 @@ public class SystemGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
-        identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
+        identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatusName(indicatorSystemDto));
 
         // Production Descriptors
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
@@ -302,7 +302,7 @@ public class SystemGeneralPanel extends VLayout {
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
-        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatusName(indicatorSystemDto));
 
         diffusionMainFormLayout.show();
     }

@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -14,6 +15,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.utils.MetamacWebCriteriaUtils;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListResult;
 
@@ -30,9 +32,16 @@ public class GetGeographicalValuesPaginatedListActionHandler extends SecurityAct
     @Override
     public GetGeographicalValuesPaginatedListResult executeSecurityAction(GetGeographicalValuesPaginatedListAction action) throws ActionException {
         MetamacCriteria criteria = new MetamacCriteria();
+
+        // Criteria
+        MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
+        restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
+        criteria.setRestriction(restriction);
+
+        // Pagination
         criteria.setPaginator(new MetamacCriteriaPaginator());
-        criteria.getPaginator().setFirstResult(action.getFirstResult());
-        criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
+        criteria.getPaginator().setFirstResult(action.getCriteria().getFirstResult());
+        criteria.getPaginator().setMaximumResultSize(action.getCriteria().getMaxResults());
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
@@ -42,5 +51,4 @@ public class GetGeographicalValuesPaginatedListActionHandler extends SecurityAct
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
-
 }

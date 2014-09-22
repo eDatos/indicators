@@ -17,7 +17,7 @@ public class IndicatorRecord extends Record {
         setUuid(indicatorDto.getUuid());
         setName(getLocalisedString(indicatorDto.getTitle()));
         setCode(indicatorDto.getCode());
-        setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorDto));
+        setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
         setNeedsUpdate(indicatorDto.getNeedsUpdate());
         setVersionNumber(indicatorDto.getVersionNumber());
         setIndicatorDto(indicatorDto);
@@ -29,11 +29,11 @@ public class IndicatorRecord extends Record {
         // Diffusion version
         if (indicatorSummaryDto.getDiffusionVersion() != null) {
             setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
-            setDiffusionProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
+            setDiffusionProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
             setDiffusionNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
             setDiffusionVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
             // Force to show diffusion version as production version (if there is a production version, these values will be overwritten)
-            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
             setNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
         }
@@ -41,7 +41,7 @@ public class IndicatorRecord extends Record {
         if (indicatorSummaryDto.getProductionVersion() != null) {
             // Overwrite name if production version exists
             setName(getLocalisedString(indicatorSummaryDto.getProductionVersion().getTitle()));
-            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getProductionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getProductionVersion().getProcStatus()));
             setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
         }

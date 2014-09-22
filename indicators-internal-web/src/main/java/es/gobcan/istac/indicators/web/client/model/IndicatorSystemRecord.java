@@ -15,7 +15,7 @@ public class IndicatorSystemRecord extends Record {
         setUuid(indicatorsSystemDtoWeb.getUuid());
         setCode(indicatorsSystemDtoWeb.getCode());
         setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
-        setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb));
+        setProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb));
         setVersionNumber(indicatorsSystemDtoWeb.getVersionNumber());
     }
 
@@ -25,15 +25,15 @@ public class IndicatorSystemRecord extends Record {
         setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
         // Diffusion version
         if (indicatorsSystemDtoWeb.getDiffusionVersion() != null) {
-            setDiffusionProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
+            setDiffusionProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
             setDiffusionVersionNumber(indicatorsSystemDtoWeb.getDiffusionVersion().getVersionNumber());
             // Force to show diffusion version as production version (if there is a production version, these values will be overwritten)
-            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
             setVersionNumber(indicatorsSystemDtoWeb.getDiffusionVersion().getVersionNumber());
         }
         // Production version
         if (indicatorsSystemDtoWeb.getProductionVersion() != null) {
-            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getProductionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb.getProductionVersion().getProcStatus()));
             setVersionNumber(indicatorsSystemDtoWeb.getProductionVersion().getVersionNumber());
         }
     }
@@ -65,5 +65,4 @@ public class IndicatorSystemRecord extends Record {
     public void setDiffusionVersionNumber(String value) {
         setAttribute(IndicatorsSystemsDS.VERSION_DIFF, value);
     }
-
 }

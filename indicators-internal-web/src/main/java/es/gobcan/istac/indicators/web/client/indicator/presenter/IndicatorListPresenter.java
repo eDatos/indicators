@@ -45,6 +45,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 
@@ -67,6 +68,10 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
         void setNumberOfElements(int numberOfElements);
         void setPageNumber(int pageNumber);
         void removeSelectedData();
+
+        // Search
+        void clearSearchSection();
+        IndicatorCriteria getIndicatorCriteria();
     }
 
     @ProxyCodeSplit
@@ -94,8 +99,11 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
     }
 
     @Override
-    protected void onReset() {
-        super.onReset();
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+        // Clear search section
+        getView().clearSearchSection();
+
         SetTitleEvent.fire(IndicatorListPresenter.this, getConstants().indicators());
         initializePaginationSettings();
         retrieveResultSet();
@@ -108,8 +116,16 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
     }
 
     @Override
+    public void retrieveIndicators() {
+        retrieveResultSet();
+    }
+
+    @Override
     public void retrieveResultSet() {
-        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallbackHandlingError<GetIndicatorPaginatedListResult>(this) {
+        IndicatorCriteria criteria = getView().getIndicatorCriteria();
+        criteria.setFirstResult(getFirstResult());
+        criteria.setMaxResults(getMaxResults());
+        dispatcher.execute(new GetIndicatorPaginatedListAction(criteria), new WaitingAsyncCallbackHandlingError<GetIndicatorPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorPaginatedListResult result) {
@@ -121,10 +137,6 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
                 getView().setNumberOfElements(getNumberOfElements());
                 getView().setPageNumber(getPageNumber());
                 getView().refreshStatusBar();
-
-                // Log.debug("onSuccess() - firstResult: " + firstResult +
-                // " pageNumber: " + pageNumber + " numberOfElements: " +
-                // numberOfElements);
 
                 // enable/disable the pagination widgets
                 if (getPageNumber() == 1) {
@@ -199,5 +211,4 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
             }
         });
     }
-
 }

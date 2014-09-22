@@ -7,19 +7,17 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 @GenDispatch(isSecure = false)
 public class GetIndicatorPaginatedList {
 
     @In(1)
-    int                       maxResults;
-    @In(2)
-    int                       firstResult;
+    IndicatorCriteria         criteria;
 
     @Out(1)
     List<IndicatorSummaryDto> indicatorList;
 
     @Out(2)
     Integer                   totalResults;
-
 }

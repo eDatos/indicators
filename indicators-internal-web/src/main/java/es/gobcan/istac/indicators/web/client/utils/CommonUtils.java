@@ -126,7 +126,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getGeographicalGranularituesValueMap(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        valueMap.put(new String(), new String());
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
         for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
             valueMap.put(geographicalGranularityDto.getUuid(), CommonWebUtils.getElementName(geographicalGranularityDto.getCode(), geographicalGranularityDto.getTitle()));
         }
@@ -244,6 +244,15 @@ public class CommonUtils {
         return valueMap;
     }
 
+    public static LinkedHashMap<String, String> getProcStatusValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
+        for (IndicatorProcStatusEnum procStatus : IndicatorProcStatusEnum.values()) {
+            valueMap.put(procStatus.toString(), getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + procStatus.getName()));
+        }
+        return valueMap;
+    }
+
     /**
      * Returns null if UUID parameter is blank
      * 
@@ -254,24 +263,28 @@ public class CommonUtils {
         return StringUtils.isBlank(uuid) ? null : uuid;
     }
 
-    public static String getIndicatorProcStatus(IndicatorDto indicatorDto) {
-        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName());
-        return procStatus;
+    public static String getIndicatorProcStatusName(IndicatorDto indicatorDto) {
+        return getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName());
     }
 
-    public static String getIndicatorProcStatus(IndicatorProcStatusEnum indicatorProcStatus) {
-        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorProcStatus.getName());
-        return procStatus;
+    public static String getIndicatorProcStatusName(IndicatorProcStatusEnum indicatorProcStatus) {
+        return getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorProcStatus.getName());
     }
 
-    public static String getIndicatorSystemProcStatus(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
-        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemDtoWeb.getProcStatus().getName());
-        return procStatus;
+    public static String getIndicatorSystemProcStatusName(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+        return getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemDtoWeb.getProcStatus().getName());
     }
 
-    public static String getIndicatorSystemProcStatus(IndicatorsSystemProcStatusEnum indicatorsSystemProcStatus) {
-        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemProcStatus.getName());
-        return procStatus;
+    public static String getIndicatorSystemProcStatusName(IndicatorsSystemProcStatusEnum indicatorsSystemProcStatus) {
+        return getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemProcStatus.getName());
+    }
+
+    public static IndicatorProcStatusEnum getIndicatorProcStatusEnum(String value) {
+        try {
+            return IndicatorProcStatusEnum.valueOf(value);
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public static FormItemIfFunction getFalseIfFunction() {

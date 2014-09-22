@@ -1,9 +1,9 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum GeographicalValueCriteriaPropertyEnum  {
+public enum GeographicalValueCriteriaPropertyEnum {
 
-    GEOGRAPHICAL_GRANULARITY_UUID;
-    
+    UUID, CODE, TITLE, GEOGRAPHICAL_GRANULARITY_UUID, GEOGRAPHICAL_GRANULARITY_CODE;
+
     public String value() {
         return name();
     }

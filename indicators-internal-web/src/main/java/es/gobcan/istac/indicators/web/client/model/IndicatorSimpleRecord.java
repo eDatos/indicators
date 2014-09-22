@@ -18,12 +18,12 @@ public class IndicatorSimpleRecord extends Record {
         // Diffusion version
         if (indicatorSummaryDto.getDiffusionVersion() != null && indicatorSummaryDto.getProductionVersion() == null) {
             setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
-            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
             setNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
         } else {
             setName(getLocalisedString(indicatorSummaryDto.getProductionVersion().getTitle()));
-            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getProductionVersion().getProcStatus()));
+            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getProductionVersion().getProcStatus()));
             setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
         }
@@ -73,5 +73,4 @@ public class IndicatorSimpleRecord extends Record {
     public IndicatorSummaryDto getIndicatorDto() {
         return (IndicatorSummaryDto) getAttributeAsObject(IndicatorDS.DTO);
     }
-
 }
