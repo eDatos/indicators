@@ -54,7 +54,7 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
 
     @Override
     protected void retrieveResources() {
-        getUiHandlers().retrieveIndicators();
+        getUiHandlers().retrieveIndicators(getIndicatorCriteria());
     }
 
     public IndicatorCriteria getIndicatorCriteria() {

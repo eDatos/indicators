@@ -46,7 +46,7 @@ public class GetIndicatorPaginatedListActionHandler extends SecurityActionHandle
 
         try {
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHolder.getCurrentServiceContext(), criteria);
-            return new GetIndicatorPaginatedListResult(result.getResults(), result.getPaginatorResult().getTotalResults());
+            return new GetIndicatorPaginatedListResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

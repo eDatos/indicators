@@ -19,5 +19,8 @@ public class GetIndicatorPaginatedList {
     List<IndicatorSummaryDto> indicatorList;
 
     @Out(2)
+    Integer                   firstResult;
+
+    @Out(3)
     Integer                   totalResults;
 }

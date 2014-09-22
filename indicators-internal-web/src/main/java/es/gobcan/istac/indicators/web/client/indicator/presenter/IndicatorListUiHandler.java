@@ -5,6 +5,7 @@ import java.util.List;
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public interface IndicatorListUiHandler extends UiHandlers {
 
@@ -12,14 +13,8 @@ public interface IndicatorListUiHandler extends UiHandlers {
     void deleteIndicators(List<String> uuids);
 
     void goToIndicator(String code);
-    void reloadIndicatorList();
 
     void retrieveSubjectsList();
 
-    void onResultSetNextButtonClicked();
-    void onResultSetFirstButtonClicked();
-    void onResultSetLastButtonClicked();
-    void onResultSetPreviousButtonClicked();
-    
-    void retrieveIndicators();
+    void retrieveIndicators(IndicatorCriteria criteria);
 }

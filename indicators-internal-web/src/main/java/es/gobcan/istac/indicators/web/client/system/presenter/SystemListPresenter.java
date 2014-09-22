@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
@@ -40,8 +41,6 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListPresenter extends PaginationPresenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 
-    public static final int          DEFAULT_MAX_RESULTS = 30;
-
     private ToolStripPresenterWidget toolStripPresenterWidget;
 
     public interface SystemListView extends View, HasUiHandlers<SystemListPresenter> {
@@ -67,7 +66,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
     @Inject
     public SystemListPresenter(EventBus eventBus, SystemListView view, SystemListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, ToolStripPresenterWidget toolStripPresenterWidget) {
-        super(eventBus, view, proxy, dispatcher, DEFAULT_MAX_RESULTS);
+        super(eventBus, view, proxy, dispatcher, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
         this.toolStripPresenterWidget = toolStripPresenterWidget;
@@ -136,7 +135,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
                 }
 
                 // enable/disable the pagination widgets
-                if ((result.getTotalResults() - (getPageNumber() - 1) * DEFAULT_MAX_RESULTS) > getNumberOfElements()) {
+                if ((result.getTotalResults() - (getPageNumber() - 1) * CommonWebConstants.MAIN_LIST_MAX_RESULTS) > getNumberOfElements()) {
                     getView().getStatusBar().getResultSetNextButton().enable();
                     getView().getStatusBar().getResultSetLastButton().enable();
                 } else {

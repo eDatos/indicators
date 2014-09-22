@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.web.shared.criteria;
 
+import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.shared.criteria.PaginationWebCriteria;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -12,6 +13,11 @@ public class IndicatorCriteria extends PaginationWebCriteria {
     private String                  title;
     private IndicatorProcStatusEnum productionVersionProcStatus;
     private IndicatorProcStatusEnum diffusionVersionProcStatus;
+
+    public IndicatorCriteria() {
+        setFirstResult(0);
+        setMaxResults(CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+    }
 
     public String getCode() {
         return code;

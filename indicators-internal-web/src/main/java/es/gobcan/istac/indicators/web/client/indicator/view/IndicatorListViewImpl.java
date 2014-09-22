@@ -6,19 +6,18 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
+import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
+import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridFieldType;
-import com.smartgwt.client.types.SelectionAppearance;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.HeaderSpan;
-import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
@@ -30,7 +29,6 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
-import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
@@ -38,14 +36,11 @@ import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
-import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorListGrid;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsSearchSectionStack;
-import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
-public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPresenter> implements IndicatorListPresenter.IndicatorListView {
-
-    private IndicatorListUiHandler       uiHandlers;
+public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHandler> implements IndicatorListPresenter.IndicatorListView {
 
     private VLayout                      panel;
 
@@ -54,15 +49,15 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
     private IndicatorsSearchSectionStack searchSectionStack;
 
-    private BaseCustomListGrid           indicatorList;
+    private PaginatedCheckListGrid       indicatorList;
 
     private DeleteConfirmationWindow     deleteConfirmationWindow;
 
     private NewIndicatorWindow           window;
 
     @Inject
-    public IndicatorListViewImpl(StatusBar statusBar) {
-        super(statusBar);
+    public IndicatorListViewImpl() {
+        super();
 
         // ToolStrip
         ToolStrip toolStrip = new ToolStrip();
@@ -74,13 +69,13 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
             @Override
             public void onClick(ClickEvent event) {
                 window = new NewIndicatorWindow(getConstants().indicCreateTitle());
-                uiHandlers.retrieveSubjectsList();
+                getUiHandlers().retrieveSubjectsList();
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (window.validateForm()) {
-                            uiHandlers.createIndicator(window.getNewIndicatorDto());
+                            getUiHandlers().createIndicator(window.getNewIndicatorDto());
                             window.destroy();
                         }
                     }
@@ -106,69 +101,46 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         searchSectionStack = new IndicatorsSearchSectionStack();
 
-        indicatorList = new BaseCustomListGrid();
-        indicatorList.setHeight(680);
-        indicatorList.setHeaderHeight(40);
-        indicatorList.setDataSource(new IndicatorDS());
-        indicatorList.setUseAllDataSourceFields(false);
-        indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
-        indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {
+        indicatorList = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new IndicatorListGrid(), new PaginatedAction() {
+
+            @Override
+            public void retrieveResultSet(int firstResult, int maxResults) {
+                IndicatorCriteria criteria = getIndicatorCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(maxResults);
+                getUiHandlers().retrieveIndicators(criteria);
+            }
+        });
+        ListGridUtils.setCheckBoxSelectionType(indicatorList.getListGrid());
+
+        indicatorList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 if (ClientSecurityUtils.canDeleteIndicator()) {
-                    if (indicatorList.getSelectedRecords().length > 0) {
+                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
                         deleteIndicatorActor.show();
                     } else {
                         deleteIndicatorActor.hide();
                     }
                 }
-
-                ListGridRecord[] records = event.getSelection();
-
-                setNumberSelected(records.length);
-
-                String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
-                IndicatorListViewImpl.this.statusBar.getSelectedLabel().setContents(selectedLabel);
-
             }
         });
-        indicatorList.addRecordClickHandler(new RecordClickHandler() {
+        indicatorList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
                     String code = event.getRecord().getAttribute(IndicatorDS.CODE);
-                    uiHandlers.goToIndicator(code);
+                    getUiHandlers().goToIndicator(code);
                 }
             }
         });
-
-        ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
-        fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicDetailTitle());
-        ListGridField version = new ListGridField(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
-        ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-        ListGridField needsUpdate = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
-        needsUpdate.setWidth(140);
-        needsUpdate.setType(ListGridFieldType.IMAGE);
-        needsUpdate.setAlign(Alignment.CENTER);
-        ListGridField diffusionVersion = new ListGridField(IndicatorDS.VERSION_NUMBER_DIFF, getConstants().indicDetailVersion());
-        ListGridField diffusionStatus = new ListGridField(IndicatorDS.PROC_STATUS_DIFF, getConstants().indicDetailProcStatus());
-        ListGridField diffusionNeedsUpdate = new ListGridField(IndicatorDS.NEEDS_UPDATE_DIFF, getConstants().indicatorUpdateStatus());
-        diffusionNeedsUpdate.setWidth(140);
-        diffusionNeedsUpdate.setType(ListGridFieldType.IMAGE);
-        diffusionNeedsUpdate.setAlign(Alignment.CENTER);
-        indicatorList.setFields(fieldCode, fieldName, version, status, needsUpdate, diffusionVersion, diffusionStatus, diffusionNeedsUpdate);
-        indicatorList.setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{IndicatorDS.CODE, IndicatorDS.TITLE}), new HeaderSpan(getConstants().indicatorProductionEnvironment(),
-                new String[]{IndicatorDS.VERSION_NUMBER, IndicatorDS.PROC_STATUS, IndicatorDS.NEEDS_UPDATE}), new HeaderSpan(getConstants().indicatorDiffusionEnvironment(), new String[]{
-                IndicatorDS.VERSION_NUMBER_DIFF, IndicatorDS.PROC_STATUS_DIFF, IndicatorDS.NEEDS_UPDATE_DIFF}));
 
         panel = new VLayout();
         panel.addMember(toolStrip);
         panel.addMember(searchSectionStack);
         panel.addMember(indicatorList);
-        panel.addMember(statusBar);
 
         // Delete confirmation window
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
@@ -177,13 +149,10 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.deleteIndicators(getUuidsFromSelected());
+                getUiHandlers().deleteIndicators(getUuidsFromSelected());
                 deleteConfirmationWindow.hide();
             }
         });
-
-        initStatusBar();
-
     }
 
     @Override
@@ -205,24 +174,26 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     }
 
     @Override
-    public void setIndicatorList(List<IndicatorSummaryDto> indicators) {
+    public void setIndicatorList(List<IndicatorSummaryDto> indicators, int firstResult, int totalResults) {
         IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
         int index = 0;
         for (IndicatorSummaryDto ind : indicators) {
             records[index++] = RecordUtils.getIndicatorRecord(ind);
         }
-        indicatorList.setData(records);
+        indicatorList.getListGrid().setData(records);
+        indicatorList.refreshPaginationInfo(firstResult, indicators.size(), totalResults);
+
     }
 
     @Override
-    public void setUiHandlers(IndicatorListPresenter uiHandlers) {
-        this.uiHandlers = uiHandlers;
+    public void setUiHandlers(IndicatorListUiHandler uiHandlers) {
+        super.setUiHandlers(uiHandlers);
         searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     public List<String> getUuidsFromSelected() {
         List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : indicatorList.getSelectedRecords()) {
+        for (ListGridRecord record : indicatorList.getListGrid().getSelectedRecords()) {
             codes.add(record.getAttribute(IndicatorDS.UUID));
         }
         return codes;
@@ -236,18 +207,6 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     }
 
     @Override
-    public void refreshStatusBar() {
-        // update Selected label e.g "0 of 50 selected"
-        String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
-        getStatusBar().getSelectedLabel().setContents(selectedLabel);
-
-        // update Page number label e.g "Page 1"
-        String pageNumberLabel = IndicatorsWeb.getMessages().page(String.valueOf(getPageNumber()));
-        getStatusBar().getPageNumberLabel().setContents(pageNumberLabel);
-        getStatusBar().getPageNumberLabel().markForRedraw();
-    }
-
-    @Override
     public void clearSearchSection() {
         searchSectionStack.clearSearchSection();
     }
@@ -255,57 +214,5 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     @Override
     public IndicatorCriteria getIndicatorCriteria() {
         return searchSectionStack.getIndicatorCriteria();
-    }
-
-    protected void initStatusBar() {
-
-        // "0 of 50 selected"
-
-        getStatusBar().getResultSetFirstButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                if (uiHandlers != null) {
-                    uiHandlers.onResultSetFirstButtonClicked();
-                }
-            }
-        });
-
-        getStatusBar().getResultSetPreviousButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                if (uiHandlers != null) {
-                    uiHandlers.onResultSetPreviousButtonClicked();
-                }
-            }
-        });
-
-        // "Page 1"
-
-        getStatusBar().getResultSetNextButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                if (uiHandlers != null) {
-                    uiHandlers.onResultSetNextButtonClicked();
-                }
-            }
-        });
-
-        getStatusBar().getResultSetLastButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                if (uiHandlers != null) {
-                    uiHandlers.onResultSetLastButtonClicked();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void removeSelectedData() {
-        this.indicatorList.removeSelectedData();
     }
 }
