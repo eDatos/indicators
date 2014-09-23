@@ -325,8 +325,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         assertEquals(newDiffusionVersion, indVersion.getVersionNumber());
         // Check indicator relationships
         Indicator indicator = indVersion.getIndicator();
-        assertEquals(newProductionVersion, indicator.getProductionVersion().getVersionNumber());
-        assertEquals(newDiffusionVersion, indicator.getDiffusionVersion().getVersionNumber());
+        assertEquals(newProductionVersion, indicator.getProductionVersionNumber());
+        assertEquals(newDiffusionVersion, indicator.getDiffusionVersionNumber());
     }
 
     /*
@@ -358,8 +358,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         assertEquals(newDiffusionVersion, indVersion.getVersionNumber());
         // Check indicator relationships
         Indicator indicator = indVersion.getIndicator();
-        assertEquals(productionVersion, indicator.getProductionVersion().getVersionNumber()); // production remains the same as before
-        assertEquals(newDiffusionVersion, indicator.getDiffusionVersion().getVersionNumber());
+        assertEquals(productionVersion, indicator.getProductionVersionNumber()); // production remains the same as before
+        assertEquals(newDiffusionVersion, indicator.getDiffusionVersionNumber());
     }
 
     private void setNeedsUpdateTransaction(String indicatorUuid, String indicatorVersionNumber) {

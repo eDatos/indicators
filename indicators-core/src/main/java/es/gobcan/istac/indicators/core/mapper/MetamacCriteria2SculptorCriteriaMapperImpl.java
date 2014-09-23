@@ -290,9 +290,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                 case TITLE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case PRODUCTION_PROC_STATUS:
-                    // TODO INDISTAC-877
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().productionProcStatus(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case DIFFUSION_PROC_STATUS:
-                    // TODO INDISTAC-877
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().diffusionProcStatus(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

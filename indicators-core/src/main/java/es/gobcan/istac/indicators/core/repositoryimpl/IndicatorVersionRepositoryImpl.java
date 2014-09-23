@@ -12,7 +12,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
@@ -47,8 +46,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         String query = "from IndicatorVersion iv " +
         		        "where iv.indicator.code = :indicatorCode " +
         		        "and iv.procStatus = :publishedStatus " +
-        		        "and iv.indicator.diffusionVersion != null " +
-        		        "and iv.indicator.diffusionVersion.versionNumber = iv.versionNumber";
+        		        "and iv.indicator.diffusionVersionNumber != null " +
+        		        "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
         List<IndicatorVersion> result = findByQuery(query, parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -66,8 +65,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         String query = "from IndicatorVersion iv " +
                         "where iv.subjectCode = :subjectCode " +
                         "and iv.procStatus = :publishedStatus " +
-                        "and iv.indicator.diffusionVersion != null " +
-                        "and iv.indicator.diffusionVersion.versionNumber = iv.versionNumber";
+                        "and iv.indicator.diffusionVersionNumber != null " +
+                        "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
         List<IndicatorVersion> result = findByQuery(query, parameters, Integer.MAX_VALUE);
         return result;
     }

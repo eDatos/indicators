@@ -142,7 +142,9 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         {
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "1.000");
             assertTrue(indicatorVersion1.getIsLastVersion());
-            assertNull(indicatorVersion1.getIndicator().getProductionVersion());
+            assertNull(indicatorVersion1.getIndicator().getProductionIdIndicatorVersion());
+            assertNull(indicatorVersion1.getIndicator().getProductionVersionNumber());
+            assertNull(indicatorVersion1.getIndicator().getProductionProcStatus());
         }
     }
 

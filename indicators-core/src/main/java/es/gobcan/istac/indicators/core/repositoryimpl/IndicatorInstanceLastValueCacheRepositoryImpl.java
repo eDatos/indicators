@@ -26,7 +26,7 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         queryHql += "from IndicatorInstanceLastValueCache tuple, IndicatorVersion indV ";
         queryHql += "where tuple.geographicalCode = :geoCode ";
         queryHql += "and tuple.indicatorInstance.elementLevel.indicatorsSystemVersion.indicatorsSystem.code = :systemCode ";
-        queryHql += "and tuple.indicatorInstance.indicator.diffusionVersion.idIndicatorVersion = indV.id ";
+        queryHql += "and tuple.indicatorInstance.indicator.diffusionIdIndicatorVersion = indV.id ";
         queryHql += "and indV.procStatus = :publishedStatus ";
         queryHql += "order by tuple.lastDataUpdated.datetime desc";
 

@@ -576,7 +576,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     private IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         if (indicator.getIsPublished()) {
-            return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+            return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersionNumber());
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, indicatorUuid);
         }
@@ -594,11 +594,11 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     private IndicatorVersion getIndicatorLastVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
 
-        if (indicator.getProductionVersion() != null) {
-            return getIndicatorVersion(indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+        if (indicator.getProductionVersionNumber() != null) {
+            return getIndicatorVersion(indicatorUuid, indicator.getProductionVersionNumber());
         } else {
             if (indicator.getIsPublished()) {
-                return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+                return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersionNumber());
             } else {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_LAST_ARCHIVED, indicatorUuid);
             }

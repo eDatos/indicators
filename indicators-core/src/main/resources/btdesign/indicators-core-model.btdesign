@@ -752,11 +752,20 @@ Application Indicators {
 			"Code for dataset Oracle view"
 			String viewCode not nullable length="30";
 			
-			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
-			"Version in production"
-            - @IndicatorVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
-            "Version in diffusion"
-            - @IndicatorVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
+            "Id into database of IndicatorVersion in production environment"
+    		Long productionIdIndicatorVersion nullable databaseColumn="PRODUCTION_ID";
+    		"Version number of IndicatorVersion in production environment"
+    		String productionVersionNumber nullable databaseColumn="PRODUCTION_VERSION_NUMBER" length="10";
+            "ProcStatus of IndicatorVersion in production enviroment"
+            - @IndicatorProcStatusEnum productionProcStatus nullable databaseColumn="PRODUCTION_PROC_STATUS";
+            
+			"Id into database of IndicatorVersion in diffusion environment"
+    		Long diffusionIdIndicatorVersion nullable databaseColumn="DIFFUSION_ID";
+    		"Version number of IndicatorVersion in diffusion environment"
+    		String diffusionVersionNumber nullable databaseColumn="DIFFUSION_VERSION_NUMBER" length="10";
+            "ProcStatus of IndicatorVersion in diffusion enviroment"
+            - @IndicatorProcStatusEnum diffusionProcStatus nullable databaseColumn="DIFFUSION_PROC_STATUS";
+
             "True if indicator is published"
             Boolean isPublished not nullable;
 			"All versions"
@@ -926,15 +935,7 @@ Application Indicators {
             	delete;
             }
 	    }
-	    
-        BasicType IndicatorVersionInformation {
-        	gap
-        	"Id into database of IndicatorVersion"
-    		Long idIndicatorVersion nullable databaseColumn="ID";
-    		"Version number of IndicatorVersion"
-    		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
-    	}			
-    	
+
 		"Data source of indicator"
         Entity DataSource {
         	databaseTable = "TB_DATA_SOURCES"

@@ -20,6 +20,7 @@ public class IndicatorInstanceRepositoryImpl extends IndicatorInstanceRepository
     public IndicatorInstanceRepositoryImpl() {
     }
 
+    @Override
     public IndicatorInstance findIndicatorInstance(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);

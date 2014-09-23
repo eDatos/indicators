@@ -30,7 +30,6 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
@@ -74,7 +73,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorViewCodeUnique(ctx, indicator.getViewCode());
 
         // Save indicator
-        indicator.setDiffusionVersion(null);
+        indicator.setDiffusionIdIndicatorVersion(null);
+        indicator.setDiffusionVersionNumber(null);
+        indicator.setDiffusionProcStatus(null);
         indicator.setIsPublished(Boolean.FALSE);
         indicator = getIndicatorRepository().save(indicator);
 
@@ -88,7 +89,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber()));
+        indicator.setProductionIdIndicatorVersion(indicatorVersion.getId());
+        indicator.setProductionVersionNumber(indicatorVersion.getVersionNumber());
+        indicator.setProductionProcStatus(indicatorVersion.getProcStatus());
+
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
@@ -115,7 +119,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (versionNumber == null) {
             // Retrieve last version
             Indicator indicator = retrieveIndicator(ctx, uuid);
-            versionNumber = indicator.getProductionVersion() != null ? indicator.getProductionVersion().getVersionNumber() : indicator.getDiffusionVersion().getVersionNumber();
+            versionNumber = indicator.getProductionVersionNumber() != null ? indicator.getProductionVersionNumber() : indicator.getDiffusionVersionNumber();
         }
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(uuid, versionNumber);
         if (indicatorVersion == null) {
@@ -254,7 +258,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } else {
             Indicator indicator = indicatorVersion.getIndicator();
             indicator.getVersions().remove(indicatorVersion);
-            indicator.setProductionVersion(null);
+            indicator.setProductionIdIndicatorVersion(null);
+            indicator.setProductionVersionNumber(null);
+            indicator.setProductionProcStatus(null);
             indicator.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
 
             // Update
@@ -427,13 +433,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         Indicator indicator = indicatorInProduction.getIndicator();
         // Remove possible last version in diffusion
-        if (indicator.getDiffusionVersion() != null) {
-            IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+        if (indicator.getDiffusionVersionNumber() != null) {
+            IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersionNumber());
             try {
-                getIndicatorsDataService().deleteIndicatorVersionData(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+                getIndicatorsDataService().deleteIndicatorVersionData(ctx, uuid, indicator.getDiffusionVersionNumber());
             } catch (MetamacException e) {
-                LOG.warn("Dataset datasetId:" + indicatorDiffusionVersion.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:"
-                        + indicator.getDiffusionVersion().getVersionNumber() + " could not be deleted", e);
+                LOG.warn("Dataset datasetId:" + indicatorDiffusionVersion.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:" + indicator.getDiffusionVersionNumber()
+                        + " could not be deleted", e);
             }
             indicator.getVersions().remove(indicatorDiffusionVersion);
             getIndicatorRepository().save(indicator);
@@ -441,8 +447,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         }
         indicator.setIsPublished(Boolean.TRUE);
-        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
-        indicator.setProductionVersion(null);
+        indicator.setDiffusionIdIndicatorVersion(indicatorInProduction.getId());
+        indicator.setDiffusionVersionNumber(indicatorInProduction.getVersionNumber());
+        indicator.setDiffusionProcStatus(indicatorInProduction.getProcStatus());
+        indicator.setProductionIdIndicatorVersion(null);
+        indicator.setProductionVersionNumber(null);
+        indicator.setProductionProcStatus(null);
 
         getIndicatorRepository().save(indicator);
 
@@ -506,7 +516,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, uuid);
-        if (indicator.getProductionVersion() != null) {
+        if (indicator.getProductionVersionNumber() != null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED,
                     ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED});
         }
@@ -529,7 +539,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion = getIndicatorVersionRepository().save(indicatorNewVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber()));
+        indicator.setProductionIdIndicatorVersion(indicatorNewVersion.getId());
+        indicator.setProductionVersionNumber(indicatorNewVersion.getVersionNumber());
+        indicator.setProductionProcStatus(indicatorNewVersion.getProcStatus());
+
         indicator.getVersions().add(indicatorNewVersion);
         getIndicatorRepository().save(indicator);
 
@@ -896,13 +909,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      */
     private IndicatorVersion retrieveIndicatorProcStatusInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
         Indicator indicator = retrieveIndicator(ctx, uuid);
-        if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
+        if (indicator.getProductionVersionNumber() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
-        if (indicator.getProductionVersion() == null) {
+        if (indicator.getProductionVersionNumber() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionProduction = retrieveIndicator(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
+        IndicatorVersion indicatorVersionProduction = retrieveIndicator(ctx, uuid, indicator.getProductionVersionNumber());
         return indicatorVersionProduction;
     }
 
@@ -911,13 +924,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      */
     private IndicatorVersion retrieveIndicatorProcStatusInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
         Indicator indicator = retrieveIndicator(ctx, uuid);
-        if (indicator.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
+        if (indicator.getDiffusionVersionNumber() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
-        if (indicator.getDiffusionVersion() == null) {
+        if (indicator.getDiffusionVersionNumber() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionDiffusion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+        IndicatorVersion indicatorVersionDiffusion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersionNumber());
         return indicatorVersionDiffusion;
     }
 

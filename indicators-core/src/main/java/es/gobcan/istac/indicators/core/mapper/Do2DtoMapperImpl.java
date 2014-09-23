@@ -192,14 +192,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setComments(internationalStringToDto(source.getComments()));
         target.setNotes(internationalStringToDto(source.getNotes()));
         target.setProcStatus(source.getProcStatus());
-        target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
-        if (source.getIndicator().getDiffusionVersion() == null) {
+        target.setProductionVersion(source.getIndicator().getProductionVersionNumber());
+        if (source.getIndicator().getDiffusionVersionNumber() == null) {
             target.setPublishedVersion(null);
             target.setArchivedVersion(null);
         } else if (source.getIndicator().getIsPublished()) {
-            target.setPublishedVersion(source.getIndicator().getDiffusionVersion().getVersionNumber());
+            target.setPublishedVersion(source.getIndicator().getDiffusionVersionNumber());
         } else {
-            target.setArchivedVersion(source.getIndicator().getDiffusionVersion().getVersionNumber());
+            target.setArchivedVersion(source.getIndicator().getDiffusionVersionNumber());
         }
 
         target.setNeedsUpdate(source.getNeedsUpdate());
@@ -236,9 +236,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(indicator.getUuid());
         target.setCode(indicator.getCode());
         for (IndicatorVersion indicatorVersionInIndicator : indicator.getVersions()) {
-            if (indicator.getProductionVersion() != null && indicator.getProductionVersion().getVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
+            if (indicator.getProductionVersionNumber() != null && indicator.getProductionVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
                 target.setProductionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
-            } else if (indicator.getDiffusionVersion() != null && indicator.getDiffusionVersion().getVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
+            } else if (indicator.getDiffusionVersionNumber() != null && indicator.getDiffusionVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
                 target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
             }
         }

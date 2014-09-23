@@ -57,7 +57,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionGeoCoverage;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionMeasureCoverage;
@@ -201,17 +200,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         if (indicator.getIsPublished()) { // avoid populating archived
             try {
-                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersionNumber());
             } catch (MetamacException e) {
-                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersion().getVersionNumber(), e);
+                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersionNumber(), e);
                 exceptionItems.addAll(e.getExceptionItems());
             }
         }
-        if (indicator.getProductionVersion() != null) {
+        if (indicator.getProductionVersionNumber() != null) {
             try {
-                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersionNumber());
             } catch (MetamacException e) {
-                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getProductionVersion().getVersionNumber(), e);
+                LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getProductionVersionNumber(), e);
                 exceptionItems.addAll(e.getExceptionItems());
             }
         }
@@ -231,7 +230,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (indicatorVersion != null) {
             Indicator indicator = indicatorVersion.getIndicator();
             if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
-                String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
+                String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
                 onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
@@ -279,7 +278,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
-            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
+            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
@@ -418,26 +417,30 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
-        IndicatorVersionInformation diffusionVersionInfo = indicator.getIsPublished() ? indicator.getDiffusionVersion() : null;
-        if (diffusionVersionInfo != null) {
-            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+        String diffusionVersionNumber = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
+        if (diffusionVersionNumber != null) {
+            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionNumber, VersionTypeEnum.MINOR);
             // Check if new version number is the same as production version
-            IndicatorVersionInformation productionVersionInfo = indicator.getProductionVersion();
-            if (productionVersionInfo != null && productionVersionInfo.getVersionNumber().equals(nextDiffusionVersionNumber)) {
-                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
-                IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionInfo.getVersionNumber());
+            String productionVersionNumber = indicator.getProductionVersionNumber();
+            if (productionVersionNumber != null && productionVersionNumber.equals(nextDiffusionVersionNumber)) {
+                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionNumber, VersionTypeEnum.MINOR);
+                IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionNumber);
                 productionVersion.setVersionNumber(nextProductionVersionNumber);
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
-                indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
+                indicator.setProductionIdIndicatorVersion(productionVersion.getId());
+                indicator.setProductionVersionNumber(productionVersion.getVersionNumber());
+                indicator.setProductionProcStatus(productionVersion.getProcStatus());
             }
 
             // update diffusion version
-            IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionInfo.getVersionNumber());
+            IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionNumber);
             diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
             diffusionVersion.setUpdateDate(new DateTime());
             diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
-            indicator.setDiffusionVersion(new IndicatorVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
+            indicator.setDiffusionIdIndicatorVersion(diffusionVersion.getId());
+            indicator.setDiffusionVersionNumber(diffusionVersion.getVersionNumber());
+            indicator.setDiffusionProcStatus(diffusionVersion.getProcStatus());
             indicator = getIndicatorRepository().save(indicator);
         }
         return indicator;
@@ -857,7 +860,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private IndicatorInstanceLastValue retrieveLastValueForIndicatorInstance(IndicatorInstance indicatorInstance, GeographicalValue geoValue, List<MeasureDimensionTypeEnum> measureValues) {
         String indicatorUuuid = indicatorInstance.getIndicator().getUuid();
-        String publishedVersionNumber = indicatorInstance.getIndicator().getDiffusionVersion().getVersionNumber();
+        String publishedVersionNumber = indicatorInstance.getIndicator().getDiffusionVersionNumber();
         IndicatorVersion diffusionVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuuid, publishedVersionNumber);
 
         IndicatorInstanceLastValueCache lastValueCache = getIndicatorInstanceLastValueCacheRepository().retrieveLastValueCacheForIndicatorInstanceWithGeoCode(indicatorInstance.getUuid(),
@@ -1303,7 +1306,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         if (indicator.getIsPublished()) {
-            return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+            return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersionNumber());
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, indicatorUuid);
         }
@@ -1312,11 +1315,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private IndicatorVersion getIndicatorLastVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
 
-        if (indicator.getProductionVersion() != null) {
-            return getIndicatorVersion(indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+        if (indicator.getProductionVersionNumber() != null) {
+            return getIndicatorVersion(indicatorUuid, indicator.getProductionVersionNumber());
         } else {
             if (indicator.getIsPublished()) {
-                return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+                return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersionNumber());
             } else {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_LAST_ARCHIVED, indicatorUuid);
             }
