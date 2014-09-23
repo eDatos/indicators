@@ -174,11 +174,11 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
     private String getLastVersionIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         Indicator indicator = indicatorsService.retrieveIndicator(ctx, indicatorUuid);
 
-        if (indicator.getProductionVersion() != null) {
-            return indicator.getProductionVersion().getVersionNumber();
+        if (indicator.getProductionVersionNumber() != null) {
+            return indicator.getProductionVersionNumber();
         } else {
             if (indicator.getIsPublished()) {
-                return indicator.getDiffusionVersion().getVersionNumber();
+                return indicator.getDiffusionVersionNumber();
             } else {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_LAST_ARCHIVED, indicatorUuid);
             }
