@@ -30,7 +30,6 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
@@ -88,7 +87,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber()));
+        indicator.setProductionVersion(indicatorVersion);
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
@@ -441,7 +440,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         }
         indicator.setIsPublished(Boolean.TRUE);
-        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
+        indicator.setDiffusionVersion(indicatorInProduction);
         indicator.setProductionVersion(null);
 
         getIndicatorRepository().save(indicator);
@@ -529,7 +528,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion = getIndicatorVersionRepository().save(indicatorNewVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber()));
+        indicator.setProductionVersion(indicatorNewVersion);
         indicator.getVersions().add(indicatorNewVersion);
         getIndicatorRepository().save(indicator);
 

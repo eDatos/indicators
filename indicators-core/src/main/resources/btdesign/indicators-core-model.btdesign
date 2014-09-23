@@ -752,11 +752,11 @@ Application Indicators {
 			"Code for dataset Oracle view"
 			String viewCode not nullable length="30";
 			
-			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
-			"Version in production"
-            - @IndicatorVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
-            "Version in diffusion"
-            - @IndicatorVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
+            "Id into database of IndicatorVersion"
+    		-@IndicatorVersion productionVersion nullable databaseColumn="PRODUCTION_ID";
+    		"Id into database of IndicatorVersion"
+    		-@IndicatorVersion diffusionVersion nullable databaseColumn="DIFFUSION_ID";
+
             "True if indicator is published"
             Boolean isPublished not nullable;
 			"All versions"
@@ -927,14 +927,6 @@ Application Indicators {
             }
 	    }
 	    
-        BasicType IndicatorVersionInformation {
-        	gap
-        	"Id into database of IndicatorVersion"
-    		Long idIndicatorVersion nullable databaseColumn="ID";
-    		"Version number of IndicatorVersion"
-    		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
-    	}			
-    	
 		"Data source of indicator"
         Entity DataSource {
         	databaseTable = "TB_DATA_SOURCES"
