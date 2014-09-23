@@ -15,6 +15,7 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -101,46 +102,20 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
 
         searchSectionStack = new IndicatorsSearchSectionStack();
 
-        indicatorList = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new IndicatorListGrid(), new PaginatedAction() {
+        // List
 
-            @Override
-            public void retrieveResultSet(int firstResult, int maxResults) {
-                IndicatorCriteria criteria = getIndicatorCriteria();
-                criteria.setFirstResult(firstResult);
-                criteria.setMaxResults(maxResults);
-                getUiHandlers().retrieveIndicators(criteria);
-            }
-        });
-        ListGridUtils.setCheckBoxSelectionType(indicatorList.getListGrid());
-
-        indicatorList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
-
-            @Override
-            public void onSelectionChanged(SelectionEvent event) {
-                if (ClientSecurityUtils.canDeleteIndicator()) {
-                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
-                        deleteIndicatorActor.show();
-                    } else {
-                        deleteIndicatorActor.hide();
-                    }
-                }
-            }
-        });
-        indicatorList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
-
-            @Override
-            public void onRecordClick(RecordClickEvent event) {
-                if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
-                    String code = event.getRecord().getAttribute(IndicatorDS.CODE);
-                    getUiHandlers().goToIndicator(code);
-                }
-            }
-        });
+        createIndicatorList();
 
         panel = new VLayout();
-        panel.addMember(toolStrip);
-        panel.addMember(searchSectionStack);
-        panel.addMember(indicatorList);
+        panel.setHeight100();
+
+        VLayout subpanel = new VLayout();
+        subpanel.setOverflow(Overflow.SCROLL);
+        subpanel.addMember(toolStrip);
+        subpanel.addMember(searchSectionStack);
+        subpanel.addMember(indicatorList);
+
+        panel.addMember(subpanel);
 
         // Delete confirmation window
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
@@ -214,5 +189,43 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     @Override
     public IndicatorCriteria getIndicatorCriteria() {
         return searchSectionStack.getIndicatorCriteria();
+    }
+
+    private void createIndicatorList() {
+        indicatorList = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new IndicatorListGrid(), new PaginatedAction() {
+
+            @Override
+            public void retrieveResultSet(int firstResult, int maxResults) {
+                IndicatorCriteria criteria = getIndicatorCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(maxResults);
+                getUiHandlers().retrieveIndicators(criteria);
+            }
+        });
+        ListGridUtils.setCheckBoxSelectionType(indicatorList.getListGrid());
+
+        indicatorList.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+
+            @Override
+            public void onSelectionChanged(SelectionEvent event) {
+                if (ClientSecurityUtils.canDeleteIndicator()) {
+                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                        deleteIndicatorActor.show();
+                    } else {
+                        deleteIndicatorActor.hide();
+                    }
+                }
+            }
+        });
+        indicatorList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
+                    String code = event.getRecord().getAttribute(IndicatorDS.CODE);
+                    getUiHandlers().goToIndicator(code);
+                }
+            }
+        });
     }
 }
