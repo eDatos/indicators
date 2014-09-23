@@ -429,7 +429,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 productionVersion.setVersionNumber(nextProductionVersionNumber);
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
-                indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber(), productionVersion.getProcStatus()));
+                indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
             }
 
             // update diffusion version
@@ -437,7 +437,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
             diffusionVersion.setUpdateDate(new DateTime());
             diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
-            indicator.setDiffusionVersion(new IndicatorVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber(), diffusionVersion.getProcStatus()));
+            indicator.setDiffusionVersion(new IndicatorVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
             indicator = getIndicatorRepository().save(indicator);
         }
         return indicator;

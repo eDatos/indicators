@@ -933,9 +933,7 @@ Application Indicators {
     		Long idIndicatorVersion nullable databaseColumn="ID";
     		"Version number of IndicatorVersion"
     		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
-    	    "Proc Status of IndicatorVersion"
-    		- @IndicatorProcStatusEnum procStatus nullable databaseColumn="PROC_STATUS";
-    	}
+    	}			
     	
 		"Data source of indicator"
         Entity DataSource {

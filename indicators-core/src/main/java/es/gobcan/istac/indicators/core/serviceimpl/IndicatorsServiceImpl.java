@@ -88,7 +88,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber(), indicatorVersion.getProcStatus()));
+        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber()));
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
@@ -441,7 +441,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         }
         indicator.setIsPublished(Boolean.TRUE);
-        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber(), indicatorInProduction.getProcStatus()));
+        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
         indicator.setProductionVersion(null);
 
         getIndicatorRepository().save(indicator);
@@ -529,7 +529,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion = getIndicatorVersionRepository().save(indicatorNewVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber(), indicatorNewVersion.getProcStatus()));
+        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber()));
         indicator.getVersions().add(indicatorNewVersion);
         getIndicatorRepository().save(indicator);
 
