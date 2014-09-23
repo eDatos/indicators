@@ -57,6 +57,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionGeoCoverage;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionMeasureCoverage;
@@ -417,18 +418,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
-        IndicatorVersion diffusionVersionInfo = indicator.getIsPublished() ? indicator.getDiffusionVersion() : null;
+        IndicatorVersionInformation diffusionVersionInfo = indicator.getIsPublished() ? indicator.getDiffusionVersion() : null;
         if (diffusionVersionInfo != null) {
             String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
             // Check if new version number is the same as production version
-            IndicatorVersion productionVersionInfo = indicator.getProductionVersion();
+            IndicatorVersionInformation productionVersionInfo = indicator.getProductionVersion();
             if (productionVersionInfo != null && productionVersionInfo.getVersionNumber().equals(nextDiffusionVersionNumber)) {
                 String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionInfo.getVersionNumber());
                 productionVersion.setVersionNumber(nextProductionVersionNumber);
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
-                indicator.setProductionVersion(productionVersion);
+                indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber(), productionVersion.getProcStatus()));
             }
 
             // update diffusion version
@@ -436,7 +437,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
             diffusionVersion.setUpdateDate(new DateTime());
             diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
-            indicator.setDiffusionVersion(diffusionVersion);
+            indicator.setDiffusionVersion(new IndicatorVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber(), diffusionVersion.getProcStatus()));
             indicator = getIndicatorRepository().save(indicator);
         }
         return indicator;
