@@ -13,6 +13,7 @@ public class QuantityUnitDS extends DataSource {
     public static String TITLE           = "quantity-unit-title";
 
     public static String ORDER_BY        = "quantity-unit-order-by";
+    public static String ORDER_TYPE      = "quantity-unit-order-type";
 
     public static String DTO             = "quantity-unit-dto";
 

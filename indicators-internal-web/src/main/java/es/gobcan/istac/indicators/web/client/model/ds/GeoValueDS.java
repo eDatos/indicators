@@ -17,6 +17,7 @@ public class GeoValueDS extends DataSource {
     public static String ORDER             = "geo-value-order";
 
     public static String ORDER_BY          = "geo-value-order-by";
+    public static String ORDER_TYPE        = "geo-value-order-type";
 
     public static String DTO               = "geo-value-dto";
 

@@ -5,10 +5,13 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -46,6 +49,18 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         orderBy.setValueMap(CommonUtils.getIndicatorOrderValueMap());
         orderBy.setStartRow(true);
         orderBy.setWidth(200);
+        orderBy.addChangedHandler(FormItemUtils.getMarkForRedrawChangedHandler(advancedSearchForm));
+
+        SelectItem orderType = new SelectItem(IndicatorDS.ORDER_TYPE, getConstants().orderType());
+        orderType.setValueMap(CommonUtils.getOrderTypeValueMap());
+        orderType.setDefaultValue(OrderTypeEnum.ASC.name());
+        orderType.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !StringUtils.isBlank(form.getValueAsString(IndicatorDS.ORDER_BY));
+            }
+        });
 
         CustomButtonItem searchItem = new CustomButtonItem(ADVANCED_SEARCH_ITEM_NAME, MetamacWebCommon.getConstants().search());
         searchItem.setColSpan(4);
@@ -57,7 +72,7 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
             }
         });
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{title, productionVersionProcStatus, diffusionVersionProcStatus, orderBy, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{title, productionVersionProcStatus, diffusionVersionProcStatus, orderBy, orderType, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
@@ -75,7 +90,8 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
 
         IndicatorCriteriaOrderEnum indicatorCriteriaOrderEnum = CommonUtils.getIndicatorCriteriaOrderEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_BY));
         if (indicatorCriteriaOrderEnum != null) {
-            criteria.setOrders(ClientCriteriaUtils.buildCriteriaOrder(OrderTypeEnum.ASC, indicatorCriteriaOrderEnum)); // TODO INDISTAC-877
+            OrderTypeEnum orderTypeEnum = CommonUtils.getOrderTypeEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_TYPE));
+            criteria.setOrders(ClientCriteriaUtils.buildCriteriaOrder(orderTypeEnum, indicatorCriteriaOrderEnum));
         }
 
         return criteria;

@@ -75,6 +75,7 @@ public class IndicatorDS extends DataSource {
     public static String COMMENTS                              = "ind-comments";
 
     public static String ORDER_BY                              = "ind-order-by";
+    public static String ORDER_TYPE                            = "ind-order-type";
 
     public static String DTO                                   = "ind-dto";
 

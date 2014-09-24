@@ -123,7 +123,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                 case GEOGRAPHICAL_GRANULARITY_CODE:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case GEOGRAPHICAL_GRANULARITY_TITLE:
-                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().title(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case UUID:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case CODE:
