@@ -205,6 +205,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
     public void setGeoValues(int firstResult, List<GeographicalValueDto> dtos, int totalResults) {
         geoValuePanel.hide();
 
+        listGrid.getListGrid().resetSort();
         GeoValueRecord[] records = new GeoValueRecord[dtos.size()];
         int index = 0;
         for (GeographicalValueDto ds : dtos) {

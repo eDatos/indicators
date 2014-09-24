@@ -150,6 +150,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
 
     @Override
     public void setIndicatorList(List<IndicatorSummaryDto> indicators, int firstResult, int totalResults) {
+        indicatorList.getListGrid().resetSort();
         IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
         int index = 0;
         for (IndicatorSummaryDto ind : indicators) {
@@ -157,7 +158,6 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
         }
         indicatorList.getListGrid().setData(records);
         indicatorList.refreshPaginationInfo(firstResult, indicators.size(), totalResults);
-
     }
 
     @Override

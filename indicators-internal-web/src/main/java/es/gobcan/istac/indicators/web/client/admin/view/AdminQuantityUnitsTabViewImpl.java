@@ -206,6 +206,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
     public void setQuantityUnits(int firstResult, List<QuantityUnitDto> quantityUnits, int totalResults) {
         quantityUnitPanel.hide();
 
+        listGrid.getListGrid().resetSort();
         QuantityUnitRecord[] records = new QuantityUnitRecord[quantityUnits.size()];
         int index = 0;
         for (QuantityUnitDto ds : quantityUnits) {
