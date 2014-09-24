@@ -32,9 +32,7 @@ import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 
 public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPresenter.AdminGeoValuesTabView, AdminGeoValuesTabPresenter.AdminGeoValuesTabProxy> implements AdminGeoValuesUiHandlers {
 
-    public static final int MAX_RESULTS = 30;
-
-    private DispatchAsync   dispatcher;
+    private DispatchAsync dispatcher;
 
     public interface AdminGeoValuesTabView extends View, HasUiHandlers<AdminGeoValuesUiHandlers> {
 
@@ -123,7 +121,6 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
             public void onWaitSuccess(final SaveGeoValueResult result) {
                 GeoValueCriteria criteria = getView().getGeoValueCriteria();
                 criteria.setFirstResult(firstResult);
-                criteria.setMaxResults(MAX_RESULTS);
 
                 retrieveGeoValuesWithAction(criteria, new Action() {
 
@@ -144,7 +141,6 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     private void reloadGeoValues(int firstResult) {
         GeoValueCriteria criteria = getView().getGeoValueCriteria();
         criteria.setFirstResult(firstResult);
-        criteria.setMaxResults(MAX_RESULTS);
         retrieveGeoValues(criteria);
     }
 

@@ -7,25 +7,15 @@ import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.shared.criteria.PaginationWebCriteria;
 
-public class GeoValueCriteria extends PaginationWebCriteria {
+public class QuantityUnitCriteria extends PaginationWebCriteria {
 
     private static final long          serialVersionUID = 5888787900805195271L;
 
-    private String                     granularityCode;
-
     private List<MetamacCriteriaOrder> orders           = new ArrayList<MetamacCriteriaOrder>();
 
-    public GeoValueCriteria() {
+    public QuantityUnitCriteria() {
         setFirstResult(0);
         setMaxResults(CommonWebConstants.MAIN_LIST_MAX_RESULTS);
-    }
-
-    public String getGranularityCode() {
-        return granularityCode;
-    }
-
-    public void setGranularityCode(String granularityCode) {
-        this.granularityCode = granularityCode;
     }
 
     public List<MetamacCriteriaOrder> getOrders() {

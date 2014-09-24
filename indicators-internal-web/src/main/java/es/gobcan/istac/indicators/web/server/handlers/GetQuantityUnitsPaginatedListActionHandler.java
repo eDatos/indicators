@@ -31,9 +31,11 @@ public class GetQuantityUnitsPaginatedListActionHandler extends SecurityActionHa
     public GetQuantityUnitsPaginatedListResult executeSecurityAction(GetQuantityUnitsPaginatedListAction action) throws ActionException {
         MetamacCriteria criteria = new MetamacCriteria();
         criteria.setPaginator(new MetamacCriteriaPaginator());
-        criteria.getPaginator().setFirstResult(action.getFirstResult());
-        criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
+        criteria.getPaginator().setFirstResult(action.getCriteria().getFirstResult());
+        criteria.getPaginator().setMaximumResultSize(action.getCriteria().getMaxResults());
         criteria.getPaginator().setCountTotalResults(true);
+
+        criteria.setOrdersBy(action.getCriteria().getOrders());
 
         try {
             MetamacCriteriaResult<QuantityUnitDto> result = indicatorsServiceFacade.findQuantityUnits(ServiceContextHolder.getCurrentServiceContext(), criteria);
@@ -42,5 +44,4 @@ public class GetQuantityUnitsPaginatedListActionHandler extends SecurityActionHa
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
-
 }

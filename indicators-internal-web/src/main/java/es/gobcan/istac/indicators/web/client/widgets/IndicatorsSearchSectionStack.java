@@ -74,7 +74,9 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         criteria.setDiffusionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS_DIFF)));
 
         IndicatorCriteriaOrderEnum indicatorCriteriaOrderEnum = CommonUtils.getIndicatorCriteriaOrderEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_BY));
-        criteria.setOrders(ClientCriteriaUtils.buildIndicatorCriteriaOrder(indicatorCriteriaOrderEnum, OrderTypeEnum.ASC));
+        if (indicatorCriteriaOrderEnum != null) {
+            criteria.setOrders(ClientCriteriaUtils.buildCriteriaOrder(OrderTypeEnum.ASC, indicatorCriteriaOrderEnum)); // TODO INDISTAC-877
+        }
 
         return criteria;
     }

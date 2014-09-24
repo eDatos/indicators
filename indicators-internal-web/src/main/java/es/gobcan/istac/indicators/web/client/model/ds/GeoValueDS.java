@@ -16,6 +16,8 @@ public class GeoValueDS extends DataSource {
     public static String LONGITUDE         = "geo-value-longitude";
     public static String ORDER             = "geo-value-order";
 
+    public static String ORDER_BY          = "geo-value-order-by";
+
     public static String DTO               = "geo-value-dto";
 
     public GeoValueDS() {

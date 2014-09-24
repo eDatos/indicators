@@ -9,8 +9,10 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 public class MetamacWebCriteriaUtils {
 
@@ -74,6 +76,25 @@ public class MetamacWebCriteriaUtils {
                 conjunctionRestriction.getRestrictions().add(
                         new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), criteria.getGranularityCode(), OperationType.EQ));
             }
+        }
+
+        return conjunctionRestriction;
+    }
+
+    public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(QuantityUnitCriteria criteria) {
+        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
+
+        if (criteria != null) {
+
+            // General criteria
+
+            MetamacCriteriaDisjunctionRestriction quantityUnitCriteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
+            if (StringUtils.isNotBlank(criteria.getCriteria())) {
+                quantityUnitCriteriaDisjuction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(QuantityUnitCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
+                // TODO INDISTAC-877
+            }
+            conjunctionRestriction.getRestrictions().add(quantityUnitCriteriaDisjuction);
         }
 
         return conjunctionRestriction;

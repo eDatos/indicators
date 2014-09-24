@@ -38,6 +38,8 @@ public class GetGeographicalValuesPaginatedListActionHandler extends SecurityAct
         restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
         criteria.setRestriction(restriction);
 
+        criteria.setOrdersBy(action.getCriteria().getOrders());
+
         // Pagination
         criteria.setPaginator(new MetamacCriteriaPaginator());
         criteria.getPaginator().setFirstResult(action.getCriteria().getFirstResult());

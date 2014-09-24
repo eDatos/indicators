@@ -7,14 +7,13 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 @GenDispatch(isSecure = false)
 public class GetQuantityUnitsPaginatedList {
 
     @In(1)
-    int                   maxResults;
-    @In(2)
-    int                   firstResult;
+    QuantityUnitCriteria  criteria;
 
     @Out(1)
     List<QuantityUnitDto> dtos;

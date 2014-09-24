@@ -14,19 +14,18 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
-import es.gobcan.istac.indicators.web.client.IndicatorsValues;
-import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoValuesUiHandlers;
-import es.gobcan.istac.indicators.web.client.enums.MultipleGeographicalValueOrderTypeEnum;
-import es.gobcan.istac.indicators.web.client.model.ds.GeoValueDS;
+import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaOrderEnum;
+import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminQuantityUnitsUiHandlers;
+import es.gobcan.istac.indicators.web.client.model.ds.QuantityUnitDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientCriteriaUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
-import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
-public class GeographicalValuesSearchSectionStack extends BaseAdvancedSearchSectionStack {
+public class QuantityUnitsSearchSectionStack extends BaseAdvancedSearchSectionStack {
 
-    private AdminGeoValuesUiHandlers uiHandlers;
+    private AdminQuantityUnitsUiHandlers uiHandlers;
 
-    public GeographicalValuesSearchSectionStack() {
+    public QuantityUnitsSearchSectionStack() {
         searchForm.getItem(SEARCH_ITEM_NAME).setWidth(180);
     }
 
@@ -37,12 +36,8 @@ public class GeographicalValuesSearchSectionStack extends BaseAdvancedSearchSect
         advancedSearchForm.setMargin(5);
         advancedSearchForm.setVisible(false);
 
-        SelectItem granularity = new SelectItem(GeoValueDS.GRANULARITY, getConstants().geoValueGranularity());
-        granularity.setValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
-
-        SelectItem orderBy = new SelectItem(GeoValueDS.ORDER_BY, getConstants().orderBy());
-        orderBy.setValueMap(CommonUtils.getMultipleGeographicalValueOrderValueMap());
-        orderBy.setStartRow(true);
+        SelectItem orderBy = new SelectItem(QuantityUnitDS.ORDER_BY, getConstants().orderBy());
+        orderBy.setValueMap(CommonUtils.getQuantityUnitOrderValueMap());
 
         CustomButtonItem searchItem = new CustomButtonItem(ADVANCED_SEARCH_ITEM_NAME, MetamacWebCommon.getConstants().search());
         searchItem.setColSpan(4);
@@ -54,33 +49,32 @@ public class GeographicalValuesSearchSectionStack extends BaseAdvancedSearchSect
             }
         });
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{granularity, orderBy, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{orderBy, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
     @Override
     protected void retrieveResources() {
-        getUiHandlers().retrieveGeoValues(getGeoValueCriteria());
+        getUiHandlers().retrieveQuantityUnits(getQuantityUnitCriteria());
     }
 
-    public GeoValueCriteria getGeoValueCriteria() {
-        GeoValueCriteria criteria = new GeoValueCriteria();
+    public QuantityUnitCriteria getQuantityUnitCriteria() {
+        QuantityUnitCriteria criteria = new QuantityUnitCriteria();
         criteria.setCriteria(searchForm.getValueAsString(SEARCH_ITEM_NAME));
-        criteria.setGranularityCode(advancedSearchForm.getValueAsString(GeoValueDS.GRANULARITY));
 
-        MultipleGeographicalValueOrderTypeEnum geoValueCriteriaOrderEnum = CommonUtils.getMultipleGeographicalValueOrderTypeEnum(advancedSearchForm.getValueAsString(GeoValueDS.ORDER_BY));
-        if (geoValueCriteriaOrderEnum != null) {
-            criteria.setOrders(ClientCriteriaUtils.buildGeographicalValueCriteriaOrder(OrderTypeEnum.ASC, geoValueCriteriaOrderEnum));
+        QuantityUnitCriteriaOrderEnum quantityUnitCriteriaOrderEnum = CommonUtils.getQuantityUnitCriteriaOrderEnum(advancedSearchForm.getValueAsString(QuantityUnitDS.ORDER_BY));
+        if (quantityUnitCriteriaOrderEnum != null) {
+            criteria.setOrders(ClientCriteriaUtils.buildCriteriaOrder(OrderTypeEnum.ASC, quantityUnitCriteriaOrderEnum)); // TODO INDISTAC-877
         }
 
         return criteria;
     }
 
-    public void setUiHandlers(AdminGeoValuesUiHandlers uiHandlers) {
+    public void setUiHandlers(AdminQuantityUnitsUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
 
-    public AdminGeoValuesUiHandlers getUiHandlers() {
+    public AdminQuantityUnitsUiHandlers getUiHandlers() {
         return uiHandlers;
     }
 }

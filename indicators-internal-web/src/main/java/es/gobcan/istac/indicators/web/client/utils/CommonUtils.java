@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
+import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -41,6 +42,7 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.MultipleGeographicalValueOrderTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
@@ -279,6 +281,46 @@ public class CommonUtils {
         valueMap.put(OrderTypeEnum.ASC.name(), getConstants().orderASC());
         valueMap.put(OrderTypeEnum.DESC.name(), getConstants().orderDESC());
         return valueMap;
+    }
+
+    public static OrderTypeEnum getOrderTypeEnum(String value) {
+        return OrderTypeEnum.valueOf(value);
+    }
+
+    public static LinkedHashMap<String, String> getQuantityUnitOrderValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        valueMap.put(QuantityUnitCriteriaOrderEnum.TITLE.name(), getConstants().quantityUnitTitle());
+        return valueMap;
+    }
+
+    public static QuantityUnitCriteriaOrderEnum getQuantityUnitCriteriaOrderEnum(String value) {
+        try {
+            return QuantityUnitCriteriaOrderEnum.valueOf(value);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static LinkedHashMap<String, String> getMultipleGeographicalValueOrderValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.CODE.name(), getConstants().geoValueCode());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.TITLE.name(), getConstants().geoValueTitle());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.ORDER.name(), getConstants().geoValueOrder());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.GRANULARITY.name(), getConstants().geoValueGranularity());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.GRANULARITY_AND_CODE.name(), getConstants().geoValueGranularityAndCode());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.GRANULARITY_AND_TITLE.name(), getConstants().geoValueGranularityAndTitle());
+        valueMap.put(MultipleGeographicalValueOrderTypeEnum.GRANULARITY_AND_ORDER.name(), getConstants().geoValueGranularityAndOrder());
+        return valueMap;
+    }
+
+    public static MultipleGeographicalValueOrderTypeEnum getMultipleGeographicalValueOrderTypeEnum(String value) {
+        try {
+            return MultipleGeographicalValueOrderTypeEnum.valueOf(value);
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     /**

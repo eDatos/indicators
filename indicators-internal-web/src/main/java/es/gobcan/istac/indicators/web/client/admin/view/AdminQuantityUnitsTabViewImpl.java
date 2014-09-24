@@ -49,16 +49,20 @@ import es.gobcan.istac.indicators.web.client.model.ds.QuantityUnitDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.widgets.QuantityUnitsSearchSectionStack;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuantityUnitsUiHandlers> implements AdminQuantityUnitsTabView {
 
-    private HLayout                panel;
+    private HLayout                         panel;
 
-    private PaginatedCheckListGrid listGrid;
+    private PaginatedCheckListGrid          listGrid;
 
-    private ListGridToolStrip      toolStrip;
+    private ListGridToolStrip               toolStrip;
 
-    private QuantityUnitPanel      quantityUnitPanel;
+    private QuantityUnitsSearchSectionStack searchSectionStack;
+
+    private QuantityUnitPanel               quantityUnitPanel;
 
     public AdminQuantityUnitsTabViewImpl() {
         super();
@@ -94,13 +98,20 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
             }
         });
 
+        // Search
+
+        searchSectionStack = new QuantityUnitsSearchSectionStack();
+
         // ListGrid
 
         listGrid = new PaginatedCheckListGrid(MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrieveQuantityUnits(firstResult, maxResults);
+                QuantityUnitCriteria criteria = getQuantityUnitCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(maxResults);
+                getUiHandlers().retrieveQuantityUnits(criteria);
             }
         });
         listGrid.setHeight100();
@@ -132,6 +143,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
         VLayout listPanel = new VLayout();
         listPanel.addMember(toolStrip);
+        listPanel.addMember(searchSectionStack);
         listPanel.addMember(listGrid);
 
         HLayout leftLayout = new HLayout();
@@ -148,6 +160,12 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         panel.addMember(leftLayout);
         panel.addMember(rightLayout);
 
+    }
+
+    @Override
+    public void setUiHandlers(AdminQuantityUnitsUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
     }
 
     // UTILS
@@ -210,6 +228,16 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
     @Override
     public Widget asWidget() {
         return panel;
+    }
+
+    @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
+    public QuantityUnitCriteria getQuantityUnitCriteria() {
+        return searchSectionStack.getQuantityUnitCriteria();
     }
 
     public class QuantityUnitPanel extends VLayout {

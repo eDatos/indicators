@@ -5,6 +5,7 @@ import java.util.List;
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 public interface AdminQuantityUnitsUiHandlers extends UiHandlers {
 
@@ -12,5 +13,5 @@ public interface AdminQuantityUnitsUiHandlers extends UiHandlers {
 
     void saveQuantityUnit(int currentPage, QuantityUnitDto quantityUnitDto);
 
-    void retrieveQuantityUnits(final int firstResult, final int maxResults);
+    void retrieveQuantityUnits(QuantityUnitCriteria criteria);
 }

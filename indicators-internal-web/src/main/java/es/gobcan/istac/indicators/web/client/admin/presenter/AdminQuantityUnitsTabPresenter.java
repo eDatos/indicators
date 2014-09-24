@@ -32,20 +32,23 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.SaveQuantityUnitAction;
 import es.gobcan.istac.indicators.web.shared.SaveQuantityUnitResult;
+import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabView, AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabProxy>
         implements
             AdminQuantityUnitsUiHandlers {
 
-    public static final int MAX_RESULTS = 30;
-
-    private DispatchAsync   dispatcher;
+    private DispatchAsync dispatcher;
 
     public interface AdminQuantityUnitsTabView extends View, HasUiHandlers<AdminQuantityUnitsUiHandlers> {
 
         void setQuantityUnits(int firstResult, List<QuantityUnitDto> quantityUnits, int totalResults);
         void onQuantityUnitCreated(QuantityUnitDto outputQuantityUnitDto);
         void onQuantityUnitUpdated(QuantityUnitDto outputQuantityUnitDto);
+
+        // Search
+        void clearSearchSection();
+        QuantityUnitCriteria getQuantityUnitCriteria();
     }
 
     @ProxyCodeSplit
@@ -75,6 +78,7 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
+        getView().clearSearchSection();
         reloadQuantityUnits(0);
     }
 
@@ -99,18 +103,22 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
     }
 
     @Override
-    public void retrieveQuantityUnits(final int firstResult, final int maxResults) {
-        retrieveQuantityUnitsAndDoAction(firstResult, maxResults, null);
+    public void retrieveQuantityUnits(QuantityUnitCriteria criteria) {
+        retrieveQuantityUnitsAndDoAction(criteria, null);
     }
 
     @Override
-    public void saveQuantityUnit(final int currentPage, QuantityUnitDto quantityUnitDto) {
+    public void saveQuantityUnit(final int firstResult, QuantityUnitDto quantityUnitDto) {
         final boolean creation = quantityUnitDto.getUuid() == null;
         dispatcher.execute(new SaveQuantityUnitAction(quantityUnitDto), new WaitingAsyncCallbackHandlingError<SaveQuantityUnitResult>(this) {
 
             @Override
             public void onWaitSuccess(final SaveQuantityUnitResult result) {
-                retrieveQuantityUnitsAndDoAction(currentPage, MAX_RESULTS, new Action() {
+
+                QuantityUnitCriteria criteria = getView().getQuantityUnitCriteria();
+                criteria.setFirstResult(firstResult);
+
+                retrieveQuantityUnitsAndDoAction(criteria, new Action() {
 
                     @Override
                     public void run() {
@@ -125,14 +133,14 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
             }
 
         });
-
     }
-    private void retrieveQuantityUnitsAndDoAction(final int firstResult, final int maxResults, final Action action) {
-        dispatcher.execute(new GetQuantityUnitsPaginatedListAction(maxResults, firstResult), new WaitingAsyncCallbackHandlingError<GetQuantityUnitsPaginatedListResult>(this) {
+
+    private void retrieveQuantityUnitsAndDoAction(final QuantityUnitCriteria criteria, final Action action) {
+        dispatcher.execute(new GetQuantityUnitsPaginatedListAction(criteria), new WaitingAsyncCallbackHandlingError<GetQuantityUnitsPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetQuantityUnitsPaginatedListResult result) {
-                getView().setQuantityUnits(firstResult, result.getDtos(), result.getTotalResults());
+                getView().setQuantityUnits(criteria.getFirstResult(), result.getDtos(), result.getTotalResults());
                 if (action != null) {
                     action.run();
                 }
@@ -141,7 +149,9 @@ public class AdminQuantityUnitsTabPresenter extends Presenter<AdminQuantityUnits
     }
 
     private void reloadQuantityUnits(int firstResult) {
-        retrieveQuantityUnits(firstResult, MAX_RESULTS);
+        QuantityUnitCriteria criteria = getView().getQuantityUnitCriteria();
+        criteria.setFirstResult(firstResult);
+        retrieveQuantityUnits(criteria);
     }
 
     private void reloadQuantityUnitsCache() {

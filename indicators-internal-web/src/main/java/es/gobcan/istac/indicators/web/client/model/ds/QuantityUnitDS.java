@@ -12,6 +12,8 @@ public class QuantityUnitDS extends DataSource {
     public static String SYMBOL_POSITION = "quantity-unit-symbol-position";
     public static String TITLE           = "quantity-unit-title";
 
+    public static String ORDER_BY        = "quantity-unit-order-by";
+
     public static String DTO             = "quantity-unit-dto";
 
     public QuantityUnitDS() {
