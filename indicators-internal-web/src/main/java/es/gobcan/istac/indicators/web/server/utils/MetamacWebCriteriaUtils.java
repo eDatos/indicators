@@ -67,6 +67,8 @@ public class MetamacWebCriteriaUtils {
                         .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
                 geoValueCriteriaDisjuction.getRestrictions().add(
                         new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
+                geoValueCriteriaDisjuction.getRestrictions().add(
+                        new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
             }
             conjunctionRestriction.getRestrictions().add(geoValueCriteriaDisjuction);
 
@@ -90,9 +92,9 @@ public class MetamacWebCriteriaUtils {
 
             MetamacCriteriaDisjunctionRestriction quantityUnitCriteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
             if (StringUtils.isNotBlank(criteria.getCriteria())) {
+                quantityUnitCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(QuantityUnitCriteriaPropertyEnum.UUID.name(), criteria.getCriteria(), OperationType.ILIKE));
                 quantityUnitCriteriaDisjuction.getRestrictions()
                         .add(new MetamacCriteriaPropertyRestriction(QuantityUnitCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
-                // TODO INDISTAC-877
             }
             conjunctionRestriction.getRestrictions().add(quantityUnitCriteriaDisjuction);
         }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum GeographicalValueCriteriaPropertyEnum implements Serializable {
 
-    UUID, CODE, TITLE, GEOGRAPHICAL_GRANULARITY_UUID, GEOGRAPHICAL_GRANULARITY_CODE;
+    UUID, CODE, TITLE, GEOGRAPHICAL_GRANULARITY_UUID, GEOGRAPHICAL_GRANULARITY_CODE, GEOGRAPHICAL_GRANULARITY_TITLE;
 
     private GeographicalValueCriteriaPropertyEnum() {
     }

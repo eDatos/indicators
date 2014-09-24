@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum QuantityUnitCriteriaPropertyEnum implements Serializable {
 
-    SYMBOL_POSITION, TITLE;
+    UUID, SYMBOL_POSITION, TITLE;
 
     private QuantityUnitCriteriaPropertyEnum() {
     }

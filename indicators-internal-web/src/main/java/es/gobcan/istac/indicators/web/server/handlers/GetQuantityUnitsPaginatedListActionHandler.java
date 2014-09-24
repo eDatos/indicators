@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -14,6 +15,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.utils.MetamacWebCriteriaUtils;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListResult;
 
@@ -30,12 +32,18 @@ public class GetQuantityUnitsPaginatedListActionHandler extends SecurityActionHa
     @Override
     public GetQuantityUnitsPaginatedListResult executeSecurityAction(GetQuantityUnitsPaginatedListAction action) throws ActionException {
         MetamacCriteria criteria = new MetamacCriteria();
+
+        // Criteria
+        MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
+        restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
+        criteria.setRestriction(restriction);
+
+        criteria.setOrdersBy(action.getCriteria().getOrders());
+
         criteria.setPaginator(new MetamacCriteriaPaginator());
         criteria.getPaginator().setFirstResult(action.getCriteria().getFirstResult());
         criteria.getPaginator().setMaximumResultSize(action.getCriteria().getMaxResults());
         criteria.getPaginator().setCountTotalResults(true);
-
-        criteria.setOrdersBy(action.getCriteria().getOrders());
 
         try {
             MetamacCriteriaResult<QuantityUnitDto> result = indicatorsServiceFacade.findQuantityUnits(ServiceContextHolder.getCurrentServiceContext(), criteria);

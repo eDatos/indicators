@@ -122,6 +122,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                     return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case GEOGRAPHICAL_GRANULARITY_CODE:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case GEOGRAPHICAL_GRANULARITY_TITLE:
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().title(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case UUID:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case CODE:
@@ -218,6 +220,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
             QuantityUnitCriteriaPropertyEnum propertyNameCriteria = QuantityUnitCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
+                case UUID:
+                    return new SculptorPropertyCriteria(QuantityUnitProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case SYMBOL_POSITION:
                     return new SculptorPropertyCriteria(QuantityUnitProperties.symbolPosition(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case TITLE:
