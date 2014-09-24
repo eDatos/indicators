@@ -19,6 +19,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -93,7 +94,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
             }
         });
 
-        listGrid.setHeight100();
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         ListGridField uuidField = new ListGridField(GeoGranularityDS.UUID, IndicatorsWeb.getConstants().geoGranularityUuid());
         ListGridField codeField = new ListGridField(GeoGranularityDS.CODE, IndicatorsWeb.getConstants().geoGranularityCode());
         ListGridField titleField = new ListGridField(GeoGranularityDS.TITLE, IndicatorsWeb.getConstants().geoGranularityTitle());

@@ -18,6 +18,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -94,7 +95,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
             }
         });
 
-        listGrid.setHeight100();
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         ListGridField uuidField = new ListGridField(UnitMultiplierDS.UUID, IndicatorsWeb.getConstants().unitMultiplierUuid());
         ListGridField titleField = new ListGridField(UnitMultiplierDS.TITLE, IndicatorsWeb.getConstants().unitMultiplierTitle());
         ListGridField multiplierField = new ListGridField(UnitMultiplierDS.MULTIPLIER, IndicatorsWeb.getConstants().unitMultiplierMultiplier());

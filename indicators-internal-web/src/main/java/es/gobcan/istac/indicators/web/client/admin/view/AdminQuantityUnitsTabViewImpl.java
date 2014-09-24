@@ -22,6 +22,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -114,7 +115,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                 getUiHandlers().retrieveQuantityUnits(criteria);
             }
         });
-        listGrid.setHeight100();
+        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         ListGridField uuidField = new ListGridField(QuantityUnitDS.UUID, IndicatorsWeb.getConstants().quantityUnitUuid());
         ListGridField titleField = new ListGridField(QuantityUnitDS.TITLE, IndicatorsWeb.getConstants().quantityUnitTitle());
         listGrid.getListGrid().setFields(uuidField, titleField);
