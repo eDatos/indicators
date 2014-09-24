@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum QuantityUnitCriteriaPropertyEnum {
+import java.io.Serializable;
+
+public enum QuantityUnitCriteriaPropertyEnum implements Serializable {
 
     SYMBOL_POSITION, TITLE;
+
+    private QuantityUnitCriteriaPropertyEnum() {
+    }
 
     public String value() {
         return name();

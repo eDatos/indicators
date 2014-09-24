@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum IndicatorsSystemCriteriaPropertyEnum {
+import java.io.Serializable;
+
+public enum IndicatorsSystemCriteriaPropertyEnum implements Serializable {
 
     CODE;
+
+    private IndicatorsSystemCriteriaPropertyEnum() {
+    }
 
     public String value() {
         return name();

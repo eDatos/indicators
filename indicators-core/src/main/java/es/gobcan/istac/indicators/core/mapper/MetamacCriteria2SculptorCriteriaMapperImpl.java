@@ -1,12 +1,12 @@
 package es.gobcan.istac.indicators.core.mapper;
 
 import org.fornax.cartridges.sculptor.framework.domain.Property;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
+import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.criteria.GeographicalGranularityCriteriaO
 import es.gobcan.istac.indicators.core.criteria.GeographicalGranularityCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaOrderEnum;
@@ -53,7 +54,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                 new UnitMultiplierCriteriaCallback());
         quantityUnitCriteriaMapper = new MetamacCriteria2SculptorCriteria<QuantityUnit>(QuantityUnit.class, QuantityUnitCriteriaOrderEnum.class, QuantityUnitCriteriaPropertyEnum.class,
                 new QuantityUnitCriteriaCallback());
-        indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, null, IndicatorCriteriaPropertyEnum.class,
+        indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, IndicatorCriteriaOrderEnum.class, IndicatorCriteriaPropertyEnum.class,
                 new IndicatorVersionCriteriaCallback());
         indicatorsSystemVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion>(IndicatorsSystemVersion.class, null, IndicatorsSystemCriteriaPropertyEnum.class,
                 new IndicatorsSystemVersionCriteriaCallback());
@@ -136,10 +137,18 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         public Property<GeographicalValue> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
             GeographicalValueCriteriaOrderEnum propertyNameCriteria = GeographicalValueCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyNameCriteria) {
+                case UUID:
+                    return GeographicalValueProperties.uuid();
                 case GEOGRAPHICAL_GRANULARITY_UUID:
                     return GeographicalValueProperties.granularity();
                 case ORDER:
                     return GeographicalValueProperties.order();
+                case CODE:
+                    return GeographicalValueProperties.code();
+                case TITLE:
+                    return GeographicalValueProperties.title().texts().label();
+                case GEOGRAPHICAL_GRANULARITY_TITLE:
+                    return GeographicalValueProperties.granularity().title().texts().label();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
@@ -222,6 +231,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         public Property<QuantityUnit> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
             QuantityUnitCriteriaOrderEnum propertyNameCriteria = QuantityUnitCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyNameCriteria) {
+                case UUID:
+                    return QuantityUnitProperties.uuid();
                 case TITLE:
                     return QuantityUnitProperties.title().texts().label();
                 default:
@@ -300,7 +311,23 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
 
         @Override
         public Property<IndicatorVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            return null; // put default order
+            IndicatorCriteriaOrderEnum propertyOrderEnum = IndicatorCriteriaOrderEnum.fromValue(order.getPropertyName());
+            switch (propertyOrderEnum) {
+                case CODE:
+                    return IndicatorVersionProperties.indicator().code();
+                case TITLE:
+                    return IndicatorVersionProperties.title().texts().label();
+                case PRODUCTION_VERSION:
+                    return IndicatorVersionProperties.indicator().productionVersionNumber();
+                case PRODUCTION_PROC_STATUS:
+                    return IndicatorVersionProperties.indicator().productionProcStatus();
+                case DIFFUSION_VERSION:
+                    return IndicatorVersionProperties.indicator().diffusionVersionNumber();
+                case DIFFUSION_PROC_STATUS:
+                    return IndicatorVersionProperties.indicator().diffusionProcStatus();
+                default:
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
+            }
         }
 
         @Override

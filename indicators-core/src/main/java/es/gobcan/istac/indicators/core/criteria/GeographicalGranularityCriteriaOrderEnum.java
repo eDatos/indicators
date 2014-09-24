@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum GeographicalGranularityCriteriaOrderEnum {
+import java.io.Serializable;
+
+public enum GeographicalGranularityCriteriaOrderEnum implements Serializable {
 
     CODE, TITLE;
+
+    private GeographicalGranularityCriteriaOrderEnum() {
+    }
 
     public String value() {
         return name();

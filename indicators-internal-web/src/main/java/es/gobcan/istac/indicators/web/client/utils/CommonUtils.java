@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -17,6 +19,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
+import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -250,6 +253,31 @@ public class CommonUtils {
         for (IndicatorProcStatusEnum procStatus : IndicatorProcStatusEnum.values()) {
             valueMap.put(procStatus.toString(), getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + procStatus.getName()));
         }
+        return valueMap;
+    }
+
+    public static LinkedHashMap<String, String> getIndicatorOrderValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        valueMap.put(IndicatorCriteriaOrderEnum.CODE.name(), getConstants().indicListHeaderIdentifier());
+        valueMap.put(IndicatorCriteriaOrderEnum.TITLE.name(), getConstants().indicDetailTitle());
+        valueMap.put(IndicatorCriteriaOrderEnum.PRODUCTION_PROC_STATUS.name(), getConstants().indicatorProductionEnvironmentProcStatus());
+        valueMap.put(IndicatorCriteriaOrderEnum.DIFFUSION_PROC_STATUS.name(), getConstants().indicatorDiffusionEnvironmentProcStatus());
+        return valueMap;
+    }
+
+    public static IndicatorCriteriaOrderEnum getIndicatorCriteriaOrderEnum(String value) {
+        try {
+            return IndicatorCriteriaOrderEnum.valueOf(value);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static LinkedHashMap<String, String> getOrderTypeValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(OrderTypeEnum.ASC.name(), getConstants().orderASC());
+        valueMap.put(OrderTypeEnum.DESC.name(), getConstants().orderDESC());
         return valueMap;
     }
 

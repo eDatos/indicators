@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum UnitMultiplierCriteriaOrderEnum {
+import java.io.Serializable;
+
+public enum UnitMultiplierCriteriaOrderEnum implements Serializable {
 
     UNIT_MULTIPLIER, TITLE;
+
+    private UnitMultiplierCriteriaOrderEnum() {
+    }
 
     public String value() {
         return name();

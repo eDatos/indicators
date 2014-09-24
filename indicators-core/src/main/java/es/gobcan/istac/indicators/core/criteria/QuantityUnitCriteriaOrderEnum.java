@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum QuantityUnitCriteriaOrderEnum {
+import java.io.Serializable;
 
-    TITLE;
+public enum QuantityUnitCriteriaOrderEnum implements Serializable {
+
+    UUID, TITLE;
+
+    private QuantityUnitCriteriaOrderEnum() {
+    }
 
     public String value() {
         return name();

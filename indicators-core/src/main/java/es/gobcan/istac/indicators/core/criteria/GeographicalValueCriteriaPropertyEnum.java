@@ -1,8 +1,13 @@
 package es.gobcan.istac.indicators.core.criteria;
 
-public enum GeographicalValueCriteriaPropertyEnum {
+import java.io.Serializable;
+
+public enum GeographicalValueCriteriaPropertyEnum implements Serializable {
 
     UUID, CODE, TITLE, GEOGRAPHICAL_GRANULARITY_UUID, GEOGRAPHICAL_GRANULARITY_CODE;
+
+    private GeographicalValueCriteriaPropertyEnum() {
+    }
 
     public String value() {
         return name();
