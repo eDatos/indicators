@@ -13,6 +13,7 @@ public class GetIndicatorsSystemPaginatedList {
 
     @In(1)
     int                                 maxResults;
+
     @In(2)
     int                                 firstResult;
 
@@ -20,5 +21,8 @@ public class GetIndicatorsSystemPaginatedList {
     List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemList;
 
     @Out(2)
+    Integer                             firstResultOut;
+
+    @Out(3)
     Integer                             totalResults;
 }

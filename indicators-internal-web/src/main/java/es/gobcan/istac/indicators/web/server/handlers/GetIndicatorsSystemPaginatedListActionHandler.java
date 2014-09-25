@@ -18,7 +18,6 @@ import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
@@ -47,8 +46,10 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
+        int firstResult = 0;
         Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), action.getFirstResult(), action.getMaxResults());
         if (result != null && result.getOperations() != null) {
+            firstResult = result.getOffset().intValue();
             totalResults = result.getTotal().intValue();
             for (Resource resource : result.getOperations()) {
                 // Check if operation (indicators system) exists in the DB
@@ -74,12 +75,6 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
                 }
             }
         }
-        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, totalResults);
+        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, firstResult, totalResults);
     }
-
-    @Override
-    public void undo(GetIndicatorsSystemPaginatedListAction action, GetIndicatorsSystemPaginatedListResult result, ExecutionContext context) throws ActionException {
-
-    }
-
 }

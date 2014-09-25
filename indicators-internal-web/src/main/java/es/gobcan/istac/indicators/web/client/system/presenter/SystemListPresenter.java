@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -31,28 +32,19 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
-import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
-import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
-public class SystemListPresenter extends PaginationPresenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
+public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 
     private ToolStripPresenterWidget toolStripPresenterWidget;
 
-    public interface SystemListView extends View, HasUiHandlers<SystemListPresenter> {
+    public interface SystemListView extends View, HasUiHandlers<SystemListUiHandler> {
 
-        void setIndSystemList(List<IndicatorsSystemSummaryDtoWeb> indSysList);
-        void onIndicatorsSystemsDeleted();
-
-        StatusBar getStatusBar();
-        void refreshStatusBar();
-        void setNumberOfElements(int numberOfElements);
-        void setPageNumber(int pageNumber);
-        void removeSelectedData();
+        void setIndSystemList(List<IndicatorsSystemSummaryDtoWeb> indSysList, int firstResult, int totalResults);
     }
 
     @ProxyCodeSplit
@@ -66,7 +58,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
     @Inject
     public SystemListPresenter(EventBus eventBus, SystemListView view, SystemListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, ToolStripPresenterWidget toolStripPresenterWidget) {
-        super(eventBus, view, proxy, dispatcher, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+        super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
         this.toolStripPresenterWidget = toolStripPresenterWidget;
@@ -82,11 +74,10 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
     }
 
     @Override
-    protected void onReset() {
-        super.onReset();
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
         SetTitleEvent.fire(SystemListPresenter.this, getConstants().indicatorSystems());
-        initializePaginationSettings();
-        retrieveResultSet();
+        retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
     }
 
     @Override
@@ -96,55 +87,18 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
     }
 
     @Override
-    public void reloadIndicatorsSystemList() {
-        retrieveResultSet();
-    }
-
-    @Override
     public void goToIndicatorsSystem(String indSysCode) {
         PlaceRequest systemDetailRequest = new PlaceRequest(NameTokens.systemPage).with(PlaceRequestParams.indSystemParam, indSysCode);
         placeManager.revealPlace(systemDetailRequest);
     }
 
     @Override
-    public void retrieveResultSet() {
-        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemPaginatedListResult>(this) {
+    public void retrieveSystems(int firstResult, int maxResults) {
+        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(maxResults, firstResult), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorsSystemPaginatedListResult result) {
-                SystemListPresenter.this.totalResults = result.getTotalResults();
-
-                setNumberOfElements(result.getIndicatorsSystemList().size());
-
-                // update Selected label e.g "0 of 50 selected"
-                getView().setNumberOfElements(getNumberOfElements());
-                getView().setPageNumber(getPageNumber());
-                getView().refreshStatusBar();
-
-                // Log.debug("onSuccess() - firstResult: " + firstResult +
-                // " pageNumber: " + pageNumber + " numberOfElements: " +
-                // numberOfElements);
-
-                // enable/disable the pagination widgets
-                if (getPageNumber() == 1) {
-                    getView().getStatusBar().getResultSetFirstButton().disable();
-                    getView().getStatusBar().getResultSetPreviousButton().disable();
-                } else {
-                    getView().getStatusBar().getResultSetFirstButton().enable();
-                    getView().getStatusBar().getResultSetPreviousButton().enable();
-                }
-
-                // enable/disable the pagination widgets
-                if ((result.getTotalResults() - (getPageNumber() - 1) * CommonWebConstants.MAIN_LIST_MAX_RESULTS) > getNumberOfElements()) {
-                    getView().getStatusBar().getResultSetNextButton().enable();
-                    getView().getStatusBar().getResultSetLastButton().enable();
-                } else {
-                    getView().getStatusBar().getResultSetNextButton().disable();
-                    getView().getStatusBar().getResultSetLastButton().disable();
-                }
-
-                // pass the result set to the View
-                getView().setIndSystemList(result.getIndicatorsSystemList());
+                getView().setIndSystemList(result.getIndicatorsSystemList(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
     }
@@ -154,12 +108,15 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
         dispatcher.execute(new DeleteIndicatorsSystemsAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteIndicatorsSystemsResult>(this) {
 
             @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+            }
+            @Override
             public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
                 fireSuccessMessage(getMessages().systemDeleted());
-                getView().onIndicatorsSystemsDeleted();
-                retrieveResultSet();
+                retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }
-
 }

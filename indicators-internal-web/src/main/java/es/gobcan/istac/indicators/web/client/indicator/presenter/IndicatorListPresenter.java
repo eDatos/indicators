@@ -140,6 +140,12 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
         dispatcher.execute(new DeleteIndicatorsAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteIndicatorsResult>(this) {
 
             @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                IndicatorCriteria criteria = getView().getIndicatorCriteria();
+                retrieveIndicators(criteria);
+            }
+            @Override
             public void onWaitSuccess(DeleteIndicatorsResult result) {
                 fireSuccessMessage(getMessages().indicDeleted());
                 IndicatorCriteria criteria = getView().getIndicatorCriteria();
