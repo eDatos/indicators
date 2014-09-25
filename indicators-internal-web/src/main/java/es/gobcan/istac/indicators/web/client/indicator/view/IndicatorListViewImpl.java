@@ -6,7 +6,6 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
@@ -36,6 +35,7 @@ import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindo
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorListGrid;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsSearchSectionStack;
@@ -192,7 +192,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     }
 
     private void createIndicatorList() {
-        indicatorList = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new IndicatorListGrid(), new PaginatedAction() {
+        indicatorList = new PaginatedCheckListGrid(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, new IndicatorListGrid(), new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {

@@ -23,6 +23,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoGranularitiesUiHandlers;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
@@ -36,9 +37,7 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
         implements
             AdminGeoGranularitiesUiHandlers {
 
-    public static final int MAX_RESULTS = 30;
-
-    private DispatchAsync   dispatcher;
+    private DispatchAsync dispatcher;
 
     public interface AdminGeoGranularitiesTabView extends View, HasUiHandlers<AdminGeoGranularitiesUiHandlers> {
 
@@ -103,16 +102,17 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
     }
 
     private void retrieveGeoGranularitiesWithAction(final int firstResult, final Action action) {
-        dispatcher.execute(new GetGeographicalGranularitiesPaginatedListAction(MAX_RESULTS, firstResult), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesPaginatedListResult>(this) {
+        dispatcher.execute(new GetGeographicalGranularitiesPaginatedListAction(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, firstResult),
+                new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetGeographicalGranularitiesPaginatedListResult result) {
-                getView().setGeoGranularities(firstResult, result.getDtos(), result.getTotalResults());
-                if (action != null) {
-                    action.run();
-                }
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetGeographicalGranularitiesPaginatedListResult result) {
+                        getView().setGeoGranularities(firstResult, result.getDtos(), result.getTotalResults());
+                        if (action != null) {
+                            action.run();
+                        }
+                    }
+                });
     }
 
     @Override

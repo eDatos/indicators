@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.shared.criteria.PaginationWebCriteria;
+
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class GeoValueCriteria extends PaginationWebCriteria {
 
@@ -17,7 +18,7 @@ public class GeoValueCriteria extends PaginationWebCriteria {
 
     public GeoValueCriteria() {
         setFirstResult(0);
-        setMaxResults(CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+        setMaxResults(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
     }
 
     public String getGranularityCode() {

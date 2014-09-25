@@ -2,10 +2,10 @@ package es.gobcan.istac.indicators.web.client.system.presenter;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+import static es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants.SYSTEMS_LISTGRID_MAX_RESULTS;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
@@ -77,7 +77,7 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         SetTitleEvent.fire(SystemListPresenter.this, getConstants().indicatorSystems());
-        retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+        retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
     }
 
     @Override
@@ -110,12 +110,12 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
             }
             @Override
             public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
                 fireSuccessMessage(getMessages().systemDeleted());
-                retrieveSystems(0, CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+                retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
             }
         });
     }

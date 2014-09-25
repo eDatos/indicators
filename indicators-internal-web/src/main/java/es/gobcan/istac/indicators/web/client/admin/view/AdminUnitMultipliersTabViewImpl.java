@@ -32,13 +32,13 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
-import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter.AdminUnitMultipliersTabView;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUnitMultipliersUiHandlers;
 import es.gobcan.istac.indicators.web.client.model.UnitMultiplierRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.UnitMultiplierDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUnitMultipliersUiHandlers> implements AdminUnitMultipliersTabView {
@@ -87,7 +87,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
 
         // ListGrid
 
-        listGrid = new PaginatedCheckListGrid(AdminUnitMultipliersTabPresenter.MAX_RESULTS, new PaginatedAction() {
+        listGrid = new PaginatedCheckListGrid(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
@@ -96,6 +96,7 @@ public class AdminUnitMultipliersTabViewImpl extends ViewWithUiHandlers<AdminUni
         });
 
         listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setAutoFitMaxRecords(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
         ListGridField uuidField = new ListGridField(UnitMultiplierDS.UUID, IndicatorsWeb.getConstants().unitMultiplierUuid());
         ListGridField titleField = new ListGridField(UnitMultiplierDS.TITLE, IndicatorsWeb.getConstants().unitMultiplierTitle());
         ListGridField multiplierField = new ListGridField(UnitMultiplierDS.MULTIPLIER, IndicatorsWeb.getConstants().unitMultiplierMultiplier());

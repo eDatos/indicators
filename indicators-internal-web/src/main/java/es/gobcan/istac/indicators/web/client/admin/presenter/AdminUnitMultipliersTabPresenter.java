@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUnitMultipliersUiHandlers;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersPaginatedListAction;
@@ -33,8 +34,7 @@ public class AdminUnitMultipliersTabPresenter extends Presenter<AdminUnitMultipl
         implements
             AdminUnitMultipliersUiHandlers {
 
-    public static final int MAX_RESULTS = 30;
-    private DispatchAsync   dispatcher;
+    private DispatchAsync dispatcher;
 
     public interface AdminUnitMultipliersTabView extends View, HasUiHandlers<AdminUnitMultipliersUiHandlers> {
 
@@ -98,16 +98,17 @@ public class AdminUnitMultipliersTabPresenter extends Presenter<AdminUnitMultipl
     }
 
     private void retrieveUnitMultipliersAndDoAction(final int firstResult, final Action action) {
-        dispatcher.execute(new GetUnitMultipliersPaginatedListAction(MAX_RESULTS, firstResult), new WaitingAsyncCallbackHandlingError<GetUnitMultipliersPaginatedListResult>(this) {
+        dispatcher.execute(new GetUnitMultipliersPaginatedListAction(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, firstResult),
+                new WaitingAsyncCallbackHandlingError<GetUnitMultipliersPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetUnitMultipliersPaginatedListResult result) {
-                getView().setUnitMultipliers(firstResult, result.getDtos(), result.getTotalResults());
-                if (action != null) {
-                    action.run();
-                }
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetUnitMultipliersPaginatedListResult result) {
+                        getView().setUnitMultipliers(firstResult, result.getDtos(), result.getTotalResults());
+                        if (action != null) {
+                            action.run();
+                        }
+                    }
+                });
     }
 
     private void reloadUnitMultipliers(int firstResult) {

@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.client.admin.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
-import static es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter.MAX_RESULTS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,7 @@ import es.gobcan.istac.indicators.web.client.model.GeoGranularityRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.GeoGranularityDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGeoGranularitiesUiHandlers> implements AdminGeoGranularitiesTabView {
@@ -86,7 +86,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
 
         // ListGrid
 
-        listGrid = new PaginatedCheckListGrid(MAX_RESULTS, new PaginatedAction() {
+        listGrid = new PaginatedCheckListGrid(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
@@ -95,6 +95,7 @@ public class AdminGeoGranularitiesTabViewImpl extends ViewWithUiHandlers<AdminGe
         });
 
         listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setAutoFitMaxRecords(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
         ListGridField uuidField = new ListGridField(GeoGranularityDS.UUID, IndicatorsWeb.getConstants().geoGranularityUuid());
         ListGridField codeField = new ListGridField(GeoGranularityDS.CODE, IndicatorsWeb.getConstants().geoGranularityCode());
         ListGridField titleField = new ListGridField(GeoGranularityDS.TITLE, IndicatorsWeb.getConstants().geoGranularityTitle());

@@ -6,7 +6,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -42,6 +41,7 @@ import es.gobcan.istac.indicators.web.client.model.GeoValueRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.GeoValueDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalValuesSearchSectionStack;
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
@@ -99,7 +99,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
 
         // ListGrid
 
-        listGrid = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new PaginatedAction() {
+        listGrid = new PaginatedCheckListGrid(IndicatorsWebConstants.LISTGRID_MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
@@ -111,6 +111,7 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
         });
 
         listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
+        listGrid.getListGrid().setAutoFitMaxRecords(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
         ListGridField uuidField = new ListGridField(GeoValueDS.UUID, IndicatorsWeb.getConstants().geoValueUuid());
         ListGridField codeField = new ListGridField(GeoValueDS.CODE, IndicatorsWeb.getConstants().geoValueCode());
         ListGridField titleField = new ListGridField(GeoValueDS.TITLE, IndicatorsWeb.getConstants().geoValueTitle());

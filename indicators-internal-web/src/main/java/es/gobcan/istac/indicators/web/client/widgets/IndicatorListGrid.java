@@ -11,11 +11,13 @@ import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class IndicatorListGrid extends CustomListGrid {
 
     public IndicatorListGrid() {
         setAutoFitData(Autofit.VERTICAL);
+        setAutoFitMaxRecords(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
         setDataSource(new IndicatorDS());
         setUseAllDataSourceFields(false);
         setHeaderHeight(40);

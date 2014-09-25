@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants.SYSTEMS_LISTGRID_MAX_RESULTS;
 
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
@@ -17,6 +18,7 @@ public class SystemListGrid extends CustomListGrid {
 
     public SystemListGrid() {
         setAutoFitData(Autofit.VERTICAL);
+        setAutoFitMaxRecords(SYSTEMS_LISTGRID_MAX_RESULTS);
         setDataSource(new IndicatorDS());
         setUseAllDataSourceFields(false);
         setHeaderHeight(40);

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.shared.criteria.PaginationWebCriteria;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class IndicatorCriteria extends PaginationWebCriteria {
 
@@ -22,7 +22,7 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     public IndicatorCriteria() {
         setFirstResult(0);
-        setMaxResults(CommonWebConstants.MAIN_LIST_MAX_RESULTS);
+        setMaxResults(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
     }
 
     public String getCode() {

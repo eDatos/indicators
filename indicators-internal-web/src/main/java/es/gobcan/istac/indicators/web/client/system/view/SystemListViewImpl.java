@@ -1,13 +1,13 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants.SYSTEMS_LISTGRID_MAX_RESULTS;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
@@ -68,7 +68,7 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
 
         toolStrip.addButton(deleteSystemActor);
 
-        indSystemListGrid = new PaginatedCheckListGrid(CommonWebConstants.MAIN_LIST_MAX_RESULTS, new SystemListGrid(), new PaginatedAction() {
+        indSystemListGrid = new PaginatedCheckListGrid(SYSTEMS_LISTGRID_MAX_RESULTS, new SystemListGrid(), new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
