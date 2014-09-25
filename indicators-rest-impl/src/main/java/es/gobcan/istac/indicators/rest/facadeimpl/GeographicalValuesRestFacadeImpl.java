@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
+import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
+import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
