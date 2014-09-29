@@ -23,5 +23,6 @@ insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VAL
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(7,1,1,'indicators.subjects.db.column_code','ID_AREA_TEMATICA');
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(8,1,1,'indicators.subjects.db.column_title','DESCRIPCION');
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(9,1,1,'indicators.bbbd.data_views_role','INDICATORS_DATA_ROLE_TEST');
+insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(9,1,0,'metamac.edition.languages','es,en,pt');
 
 commit;
