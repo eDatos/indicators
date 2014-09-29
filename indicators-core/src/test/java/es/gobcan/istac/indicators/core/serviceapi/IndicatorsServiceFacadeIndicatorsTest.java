@@ -1,11 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +51,12 @@ import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators, data sources
  * Spring based transactional test with DbUnit support.
@@ -78,60 +78,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Autowired
     private Do2DtoMapper              do2DtoMapper;
-
-    private static String             NOT_EXISTS                   = "not-exists";
-
-    // Indicators
-    private static String             INDICATOR_1                  = "Indicator-1";
-    private static String             INDICATOR_1_V2               = "2.000";
-    private static String             INDICATOR_2                  = "Indicator-2";
-    private static String             INDICATOR_3                  = "Indicator-3";
-    private static String             INDICATOR_3_VERSION          = "11.033";
-    private static String             INDICATOR_4                  = "Indicator-4";
-    private static String             INDICATOR_5                  = "Indicator-5";
-    private static String             INDICATOR_6                  = "Indicator-6";
-    private static String             INDICATOR_7                  = "Indicator-7";
-    private static String             INDICATOR_8                  = "Indicator-8";
-    private static String             INDICATOR_9                  = "Indicator-9";
-    private static String             INDICATOR_10                 = "Indicator-10";
-    private static String             INDICATOR_11                 = "Indicator-11";
-    private static String             INDICATOR_12                 = "Indicator-12";
-    private static String             INDICATOR_13                 = "Indicator-13";
-
-    // Indicators systems
-    private static String             INDICATORS_SYSTEM_2          = "IndSys-2";
-    private static String             INDICATORS_SYSTEM_3          = "IndSys-3";
-
-    // Data sources
-    private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
-    private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
-    private static String             DATA_SOURCE_2_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-2";
-    private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
-    private static String             DATA_SOURCE_1_INDICATOR_11   = "Indicator-11-v1-DataSource-1";
-
-    // Quantity units
-    private static String             QUANTITY_UNIT_1              = "1";
-    private static String             QUANTITY_UNIT_2              = "2";
-    private static String             QUANTITY_UNIT_3              = "3";
-
-    // Unit multiplier
-    private static String             UNIT_MULTIPLIER_1            = "1";
-    private static String             UNIT_MULTIPLIER_2            = "2";
-    private static String             UNIT_MULTIPLIER_3            = "3";
-    private static String             UNIT_MULTIPLIER_4            = "4";
-    private static String             UNIT_MULTIPLIER_5            = "5";
-    private static String             UNIT_MULTIPLIER_6            = "6";
-    private static String             UNIT_MULTIPLIER_7            = "7";
-
-    // Geographical values
-    private static String             GEOGRAPHICAL_VALUE_1         = "1";
-
-    // Subjects
-    private static String             SUBJECT_1                    = "1";
-    private static String             SUBJECT_2                    = "2";
-    private static String             SUBJECT_3                    = "3";
-    private static String             SUBJECT_4                    = "4";
-    private static String             SUBJECT_5                    = "5";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -3012,7 +2958,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             MetamacCriteria criteria = new MetamacCriteria();
 
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "SPAIN", OperationType.ILIKE));
+            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Educación en España", OperationType.ILIKE));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
@@ -3024,18 +2970,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
         {
             // Retrieve by title ENGLISH
-            MetamacCriteria criteria = new MetamacCriteria();
+            // IMPORTANT: Find in english do not retrieve results because this method find internationalStrings in the main language of the app.
+            // In this test, the configurationService define ES as the main language.
 
+            MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Education", OperationType.LIKE));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-            assertEquals(1, result.getResults().size());
-            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
-
-            assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
+            assertEquals(0, result.getResults().size());
         }
         {
             // Retrieve by title and code

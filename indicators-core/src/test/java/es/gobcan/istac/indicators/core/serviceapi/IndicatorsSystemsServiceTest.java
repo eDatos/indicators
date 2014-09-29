@@ -1,12 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -31,6 +24,14 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import static org.mockito.Mockito.when;
+
 /**
  * Test to IndicatorsSystemService. Testing: indicators systems, dimensions, indicators instances
  * Spring based transactional test with DbUnit support.
@@ -50,30 +51,6 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;
-
-    private static String                 INDICATORS_SYSTEM_3                 = "IndSys-3";
-    private static String                 INDICATORS_SYSTEM_1                 = "IndSys-1";
-    private static String                 INDICATORS_SYSTEM_3_VERSION         = "11.033";
-    private static String                 INDICATORS_SYSTEM_5                 = "IndSys-5";
-    private static String                 INDICATORS_SYSTEM_6                 = "IndSys-6";
-    private static String                 INDICATORS_SYSTEM_10                = "IndSys-10";
-
-    private static String                 INDICATOR_1                         = "Indicator-1";
-    private static String                 INDICATOR_1_DS_GPE_UUID             = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
-    private static String                 INDICATOR_1_GPE_JSON_DATA           = readFile("json/data_temporal_spatials.json");
-
-    private static String                 INDICATORS_SYSTEM_1_IINSTANCE_1     = "IndSys-1-v1-IInstance-1";
-    private static String                 INDICATORS_SYSTEM_1_V2_IINSTANCE_1  = "IndSys-1-v2-IInstance-1";
-    private static String                 INDICATORS_SYSTEM_1_V2_IINSTANCE_2  = "IndSys-1-v2-IInstance-2";
-    private static String                 INDICATORS_SYSTEM_1_V2_IINSTANCE_3  = "IndSys-1-v2-IInstance-3";
-    private static String                 INDICATORS_SYSTEM_3_IINSTANCE_1A    = "IndSys-3-v1-IInstance-1A";
-    private static String                 INDICATORS_SYSTEM_3_IINSTANCE_2     = "IndSys-3-v1-IInstance-2";
-    private static String                 INDICATORS_SYSTEM_6_IINSTANCE_1     = "IndSys-6-v1-IInstance-1";
-    private static String                 INDICATORS_SYSTEM_6_IINSTANCE_2     = "IndSys-6-v1-IInstance-2";
-    private static String                 INDICATORS_SYSTEM_10_IINSTANCE_1    = "IndSys-10-v1-IInstance-1";
-    private static String                 INDICATORS_SYSTEM_10_V2_IINSTANCE_1 = "IndSys-10-v2-IInstance-1";
-    private static String                 INDICATORS_SYSTEM_10_IINSTANCE_2    = "IndSys-10-v1-IInstance-2";
-    private static String                 INDICATORS_SYSTEM_10_IINSTANCE_3    = "IndSys-10-v1-IInstance-3";
 
     @Test
     public void testCreateIndicatorsSystem() throws Exception {

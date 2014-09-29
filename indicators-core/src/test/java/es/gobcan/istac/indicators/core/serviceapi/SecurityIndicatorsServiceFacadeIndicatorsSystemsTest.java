@@ -1,8 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.Arrays;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -30,6 +27,9 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.security.SecurityUtils;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /**
  * Security Role Test
  */
@@ -41,35 +41,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
-
-    private static String             NOT_EXISTS                                  = "not-exists";
-
-    // Indicators systems
-    private static String             INDICATORS_SYSTEM_1                         = "IndSys-1";
-    private static String             INDICATORS_SYSTEM_1_CODE                    = "CODE-1";
-    private static String             INDICATORS_SYSTEM_2                         = "IndSys-2";
-    private static String             INDICATORS_SYSTEM_3                         = "IndSys-3";
-    private static String             INDICATORS_SYSTEM_4                         = "IndSys-4";
-    private static String             INDICATORS_SYSTEM_5                         = "IndSys-5";
-
-    // Dimensions
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-1";
-
-    // Indicator instances
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
-
-    // Indicators
-    private static String             INDICATOR_1                                 = "Indicator-1";
-    private static String             INDICATOR_2                                 = "Indicator-2";
-
-    // Geographical values
-    private static String             GEOGRAPHICAL_VALUE_1                        = "1";
-    private static String             GEOGRAPHICAL_VALUE_2                        = "2";
-
-    // Geographical granularities
-    private static String             GEOGRAPHICAL_GRANULARITY_1                  = "1";
-    private static String             GEOGRAPHICAL_GRANULARITY_2                  = "2";
-    private static String             GEOGRAPHICAL_GRANULARITY_5                  = "5";
 
     @Test
     public void testErrorPrincipalNotFound() throws Exception {

@@ -1,10 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +27,11 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
  * Spring based transactional test with DbUnit support.
@@ -51,17 +51,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
     protected UnitMultiplierRepository unitMultiplierRepository;
-
-    // Indicators
-    private static String              INDICATOR_1         = "Indicator-1";
-    private static String              INDICATOR_3         = "Indicator-3";
-    private static String              INDICATOR_3_VERSION = "11.033";
-    private static String              INDICATOR_5         = "Indicator-5";
-    private static String              INDICATOR_12        = "Indicator-12";
-    private static String              INDICATOR_13        = "Indicator-13";
-
-    // Quantity units
-    private static String              QUANTITY_UNIT_1     = "1";
 
     @Test
     public void testCreateIndicator() throws Exception {

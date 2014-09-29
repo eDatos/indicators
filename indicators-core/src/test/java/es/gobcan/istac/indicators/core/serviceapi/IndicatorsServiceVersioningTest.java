@@ -1,10 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +16,12 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
@@ -44,12 +45,6 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsDataService         indicatorsDataService;
-
-    /* Using one datasource */
-    private static final String           INDICATOR1_UUID          = "Indicator-1";
-    private static final String           INDICATOR1_DS_GPE_UUID   = "Indicator-1-v1-DataSource-1-GPE-TIME";
-    private static final String           INDICATOR1_GPE_JSON_DATA = readFile("json/data_temporals_batch_update.json");
-    private static final String           INDICATOR1_VERSION       = "1.001";
 
     @Test
     public void testVersioningIndicator() throws Exception {

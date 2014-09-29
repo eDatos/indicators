@@ -1,8 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.Date;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -33,6 +30,9 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /**
  * Security tester.
  * Don't test operations to "Data", because is for Any Role
@@ -51,28 +51,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Autowired
     private Do2DtoMapper              do2DtoMapper;
-
-    private static String             NOT_EXISTS                   = "not-exists";
-
-    // Indicators
-    private static String             INDICATOR_1                  = "Indicator-1";
-    private static String             INDICATOR_1_CODE             = "CODE-1";
-    private static String             INDICATOR_3                  = "Indicator-3";
-    private static String             INDICATOR_4                  = "Indicator-4";
-    private static String             INDICATOR_5                  = "Indicator-5";
-
-    // Data sources
-    private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
-
-    // Quantity units
-    private static String             QUANTITY_UNIT_1              = "1";
-    private static String             QUANTITY_UNIT_3              = "3";
-
-    // Unit multipliers
-    private static String             UNIT_MULTIPLIER_1            = "1";
-
-    // Subjects
-    private static String             SUBJECT_1                    = "1";
 
     @Test
     public void testErrorPrincipalNotFound() throws Exception {
