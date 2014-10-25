@@ -237,7 +237,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
     /**
      * Creates and returns the view layout
-     * 
+     *
      * @return
      */
     private void createViewForm() {
@@ -539,7 +539,8 @@ public class IndicatorGeneralPanel extends VLayout {
     }
 
     private void saveIndicator() {
-        if (identifiersEditionForm.validate(false) && contentClassifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && quantityEditionForm.validate(false)) {
+        if (identifiersEditionForm.validate(false) && contentClassifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && quantityEditionForm.validate(false)
+                && annotationsEditionForm.validate(false)) {
             // Identifiers
             indicator.setTitle(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.TITLE));
             indicator.setAcronym(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.ACRONYM));
