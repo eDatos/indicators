@@ -42,14 +42,13 @@ public class IndicatorBaseType implements Serializable {
     private Map<String, String> subjectTitle       = null;
     private List<LinkType>      systemSurveyLinks  = null;
 
-    // TODO Ver si queremos volver a ponerlo dado que se devuelven este dato como atributo de cada observación
     @JsonIgnore
     private QuantityType        quantity           = null;
     private Map<String, String> conceptDescription = null;
     private Map<String, String> notes              = null;
 
-    private MetadataType metadata;
-    private DataType data;
+    private MetadataType        metadata;
+    private DataType            data;
 
     public String getId() {
         return id;
