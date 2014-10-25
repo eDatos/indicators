@@ -41,9 +41,6 @@ public class IndicatorSystemTestRestService {
 
     private MockMvc               mockMvc = null;
 
-    // TODO TESTEAR QUE AL FILTRAR SE OBTIENEN TANTAS OBSERVACIONES COMO SE ESPERAN
-
-    // @SuppressWarnings("unchecked")
     @Before
     public void initMocks() throws Exception {
         mockMvc = webApplicationContextSetup(wac).build();
@@ -54,17 +51,6 @@ public class IndicatorSystemTestRestService {
         // MOCKS
         when(indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(any(ServiceContext.class), eq("CODIGO_0001"))).thenReturn(IndicatorsSystemVersionMock.mockIndicatorsSystemVersion1());
         when(statisticalOperations.retrieveOperationById(eq("CODIGO_0001"))).thenReturn(OperationMock.mockOperation1());
-
-        // List<IndicatorsSystemVersion> indicatorsSystemVersions = new ArrayList<IndicatorsSystemVersion>();
-        // indicatorsSystemVersions.add(IndicatorsSystemVersionMock.mockIndicatorsSystemVersion1());
-        // indicatorsSystemVersions.add(IndicatorsSystemVersionMock.mockIndicatorsSystemVersion2());
-        // PagedResult<IndicatorsSystemVersion> pagedResult = new PagedResult<IndicatorsSystemVersion>(indicatorsSystemVersions, 0, 2, 5);
-        // when(indicatorsSystemsService.findIndicatorsSystemsPublished(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenReturn(pagedResult);
-        //
-        // when(metamacStatisticalOperationsExternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase1().getCode())).thenReturn(OperationBaseMock.mockOperationBase1());
-        // when(metamacStatisticalOperationsExternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase2().getCode())).thenReturn(OperationBaseMock.mockOperationBase2());
-
-        // when(indicatorsSystemsService.retrieveIndicatorInstance(any(ServiceContext.class), "UUID_INDICATOR_INSTANCE_1")).thenReturn(value)
     }
 
     @Ignore
