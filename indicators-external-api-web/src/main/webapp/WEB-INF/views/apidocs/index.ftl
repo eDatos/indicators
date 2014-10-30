@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Swagger UI</title>
+    <title>ISTAC | Indicators</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
     <link href='[@spring.url "/apidocs/css/hightlight.default.css"/]' media='screen' rel='stylesheet' type='text/css'/>
     <link href='[@spring.url "/apidocs/css/screen.css"/]' media='screen' rel='stylesheet' type='text/css'/>
