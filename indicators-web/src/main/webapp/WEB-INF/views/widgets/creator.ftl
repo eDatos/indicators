@@ -103,7 +103,7 @@
 
     var options = {};
     [#if RequestParameters.type??]
-    options.type = '${RequestParameters.type}';
+    options.type = '${RequestParameters.type?html}';
     [/#if]
 
 
