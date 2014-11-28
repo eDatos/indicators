@@ -84,6 +84,45 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
         }
     }
 
+    @Test
+    public void testVersioningIndicatorWithADatasourceAssociatedWithDeletedQuery() throws Exception {
+
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        String uuid = INDICATOR1_UUID;
+
+        // Retrieve before versioning
+        {
+            indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR1_VERSION);
+            assertTrue(indicatorVersion1.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
+            assertFalse(indicatorVersion1.getNeedsUpdate());
+            assertFalse(indicatorVersion1.getInconsistentData());
+        }
+
+        // Versioning
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(null);
+        IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MAJOR);
+
+        // Retrieve after delete
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR1_VERSION);
+            assertFalse(indicatorVersion1.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
+            assertFalse(indicatorVersion1.getNeedsUpdate());
+            assertFalse(indicatorVersion1.getInconsistentData());
+
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
+            assertTrue(indicatorVersion2.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion2.getDataRepositoryId()));
+            assertTrue(indicatorVersion2.getNeedsUpdate());
+            assertTrue(indicatorVersion2.getInconsistentData());
+
+            assertNotSame(indicatorVersion1.getDataRepositoryId(), indicatorVersion2.getDataRepositoryId());
+        }
+    }
+
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsDataServiceTest_BatchUpdate.xml";

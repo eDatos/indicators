@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 /**
  * Implementation of IndicatorsService
@@ -547,12 +548,25 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getIndicatorRepository().save(indicator);
 
         // Populate indicator data
-        getIndicatorsDataService().populateIndicatorVersionData(ctx, indicatorNewVersion.getIndicator().getUuid(), indicatorNewVersion.getVersionNumber());
-        indicatorNewVersion = retrieveIndicator(ctx, indicatorNewVersion.getIndicator().getUuid(), indicatorNewVersion.getVersionNumber());
+        String indicatorsUuid = indicatorNewVersion.getIndicator().getUuid();
+        String indicatorVersionNumber = indicatorNewVersion.getVersionNumber();
+
+        try {
+            getIndicatorsDataService().populateIndicatorVersionData(ctx, indicatorsUuid, indicatorVersionNumber);
+        } catch (MetamacException e) {
+            // If we can not populate data because the datasource has been deleted we have to create the table and change the view relation
+            DatasetRepositoryDto datasetRepositoryDto = getIndicatorsDataService().createDatasetRepositoryDefinition(ctx, indicatorsUuid, indicatorVersionNumber);
+            getIndicatorsDataService().setDatasetRepositoryDeleteOldOne(ctx, indicatorNewVersion, datasetRepositoryDto);
+            getIndicatorsDataService().manageDatabaseViewForLastVersion(ctx, indicatorNewVersion);
+
+            // We set that data needs update
+            indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
+            indicatorNewVersion.setInconsistentData(Boolean.TRUE);
+        }
+        indicatorNewVersion = retrieveIndicator(ctx, indicatorsUuid, indicatorVersionNumber);
 
         return indicatorNewVersion;
     }
-
     @Override
     public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
 

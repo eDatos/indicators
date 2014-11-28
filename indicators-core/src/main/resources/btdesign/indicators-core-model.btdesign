@@ -205,6 +205,12 @@ Application Indicators {
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	updateIndicatorsData() throws MetamacException;
+	    	"Create a dataset repository definition"
+	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
+	    	"Link a dataset view to the latest version of the indicator"
+	    	manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) throws MetamacException;
+	    	"Replace old datasetRepository for the new one"
+            IndicatorVersion setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException;
 
 	    	//Data finders
 	    	"Find Published Indicator's Observations by dimensions"

@@ -364,7 +364,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber);
+            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber);
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
@@ -373,13 +373,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
-            indicatorVersion = setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
+            indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
 
             // No more inconsistent data, no more needs update
             markIndicatorVersionAsDataUpdated(indicatorVersion);
 
             // Update view if it's necessary
-            manageDatabaseViewForLastVersion(indicatorVersion);
+            manageDatabaseViewForLastVersion(ctx, indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
             if (e instanceof MetamacException) {
@@ -390,7 +390,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void manageDatabaseViewForLastVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
             createOrReplaceLastVersionDatabaseView(indicatorVersion);
             assignIndicatorDataOracleRolePermissionsToView(indicatorVersion.getIndicator().getViewCode());
@@ -1177,7 +1178,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     /**
      * Retrieve observation from a specific IndicatorVersion
-     * 
+     *
      * @param indicatorVersion
      * @param geoValue
      * @param timeValue
@@ -1404,7 +1405,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Given an indicator, the old dataset repository is replaced and deleted and a new one is assigned
      */
-    private IndicatorVersion setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
+    @Override
+    public IndicatorVersion setDatasetRepositoryDeleteOldOne(ServiceContext ctx, IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
         String oldDatasetId = indicatorVersion.getDataRepositoryId();
         indicatorVersion.setDataRepositoryId(datasetRepoDto.getDatasetId());
         indicatorVersion.setDataRepositoryTableName(datasetRepoDto.getTableName());
@@ -1588,7 +1590,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Creates Indicator's basic structure in dataset repository
      */
-    private DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException {
+    @Override
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
         datasetRepoDto.getDimensions().add(GEO_DIMENSION);
@@ -1941,5 +1944,4 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-
 }
