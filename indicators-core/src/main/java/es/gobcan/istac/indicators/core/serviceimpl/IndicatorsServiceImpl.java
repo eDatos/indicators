@@ -554,18 +554,22 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         try {
             getIndicatorsDataService().populateIndicatorVersionData(ctx, indicatorsUuid, indicatorVersionNumber);
         } catch (MetamacException e) {
-            // If we can not populate data because the datasource has been deleted we have to create the table and change the view relation
-            DatasetRepositoryDto datasetRepositoryDto = getIndicatorsDataService().createDatasetRepositoryDefinition(ctx, indicatorsUuid, indicatorVersionNumber);
-            getIndicatorsDataService().setDatasetRepositoryDeleteOldOne(ctx, indicatorNewVersion, datasetRepositoryDto);
-            getIndicatorsDataService().manageDatabaseViewForLastVersion(ctx, indicatorNewVersion);
-
-            // We set that data needs update
-            indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
-            indicatorNewVersion.setInconsistentData(Boolean.TRUE);
+            createDatasetRepositoryAndUpdateViewReference(ctx, indicatorNewVersion, indicatorsUuid, indicatorVersionNumber);
         }
         indicatorNewVersion = retrieveIndicator(ctx, indicatorsUuid, indicatorVersionNumber);
 
         return indicatorNewVersion;
+    }
+
+    private void createDatasetRepositoryAndUpdateViewReference(ServiceContext ctx, IndicatorVersion indicatorNewVersion, String indicatorsUuid, String indicatorVersionNumber) throws MetamacException {
+        // If we can not populate data because the datasource has been deleted we have to create the table and change the view relation
+        DatasetRepositoryDto datasetRepositoryDto = getIndicatorsDataService().createDatasetRepositoryDefinition(ctx, indicatorsUuid, indicatorVersionNumber);
+        getIndicatorsDataService().setDatasetRepositoryDeleteOldOne(ctx, indicatorNewVersion, datasetRepositoryDto);
+        getIndicatorsDataService().manageDatabaseViewForLastVersion(ctx, indicatorNewVersion);
+
+        // We set that data needs update
+        indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
+        indicatorNewVersion.setInconsistentData(Boolean.TRUE);
     }
     @Override
     public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
