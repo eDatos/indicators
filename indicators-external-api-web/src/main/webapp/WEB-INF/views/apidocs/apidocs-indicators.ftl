@@ -712,10 +712,10 @@
                     "type" : "int"
                 },
                 "baseTime" : {
-                    "type" : "MetadataRepresentation"
+                    "type" : "TimeRepresentation"
                 },
                 "baseLocation" : {
-                    "type" : "MetadataRepresentation"
+                    "type" : "GeographicalRepresentation"
                 },
                 "baseQuantityLink" : {
                     "type" : "Link"
