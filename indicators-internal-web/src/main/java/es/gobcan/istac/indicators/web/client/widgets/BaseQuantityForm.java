@@ -33,15 +33,12 @@ public class BaseQuantityForm extends GroupDynamicForm {
     }
 
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {
-        Integer baseValue = quantityDto.getBaseValue();
         String baseTime = quantityDto.getBaseTime();
         String baseLocation = quantityDto.getBaseLocationUuid();
         if (baseTime != null && !baseTime.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_TIME;
         } else if (baseLocation != null && !baseLocation.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_LOCATION;
-        } else if (baseValue != null) {
-            return QuantityIndexBaseTypeEnum.BASE_VALUE;
         }
         return null;
     }
@@ -64,9 +61,8 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
     protected LinkedHashMap<String, String> getQuantityIndexBaseTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (QuantityIndexBaseTypeEnum type : QuantityIndexBaseTypeEnum.values()) {
-            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityIndexBaseTypeEnum() + type.getName()));
-        }
+        valueMap.put(QuantityIndexBaseTypeEnum.BASE_LOCATION.toString(), getCoreMessages().quantityIndexBaseTypeEnumBASE_LOCATION());
+        valueMap.put(QuantityIndexBaseTypeEnum.BASE_TIME.toString(), getCoreMessages().quantityIndexBaseTypeEnumBASE_TIME());
         return valueMap;
     }
 
@@ -217,9 +213,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
-                        if (QuantityIndexBaseTypeEnum.BASE_VALUE.toString().equals(BaseQuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_INDEX_BASE_TYPE))) {
-                            return true;
-                        }
+                        return true;
                     }
                 }
                 return false;

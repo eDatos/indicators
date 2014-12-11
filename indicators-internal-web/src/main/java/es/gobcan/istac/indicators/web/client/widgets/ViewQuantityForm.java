@@ -55,13 +55,13 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewMultiLanguageTextItem percentageOf = new ViewMultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
+        ViewTextItem baseValue = new ViewTextItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
+        baseValue.setShowIfCondition(getBaseValueIfFunction());
+
         ViewTextItem indexBaseType = new ViewTextItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
         indexBaseType.setVisible(false);
         ViewTextItem indexBaseTypeText = new ViewTextItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getConstants().indicQuantityIndexMetadata());
         indexBaseTypeText.setShowIfCondition(getIndexBaseTypeIfFunction());
-
-        ViewTextItem baseValue = new ViewTextItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
-        baseValue.setShowIfCondition(getBaseValueIfFunction());
 
         ViewTextItem baseTime = new ViewTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
@@ -72,8 +72,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
 
-        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, indexBaseType,
-                indexBaseTypeText, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, baseValue, indexBaseType,
+                indexBaseTypeText, baseTime, baseLocation, baseQuantityIndUuid);
     }
 
     public void setValue(QuantityDto quantityDto) {

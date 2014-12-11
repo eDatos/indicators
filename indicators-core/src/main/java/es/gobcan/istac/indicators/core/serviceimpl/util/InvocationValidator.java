@@ -1861,10 +1861,10 @@ public class InvocationValidator {
                 IndicatorsValidationUtils.checkMetadataRequired(quantity.getIsPercentage(), parameterName + ServiceExceptionParametersInternal.QUANTITY_IS_PERCENTAGE, exceptions);
             }
             if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
-                if (IndicatorsValidationUtils.isEmpty(quantity.getBaseValue()) && IndicatorsValidationUtils.isEmpty(quantity.getBaseTime())
-                        && IndicatorsValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_VALUE, parameterName
-                            + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID));
+                IndicatorsValidationUtils.checkMetadataRequired(quantity.getBaseValue(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_VALUE, exceptions);
+                if (IndicatorsValidationUtils.isEmpty(quantity.getBaseTime()) && IndicatorsValidationUtils.isEmpty(quantity.getBaseLocation())) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME, parameterName
+                            + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID));
                 }
             }
             if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
@@ -1891,11 +1891,11 @@ public class InvocationValidator {
             IndicatorsValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID, exceptions);
         } else {
             // must be filled only one of followings
-            if (!IndicatorsValidationUtils.isEmpty(quantity.getBaseValue())) {
+            if (!IndicatorsValidationUtils.isEmpty(quantity.getBaseTime())) {
+                IndicatorsValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID, exceptions);
+            }
+            if (!IndicatorsValidationUtils.isEmpty(quantity.getBaseLocation())) {
                 IndicatorsValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME, exceptions);
-                IndicatorsValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID, exceptions);
-            } else if (!IndicatorsValidationUtils.isEmpty(quantity.getBaseTime())) {
-                IndicatorsValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID, exceptions);
             }
         }
         if (!IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {

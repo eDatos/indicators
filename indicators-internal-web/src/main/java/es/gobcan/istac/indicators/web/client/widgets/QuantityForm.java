@@ -108,7 +108,12 @@ public class QuantityForm extends BaseQuantityForm {
         MultiLanguageTextItem percentageOf = new MultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
+        CustomIntegerItem baseValue = new CustomIntegerItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
+        baseValue.setRequired(true);
+        baseValue.setShowIfCondition(getBaseValueIfFunction());
+
         CustomSelectItem indexBaseType = new CustomSelectItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
+        indexBaseType.setRequired(true);
         indexBaseType.setValueMap(getQuantityIndexBaseTypeValueMap());
         indexBaseType.setShowIfCondition(getIndexBaseTypeIfFunction());
         indexBaseType.addChangedHandler(new ChangedHandler() {
@@ -118,10 +123,6 @@ public class QuantityForm extends BaseQuantityForm {
                 QuantityForm.this.markForRedraw();
             }
         });
-
-        CustomIntegerItem baseValue = new CustomIntegerItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
-        baseValue.setRequired(true);
-        baseValue.setShowIfCondition(getBaseValueIfFunction());
 
         RequiredTextItem baseTime = new RequiredTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
@@ -155,7 +156,7 @@ public class QuantityForm extends BaseQuantityForm {
         SearchViewTextItem searchIndicatorBaseText = getSearchIndicatorBaseTextItem();
 
         setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, percentageOf,
-                indexBaseType, baseValue, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
+                baseValue, indexBaseType, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
     }
 
     public void setValue(QuantityDto quantityDto) {
