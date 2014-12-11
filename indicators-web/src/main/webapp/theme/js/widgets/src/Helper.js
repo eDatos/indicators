@@ -5,7 +5,7 @@
     Istac.widget.helper.tooltip = function($el, text, tooltipId) {
         var $tooltip = $(".istact-widget-tooltip");
 
-        $tooltip = $('<p class="istact-widget-tooltip' + tooltipId + '"></p>');
+        $tooltip = $('<p class="istact-widget-tooltip ' + tooltipId + '"></p>');
         $("body").append($tooltip);
 
         var xOffset = 10;
