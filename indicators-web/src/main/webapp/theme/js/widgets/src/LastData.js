@@ -96,7 +96,8 @@
             addTooltips : function ($el) {
                 $el.find('[data-tooltip]').each(function (i, row) {
                     var $row = $(row);
-                    Istac.widget.helper.tooltip($row, $row.data('tooltip'));
+                    var tooltipId = 'row-' + i;
+                    Istac.widget.helper.tooltip($row, $row.data('tooltip'), tooltipId);
                 });
             },
 

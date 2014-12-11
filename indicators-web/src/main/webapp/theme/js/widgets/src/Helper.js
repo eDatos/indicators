@@ -2,14 +2,14 @@
 
     Istac.widget.helper = {};
 
-    Istac.widget.helper.tooltip = function ($el, text) {
+    Istac.widget.helper.tooltip = function ($el, text, tooltipId) {
         var $tooltip = $(".istact-widget-tooltip");
 
         // Lazy init
-        if ($tooltip.length === 0) {
-            $tooltip = $('<p class="istact-widget-tooltip"></p>');
+//        if ($tooltip.length === 0) {
+            $tooltip = $('<p class="istact-widget-tooltip' + tooltipId + '"></p>');
             $("body").append($tooltip);
-        }
+//        }
 
         var xOffset = 10;
         var yOffset = 20;
