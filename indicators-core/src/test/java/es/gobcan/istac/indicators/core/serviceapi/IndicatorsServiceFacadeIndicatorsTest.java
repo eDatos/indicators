@@ -1,5 +1,11 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,12 +56,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators, data sources
@@ -607,11 +607,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_TIME, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_LOCATION_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_LOCATION_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_TIME, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
