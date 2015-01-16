@@ -590,7 +590,7 @@
                 },
                 "representation" : {
                     "type" : "array",
-                    "description" : "Representación de la dimensión. Indica cómo se codifica la dimensión.",
+                    "description" : "Representación de la dimensión. Indica como se codifica la dimensión.",
                     "items" : {
                         "$ref" : "GeographicalRepresentation"
                     }
@@ -613,7 +613,7 @@
                     },
                     "representation" : {
                         "type" : "array",
-                        "description" : "Representación de la dimensión. Indica cómo se codifica la dimensión.",
+                        "description" : "Representación de la dimensión. Indica como se codifica la dimensión.",
                         "items" : {
                             "$ref" : "TimeRepresentation"
                         }
@@ -629,7 +629,7 @@
                 },
                 "representation" : {
                     "type" : "array",
-                    "description" : "Representación de la dimensión. Indica cómo se codifica la dimensión.",
+                    "description" : "Representación de la dimensión. Indica como se codifica la dimensión.",
                     "items" : {
                         "$ref" : "MeasureRepresentation"
                     }
