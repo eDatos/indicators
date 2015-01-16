@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     @Override
     public List<GeographicalValueVO> retrieveCoverage(IndicatorVersion indicatorVersion) {
         String sql = "select geoval.code as geoCode, geoval.global_order as globalOrder, loc.locale as geoLocale, loc.label as geoLabel, ";
-        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel ";
+        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel, geoval.latitude as latitude, geoval.longitude as longitude ";
         sql += "from tb_ind_version_geo_cov geoCov, tb_localised_strings loc, tb_lis_geogr_values geoVal, ";
         sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra ";
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
@@ -93,7 +94,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     @Override
     public List<GeographicalValueVO> retrieveCoverageFilteredByGranularity(IndicatorVersion indicatorVersion, String geographicalGranularityUuid) {
         String sql = "select geoval.code as geoCode, geoval.global_order as globalOrder, loc.locale as geoLocale, loc.label as geoLabel, ";
-        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel ";
+        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel, geoval.latitude as latitude, geoval.longitude as longitude ";
         sql += "from tb_ind_version_geo_cov geoCov, tb_localised_strings loc, tb_lis_geogr_values geoVal, ";
         sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra ";
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
@@ -142,7 +143,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     @Override
     public List<GeographicalValueVO> retrieveCoverageFilteredByInstanceGeoValues(IndicatorVersion indicatorVersion, String indicatorInstanceUuid) {
         String sql = "select geoval.code as geoCode, geoval.global_order as globalOrder, loc.locale as geoLocale, loc.label as geoLabel, ";
-        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel ";
+        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel, geoval.latitude as latitude, geoval.longitude as longitude ";
         sql += "from tb_ind_version_geo_cov geoCov, tb_localised_strings loc, tb_lis_geogr_values geoVal, ";
         sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra, tb_indicators_instances instance, tb_indic_inst_geo_values instance_geo ";
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
@@ -182,7 +183,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     public List<GeographicalValueVO> retrieveCoverageFilteredByInstanceGeoValuesByGranularity(IndicatorVersion indicatorVersion, String indicatorInstanceUuid, String geographicalGranularityUuid) {
 
         String sql = "select geoval.code as geoCode, geoval.global_order as globalOrder, loc.locale as geoLocale, loc.label as geoLabel, ";
-        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel ";
+        sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel, geoval.latitude as latitude, geoval.longitude as longitude ";
         sql += "from tb_ind_version_geo_cov geoCov, tb_localised_strings loc, tb_lis_geogr_values geoVal, ";
         sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra, tb_indicator_instances instance, tb_indic_inst_geo_values instance_geo, ";
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
@@ -235,6 +236,8 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
             String granularityCode = (String) fields[4];
             String granularityLocale = (String) fields[5];
             String granularityLabel = (String) fields[6];
+            BigDecimal latitude = (BigDecimal) fields[7];
+            BigDecimal longitude = (BigDecimal) fields[8];
 
             GeographicalValueVO geoVal = geoValues.get(geoCode);
             GeographicalGranularityVO granularity = null;
@@ -244,11 +247,12 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
                 geoVal.setCode(geoCode);
                 geoVal.setOrder(geoOrder);
                 geoVal.setTitle(new InternationalString());
+                geoVal.setLatitude(latitude.doubleValue());
+                geoVal.setLongitude(longitude.doubleValue());
 
                 granularity = new GeographicalGranularityVO();
                 granularity.setCode(granularityCode);
                 granularity.setTitle(new InternationalString());
-
                 geoVal.setGranularity(granularity);
 
                 geoValues.put(geoCode, geoVal);
