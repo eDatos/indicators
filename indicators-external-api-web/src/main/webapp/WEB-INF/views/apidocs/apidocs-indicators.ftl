@@ -326,7 +326,7 @@
                 {
                     "httpMethod" : "GET",
                     "summary" : "Valores geográficos",
-                    "notes" : "<p>Esta petición devuelve los valores de una granularidad geográfica que a su vez forman parte de una un tema o un sistema de indicadores específicos.</p><br>Es obligatorio especificar un <strong>subjectCode</strong> o un <strong>systemCode</strong>.",
+                    "notes" : "<p>Esta petición devuelve los valores de una granularidad geográfica que a su vez forman parte de una un tema o un sistema de indicadores específicos.</p><br><p>Es importante tener en cuenta que de los parátemeros opcionales (<strong>subjectCode</strong> y <strong>systemCode</strong>) podrá estar cumplimentado uno de ellos o ninguno. En caso de que estén cumplimentados ambos, sólo se tendrá en cuenta el último.</p> <br>",
                     "responseClass" : "List[GeographicalValue]",
                     "nickname" : "findGeographicalValues",
                     "parameters" : [
