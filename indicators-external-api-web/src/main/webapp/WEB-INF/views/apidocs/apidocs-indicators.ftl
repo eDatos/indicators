@@ -6,24 +6,24 @@
     "apis" : [
         {
             "path" : "/indicators",
-            "description" : "Listado de indicadores",
+            "description" : "Listado de indicadores.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
                     "summary" : "Listado de indicadores",
                     "nickname" : "findIndicators",
-                    "notes" : "<p>Esta petición aporta la lista de indicadores publicados en el banco de datos ISTAC-indicadores. Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granualidades espaciales o temporales. Por ejemplo \"Tasa de paro\" es un indicador, con diversas granualirades espaciales (insular, provincial y autonómica), con el trimestre como una única granulariad temporal.</p><br>",
+                    "notes" : "<p>Esta petición aporta la lista de indicadores publicados en el banco de datos ISTAC-indicadores. Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales o temporales. Por ejemplo \"Tasa de paro\" es un indicador con diversas granularidades espaciales (insular, provincial y autonómica) y con el trimestre como una única granulariad temporal.</p><br>",
                     "responseClass" : "IndicatorsPagination",
                     "parameters" : [
                         {
                             "name" : "q",
-                            "description" : "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\") ",
+                            "description" : "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "order",
-                            "description" : "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc",
+                            "description" : "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc.",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
@@ -35,19 +35,19 @@
                         },
                         {
                             "name" : "offset",
-                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2",
+                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
                             "paramType" : "query",
                             "dataType" : "int"
                         },
                         {
                             "name" : "fields",
-                            "description" : "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata",
+                            "description" : "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata.",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "representation",
-                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]",
+                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -62,7 +62,7 @@
                 {
                     "httpMethod" : "GET",
                     "summary" : "Indicador",
-                    "notes" : "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granualidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses. A través de esta petición se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido; asimismo a través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. </p><br>",
+                    "notes" : "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses. A través de esta petición se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido; asimismo a través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador.</p><br>",
                     "nickname" : "findIndicator",
                     "responseClass" : "Indicator",
                     "parameters" : [
@@ -79,37 +79,37 @@
         },
         {
             "path" : "/indicators/{indicatorCode}/data",
-            "description" : "Observaciones de un indicador",
+            "description" : "Observaciones de un indicador.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
                     "summary" : "Observaciones de un indicador",
                     "nickname" : "findIndicator",
-                    "notes" : "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granualidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
+                    "notes" : "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
                     "responseClass" : "Data",
                     "parameters" : [
                         {
                             "name" : "indicatorCode",
                             "paramType" : "path",
-                            "description" : "Código del indicador a obtener",
+                            "description" : "Código del indicador a obtener.",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "representation",
-                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]",
+                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "granularity",
-                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY]",
+                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "fields",
-                            "description" : "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata",
+                            "description" : "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata.",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -119,7 +119,7 @@
         },
         {
             "path" : "/indicatorsSystems",
-            "description" : "Listado de sistemas de indicadores",
+            "description" : "Listado de sistemas de indicadores.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
@@ -136,7 +136,7 @@
                         },
                         {
                             "name" : "offset",
-                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2",
+                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
                             "paramType" : "query",
                             "dataType" : "int"
                         }
@@ -146,18 +146,18 @@
         },
         {
             "path" : "/indicatorsSystems/{indicatorSystemCode}",
-            "description" : "Sistema de indicadores",
+            "description" : "Sistema de indicadores.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
                     "summary" : "Sistema de indicadores",
                     "nickname" : "findIndicatorsSystem",
-                    "notes" : "<p>Esta petición ofrece los metadatos de un sistema de indicadores publicado en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuáles se integran los indicadores.  En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
+                    "notes" : "<p>Esta petición ofrece los metadatos de un sistema de indicadores publicado en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuales se integran los indicadores.  En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
                     "responseClass" : "IndicatorSystem",
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "Código del sistema a obtener",
+                            "description" : "Código del sistema a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : "true"
@@ -168,7 +168,7 @@
         },
         {
             "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances",
-            "description" : "Instancias de sistema de indicadores",
+            "description" : "Instancias de sistema de indicadores.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
@@ -179,20 +179,20 @@
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "Código del sistema a obtener",
+                            "description" : "Código del sistema a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "q",
-                            "description" : "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\") ",
+                            "description" : "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "order",
-                            "description" : "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc",
+                            "description" : "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc.",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
@@ -204,25 +204,25 @@
                         },
                         {
                             "name" : "offset",
-                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2",
+                            "description" : "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
                             "paramType" : "query",
                             "dataType" : "int"
                         },
                         {
                             "name" : "fields",
-                            "description" : "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata",
+                            "description" : "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata.",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "representation",
-                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]",
+                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "granularity",
-                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY]",
+                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -232,7 +232,7 @@
         },
         {
             "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}",
-            "description" : "Instancia de un sistema de indicadores",
+            "description" : "Instancia de un sistema de indicadores.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
@@ -243,14 +243,14 @@
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "Código del sistema a obtener",
+                            "description" : "Código del sistema a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "indicatorInstanceCode",
-                            "description" : "Código de la instancia a obtener",
+                            "description" : "Código de la instancia a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
@@ -261,44 +261,44 @@
         },
         {
             "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}/data",
-            "description" : "Observaciones de una instancia de indicadores",
+            "description" : "Observaciones de instancia de indicador",
             "operations" : [
                 {
                     "httpMethod" : "GET",
-                    "summary" : "Observaciones de una instancia de indicadores",
+                    "summary" : "Observaciones instancia de indicador",
                     "nickname" : "retrieveIndicatorsInstanceData",
                     "notes" : "<p>Esta petición devuelve los datos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
                     "responseClass" : "Data",
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "Código del sistema a obtener",
+                            "description" : "Código del sistema a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "indicatorInstanceCode",
-                            "description" : "Código de la instancia a obtener",
+                            "description" : "Código de la instancia a obtener.",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "representation",
-                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]",
+                            "description" : "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "granularity",
-                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY]",
+                            "description" : "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "fields",
-                            "description" : "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata",
+                            "description" : "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata.",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -308,20 +308,20 @@
         },
         {
             "path" : "/geographicGranularities",
-            "description" : "Granularidades geográficas",
+            "description" : "Granularidades geográficas.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
                     "summary" : "Granularidades geográficas",
                     "nickname" : "findGeographicGranularities",
-                    "notes" : "<p>Esta petición devuelve la lista de granularidades geográficas tratadas en el banco de datos ISTAC-indicadores. Por ejemplo granualidad provincial, insular o municipal.</p><br>",
+                    "notes" : "<p>Esta petición devuelve la lista de granularidades geográficas tratadas en el banco de datos ISTAC-indicadores. Por ejemplo granularidad provincial, insular o municipal.</p><br>",
                     "responseClass" : "List[GeographicalGranularity]"
                 }
             ]
         },
         {
             "path" : "/geographicalValues",
-            "description" : "Valores geográficos",
+            "description" : "Valores geográficos.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
@@ -346,7 +346,7 @@
                         },
                         {
                             "name" : "geographicalGranularityCode",
-                            "description" : "Código de la granularidad geográfica",
+                            "description" : "Código de la granularidad geográfica.",
                             "paramType" : "query",
                             "required" : true,
                             "dataType" : "string"
@@ -357,7 +357,7 @@
         },
         {
             "path" : "/subjects",
-            "description" : "Temas estadísticos",
+            "description" : "Temas estadísticos.",
             "operations" : [
                 {
                     "httpMethod" : "GET",
@@ -375,11 +375,11 @@
             "properties" : {
                 "{locale}" : {
                     "type" : "string",
-                    "description" : "Traducción en el locale especificado"
+                    "description" : "Traducción en el locale especificado."
                 },
                 "__default__" : {
                     "type" : "string",
-                    "description" : "Traducción en el idioma por defecto"
+                    "description" : "Traducción en el idioma por defecto."
                 }
             }
         },
@@ -388,15 +388,15 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código del valor geográfico"
+                    "description" : "Código del valor geográfico."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del valor geográfico"
+                    "description" : "Nombre del valor geográfico."
                 },
                 "granularityCode" : {
                     "type" : "string",
-                    "description" : "Granularidad del valor geográfico"
+                    "description" : "Granularidad del valor geográfico."
                 }
             }
         },
@@ -405,11 +405,11 @@
             "properties" : {
                 "code" : {
                     "type"  : "string",
-                    "description" : "Código de la granularidad geográfica"
+                    "description" : "Código de la granularidad geográfica."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre la granularidad geográfica"
+                    "description" : "Nombre la granularidad geográfica."
                 }
             }
         },
@@ -418,23 +418,23 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "code" : {
                     "type" : "string",
-                    "description" : "Código semántico del recurso"
+                    "description" : "Código semántico del recurso."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del tema estadístico"
+                    "description" : "Nombre del tema estadístico."
                 }
             }
         },
@@ -443,23 +443,23 @@
             "properties" : {
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "limit" : {
                     "type" : "string",
-                    "description" : "Número máximo de resultados a obtener"
+                    "description" : "Número máximo de resultados a obtener."
                 },
                 "offset" : {
                     "type" : "int",
-                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados"
+                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados."
                 },
                 "total" : {
                     "type" : "int",
-                    "description" : "Número total de resultados existentes"
+                    "description" : "Número total de resultados existentes."
                 },
                 "items" : {
                     "type" : "array",
-                    "description" : "Listado de recursos",
+                    "description" : "Listado de recursos.",
                     "items" : {
                         "$ref" : "IndicatorBase"
                     }
@@ -471,27 +471,27 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "code" : {
                     "type" : "string",
-                    "description" : "Código semántico del recurso"
+                    "description" : "Código semántico del recurso."
                 },
                 "version" : {
                     "type" : "string",
-                    "description" : "Versión del recurso"
+                    "description" : "Versión del recurso."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del recurso"
+                    "description" : "Nombre del recurso."
                 },
                 "acronym" : {
                     "type" : "InternationalString",
@@ -507,7 +507,7 @@
                 },
                 "systemSurveyLinks" : {
                     "type" : "array",
-                    "description" : "Sistemas de indicadores relacionados con el indicador",
+                    "description" : "Sistemas de indicadores relacionados con el indicador.",
                     "items" : {
                         "$ref" : "Link"
                     }
@@ -535,11 +535,11 @@
             "properties" : {
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "href" : {
                     "type" : "string",
-                    "description" : "Enlace al recurso"
+                    "description" : "Enlace al recurso."
                 }
             }
         },
@@ -548,11 +548,11 @@
             "properties" : {
                 "dimension" : {
                     "type" : "MetadataDimensionMap",
-                    "description" : "Dimensiones de los datos"
+                    "description" : "Dimensiones de los datos."
                 },
                 "attribute" : {
                     "type" : "MetadataAttributeMap",
-                    "description" : "Atributos de los datos"
+                    "description" : "Atributos de los datos."
                 }
             }
         },
@@ -561,15 +561,15 @@
             "properties" : {
                 "GEOGRAPHICAL" : {
                     "type" : "GeographicalDimension",
-                    "description" : "Dimensión geográfica de los datos"
+                    "description" : "Dimensión geográfica de los datos."
                 },
                 "TIME" : {
                     "type" : "TimeDimension",
-                    "description" : "Dimensión temporal de los datos"
+                    "description" : "Dimensión temporal de los datos."
                 },
                 "MEASURE" : {
                     "type" : "MeasureDimension",
-                    "description" : "Dimensión de medida de los datos"
+                    "description" : "Dimensión de medida de los datos."
                 }
             }
         },
@@ -579,11 +579,11 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código de la dimensión"
+                    "description" : "Código de la dimensión."
                 },
                 "granularity" : {
                     "type" : "array",
-                    "description" : "Granularidades que intervienen en la dimensión",                   
+                    "description" : "Granularidades que intervienen en la dimensión.",                   
                     "items" : {
                         "$ref" : "Granularity"
                     }
@@ -602,11 +602,11 @@
                 "properties" : {
                     "code" : {
                         "type" : "string",
-                        "description" : "Código de la dimensión"
+                        "description" : "Código de la dimensión."
                     },
                     "granularity" : {
                         "type" : "array",
-                        "description" : "Granularidades que intervienen en la dimensión",
+                        "description" : "Granularidades que intervienen en la dimensión.",
                         "items" : {
                             "$ref" : "Granularity"
                         }
@@ -625,7 +625,7 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código de la dimensión"
+                    "description" : "Código de la dimensión."
                 },
                 "representation" : {
                     "type" : "array",
@@ -641,11 +641,11 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código de la granularidad"
+                    "description" : "Código de la granularidad."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre de la granularidad"
+                    "description" : "Nombre de la granularidad."
                 }
             }
         },
@@ -654,23 +654,23 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código del recinto geográfico"
+                    "description" : "Código del recinto geográfico."
                 },
                 "title" : {
                     "type" : "string",
-                    "description" : "Nombre del recinto geográfico"
+                    "description" : "Nombre del recinto geográfico."
                 },
                 "latitude" : {
                     "type" : "double",
-                    "description" : "Latitud del recinto geográfico"
+                    "description" : "Latitud del recinto geográfico."
                 },
                 "longitude" : {
                     "type" : "double",
-                    "description" : "Longitud del recinto geográfico"
+                    "description" : "Longitud del recinto geográfico."
                 },
                 "granularityCode" : {
                     "type" : "string",
-                    "description" : "Granularidad del recinto geográfico"
+                    "description" : "Granularidad del recinto geográfico."
                 }
             }
         },
@@ -679,15 +679,15 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código del momento de tiempo"
+                    "description" : "Código del momento de tiempo."
                 },
                 "title" : {
                     "type" : "string",
-                    "description" : "Nombre del momento de tiempo"
+                    "description" : "Nombre del momento de tiempo."
                 },
                 "granularityCode" : {
                     "type" : "string",
-                    "description" : "Granularidad del momento de tiempo"
+                    "description" : "Granularidad del momento de tiempo."
                 }
             }
         },
@@ -696,15 +696,15 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código de la medida"
+                    "description" : "Código de la medida."
                 },
                 "title" : {
                     "type" : "string",
-                    "description" : "Nombre de la medida"
+                    "description" : "Nombre de la medida."
                 },
                 "quantity" : {
                     "type" : "Quantity",
-                    "description" : "Metadatos relacionados con la medida"
+                    "description" : "Metadatos relacionados con la medida."
                 }
             }
         },
@@ -807,7 +807,7 @@
             "properties" : {
                 "{attribute}" : {
                     "type" : "Attribute",
-                    "description" : "Atributo de los datos"
+                    "description" : "Atributo de los datos."
                 }
             }
         },
@@ -816,11 +816,11 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código del atributo"
+                    "description" : "Código del atributo."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del atributo"
+                    "description" : "Nombre del atributo."
                 },
                 "attachmentLevel" : {
                     "type" : "string",
@@ -832,7 +832,7 @@
                             "OBSERVATION"
                         ]
                     },
-                    "description" : "Nivel de los datos al que afecta el atributo"
+                    "description" : "Nivel de los datos al que afecta el atributo."
                 }
             }
         },
@@ -844,11 +844,11 @@
                     "items":{
                         "$ref":"string"
                     },
-                    "description" : "Orden en el que se deuvelven las dimensiones"
+                    "description" : "Orden en el que se deuvelven las dimensiones."
                 },
                 "dimension" : {
                     "type" : "DataDimensionMap",
-                    "description" : "Dimensiones que identifican los datos"
+                    "description" : "Dimensiones que identifican los datos."
                 },
                 "observation" : {
                     "type" : "array",
@@ -862,7 +862,7 @@
                     "items" : {
                         "$ref" : "DataAttributeMap"
                     },
-                    "description" : "Atributos que describen los datos"
+                    "description" : "Atributos que describen los datos."
                 }
             }
         },
@@ -880,7 +880,7 @@
             "properties" : {
                 "representation"  : {
                     "type" : "DataDimensionRepresentation",
-                    "description" : "Representación de la dimensión. Incluye los posibles valores que toma la dimensión"
+                    "description" : "Representación de la dimensión. Incluye los posibles valores que toma la dimensión."
                 }
             }
         },
@@ -893,7 +893,7 @@
                 },
                 "index" : {
                     "type" : "DataDimensionRepresentationIndexMap",
-                    "description" : "Índice que se le asigna a cada una de las dimensiones"
+                    "description" : "Índice que se le asigna a cada una de las dimensiones."
                 }
             }
         },
@@ -902,7 +902,7 @@
             "properties" : {
                 "{category}" : {
                     "type" : "int",
-                    "description" : "Índice del código de la dimensión indicado"
+                    "description" : "Índice del código de la dimensión indicado."
                 }
             }
         },
@@ -920,11 +920,11 @@
             "properties" : {
                 "code" : {
                     "type" : "string",
-                    "description" : "Código del atributo"
+                    "description" : "Código del atributo."
                 },
                 "value" : {
                     "type" : "InternationalString",
-                    "description" : "Valor que toma el atributo"
+                    "description" : "Valor que toma el atributo."
                 }
             }
         },
@@ -934,27 +934,27 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "code" : {
                     "type" : "string",
-                    "description" : "Código semántico del recurso"
+                    "description" : "Código semántico del recurso."
                 },
                 "version" : {
                     "type" : "string",
-                    "description" : "Versión del recurso"
+                    "description" : "Versión del recurso."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del recurso"
+                    "description" : "Nombre del recurso."
                 },
                 "acronym" : {
                     "type" : "InternationalString",
@@ -973,7 +973,7 @@
                     "items" : {
                         "$ref" : "Link"
                     },
-                    "description" : "Sistemas de indicadores relacionados con el indicador"
+                    "description" : "Sistemas de indicadores relacionados con el indicador."
                 },
                 "conceptDescription" : {
                     "type" : "InternationalString",
@@ -985,11 +985,11 @@
                 },
                 "dimension" : {
                     "type" : "MetadataDimensionMap",
-                    "description" : "Dimensiones que identifican los datos del indicador"
+                    "description" : "Dimensiones que identifican los datos del indicador."
                 },
                 "attribute" : {
                     "type" : "MetadataAttributeMap",
-                    "description" : "Atributos que describen los datos del indicador"
+                    "description" : "Atributos que describen los datos del indicador."
                 },
                 "decimalPlaces" : {
                     "type" : "int",
@@ -1008,26 +1008,26 @@
             "properties" : {
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "limit" : {
                     "type" : "string",
-                    "description" : "Número máximo de resultados a obtener"
+                    "description" : "Número máximo de resultados a obtener."
                 },
                 "offset" : {
                     "type" : "int",
-                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados"
+                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados."
                 },
                 "total" : {
                     "type" : "int",
-                    "description" : "Número total de resultados existentes"
+                    "description" : "Número total de resultados existentes."
                 },
                 "items" : {
                     "type" : "array",
                     "items" : {
                         "$ref" : "IndicatorSystemBase"
                     },
-                    "description" : "Listado de recursos"
+                    "description" : "Listado de recursos."
                 }
             }
         },
@@ -1036,15 +1036,15 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "code" : {
                     "type" : "string",
@@ -1085,15 +1085,15 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "code" : {
                     "type" : "string",
@@ -1146,19 +1146,19 @@
             "properties" : {
                 "id" : {
                     "type" : "string",
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string",
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string",
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "title" : {
                     "type" : "InternationalString",
-                    "description" : "Nombre del recurso"
+                    "description" : "Nombre del recurso."
                 },
                 "elements" : {
                     "type" : "array",
@@ -1174,26 +1174,26 @@
             "properties" : {
                 "kind" : {
                     "type" : "string", 
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "limit" : {
                     "type" : "string", 
-                    "description" : "Número máximo de resultados a obtener"
+                    "description" : "Número máximo de resultados a obtener."
                 },
                 "offset" : {
                     "type" : "int", 
-                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados"
+                    "description" : "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados."
                 },
                 "total" : {
                     "type" : "int", 
-                    "description" : "Número total de resultados existentes"
+                    "description" : "Número total de resultados existentes."
                 },
                 "items" : {
                     "type" : "array",
                     "items" : {
                         "$ref" : "InstanceBase"
                     }, 
-                    "description" : "Listado de recursos"
+                    "description" : "Listado de recursos."
                 }
             }
         },
@@ -1202,19 +1202,19 @@
             "properties" : {
                 "id" : {
                     "type" : "string", 
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string", 
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string", 
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "parentLink": {
                     "type" : "Link", 
-                    "description" : "Enlace al recurso padre de la API"
+                    "description" : "Enlace al recurso padre de la API."
                 },
                 "systemCode" : {
                     "type" : "string", 
@@ -1226,15 +1226,15 @@
                 },
                 "conceptDescription" : {
                     "type" : "InternationalString", 
-                    "description" : "Descripción del indicador con el que se asocia la instancia de indicador"
+                    "description" : "Descripción del indicador con el que se asocia la instancia de indicador."
                 },
                 "metadata" : {
                     "type" : "Metadata", 
-                    "description" : "Metadatos de la instanacia de indicador"
+                    "description" : "Metadatos de la instanacia de indicador."
                 },
                 "data" : {
                     "type" : "Data", 
-                    "description" : "Datos de la instancia de indicador"
+                    "description" : "Datos de la instancia de indicador."
                 }
             }
         },
@@ -1243,19 +1243,19 @@
             "properties" : {
                 "id" : {
                     "type" : "string", 
-                    "description" : "Identificador del recurso"
+                    "description" : "Identificador del recurso."
                 },
                 "kind" : {
                     "type" : "string", 
-                    "description" : "Tipo del recurso"
+                    "description" : "Tipo del recurso."
                 },
                 "selfLink" : {
                     "type" : "string", 
-                    "description" : "Enlace al propio recurso"
+                    "description" : "Enlace al propio recurso."
                 },
                 "parentLink": {
                     "type" : "Link", 
-                    "description" : "Enlace al recurso padre de la API"
+                    "description" : "Enlace al recurso padre de la API."
                 },
                 "systemCode" : {
                     "type" : "string", 
@@ -1267,7 +1267,7 @@
                 },
                 "conceptDescription" : {
                     "type" : "InternationalString", 
-                    "description" : "Descripción de la instancia de indicador"
+                    "description" : "Descripción de la instancia de indicador."
                 },
                 "subjectCode" : {
                     "type" : "string", 
@@ -1279,7 +1279,7 @@
                 },
                 "dimension" : {
                     "type" : "MetadataDimensionMap", 
-                    "description" : "Dimensiones de identifican a la instancia de indicador"
+                    "description" : "Dimensiones de identifican a la instancia de indicador."
                 },
                 "decimalPlaces" : {
                     "type" : "int", 
