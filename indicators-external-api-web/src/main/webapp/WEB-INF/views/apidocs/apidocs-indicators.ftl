@@ -397,6 +397,14 @@
                 "granularityCode" : {
                     "type" : "string",
                     "description" : "Granularidad del valor geográfico."
+                },
+                "latitude" : {
+                    "type" : "double",
+                    "description" : "Latitud del recinto geográfico."
+                },
+                "longitude" : {
+                    "type" : "double",
+                    "description" : "Longitud del recinto geográfico."
                 }
             }
         },
