@@ -264,6 +264,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             type.setCode(geographicalValue.getCode());
             type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
             type.setGranularityCode(geographicalValue.getGranularity().getCode());
+            type.setLatitude(geographicalValue.getLatitude());
+            type.setLongitude(geographicalValue.getLongitude());
             result.add(type);
         }
 
@@ -279,6 +281,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             type.setCode(geographicalValue.getCode());
             type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
             type.setGranularityCode(geographicalValue.getGranularity().getCode());
+            type.setLatitude(geographicalValue.getLatitude());
+            type.setLongitude(geographicalValue.getLongitude());
             result.add(type);
         }
 
