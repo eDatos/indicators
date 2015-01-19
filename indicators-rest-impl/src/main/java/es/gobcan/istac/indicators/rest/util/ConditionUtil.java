@@ -1,15 +1,9 @@
 package es.gobcan.istac.indicators.rest.util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-
-import es.gobcan.istac.indicators.core.domain.MeasureValue;
-import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;

@@ -1,11 +1,16 @@
 package es.gobcan.istac.indicators.rest.util;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class RequestUtil {
 
@@ -41,9 +46,9 @@ public class RequestUtil {
 
     public static Set<String> parseFields(String fields) {
         Set<String> result = new HashSet<String>();
-        if(!org.siemac.metamac.core.common.util.shared.StringUtils.isEmpty(fields)) {
+        if (!org.siemac.metamac.core.common.util.shared.StringUtils.isEmpty(fields)) {
             String[] fieldsParts = fields.split(",");
-            for(String fieldPart : fieldsParts) {
+            for (String fieldPart : fieldsParts) {
                 result.add(fieldPart.trim());
             }
         }
