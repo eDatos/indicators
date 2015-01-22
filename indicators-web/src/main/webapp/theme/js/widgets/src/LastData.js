@@ -128,12 +128,21 @@
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
                 }
             },
+            
+            orderDatasetsByInstancesOrder : function(datasets) {
+            	return = _.sortBy(datasets, function(dataset) {
+            		return _.indexOf(this.options.instances, dataset.request.id);
+            	}, this);
+            },
 
             renderTable : function (datasets) {
                 var context = {};
                 context.measures = _.map(this.measures, function (measure) {
                     return measuresLabels[measure];
                 });
+                
+                datasets = this.orderDatasetsByInstancesOrder(datasets);
+                
                 context.datasets = _.map(datasets, this.parseDataset, this);
 
                 _.each(context.datasets, function (dataset, i) {
