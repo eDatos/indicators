@@ -130,7 +130,7 @@
             },
             
             orderDatasetsByInstancesOrder : function(datasets) {
-            	return = _.sortBy(datasets, function(dataset) {
+            	return _.sortBy(datasets, function(dataset) {
             		return _.indexOf(this.options.instances, dataset.request.id);
             	}, this);
             },
