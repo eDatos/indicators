@@ -185,7 +185,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         String sql = "select geoval.code as geoCode, geoval.global_order as globalOrder, loc.locale as geoLocale, loc.label as geoLabel, ";
         sql += "geoGra.code as granularityCode, locGra.locale as granularityLocale, locGra.label as granularityLabel, geoval.latitude as latitude, geoval.longitude as longitude ";
         sql += "from tb_ind_version_geo_cov geoCov, tb_localised_strings loc, tb_lis_geogr_values geoVal, ";
-        sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra, tb_indicator_instances instance, tb_indic_inst_geo_values instance_geo, ";
+        sql += "tb_lis_geogr_granularities geoGra, tb_localised_strings locGra, tb_indicators_instances instance, tb_indic_inst_geo_values instance_geo ";
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
         sql += "and instance.uuid = '" + indicatorInstanceUuid + "' ";
         sql += "and instance_geo.indicator_instance_fk = instance.id ";
