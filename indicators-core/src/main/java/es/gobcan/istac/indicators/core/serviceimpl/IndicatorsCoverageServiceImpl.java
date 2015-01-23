@@ -175,7 +175,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
             throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
-        if (indicatorInstance.isFilteredByGeographicalValues()) { // Fixed values
+        // Fixed values
+        if (indicatorInstance.isFilteredByGeographicalValues()) {
             return getIndicatorVersionGeoCoverageRepository().retrieveCoverageFilteredByInstanceGeoValuesByGranularity(indicatorVersion, indicatorInstance.getUuid(), granularityUuid);
         }
 
@@ -190,7 +191,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
             throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
-        if (indicatorInstance.isFilteredByGeographicalValues()) { // Fixed values
+        // Fixed values
+        if (indicatorInstance.isFilteredByGeographicalValues()) {
             return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByInstanceGeoValuesByGranularity(indicatorVersion, indicatorInstance.getUuid(), granularityUuid);
         }
 
