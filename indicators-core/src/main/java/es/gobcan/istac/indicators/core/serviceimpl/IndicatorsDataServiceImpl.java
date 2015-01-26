@@ -955,7 +955,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public void buildIndicatorInstanceLatestValuesCache(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorInstance.getIndicator().getUuid());
 
-        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
+        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstance.getUuid()));
 
         List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstance.getUuid());
 
