@@ -25,9 +25,11 @@
                                     <span class="inlinesparkline"></span>
                                 {{/if}}
                             {{/if}}
-                            <span class="istac-widget-observation">{{ value }} </span>
+							<span data-tooltip="{{../../description}}">
+                        		<span class="istac-widget-observation">{{ value }} </span>
+                        		<div class="istac-widget-unit"> {{ unit }}</div>
+                        	</span>
                         </div>
-                        <div class="istac-widget-unit"> {{ unit }}</div>
                     {{else}}
                         -
                     {{/if}}

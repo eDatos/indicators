@@ -135,35 +135,38 @@ function program3(depth0,data) {
   else { stack1 = depth0.temporalLabel; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</div>\r\n                </td>\r\n                ";
   stack1 = depth0.observations;
-  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(4, program4, data)});
+  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program4, data, depth0)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n            </tr>\r\n        ";
   return buffer;}
-function program4(depth0,data) {
+function program4(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\r\n                <td>\r\n                    ";
   stack1 = depth0.value;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(11, program11, data),fn:self.program(5, program5, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(11, program11, data),fn:self.programWithDepth(program5, data, depth1)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n                </td>\r\n                ";
   return buffer;}
-function program5(depth0,data) {
+function program5(depth0,data,depth2) {
   
   var buffer = "", stack1, foundHelper;
   buffer += "\r\n                        <div>\r\n                            ";
   stack1 = depth0.showSparkline;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n                            <span class=\"istac-widget-observation\">";
+  buffer += "                   \r\n							<span data-tooltip=\"";
+  stack1 = depth2.description;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  buffer += escapeExpression(stack1) + "\">\r\n                        		<span class=\"istac-widget-observation\">";
   foundHelper = helpers.value;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + " </span>\r\n                        </div>\r\n                        <div class=\"istac-widget-unit\"> ";
+  buffer += escapeExpression(stack1) + " </span>\r\n                        		<div class=\"istac-widget-unit\"> ";
   foundHelper = helpers.unit;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</div>\r\n                    ";
+  buffer += escapeExpression(stack1) + "</div>\r\n                        	</span>         \r\n                        </div>                        \r\n                    ";
   return buffer;}
 function program6(depth0,data) {
   
