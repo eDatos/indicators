@@ -62,12 +62,6 @@
         </div>
     </div>
 
-    [#if indicator.description??]
-        <div>
-            <p>[@localizeTitle indicator.description/]</p>
-        </div>
-    [/#if]
-
     [#if indicator.objective??]
         <div>
             <p>[@localizeTitle indicator.objective/]</p>
