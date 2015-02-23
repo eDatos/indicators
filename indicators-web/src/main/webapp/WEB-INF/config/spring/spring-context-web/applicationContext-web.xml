@@ -38,6 +38,11 @@
                 <value>/theme/js</value>
             </list>
         </property>
+        <property name="freemarkerSettings">
+	        <props>
+	            <prop key="url_escaping_charset">UTF-8</prop>
+	        </props>
+	    </property>
       </bean>
 
     <!-- Simple ViewResolver for FreeMarker, appending ".ftl" to logical view names. -->
