@@ -442,6 +442,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             indicator.setDiffusionIdIndicatorVersion(diffusionVersion.getId());
             indicator.setDiffusionVersionNumber(diffusionVersion.getVersionNumber());
             indicator.setDiffusionProcStatus(diffusionVersion.getProcStatus());
+
+            // update indicator
             indicator = getIndicatorRepository().save(indicator);
         }
         return indicator;
