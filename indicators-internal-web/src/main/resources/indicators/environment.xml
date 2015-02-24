@@ -6,8 +6,8 @@
    <entry key="environment.indicators.data">/data/istac/indicators</entry>
   
    <entry key="environment.metamac.configuration.db.driver_name">oracle.jdbc.OracleDriver</entry>
-   <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@localhost:1521:XE</entry>
-   <entry key="environment.metamac.configuration.db.username">metamac_common_metadata</entry>
-   <entry key="environment.metamac.configuration.db.password">metamac_common_metadata</entry>
+   <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@FILL_ME_WITH_HOST:FILL_ME_WITH_PORT:FILL_ME_WITH_ORACLE_SID</entry>
+   <entry key="environment.metamac.configuration.db.username">FILL_ME_WITH_USERNAME</entry>
+   <entry key="environment.metamac.configuration.db.password">FILL_ME_WITH_PASSWORD</entry>
    
 </properties>
