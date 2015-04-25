@@ -83,7 +83,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return datasetArchives;
     }
 
-    private String zipFileNameZipDirectoryNonRecursively(String datasetId, File dirToZip) throws Exception {
+    private String zipFileNameZipDirectoryNonRecursively(String datasetId, File dirToZip) throws IOException {
 
         byte[] buffer = new byte[1024];
         ZipOutputStream zos = null;
@@ -95,15 +95,17 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             FileOutputStream fos = new FileOutputStream(zipFile);
             zos = new ZipOutputStream(fos);
 
-            for (String file : dirToZip.list()) {
-                in = null;
-                ZipEntry ze = new ZipEntry(file);
-                zos.putNextEntry(ze);
+            if (dirToZip != null) {
+                for (String file : dirToZip.list()) {
+                    in = null;
+                    ZipEntry ze = new ZipEntry(file);
+                    zos.putNextEntry(ze);
 
-                in = new FileInputStream(dirToZip.getAbsolutePath() + File.separatorChar + file);
-                int len;
-                while ((len = in.read(buffer)) > 0) {
-                    zos.write(buffer, 0, len);
+                    in = new FileInputStream(dirToZip.getAbsolutePath() + File.separatorChar + file);
+                    int len;
+                    while ((len = in.read(buffer)) > 0) {
+                        zos.write(buffer, 0, len);
+                    }
                 }
             }
         } finally {

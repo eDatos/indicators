@@ -532,7 +532,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (oldDecimalPlaces != null) {
             return !oldDecimalPlaces.equals(newDecimalPlaces);
         } else if (newDecimalPlaces != null) {
-            return !newDecimalPlaces.equals(oldDecimalPlaces);
+            // oldDecimalPlaces is null and newDecimalPlaces isn't so, decimalPlaces has changed
+            return true;
         }
         return false;
     }

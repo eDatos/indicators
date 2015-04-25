@@ -533,7 +533,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);
-        indicatorVersionDiffusion = getIndicatorVersionRepository().save(indicatorVersionDiffusion);
+        getIndicatorVersionRepository().save(indicatorVersionDiffusion);
 
         // Create draft version
         indicatorNewVersion.setIndicator(indicator);
