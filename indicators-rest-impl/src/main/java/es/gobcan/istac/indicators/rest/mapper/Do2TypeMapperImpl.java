@@ -521,7 +521,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws Exception {
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL

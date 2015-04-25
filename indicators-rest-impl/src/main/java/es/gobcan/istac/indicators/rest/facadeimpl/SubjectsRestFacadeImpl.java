@@ -2,8 +2,7 @@ package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +15,16 @@ import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 @Service("themesRestFacade")
 public class SubjectsRestFacadeImpl implements SubjectsRestFacade {
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private IndicatorsApiService indicatorsApiService = null;
 
     @Autowired
-    private Do2TypeMapper mapper = null;
+    private Do2TypeMapper        mapper               = null;
 
     @Override
-    public List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws Exception {
+    public List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws MetamacException {
         List<SubjectIndicatorResult> subjects = indicatorsApiService.retrieveSubjectsInIndicators();
-        List<SubjectBaseType> subjectTypes = mapper.subjectDoToBaseType(subjects, baseUrl);
-        return subjectTypes;
+        return mapper.subjectDoToBaseType(subjects, baseUrl);
     }
 
 }

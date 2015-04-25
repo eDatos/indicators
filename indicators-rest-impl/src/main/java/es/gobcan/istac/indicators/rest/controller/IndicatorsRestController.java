@@ -26,7 +26,7 @@ import es.gobcan.istac.indicators.rest.util.RequestUtil;
 public class IndicatorsRestController extends AbstractRestController {
 
     @Autowired
-    private final IndicatorRestFacade indicatorRestFacade = null;
+    private static final IndicatorRestFacade indicatorRestFacade = null;
 
     /**
      * @throws Exception
@@ -62,7 +62,7 @@ public class IndicatorsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}", method = RequestMethod.GET)
     @ResponseBody
     // @formatter:off
-    public ResponseEntity<IndicatorBaseType> retrieveIndicator(final UriComponentsBuilder uriComponentsBuilder, 
+    public ResponseEntity<IndicatorBaseType> retrieveIndicator(final UriComponentsBuilder uriComponentsBuilder,
                                                                 @PathVariable("indicatorCode") final String indicatorCode) throws Exception {
         // @formatter:on
         String baseURL = uriComponentsBuilder.build().toUriString();

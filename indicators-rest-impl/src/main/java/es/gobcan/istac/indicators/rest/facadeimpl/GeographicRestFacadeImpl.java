@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 @Service("geographicRestFacade")
 public class GeographicRestFacadeImpl implements GeographicRestFacade {
 
-    protected Logger                  logger                    = LoggerFactory.getLogger(getClass());
+    protected static final Logger     LOG                       = LoggerFactory.getLogger(GeographicRestFacadeImpl.class);
 
     @Autowired
     private Do2TypeMapper             dto2TypeMapper            = null;
@@ -30,26 +31,23 @@ public class GeographicRestFacadeImpl implements GeographicRestFacade {
     private IndicatorsCoverageService indicatorsCoverageService = null;
 
     @Override
-    public List<MetadataGranularityType> findGeographicGranularities() throws Exception {
+    public List<MetadataGranularityType> findGeographicGranularities() throws MetamacException {
         List<GeographicalGranularity> geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(RestConstants.SERVICE_CONTEXT);
-        List<MetadataGranularityType> granularityTypes = dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
-        return granularityTypes;
+        return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 
     @Override
-    public List<MetadataGranularityType> findGeographicGranularitiesByIndicatorsSystemCode(String indicatorsSystemCode) throws Exception {
+    public List<MetadataGranularityType> findGeographicGranularitiesByIndicatorsSystemCode(String indicatorsSystemCode) throws MetamacException {
         List<GeographicalGranularity> geographicalGranularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(
                 RestConstants.SERVICE_CONTEXT, indicatorsSystemCode);
-        List<MetadataGranularityType> granularityTypes = dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
-        return granularityTypes;
+        return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 
     @Override
-    public List<MetadataGranularityType> findGeographicGranularitiesBySubjectCode(String subjectCode) throws Exception {
+    public List<MetadataGranularityType> findGeographicGranularitiesBySubjectCode(String subjectCode) throws MetamacException {
         List<GeographicalGranularity> geographicalGranularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT,
                 subjectCode);
-        List<MetadataGranularityType> granularityTypes = dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
-        return granularityTypes;
+        return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 
 }

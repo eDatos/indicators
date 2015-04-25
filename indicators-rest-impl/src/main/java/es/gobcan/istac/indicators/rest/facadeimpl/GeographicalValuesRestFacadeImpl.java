@@ -52,8 +52,7 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
         String granularityUuid = getGranularityUuidByCode(granularityCode);
         List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(RestConstants.SERVICE_CONTEXT,
                 indicatorsSystemCode, granularityUuid);
-        List<GeographicalValueType> types = mapper.geographicalValuesVOToType(geographicalValues);
-        return types;
+        return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
     @Override
@@ -84,8 +83,7 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
         PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         List<GeographicalValue> geographicalValues = result.getValues();
-        List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
-        return types;
+        return mapper.geographicalValuesDoToType(geographicalValues);
     }
 
     @Override
@@ -93,8 +91,7 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
         String granularityUuid = getGranularityUuidByCode(granularityCode);
         List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT, subjectCode,
                 granularityUuid);
-        List<GeographicalValueType> types = mapper.geographicalValuesVOToType(geographicalValues);
-        return types;
+        return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
 }

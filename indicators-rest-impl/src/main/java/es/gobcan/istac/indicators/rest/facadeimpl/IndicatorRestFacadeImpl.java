@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +49,10 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Autowired
     private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
 
+    @SuppressWarnings("unchecked")
     @Override
     public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
-            throws Exception {
+            throws MetamacException {
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorsRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
 
@@ -104,15 +106,14 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public IndicatorType retrieveIndicator(String baseUrl, String indicatorCode) throws Exception {
+    public IndicatorType retrieveIndicator(String baseUrl, String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorsVersion = retrieveIndicatorByCode(indicatorCode);
-        IndicatorType result = dto2TypeMapper.indicatorDoToType(indicatorsVersion, baseUrl);
-        return result;
+        return dto2TypeMapper.indicatorDoToType(indicatorsVersion, baseUrl);
     }
 
     @Override
     public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            boolean includeObservationMetadata) throws Exception {
+            boolean includeObservationMetadata) throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
@@ -123,7 +124,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         dataFilter.setGeoFilter(geoFilter);
         dataFilter.setTimeFilter(timeFilter);
         dataFilter.setMeasureFilter(measureFilter);
-
 
         DataType dataType;
         if (includeObservationMetadata) {

@@ -1,13 +1,21 @@
 package es.gobcan.istac.indicators.rest.facadeapi;
 
-import es.gobcan.istac.indicators.rest.types.*;
-
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
+
+import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.PagedResultType;
+import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+
 public interface IndicatorRestFacade {
 
-    public IndicatorType retrieveIndicator(final String baseUrl, final String indicatorCode) throws Exception;
-    public DataType retrieveIndicatorData(final String baseUrl, final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception;
-    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation) throws Exception;
+    IndicatorType retrieveIndicator(final String baseUrl, final String indicatorCode) throws MetamacException;
+    DataType retrieveIndicatorData(final String baseUrl, final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            boolean includeObservationMetadata) throws MetamacException;
+    PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
+            throws MetamacException;
 }

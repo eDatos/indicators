@@ -1,11 +1,13 @@
 package es.gobcan.istac.indicators.rest.facadeapi;
 
-import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
-
 import java.util.List;
+
+import org.siemac.metamac.core.common.exception.MetamacException;
+
+import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 
 public interface SubjectsRestFacade {
 
-    public List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws Exception;
+    List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws MetamacException;
 
 }

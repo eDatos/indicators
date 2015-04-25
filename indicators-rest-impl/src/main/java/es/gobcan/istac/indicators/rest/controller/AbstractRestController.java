@@ -46,8 +46,7 @@ public abstract class AbstractRestController {
         ErrorType errorType = new ErrorType();
         errorType.setCode("" + httpStatus.value());
         errorType.setMessage(message);
-        ResponseEntity<ErrorType> responseEntity = new ResponseEntity<ErrorType>(errorType, httpStatus);
-        return responseEntity;
+        return new ResponseEntity<ErrorType>(errorType, httpStatus);
     }
 
 }

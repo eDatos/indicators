@@ -1,14 +1,15 @@
 package es.gobcan.istac.indicators.rest.facadeapi;
 
-import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import java.util.List;
+import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 
 public interface GeographicalValuesRestFacade {
 
-    public List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException;
-    public List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException;
-    public List<GeographicalValueType> findGeographicalValuesByGranularity(String granularityCode) throws MetamacException;
+    List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException;
+    List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException;
+    List<GeographicalValueType> findGeographicalValuesByGranularity(String granularityCode) throws MetamacException;
 
 }

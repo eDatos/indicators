@@ -12,8 +12,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +48,6 @@ import es.gobcan.istac.indicators.rest.util.RequestUtil;
 @Service
 public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade {
 
-    private Logger                          logger               = LoggerFactory.getLogger(getClass());
-
     @Autowired
     protected IndicatorsApiService          indicatorsApiService = null;
 
@@ -62,7 +58,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     private IndicatorInstancesRest2DoMapper indicatorInstancesRest2DoMapper;
 
     @Override
-    public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseURL, final RestCriteriaPaginator paginator) throws Exception {
+    public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseURL, final RestCriteriaPaginator paginator) throws MetamacException {
         PagingParameter pagingParameter = CriteriaUtil.createPagingParameter(paginator);
         PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystems(pagingParameter);
 
@@ -95,14 +91,14 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public IndicatorsSystemType retrieveIndicatorsSystem(final String baseURL, String idIndicatorSystem) throws Exception {
+    public IndicatorsSystemType retrieveIndicatorsSystem(final String baseURL, String idIndicatorSystem) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemByCode(idIndicatorSystem);
         IndicatorsSystemType result = dto2TypeMapper.indicatorsSystemDoToType(indicatorsSystemVersion, baseURL);
         return result;
     }
 
     @Override
-    public List<IndicatorsSystemHistoryType> findIndicatorsSystemHistoryByCode(final String baseURL, final String code, final int maxResults) throws Exception {
+    public List<IndicatorsSystemHistoryType> findIndicatorsSystemHistoryByCode(final String baseURL, final String code, final int maxResults) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemByCode(code);
 
         List<IndicatorsSystemHistory> systemHistories = indicatorsApiService.findIndicatorsSystemHistory(indicatorsSystemVersion.getIndicatorsSystem().getUuid(), maxResults);
@@ -116,7 +112,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Override
     public ListResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, String fields,
-            Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws Exception {
+            Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws MetamacException {
 
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, null, null);
@@ -183,7 +179,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Override
     public PagedResultType<IndicatorInstanceBaseType> retrievePaginatedIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, Integer limit, Integer offset,
-            String fields, Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws Exception {
+            String fields, Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws MetamacException {
 
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, limit, offset);
@@ -227,15 +223,14 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String baseURL, final String idIndicatorSystem, final String idIndicatorInstance) throws Exception {
+    public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String baseURL, final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
-        IndicatorInstanceType result = dto2TypeMapper.indicatorsInstanceDoToType(indicatorInstance, baseURL);
-        return result;
+        return dto2TypeMapper.indicatorsInstanceDoToType(indicatorInstance, baseURL);
     }
 
     @Override
     public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
-            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception {
+            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws MetamacException {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);

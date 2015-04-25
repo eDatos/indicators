@@ -35,8 +35,7 @@ public class GeographicalValuesRestController extends AbstractRestController {
         } else {
             items = geographicalValuesRestFacade.findGeographicalValuesByGranularity(geographicalGranularityCode);
         }
-        ResponseEntity<List<GeographicalValueType>> response = new ResponseEntity<List<GeographicalValueType>>(items, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<List<GeographicalValueType>>(items, HttpStatus.OK);
     }
 
 }

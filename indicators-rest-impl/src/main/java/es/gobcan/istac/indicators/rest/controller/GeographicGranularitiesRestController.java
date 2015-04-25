@@ -18,7 +18,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 public class GeographicGranularitiesRestController extends AbstractRestController {
 
     @Autowired
-    private final GeographicRestFacade geographicRestFacade = null;
+    private static final GeographicRestFacade geographicRestFacade = null;
 
     @RequestMapping(value = "/api/indicators/v1.0/geographicGranularities", method = RequestMethod.GET)
     @ResponseBody
@@ -34,8 +34,7 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
             items = geographicRestFacade.findGeographicGranularities();
         }
 
-        ResponseEntity<List<MetadataGranularityType>> response = new ResponseEntity<List<MetadataGranularityType>>(items, null, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<List<MetadataGranularityType>>(items, null, HttpStatus.OK);
     }
 
 }
