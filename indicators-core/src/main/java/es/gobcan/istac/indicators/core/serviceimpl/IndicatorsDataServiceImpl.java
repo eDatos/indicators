@@ -213,7 +213,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         if (indicator.getProductionVersionNumber() != null) {
             try {
-                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersionNumber());
+                populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getProductionVersionNumber(), e);
                 exceptionItems.addAll(e.getExceptionItems());
