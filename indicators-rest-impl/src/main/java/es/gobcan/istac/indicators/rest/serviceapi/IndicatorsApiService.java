@@ -28,67 +28,67 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 
 public interface IndicatorsApiService {
 
-    public List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException;
+    List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException;
 
     /* INDICATORS */
-    public PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+    PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 
-    public IndicatorVersion retrieveIndicatorByCode(String code) throws MetamacException;
+    IndicatorVersion retrieveIndicatorByCode(String code) throws MetamacException;
 
-    public IndicatorVersion retrieveIndicator(String uuid) throws MetamacException;
+    IndicatorVersion retrieveIndicator(String uuid) throws MetamacException;
 
-    public DataSource retrieveDataSource(String uuid) throws MetamacException;
+    DataSource retrieveDataSource(String uuid) throws MetamacException;
 
-    public UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException;
+    UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException;
 
     /* DATA */
-    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorVersion(IndicatorVersion source) throws MetamacException;
+    List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorVersion(IndicatorVersion source) throws MetamacException;
 
-    public GeographicalValue retrieveGeographicalValueByCode(String geoCode) throws MetamacException;
+    GeographicalValue retrieveGeographicalValueByCode(String geoCode) throws MetamacException;
 
-    public List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
+    List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
 
-    public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
+    List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
 
-    public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid) throws MetamacException;
+    List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid) throws MetamacException;
 
-    public List<TimeValue> retrieveTimeValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
+    List<TimeValue> retrieveTimeValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException;
 
-    public List<MeasureValue> retrieveMeasureValuesInIndicator(IndicatorVersion indicatorVersion) throws MetamacException;
+    List<MeasureValue> retrieveMeasureValuesInIndicator(IndicatorVersion indicatorVersion) throws MetamacException;
 
-    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public List<TimeValue> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<TimeValue> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+    List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-    public IndicatorObservationsExtendedVO findObservationsExtendedInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+    IndicatorObservationsExtendedVO findObservationsExtendedInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 
-    public IndicatorObservationsVO findObservationsInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+    IndicatorObservationsVO findObservationsInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 
-    public IndicatorObservationsExtendedVO findObservationsExtendedInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+    IndicatorObservationsExtendedVO findObservationsExtendedInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 
-    public IndicatorObservationsVO findObservationsInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
+    IndicatorObservationsVO findObservationsInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 
     /* INDICATORS SYSTEM */
-    public PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException;
+    PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException;
 
-    public IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException;
+    IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException;
 
-    public PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException;
+    PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException;
 
-    public IndicatorInstance retrieveIndicatorInstanceByCode(String idIndicatorSystem, String idIndicatorInstance) throws MetamacException;
+    IndicatorInstance retrieveIndicatorInstanceByCode(String idIndicatorSystem, String idIndicatorInstance) throws MetamacException;
 
-    public List<IndicatorsSystemHistory> findIndicatorsSystemHistory(String idIndicatorSystem, int maxResults) throws MetamacException;
+    List<IndicatorsSystemHistory> findIndicatorsSystemHistory(String idIndicatorSystem, int maxResults) throws MetamacException;
 
-    public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+    List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 
-    public TimeValue retrieveTimeValueByCode(String timeCode) throws MetamacException;
+    TimeValue retrieveTimeValueByCode(String timeCode) throws MetamacException;
 
 }

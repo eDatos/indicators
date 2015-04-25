@@ -1,19 +1,23 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 
-import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
+import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 
 public class MapperUtil {
 
-    public static String DEFAULT          = "__default__";
+    private MapperUtil() {
+    }
+
+    public static String  DEFAULT          = "__default__";
     private static String DEFAULT_LANGUAGE = "es";
 
     public static Map<String, String> getDefaultLabel(Object defaultLabel) {
@@ -36,9 +40,8 @@ public class MapperUtil {
         String defaultLabelLocale = null;
         for (LocalisedString localisedString : internationalString.getTexts()) {
             labels.put(localisedString.getLang(), localisedString.getValue());
-            if ((defaultLabel == null) || 
-                (defaultLabel != null && localisedString.getLang().equals(DEFAULT_LANGUAGE)) ||
-                (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLang().startsWith(DEFAULT_LANGUAGE))) {
+            if ((defaultLabel == null) || (defaultLabel != null && localisedString.getLang().equals(DEFAULT_LANGUAGE))
+                    || (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLang().startsWith(DEFAULT_LANGUAGE))) {
                 defaultLabel = localisedString.getValue();
                 defaultLabelLocale = localisedString.getLang();
             }
@@ -57,12 +60,11 @@ public class MapperUtil {
         String defaultLabelLocale = null;
         for (org.siemac.metamac.core.common.ent.domain.LocalisedString localisedString : internationalString.getTexts()) {
             labels.put(localisedString.getLocale(), localisedString.getLabel());
-            if ((defaultLabel == null) || 
-                    (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE)) ||
-                    (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
-                    defaultLabel = localisedString.getLabel();
-                    defaultLabelLocale = localisedString.getLocale();
-                }
+            if ((defaultLabel == null) || (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE))
+                    || (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
+                defaultLabel = localisedString.getLabel();
+                defaultLabelLocale = localisedString.getLocale();
+            }
         }
         labels.put(DEFAULT, defaultLabel);
         return labels;
@@ -78,9 +80,8 @@ public class MapperUtil {
         String defaultLabelLocale = null;
         for (LocalisedStringDto localisedString : internationalString.getTexts()) {
             labels.put(localisedString.getLocale(), localisedString.getLabel());
-            if ((defaultLabel == null) ||
-                    (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE)) ||
-                    (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
+            if ((defaultLabel == null) || (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE))
+                    || (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
                 defaultLabel = localisedString.getLabel();
                 defaultLabelLocale = localisedString.getLocale();
             }
@@ -88,7 +89,6 @@ public class MapperUtil {
         labels.put(DEFAULT, defaultLabel);
         return labels;
     }
-
 
     public static OperationIndicators getOperationIndicators(Operation operation) {
         OperationIndicators target = new OperationIndicators();
@@ -100,7 +100,7 @@ public class MapperUtil {
         target.setUri(operation.getSelfLink().getHref());
         return target;
     }
-    
+
     public static OperationIndicators getOperationIndicators(org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation operation) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
@@ -111,5 +111,5 @@ public class MapperUtil {
         target.setUri(operation.getSelfLink().getHref());
         return target;
     }
-    
+
 }
