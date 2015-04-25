@@ -4,10 +4,10 @@ import java.util.Map;
 
 public class SubjectBaseType {
 
-    private String id;
-    private String kind;
-    private String selfLink;
-    private String code;
+    private String              id;
+    private String              kind;
+    private String              selfLink;
+    private String              code;
     private Map<String, String> title;
 
     public String getId() {

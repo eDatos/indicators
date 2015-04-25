@@ -14,55 +14,55 @@ import org.apache.commons.lang.StringUtils;
 
 public class RequestUtil {
 
-	private static final String SPACE = " ";
-	private static final String PLUS = "+";
+    private RequestUtil() {
+    }
 
-	@SuppressWarnings("unchecked")
-	public static Map<String, List<String>> parseParamExpression(
-			String paramExpression) {
-		if (StringUtils.isBlank(paramExpression)) {
-			return MapUtils.EMPTY_MAP;
-		}
+    private static final String SPACE = " ";
+    private static final String PLUS  = "+";
 
-		// dimExpression =
-		// MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
-		Pattern patternDimension = Pattern.compile("(\\w+)\\[((\\w\\|?)+)\\]");
-		Pattern patternCode = Pattern.compile("(\\w+)\\|?");
+    @SuppressWarnings("unchecked")
+    public static Map<String, List<String>> parseParamExpression(String paramExpression) {
+        if (StringUtils.isBlank(paramExpression)) {
+            return MapUtils.EMPTY_MAP;
+        }
 
-		Matcher matcherDimension = patternDimension.matcher(paramExpression);
+        // dimExpression =
+        // MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
+        Pattern patternDimension = Pattern.compile("(\\w+)\\[((\\w\\|?)+)\\]");
+        Pattern patternCode = Pattern.compile("(\\w+)\\|?");
 
-		Map<String, List<String>> selectedDimension = new HashMap<String, List<String>>();
-		while (matcherDimension.find()) {
-			String dimIdentifier = matcherDimension.group(1);
-			String codes = matcherDimension.group(2);
-			Matcher matcherCode = patternCode.matcher(codes);
-			while (matcherCode.find()) {
-				List<String> codeDimensions = selectedDimension
-						.get(dimIdentifier);
-				if (codeDimensions == null) {
-					codeDimensions = new ArrayList<String>();
-					selectedDimension.put(dimIdentifier, codeDimensions);
-				}
-				String codeIdentifier = matcherCode.group(1);
-				codeDimensions.add(codeIdentifier);
-			}
-		}
-		return selectedDimension;
-	}
+        Matcher matcherDimension = patternDimension.matcher(paramExpression);
 
-	public static Set<String> parseFields(String fields) {
-		Set<String> result = new HashSet<String>();
-		if (!org.siemac.metamac.core.common.util.shared.StringUtils
-				.isEmpty(fields)) {
-			String[] fieldsParts = fields.split(",");
-			for (String fieldPart : fieldsParts) {
-				// WORKAROUND: INDISTAC-899
-				if (fieldPart.startsWith(SPACE)) {
-					fieldPart = fieldPart.replace(SPACE, PLUS);
-				}
-				result.add(fieldPart.trim());
-			}
-		}
-		return result;
-	}
+        Map<String, List<String>> selectedDimension = new HashMap<String, List<String>>();
+        while (matcherDimension.find()) {
+            String dimIdentifier = matcherDimension.group(1);
+            String codes = matcherDimension.group(2);
+            Matcher matcherCode = patternCode.matcher(codes);
+            while (matcherCode.find()) {
+                List<String> codeDimensions = selectedDimension.get(dimIdentifier);
+                if (codeDimensions == null) {
+                    codeDimensions = new ArrayList<String>();
+                    selectedDimension.put(dimIdentifier, codeDimensions);
+                }
+                String codeIdentifier = matcherCode.group(1);
+                codeDimensions.add(codeIdentifier);
+            }
+        }
+        return selectedDimension;
+    }
+
+    public static Set<String> parseFields(String fields) {
+        Set<String> result = new HashSet<String>();
+        if (!org.siemac.metamac.core.common.util.shared.StringUtils.isEmpty(fields)) {
+            String[] fieldsParts = fields.split(",");
+            for (String fieldPart : fieldsParts) {
+                // WORKAROUND: INDISTAC-899
+                if (fieldPart.startsWith(SPACE)) {
+                    fieldPart = fieldPart.replace(SPACE, PLUS);
+                }
+                result.add(fieldPart.trim());
+            }
+        }
+        return result;
+    }
 }

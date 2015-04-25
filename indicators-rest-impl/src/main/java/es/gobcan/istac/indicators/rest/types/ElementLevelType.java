@@ -6,13 +6,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "id",
-    "kind",
-    "selfLink",
-    "title",
-    "elements"
-})
+@JsonPropertyOrder({"id", "kind", "selfLink", "title", "elements"})
 public class ElementLevelType {
 
     private String                 id       = null;

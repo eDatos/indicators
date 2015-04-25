@@ -4,26 +4,9 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "id",
-    "kind",
-    "selfLink",
-    "code",
-    "version",
-    "publicationDate",
-    "title",
-    "acronym",
-    "statisticalOperationLink",
-    "description",
-    "objective",
-    "elements",
-    "childLink"    
-})
+@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "publicationDate", "title", "acronym", "statisticalOperationLink", "description", "objective", "elements", "childLink"})
 public class IndicatorsSystemType extends IndicatorsSystemBaseType {
 
-    /**
-     * 
-     */
     private static final long      serialVersionUID = -5856767616725665032L;
 
     private List<ElementLevelType> elements         = null;

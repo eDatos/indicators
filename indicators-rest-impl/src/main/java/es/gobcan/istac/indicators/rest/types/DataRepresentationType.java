@@ -4,10 +4,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "size",
-    "index"
-})
+@JsonPropertyOrder({"size", "index"})
 public class DataRepresentationType {
 
     private Integer              size  = null;

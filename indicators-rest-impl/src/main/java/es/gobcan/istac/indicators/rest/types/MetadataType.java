@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.rest.types;
 
 import java.util.Map;
 
-
 public class MetadataType {
 
     private Map<String, MetadataDimensionType> dimension;

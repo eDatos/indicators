@@ -2,10 +2,7 @@ package es.gobcan.istac.indicators.rest.types;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-  "kind",
-  "href"
-})
+@JsonPropertyOrder({"kind", "href"})
 public class LinkType {
 
     private String kind = null;

@@ -4,10 +4,13 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 
-public class CriteriaUtil {
+public final class CriteriaUtil {
 
-    private static Integer MAXIMUM_RESULT_SIZE_DEFAULT = Integer.valueOf(25);
-    private static Integer MAXIMUM_RESULT_SIZE_ALLOWED = Integer.valueOf(1000);
+    private CriteriaUtil() {
+    }
+
+    private static final Integer MAXIMUM_RESULT_SIZE_DEFAULT = Integer.valueOf(25);
+    private static final Integer MAXIMUM_RESULT_SIZE_ALLOWED = Integer.valueOf(1000);
 
     public static PagingParameter createPagingParameter(final RestCriteriaPaginator paginator) {
         if (paginator.getOffset() == null || paginator.getOffset() < 0) {

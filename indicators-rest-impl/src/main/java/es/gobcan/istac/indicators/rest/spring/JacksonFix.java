@@ -32,7 +32,7 @@ public class JacksonFix {
                 stat4youModule.addSerializer(DateTime.class, new DateTimeSerializer());
                 objectMapper.registerModule(stat4youModule);
                 objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-                
+
                 m.setObjectMapper(objectMapper);
             }
         }

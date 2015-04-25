@@ -5,16 +5,9 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "kind",
-    "total",
-    "items"
-})
+@JsonPropertyOrder({"kind", "total", "items"})
 public class NoPagedResultType<E extends Serializable> implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 3350142395512943541L;
 
     private String            kind             = null;

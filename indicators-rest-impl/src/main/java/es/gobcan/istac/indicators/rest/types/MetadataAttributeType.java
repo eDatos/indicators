@@ -5,16 +5,9 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-        "code",
-        "title",
-        "attachmentLevel"
-})
+@JsonPropertyOrder({"code", "title", "attachmentLevel"})
 public class MetadataAttributeType implements Serializable {
 
-    /**
-     * 
-     */
     private static final long                serialVersionUID = 7916356957929853567L;
 
     private String                           code             = null;

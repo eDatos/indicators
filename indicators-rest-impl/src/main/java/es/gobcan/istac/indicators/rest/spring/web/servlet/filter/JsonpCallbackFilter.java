@@ -18,12 +18,14 @@ import org.slf4j.LoggerFactory;
 
 public class JsonpCallbackFilter implements Filter {
 
-    private static Logger log           = LoggerFactory.getLogger(JsonpCallbackFilter.class);
-    private static String CALBACK_PARAM = "_callback";
+    private static final Logger LOG           = LoggerFactory.getLogger(JsonpCallbackFilter.class);
+    private static final String CALBACK_PARAM = "_callback";
 
+    @Override
     public void init(FilterConfig fConfig) throws ServletException {
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -32,8 +34,8 @@ public class JsonpCallbackFilter implements Filter {
         Map<String, String[]> parms = httpRequest.getParameterMap();
 
         if (parms.containsKey(CALBACK_PARAM)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Wrapping response with JSONP callback '" + parms.get(CALBACK_PARAM)[0] + "'");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Wrapping response with JSONP callback '" + parms.get(CALBACK_PARAM)[0] + "'");
             }
 
             OutputStream out = httpResponse.getOutputStream();
@@ -41,7 +43,7 @@ public class JsonpCallbackFilter implements Filter {
             GenericResponseWrapper wrapper = new GenericResponseWrapper(httpResponse);
 
             chain.doFilter(request, wrapper);
-            
+
             byte[] startCallbackFunction = new String(parms.get(CALBACK_PARAM)[0] + "(").getBytes();
             byte[] endCallbackFunction = new String(");").getBytes();
             wrapper.setContentLength(startCallbackFunction.length + wrapper.getData().length + endCallbackFunction.length);
@@ -58,6 +60,7 @@ public class JsonpCallbackFilter implements Filter {
         }
     }
 
+    @Override
     public void destroy() {
     }
 }

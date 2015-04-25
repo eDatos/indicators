@@ -8,30 +8,10 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 
-@JsonPropertyOrder({
-    "type",
-    "unit",
-    "unitSymbol",
-    "unitSymbolPosition",
-    "unitMultiplier",
-    "significantDigits",
-    "decimalPlaces",
-    "min",
-    "max",
-    "denominatorLink",
-    "numeratorLink",
-    "isPercentage",
-    "percentageOf",
-    "baseValue",
-    "baseTime",
-    "baseLocation",
-    "baseQuantity"
-})
+@JsonPropertyOrder({"type", "unit", "unitSymbol", "unitSymbolPosition", "unitMultiplier", "significantDigits", "decimalPlaces", "min", "max", "denominatorLink", "numeratorLink", "isPercentage",
+        "percentageOf", "baseValue", "baseTime", "baseLocation", "baseQuantity"})
 public class QuantityType implements Serializable {
 
-    /**
-     * 
-     */
     private static final long              serialVersionUID   = -456489258156288381L;
 
     private QuantityTypeEnum               type               = null;
@@ -60,11 +40,11 @@ public class QuantityType implements Serializable {
     public void setType(QuantityTypeEnum type) {
         this.type = type;
     }
-    
+
     public Map<String, String> getUnit() {
         return unit;
     }
-    
+
     public void setUnit(Map<String, String> unit) {
         this.unit = unit;
     }
@@ -172,11 +152,11 @@ public class QuantityType implements Serializable {
     public void setBaseTime(MetadataRepresentationType baseTime) {
         this.baseTime = baseTime;
     }
-    
+
     public MetadataRepresentationType getBaseLocation() {
         return baseLocation;
     }
-    
+
     public void setBaseLocation(MetadataRepresentationType baseLocation) {
         this.baseLocation = baseLocation;
     }

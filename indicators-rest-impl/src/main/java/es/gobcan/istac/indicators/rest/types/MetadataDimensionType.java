@@ -6,17 +6,9 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "code",
-    "title",
-    "granularity",
-    "representation"
-})
+@JsonPropertyOrder({"code", "title", "granularity", "representation"})
 public class MetadataDimensionType implements Serializable {
 
-    /**
-     * 
-     */
     private static final long                serialVersionUID = 4899374311088453009L;
     private String                           code             = null;
     private Map<String, List<String>>        title            = null;

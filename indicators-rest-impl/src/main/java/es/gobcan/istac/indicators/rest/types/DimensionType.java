@@ -4,12 +4,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "uuid",
-    "parentUuid",
-    "orderInLevel",
-    "title"
-})
+@JsonPropertyOrder({"uuid", "parentUuid", "orderInLevel", "title"})
 public class DimensionType {
 
     private String              uuid         = null;

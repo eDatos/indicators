@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public class CacheUtils {
+public final class CacheUtils {
 
     private CacheUtils() {
     }

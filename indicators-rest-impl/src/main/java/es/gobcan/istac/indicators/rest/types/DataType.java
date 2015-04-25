@@ -6,17 +6,11 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-
-@JsonPropertyOrder({
-    "format",
-    "dimension",
-    "observation",
-    "attribute"
-})
+@JsonPropertyOrder({"format", "dimension", "observation", "attribute"})
 public class DataType implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long                serialVersionUID = 8269216607592124587L;
 

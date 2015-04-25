@@ -2,10 +2,7 @@ package es.gobcan.istac.indicators.rest.types;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "code",
-    "message"
-})
+@JsonPropertyOrder({"code", "message"})
 public class ErrorType {
 
     private String code    = null;

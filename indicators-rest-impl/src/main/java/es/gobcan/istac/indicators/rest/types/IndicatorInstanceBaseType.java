@@ -1,34 +1,26 @@
 package es.gobcan.istac.indicators.rest.types;
 
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
 import java.io.Serializable;
 import java.util.Map;
 
-@JsonPropertyOrder({
-        "id",
-        "kind",
-        "selfLink",
-        "parentLink",
-        "title",
-        "conceptDescription"
-})
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "kind", "selfLink", "parentLink", "title", "conceptDescription"})
 public class IndicatorInstanceBaseType implements Serializable {
 
-    private static final long serialVersionUID = -2902494676944136458L;
+    private static final long   serialVersionUID = -2902494676944136458L;
 
-    private String id;
-    private String kind;
-    private String selfLink;
-    private LinkType parentLink;
-    private String systemCode;
+    private String              id;
+    private String              kind;
+    private String              selfLink;
+    private LinkType            parentLink;
+    private String              systemCode;
 
     private Map<String, String> title;
     private Map<String, String> conceptDescription;
 
-
-    private MetadataType metadata;
-    private DataType data;
+    private MetadataType        metadata;
+    private DataType            data;
 
     public String getId() {
         return id;

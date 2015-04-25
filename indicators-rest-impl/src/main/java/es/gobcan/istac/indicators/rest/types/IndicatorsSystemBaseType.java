@@ -8,23 +8,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.joda.time.DateTime;
 
-@JsonPropertyOrder({
-    "id",
-    "kind",
-    "selfLink",
-    "code",
-    "version",
-    "publicationDate",
-    "title",
-    "acronym",
-    "statisticalOperationLink",
-    "description",
-    "objective"
-})
+@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "publicationDate", "title", "acronym", "statisticalOperationLink", "description", "objective"})
 public class IndicatorsSystemBaseType implements Serializable {
-    
+
     /**
-     * 
+     *
      */
     private static final long   serialVersionUID         = 5785494152459693755L;
 

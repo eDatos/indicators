@@ -1,22 +1,13 @@
 package es.gobcan.istac.indicators.rest.types;
 
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
 import java.io.Serializable;
 import java.util.Map;
 
-@JsonPropertyOrder({
-    "code",
-    "title",
-    "latitude",
-    "longitude",
-    "quantity"
-})
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
+@JsonPropertyOrder({"code", "title", "latitude", "longitude", "quantity"})
 public class MetadataRepresentationType implements Serializable {
 
-    /**
-     * 
-     */
     private static final long   serialVersionUID = -7592282289916205999L;
     private String              code             = null;
     private Map<String, String> title            = null;
@@ -25,7 +16,7 @@ public class MetadataRepresentationType implements Serializable {
     private Double              longitude        = null;
     private QuantityType        quantity         = null;
 
-    private String granularityCode;
+    private String              granularityCode;
 
     public String getCode() {
         return code;
@@ -42,11 +33,11 @@ public class MetadataRepresentationType implements Serializable {
     public void setTitle(Map<String, String> title) {
         this.title = title;
     }
-    
+
     public QuantityType getQuantity() {
         return quantity;
     }
-    
+
     public void setQuantity(QuantityType quantity) {
         this.quantity = quantity;
     }

@@ -5,23 +5,11 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "id",
-    "kind",
-    "selfLink",
-    "parentLink",
-    "title",
-    "conceptDescription",
-    "subjectCode",
-    "subjectTitle",
-    "dimension",
-    "decimalPlaces",
-    "childLink"
-})
+@JsonPropertyOrder({"id", "kind", "selfLink", "parentLink", "title", "conceptDescription", "subjectCode", "subjectTitle", "dimension", "decimalPlaces", "childLink"})
 public class IndicatorInstanceType extends IndicatorInstanceBaseType implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long                  serialVersionUID = 4307766622180932870L;
 
@@ -58,15 +46,15 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
     public String getSubjectCode() {
         return subjectCode;
     }
-    
+
     public void setSubjectCode(String subjectCode) {
         this.subjectCode = subjectCode;
     }
-    
+
     public Map<String, String> getSubjectTitle() {
         return subjectTitle;
     }
-    
+
     public void setSubjectTitle(Map<String, String> subjectTitle) {
         this.subjectTitle = subjectTitle;
     }

@@ -10,6 +10,8 @@ public final class RESTURIUtil {
     public static final String REL_PREV       = "prev";
     public static final String REL_FIRST      = "first";
     public static final String REL_LAST       = "last";
+    public static final String LIMIT          = "limit";
+    public static final String OFFSET         = "offset";
 
     private RESTURIUtil() {
         throw new AssertionError();

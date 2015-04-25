@@ -1,11 +1,5 @@
 package es.gobcan.istac.indicators.rest.util;
 
-import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_FIRST;
-import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_LAST;
-import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_NEXT;
-import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_PREV;
-import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.createLinkHeader;
-
 import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,8 +7,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.LIMIT;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.OFFSET;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_FIRST;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_LAST;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_NEXT;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.REL_PREV;
+import static es.gobcan.istac.indicators.rest.util.RESTURIUtil.createLinkHeader;
 
 public class HttpHeaderUtil {
+
+    private HttpHeaderUtil() {
+    }
 
     //
     public static <T extends Serializable> HttpHeaders createPagedHeaders(final String httpUrl, final PagedResultType<T> pagedResultType) {
@@ -50,19 +54,19 @@ public class HttpHeaderUtil {
     }
 
     private static <T extends Serializable> String constructNextUri(final UriComponentsBuilder uriBuilder, final PagedResultType<T> pagedResultType) {
-        return uriBuilder.replaceQueryParam("offset", pagedResultType.getOffset() + pagedResultType.getLimit()).replaceQueryParam("limit", pagedResultType.getLimit()).build().encode().toUriString();
+        return uriBuilder.replaceQueryParam(OFFSET, pagedResultType.getOffset() + pagedResultType.getLimit()).replaceQueryParam(LIMIT, pagedResultType.getLimit()).build().encode().toUriString();
     }
 
     private static <T extends Serializable> String constructPrevPageUri(final UriComponentsBuilder uriBuilder, final PagedResultType<T> pagedResultType) {
-        return uriBuilder.replaceQueryParam("offset", pagedResultType.getOffset() + pagedResultType.getLimit()).replaceQueryParam("limit", pagedResultType.getLimit()).build().encode().toUriString();
+        return uriBuilder.replaceQueryParam(OFFSET, pagedResultType.getOffset() + pagedResultType.getLimit()).replaceQueryParam(LIMIT, pagedResultType.getLimit()).build().encode().toUriString();
     }
 
     private static <T extends Serializable> String constructFirstUri(final UriComponentsBuilder uriBuilder, final PagedResultType<T> pagedResultType) {
-        return uriBuilder.replaceQueryParam("offset", 0).replaceQueryParam("limit", pagedResultType.getLimit()).build().encode().toUriString();
+        return uriBuilder.replaceQueryParam(OFFSET, 0).replaceQueryParam(LIMIT, pagedResultType.getLimit()).build().encode().toUriString();
     }
 
     private static <T extends Serializable> String constructLastUri(final UriComponentsBuilder uriBuilder, final PagedResultType<T> pagedResultType) {
-        return uriBuilder.replaceQueryParam("offset", pagedResultType.getTotal() - pagedResultType.getLimit()).replaceQueryParam("limit", pagedResultType.getLimit()).build().encode().toUriString();
+        return uriBuilder.replaceQueryParam(OFFSET, pagedResultType.getTotal() - pagedResultType.getLimit()).replaceQueryParam(LIMIT, pagedResultType.getLimit()).build().encode().toUriString();
     }
 
     private static <T extends Serializable> boolean hasNext(final PagedResultType<T> pagedResultType) {

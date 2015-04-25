@@ -8,7 +8,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 
-public class ConditionUtil {
+public final class ConditionUtil {
 
     private ConditionUtil() {
     }

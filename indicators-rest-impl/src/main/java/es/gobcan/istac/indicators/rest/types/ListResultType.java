@@ -8,9 +8,6 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 @JsonPropertyOrder({"kind", "total", "items"})
 public class ListResultType<E extends Serializable> implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 3350142395512943541L;
 
     private String            kind             = null;

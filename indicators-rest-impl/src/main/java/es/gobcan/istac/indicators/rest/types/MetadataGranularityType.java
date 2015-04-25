@@ -5,15 +5,9 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({
-    "code",
-    "title"
-})
+@JsonPropertyOrder({"code", "title"})
 public class MetadataGranularityType implements Serializable {
 
-    /**
-     * 
-     */
     private static final long   serialVersionUID = -3847641180837422217L;
     private String              code             = null;
     private Map<String, String> title            = null;

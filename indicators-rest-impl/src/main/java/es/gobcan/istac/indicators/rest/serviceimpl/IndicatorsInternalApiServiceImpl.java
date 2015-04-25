@@ -47,7 +47,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public IndicatorVersion retrieveIndicatorByCode(String indicatorCode) throws MetamacException {
-        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+        List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
         conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.indicator().code(), indicatorCode));
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
 
@@ -62,7 +62,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public IndicatorVersion retrieveIndicator(String uuid) throws MetamacException {
-        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+        List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
         conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.indicator().uuid(), uuid));
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
 
