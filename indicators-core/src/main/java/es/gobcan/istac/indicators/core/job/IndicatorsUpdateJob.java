@@ -4,7 +4,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -22,9 +21,8 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 @DisallowConcurrentExecution
 public class IndicatorsUpdateJob implements Job {
 
-    private static Logger         logger = LoggerFactory.getLogger(IndicatorsUpdateJob.class);
+    private static Logger           LOG = LoggerFactory.getLogger(IndicatorsUpdateJob.class);
 
-    
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
     public IndicatorsUpdateJob() {
@@ -36,21 +34,20 @@ public class IndicatorsUpdateJob implements Job {
         }
         return indicatorsServiceFacade;
     }
-    
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
 
         ServiceContext serviceContext = new ServiceContext("updateJob", context.getFireInstanceId(), "metamac-core");
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
-        
+
         try {
             getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
         } catch (MetamacException e) {
-            logger.error("Error updating indicators Data");
+            LOG.error("Error updating indicators Data", e);
         }
     }
 }

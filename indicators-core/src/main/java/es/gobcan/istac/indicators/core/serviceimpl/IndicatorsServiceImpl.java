@@ -473,8 +473,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorVersion.setSubjectTitle(title);
             LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());
         } catch (Exception e) {
-            LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
-                    + indicatorVersion.getVersionNumber());
+            LOG.warn(
+                    "Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
+                            + indicatorVersion.getVersionNumber(), e);
         }
     }
 
@@ -878,7 +879,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED, unitMultiplier.getUnitMultiplier());
             }
         } catch (DataIntegrityViolationException e) {
-            throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED, unitMultiplier.getUnitMultiplier());
+            throw new MetamacException(e, ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED, unitMultiplier.getUnitMultiplier());
         }
     }
 

@@ -875,7 +875,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                     throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
                 }
             } else {
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason", e);
+                throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
             }
         }
     }
@@ -980,7 +980,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED, geographicalGranularity.getCode());
             }
         } catch (DataIntegrityViolationException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED, geographicalGranularity.getCode());
+            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED, geographicalGranularity.getCode());
         }
     }
 

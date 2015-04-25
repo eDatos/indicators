@@ -1130,7 +1130,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         try {
             getIndicatorsService().deleteQuantityUnit(ctx, uuid);
         } catch (PersistenceException e) {
-            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_CAN_NOT_BE_REMOVED, uuid);
+            throw new MetamacException(e, ServiceExceptionType.QUANTITY_UNIT_CAN_NOT_BE_REMOVED, uuid);
         }
     }
 
