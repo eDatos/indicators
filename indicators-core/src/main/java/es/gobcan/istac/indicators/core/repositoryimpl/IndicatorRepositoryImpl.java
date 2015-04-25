@@ -9,6 +9,9 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.ListBlockIterator;
+import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 
 /**
  * Repository implementation for Indicator
@@ -19,6 +22,7 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
     public IndicatorRepositoryImpl() {
     }
 
+    @Override
     public Indicator retrieveIndicator(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
@@ -33,10 +37,16 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid) {
-        Query query = getEntityManager().createQuery("select distinct(i.uuid) from Indicator i where i.uuid in (:uuids) and i.isPublished = false");
-        query.setParameter("uuids", indicatorsUuid);
-        List<String> result = query.getResultList();
-        return result;
+        return new ListBlockIterator<String, String>(indicatorsUuid, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, String>() {
+
+            @Override
+            public List<String> apply(List<String> sublist) {
+                String queryHql = "select distinct(i.uuid) from Indicator i where i.uuid in (:uuids) and i.isPublished = false";
+                Query query = getEntityManager().createQuery(queryHql);
+                query.setParameter("uuids", sublist);
+                return query.getResultList();
+            }
+        });
     }
-    
+
 }

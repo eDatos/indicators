@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
@@ -16,6 +20,18 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEn
  * Mocks
  */
 public class IndicatorsMocks extends MetamacMocks {
+
+    // -----------------------------------------------------------------
+    // LISTS
+    // -----------------------------------------------------------------
+    public static List<String> mockUuidsList(Integer listSize) {
+        List<String> randomUuidsList = new ArrayList<String>();
+
+        for (int i = 0; i < listSize; i++) {
+            randomUuidsList.add(UUID.randomUUID().toString());
+        }
+        return randomUuidsList;
+    }
 
     // -----------------------------------------------------------------
     // INTERNATIONAL STRING
@@ -78,6 +94,10 @@ public class IndicatorsMocks extends MetamacMocks {
         return target;
     }
 
+    // -----------------------------------------------------------------
+    // GEOGRAPHIC GRANULARITY AND VALUE
+    // -----------------------------------------------------------------
+
     /**
      * Mock a GeographicalGranularity
      */
@@ -106,6 +126,10 @@ public class IndicatorsMocks extends MetamacMocks {
         return geographicalValueDto;
     }
 
+    // -----------------------------------------------------------------
+    // QUANTITY UNIT
+    // -----------------------------------------------------------------
+
     /**
      * Mock a QuantityUnit
      */
@@ -116,6 +140,10 @@ public class IndicatorsMocks extends MetamacMocks {
         quantityUnitDto.setTitle(mockInternationalStringDto(locale, label));
         return quantityUnitDto;
     }
+
+    // -----------------------------------------------------------------
+    // UNIT MULTIPLIER
+    // -----------------------------------------------------------------
 
     /**
      * Mock a UnitMultiplier

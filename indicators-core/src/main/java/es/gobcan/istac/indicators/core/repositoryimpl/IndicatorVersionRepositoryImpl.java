@@ -14,6 +14,9 @@ import org.springframework.stereotype.Repository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.ListBlockIterator;
+import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 
 /**
  * Repository implementation for IndicatorVersion
@@ -36,18 +39,21 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             return result.get(0);
         }
     }
-    
+
     @Override
     public IndicatorVersion findPublishedIndicatorVersionByCode(String indicatorCode) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("indicatorCode", indicatorCode);
         parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
-        
+
+        // @formatter:off
         String query = "from IndicatorVersion iv " +
-        		        "where iv.indicator.code = :indicatorCode " +
-        		        "and iv.procStatus = :publishedStatus " +
-        		        "and iv.indicator.diffusionVersionNumber != null " +
-        		        "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
+                       "where iv.indicator.code = :indicatorCode " +
+                                "and iv.procStatus = :publishedStatus " +
+                                "and iv.indicator.diffusionVersionNumber != null " +
+                                "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
+        // @formatter:on
+
         List<IndicatorVersion> result = findByQuery(query, parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -55,20 +61,22 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             return result.get(0);
         }
     }
-    
+
     @Override
     public List<IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("subjectCode", subjectCode);
         parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
-        
+
+        // @formatter:off
         String query = "from IndicatorVersion iv " +
-                        "where iv.subjectCode = :subjectCode " +
-                        "and iv.procStatus = :publishedStatus " +
-                        "and iv.indicator.diffusionVersionNumber != null " +
-                        "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
-        List<IndicatorVersion> result = findByQuery(query, parameters, Integer.MAX_VALUE);
-        return result;
+                       "where iv.subjectCode = :subjectCode " +
+                           "and iv.procStatus = :publishedStatus " +
+                           "and iv.indicator.diffusionVersionNumber != null " +
+                           "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
+        // @formatter:on
+
+        return findByQuery(query, parameters, Integer.MAX_VALUE);
     }
 
     @Override
@@ -109,66 +117,72 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.procStatus = :procStatus group by iv.subjectCode");
         query.setParameter("procStatus", IndicatorProcStatusEnum.PUBLISHED);
         List<Object> results = query.getResultList();
-        
+
         List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
         if (results != null) {
             for (Object result : results) {
-                String subjectCode = (String)((Object[]) result)[0];
-                InternationalString subjectTitle = (InternationalString)((Object[]) result)[1];
-                
+                String subjectCode = (String) ((Object[]) result)[0];
+                InternationalString subjectTitle = (InternationalString) ((Object[]) result)[1];
+
                 SubjectIndicatorResult subject = new SubjectIndicatorResult();
                 subject.setId(subjectCode);
                 subject.setTitle(subjectTitle);
                 subjectsResults.add(subject);
             }
-        } 
+        }
         return subjectsResults;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException {
         Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.isLastVersion = true group by iv.subjectCode");
         List<Object> results = query.getResultList();
-        
+
         List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
         if (results != null) {
             for (Object result : results) {
-                String subjectCode = (String)((Object[]) result)[0];
-                InternationalString subjectTitle = (InternationalString)((Object[]) result)[1];
-                
+                String subjectCode = (String) ((Object[]) result)[0];
+                InternationalString subjectTitle = (InternationalString) ((Object[]) result)[1];
+
                 SubjectIndicatorResult subject = new SubjectIndicatorResult();
                 subject.setId(subjectCode);
                 subject.setTitle(subjectTitle);
                 subjectsResults.add(subject);
             }
-        } 
+        }
         return subjectsResults;
     }
-    
+
     @Override
     public List<IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException {
-        StringBuffer querySql = new StringBuffer();
-        if (dataGpeUuids == null || dataGpeUuids.size() == 0) {
-            return new ArrayList<IndicatorVersion>();
-        }
+        return new ListBlockIterator<String, IndicatorVersion>(dataGpeUuids, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, IndicatorVersion>() {
 
-        querySql.append("select indV ");
-        querySql.append("from IndicatorVersion as indV ");
-        querySql.append("inner join indV.dataSources as ds ");
-        querySql.append("where ds.dataGpeUuid in (:dataGpeUuids)");
-        
-        Query query = getEntityManager().createQuery(querySql.toString());
-        query.setParameter("dataGpeUuids", dataGpeUuids);
-        List<IndicatorVersion> results = query.getResultList();
-        return results;
+            @SuppressWarnings("unchecked")
+            @Override
+            public List<IndicatorVersion> apply(List<String> sublist) {
+                StringBuffer querySql = new StringBuffer();
+                if (sublist == null || sublist.size() == 0) {
+                    return new ArrayList<IndicatorVersion>();
+                }
+
+                querySql.append("select indV ");
+                querySql.append("from IndicatorVersion as indV ");
+                querySql.append("inner join indV.dataSources as ds ");
+                querySql.append("where ds.dataGpeUuid in (:dataGpeUuids)");
+
+                Query query = getEntityManager().createQuery(querySql.toString());
+                query.setParameter("dataGpeUuids", sublist);
+                return query.getResultList();
+            }
+        });
     }
-    
+
+    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException {
         Query query = getEntityManager().createQuery("from IndicatorVersion iv where iv.needsUpdate = true");
-        List<IndicatorVersion> result = query.getResultList();
-        return result;
+        return query.getResultList();
     }
 
 }
