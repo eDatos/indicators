@@ -19,6 +19,8 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.InternationalStringProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +93,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Autowired
     private ConfigurationService                   configurationService;
+
+    private static Logger                          LOG = LoggerFactory.getLogger(IndicatorsServiceFacadeImpl.class);
 
     public IndicatorsServiceFacadeImpl() {
     }
@@ -952,7 +956,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         try {
             getIndicatorsSystemsService().deleteGeographicalValue(ctx, uuid);
         } catch (PersistenceException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid, e);
+            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
         }
 
     }
@@ -1046,7 +1050,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         try {
             getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
         } catch (PersistenceException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid, e);
+            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
         }
     }
 
