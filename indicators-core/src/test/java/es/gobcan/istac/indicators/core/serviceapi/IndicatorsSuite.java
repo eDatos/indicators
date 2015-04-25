@@ -4,8 +4,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import es.gobcan.istac.indicators.core.repositoryimpl.IndicatorRepositoryTest;
+import es.gobcan.istac.indicators.core.repositoryimpl.IndicatorVersionRepositoryTest;
+import es.gobcan.istac.indicators.core.repositoryimpl.IndicatorVersionTimeCoverageRepositoryTest;
+
 @RunWith(Suite.class)
-@SuiteClasses({ 
+// @formatter:off
+@SuiteClasses({
     IndicatorsDataServiceBatchUpdateTest.class,
     IndicatorsDataServiceDataGpeTest.class,
     IndicatorsDataServicePopulateTest.class,
@@ -24,8 +29,12 @@ import org.junit.runners.Suite.SuiteClasses;
     FillData.class,
     IndicatorsConfigurationServiceTest.class,
     TimeVariableUtilsTest.class,
-    IndicatorsServiceVersioningTest.class
+    IndicatorsServiceVersioningTest.class,
+    IndicatorRepositoryTest.class,
+    IndicatorVersionRepositoryTest.class,
+    IndicatorVersionTimeCoverageRepositoryTest.class
                 })
+//@formatter:on
 public class IndicatorsSuite {
-    
+
 }
