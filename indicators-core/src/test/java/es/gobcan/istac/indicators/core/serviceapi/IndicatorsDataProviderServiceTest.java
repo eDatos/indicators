@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Spring based transactional test with DbUnit support.
  * This class depends on a Jaxi instance
  */
-public class IndicatorsDataProviderServiceTest extends AbstractDbUnitJpaTests implements IndicatorsDataProviderServiceTestBase {
+public class IndicatorsDataProviderServiceTest implements IndicatorsDataProviderServiceTestBase {
 
     @Autowired
     protected IndicatorsDataProviderService indicatorsDataProviderService;
