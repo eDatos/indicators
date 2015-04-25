@@ -180,8 +180,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
     }
 
     @Override
@@ -587,8 +586,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
     }
 
     @Override
@@ -600,8 +598,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
     }
 
     @Override

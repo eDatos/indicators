@@ -154,8 +154,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkRetrieveDataDefinitions(null);
 
         // Find db
-        List<DataDefinition> dataDefinitions = getDataGpeRepository().findCurrentDataDefinitions();
-        return dataDefinitions;
+        return getDataGpeRepository().findCurrentDataDefinitions();
     }
 
     @Override
@@ -177,8 +176,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkFindDataDefinitionsByOperationCode(operationCode, null);
 
         // Find db
-        List<DataDefinition> result = getDataGpeRepository().findCurrentDataDefinitionsByOperationCode(operationCode);
-        return result;
+        return getDataGpeRepository().findCurrentDataDefinitionsByOperationCode(operationCode);
     }
 
     @Override

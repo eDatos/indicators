@@ -937,8 +937,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (indicator.getProductionVersionNumber() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionProduction = retrieveIndicator(ctx, uuid, indicator.getProductionVersionNumber());
-        return indicatorVersionProduction;
+        return retrieveIndicator(ctx, uuid, indicator.getProductionVersionNumber());
     }
 
     /**
@@ -952,8 +951,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (indicator.getDiffusionVersionNumber() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionDiffusion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersionNumber());
-        return indicatorVersionDiffusion;
+        return retrieveIndicator(ctx, uuid, indicator.getDiffusionVersionNumber());
     }
 
     /**

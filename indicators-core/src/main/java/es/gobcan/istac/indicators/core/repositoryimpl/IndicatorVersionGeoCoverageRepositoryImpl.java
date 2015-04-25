@@ -86,9 +86,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         query.setParameter("indicatorVersion", indicatorVersion);
         query.setParameter("granularityUuid", geographicalGranularityUuid);
 
-        List<GeographicalCodeVO> geographicalCodes = extractGeographicalCodes(query.getResultList());
-
-        return geographicalCodes;
+        return extractGeographicalCodes(query.getResultList());
     }
 
     @Override

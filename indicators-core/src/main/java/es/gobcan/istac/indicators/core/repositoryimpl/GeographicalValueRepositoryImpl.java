@@ -1,16 +1,15 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-import es.gobcan.istac.indicators.core.util.ListBlockIterator;
-import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.ListBlockIterator;
+import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 
 /**
  * Repository implementation for GeographicalValue
@@ -21,6 +20,7 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
     public GeographicalValueRepositoryImpl() {
     }
 
+    @Override
     public GeographicalValue retrieveGeographicalValue(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
@@ -46,22 +46,21 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
 
     @Override
     public List<GeographicalValue> findGeographicalValuesByCodes(List<String> codes) {
-        List<GeographicalValue> geoValues = new ListBlockIterator<String, GeographicalValue>(codes, ServiceUtils.ORACLE_IN_MAX)
-                .iterate(new ListBlockIteratorFn<String, GeographicalValue>() {
-                    public List<GeographicalValue> apply(List<String> subcodes) {
-                        Map<String, Object> parameters = new HashMap<String, Object>();
-                        parameters.put("codes", subcodes);
-                        return findByQuery("from GeographicalValue gv where gv.code in (:codes)", parameters);
-                    }
-                });
-        return geoValues;
+        return new ListBlockIterator<String, GeographicalValue>(codes, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, GeographicalValue>() {
+
+            @Override
+            public List<GeographicalValue> apply(List<String> subcodes) {
+                Map<String, Object> parameters = new HashMap<String, Object>();
+                parameters.put("codes", subcodes);
+                return findByQuery("from GeographicalValue gv where gv.code in (:codes)", parameters);
+            }
+        });
     }
 
     @Override
     public List<GeographicalValue> findGeographicalValuesByGranularity(String granularityCode) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("code", granularityCode);
-        List<GeographicalValue> result = findByQuery("select gv from GeographicalValue gv inner join gv.granularity as gra where gra.code = :code", parameters);
-        return result;
+        return findByQuery("select gv from GeographicalValue gv inner join gv.granularity as gra where gra.code = :code", parameters);
     }
 }
