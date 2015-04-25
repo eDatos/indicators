@@ -15,6 +15,9 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
  */
 public class IndicatorUtils {
 
+    private IndicatorUtils() {
+    }
+
     public static Boolean isQuantityOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.QUANTITY.equals(type) || isAmountOrExtension(type) || isMagnitudeOrExtension(type);
     }

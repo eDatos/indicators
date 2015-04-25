@@ -21,6 +21,9 @@ import es.gobcan.istac.indicators.core.domain.RateDerivation;
 
 public class DoCopyUtils {
 
+    private DoCopyUtils() {
+    }
+
     /**
      * Create a new IndicatorsSystemVersion copying values from a source
      */

@@ -18,8 +18,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -103,7 +101,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private IndicatorsConfigurationService   configurationService;
-    private final Logger                     LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger              LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
     public static final String               GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
     public static final String               TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
@@ -144,8 +142,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkRetrieveDataDefinitionsOperationsCodes(null);
 
         // Find db
-        List<String> operationsCodes = getDataGpeRepository().findCurrentDataDefinitionsOperationsCodes();
-        return operationsCodes;
+        return getDataGpeRepository().findCurrentDataDefinitionsOperationsCodes();
     }
 
     @Override
@@ -985,7 +982,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
 
-        rebuildTimeCoverageCache(ctx, indicatorVersion);
+        rebuildTimeCoverageCache(indicatorVersion);
     }
 
     private void rebuildGeoCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
@@ -1056,17 +1053,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void rebuildTimeCoverageCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void rebuildTimeCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating time coverage cache for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
 
         getIndicatorVersionTimeCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
 
-        buildIndicatorVersionTimeCoverageCache(ctx, indicatorVersion);
+        buildIndicatorVersionTimeCoverageCache(indicatorVersion);
 
         LOG.info("Updated time coverage cache for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
     }
 
-    private void buildIndicatorVersionTimeCoverageCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void buildIndicatorVersionTimeCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
         List<String> timeCodes = calculateTimeCodesInIndicatorVersionFromData(indicatorVersion);
 
         List<TimeGranularityEnum> granularities = getTimeCodesGranularities(timeCodes);
@@ -1916,7 +1913,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Private methods that get info from jaxi
      */
-    private DataStructure jsonToDataStructure(String json) throws JsonParseException, JsonMappingException, IOException {
+    private DataStructure jsonToDataStructure(String json) throws IOException {
         DataStructure target = new DataStructure();
         target = mapper.readValue(json, DataStructure.class);
         return target;
@@ -1925,7 +1922,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Private methods that get data from jaxi
      */
-    private Data jsonToData(String json) throws JsonParseException, JsonMappingException, IOException {
+    private Data jsonToData(String json) throws IOException {
         Data target = new Data();
         target = mapper.readValue(json, Data.class);
         return target;

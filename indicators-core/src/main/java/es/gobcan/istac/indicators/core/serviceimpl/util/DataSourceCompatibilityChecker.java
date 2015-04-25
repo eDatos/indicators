@@ -17,7 +17,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
-public class DataSourceCompatibilityChecker {
+public final class DataSourceCompatibilityChecker {
 
     private DataSourceCompatibilityChecker() {
     }

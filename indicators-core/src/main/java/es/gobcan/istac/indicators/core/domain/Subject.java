@@ -26,7 +26,7 @@ public class Subject {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof Subject) {
+        if (obj instanceof Subject) {
             return getKey().equals(((Subject) obj).getKey());
         } else {
             return false;

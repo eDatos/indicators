@@ -45,8 +45,8 @@ public class DsplDataset {
         }
     }
 
-    public void addSlices(Collection<DsplSlice> Slices) {
-        for (DsplSlice slice : Slices) {
+    public void addSlices(Collection<DsplSlice> slices) {
+        for (DsplSlice slice : slices) {
             this.slices.add(slice);
             if (slice.getTable() != null) {
                 this.tables.add(slice.getTable());

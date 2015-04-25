@@ -56,9 +56,9 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Autowired(required = false)
-    private SubjectRepository subjectRepository;
+    private SubjectRepository   subjectRepository;
 
-    private final Logger      LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     public IndicatorsServiceImpl() {
     }

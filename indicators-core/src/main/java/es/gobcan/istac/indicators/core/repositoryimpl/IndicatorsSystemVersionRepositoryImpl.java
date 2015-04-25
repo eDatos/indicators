@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.VERSION_NUMBER;
 
 /**
  * Repository implementation for IndicatorsSystemVersion
@@ -29,8 +31,8 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
     @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("uuid", uuid);
-        parameters.put("versionNumber", versionNumber);
+        parameters.put(UUID, uuid);
+        parameters.put(VERSION_NUMBER, versionNumber);
         List<IndicatorsSystemVersion> result = findByQuery("from IndicatorsSystemVersion isv where isv.indicatorsSystem.uuid = :uuid and isv.versionNumber = :versionNumber", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -43,14 +45,14 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
     public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
 
         ConditionRoot<IndicatorsSystemVersion> criteria = ConditionalCriteriaBuilder.criteriaFor(IndicatorsSystemVersion.class);
-        
+
         // Restrictions
         criteria.withProperty(IndicatorsSystemVersionProperties.procStatus()).eq(IndicatorsSystemProcStatusEnum.PUBLISHED);
         criteria.withProperty(new LeafProperty<IndicatorsSystemVersion>("childrenAllLevels.indicatorInstance.indicator", "uuid", false, IndicatorsSystemVersion.class)).eq(indicatorUuid);
-        
+
         // Distinct
         criteria.distinctRoot();
-        
+
         List<ConditionalCriteria> conditions = criteria.build();
         PagingParameter pagingParameter = PagingParameter.noLimits();
 

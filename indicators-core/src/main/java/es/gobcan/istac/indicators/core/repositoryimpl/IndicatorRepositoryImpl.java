@@ -12,6 +12,8 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUIDS;
 
 /**
  * Repository implementation for Indicator
@@ -25,7 +27,7 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
     @Override
     public Indicator retrieveIndicator(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("uuid", uuid);
+        parameters.put(UUID, uuid);
         List<Indicator> result = findByQuery("from Indicator i where i.uuid = :uuid", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -43,7 +45,7 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
             public List<String> apply(List<String> sublist) {
                 String queryHql = "select distinct(i.uuid) from Indicator i where i.uuid in (:uuids) and i.isPublished = false";
                 Query query = getEntityManager().createQuery(queryHql);
-                query.setParameter("uuids", sublist);
+                query.setParameter(UUIDS, sublist);
                 return query.getResultList();
             }
         });

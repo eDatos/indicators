@@ -17,6 +17,13 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.DATA_GPE_UUIDS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PROC_STATUS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PUBLISHED_STATUS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.VERSION_NUMBER;
 
 /**
  * Repository implementation for IndicatorVersion
@@ -30,8 +37,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
     @Override
     public IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("uuid", uuid);
-        parameters.put("versionNumber", versionNumber);
+        parameters.put(UUID, uuid);
+        parameters.put(VERSION_NUMBER, versionNumber);
         List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.indicator.uuid = :uuid and iv.versionNumber = :versionNumber", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -43,8 +50,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
     @Override
     public IndicatorVersion findPublishedIndicatorVersionByCode(String indicatorCode) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("indicatorCode", indicatorCode);
-        parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
+        parameters.put(INDICATOR_CODE, indicatorCode);
+        parameters.put(PUBLISHED_STATUS, IndicatorProcStatusEnum.PUBLISHED);
 
         // @formatter:off
         String query = "from IndicatorVersion iv " +
@@ -65,8 +72,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
     @Override
     public List<IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("subjectCode", subjectCode);
-        parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
+        parameters.put(SUBJECT_CODE, subjectCode);
+        parameters.put(PUBLISHED_STATUS, IndicatorProcStatusEnum.PUBLISHED);
 
         // @formatter:off
         String query = "from IndicatorVersion iv " +
@@ -83,7 +90,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
     public IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid) {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("uuid", indicatorUuid);
+        parameters.put(UUID, indicatorUuid);
 
         // Important! Queries must be executed separately because indicator can have different value of indicator in numerator, denominator..
 
@@ -115,7 +122,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
     @Override
     public List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException {
         Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.procStatus = :procStatus group by iv.subjectCode");
-        query.setParameter("procStatus", IndicatorProcStatusEnum.PUBLISHED);
+        query.setParameter(PROC_STATUS, IndicatorProcStatusEnum.PUBLISHED);
         List<Object> results = query.getResultList();
 
         List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
@@ -172,7 +179,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
                 querySql.append("where ds.dataGpeUuid in (:dataGpeUuids)");
 
                 Query query = getEntityManager().createQuery(querySql.toString());
-                query.setParameter("dataGpeUuids", sublist);
+                query.setParameter(DATA_GPE_UUIDS, sublist);
                 return query.getResultList();
             }
         });

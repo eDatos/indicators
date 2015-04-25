@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
 
 /**
  * Repository implementation for IndicatorVersionMeasureCoverage
@@ -31,7 +32,7 @@ public class IndicatorVersionMeasureCoverageRepositoryImpl extends IndicatorVers
         queryHql += "where measureCoverage.indicatorVersion = :indicatorVersion ";
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("indicatorVersion", indicatorVersion);
+        parameters.put(INDICATOR_VERSION, indicatorVersion);
         List<IndicatorVersionMeasureCoverage> results = findByQuery(queryHql, parameters);
 
         List<MeasureValue> measureValues = new ArrayList<MeasureValue>();
@@ -54,7 +55,7 @@ public class IndicatorVersionMeasureCoverageRepositoryImpl extends IndicatorVers
     @Override
     public void deleteCoverageForIndicatorVersion(IndicatorVersion indicatorVersion) {
         Query query = getEntityManager().createQuery("delete IndicatorVersionMeasureCoverage where indicatorVersion = :indicatorVersion");
-        query.setParameter("indicatorVersion", indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
         query.executeUpdate();
     }
 

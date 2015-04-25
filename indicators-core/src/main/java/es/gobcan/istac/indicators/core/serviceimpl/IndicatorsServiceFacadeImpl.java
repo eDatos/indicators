@@ -94,7 +94,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Autowired
     private ConfigurationService                   configurationService;
 
-    private static Logger                          LOG = LoggerFactory.getLogger(IndicatorsServiceFacadeImpl.class);
+    private static final Logger                    LOG = LoggerFactory.getLogger(IndicatorsServiceFacadeImpl.class);
 
     public IndicatorsServiceFacadeImpl() {
     }

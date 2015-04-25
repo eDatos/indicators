@@ -138,7 +138,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(systemCode, granularityUuid, null);
 
-        // IDEA: cOULD BE ONE SINGLE QUERY
+        // IDEA: COULD BE ONE SINGLE QUERY
 
         List<IndicatorInstance> instances = getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystem(systemCode);
 
@@ -482,7 +482,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
-        return calculateTimeCoverageInIndicatorInstance(ctx, indInstance, indicatorVersion);
+        return calculateTimeCoverageInIndicatorInstance(indInstance, indicatorVersion);
     }
 
     @Override
@@ -493,16 +493,16 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
 
-        return calculateTimeCoverageInIndicatorInstance(ctx, indInstance, indicatorVersion);
+        return calculateTimeCoverageInIndicatorInstance(indInstance, indicatorVersion);
     }
 
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorInstanceWithIndicatorVersion(ServiceContext ctx, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion)
             throws MetamacException {
-        return calculateTimeCoverageInIndicatorInstance(ctx, indicatorInstance, indicatorVersion);
+        return calculateTimeCoverageInIndicatorInstance(indicatorInstance, indicatorVersion);
     }
 
-    private List<TimeValue> calculateTimeCoverageInIndicatorInstance(ServiceContext ctx, IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> calculateTimeCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
         if (indInstance.isFilteredByTimeValues()) {
             List<TimeValue> timeValues = getIndicatorVersionTimeCoverageRepository().retrieveCoverageFilteredByInstanceTimeValues(indicatorVersion, indInstance.getTimeValuesAsList());

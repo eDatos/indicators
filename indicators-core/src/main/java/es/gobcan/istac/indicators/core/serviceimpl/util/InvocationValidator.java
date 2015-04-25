@@ -39,6 +39,9 @@ import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 
 public class InvocationValidator {
 
+    private InvocationValidator() {
+    }
+
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
     // --------------------------------------------------------------------------------------------

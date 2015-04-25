@@ -14,6 +14,10 @@ import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID_OPERACION;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.LAST_UPDATE_DATE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.NOW;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUIDS;
 
 /**
  * Repository implementation for DataGpe
@@ -29,7 +33,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public List<String> findCurrentDataDefinitionsOperationsCodes() {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("now", now);
+        parameters.put(NOW, now);
 
         // @formatter:off
         String queryHql = "select distinct df.idOperacion "+
@@ -46,7 +50,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
                           "order by df.idOperacion";
         // @formatter:on
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("now", now);
+        query.setParameter(NOW, now);
         return query.getResultList();
     }
 
@@ -54,7 +58,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public List<DataDefinition> findCurrentDataDefinitions() {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("now", now);
+        parameters.put(NOW, now);
 
         // @formatter:off
         String query = "from DataDefinition df " +
@@ -75,8 +79,8 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public List<DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode) {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("now", now);
-        parameters.put("idOperacion", operationCode);
+        parameters.put(NOW, now);
+        parameters.put(ID_OPERACION, operationCode);
 
         // @formatter:off
         String query = "from DataDefinition df " +
@@ -98,7 +102,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public DataDefinition findCurrentDataDefinition(String uuid) {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("now", now);
+        parameters.put(NOW, now);
         parameters.put("uuid", uuid);
 
         // @formatter:off
@@ -122,6 +126,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> findDataDefinitionsWithDataUpdatedAfter(Date date) {
         Date now = Calendar.getInstance().getTime();
@@ -140,8 +145,8 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
                                                       " and df.uuid = df2.uuid)";
         // @formatter:on
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("now", now);
-        query.setParameter("lastUpdateDate", date);
+        query.setParameter(NOW, now);
+        query.setParameter(LAST_UPDATE_DATE, date);
         return query.getResultList();
     }
 
@@ -169,9 +174,9 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
                                 " and df.uuid = df2.uuid)";
                         // @formatter:on
                 Query query = getEntityManager().createQuery(queryHql);
-                query.setParameter("now", now);
-                query.setParameter("lastUpdateDate", date);
-                query.setParameter("uuids", subcodes);
+                query.setParameter(NOW, now);
+                query.setParameter(LAST_UPDATE_DATE, date);
+                query.setParameter(UUIDS, subcodes);
                 return query.getResultList();
             }
         });

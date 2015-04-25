@@ -21,6 +21,9 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public class ServiceUtils {
 
+    private ServiceUtils() {
+    }
+
     private static final NumberFormat formatterMajor                  = new DecimalFormat("0");
     private static final NumberFormat formatterMinor                  = new DecimalFormat("000");
     private static final String       SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
@@ -50,7 +53,7 @@ public class ServiceUtils {
 
     public static String dtoList2DtoString(List<String> source) {
         if (source == null || source.size() == 0) {
-            return null;
+            return StringUtils.EMPTY;
         }
         return StringUtils.join(source, SEPARATOR_LIST_DTO_TO_STRING_DO);
 

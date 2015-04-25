@@ -27,7 +27,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
-    private final Logger                   LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
+    private static final Logger            LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
 
     @Autowired
     @Qualifier("dataSourceSubjects")

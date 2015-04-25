@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.core.error;
 
 public class ServiceExceptionParameters {
 
+    private ServiceExceptionParameters() {
+    }
+
     public static final String UUID                                                                          = "parameter.indicators.uuid";
     public static final String CODE                                                                          = "parameter.indicators.code";
 

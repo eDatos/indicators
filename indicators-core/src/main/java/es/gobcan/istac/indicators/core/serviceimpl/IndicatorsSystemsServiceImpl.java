@@ -246,8 +246,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         conditions.add(ConditionalCriteria.equal(IndicatorsSystemVersionProperties.isLastVersion(), Boolean.TRUE));
 
         // Find
-        PagedResult<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findByCondition(conditions, pagingParameter);
-        return indicatorsSystemsVersions;
+        return getIndicatorsSystemVersionRepository().findByCondition(conditions, pagingParameter);
     }
 
     @Override
@@ -374,7 +373,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
 
         // Validate to publish
-        checkIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction);
+        checkIndicatorsSystemToPublish(uuid, indicatorsSystemInProduction);
 
         // Update proc status
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PUBLISHED);
@@ -936,7 +935,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public GeographicalGranularity createGeographicalGranularity(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkCreateGeographicalGranularity(null, geographicalGranularity);
-        validateGeographicalGranularityCodeUnique(ctx, geographicalGranularity);
+        validateGeographicalGranularityCodeUnique(geographicalGranularity);
 
         // Repository operation
         return getGeographicalGranularityRepository().save(geographicalGranularity);
@@ -946,7 +945,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public GeographicalGranularity updateGeographicalGranularity(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkUpdateGeographicalGranularity(null, geographicalGranularity);
-        validateGeographicalGranularityCodeUnique(ctx, geographicalGranularity);
+        validateGeographicalGranularityCodeUnique(geographicalGranularity);
 
         // Repository operation
         return getGeographicalGranularityRepository().save(geographicalGranularity);
@@ -963,7 +962,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     }
 
-    private void validateGeographicalGranularityCodeUnique(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
+    private void validateGeographicalGranularityCodeUnique(GeographicalGranularity geographicalGranularity) throws MetamacException {
         // Prepare criteria
         PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
 
@@ -1152,8 +1151,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         if (indicatorsSystem.getDiffusionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND, uuid);
         }
-        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
-        return indicatorsSystemVersionDiffusion;
+        return retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
     }
 
     /**
@@ -1240,7 +1238,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Makes validations to publish
      * Checks actual processing status and if it is correct checks same conditions to send to production validation and additional conditions to publish
      */
-    private void checkIndicatorsSystemToPublish(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    private void checkIndicatorsSystemToPublish(String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 

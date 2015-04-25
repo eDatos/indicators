@@ -36,45 +36,29 @@ public class DataOperation {
                 return dataSource.getInterperiodPercentageRate().getMethodType();
             case INTERPERIOD_PUNTUAL_RATE:
                 return dataSource.getInterperiodPuntualRate().getMethodType();
+            default:
+                return null;
         }
-        return null;
     }
-    
+
     public boolean shouldBeRounded() {
         return true;
     }
-    
+
     public boolean isAnnualMethod() {
-        if (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureDimension)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureDimension));
     }
-    
+
     public boolean isInterPeriodMethod() {
-        if (MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureDimension)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureDimension));
     }
-    
-    
+
     public boolean isPercentageMethod() {
-        if (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension));
     }
-    
+
     public boolean isPuntualMethod() {
-        if (MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureDimension)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureDimension));
     }
 
     public MeasureDimensionTypeEnum getMeasureDimension() {
@@ -93,10 +77,11 @@ public class DataOperation {
                 return dataSource.getInterperiodPercentageRate().getMethod();
             case INTERPERIOD_PUNTUAL_RATE:
                 return dataSource.getInterperiodPuntualRate().getMethod();
+            default:
+                return null;
         }
-        return null;
     }
-    
+
     public RateDerivationRoundingEnum getRateRounding() {
         switch (measureDimension) {
             case ABSOLUTE:
@@ -110,10 +95,11 @@ public class DataOperation {
                 return dataSource.getInterperiodPercentageRate().getRounding();
             case INTERPERIOD_PUNTUAL_RATE:
                 return dataSource.getInterperiodPuntualRate().getRounding();
+            default:
+                return null;
         }
-        return null;
     }
-    
+
     public Quantity getQuantity() {
         switch (measureDimension) {
             case ABSOLUTE:
@@ -126,8 +112,9 @@ public class DataOperation {
                 return dataSource.getInterperiodPercentageRate().getQuantity();
             case INTERPERIOD_PUNTUAL_RATE:
                 return dataSource.getInterperiodPuntualRate().getQuantity();
+            default:
+                return null;
         }
-        return null;
     }
 
     public String getDataSourceUuid() {
@@ -165,6 +152,5 @@ public class DataOperation {
     public String getTimeValue() {
         return dataSource.getTimeValue();
     }
-    
 
 }

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GEO_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
 
 /**
  * Repository implementation for IndicatorVersionLastValueCache
@@ -19,6 +22,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
     public IndicatorVersionLastValueCacheRepositoryImpl() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorVersion> findLastNIndicatorsVersionsWithGeoCodeAndSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, int n) {
         String queryHql = "select distinct(tuple.indicatorVersion), tuple.lastDataUpdated ";
@@ -28,8 +32,8 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
         queryHql += "order by tuple.lastDataUpdated.datetime desc";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("subjectCode", subjectCode);
-        query.setParameter("geoCode", geoCode);
+        query.setParameter(SUBJECT_CODE, subjectCode);
+        query.setParameter(GEO_CODE, geoCode);
         query.setMaxResults(n);
 
         List<IndicatorVersion> indicatorsVersions = new ArrayList<IndicatorVersion>();
@@ -41,6 +45,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
         return indicatorsVersions;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public IndicatorVersionLastValueCache retrieveLastValueCacheForIndicatorVersionWithGeoCode(String indicatorUuid, String geoCode) {
         String queryHql = "select tuple ";
@@ -49,8 +54,8 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
         queryHql += "and tuple.indicatorVersion.indicator.uuid = :indicatorUuid ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorUuid", indicatorUuid);
-        query.setParameter("geoCode", geoCode);
+        query.setParameter(INDICATOR_UUID, indicatorUuid);
+        query.setParameter(GEO_CODE, geoCode);
 
         List<IndicatorVersionLastValueCache> latestValues = query.getResultList();
         if (latestValues != null && latestValues.size() > 0) {
@@ -59,6 +64,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteWithIndicatorVersion(String indicatorUuid) {
         String queryHql = "select tuple ";
@@ -66,7 +72,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
         queryHql += "where tuple.indicatorVersion.indicator.uuid = :indicatorUuid ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorUuid", indicatorUuid);
+        query.setParameter(INDICATOR_UUID, indicatorUuid);
 
         List<IndicatorVersionLastValueCache> entities = query.getResultList();
 

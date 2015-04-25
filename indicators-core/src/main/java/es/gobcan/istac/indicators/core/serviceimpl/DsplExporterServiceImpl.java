@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,6 +36,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTrans
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * Implementation of DsplExporterService.
@@ -95,7 +97,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             FileOutputStream fos = new FileOutputStream(zipFile);
             zos = new ZipOutputStream(fos);
 
-            if (dirToZip != null) {
+            if (dirToZip != null && dirToZip.list() != null) {
                 for (String file : dirToZip.list()) {
                     in = null;
                     ZipEntry ze = new ZipEntry(file);
@@ -130,7 +132,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return temp;
     }
 
-    private String generateDescriptorFile(File directory, DsplDataset dataset) throws Exception {
+    private String generateDescriptorFile(File directory, DsplDataset dataset) throws IOException, TemplateException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("dataset", dataset);
 
@@ -143,7 +145,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return generateFile(file, "dataset", parameters);
     }
 
-    private String generateDataFile(File directory, DsplTable table) throws Exception {
+    private String generateDataFile(File directory, DsplTable table) throws TemplateException, IOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("table", table);
 
@@ -154,7 +156,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return generateFile(file, "data", parameters);
     }
 
-    private String generateFile(File file, String templateName, Map<String, Object> parameters) throws Exception {
+    private String generateFile(File file, String templateName, Map<String, Object> parameters) throws TemplateException, IOException {
         String filename = file.getAbsolutePath();
         Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
         try {
@@ -168,7 +170,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return filename;
     }
 
-    private Template getTemplateFreemarker(String templateName) throws Exception {
+    private Template getTemplateFreemarker(String templateName) throws FileNotFoundException, IOException {
         Configuration cfg = new Configuration();
         cfg.setDefaultEncoding("UTF-8");
         URL url = Thread.currentThread().getContextClassLoader().getResource("templates/" + templateName + ".ftl");

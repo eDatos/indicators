@@ -10,6 +10,8 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
 
 /**
  * Repository implementation for DataSource
@@ -23,7 +25,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
     @Override
     public DataSource findDataSource(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("uuid", uuid);
+        parameters.put(UUID, uuid);
         List<DataSource> result = findByQuery("from DataSource d where d.uuid = :uuid", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
@@ -32,13 +34,13 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> findDatasourceDataGpeUuidLinkedToIndicatorVersion(Long indicatorVersionId) {
         String querySql = "select distinct(ds.dataGpeUuid) " + "from DataSource ds " + "where ds.dataGpeUuid is not null " + "and ds.indicatorVersion.id = :id";
         Query query = getEntityManager().createQuery(querySql);
-        query.setParameter("id", indicatorVersionId);
-        List<String> results = query.getResultList();
-        return results;
+        query.setParameter(ID, indicatorVersionId);
+        return query.getResultList();
     }
 
     @Override
@@ -64,7 +66,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
             for (int j = 0; j < quantityIndicatorsAttributes.length; j++) {
                 String quantityIndicatorsAttribute = quantityIndicatorsAttributes[j];
 
-                StringBuffer querySql = new StringBuffer();
+                StringBuilder querySql = new StringBuilder();
                 querySql.append("select d.");
                 querySql.append(rateAttribute);
                 querySql.append(".quantity.");
@@ -80,8 +82,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
     @SuppressWarnings("unchecked")
     private List<String> findIndicatorsLinkedCommon(Long indicatorVersionId, String querySql) {
         Query query = getEntityManager().createQuery(querySql);
-        query.setParameter("id", indicatorVersionId);
-        List<String> results = query.getResultList();
-        return results;
+        query.setParameter(ID, indicatorVersionId);
+        return query.getResultList();
     }
 }

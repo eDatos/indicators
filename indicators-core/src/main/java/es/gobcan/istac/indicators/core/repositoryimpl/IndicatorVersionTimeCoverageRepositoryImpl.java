@@ -21,16 +21,15 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_CODES;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_GRANULARITY;
 
 /**
  * Repository implementation for IndicatorVersionTimeCoverage
  */
 @Repository("indicatorVersionTimeCoverageRepository")
 public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersionTimeCoverageRepositoryBase {
-
-    private static final String QUERY_PARAMETER_TIME_GRANULARITY  = "timeGranularity";
-    private static final String QUERY_PARAMETER_TIME_CODES        = "timeCodes";
-    private static final String QUERY_PARAMETER_INDICATOR_VERSION = "indicatorVersion";
 
     public IndicatorVersionTimeCoverageRepositoryImpl() {
     }
@@ -43,7 +42,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
         queryHql += "where coverage.indicatorVersion = :indicatorVersion ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
 
         List<TimeGranularity> timeGranularities = new ArrayList<TimeGranularity>();
         List<Object> results = query.getResultList();
@@ -66,6 +65,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
         return timeGranularities;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<TimeGranularity> retrieveGranularityCoverageFilteredByInstanceTimeValues(IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException {
         String queryHql = "select distinct coverage.timeGranularity, coverage.granularityTranslation ";
@@ -84,7 +84,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
         queryHql += ") ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
         for (int i = 0; i < batchedList.size(); i++) {
             query.setParameter("timeCodes_" + i, batchedList.get(i));
         }
@@ -106,7 +106,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
     public List<TimeValue> retrieveCoverage(IndicatorVersion indicatorVersion) throws MetamacException {
         String queryHql = "from IndicatorVersionTimeCoverage where indicatorVersion = :indicatorVersion";
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
+        parameters.put(INDICATOR_VERSION, indicatorVersion);
         List<IndicatorVersionTimeCoverage> results = findByQuery(queryHql, parameters);
         List<TimeValue> timeValues = new ArrayList<TimeValue>();
         for (IndicatorVersionTimeCoverage coverage : results) {
@@ -119,6 +119,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
         return timeValues;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<TimeValue> retrieveCoverageByGranularity(IndicatorVersion indicatorVersion, String timeGranularityCode) throws MetamacException {
         String queryHql = "select distinct coverage.timeValue, coverage.translation ";
@@ -127,8 +128,8 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
         queryHql += "and coverage.timeGranularity = :timeGranularity ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
-        query.setParameter(QUERY_PARAMETER_TIME_GRANULARITY, timeGranularityCode);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(TIME_GRANULARITY, timeGranularityCode);
 
         List<TimeValue> timeValues = new ArrayList<TimeValue>();
         List<Object> results = query.getResultList();
@@ -156,8 +157,8 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
                 queryHql += "and   coverage.timeValue in (:timeCodes) ";
 
                 Query query = getEntityManager().createQuery(queryHql);
-                query.setParameter(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
-                query.setParameter(QUERY_PARAMETER_TIME_CODES, sublist);
+                query.setParameter(INDICATOR_VERSION, indicatorVersion);
+                query.setParameter(TIME_CODES, sublist);
 
                 return query.getResultList();
             }
@@ -179,7 +180,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
     @Override
     public void deleteCoverageForIndicatorVersion(IndicatorVersion indicatorVersion) {
         Query query = getEntityManager().createQuery("delete IndicatorVersionTimeCoverage where indicatorVersion = :indicatorVersion");
-        query.setParameter(QUERY_PARAMETER_INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
         query.executeUpdate();
     }
 

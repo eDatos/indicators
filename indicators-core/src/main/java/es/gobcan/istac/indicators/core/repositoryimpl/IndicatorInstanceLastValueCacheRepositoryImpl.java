@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValueCache;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GEO_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PUBLISHED_STATUS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SYSTEM_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID_INSTANCE;
 
 /**
  * Repository implementation for IndicatorInstanceLastValueCache
@@ -20,6 +24,7 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
     public IndicatorInstanceLastValueCacheRepositoryImpl() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorInstance> findLastNIndicatorsInstancesWithGeoCodeInIndicatorsSystemOrderedByLastUpdate(String systemCode, String geoCode, int n) {
         String queryHql = "select tuple.indicatorInstance, tuple.lastDataUpdated ";
@@ -31,9 +36,9 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         queryHql += "order by tuple.lastDataUpdated.datetime desc";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
-        query.setParameter("systemCode", systemCode);
-        query.setParameter("geoCode", geoCode);
+        query.setParameter(PUBLISHED_STATUS, IndicatorProcStatusEnum.PUBLISHED);
+        query.setParameter(SYSTEM_CODE, systemCode);
+        query.setParameter(GEO_CODE, geoCode);
         query.setMaxResults(n);
 
         List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
@@ -45,6 +50,7 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         return indicatorsInstances;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public IndicatorInstanceLastValueCache retrieveLastValueCacheForIndicatorInstanceWithGeoCode(String indicatorInstanceUuid, String geoCode) {
         String queryHql = "select tuple ";
@@ -53,8 +59,8 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         queryHql += "and tuple.geographicalCode = :geoCode ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("uuidInstance", indicatorInstanceUuid);
-        query.setParameter("geoCode", geoCode);
+        query.setParameter(UUID_INSTANCE, indicatorInstanceUuid);
+        query.setParameter(GEO_CODE, geoCode);
         List<IndicatorInstanceLastValueCache> latestValues = query.getResultList();
 
         if (latestValues != null && latestValues.size() > 0) {
@@ -63,6 +69,7 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void deleteWithIndicatorInstance(String indicatorInstanceUuid) {
         String queryHql = "select tuple ";
@@ -70,7 +77,7 @@ public class IndicatorInstanceLastValueCacheRepositoryImpl extends IndicatorInst
         queryHql += "where tuple.indicatorInstance.uuid = :uuidInstance ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("uuidInstance", indicatorInstanceUuid);
+        query.setParameter(UUID_INSTANCE, indicatorInstanceUuid);
 
         List<IndicatorInstanceLastValueCache> entities = query.getResultList();
         for (IndicatorInstanceLastValueCache entity : entities) {

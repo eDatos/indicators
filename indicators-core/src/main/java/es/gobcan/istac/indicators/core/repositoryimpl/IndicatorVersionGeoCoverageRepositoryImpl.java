@@ -18,6 +18,9 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalGranularityVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GRANULARITY_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_INSTANCE_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
 
 /**
  * Repository implementation for IndicatorVersionGeoCoverage
@@ -28,6 +31,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     public IndicatorVersionGeoCoverageRepositoryImpl() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<GeographicalGranularity> retrieveGranularityCoverage(IndicatorVersion indicatorVersion) {
 
@@ -36,7 +40,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         queryHql += "where geoCoverage.indicatorVersion = :indicatorVersion";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorVersion", indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
 
         return query.getResultList();
     }
@@ -83,8 +87,8 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         queryHql += "order by geoCoverage.geographicalValue.order";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorVersion", indicatorVersion);
-        query.setParameter("granularityUuid", geographicalGranularityUuid);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(GRANULARITY_UUID, geographicalGranularityUuid);
 
         return extractGeographicalCodes(query.getResultList());
     }
@@ -107,6 +111,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         return extractGeographicalValueVO(query.getResultList());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<GeographicalValue> retrieveValueCoverageFilteredByGranularity(IndicatorVersion indicatorVersion, String geographicalGranularityUuid) {
         String hql = "select geoCov.geographicalValue ";
@@ -116,8 +121,8 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         hql += "order by geoCov.geographicalValue.order ";
 
         Query query = getEntityManager().createQuery(hql);
-        query.setParameter("indicatorVersion", indicatorVersion);
-        query.setParameter("granularityUuid", geographicalGranularityUuid);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(GRANULARITY_UUID, geographicalGranularityUuid);
 
         return query.getResultList();
     }
@@ -132,8 +137,8 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         queryHql += "order by geoCoverage.geographicalValue.order";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorVersion", indicatorVersion);
-        query.setParameter("indicatorInstanceUuid", indicatorInstanceUuid);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(INDICATOR_INSTANCE_UUID, indicatorInstanceUuid);
 
         return extractGeographicalCodes(query.getResultList());
     }
@@ -170,9 +175,9 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         queryHql += "order by geoCoverage.geographicalValue.order";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("indicatorVersion", indicatorVersion);
-        query.setParameter("indicatorInstanceUuid", indicatorInstanceUuid);
-        query.setParameter("granularityUuid", geographicalGranularityUuid);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
+        query.setParameter(INDICATOR_INSTANCE_UUID, indicatorInstanceUuid);
+        query.setParameter(GRANULARITY_UUID, geographicalGranularityUuid);
 
         return extractGeographicalCodes(query.getResultList());
     }
@@ -203,11 +208,11 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
     @Override
     public void deleteCoverageForIndicatorVersion(IndicatorVersion indicatorVersion) {
         Query query = getEntityManager().createQuery("delete IndicatorVersionGeoCoverage where indicatorVersion = :indicatorVersion");
-        query.setParameter("indicatorVersion", indicatorVersion);
+        query.setParameter(INDICATOR_VERSION, indicatorVersion);
         query.executeUpdate();
     }
 
-    private List<GeographicalCodeVO> extractGeographicalCodes(List resultList) {
+    private List<GeographicalCodeVO> extractGeographicalCodes(List<Object> resultList) {
         List<GeographicalCodeVO> codes = new ArrayList<GeographicalCodeVO>();
         for (Object result : resultList) {
             Object[] fields = (Object[]) result;
@@ -222,7 +227,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         return codes;
     }
 
-    private List<GeographicalValueVO> extractGeographicalValueVO(List resultList) {
+    private List<GeographicalValueVO> extractGeographicalValueVO(List<Object> resultList) {
         Map<String, GeographicalValueVO> geoValues = new LinkedHashMap<String, GeographicalValueVO>();
         List<GeographicalValueVO> values = new ArrayList<GeographicalValueVO>();
         for (Object result : resultList) {
