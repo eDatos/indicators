@@ -146,10 +146,10 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
     @Override
     @SuppressWarnings("unchecked")
     public List<TimeValue> retrieveCoverageFilteredByInstanceTimeValues(final IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException {
-        List<TimeValue> results = new ListBlockIterator<String, TimeValue>(instanceTimeValues, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, TimeValue>() {
+        List<Object> results = new ListBlockIterator<String, Object>(instanceTimeValues, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, Object>() {
 
             @Override
-            public List<TimeValue> apply(List<String> sublist) {
+            public List<Object> apply(List<String> sublist) {
                 String queryHql = "select distinct coverage.timeValue, coverage.translation ";
                 queryHql += "from IndicatorVersionTimeCoverage coverage left outer join coverage.translation ";
                 queryHql += "where coverage.indicatorVersion = :indicatorVersion ";
