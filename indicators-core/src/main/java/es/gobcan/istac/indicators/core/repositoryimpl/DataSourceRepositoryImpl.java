@@ -20,6 +20,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
     public DataSourceRepositoryImpl() {
     }
 
+    @Override
     public DataSource findDataSource(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
@@ -30,13 +31,10 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
             return result.get(0);
         }
     }
-    
+
     @Override
     public List<String> findDatasourceDataGpeUuidLinkedToIndicatorVersion(Long indicatorVersionId) {
-        String querySql = "select distinct(ds.dataGpeUuid) " +
-        		          "from DataSource ds " +
-        		          "where ds.dataGpeUuid is not null " +
-        		          "and ds.indicatorVersion.id = :id";
+        String querySql = "select distinct(ds.dataGpeUuid) " + "from DataSource ds " + "where ds.dataGpeUuid is not null " + "and ds.indicatorVersion.id = :id";
         Query query = getEntityManager().createQuery(querySql);
         query.setParameter("id", indicatorVersionId);
         List<String> results = query.getResultList();
@@ -55,26 +53,27 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
         }
         return indicatorsUuidLinked;
     }
-    
+
     private List<String> buildQueriesToFindIndicatorsLinkedWithIndicatorVersion() {
-        String[] rateAttributes = new String[] {"annualPercentageRate", "interperiodPercentageRate"}; // Note: *puntualRate has not attributes with indicators
-        String[] quantityIndicatorsAttributes = new String[] {"numerator", "denominator", "baseQuantity"};
+        // Note: *puntualRate has not attributes with indicators
+        String[] rateAttributes = new String[]{"annualPercentageRate", "interperiodPercentageRate"};
+        String[] quantityIndicatorsAttributes = new String[]{"numerator", "denominator", "baseQuantity"};
         List<String> queriesSql = new ArrayList<String>();
         for (int i = 0; i < rateAttributes.length; i++) {
             String rateAttribute = rateAttributes[i];
             for (int j = 0; j < quantityIndicatorsAttributes.length; j++) {
                 String quantityIndicatorsAttribute = quantityIndicatorsAttributes[j];
-                
+
                 StringBuffer querySql = new StringBuffer();
                 querySql.append("select d.");
                 querySql.append(rateAttribute);
                 querySql.append(".quantity.");
                 querySql.append(quantityIndicatorsAttribute);
                 querySql.append(".uuid from DataSource d where d.indicatorVersion.id = :id");
-                
+
                 queriesSql.add(querySql.toString());
             }
-        }        
+        }
         return queriesSql;
     }
 

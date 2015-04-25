@@ -315,7 +315,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         InternationalStringDto title = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel(source.getTitle());
-        localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH); // title only in spanish
+        // title only in spanish
+        localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH);
         title.addText(localisedStringDto);
         target.setTitle(title);
 

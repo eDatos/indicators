@@ -77,7 +77,8 @@ public class DsplData {
         List<String> colNames = new ArrayList<String>();
 
         Set<String> locales = localisedColumns.get(colName);
-        if (locales == null) { // Not localised column
+        // Not localised column
+        if (locales == null) {
             colNames.add(colName);
         } else {
             List<String> localesSorted = new ArrayList<String>(locales);
@@ -227,7 +228,8 @@ public class DsplData {
                 } else if (valueLeft == valueRight && valueLeft == null) {
                     decision = 0;
                 } else if (valueLeft != null) {
-                    decision = 1; // null is less
+                    // null is less
+                    decision = 1;
                 } else {
                     decision = -1;
                 }

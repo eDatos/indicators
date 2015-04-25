@@ -87,7 +87,8 @@ public class TimeVariableUtils extends TimeUtils {
         switch (timeValue.getGranularity()) {
             case BIYEARLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                // Ignore granularity character
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod * 6);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
@@ -99,14 +100,16 @@ public class TimeVariableUtils extends TimeUtils {
             }
             case QUARTERLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                // Ignore granularity character
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod * 3);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
             case MONTHLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                // Ignore granularity character
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
@@ -183,7 +186,8 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeValueOrderByGranularity(timeValue1) < getTimeValueOrderByGranularity(timeValue2)) { // least the granularity is latest the value will be
+            // least the granularity is latest the value will be
+            if (getTimeValueOrderByGranularity(timeValue1) < getTimeValueOrderByGranularity(timeValue2)) {
                 return -1;
             } else if (getTimeValueOrderByGranularity(timeValue1) > getTimeValueOrderByGranularity(timeValue2)) {
                 return 1;
@@ -206,7 +210,8 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeValueOrderByGranularity(timeValue1) > getTimeValueOrderByGranularity(timeValue2)) { // highest the granularity is latest the value will be
+            // highest the granularity is latest the value will be
+            if (getTimeValueOrderByGranularity(timeValue1) > getTimeValueOrderByGranularity(timeValue2)) {
                 return -1;
             } else if (getTimeValueOrderByGranularity(timeValue1) < getTimeValueOrderByGranularity(timeValue2)) {
                 return 1;

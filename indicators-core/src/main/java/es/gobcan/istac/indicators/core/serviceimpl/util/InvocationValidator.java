@@ -633,7 +633,8 @@ public class InvocationValidator {
 
         checkDataSource(dataSource, exceptions);
         if (dataSource != null) {
-            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
         }
 

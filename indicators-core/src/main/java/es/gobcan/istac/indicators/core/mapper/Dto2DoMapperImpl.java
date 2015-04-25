@@ -91,7 +91,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         target = new IndicatorsSystemVersion();
         target.setIndicatorsSystem(new IndicatorsSystem());
-        target.getIndicatorsSystem().setCode(source.getCode()); // non modifiable after creation
+        // non modifiable after creation
+        target.getIndicatorsSystem().setCode(source.getCode());
 
         return target;
     }

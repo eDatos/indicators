@@ -103,7 +103,8 @@ public class ServiceUtils {
 
             @Override
             public int compare(LastValue o1, LastValue o2) {
-                return o1.getLastDataUpdated().compareTo(o2.getLastDataUpdated()) * (-1); // desc order
+                // desc order
+                return o1.getLastDataUpdated().compareTo(o2.getLastDataUpdated()) * (-1);
             }
         });
     }

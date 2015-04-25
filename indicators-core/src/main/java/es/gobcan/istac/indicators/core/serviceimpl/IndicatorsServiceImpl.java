@@ -262,7 +262,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicator.setProductionIdIndicatorVersion(null);
             indicator.setProductionVersionNumber(null);
             indicator.setProductionProcStatus(null);
-            indicator.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
+            // another version is now last version
+            indicator.getVersions().get(0).setIsLastVersion(Boolean.TRUE);
 
             // Update
             getIndicatorRepository().save(indicator);
@@ -428,7 +429,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
-        indicatorInProduction.setPublicationFailedDate(null); // remove posible failed information
+        // remove posible failed information
+        indicatorInProduction.setPublicationFailedDate(null);
         indicatorInProduction.setPublicationFailedUser(null);
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
@@ -929,7 +931,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private IndicatorVersion retrieveIndicatorProcStatusInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
         Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getProductionVersionNumber() == null && !throwsExceptionIfNotExistsInProduction) {
-            return null; // to throws an specific exception
+            // to throws an specific exception
+            return null;
         }
         if (indicator.getProductionVersionNumber() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);

@@ -224,7 +224,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
             indicatorsSystem.getVersions().remove(indicatorsSystemVersion);
             indicatorsSystem.setProductionVersion(null);
-            indicatorsSystem.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
+            // another version is now last version
+            indicatorsSystem.getVersions().get(0).setIsLastVersion(Boolean.TRUE);
 
             // Update
             getIndicatorsSystemRepository().save(indicatorsSystem);
@@ -1145,7 +1146,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     private IndicatorsSystemVersion retrieveIndicatorsSystemProcStatusInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(uuid);
         if (indicatorsSystem.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
-            return null; // to throws an specific exception
+            // to throws an specific exception
+            return null;
         }
         if (indicatorsSystem.getDiffusionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND, uuid);

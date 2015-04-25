@@ -155,15 +155,17 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
             public List<String> apply(List<String> subcodes) {
                 // @formatter:off
                         String queryHql = "select df.uuid " +
-                                "from DataDefinition df "+
+                                "from DataDefinition df " +
                                 "where df.uuid in (:uuids) " +
-                                "and df.availableEndDate is null "+
-                                "and df.dataUpdateDate > :lastUpdateDate "+
-                                "and df.availableStartDate = ("+
+                                "and df.availableEndDate is null " +
+                                "and df.dataUpdateDate > :lastUpdateDate " +
+                                "and df.availableStartDate = (" +
                                 " select max(df2.availableStartDate) " +
-                                " from DataDefinition df2 "+
-                                " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
-                                " and df2.availableEndDate is NULL "+ //It's not archived
+                                " from DataDefinition df2 " +
+                                // It's not a NOT visible query
+                                " where df2.availableStartDate <= :now " +
+                                // It's not archived
+                                " and df2.availableEndDate is NULL " +
                                 " and df.uuid = df2.uuid)";
                         // @formatter:on
                 Query query = getEntityManager().createQuery(queryHql);

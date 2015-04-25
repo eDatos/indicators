@@ -70,7 +70,7 @@ public class DoCopyUtils {
     }
 
     /**
-     * 
+     *
      */
     private static void copyElementsLevels(IndicatorsSystemVersion indicatorsSystemVersionSource, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
         List<ElementLevel> targets = new ArrayList<ElementLevel>();
@@ -127,7 +127,8 @@ public class DoCopyUtils {
      */
     public static IndicatorInstance copy(IndicatorInstance source) {
         IndicatorInstance target = new IndicatorInstance();
-        target.setCode(source.getCode()); // must remains with same code (but with different uuid)
+        // must remains with same code (but with different uuid)
+        target.setCode(source.getCode());
         target.setTitle(copy(source.getTitle()));
         target.setIndicator(source.getIndicator());
         target.setGeographicalGranularity(source.getGeographicalGranularity());
@@ -167,7 +168,7 @@ public class DoCopyUtils {
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
-        
+
         target.setSourceSurveyCode(source.getSourceSurveyCode());
         target.setSourceSurveyTitle(copy(source.getSourceSurveyTitle()));
         target.setSourceSurveyAcronym(copy(source.getSourceSurveyAcronym()));
@@ -222,7 +223,7 @@ public class DoCopyUtils {
             return null;
         }
         InternationalString target = new InternationalString();
-        target.getTexts().addAll(copyLocalisedStrings(source.getTexts(),target));
+        target.getTexts().addAll(copyLocalisedStrings(source.getTexts(), target));
         return target;
     }
 

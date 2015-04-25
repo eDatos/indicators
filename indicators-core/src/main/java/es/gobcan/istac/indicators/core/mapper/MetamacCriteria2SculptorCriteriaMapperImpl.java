@@ -274,7 +274,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
 
         @Override
         public Property<IndicatorsSystemVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            return null; // put default order
+            // put default order
+            return null;
         }
 
         @Override
