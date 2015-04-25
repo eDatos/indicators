@@ -1,11 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -25,6 +19,13 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -194,6 +195,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         assertNotNull(files);
         assertEquals(3, files.size());
     }
+
     @Test
     public void testExportInstancesMergingTimeGranularitiesDifferentQuantities() throws Exception {
         populateForIndicatorsSystem3();

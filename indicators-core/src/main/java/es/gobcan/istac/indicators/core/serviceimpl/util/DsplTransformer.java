@@ -83,7 +83,6 @@ public class DsplTransformer {
     private static final String              QUANTITY_FRACTION_CONCEPT_BASE    = "quantity:fraction";
     private static final String              QUANTITY_RATE_CONCEPT_BASE        = "quantity:rate";
     private static final String              QUANTITY_RATIO_CONCEPT_BASE       = "quantity:ratio";
-    private static final String              QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
     private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
     public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
@@ -368,13 +367,12 @@ public class DsplTransformer {
 
         concepts.addAll(createConceptsForUsedUnits(usedIndicators));
 
-        concepts.addAll(createConceptsForUsedQuantitiesNotInstances(usedIndicators, instances));
+        concepts.addAll(createConceptsForUsedQuantitiesNotInstances());
 
-        concepts.addAll(createConceptsForInstances(ctx, instances, usedIndicators));
+        concepts.addAll(createConceptsForInstances(instances, usedIndicators));
 
         return concepts;
     }
-
     private Set<IndicatorVersion> calculateUsedIndicators(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
         Set<IndicatorVersion> indicators = new HashSet<IndicatorVersion>();
 
@@ -392,7 +390,8 @@ public class DsplTransformer {
         if (!usedIndicators.contains(indicatorVersion)) {
             usedIndicators.add(indicatorVersion);
 
-            // referenced quantities seem not to work in data explorer. if a concept can link to other quantities in a near future this code should be uncommented
+            // referenced quantities seem not to work in data explorer.
+            // if a concept can link to other quantities in a near future this code should be uncommented
 
             /*
              * // For numerator and denominator quantities
@@ -466,18 +465,20 @@ public class DsplTransformer {
 
         data.setRows(Arrays.asList(row));
 
-        data.setColumnsToOrder(Arrays.asList(idColumnName)); // id is first column
+        // id is first column
+        data.setColumnsToOrder(Arrays.asList(idColumnName));
 
         return data;
     }
 
-    private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances(Set<IndicatorVersion> usedIndicators, List<IndicatorInstance> instances) {
-        // Referenced quantities seem not to work in data explorer, if they are this method should be implemented creating concepts associated to used quantities, but those quantities can't be
-        // instances quantities.
+    private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {
+        // Referenced quantities seem not to work in data explorer, if they are this method
+        // should be implemented creating concepts associated to used quantities, but those
+        // quantities can't be instances quantities.
         return new HashSet<DsplConcept>();
     }
 
-    private Set<DsplConcept> createConceptsForInstances(ServiceContext ctx, List<IndicatorInstance> instances, Set<IndicatorVersion> usedIndicators) {
+    private Set<DsplConcept> createConceptsForInstances(List<IndicatorInstance> instances, Set<IndicatorVersion> usedIndicators) throws MetamacException {
         Map<String, List<IndicatorInstance>> instancesByIndicator = groupInstancesByIndicator(instances);
 
         Set<DsplConcept> concepts = new HashSet<DsplConcept>();
@@ -510,7 +511,7 @@ public class DsplTransformer {
         return instancesByIndicator;
     }
 
-    private DsplConcept createConceptForQuantityIndicator(IndicatorVersion quantityIndicator) {
+    private DsplConcept createConceptForQuantityIndicator(IndicatorVersion quantityIndicator) throws MetamacException {
         DsplInfo info = new DsplInfo();
         populateDsplLocalisedTextForInternString(info.getName(), quantityIndicator.getTitle());
 
@@ -522,7 +523,7 @@ public class DsplTransformer {
         return concept;
     }
 
-    private void setConceptAttributesBasedOnQuantity(DsplConcept concept, Quantity quantity) {
+    private void setConceptAttributesBasedOnQuantity(DsplConcept concept, Quantity quantity) throws MetamacException {
         switch (quantity.getQuantityType()) {
             case QUANTITY:
                 applyConceptAttributesForQuantity(concept, quantity);
@@ -548,6 +549,8 @@ public class DsplTransformer {
             case CHANGE_RATE:
                 applyConceptAttributesForChangeRateQuantity(concept, quantity);
                 break;
+            default:
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Quantity type undefined: " + quantity.getQuantityType());
         }
     }
 
@@ -591,7 +594,6 @@ public class DsplTransformer {
     private void applyConceptAttributesForIndexQuantity(DsplConcept concept, Quantity quantity) {
         // Data explorer does not support index. Ratio or magnitude should be used
         applyConceptAttributesForRatioQuantity(concept, quantity);
-        // concept.setExtend(QUANTITY_INDEX_CONCEPT_BASE);
     }
 
     private void applyConceptAttributesForChangeRateQuantity(DsplConcept concept, Quantity quantity) {
@@ -663,7 +665,9 @@ public class DsplTransformer {
     private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
             throws MetamacException {
         DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
-        if (table.getData().getColumnNames().size() == 0) { // No data
+
+        // No data
+        if (table.getData().getColumnNames().size() == 0) {
             return null;
         }
 
@@ -790,7 +794,7 @@ public class DsplTransformer {
         return indicatorsDataService.findObservationsInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid(), dataFilter);
     }
 
-    private DateColumn getColumnForTime(TimeGranularityEnum timeGranularity) {
+    private DateColumn getColumnForTime(TimeGranularityEnum timeGranularity) throws MetamacException {
         switch (timeGranularity) {
             case YEARLY:
                 return new DateColumn("year", "yyyy");
@@ -801,8 +805,9 @@ public class DsplTransformer {
             case WEEKLY:
             case DAILY:
                 return new DateColumn("day", "yyyyMMdd");
+            default:
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
-        return null;
     }
 
     private FloatColumn getColumnForInstanceMetric(IndicatorInstance instance) {
@@ -815,7 +820,7 @@ public class DsplTransformer {
     }
 
     // Id builders
-    private String getIdForTimeConcept(TimeGranularityEnum timeGranularity) {
+    private String getIdForTimeConcept(TimeGranularityEnum timeGranularity) throws MetamacException {
         switch (timeGranularity) {
             case YEARLY:
                 return "time:year";
@@ -826,8 +831,9 @@ public class DsplTransformer {
             case WEEKLY:
             case DAILY:
                 return "time:day";
+            default:
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
-        return null;
     }
 
     private String getIdForTopic(Dimension dim) {

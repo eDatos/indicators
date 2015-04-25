@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.Collection;
 import java.util.List;
 
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
@@ -14,7 +13,7 @@ public class IndicatorsValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -41,7 +40,7 @@ public class IndicatorsValidationUtils extends ValidationUtils {
 
     /**
      * Check if a collection metadata is valid.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -59,8 +58,6 @@ public class IndicatorsValidationUtils extends ValidationUtils {
         for (Object item : parameter) {
             if (InternationalString.class.isInstance(item)) {
                 checkMetadataOptionalIsValid((InternationalString) item, parameterName, exceptions);
-            } else if (ExternalItem.class.isInstance(item)) {
-                checkMetadataOptionalIsValid(item, parameterName, exceptions);
             } else {
                 checkMetadataOptionalIsValid(item, parameterName, exceptions);
             }

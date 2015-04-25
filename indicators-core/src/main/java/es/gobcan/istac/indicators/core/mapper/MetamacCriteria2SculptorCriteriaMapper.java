@@ -11,15 +11,15 @@ import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 
 public interface MetamacCriteria2SculptorCriteriaMapper {
 
-    public MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> getIndicatorsSystemVersionCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> getIndicatorsSystemVersionCriteriaMapper();
 
-    public MetamacCriteria2SculptorCriteria<IndicatorVersion> getIndicatorVersionCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<IndicatorVersion> getIndicatorVersionCriteriaMapper();
 
-    public MetamacCriteria2SculptorCriteria<GeographicalValue> getGeographicalValueCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<GeographicalValue> getGeographicalValueCriteriaMapper();
 
-    public MetamacCriteria2SculptorCriteria<GeographicalGranularity> getGeographicalGranularityCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<GeographicalGranularity> getGeographicalGranularityCriteriaMapper();
 
-    public MetamacCriteria2SculptorCriteria<QuantityUnit> getQuantityUnitCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<QuantityUnit> getQuantityUnitCriteriaMapper();
 
-    public MetamacCriteria2SculptorCriteria<UnitMultiplier> getUnitMultiplierCriteriaMapper();
+    MetamacCriteria2SculptorCriteria<UnitMultiplier> getUnitMultiplierCriteriaMapper();
 }

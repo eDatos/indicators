@@ -1,10 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,7 +14,6 @@ import org.joda.time.MutableDateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.util.TimeUtils;
 
 import com.ibm.icu.util.Calendar;
@@ -30,14 +24,24 @@ import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
 
 /**
  * Utilities to time variables
  */
 public class TimeVariableUtils extends TimeUtils {
 
-    private static final List<TimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY,
-                                                                             TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
+    // @formatter:off
+    private static final List<TimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(TimeGranularityEnum.DAILY,
+                                                                                        TimeGranularityEnum.WEEKLY,
+                                                                                        TimeGranularityEnum.MONTHLY,
+                                                                                        TimeGranularityEnum.QUARTERLY,
+                                                                                        TimeGranularityEnum.BIYEARLY,
+                                                                                        TimeGranularityEnum.YEARLY);
+    // @formatter:on
 
     public static TimeValue convertToLastMonth(TimeValue timeValue) throws MetamacException {
         Date date = timeValueToLastPossibleDate(timeValue);
@@ -168,7 +172,7 @@ public class TimeVariableUtils extends TimeUtils {
 
     /**
      * Compare two time values.
-     * 
+     *
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
     private static int compareToLowestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
@@ -191,7 +195,7 @@ public class TimeVariableUtils extends TimeUtils {
 
     /**
      * Compare two time values. if date values are the same
-     * 
+     *
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
     private static int compareToHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
@@ -214,7 +218,7 @@ public class TimeVariableUtils extends TimeUtils {
 
     /**
      * Compare two time values in String representation
-     * 
+     *
      * @return 0 if are equals; a value less than 0 if this value1 is less than value2; a value greater than 0 if this value1 is less than value2
      */
     public static int compareToMostRecentFirstLowestGranularityMostRecent(String value1, String value2) throws MetamacException {

@@ -42,56 +42,56 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 public interface Do2DtoMapper {
 
     // Indicators systems
-    public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
-    public IndicatorsSystemSummaryDto indicatorsSystemDoToDtoSummary(IndicatorsSystemVersion source);
+    IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
+    IndicatorsSystemSummaryDto indicatorsSystemDoToDtoSummary(IndicatorsSystemVersion source);
 
     // Dimensions
-    public DimensionDto dimensionDoToDto(Dimension source);
+    DimensionDto dimensionDoToDto(Dimension source);
 
     // Indicators instances
-    public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source);
+    IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source);
 
     // Indicators
-    public IndicatorDto indicatorDoToDto(IndicatorVersion source);
-    public IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source);
+    IndicatorDto indicatorDoToDto(IndicatorVersion source);
+    IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source);
 
     // Data sources
-    public DataSourceDto dataSourceDoToDto(DataSource source);
+    DataSourceDto dataSourceDoToDto(DataSource source);
 
     // Elements levels
-    public List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
+    List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
 
     // Quantity unit
-    public QuantityUnitDto quantityUnitDoToDto(QuantityUnit source);
+    QuantityUnitDto quantityUnitDoToDto(QuantityUnit source);
 
     // Geographical value
-    public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source);
-    
+    GeographicalValueDto geographicalValueDoToDto(GeographicalValue source);
+
     // Geographical value Base
-    public GeographicalValueBaseDto geographicalValueDoToBaseDto(GeographicalValue source);
+    GeographicalValueBaseDto geographicalValueDoToBaseDto(GeographicalValue source);
 
     // Geographical granularity
-    public GeographicalGranularityDto geographicalGranularityDoToDto(GeographicalGranularity source);
+    GeographicalGranularityDto geographicalGranularityDoToDto(GeographicalGranularity source);
 
     // Time value
-    public TimeGranularityDto timeGranularityDoToTimeGranularityDto(TimeGranularity source);
+    TimeGranularityDto timeGranularityDoToTimeGranularityDto(TimeGranularity source);
 
     // Time granularity
-    public TimeValueDto timeValueDoToTimeValueDto(TimeValue source);
+    TimeValueDto timeValueDoToTimeValueDto(TimeValue source);
 
     // Subject
-    public SubjectDto subjectDoToDto(Subject source);
-    public SubjectDto subjectDoToDto(SubjectIndicatorResult source);
+    SubjectDto subjectDoToDto(Subject source);
+    SubjectDto subjectDoToDto(SubjectIndicatorResult source);
 
     // DataDefinition
-    public DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
+    DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
 
     // DataStructure
-    public DataStructureDto dataStructureDoToDto(DataStructure source);
+    DataStructureDto dataStructureDoToDto(DataStructure source);
 
     // Data
-    public DataDto dataDoToDto(Data source);
+    DataDto dataDoToDto(Data source);
 
     // Unit multipliers
-    public UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
+    UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
 }

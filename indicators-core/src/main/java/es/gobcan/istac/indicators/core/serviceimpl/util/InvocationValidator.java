@@ -303,7 +303,8 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         checkDimension(dimension, exceptions);
         if (dimension != null) {
-            IndicatorsValidationUtils.checkMetadataEmpty(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataEmpty(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);
@@ -349,7 +350,8 @@ public class InvocationValidator {
 
         checkDimension(dimension, exceptions);
         if (dimension != null) {
-            IndicatorsValidationUtils.checkMetadataRequired(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataRequired(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
         }
 
@@ -403,7 +405,8 @@ public class InvocationValidator {
 
         IndicatorsValidationUtils.checkMetadataRequired(indicator, ServiceExceptionParameters.INDICATOR, exceptions);
         if (indicator != null) {
-            IndicatorsValidationUtils.checkMetadataRequired(indicator.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataRequired(indicator.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
         }
 
@@ -417,8 +420,8 @@ public class InvocationValidator {
 
         checkIndicator(indicatorVersion, exceptions);
         if (indicatorVersion != null) {
-            IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create
-                                                                                                                                              // object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getVersionNumber(), ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
@@ -649,8 +652,8 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         checkIndicatorInstance(indicatorInstance, exceptions);
         if (indicatorInstance != null) {
-            IndicatorsValidationUtils.checkMetadataEmpty(indicatorInstance.getId(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions); // uuid never is null: it is initialized when
-                                                                                                                                                     // create object
+            // uuid never is null: it is initialized when create object
+            IndicatorsValidationUtils.checkMetadataEmpty(indicatorInstance.getId(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);

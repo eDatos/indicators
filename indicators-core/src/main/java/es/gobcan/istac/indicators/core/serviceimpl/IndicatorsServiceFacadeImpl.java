@@ -109,8 +109,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystem(ctx, indicatorsSystemVersion);
 
         // Transform to Dto
-        indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
-        return indicatorsSystemDto;
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
     }
 
     @Override
@@ -123,8 +122,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemByCode(ctx, code, versionNumber);
 
         // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
     }
 
     @Override
@@ -167,8 +165,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().sendIndicatorsSystemToProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
     }
 
     @Override
@@ -250,8 +247,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().versioningIndicatorsSystem(ctx, uuid, versionType);
 
         // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
-        return indicatorsSystemDto;
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
     }
 
     @Override
@@ -267,9 +263,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystems(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorsSystemSummaryDto> dtoResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystemSummary(result,
-                sculptorCriteria.getPageSize());
-        return dtoResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystemSummary(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -286,8 +280,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dimension = getIndicatorsSystemsService().createDimension(ctx, indicatorsSystemUuid, dimension);
 
         // Transform to Dto to return
-        dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
-        return dimensionDto;
+        return do2DtoMapper.dimensionDoToDto(dimension);
     }
 
     @Override
@@ -300,8 +293,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
 
         // Transform
-        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
-        return dimensionDto;
+        return do2DtoMapper.dimensionDoToDto(dimension);
     }
 
     @Override
@@ -331,8 +323,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dimension = getIndicatorsSystemsService().updateDimension(ctx, dimension);
 
         // Transform to Dto
-        dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
-        return dimensionDto;
+        return do2DtoMapper.dimensionDoToDto(dimension);
     }
 
     @Override
@@ -347,8 +338,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         Dimension dimension = getIndicatorsSystemsService().updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
 
         // Transform to Dto
-        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
-        return dimensionDto;
+        return do2DtoMapper.dimensionDoToDto(dimension);
     }
 
     @Override
@@ -365,8 +355,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         indicatorInstance = getIndicatorsSystemsService().createIndicatorInstance(ctx, indicatorsSystemUuid, indicatorInstance);
 
         // Transform to Dto to return
-        indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-        return indicatorInstanceDto;
+        return do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
     }
 
     @Override
@@ -379,8 +368,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, uuid);
 
         // Transform
-        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-        return indicatorInstanceDto;
+        return do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
     }
 
     @Override
@@ -410,8 +398,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         indicatorInstance = getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
 
         // Transform to Dto
-        indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-        return indicatorInstanceDto;
+        return do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
     }
 
     @Override
@@ -426,8 +413,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorInstance indicatorInstance = getIndicatorsSystemsService().updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
 
         // Transform to Dto
-        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-        return indicatorInstanceDto;
+        return do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
     }
 
     @Override
@@ -533,8 +519,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicatorVersion);
 
         // Transform to Dto
-        indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
     }
 
     @Override
@@ -547,8 +532,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(ctx, uuid, versionNumber);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
     }
 
     @Override
@@ -561,8 +545,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorByCode(ctx, code, versionNumber);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
     }
 
     @Override
@@ -588,8 +571,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         indicatorVersion = getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
 
         // Transform to Dto
-        indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
     }
 
     @Override
@@ -683,8 +665,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().versioningIndicator(ctx, uuid, versionType);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
-        return indicatorDto;
+        return do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
     }
 
     @Override
@@ -701,9 +682,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorSummaryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -719,8 +698,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dataSource = getIndicatorsService().createDataSource(ctx, indicatorUuid, dataSource);
 
         // Transform to Dto to return
-        dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
-        return dataSourceDto;
+        return do2DtoMapper.dataSourceDoToDto(dataSource);
     }
 
     @Override
@@ -733,8 +711,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
 
         // Transform
-        DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
-        return dataSourceDto;
+        return do2DtoMapper.dataSourceDoToDto(dataSource);
     }
 
     @Override
@@ -778,8 +755,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dataSource = getIndicatorsService().updateDataSource(ctx, dataSource);
 
         // Transform
-        dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
-        return dataSourceDto;
+        return do2DtoMapper.dataSourceDoToDto(dataSource);
     }
 
     @Override
@@ -806,9 +782,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Service call
-        List<String> operationCodes = getIndicatorsDataService().retrieveDataDefinitionsOperationsCodes(ctx);
-
-        return operationCodes;
+        return getIndicatorsDataService().retrieveDataDefinitionsOperationsCodes(ctx);
     }
 
     @Override
@@ -905,8 +879,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValue(ctx, uuid);
 
         // Transform
-        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-        return geographicalValueDto;
+        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
     }
 
     @Override
@@ -937,9 +910,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<GeographicalValueDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -954,10 +925,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         geographicalValue = getIndicatorsSystemsService().createGeographicalValue(ctx, geographicalValue);
 
         // Transform to Dto
-        geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-
-        // Return
-        return geographicalValueDto;
+        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
     }
 
     @Override
@@ -972,10 +940,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         geographicalValue = getIndicatorsSystemsService().updateGeographicalValue(ctx, geographicalValue);
 
         // Transform to Dto
-        geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-
-        // Return
-        return geographicalValueDto;
+        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
     }
 
     @Override
@@ -987,7 +952,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         try {
             getIndicatorsSystemsService().deleteGeographicalValue(ctx, uuid);
         } catch (PersistenceException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid, e);
         }
 
     }
@@ -1008,9 +973,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<GeographicalGranularity> result = getIndicatorsSystemsService().findGeographicalGranularities(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<GeographicalGranularityDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalGranularity(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalGranularity(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -1023,8 +986,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularity(ctx, uuid);
 
         // Transform
-        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-        return geographicalGranularityDto;
+        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
     }
 
     @Override
@@ -1057,10 +1019,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         geographicalGranularity = getIndicatorsSystemsService().createGeographicalGranularity(ctx, geographicalGranularity);
 
         // Transform to Dto
-        geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-
-        // Return
-        return geographicalGranularityDto;
+        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
     }
 
     @Override
@@ -1075,10 +1034,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         geographicalGranularity = getIndicatorsSystemsService().updateGeographicalGranularity(ctx, geographicalGranularity);
 
         // Transform to Dto
-        geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-
-        // Return
-        return geographicalGranularityDto;
+        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
     }
 
     @Override
@@ -1090,7 +1046,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         try {
             getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
         } catch (PersistenceException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid, e);
         }
     }
 
@@ -1111,8 +1067,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<QuantityUnit> result = getIndicatorsService().findQuantityUnits(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<QuantityUnitDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuantiyUnit(result, sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuantiyUnit(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -1144,10 +1099,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         quantityUnit = getIndicatorsService().createQuantityUnit(ctx, quantityUnit);
 
         // Transform to Dto
-        quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-
-        // Return
-        return quantityUnitDto;
+        return do2DtoMapper.quantityUnitDoToDto(quantityUnit);
     }
 
     @Override
@@ -1162,10 +1114,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         quantityUnit = getIndicatorsService().updateQuantityUnit(ctx, quantityUnit);
 
         // Transform to Dto
-        quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-
-        // Return
-        return quantityUnitDto;
+        return do2DtoMapper.quantityUnitDoToDto(quantityUnit);
     }
 
     @Override
@@ -1197,8 +1146,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<UnitMultiplier> result = getIndicatorsService().findUnitMultipliers(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<UnitMultiplierDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultUnitMultiplier(result, sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultUnitMultiplier(result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -1231,10 +1179,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         unitMultiplier = getIndicatorsService().createUnitMultiplier(ctx, unitMultiplier);
 
         // Transform to Dto
-        unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
-
-        // Return
-        return unitMultiplierDto;
+        return do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
     }
 
     @Override
@@ -1249,10 +1194,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         unitMultiplier = getIndicatorsService().updateUnitMultiplier(ctx, unitMultiplier);
 
         // Transform to Dto
-        unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
-
-        // Return
-        return unitMultiplierDto;
+        return do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
     }
 
     @Override
@@ -1293,7 +1235,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     /**
      * Adds a condition to the {@link SculptorCriteria} to filter the results by the edition language. The filtering allows the query to be faster and allows the resources to be sorted by a specific
      * locale of an {@link InternationalString}.
-     * 
+     *
      * @param sculptorCriteria
      * @param properties
      * @throws MetamacException

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ListBlockIteratorFn<T, U> {
 
-    public List<U> apply(List<T> sublist);
+    List<U> apply(List<T> sublist);
 
 }

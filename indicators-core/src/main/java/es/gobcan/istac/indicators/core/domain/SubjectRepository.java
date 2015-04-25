@@ -9,9 +9,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
  */
 public interface SubjectRepository {
 
-    public static final String BEAN_ID = "subjectRepository";
+    static final String BEAN_ID = "subjectRepository";
 
-    public Subject retrieveSubject(String code) throws MetamacException;
+    Subject retrieveSubject(String code) throws MetamacException;
 
-    public List<Subject> findSubjects() throws MetamacException;
+    List<Subject> findSubjects() throws MetamacException;
 }

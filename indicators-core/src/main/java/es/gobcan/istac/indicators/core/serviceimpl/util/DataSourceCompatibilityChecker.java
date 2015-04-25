@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +18,9 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class DataSourceCompatibilityChecker {
+
+    private DataSourceCompatibilityChecker() {
+    }
 
     private static GeographicalValueRepository geographicalValueRepository = null;
 
@@ -63,7 +65,8 @@ public class DataSourceCompatibilityChecker {
         }
         // Has geographic value
         else {
-            if (data.getSpatialVariables() != null && !data.getSpatialVariables().isEmpty()) { // Data has spatial variable, should have been specified as gepgraphic variable
+            // Data has spatial variable, should have been specified as gepgraphic variable
+            if (data.getSpatialVariables() != null && !data.getSpatialVariables().isEmpty()) {
                 String geoVars = StringUtils.join(data.getSpatialVariables(), ", ");
                 items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VALUE_ILLEGAL, dataSource.getUuid(), geoVars));
             }
@@ -106,7 +109,8 @@ public class DataSourceCompatibilityChecker {
         }
         // Has time value
         else {
-            if (!StringUtils.isEmpty(data.getTemporalVariable())) { // Data has spatial variable, should have been specified as gepgraphic variable
+            // Data has spatial variable, should have been specified as gepgraphic variable
+            if (!StringUtils.isEmpty(data.getTemporalVariable())) {
                 items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VALUE_ILLEGAL, dataSource.getUuid(), data.getTemporalVariable()));
             }
         }
@@ -131,10 +135,12 @@ public class DataSourceCompatibilityChecker {
             if (data.hasContVariable()) {
                 String contVariable = data.getContVariable();
                 List<String> codes = data.getValueCodes().get(contVariable);
-                if (!codes.contains(dataSource.getAbsoluteMethod())) { // Invalid value for absoluteMethod
+                // Invalid value for absoluteMethod
+                if (!codes.contains(dataSource.getAbsoluteMethod())) {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL, dataSource.getUuid(), dataSource.getAbsoluteMethod()));
                 }
-            } else { // only possible correct value is OBS_VALUE
+            } else {
+                // only possible correct value is OBS_VALUE
                 if (!dataSource.isAbsoluteMethodObsValue()) {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL, dataSource.getUuid(), dataSource.getAbsoluteMethod()));
                 }
@@ -164,15 +170,11 @@ public class DataSourceCompatibilityChecker {
     private static List<MetamacExceptionItem> checkOtherVariablesConstraints(DataSource dataSource, Data data) {
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
 
-        if (!StringUtils.isEmpty(data.getTemporalVariable())) {
-            if (existsVariableInOtherVariables(dataSource, data.getTemporalVariable())) {
-                items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED, dataSource.getUuid(), data.getTemporalVariable()));
-            }
+        if (!StringUtils.isEmpty(data.getTemporalVariable()) && existsVariableInOtherVariables(dataSource, data.getTemporalVariable())) {
+            items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED, dataSource.getUuid(), data.getTemporalVariable()));
         }
-        if (!StringUtils.isEmpty(data.getContVariable())) {
-            if (existsVariableInOtherVariables(dataSource, data.getContVariable())) {
-                items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED, dataSource.getUuid(), data.getContVariable()));
-            }
+        if (!StringUtils.isEmpty(data.getContVariable()) && existsVariableInOtherVariables(dataSource, data.getContVariable())) {
+            items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED, dataSource.getUuid(), data.getContVariable()));
         }
 
         items.addAll(checkUnspecifedVariables(dataSource, data));
@@ -266,10 +268,12 @@ public class DataSourceCompatibilityChecker {
             if (data.hasContVariable()) {
                 String contVariable = data.getContVariable();
                 List<String> codes = data.getValueCodes().get(contVariable);
-                if (!codes.contains(method)) { // Invalid value for absoluteMethod
+                // Invalid value for absoluteMethod
+                if (!codes.contains(method)) {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL, dataSource.getUuid(), rateName, method));
                 }
-            } else { // only possible correct value is OBS_VALUE
+            } else {
+                // only possible correct value is OBS_VALUE
                 if (!rate.isMethodObsValue()) {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL, dataSource.getUuid(), rateName, method));
                 }

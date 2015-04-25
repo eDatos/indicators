@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -198,7 +201,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        if (indicator.getIsPublished()) { // avoid populating archived
+
+        // avoid populating archived
+        if (indicator.getIsPublished()) {
             try {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersionNumber());
             } catch (MetamacException e) {
@@ -1931,7 +1936,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Private methods that get data from jaxi
      */
-    private Data jsonToData(String json) throws Exception {
+    private Data jsonToData(String json) throws JsonParseException, JsonMappingException, IOException {
         Data target = new Data();
         target = mapper.readValue(json, Data.class);
         return target;

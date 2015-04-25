@@ -161,7 +161,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             @SuppressWarnings("unchecked")
             @Override
             public List<IndicatorVersion> apply(List<String> sublist) {
-                StringBuffer querySql = new StringBuffer();
+                StringBuilder querySql = new StringBuilder();
                 if (sublist == null || sublist.size() == 0) {
                     return new ArrayList<IndicatorVersion>();
                 }

@@ -53,7 +53,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
-        return calculateGeoGranularityCoverageInIndicatorInstance(ctx, indInstance, indicatorVersion);
+        return calculateGeoGranularityCoverageInIndicatorInstance(indInstance, indicatorVersion);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
 
-        return calculateGeoGranularityCoverageInIndicatorInstance(ctx, indInstance, indicatorVersion);
+        return calculateGeoGranularityCoverageInIndicatorInstance(indInstance, indicatorVersion);
     }
 
     @Override
@@ -98,8 +98,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         return new ArrayList<GeographicalGranularity>(granularities);
     }
 
-    private List<GeographicalGranularity> calculateGeoGranularityCoverageInIndicatorInstance(ServiceContext ctx, IndicatorInstance indInstance, IndicatorVersion indicatorVersion)
-            throws MetamacException {
+    private List<GeographicalGranularity> calculateGeoGranularityCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
         if (indInstance.isFilteredByGeographicalValues()) {
@@ -205,20 +204,17 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
     private List<GeographicalValueVO> retrieveGeoVOCoverageByGranularityInIndicatorVersionFromCache(String granularityUuid, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        List<GeographicalValueVO> geographicalValuesInIndicator = getIndicatorVersionGeoCoverageRepository().retrieveCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
-        return geographicalValuesInIndicator;
+        return getIndicatorVersionGeoCoverageRepository().retrieveCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
     }
 
     private List<GeographicalValue> retrieveGeoValueCoverageByGranularityInIndicatorVersionFromCache(String granularityUuid, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        List<GeographicalValue> geographicalValuesInIndicator = getIndicatorVersionGeoCoverageRepository().retrieveValueCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
-        return geographicalValuesInIndicator;
+        return getIndicatorVersionGeoCoverageRepository().retrieveValueCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
     }
 
     private List<GeographicalCodeVO> retrieveGeoCodeCoverageByGranularityInIndicatorVersionFromCache(String granularityUuid, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        List<GeographicalCodeVO> geographicalValuesInIndicator = getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
-        return geographicalValuesInIndicator;
+        return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByGranularity(indicatorVersion, granularityUuid);
     }
 
     /* GEOGRAPHICAL VALUES */
@@ -241,14 +237,12 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
     private List<GeographicalCodeVO> retrieveGeoCodeCoverageFromCache(IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        List<GeographicalCodeVO> geoCodes = getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverage(indicatorVersion);
-        return geoCodes;
+        return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverage(indicatorVersion);
     }
 
     private List<GeographicalValueVO> retrieveGeoCoverageFromCache(IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-        List<GeographicalValueVO> geoValues = getIndicatorVersionGeoCoverageRepository().retrieveCoverage(indicatorVersion);
-        return geoValues;
+        return getIndicatorVersionGeoCoverageRepository().retrieveCoverage(indicatorVersion);
     }
 
     @Override
@@ -314,11 +308,14 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     private List<GeographicalCodeVO> calculateGeoCodeCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
-        if (indInstance.isFilteredByGeographicalValues()) { // Fixed values
+        if (indInstance.isFilteredByGeographicalValues()) {
+            // Fixed values
             return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByInstanceGeoValues(indicatorVersion, indInstance.getUuid());
-        } else if (indInstance.isFilteredByGeographicalGranularity()) { // fixed granularity
+        } else if (indInstance.isFilteredByGeographicalGranularity()) {
+            // fixed granularity
             return retrieveGeoCodeCoverageByGranularityInIndicatorVersionFromCache(indInstance.getGeographicalGranularity().getUuid(), indicatorVersion);
-        } else { // nothing is fixed
+        } else {
+            // nothing is fixed
             return retrieveGeoCodeCoverageFromCache(indicatorVersion);
         }
     }
@@ -326,11 +323,14 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     private List<GeographicalValueVO> calculateGeoCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
-        if (indInstance.isFilteredByGeographicalValues()) { // Fixed values
+        if (indInstance.isFilteredByGeographicalValues()) {
+            // Fixed values
             return getIndicatorVersionGeoCoverageRepository().retrieveCoverageFilteredByInstanceGeoValues(indicatorVersion, indInstance.getUuid());
-        } else if (indInstance.isFilteredByGeographicalGranularity()) { // fixed granularity
+        } else if (indInstance.isFilteredByGeographicalGranularity()) {
+            // fixed granularity
             return retrieveGeoVOCoverageByGranularityInIndicatorVersionFromCache(indInstance.getGeographicalGranularity().getUuid(), indicatorVersion);
-        } else { // nothing is fixed
+        } else {
+            // nothing is fixed
             return retrieveGeoCoverageFromCache(indicatorVersion);
         }
     }
@@ -344,7 +344,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
 
-        return retrieveTimeGranularityCoverageFromCache(ctx, indicatorVersion);
+        return retrieveTimeGranularityCoverageFromCache(indicatorVersion);
     }
 
     @Override
@@ -354,7 +354,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
 
-        return retrieveTimeGranularityCoverageFromCache(ctx, indicatorVersion);
+        return retrieveTimeGranularityCoverageFromCache(indicatorVersion);
     }
 
     @Override
@@ -366,8 +366,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
-        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = calculateTimeGranularityCoverageInIndicatorInstance(ctx, indicatorVersion, indInstance);
-        return timeGranularitiesFixedInIndicatorInstance;
+        return calculateTimeGranularityCoverageInIndicatorInstance(ctx, indicatorVersion, indInstance);
     }
 
     @Override
@@ -379,9 +378,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
 
-        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = calculateTimeGranularityCoverageInIndicatorInstance(ctx, indicatorVersion, indInstance);
-
-        return timeGranularitiesFixedInIndicatorInstance;
+        return calculateTimeGranularityCoverageInIndicatorInstance(ctx, indicatorVersion, indInstance);
     }
 
     private List<TimeGranularity> calculateTimeGranularityCoverageInIndicatorInstance(ServiceContext ctx, IndicatorVersion indicatorVersion, IndicatorInstance indInstance) throws MetamacException {
@@ -393,11 +390,11 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
             TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, indInstance.getTimeGranularity());
             return Arrays.asList(timeGranularity);
         } else {
-            return retrieveTimeGranularityCoverageFromCache(ctx, indicatorVersion);
+            return retrieveTimeGranularityCoverageFromCache(indicatorVersion);
         }
     }
 
-    private List<TimeGranularity> retrieveTimeGranularityCoverageFromCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeGranularity> retrieveTimeGranularityCoverageFromCache(IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
         return getIndicatorVersionTimeCoverageRepository().retrieveGranularityCoverage(indicatorVersion);
     }
@@ -431,11 +428,11 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorInstance.getIndicator().getUuid());
 
-        return calculateTimeCoverageByGranularityInIndicatorInstance(ctx, granularity, indicatorInstance, indicatorVersion);
+        return calculateTimeCoverageByGranularityInIndicatorInstance(granularity, indicatorInstance, indicatorVersion);
     }
 
-    private List<TimeValue> calculateTimeCoverageByGranularityInIndicatorInstance(ServiceContext ctx, TimeGranularityEnum granularity, IndicatorInstance indicatorInstance,
-            IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> calculateTimeCoverageByGranularityInIndicatorInstance(TimeGranularityEnum granularity, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion)
+            throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
         if (indicatorInstance.isFilteredByTimeValues()) {
@@ -474,7 +471,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         // Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicator(indicatorVersion, null);
 
-        return retrieveTimeCoverageFromCache(ctx, indicatorVersion);
+        return retrieveTimeCoverageFromCache(indicatorVersion);
     }
 
     @Override
@@ -516,11 +513,11 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
             TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
             return timeValues;
         } else {
-            return retrieveTimeCoverageFromCache(ctx, indicatorVersion);
+            return retrieveTimeCoverageFromCache(indicatorVersion);
         }
     }
 
-    private List<TimeValue> retrieveTimeCoverageFromCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> retrieveTimeCoverageFromCache(IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
         List<TimeValue> timeValues = getIndicatorVersionTimeCoverageRepository().retrieveCoverage(indicatorVersion);
         TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
@@ -532,7 +529,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         // Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicator(indicatorVersion, null);
 
-        return retrieveMeasureCoverageFromCache(ctx, indicatorVersion);
+        return retrieveMeasureCoverageFromCache(indicatorVersion);
     }
 
     @Override
@@ -542,7 +539,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
-        return retrieveMeasureCoverageFromCache(ctx, indicatorVersion);
+        return retrieveMeasureCoverageFromCache(indicatorVersion);
     }
 
     @Override
@@ -552,10 +549,10 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
 
-        return retrieveMeasureCoverageFromCache(ctx, indicatorVersion);
+        return retrieveMeasureCoverageFromCache(indicatorVersion);
     }
 
-    private List<MeasureValue> retrieveMeasureCoverageFromCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<MeasureValue> retrieveMeasureCoverageFromCache(IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
         return getIndicatorVersionMeasureCoverageRepository().retrieveCoverage(indicatorVersion);
     }
