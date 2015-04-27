@@ -26,7 +26,7 @@ import es.gobcan.istac.indicators.rest.util.RequestUtil;
 public class IndicatorsRestController extends AbstractRestController {
 
     @Autowired
-    private static final IndicatorRestFacade indicatorRestFacade = null;
+    private IndicatorRestFacade indicatorRestFacade = null;
 
     /**
      * @throws Exception

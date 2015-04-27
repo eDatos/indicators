@@ -31,7 +31,7 @@ import es.gobcan.istac.indicators.rest.util.RequestUtil;
 public class IndicatorsSystemsRestController extends AbstractRestController {
 
     @Autowired
-    private final IndicatorSystemRestFacade indicatorSystemRestFacade = null;
+    private IndicatorSystemRestFacade indicatorSystemRestFacade = null;
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems", method = RequestMethod.GET)
     @ResponseBody

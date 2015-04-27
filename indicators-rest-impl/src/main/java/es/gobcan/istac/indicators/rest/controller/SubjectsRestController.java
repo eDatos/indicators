@@ -1,8 +1,7 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-import es.gobcan.istac.indicators.rest.facadeapi.SubjectsRestFacade;
-import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
+import es.gobcan.istac.indicators.rest.facadeapi.SubjectsRestFacade;
+import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 
 @Controller("subjectsRestController")
 public class SubjectsRestController extends AbstractRestController {
@@ -28,5 +28,5 @@ public class SubjectsRestController extends AbstractRestController {
         ResponseEntity<List<SubjectBaseType>> response = new ResponseEntity<List<SubjectBaseType>>(subjectTypes, null, HttpStatus.OK);
         return response;
     }
-    
+
 }
