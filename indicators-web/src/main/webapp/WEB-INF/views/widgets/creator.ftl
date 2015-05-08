@@ -103,7 +103,7 @@
 
     var options = {};
     [#if RequestParameters.type??]
-    options.type = '${RequestParameters.type?url}';
+    options.type = '${RequestParameters.type?js_string}';
     [/#if]
 
 
