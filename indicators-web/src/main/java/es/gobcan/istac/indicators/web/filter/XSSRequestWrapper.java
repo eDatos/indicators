@@ -78,10 +78,12 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
         stripXSS = stripXSS.replaceAll("(?i)" + HtmlEventsEnum.getRegexp(), StringUtils.EMPTY);
         stripXSS = stripXSS.replaceAll("(?i)" + ForbiddenTagsEnum.getRegexp(), StringUtils.EMPTY);
         
-        // Clean out HTML
+        // Allow json on params
         if (stripXSS.startsWith("{") && isValidJSON(stripXSS)){ 
             return stripXSS;
         }
+        
+        // Clean out HTML
         stripXSS = Jsoup.clean(stripXSS, Whitelist.none());
 
         return stripXSS;

@@ -12,7 +12,7 @@
     <script src="[@spring.url "/theme/js/widgets/widget.min.all.js"/]"></script>
     <div id="istac-widget"></div>
     <script>
-        var options =  ${options};
+        var options =  JSON.parse('${options}');
         var istacWidget = new IstacWidget(options);
     </script>
 </body>
