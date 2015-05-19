@@ -31,8 +31,7 @@ public class XSSFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         // Protection against Type 1 Reflected XSS attacks
         res.addHeader("X-XSS-Protection", "1; mode=block");
-        // Disabling browsers to perform risky mime sniffing
-        res.addHeader("X-Content-Type-Options", "nosniff");
+
         // Clickjack attack
         res.addHeader("X-FRAME-OPTIONS", "DENY");
     }
