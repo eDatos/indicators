@@ -10,7 +10,7 @@
     <tbody>
         {{#each datasets}}
             <tr class="{{cssClass}}">
-                <td data-tooltip="{{description}}" class="istac-widget-last-data-indicator-column">
+                <td class="istac-widget-last-data-indicator-column">
                     <div class="istac-widget-lastData-title"><a href="{{titleLink}}">{{title}}</a></div>
                     <div class="istac-widget-unit">{{ temporalLabel }}</div>
                 </td>
@@ -25,7 +25,7 @@
                                     <span class="inlinesparkline"></span>
                                 {{/if}}
                             {{/if}}
-							<span data-tooltip="{{../../description}}">
+							<span>
                         		<span class="istac-widget-observation">{{ value }} </span>
                         		<div class="istac-widget-unit"> {{ unit }}</div>
                         	</span>
