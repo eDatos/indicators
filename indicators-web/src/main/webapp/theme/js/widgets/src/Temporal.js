@@ -105,6 +105,8 @@
                 this.renderChart(chartData);
             }
             this.updateTitle();
+            
+            this.onAfterRender();
         },
 
         chartColors : function (chartData) {

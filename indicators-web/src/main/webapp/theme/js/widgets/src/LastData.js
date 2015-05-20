@@ -91,6 +91,8 @@
             render : function () {
                 this.renderTable(this.datasets);
                 this.updateTitle();
+                
+                this.onAfterRender();
             },
 
             addTooltips : function ($el) {

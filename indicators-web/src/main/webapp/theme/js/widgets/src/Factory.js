@@ -6,6 +6,8 @@
 
     Istac.widget.Factory = function (options, callback) {
         options = options || {};
+        
+        options.callback = callback;
 
         if (options.hasOwnProperty('url')) {
             var url = options.url + "/widgets/external/configuration";
@@ -36,10 +38,7 @@
                 } else {
                     showError("Tipo de widget no soportado");
                 }
-
-                if (callback) {
-                    callback(widget);
-                }
+                
             });
         } else {
             showError("Error, no se ha especificado la url del servicio web");

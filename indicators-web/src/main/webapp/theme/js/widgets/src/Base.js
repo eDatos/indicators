@@ -370,6 +370,12 @@
                 self.datasets = [];
                 self.render();
             }
+        },
+        
+        onAfterRender : function() {
+        	if (this.options.callback) {
+        		this.options.callback(this);
+        	}
         }
 
 
