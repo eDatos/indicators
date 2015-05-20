@@ -1,109 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="indicators-web" version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"  
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>indicators-web</display-name>
+	<display-name>indicators-web</display-name>
 
-    <!-- CONTEXT PARAM -->
+	<!-- CONTEXT PARAM -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/config/spring/spring-context-core/applicationContextWithoutDatabase.xml</param-value>
 	</context-param>
 
-    <!-- Avoid Cross-site Scripting (XSS)  -->
-    <context-param>
-        <param-name>defaultHtmlEscape</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    
-    <!-- LISTENER -->
+	<!-- Avoid Cross-site Scripting (XSS) -->
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- LISTENER -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-    <listener>
-        <listener-class>es.gobcan.istac.indicators.web.diffusion.ApplicationStartup</listener-class>
-    </listener>
-    
-    <!-- FILTER -->
-    <filter>
-        <filter-name>CharacterEncodingFilter</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-        <init-param>
-            <param-name>forceEncoding</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
+	<listener>
+		<listener-class>es.gobcan.istac.indicators.web.diffusion.ApplicationStartup</listener-class>
+	</listener>
 
-    <filter>
-        <filter-name>JsonpCallbackFilter</filter-name>
-        <filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
-    </filter>
+	<!-- FILTER -->
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>JsonpCallbackFilter</filter-name>
+		<filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
+	</filter>
 
 	<filter>
 		<filter-name>xssFilter</filter-name>
 		<filter-class>es.gobcan.istac.indicators.web.filter.XSSFilter</filter-class>
 	</filter>
 
-    <!-- FILTERS - MAPPING -->
-    <filter-mapping>
-        <filter-name>xssFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    
-    <filter-mapping>
-        <filter-name>CharacterEncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+	<!-- FILTERS - MAPPING -->
+	<filter-mapping>
+		<filter-name>xssFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
-    <filter-mapping>
-        <filter-name>JsonpCallbackFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
-    </filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
-    <filter-mapping>
-        <filter-name>JsonpCallbackFilter</filter-name>
-        <url-pattern>/widgets/external/configuration</url-pattern>
-    </filter-mapping>
-    
-    <!-- SERVLET -->
-    <!-- Handles all requests into the application -->
-    <servlet>
-        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/config/spring/spring-context-web/applicationContext-web.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+	<filter-mapping>
+		<filter-name>JsonpCallbackFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
 
-    <!-- SERVLET - MAPPING -->
-    <!-- Maps all /app requests to the DispatcherServlet for handling -->
-    <servlet-mapping>
-        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+	<filter-mapping>
+		<filter-name>JsonpCallbackFilter</filter-name>
+		<url-pattern>/widgets/external/configuration</url-pattern>
+	</filter-mapping>
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error/404</location>
-    </error-page>
-    
-    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/error/500</location>
-    </error-page>
-  
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.htm</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+	<!-- SERVLET -->
+	<!-- Handles all requests into the application -->
+	<servlet>
+		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/spring/spring-context-web/applicationContext-web.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- SERVLET - MAPPING -->
+	<!-- Maps all /app requests to the DispatcherServlet for handling -->
+	<servlet-mapping>
+		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/404</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error/500</location>
+	</error-page>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>
