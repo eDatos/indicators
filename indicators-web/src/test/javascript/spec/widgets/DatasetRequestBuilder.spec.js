@@ -16,7 +16,8 @@ describe("DatasetRequestBuilder", function () {
             indicatorSystem : 'System1',
             subjectCode : '',
             nrecent : 0,
-            geographicalValues : ['ES']
+            geographicalValues : ['ES'],
+            measures: [ 'ABSOLUTE' ]
         };
 
         options.selectedIndicators = {
@@ -27,7 +28,8 @@ describe("DatasetRequestBuilder", function () {
             indicatorSystem : '',
             subjectCode : 'Subject1',
             nrecent : 0,
-            geographicalValues : ['ES']
+            geographicalValues : ['ES'],
+            measures: [ 'ABSOLUTE' ]
         };
 
         options.recentInstances = {
@@ -38,7 +40,8 @@ describe("DatasetRequestBuilder", function () {
             indicatorSystem : 'System1',
             subjectCode : '',
             nrecent : 4,
-            geographicalValues : ['ES']
+            geographicalValues : ['ES'],
+            measures: [ 'ABSOLUTE' ]
         };
 
         options.recentIndicators = {
@@ -49,7 +52,8 @@ describe("DatasetRequestBuilder", function () {
             indicatorSystem : '',
             subjectCode : 'Subject1',
             nrecent : 4,
-            geographicalValues : ['ES']
+            geographicalValues : ['ES'],
+            measures: [ 'ABSOLUTE' ]
         };
 
         options.temporal = {
@@ -61,7 +65,8 @@ describe("DatasetRequestBuilder", function () {
             subjectCode : '',
             nrecent : 0,
             timeGranularities : ["MONTHLY"],
-            geographicalValues : ['ES', 'EN', 'RU']
+            geographicalValues : ['ES', 'EN', 'RU'],
+            measures: [ 'ABSOLUTE' ]
         };
 
         datasetRequestBuilder = new DatasetRequestBuilder({apiUrl : apiUrl});
@@ -69,99 +74,99 @@ describe("DatasetRequestBuilder", function () {
 
     it("should prepare request for selected instances", function () {
         var request = datasetRequestBuilder.request(options.selectedInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id IN ("INS1", "INS2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id IN ("INS1", "INS2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for selected instance", function () {
         options.selectedInstances.instances = ['INS1'];
         var request = datasetRequestBuilder.request(options.selectedInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for selected instances different instances", function () {
         options.selectedInstances.instances = ['a', 'b'];
         var request = datasetRequestBuilder.request(options.selectedInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id IN ("a", "b")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id IN ("a", "b")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for selected instances different indicatorSystem", function () {
         options.selectedInstances.indicatorSystem = 'System2';
         var request = datasetRequestBuilder.request(options.selectedInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System2/indicatorsInstances/?q=id IN ("INS1", "INS2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System2/indicatorsInstances/?q=id IN ("INS1", "INS2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for selected indicators", function () {
         var request = datasetRequestBuilder.request(options.selectedIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=id IN ("IN1", "IN2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=id IN ("IN1", "IN2")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for selected indicator", function () {
         options.selectedIndicators.indicators = ['IN1'];
         var request = datasetRequestBuilder.request(options.selectedIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=id EQ "IN1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=id EQ "IN1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for different selected indicators", function () {
         options.selectedIndicators.indicators = ['a', 'b'];
         var request = datasetRequestBuilder.request(options.selectedIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=id IN ("a", "b")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=id IN ("a", "b")&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated instances filtered by geographicalValue and systemCode", function () {
         var request = datasetRequestBuilder.request(options.recentInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated instances filtered by geographicalValue and systemCode with different systemCode", function () {
         options.recentInstances.indicatorSystem = 'System2';
         var request = datasetRequestBuilder.request(options.recentInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System2/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System2/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated instances filtered by geographicalValue and systemCode with different geographicalValue", function () {
         options.recentInstances.geographicalValues = ['EN'];
         var request = datasetRequestBuilder.request(options.recentInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "EN"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[EN]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "EN"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[EN],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated instances filtered by geographicalValue and systemCode with different limit", function () {
         options.recentInstances.nrecent = 20;
         var request = datasetRequestBuilder.request(options.recentInstances);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=20&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=geographicalValue EQ "ES"&order=update DESC, id DESC&limit=20&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated indicators filtered by geographicalValue and subjectCode", function () {
         var request = datasetRequestBuilder.request(options.recentIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated indicators filtered by geographicalValue and subjectCode with different subjectCode", function () {
         options.recentIndicators.subjectCode = 'Subject2';
         var request = datasetRequestBuilder.request(options.recentIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject2" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject2" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated indicators filtered by geographicalValue and subjectCode with different geographicalValue", function () {
         options.recentIndicators.geographicalValues = ['EN'];
         var request = datasetRequestBuilder.request(options.recentIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "EN"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[EN]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "EN"&order=update DESC, id DESC&limit=4&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[EN],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for lastupdated indicators filtered by geographicalValue and subjectCode with different limit", function () {
         options.recentIndicators.nrecent = 20;
         var request = datasetRequestBuilder.request(options.recentIndicators);
-        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=20&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES]');
+        expect(request).toEqual(apiUrl + '/indicators/?q=subjectCode EQ "Subject1" AND geographicalValue EQ "ES"&order=update DESC, id DESC&limit=20&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES],MEASURE[ABSOLUTE]');
     });
 
     it("should prepare request for temporal", function () {
         var request = datasetRequestBuilder.request(options.temporal);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]&granularity=TIME[MONTHLY]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU],MEASURE[ABSOLUTE]&granularity=TIME[MONTHLY]');
     });
 
     it("should prepare request for temporal with different instances", function () {
         options.temporal.instances = ['INS2'];
         var request = datasetRequestBuilder.request(options.temporal);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS2"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]&granularity=TIME[MONTHLY]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS2"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU],MEASURE[ABSOLUTE]&granularity=TIME[MONTHLY]');
     });
 
     describe("invalid parameters", function () {
