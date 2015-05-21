@@ -412,6 +412,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             // Last value cache must be rebuilt after publishing
             getIndicatorsDataService().buildLastValuesCache(ctx, indicatorInProduction);
         } catch (MetamacException e) {
+            LOG.warn("Error populating indicator with UUID: " + uuid, e);
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());

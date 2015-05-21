@@ -235,6 +235,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
                 rebuildCoveragesCache(ctx, indicatorVersion);
+                buildLastValuesCache(ctx, indicatorVersion);
 
                 // After diffusion version's data is populated all related systems must update their versions
                 if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -243,7 +244,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
                     changeVersionForModifiedIndicatorsSystems(modifiedSystems);
 
-                    buildLastValuesCache(ctx, indicatorVersion);
                 }
             } else {
                 LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
@@ -286,11 +286,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
                     rebuildCoveragesCache(ctx, indicatorVersion);
+                    buildLastValuesCache(ctx, indicatorVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
-
-                    buildLastValuesCache(ctx, indicatorVersion);
                 } catch (MetamacException e) {
                     LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
                 }
@@ -920,14 +919,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
-        List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
+        List<String> geoCodesLeft = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
+        List<TimeValue> timeValuesLeft = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
 
-        List<String> geoCodesLeft = geoCodes;
-
-        while (!geoCodesLeft.isEmpty() && !timeValues.isEmpty()) {
-            TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValues);
-            timeValues.remove(lastTimeValue);
+        while (!geoCodesLeft.isEmpty() && !timeValuesLeft.isEmpty()) {
+            TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValuesLeft);
+            timeValuesLeft.remove(lastTimeValue);
 
             Set<String> foundGeoCodes = getGeoValuesInObservations(indicatorVersion, geoCodesLeft, lastTimeValue.getTimeValue());
 
