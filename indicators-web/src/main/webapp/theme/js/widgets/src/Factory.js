@@ -4,10 +4,10 @@
         $(options.el).text(msg);
     };
 
-    Istac.widget.Factory = function (options, callback) {
+    Istac.widget.Factory = function (options, initCallback, afterRenderCallback) {
         options = options || {};
         
-        options.callback = callback;
+        options.afterRenderCallback = afterRenderCallback;
 
         if (options.hasOwnProperty('url')) {
             var url = options.url + "/widgets/external/configuration";
@@ -39,6 +39,9 @@
                     showError("Tipo de widget no soportado");
                 }
                 
+                if (initCallback) {
+                	initCallback(widget);
+                }
             });
         } else {
             showError("Error, no se ha especificado la url del servicio web");

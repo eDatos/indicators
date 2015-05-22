@@ -59,7 +59,7 @@
             this.measures = options.measures || this._defaultOptions.measures;
             this.geographicalValues = options.geographicalValues;
             
-            this.callback = _.once(this.options.callback);
+            this.afterRenderCallback = _.debounce(this.options.afterRenderCallback, 300);
 
             // urls
             this.url = options.url || "";
@@ -384,8 +384,8 @@
         },
         
         onAfterRender : function() {
-        	if (this.callback) {        		
-        		this.callback(this);
+        	if (this.afterRenderCallback) {        		
+        		this.afterRenderCallback(this);
         	}
         }
 

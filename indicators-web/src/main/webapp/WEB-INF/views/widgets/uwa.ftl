@@ -40,7 +40,7 @@
                     jsonp : "_callback"
                 });
                 req.success(function (options) {
-	                IstacWidget(options, function (istacWidget) {
+	                IstacWidget(options, null, function (istacWidget) {
 	                    widget.setTitle(istacWidget.title);
 	                });
                 });
