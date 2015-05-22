@@ -307,6 +307,19 @@
             ]
         },
         {
+            "path" : "/timeGranularities",
+            "description" : "Granularidades temporales",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Granularidades temporales",
+                    "nickname" : "retrieveTimeGranularities",
+                    "notes" : "<p>Esta petición devuelve la lista de granularidades temporales tratadas en el banco de datos ISTAC-indicadores ordenadas de mayor a menor granularidad. Por ejemplo granularidad anual, trimestral o mensual.</p><br>",
+                    "responseClass" : "List[TimeGranularity]"
+                }
+            ]
+        },
+        {
             "path" : "/geographicGranularities",
             "description" : "Granularidades geográficas.",
             "operations" : [
@@ -405,6 +418,19 @@
                 "longitude" : {
                     "type" : "double",
                     "description" : "Longitud del recinto geográfico."
+                }
+            }
+        },
+        "TimeGranularity" : {
+            "id" : "TimeGranularity",
+            "properties" : {
+                "code" : {
+                    "type"  : "string",
+                    "description" : "Código de la granularidad temporal"
+                },
+                "title" : {
+                    "type" : "InternationalString",
+                    "description" : "Nombre la granularidad temporal"
                 }
             }
         },

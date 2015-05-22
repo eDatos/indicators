@@ -852,6 +852,16 @@ public class InvocationValidator {
     // TIME GRANULARITY
     // --------------------------------------------------------------------------------------------
 
+    public static void checkRetrieveTimeGranularities(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // nothing
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveTimeGranularity(TimeGranularityEnum timeGranularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -2011,4 +2021,5 @@ public class InvocationValidator {
             checkQuantity(rateDerivation.getQuantity(), parameterName, true, exceptions);
         }
     }
+
 }

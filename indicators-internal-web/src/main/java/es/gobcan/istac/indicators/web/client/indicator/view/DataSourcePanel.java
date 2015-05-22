@@ -62,6 +62,8 @@ import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 public class DataSourcePanel extends VLayout {
 
@@ -86,7 +88,8 @@ public class DataSourcePanel extends VLayout {
     private List<String>                dataDefinitionsOperationCodes;
     private DataSourceMainFormLayout    mainFormLayout;
 
-    private boolean                     queryEditionViewMode;                // When we are editing the form, but query dependent fields are in view mode
+    // When we are editing the form, but query dependent fields are in view mode
+    private boolean                     queryEditionViewMode;
 
     private DataSourceDto               dataSourceDto;
     private DataStructureDto            dataStructureDtoEdition;

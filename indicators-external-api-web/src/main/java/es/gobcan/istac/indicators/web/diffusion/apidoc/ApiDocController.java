@@ -38,12 +38,14 @@ public class ApiDocController {
 
         final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
         final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS);
+        final URI uriTimeGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_TIME_GRANULARITIES);
         final URI uriGeographicGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
         final URI uriGeographicalValues = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
         final URI uriThemes = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_SUBJECTS);
 
         final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
         final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToTimeGranularities = RESTURIUtil.createLinkHeader(uriTimeGranularities.toASCIIString(), RESTURIUtil.REL_COLLECTION);
         final String linkToGeographicGranularities = RESTURIUtil.createLinkHeader(uriGeographicGranularities.toASCIIString(), RESTURIUtil.REL_COLLECTION);
         final String linkToThemes = RESTURIUtil.createLinkHeader(uriThemes.toASCIIString(), RESTURIUtil.REL_COLLECTION);
 

@@ -1007,6 +1007,23 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     // --------------------------------------------------------------------------------------------
 
     @Override
+    public List<TimeGranularity> retrieveTimeGranularities(ServiceContext ctx) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveTimeGranularities(null);
+
+        List<TimeGranularity> timeGranularities = new ArrayList<TimeGranularity>();
+
+        for (TimeGranularityEnum timeGranularityEnum : TimeGranularityEnum.values()) {
+            String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularityEnum.name()).toString();
+            Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+
+            timeGranularities.add(TimeVariableUtils.buildTimeGranularity(timeGranularityEnum, translation));
+        }
+
+        return timeGranularities;
+    }
+
+    @Override
     public TimeGranularity retrieveTimeGranularity(ServiceContext ctx, TimeGranularityEnum timeGranularity) throws MetamacException {
 
         // Validation of parameters

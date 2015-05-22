@@ -92,6 +92,7 @@ Application Indicators {
 	    	TimeValue retrieveTimeValue(String timeValue) throws MetamacException;
 
 	    	// Time granularities
+	    	List<TimeGranularity> retrieveTimeGranularities() throws MetamacException;
 	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	
 	    	// Measure value
@@ -1912,6 +1913,7 @@ Application Indicators {
     	
     	"Time granularities"
     	enum TimeGranularityEnum {
+    	"List of results in the order of bigger to smaller."  
     		YEARLY,
     		BIYEARLY,
     		QUARTERLY,

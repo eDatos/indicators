@@ -25,6 +25,9 @@ public final class RestConstants {
     public static final String         API_SLASH                                = "/";
     public static final String         API_INDICATORS_BASE                      = "/api/indicators/v1.0";
     public static final String         API_INDICATORS_INDICATORS                = "indicators";
+
+    public static final String         API_INDICATORS_TIME_GRANULARITIES        = "timeGranularities";
+
     public static final String         API_INDICATORS_GEOGRAPHIC_GRANULARITIES  = "geographicGranularities";
     public static final String         API_INDICATORS_GEOGRAPHICAL_VALUES       = "geographicalValues";
     public static final String         API_INDICATORS_SUBJECTS                  = "subjects";
