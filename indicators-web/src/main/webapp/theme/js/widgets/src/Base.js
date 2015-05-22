@@ -68,6 +68,8 @@
 
             // Request builder
             this.datasetRequestBuilder = new DatasetRequestBuilder({apiUrl : this.apiUrl});
+            
+            this._setTimeGranularities();
 
             // locale
             this.locale = options.locale || "es";
@@ -136,6 +138,13 @@
 
         setTextColor : function (textColor) {
             this.el.css('color', textColor);
+        },
+        
+        _setTimeGranularities : function() {
+        	self = this;
+        	$.ajax(this.apiUrl + '/timeGranularities').done(function (response) {
+        		self.timeGranularities = response;
+        	}, self);
         },
 
         _getContrast50 : function (hexcolor) {
@@ -363,8 +372,8 @@
                 });
                 req.success(function (response) {
                     var datasets = _.map(response.items, function (item) {
-                        return Dataset.fromRequest(item);
-                    });
+                        return Dataset.fromRequest(item, self.timeGranularities);
+                    }, self);
                     self.datasets = datasets;
                     self.render();
                 });

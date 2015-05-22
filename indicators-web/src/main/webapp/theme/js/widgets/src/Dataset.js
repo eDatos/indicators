@@ -5,11 +5,14 @@
         this.metadata = {};
     };
 
-    Dataset.fromRequest = function (request) {
+    Dataset.fromRequest = function (request, timeGranularities) {
         var dataset = new Dataset();
         dataset.request = request;
         dataset.metadata = request.metadata;
         dataset.data = request.data;
+
+        dataset.allTimeGranularities = timeGranularities;
+        
         return dataset;
     };
 
@@ -134,17 +137,32 @@
 
         getTimeValues : function () {
             var timeValues = [];
+            self = this;
+            self.smallestTimeGranularity = this._getSmallestTimeGranularity();
             if (this.data.dimension.TIME.representation.index) {
                 timeValues = _.chain(this.data.dimension.TIME.representation.index)
                     .map(function (value, key) {
                         return {key : key, value : value};
                     }).sortBy(function (dimension) {
                         return dimension.value;
-                    }).map(function (dimension) {
+                    }).filter(function (time) { 
+                    	return this.metadata.dimension.TIME.representation[time.value].granularityCode == self.smallestTimeGranularity }, 
+                    	self
+                    ).map(function (dimension) {
                         return dimension.key;
                     }).value().reverse();
             }
             return timeValues;
+        },
+        
+        _getSmallestTimeGranularity : function() {
+
+        	this.timeGranularityCodes = _.pluck(this.metadata.dimension.TIME.granularity, 'code');
+        	var sortedTimeGranularities = _.filter(this.allTimeGranularities, function(timeGranularity) {
+        		return _.contains(this.timeGranularityCodes, timeGranularity.code); 
+        	}, this);
+        	
+        	return sortedTimeGranularities[sortedTimeGranularities.length - 1].code;                     
         },
 
         getTimeValuesTitles : function (locale) {
