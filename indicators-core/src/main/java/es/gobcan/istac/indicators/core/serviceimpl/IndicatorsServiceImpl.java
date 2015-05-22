@@ -402,6 +402,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve version in diffusion validation
         IndicatorVersion indicatorInProduction = retrieveIndicatorProcStatusInProduction(ctx, uuid, false);
 
+        // Retrieve version published that have to ve removed after published the new versión
+        IndicatorVersion indicatorPreviouslyPublished = retrieveIndicatorProcStatusInDiffusion(ctx, uuid, false);
+
         // Validate to publish
         checkIndicatorToPublish(ctx, uuid, indicatorInProduction);
 
@@ -417,39 +420,36 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
-
-            PublishIndicatorResult publishIndicatorResult = new PublishIndicatorResult();
-            publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
-            publishIndicatorResult.setPublicationFailedReason(e);
-            return publishIndicatorResult;
+            return new PublishIndicatorResult(indicatorInProduction, e);
         }
 
         tryRefreshSubjectTitle(indicatorInProduction);
 
-        // Update proc status
+        // Update indicator version metadata
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
-        // remove posible failed information
         indicatorInProduction.setPublicationFailedDate(null);
         indicatorInProduction.setPublicationFailedUser(null);
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
-
         Indicator indicator = indicatorInProduction.getIndicator();
+
         // Remove possible last version in diffusion
-        if (indicator.getDiffusionVersionNumber() != null) {
-            IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersionNumber());
+        if (indicatorPreviouslyPublished != null) {
             try {
-                getIndicatorsDataService().deleteIndicatorVersionData(ctx, uuid, indicator.getDiffusionVersionNumber());
+                getIndicatorsDataService().deleteIndicatorVersionData(ctx, uuid, indicatorPreviouslyPublished.getVersionNumber());
             } catch (MetamacException e) {
-                LOG.warn("Dataset datasetId:" + indicatorDiffusionVersion.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:" + indicator.getDiffusionVersionNumber()
-                        + " could not be deleted", e);
+                LOG.warn(
+                        "Dataset datasetId:" + indicatorPreviouslyPublished.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:"
+                                + indicator.getDiffusionVersionNumber() + " could not be deleted", e);
             }
-            indicator.getVersions().remove(indicatorDiffusionVersion);
+            indicator.getVersions().remove(indicatorPreviouslyPublished);
             getIndicatorRepository().save(indicator);
-            getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
+            getIndicatorVersionRepository().delete(indicatorPreviouslyPublished);
 
         }
+
+        // Update indicator metadata
         indicator.setIsPublished(Boolean.TRUE);
         indicator.setDiffusionIdIndicatorVersion(indicatorInProduction.getId());
         indicator.setDiffusionVersionNumber(indicatorInProduction.getVersionNumber());
@@ -457,12 +457,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setProductionIdIndicatorVersion(null);
         indicator.setProductionVersionNumber(null);
         indicator.setProductionProcStatus(null);
-
         getIndicatorRepository().save(indicator);
 
-        PublishIndicatorResult publishIndicatorResult = new PublishIndicatorResult();
-        publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
-        return publishIndicatorResult;
+        return new PublishIndicatorResult(indicatorInProduction);
     }
 
     private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {

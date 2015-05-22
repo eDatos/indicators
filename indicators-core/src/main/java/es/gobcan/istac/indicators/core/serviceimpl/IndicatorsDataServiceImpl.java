@@ -235,7 +235,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
                 rebuildCoveragesCache(ctx, indicatorVersion);
-                buildLastValuesCache(ctx, indicatorVersion);
 
                 // After diffusion version's data is populated all related systems must update their versions
                 if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -244,6 +243,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
                     changeVersionForModifiedIndicatorsSystems(modifiedSystems);
 
+                    buildLastValuesCache(ctx, indicatorVersion);
                 }
             } else {
                 LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
@@ -286,10 +286,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
                     rebuildCoveragesCache(ctx, indicatorVersion);
-                    buildLastValuesCache(ctx, indicatorVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
+
+                    buildLastValuesCache(ctx, indicatorVersion);
                 } catch (MetamacException e) {
                     LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
                 }

@@ -9,6 +9,16 @@ public class PublishIndicatorResult {
     private IndicatorVersion indicatorVersion;
     private MetamacException publicationFailedReason;
 
+    public PublishIndicatorResult(IndicatorVersion indicatorVersion) {
+        new PublishIndicatorResult(indicatorVersion, null);
+    }
+
+    public PublishIndicatorResult(IndicatorVersion indicatorVersion, MetamacException publicationFailedReason) {
+        super();
+        this.indicatorVersion = indicatorVersion;
+        this.publicationFailedReason = publicationFailedReason;
+    }
+
     public IndicatorVersion getIndicatorVersion() {
         return indicatorVersion;
     }
