@@ -5,7 +5,7 @@
     <parent>
         <groupId>es.gobcan.istac.indicators</groupId>
         <artifactId>indicators-parent</artifactId>
-        <version>4.1.4-SNAPSHOT</version>
+        <version>4.2.0</version>
         <relativePath>../indicators-parent/pom.xml</relativePath>
     </parent>
 
