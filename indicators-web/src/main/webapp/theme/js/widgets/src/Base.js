@@ -108,6 +108,7 @@
             this.set('borderColor', options.borderColor);
             this.set('headerColor', options.headerColor);
             this.set('title', options.title);
+            this.set('widgetWith', options.width);
             this.set('width', realWidth);
             this.set('showLabels', options.showLabels);
             this.set('showLegend', options.showLegend);
@@ -340,7 +341,7 @@
         },
 
         showEmbed : function () {
-            var filteredOptions = _.omit(this.options, "el");
+            var filteredOptions = _.omit(this.options, ["el", "uwa", "afterRenderCallback", "width", "widgetWith"]);
 
             var closeScript = this.closeTag('script');
             
@@ -348,13 +349,20 @@
             var code = '<div id="' + el + '"></div>';            
             filteredOptions.el = '#' + el;
             
-            filteredOptions.jaxiUrl = jaxiUrl;
+            filteredOptions.jaxiUrl = this._getJaxiUrl();
+            filteredOptions.width = this.options.widgetWith;
 
             code += this.openTag('script', {src : this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
             code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
 
             this.embedContainer.find('textarea').val(code);
             this.embedContainer.show();
+        },
+        
+        _getJaxiUrl : function() {
+        	if (typeof jaxiUrl !== "undefined") return jaxiUrl;
+        	
+        	return this.options.jaxiUrl;
         },
 
         hideEmbed : function () {
