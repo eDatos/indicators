@@ -140,7 +140,11 @@
         },
         
         _getTimeGranularities : function() {
-        	return $.ajax(this.apiUrl + '/timeGranularities');
+        	return $.ajax({ 
+        		url : this.apiUrl + '/timeGranularities',
+        		dataType : 'jsonp',
+        		jsonp : "_callback"
+        	});
         },
 
         _getContrast50 : function (hexcolor) {
@@ -367,9 +371,7 @@
 
         hideEmbed : function () {
             this.embedContainer.hide();
-        },
-        
-        
+        },        
 
         reloadData : function () {
             var self = this;
