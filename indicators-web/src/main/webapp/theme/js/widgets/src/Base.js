@@ -59,7 +59,7 @@
             this.measures = options.measures || this._defaultOptions.measures;
             this.geographicalValues = options.geographicalValues;
             
-            this.afterRenderCallback = _.debounce(this.options.afterRenderCallback, 300);
+            this.afterRenderCallback = !_.isUndefined(this.options.afterRenderCallback) ? _.debounce(this.options.afterRenderCallback, 300) : null;
 
             // urls
             this.url = options.url || "";
@@ -69,8 +69,6 @@
             // Request builder
             this.datasetRequestBuilder = new DatasetRequestBuilder({apiUrl : this.apiUrl});
             
-            this._setTimeGranularities();
-
             // locale
             this.locale = options.locale || "es";
 
@@ -140,11 +138,8 @@
             this.el.css('color', textColor);
         },
         
-        _setTimeGranularities : function() {
-        	self = this;
-        	$.ajax(this.apiUrl + '/timeGranularities').done(function (response) {
-        		self.timeGranularities = response;
-        	}, self);
+        _getTimeGranularities : function() {
+        	return $.ajax(this.apiUrl + '/timeGranularities');
         },
 
         _getContrast50 : function (hexcolor) {
@@ -348,7 +343,12 @@
             var filteredOptions = _.omit(this.options, "el");
 
             var closeScript = this.closeTag('script');
-            var code = '<div id="istac-widget"></div>';
+            
+            var el = 'istac-widget';
+            var code = '<div id="' + el + '"></div>';            
+            filteredOptions.el = '#' + el;
+            
+            filteredOptions.jaxiUrl = jaxiUrl;
 
             code += this.openTag('script', {src : this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
             code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
@@ -360,6 +360,8 @@
         hideEmbed : function () {
             this.embedContainer.hide();
         },
+        
+        
 
         reloadData : function () {
             var self = this;
@@ -370,13 +372,19 @@
                     dataType : 'jsonp',
                     jsonp : "_callback"
                 });
-                req.success(function (response) {
-                    var datasets = _.map(response.items, function (item) {
-                        return Dataset.fromRequest(item, self.timeGranularities);
-                    }, self);
-                    self.datasets = datasets;
-                    self.render();
+                
+                this._getTimeGranularities().success(function(response) {
+                	self.timeGranularities = response;
+                	
+                	req.success(function (response) {                	                
+                        var datasets = _.map(response.items, function (item) {
+                            return Dataset.fromRequest(item, self.timeGranularities);
+                        }, self);
+                        self.datasets = datasets;
+                        self.render();
+                    });
                 });
+                
             } else {
                 self.datasets = [];
                 self.render();
