@@ -40,10 +40,10 @@
         return x1 + x2;
     };
 
-    Istac.widget.helper.getHost = function(url) {
+    Istac.widget.helper.getHostname = function(url) {
         var l = document.createElement("a");
         l.href = url;
-        return l.host;
+        return l.hostname;
     };
 
     Istac.widget.helper.absoluteUrl = function(url) {

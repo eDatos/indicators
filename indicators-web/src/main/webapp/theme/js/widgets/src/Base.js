@@ -307,7 +307,7 @@
                 // lo va a incrustar
                 result = false;
             } else {
-                result = window.location.host === Istac.widget.helper.getHost(absoluteUrl);
+                result = window.location.hostname === Istac.widget.helper.getHostname(absoluteUrl);
             }
             return result;
         },
