@@ -47,7 +47,7 @@
     <script type="text/javascript">
         $(function () {
             window.swaggerUi = new SwaggerUi({
-                discoveryUrl:"${appBaseUrl}/api/indicators/v1.0/docs",
+                discoveryUrl:"${appBaseUrl}/indicators/v1.0/docs",
                 apiKey:"special-key",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: false,
