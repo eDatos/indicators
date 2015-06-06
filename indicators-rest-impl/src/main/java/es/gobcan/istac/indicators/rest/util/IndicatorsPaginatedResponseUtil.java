@@ -28,7 +28,7 @@ public class IndicatorsPaginatedResponseUtil extends PaginatedResponseUtil {
             target.setLastLink(toPaginatedLink(baseURL, query, order, limit, lastOffset, fields, representation));
         }
         // previous and next page
-        if (offset > 0) {
+        if (total > 0) {
             int previousOffset = getOffsetPreviousPage(limit, offset);
             if (NO_OFFSET != previousOffset) {
                 target.setPreviousLink(toPaginatedLink(baseURL, query, order, limit, previousOffset, fields, representation));
