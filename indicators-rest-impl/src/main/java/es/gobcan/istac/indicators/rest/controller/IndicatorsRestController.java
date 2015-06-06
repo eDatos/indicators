@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.IndicatorsPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Controller("indicatorsRestController")
@@ -50,6 +51,8 @@ public class IndicatorsRestController extends AbstractRestController {
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         PagedResultType<IndicatorBaseType> indicatorsBaseType = indicatorRestFacade.findIndicators(baseURL, q, order, paginator, fields, selectedRepresentations);
+        IndicatorsPaginatedResponseUtil.createPaginationLinks(indicatorsBaseType, baseURL, q, order, limit, offset, fields, representation);
+
         ResponseEntity<PagedResultType<IndicatorBaseType>> response = new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
 
         return response;

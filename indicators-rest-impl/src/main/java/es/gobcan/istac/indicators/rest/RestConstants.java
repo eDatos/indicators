@@ -3,12 +3,15 @@ package es.gobcan.istac.indicators.rest;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 
-public final class RestConstants {
+public final class RestConstants extends org.siemac.metamac.rest.constants.RestConstants {
 
     private RestConstants() {
     }
 
     public static final ServiceContext SERVICE_CONTEXT                          = new ServiceContext("admin", "amdmin", "rest");
+
+    public static final String         PARAMETER_Q                              = "q";
+    public static final String         PARAMETER_ORDER                          = "order";
 
     public static final String         KIND_INDICATOR                           = "indicators#indicator";
     public static final String         KIND_INDICATORS                          = "indicators#indicators";

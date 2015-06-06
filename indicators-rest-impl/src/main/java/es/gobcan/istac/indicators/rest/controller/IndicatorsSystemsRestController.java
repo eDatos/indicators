@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.rest.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
+import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
+import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Controller("indicatorsSystemsRestController")
@@ -38,7 +41,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     // @formatter:off
     public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(final UriComponentsBuilder uriComponentsBuilder,
                                                                                             @RequestParam(required = false, value = "limit") final Integer limit,
-                                                                                            @RequestParam(required = false, value = "offset") final Integer offset) throws Exception {
+                                                                                            @RequestParam(required = false, value = "offset") final Integer offset) throws MetamacException {
         // @formatter:on
 
         String baseURL = uriComponentsBuilder.build().toUriString();
@@ -47,6 +50,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
         baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).build().toUriString();
         HttpHeaders headers = HttpHeaderUtil.createPagedHeaders(baseURL, indicatorsSystemBaseTypes);
+        IndicatorsSystemsPaginatedResponseUtil.createPaginationLinks(indicatorsSystemBaseTypes, baseURL, limit, offset);
         return new ResponseEntity<PagedResultType<IndicatorsSystemBaseType>>(indicatorsSystemBaseTypes, headers, HttpStatus.OK);
     }
 
@@ -83,6 +87,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrievePaginatedIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields,
                 selectedRepresentations, selectedGranularities);
+        IndicatorInstancesPaginatedResponseUtil.createPaginationLinks(indicatorInstanceTypes, baseURL, q, order, limit, offset, fields, representation, granularity);
         return new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
     }
 

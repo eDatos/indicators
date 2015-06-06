@@ -14,6 +14,11 @@ public class PagedResultType<E extends Serializable> implements Serializable {
     private Integer           limit            = null;
     private Integer           offset           = null;
     private Integer           total            = null;
+    private String            selfLink         = null;
+    private String            firstLink        = null;
+    private String            lastLink         = null;
+    private String            nextLink         = null;
+    private String            previousLink     = null;
     private List<E>           items            = null;
 
     public String getKind() {
@@ -54,6 +59,46 @@ public class PagedResultType<E extends Serializable> implements Serializable {
 
     public void setItems(List<E> items) {
         this.items = items;
+    }
+
+    public String getSelfLink() {
+        return selfLink;
+    }
+
+    public void setSelfLink(String selfLink) {
+        this.selfLink = selfLink;
+    }
+
+    public String getFirstLink() {
+        return firstLink;
+    }
+
+    public void setFirstLink(String firstLink) {
+        this.firstLink = firstLink;
+    }
+
+    public String getLastLink() {
+        return lastLink;
+    }
+
+    public void setLastLink(String lastLink) {
+        this.lastLink = lastLink;
+    }
+
+    public String getNextLink() {
+        return nextLink;
+    }
+
+    public void setNextLink(String nextLink) {
+        this.nextLink = nextLink;
+    }
+
+    public String getPreviousLink() {
+        return previousLink;
+    }
+
+    public void setPreviousLink(String previousLink) {
+        this.previousLink = previousLink;
     }
 
 }
