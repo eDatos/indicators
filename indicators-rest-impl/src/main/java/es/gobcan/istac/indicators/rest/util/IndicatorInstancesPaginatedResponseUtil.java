@@ -8,10 +8,12 @@ import es.gobcan.istac.indicators.rest.types.PagedResultType;
 
 public class IndicatorInstancesPaginatedResponseUtil extends PaginatedResponseUtil {
 
-    public static void createPaginationLinks(PagedResultType<IndicatorInstanceBaseType> target, String baseURL, String query, String order, Integer limit, Integer offset, String fields,
+    public static void createPaginationLinks(PagedResultType<IndicatorInstanceBaseType> target, String baseURL, String query, String order, Integer queryLimit, Integer queryOffset, String fields,
             String representation, String granularity) {
 
         Integer total = target.getTotal();
+        Integer offset = CriteriaUtil.calculateOffset(queryOffset);
+        Integer limit = CriteriaUtil.calculateLimit(queryLimit);
 
         target.setSelfLink(toPaginatedLink(baseURL, query, order, limit, offset, fields, representation, granularity));
 

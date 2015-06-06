@@ -9,22 +9,31 @@ public final class CriteriaUtil {
     private CriteriaUtil() {
     }
 
-    private static final Integer MAXIMUM_RESULT_SIZE_DEFAULT = Integer.valueOf(25);
-    private static final Integer MAXIMUM_RESULT_SIZE_ALLOWED = Integer.valueOf(1000);
+    protected static final Integer MAXIMUM_RESULT_SIZE_DEFAULT = Integer.valueOf(25);
+    protected static final Integer MAXIMUM_RESULT_SIZE_ALLOWED = Integer.valueOf(1000);
 
     public static PagingParameter createPagingParameter(final RestCriteriaPaginator paginator) {
-        if (paginator.getOffset() == null || paginator.getOffset() < 0) {
-            paginator.setOffset(0);
-        }
+        Integer offset = calculateOffset(paginator.getOffset());
+        Integer limit = calculateLimit(paginator.getLimit());
+        return PagingParameter.rowAccess(offset, offset + limit, Boolean.TRUE);
+    }
 
-        if (paginator.getLimit() == null || paginator.getLimit() < 0) {
-            paginator.setLimit(MAXIMUM_RESULT_SIZE_DEFAULT);
+    public static Integer calculateOffset(Integer offset) {
+        if (offset == null || offset < 0) {
+            return 0;
+        } else {
+            return offset;
         }
+    }
 
-        if (paginator.getLimit() > MAXIMUM_RESULT_SIZE_ALLOWED) {
-            paginator.setLimit(MAXIMUM_RESULT_SIZE_ALLOWED);
+    public static Integer calculateLimit(Integer limit) {
+        if (limit == null || limit < 0) {
+            return MAXIMUM_RESULT_SIZE_DEFAULT;
+        } else if (limit > MAXIMUM_RESULT_SIZE_ALLOWED) {
+            return MAXIMUM_RESULT_SIZE_ALLOWED;
+        } else {
+            return limit;
         }
-        return PagingParameter.rowAccess(paginator.getOffset(), paginator.getOffset() + paginator.getLimit(), Boolean.TRUE);
     }
 
 }
