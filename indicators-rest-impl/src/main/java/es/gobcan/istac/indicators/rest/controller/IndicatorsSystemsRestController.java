@@ -86,7 +86,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
                 selectedRepresentations, selectedGranularities);
 
         baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).pathSegment(idIndicatorSystem)
-                .path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES).build().toUriString();
+                .path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES).build().toUriString();
         IndicatorInstancesPaginatedResponseUtil.createPaginationLinks(indicatorInstanceTypes, baseURL, q, order, limit, offset, fields, representation, granularity);
         return new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
     }

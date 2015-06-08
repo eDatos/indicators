@@ -162,10 +162,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             filteredInstances.add(instancesBaseType.get(instance.getCode()));
         }
 
-        ListResultType<IndicatorInstanceBaseType> result = new ListResultType<IndicatorInstanceBaseType>();
-        result.setItems(filteredInstances);
-        result.setKind(RestConstants.KIND_INDICATOR_INSTANCES);
-        return result;
+        return new ListResultType<IndicatorInstanceBaseType>(RestConstants.KIND_INDICATOR_INSTANCES, filteredInstances);
     }
 
     private Map<String, IndicatorInstanceBaseType> buildInstancesBaseTypeMap(List<IndicatorInstance> instances, String baseUrl) {
