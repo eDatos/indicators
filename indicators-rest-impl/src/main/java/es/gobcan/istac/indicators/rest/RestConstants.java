@@ -29,7 +29,7 @@ public final class RestConstants extends org.siemac.metamac.rest.constants.RestC
     public static final String         KIND_STATISTICAL_OPERATION               = TypeExternalArtefactsEnum.STATISTICAL_OPERATION.getValue();
 
     public static final String         API_SLASH                                = "/";
-    public static final String         API_INDICATORS_BASE                      = "/api/indicators/v1.0";
+    public static final String         API_INDICATORS_BASE                      = "/v1.0";
     public static final String         API_INDICATORS_INDICATORS                = "indicators";
 
     public static final String         API_INDICATORS_TIME_GRANULARITIES        = "timeGranularities";
