@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
-import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.RequestUtil;
@@ -49,9 +47,8 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(baseURL, paginator);
 
         baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).build().toUriString();
-        HttpHeaders headers = HttpHeaderUtil.createPagedHeaders(baseURL, indicatorsSystemBaseTypes);
         IndicatorsSystemsPaginatedResponseUtil.createPaginationLinks(indicatorsSystemBaseTypes, baseURL, limit, offset);
-        return new ResponseEntity<PagedResultType<IndicatorsSystemBaseType>>(indicatorsSystemBaseTypes, headers, HttpStatus.OK);
+        return new ResponseEntity<PagedResultType<IndicatorsSystemBaseType>>(indicatorsSystemBaseTypes, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}", method = RequestMethod.GET)
