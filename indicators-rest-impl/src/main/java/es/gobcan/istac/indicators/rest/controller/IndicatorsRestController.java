@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
@@ -51,6 +52,8 @@ public class IndicatorsRestController extends AbstractRestController {
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         PagedResultType<IndicatorBaseType> indicatorsBaseType = indicatorRestFacade.findIndicators(baseURL, q, order, paginator, fields, selectedRepresentations);
+
+        baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS).build().toUriString();
         IndicatorsPaginatedResponseUtil.createPaginationLinks(indicatorsBaseType, baseURL, q, order, limit, offset, fields, representation);
 
         ResponseEntity<PagedResultType<IndicatorBaseType>> response = new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
