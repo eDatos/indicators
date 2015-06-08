@@ -122,6 +122,13 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities,
                 includeObservationsAttributes);
+
+        baseURL = uriComponentsBuilder
+                .pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS, RestConstants.API_SLASH, idIndicatorSystem,
+                        RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS_INSTANCES, RestConstants.API_SLASH, idIndicatorInstance,
+                        RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA).build().toUriString();
+
+        dataType.addHeader(baseURL, fields, representation, granularity, RestConstants.KIND_INDICATOR_INSTANCE_DATA);
         return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
     }
 

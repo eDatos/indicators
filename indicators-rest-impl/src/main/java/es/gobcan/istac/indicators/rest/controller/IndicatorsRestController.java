@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,7 @@ public class IndicatorsRestController extends AbstractRestController {
                                                           @PathVariable("indicatorCode") final String indicatorCode,
                                                           @RequestParam(required = false, value = "representation") final String representation,
                                                           @RequestParam(required = false, value = "granularity") final String granularity,
-                                                          @RequestParam(required = false, value = "fields") final String fields) throws Exception {
+                                                          @RequestParam(required = false, value = "fields") final String fields) throws MetamacException {
         // @formatter:on
 
         String baseURL = uriComponentsBuilder.build().toUriString();
@@ -96,6 +97,13 @@ public class IndicatorsRestController extends AbstractRestController {
 
         boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
+
+        baseURL = uriComponentsBuilder
+                .pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS, RestConstants.API_SLASH, indicatorCode, RestConstants.API_SLASH,
+                        RestConstants.API_INDICATORS_INDICATORS_DATA).build().toUriString();
+
+        dataType.addHeader(baseURL, fields, representation, granularity, RestConstants.KIND_INDICATOR_DATA);
+
         return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
     }
 
