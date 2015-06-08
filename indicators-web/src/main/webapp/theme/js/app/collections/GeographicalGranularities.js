@@ -8,6 +8,10 @@
         url : function () {
             return apiUrl + "/geographicGranularities/";
         },
+        
+        parse : function (response) {
+            return response.items;
+        },
 
         fetchByIndicatorSystemCode : function (systemCode) {
             return this.fetch({ data : {systemCode : systemCode } });

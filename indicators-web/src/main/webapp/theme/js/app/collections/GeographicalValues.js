@@ -9,6 +9,10 @@
 
         model : App.models.GeographicalValue,
 
+        parse : function (response) {
+            return response.items;
+        },
+
         fetchBySubjectCodeAndGeographicalGranularityCode : function (subjectCode, granularityCode) {
             return this.fetch({
                 data : {

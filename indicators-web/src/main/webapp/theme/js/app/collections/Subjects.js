@@ -5,6 +5,10 @@
 
         model : App.models.Subject,
 
+        parse : function (response) {
+            return response.items;
+        },
+        
         url : function () {
             return apiUrl + '/subjects/';
         }
