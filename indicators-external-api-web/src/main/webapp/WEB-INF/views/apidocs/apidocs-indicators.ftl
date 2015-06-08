@@ -491,6 +491,26 @@
                     "type" : "int",
                     "description" : "Número total de resultados existentes."
                 },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo"
+                },
+                "firstLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
+                },
+                "previousLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "nextLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "lastLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
+                },
                 "items" : {
                     "type" : "array",
                     "description" : "Listado de recursos.",
@@ -1056,6 +1076,26 @@
                     "type" : "int",
                     "description" : "Número total de resultados existentes."
                 },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo"
+                },
+                "firstLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
+                },
+                "previousLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "nextLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "lastLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
+                },
                 "items" : {
                     "type" : "array",
                     "items" : {
@@ -1221,6 +1261,26 @@
                 "total" : {
                     "type" : "int", 
                     "description" : "Número total de resultados existentes."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo"
+                },
+                "firstLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
+                },
+                "previousLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "nextLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente."
+                },
+                "lastLink" : {
+                    "type" : "string",
+                    "description" : "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última."
                 },
                 "items" : {
                     "type" : "array",
