@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.rest.controller;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.SubjectsRestFacade;
+import es.gobcan.istac.indicators.rest.types.ListResultType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 
 @Controller("subjectsRestController")
@@ -22,11 +25,11 @@ public class SubjectsRestController extends AbstractRestController {
 
     @RequestMapping(value = "/api/indicators/v1.0/subjects", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<SubjectBaseType>> findSubjects(final UriComponentsBuilder uriComponentsBuilder) throws Exception {
+    public ResponseEntity<ListResultType<SubjectBaseType>> findSubjects(final UriComponentsBuilder uriComponentsBuilder) throws MetamacException {
         String baseURL = uriComponentsBuilder.build().toUriString();
         List<SubjectBaseType> subjectTypes = subjectsRestFacade.retrieveSubjects(baseURL);
-        ResponseEntity<List<SubjectBaseType>> response = new ResponseEntity<List<SubjectBaseType>>(subjectTypes, null, HttpStatus.OK);
-        return response;
-    }
 
+        ListResultType<SubjectBaseType> itemsResultType = new ListResultType<SubjectBaseType>(RestConstants.KIND_SUBJECTS, subjectTypes);
+        return new ResponseEntity<ListResultType<SubjectBaseType>>(itemsResultType, null, HttpStatus.OK);
+    }
 }

@@ -1,8 +1,11 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class GeographicalValueType {
+public class GeographicalValueType implements Serializable {
+
+    private static final long   serialVersionUID = -8383077859978270324L;
 
     private String              code;
     private Map<String, String> title;

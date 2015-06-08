@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
+import es.gobcan.istac.indicators.rest.types.ListResultType;
 
 @Controller("geographicalValuesRestController")
 public class GeographicalValuesRestController extends AbstractRestController {
@@ -23,7 +25,7 @@ public class GeographicalValuesRestController extends AbstractRestController {
 
     @RequestMapping(value = "/api/indicators/v1.0/geographicalValues", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<GeographicalValueType>> findGeographicalValues(@RequestParam(value = "subjectCode", required = false) String subjectCode,
+    public ResponseEntity<ListResultType<GeographicalValueType>> findGeographicalValues(@RequestParam(value = "subjectCode", required = false) String subjectCode,
             @RequestParam(value = "systemCode", required = false) String systemCode, @RequestParam(value = "geographicalGranularityCode", required = true) String geographicalGranularityCode)
             throws MetamacException {
 
@@ -35,7 +37,8 @@ public class GeographicalValuesRestController extends AbstractRestController {
         } else {
             items = geographicalValuesRestFacade.findGeographicalValuesByGranularity(geographicalGranularityCode);
         }
-        return new ResponseEntity<List<GeographicalValueType>>(items, HttpStatus.OK);
+        ListResultType<GeographicalValueType> itemsResultType = new ListResultType<GeographicalValueType>(RestConstants.KIND_GEOGRAPHICAL_VALUES, items);
+        return new ResponseEntity<ListResultType<GeographicalValueType>>(itemsResultType, HttpStatus.OK);
     }
 
 }

@@ -56,9 +56,7 @@ public class IndicatorsRestController extends AbstractRestController {
         baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS).build().toUriString();
         IndicatorsPaginatedResponseUtil.createPaginationLinks(indicatorsBaseType, baseURL, q, order, limit, offset, fields, representation);
 
-        ResponseEntity<PagedResultType<IndicatorBaseType>> response = new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
-
-        return response;
+        return new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
     }
 
     /**
@@ -74,8 +72,7 @@ public class IndicatorsRestController extends AbstractRestController {
         String baseURL = uriComponentsBuilder.build().toUriString();
         IndicatorBaseType indicatorBaseType = indicatorRestFacade.retrieveIndicator(baseURL, indicatorCode);
 
-        ResponseEntity<IndicatorBaseType> response = new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
     }
 
     /**
@@ -99,8 +96,7 @@ public class IndicatorsRestController extends AbstractRestController {
 
         boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
-        ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
     }
 
 }

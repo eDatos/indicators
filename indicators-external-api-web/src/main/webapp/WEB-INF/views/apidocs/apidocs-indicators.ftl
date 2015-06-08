@@ -315,7 +315,7 @@
                     "summary" : "Granularidades temporales",
                     "nickname" : "retrieveTimeGranularities",
                     "notes" : "<p>Esta petición devuelve la lista de granularidades temporales tratadas en el banco de datos ISTAC-indicadores ordenadas de mayor a menor granularidad. Por ejemplo granularidad anual, trimestral o mensual.</p><br>",
-                    "responseClass" : "List[TimeGranularity]"
+                    "responseClass" : "TimeGranularitiesList"
                 }
             ]
         },
@@ -328,7 +328,7 @@
                     "summary" : "Granularidades geográficas",
                     "nickname" : "findGeographicGranularities",
                     "notes" : "<p>Esta petición devuelve la lista de granularidades geográficas tratadas en el banco de datos ISTAC-indicadores. Por ejemplo granularidad provincial, insular o municipal.</p><br>",
-                    "responseClass" : "List[GeographicalGranularity]"
+                    "responseClass" : "GeographicalGranularityList"
                 }
             ]
         },
@@ -340,7 +340,7 @@
                     "httpMethod" : "GET",
                     "summary" : "Valores geográficos",
                     "notes" : "<p>Esta petición devuelve los valores de una granularidad geográfica que a su vez forman parte de una un tema o un sistema de indicadores específicos.</p><br><p>Es importante tener en cuenta que de los parátemeros opcionales (<strong>subjectCode</strong> y <strong>systemCode</strong>) podrá estar cumplimentado uno de ellos o ninguno. En caso de que estén cumplimentados ambos, sólo se tendrá en cuenta el último.</p> <br>",
-                    "responseClass" : "List[GeographicalValue]",
+                    "responseClass" : "GeographicalValueList",
                     "nickname" : "findGeographicalValues",
                     "parameters" : [
                         {
@@ -377,7 +377,7 @@
                     "summary" : "Temas estadísticos",
                     "nickname" : "findSubjects",
                     "notes" : "<p>Esta petición devuelve los temas en los que el ISTAC clasifica sus operaciones estadísticas.</p><br>",
-                    "responseClass" : "List[Subject]"
+                    "responseClass" : "SubjectList"
                 }
             ]
         }
@@ -393,6 +393,30 @@
                 "__default__" : {
                     "type" : "string",
                     "description" : "Traducción en el idioma por defecto."
+                }
+            }
+        },
+        "GeographicalValueList" : {
+            "id" : "GeographicalValueList",
+            "properties" : {
+                "kind" : {
+                    "type" : "string",
+                    "description" : "Tipo del recurso."
+                },
+                "total" : {
+                    "type" : "int",
+                    "description" : "Número total de resultados existentes."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso."
+                },
+                "items" : {
+                    "type" : "array",
+                    "description" : "Listado de recursos.",
+                    "items" : {
+                        "$ref" : "GeographicalValue"
+                    }
                 }
             }
         },
@@ -421,6 +445,30 @@
                 }
             }
         },
+        "TimeGranularitiesList" : {
+            "id" : "TimeGranularitiesList",
+            "properties" : {
+                "kind" : {
+                    "type" : "string",
+                    "description" : "Tipo del recurso."
+                },
+                "total" : {
+                    "type" : "int",
+                    "description" : "Número total de resultados existentes."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso."
+                },
+                "items" : {
+                    "type" : "array",
+                    "description" : "Listado de recursos.",
+                    "items" : {
+                        "$ref" : "TimeGranularity"
+                    }
+                }
+            }
+        },
         "TimeGranularity" : {
             "id" : "TimeGranularity",
             "properties" : {
@@ -434,6 +482,30 @@
                 }
             }
         },
+        "GeographicalGranularityList" : {
+            "id" : "GeographicalGranularityList",
+            "properties" : {
+                "kind" : {
+                    "type" : "string",
+                    "description" : "Tipo del recurso."
+                },
+                "total" : {
+                    "type" : "int",
+                    "description" : "Número total de resultados existentes."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso."
+                },
+                "items" : {
+                    "type" : "array",
+                    "description" : "Listado de recursos.",
+                    "items" : {
+                        "$ref" : "GeographicalGranularity"
+                    }
+                }
+            }
+        },
         "GeographicalGranularity" : {
             "id" : "GeographicalGranularity",
             "properties" : {
@@ -444,6 +516,30 @@
                 "title" : {
                     "type" : "InternationalString",
                     "description" : "Nombre la granularidad geográfica."
+                }
+            }
+        },
+        "SubjectList" : {
+            "id" : "SubjectList",
+            "properties" : {
+                "kind" : {
+                    "type" : "string",
+                    "description" : "Tipo del recurso."
+                },
+                "total" : {
+                    "type" : "int",
+                    "description" : "Número total de resultados existentes."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso."
+                },
+                "items" : {
+                    "type" : "array",
+                    "description" : "Listado de recursos.",
+                    "items" : {
+                        "$ref" : "Subject"
+                    }
                 }
             }
         },

@@ -1,8 +1,9 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class SubjectBaseType {
+public class SubjectBaseType implements Serializable {
 
     private String              id;
     private String              kind;

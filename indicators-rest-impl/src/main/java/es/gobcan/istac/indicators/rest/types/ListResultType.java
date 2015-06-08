@@ -14,6 +14,13 @@ public class ListResultType<E extends Serializable> implements Serializable {
     private Integer           total            = null;
     private List<E>           items            = null;
 
+    public ListResultType(String kind, List<E> items) {
+        super();
+        this.kind = kind;
+        this.items = items;
+        this.total = items != null ? items.size() : 0;
+    }
+
     public String getKind() {
         return kind;
     }

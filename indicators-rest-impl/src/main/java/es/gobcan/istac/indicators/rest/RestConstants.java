@@ -25,6 +25,10 @@ public final class RestConstants extends org.siemac.metamac.rest.constants.RestC
     public static final String         KIND_INDICATOR_INSTANCES                 = "indicators#indicatorInstances";
     public static final String         KIND_INDICATOR_INSTANCE_DATA             = "indicators#indicatorInstanceData";
     public static final String         KIND_INDICATOR_DIMENSION                 = "indicators#dimension";
+    public static final String         KIND_GEOGRAPHICAL_VALUES                 = "indicators#geographicalValues";
+    public static final String         KIND_TIME_GRANULARITIES                  = "indicators#timeGranularities";
+    public static final String         KIND_GEOGRAPHICAL_GRANULARITIES          = "indicators#geographicalGranularities";
+    public static final String         KIND_SUBJECTS                            = "indicators#subjects";
 
     public static final String         KIND_STATISTICAL_OPERATION               = TypeExternalArtefactsEnum.STATISTICAL_OPERATION.getValue();
 
