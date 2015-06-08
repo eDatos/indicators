@@ -12,6 +12,9 @@ public final class RestConstants extends org.siemac.metamac.rest.constants.RestC
 
     public static final String         PARAMETER_Q                              = "q";
     public static final String         PARAMETER_ORDER                          = "order";
+    public static final String         PARAMETER_FIELDS                         = "fields";
+    public static final String         PARAMETER_REPRESENTATION                 = "representation";
+    public static final String         PARAMETER_GRANULARITY                    = "granularity";
 
     public static final String         KIND_INDICATOR                           = "indicators#indicator";
     public static final String         KIND_INDICATORS                          = "indicators#indicators";

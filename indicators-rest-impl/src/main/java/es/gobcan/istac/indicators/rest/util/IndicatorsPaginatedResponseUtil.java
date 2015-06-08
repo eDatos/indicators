@@ -47,8 +47,8 @@ public class IndicatorsPaginatedResponseUtil extends PaginatedResponseUtil {
         String link = baseURL;
         link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_Q, query);
         link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_ORDER, order);
-        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_OFFSET, fields);
-        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_OFFSET, representation);
+        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_FIELDS, fields);
+        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_REPRESENTATION, representation);
         link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_LIMIT, String.valueOf(limit));
         link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_OFFSET, String.valueOf(offset));
         return link;
