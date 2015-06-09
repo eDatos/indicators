@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.SubjectsRestFacade;
 import es.gobcan.istac.indicators.rest.types.ListResultType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
+import es.gobcan.istac.indicators.rest.util.UriUtils;
 
 @Controller("subjectsRestController")
 public class SubjectsRestController extends AbstractRestController {
@@ -29,7 +30,8 @@ public class SubjectsRestController extends AbstractRestController {
         String baseURL = uriComponentsBuilder.build().toUriString();
         List<SubjectBaseType> subjectTypes = subjectsRestFacade.retrieveSubjects(baseURL);
 
-        ListResultType<SubjectBaseType> itemsResultType = new ListResultType<SubjectBaseType>(RestConstants.KIND_SUBJECTS, subjectTypes);
+        String selfLink = UriUtils.getSubjectSelfLink(uriComponentsBuilder);
+        ListResultType<SubjectBaseType> itemsResultType = new ListResultType<SubjectBaseType>(RestConstants.KIND_SUBJECTS, selfLink, subjectTypes);
         return new ResponseEntity<ListResultType<SubjectBaseType>>(itemsResultType, null, HttpStatus.OK);
     }
 }

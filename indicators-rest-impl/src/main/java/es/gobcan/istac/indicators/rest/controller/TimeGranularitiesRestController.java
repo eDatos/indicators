@@ -27,7 +27,7 @@ public class TimeGranularitiesRestController extends AbstractRestController {
     public ResponseEntity<ListResultType<MetadataGranularityType>> findTimeGranularities() throws MetamacException {
         List<MetadataGranularityType> items = timeRestFacade.findTimeGranularities();
 
-        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_TIME_GRANULARITIES, items);
+        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_TIME_GRANULARITIES, null, items);
         return new ResponseEntity<ListResultType<MetadataGranularityType>>(itemsResultType, null, HttpStatus.OK);
     }
 

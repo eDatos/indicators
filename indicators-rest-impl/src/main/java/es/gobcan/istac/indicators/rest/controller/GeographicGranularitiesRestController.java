@@ -37,7 +37,7 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
             items = geographicRestFacade.findGeographicGranularities();
         }
 
-        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_GEOGRAPHICAL_GRANULARITIES, items);
+        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_GEOGRAPHICAL_GRANULARITIES, null, items);
         return new ResponseEntity<ListResultType<MetadataGranularityType>>(itemsResultType, null, HttpStatus.OK);
     }
 
