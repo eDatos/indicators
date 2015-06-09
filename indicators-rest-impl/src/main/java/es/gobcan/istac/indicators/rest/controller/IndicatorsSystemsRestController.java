@@ -46,7 +46,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
         PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(baseURL, paginator);
 
-        baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).build().toUriString();
+        baseURL = uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).build().toUriString();
         IndicatorsSystemsPaginatedResponseUtil.createPaginationLinks(indicatorsSystemBaseTypes, baseURL, limit, offset);
         return new ResponseEntity<PagedResultType<IndicatorsSystemBaseType>>(indicatorsSystemBaseTypes, HttpStatus.OK);
     }
@@ -85,8 +85,9 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrievePaginatedIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields,
                 selectedRepresentations, selectedGranularities);
 
-        baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).pathSegment(idIndicatorSystem)
-                .path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES).build().toUriString();
+        baseURL = uriComponentsBuilder
+                .pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS, idIndicatorSystem, RestConstants.API_INDICATORS_INDICATORS_INSTANCES).build()
+                .toUriString();
         IndicatorInstancesPaginatedResponseUtil.createPaginationLinks(indicatorInstanceTypes, baseURL, q, order, limit, offset, fields, representation, granularity);
         return new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
     }
@@ -124,9 +125,8 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
                 includeObservationsAttributes);
 
         baseURL = uriComponentsBuilder
-                .pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS, RestConstants.API_SLASH, idIndicatorSystem,
-                        RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS_INSTANCES, RestConstants.API_SLASH, idIndicatorInstance,
-                        RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA).build().toUriString();
+                .pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS, idIndicatorSystem, RestConstants.API_INDICATORS_INDICATORS_INSTANCES,
+                        idIndicatorInstance, RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA).build().toUriString();
 
         dataType.addHeader(baseURL, fields, representation, granularity, RestConstants.KIND_INDICATOR_INSTANCE_DATA);
         return new ResponseEntity<DataType>(dataType, HttpStatus.OK);

@@ -989,6 +989,14 @@
         "Data" : {
             "id" : "Data",
             "properties" : {
+                "kind" : {
+                    "type" : "string",
+                    "description" : "Tipo del recurso."
+                },
+                "selfLink" : {
+                    "type" : "string",
+                    "description" : "Enlace al propio recurso."
+                },
                 "format" : {
                     "type": "array",
                     "items":{

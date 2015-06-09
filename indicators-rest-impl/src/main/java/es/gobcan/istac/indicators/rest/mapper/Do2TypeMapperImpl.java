@@ -1025,68 +1025,53 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _createUrlIndicatorsSystems(UriComponentsBuilder uriComponentsBuilder) {
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
     }
 
     private void _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems(uriComponentsBuilder);
 
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsSystem.getCode());
+        uriComponentsBuilder.pathSegment(indicatorsSystem.getCode());
     }
 
     private void _createUrlIndicatorsSystems_IndicatorsSystem_Instances(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);
 
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES);
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_INDICATORS_INSTANCES);
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
             final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
 
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsInstance.getCode());
+        uriComponentsBuilder.pathSegment(indicatorsInstance.getCode());
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
             final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
 
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA);
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA);
     }
 
     private void _createUrlIndicators(UriComponentsBuilder uriComponentsBuilder) {
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS);
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS);
     }
 
     private void _createUrlIndicators_Indicator(final Indicator indicator, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicators(uriComponentsBuilder);
-
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicator.getCode());
+        uriComponentsBuilder.pathSegment(indicator.getCode());
     }
 
     private void _createUrlIndicators_Indicator_Data(final Indicator indicator, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicators_Indicator(indicator, uriComponentsBuilder);
 
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_DATA);
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_INDICATORS_DATA);
     }
 
     private String _createUrlSubject(final SubjectIndicatorResult subject, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_SUBJECTS);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(subject.getId());
+        uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_SUBJECTS, subject.getId());
         return uriComponentsBuilder.build().encode().toUriString();
     }
 

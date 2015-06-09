@@ -54,7 +54,7 @@ public class IndicatorsRestController extends AbstractRestController {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         PagedResultType<IndicatorBaseType> indicatorsBaseType = indicatorRestFacade.findIndicators(baseURL, q, order, paginator, fields, selectedRepresentations);
 
-        baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS).build().toUriString();
+        baseURL = uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS).build().toUriString();
         IndicatorsPaginatedResponseUtil.createPaginationLinks(indicatorsBaseType, baseURL, q, order, limit, offset, fields, representation);
 
         return new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
@@ -98,7 +98,7 @@ public class IndicatorsRestController extends AbstractRestController {
         boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
 
-        baseURL = uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_INDICATORS_INDICATORS, indicatorCode, RestConstants.API_INDICATORS_INDICATORS_DATA).build()
+        baseURL = uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_VERSION, RestConstants.API_INDICATORS_INDICATORS, indicatorCode, RestConstants.API_INDICATORS_INDICATORS_DATA).build()
                 .toUriString();
 
         dataType.addHeader(baseURL, fields, representation, granularity, RestConstants.KIND_INDICATOR_DATA);
