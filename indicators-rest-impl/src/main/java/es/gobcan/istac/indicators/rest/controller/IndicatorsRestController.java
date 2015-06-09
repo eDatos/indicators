@@ -98,9 +98,8 @@ public class IndicatorsRestController extends AbstractRestController {
         boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
 
-        baseURL = uriComponentsBuilder
-                .pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_SLASH, RestConstants.API_INDICATORS_INDICATORS, RestConstants.API_SLASH, indicatorCode, RestConstants.API_SLASH,
-                        RestConstants.API_INDICATORS_INDICATORS_DATA).build().toUriString();
+        baseURL = uriComponentsBuilder.pathSegment(RestConstants.API_INDICATORS_BASE, RestConstants.API_INDICATORS_INDICATORS, indicatorCode, RestConstants.API_INDICATORS_INDICATORS_DATA).build()
+                .toUriString();
 
         dataType.addHeader(baseURL, fields, representation, granularity, RestConstants.KIND_INDICATOR_DATA);
 
