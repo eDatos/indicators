@@ -1,8 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +35,6 @@ import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
-import es.gobcan.istac.indicators.rest.types.ListResultType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -108,70 +105,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             systemHistoriesType.add(dto2TypeMapper.indicatorsSystemHistoryDoToType(systemHistory, baseURL));
         }
         return systemHistoriesType;
-    }
-
-    @Override
-    public ListResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, String fields,
-            Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws MetamacException {
-
-        // Parse Query
-        SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, null, null);
-        ConditionalCriteria systemCondition = ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem);
-        sculptorCriteria.getConditions().add(systemCondition);
-
-        PagedResult<IndicatorInstance> pagedInstances = findIndicatorsInstancesInIndicatorsSystems(sculptorCriteria);
-
-        List<IndicatorInstance> instances = pagedInstances.getValues();
-
-        // Mapping to type
-        Map<String, IndicatorInstanceBaseType> instancesBaseType = buildInstancesBaseTypeMap(instances, baseUrl);
-
-        // Fields filter. Only support for +metadata, +data
-        Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
-
-        if (selectedGranularities.size() > 0 || representation.size() > 0 || fieldsToAdd.contains("+data")) {
-            boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
-            Iterator<IndicatorInstance> iterator = instances.iterator();
-            while (iterator.hasNext()) {
-                IndicatorInstance indicatorInstance = iterator.next();
-                String systemCode = indicatorInstance.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem().getCode();
-                String instanceCode = indicatorInstance.getCode();
-                DataType dataType = retrieveIndicatorInstanceDataByCode(baseUrl, systemCode, instanceCode, representation, selectedGranularities, includeObservationsAttributes);
-                if (dataType.getObservation().size() > 0) {
-                    if (fieldsToAdd.contains("+data")) {
-                        instancesBaseType.get(instanceCode).setData(dataType);
-                    }
-                } else {
-                    iterator.remove();
-                }
-            }
-        }
-
-        if (fieldsToAdd.contains("+metadata")) {
-            for (IndicatorInstance indicatorInstance : instances) {
-                IndicatorInstanceBaseType baseType = instancesBaseType.get(indicatorInstance.getCode());
-
-                MetadataType metadataType = new MetadataType();
-                dto2TypeMapper.indicatorsInstanceDoToMetadataType(indicatorInstance, metadataType, baseUrl);
-                baseType.setMetadata(metadataType);
-            }
-        }
-
-        List<IndicatorInstanceBaseType> filteredInstances = new ArrayList<IndicatorInstanceBaseType>();
-        for (IndicatorInstance instance : instances) {
-            filteredInstances.add(instancesBaseType.get(instance.getCode()));
-        }
-
-        return new ListResultType<IndicatorInstanceBaseType>(RestConstants.KIND_INDICATOR_INSTANCES, filteredInstances);
-    }
-
-    private Map<String, IndicatorInstanceBaseType> buildInstancesBaseTypeMap(List<IndicatorInstance> instances, String baseUrl) {
-        List<IndicatorInstanceBaseType> indicatorInstanceTypes = dto2TypeMapper.indicatorsInstanceDoToBaseType(instances, baseUrl);
-        Map<String, IndicatorInstanceBaseType> mapping = new LinkedHashMap<String, IndicatorInstanceBaseType>();
-        for (IndicatorInstanceBaseType baseType : indicatorInstanceTypes) {
-            mapping.put(baseType.getId(), baseType);
-        }
-        return mapping;
     }
 
     @Override
