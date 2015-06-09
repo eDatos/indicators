@@ -20,6 +20,7 @@
         </encoder>
     </appender>
 
+    <!-- To enable the debug level uncomment the following lines -->
     <!-- <logger name="org.hibernate.type" level="ALL" />  -->
     <!-- <logger name="org.hibernate" level="DEBUG" /> -->
 
