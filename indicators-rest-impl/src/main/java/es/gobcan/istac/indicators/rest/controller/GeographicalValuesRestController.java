@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import es.gobcan.istac.indicators.rest.types.ListResultType;
+import es.gobcan.istac.indicators.rest.util.UriUtils;
 
 @Controller("geographicalValuesRestController")
 public class GeographicalValuesRestController extends AbstractRestController {
@@ -34,8 +35,6 @@ public class GeographicalValuesRestController extends AbstractRestController {
                                                                                             ) throws MetamacException {
     // @formatter:on
 
-        String baseUrl = uriComponentsBuilder.build().toUriString();
-
         List<GeographicalValueType> items = null;
         if (subjectCode != null) {
             items = geographicalValuesRestFacade.findGeographicalValuesBySubjectCode(subjectCode, geographicalGranularityCode);
@@ -45,7 +44,8 @@ public class GeographicalValuesRestController extends AbstractRestController {
             items = geographicalValuesRestFacade.findGeographicalValuesByGranularity(geographicalGranularityCode);
         }
 
-        ListResultType<GeographicalValueType> itemsResultType = new ListResultType<GeographicalValueType>(RestConstants.KIND_GEOGRAPHICAL_VALUES, null, items);
+        String selfLink = UriUtils.getGeographicalValuesSelfLink(uriComponentsBuilder, subjectCode, systemCode, geographicalGranularityCode);
+        ListResultType<GeographicalValueType> itemsResultType = new ListResultType<GeographicalValueType>(RestConstants.KIND_GEOGRAPHICAL_VALUES, selfLink, items);
         return new ResponseEntity<ListResultType<GeographicalValueType>>(itemsResultType, HttpStatus.OK);
     }
 

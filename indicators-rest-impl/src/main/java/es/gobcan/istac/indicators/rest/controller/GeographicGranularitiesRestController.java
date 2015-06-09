@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicRestFacade;
 import es.gobcan.istac.indicators.rest.types.ListResultType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
+import es.gobcan.istac.indicators.rest.util.UriUtils;
 
 @Controller("geographicGranularitiesRestController")
 public class GeographicGranularitiesRestController extends AbstractRestController {
@@ -25,8 +27,12 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
 
     @RequestMapping(value = "/api/indicators/v1.0/geographicGranularities", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ListResultType<MetadataGranularityType>> findGeographicGranularities(@RequestParam(value = "subjectCode", required = false) String subjectCode,
-            @RequestParam(value = "systemCode", required = false) String systemCode) throws MetamacException {
+    //@formatter:off
+    public ResponseEntity<ListResultType<MetadataGranularityType>> findGeographicGranularities(final UriComponentsBuilder uriComponentsBuilder,
+                                                                                                @RequestParam(value = "subjectCode", required = false) String subjectCode,
+                                                                                                @RequestParam(value = "systemCode", required = false) String systemCode
+                                                                                              ) throws MetamacException {
+    //@formatter:on
 
         List<MetadataGranularityType> items = null;
         if (subjectCode != null) {
@@ -37,7 +43,8 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
             items = geographicRestFacade.findGeographicGranularities();
         }
 
-        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_GEOGRAPHICAL_GRANULARITIES, null, items);
+        String selfLink = UriUtils.getGeographicalGranularitiesSelfLink(uriComponentsBuilder, subjectCode, systemCode);
+        ListResultType<MetadataGranularityType> itemsResultType = new ListResultType<MetadataGranularityType>(RestConstants.KIND_GEOGRAPHICAL_GRANULARITIES, selfLink, items);
         return new ResponseEntity<ListResultType<MetadataGranularityType>>(itemsResultType, null, HttpStatus.OK);
     }
 

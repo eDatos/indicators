@@ -15,6 +15,9 @@ public final class RestConstants extends org.siemac.metamac.rest.constants.RestC
     public static final String         PARAMETER_FIELDS                         = "fields";
     public static final String         PARAMETER_REPRESENTATION                 = "representation";
     public static final String         PARAMETER_GRANULARITY                    = "granularity";
+    public static final String         PARAMETER_SUBJECT_CODE                   = "subjectCode";
+    public static final String         PARAMETER_SYSTEM_CODE                    = "systemCode";
+    public static final String         GEOGRAPHICAL_GRANULARITY_CODE            = "geographicalGranularityCode";
 
     public static final String         KIND_INDICATOR                           = "indicators#indicator";
     public static final String         KIND_INDICATORS                          = "indicators#indicators";
@@ -45,4 +48,5 @@ public final class RestConstants extends org.siemac.metamac.rest.constants.RestC
     public static final String         API_INDICATORS_INDICATORS_DATA           = "data";
     public static final String         API_INDICATORS_INDICATORS_INSTANCES      = "indicatorsInstances";
     public static final String         API_INDICATORS_INDICATORS_INSTANCES_DATA = "data";
+
 }

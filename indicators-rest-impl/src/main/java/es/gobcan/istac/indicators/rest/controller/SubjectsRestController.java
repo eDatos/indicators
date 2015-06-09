@@ -30,7 +30,7 @@ public class SubjectsRestController extends AbstractRestController {
         String baseURL = uriComponentsBuilder.build().toUriString();
         List<SubjectBaseType> subjectTypes = subjectsRestFacade.retrieveSubjects(baseURL);
 
-        String selfLink = UriUtils.getSubjectSelfLink(uriComponentsBuilder);
+        String selfLink = UriUtils.getSubjectsLink(uriComponentsBuilder);
         ListResultType<SubjectBaseType> itemsResultType = new ListResultType<SubjectBaseType>(RestConstants.KIND_SUBJECTS, selfLink, subjectTypes);
         return new ResponseEntity<ListResultType<SubjectBaseType>>(itemsResultType, null, HttpStatus.OK);
     }
