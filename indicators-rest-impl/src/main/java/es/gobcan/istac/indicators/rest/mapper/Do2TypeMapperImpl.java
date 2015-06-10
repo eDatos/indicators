@@ -617,8 +617,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setKind(IndicatorsRestConstants.KIND_INDICATOR_INSTANCE);
         target.setSelfLink(selfLink);
 
-        String href = uriLinks.getIndicatorSystemLink(indicatorsSystem.getCode());
-        target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_SYSTEM, href));
+        String href = createUrlIndicatorsSystemInstances(indicatorsSystem);
+        target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_INSTANCES, href));
 
         target.setSystemCode(indicatorsSystem.getCode());
         target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorInstance.getTitle()));
