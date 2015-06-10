@@ -79,7 +79,7 @@ public class IndicatorsRestController extends AbstractRestController {
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
 
         String selfLink = uriLinks.getIndicatorDataSelfLink(indicatorCode, fields, representation, granularity);
-        LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR, uriLinks.getIndicatorSystemLink(indicatorCode));
+        LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR, uriLinks.getIndicatorLink(indicatorCode));
 
         dataType.addHeader(selfLink, parentLink, IndicatorsRestConstants.KIND_INDICATOR_DATA);
         return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
