@@ -997,6 +997,10 @@
                     "type" : "string",
                     "description" : "Enlace al propio recurso."
                 },
+                "parentLink": {
+                    "type" : "Link", 
+                    "description" : "Enlace al recurso padre de la API."
+                },
                 "format" : {
                     "type": "array",
                     "items":{
@@ -1101,6 +1105,10 @@
                 "selfLink" : {
                     "type" : "string",
                     "description" : "Enlace al propio recurso."
+                },
+                "parentLink": {
+                    "type" : "Link", 
+                    "description" : "Enlace al recurso padre de la API."
                 },
                 "code" : {
                     "type" : "string",
@@ -1273,6 +1281,10 @@
                     "type" : "string",
                     "description" : "Enlace al propio recurso."
                 },
+                "parentLink": {
+                    "type" : "Link", 
+                    "description" : "Enlace al recurso padre de la API."
+                },
                 "code" : {
                     "type" : "string",
                     "description" : "Código semántico del recurso."
@@ -1369,6 +1381,10 @@
                 "selfLink" : {
                     "type" : "string",
                     "description" : "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo"
+                },
+                "parentLink": {
+                    "type" : "Link", 
+                    "description" : "Enlace al recurso padre de la API."
                 },
                 "firstLink" : {
                     "type" : "string",

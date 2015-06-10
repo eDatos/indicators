@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.util.UriTemplate;
 
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.util.RESTURIUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -36,12 +36,12 @@ public class ApiDocController {
         // Header: available methods
         final String rootUri = request.getRequestURL().toString();
 
-        final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
-        final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS);
-        final URI uriTimeGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_TIME_GRANULARITIES);
-        final URI uriGeographicGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
-        final URI uriGeographicalValues = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
-        final URI uriThemes = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_SUBJECTS);
+        final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+        final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_INDICATORS);
+        final URI uriTimeGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_TIME_GRANULARITIES);
+        final URI uriGeographicGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
+        final URI uriGeographicalValues = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
+        final URI uriThemes = new UriTemplate("{rootUri}{resource}").expand(rootUri, IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
 
         final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
         final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
