@@ -20,7 +20,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 
 public abstract class IndicatorsApiServiceBaseImpl implements IndicatorsApiService {
@@ -39,56 +39,56 @@ public abstract class IndicatorsApiServiceBaseImpl implements IndicatorsApiServi
 
     @Override
     public List<IndicatorsSystemHistory> findIndicatorsSystemHistory(String idIndicatorSystem, int maxResults) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsSystemHistory(RestConstants.SERVICE_CONTEXT, idIndicatorSystem, maxResults);
+        return indicatorsSystemsService.findIndicatorsSystemHistory(IndicatorsRestConstants.SERVICE_CONTEXT, idIndicatorSystem, maxResults);
     }
 
     @Override
     public DataSource retrieveDataSource(String uuid) throws MetamacException {
-        return indicatorsService.retrieveDataSource(RestConstants.SERVICE_CONTEXT, uuid);
+        return indicatorsService.retrieveDataSource(IndicatorsRestConstants.SERVICE_CONTEXT, uuid);
     }
 
     @Override
     public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
-        return indicatorsSystemsService.retrieveIndicatorsSystemPublishedForIndicator(RestConstants.SERVICE_CONTEXT, indicatorUuid);
+        return indicatorsSystemsService.retrieveIndicatorsSystemPublishedForIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorUuid);
     }
 
     @Override
     public UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException {
-        return indicatorsService.retrieveUnitMultiplier(RestConstants.SERVICE_CONTEXT, unitMultiplier);
+        return indicatorsService.retrieveUnitMultiplier(IndicatorsRestConstants.SERVICE_CONTEXT, unitMultiplier);
     }
 
     @Override
     public GeographicalValue retrieveGeographicalValueByCode(String geoCode) throws MetamacException {
-        return indicatorsSystemsService.retrieveGeographicalValueByCode(RestConstants.SERVICE_CONTEXT, geoCode);
+        return indicatorsSystemsService.retrieveGeographicalValueByCode(IndicatorsRestConstants.SERVICE_CONTEXT, geoCode);
     }
 
     @Override
     public TimeValue retrieveTimeValueByCode(String timeCode) throws MetamacException {
-        return indicatorsSystemsService.retrieveTimeValue(RestConstants.SERVICE_CONTEXT, timeCode);
+        return indicatorsSystemsService.retrieveTimeValue(IndicatorsRestConstants.SERVICE_CONTEXT, timeCode);
     }
 
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion);
+        return indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorVersion(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorVersion);
     }
 
     @Override
     public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalCodesInIndicatorVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion);
+        return indicatorsCoverageService.retrieveGeographicalCodesInIndicatorVersion(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorVersion);
     }
 
     @Override
     public List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalValuesInIndicatorVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion);
+        return indicatorsCoverageService.retrieveGeographicalValuesInIndicatorVersion(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorVersion);
     }
 
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicator(IndicatorVersion indicatorVersion) throws MetamacException {
-        return indicatorsCoverageService.retrieveMeasureValuesInIndicatorVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion);
+        return indicatorsCoverageService.retrieveMeasureValuesInIndicatorVersion(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorVersion);
     }
 
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
-        return indicatorsCoverageService.retrieveTimeValuesInIndicatorVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion);
+        return indicatorsCoverageService.retrieveTimeValuesInIndicatorVersion(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorVersion);
     }
 }

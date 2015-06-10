@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
@@ -32,20 +32,20 @@ public class GeographicRestFacadeImpl implements GeographicRestFacade {
 
     @Override
     public List<MetadataGranularityType> findGeographicGranularities() throws MetamacException {
-        List<GeographicalGranularity> geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(RestConstants.SERVICE_CONTEXT);
+        List<GeographicalGranularity> geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(IndicatorsRestConstants.SERVICE_CONTEXT);
         return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 
     @Override
     public List<MetadataGranularityType> findGeographicGranularitiesByIndicatorsSystemCode(String indicatorsSystemCode) throws MetamacException {
         List<GeographicalGranularity> geographicalGranularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(
-                RestConstants.SERVICE_CONTEXT, indicatorsSystemCode);
+                IndicatorsRestConstants.SERVICE_CONTEXT, indicatorsSystemCode);
         return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 
     @Override
     public List<MetadataGranularityType> findGeographicGranularitiesBySubjectCode(String subjectCode) throws MetamacException {
-        List<GeographicalGranularity> geographicalGranularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT,
+        List<GeographicalGranularity> geographicalGranularities = indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(IndicatorsRestConstants.SERVICE_CONTEXT,
                 subjectCode);
         return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }

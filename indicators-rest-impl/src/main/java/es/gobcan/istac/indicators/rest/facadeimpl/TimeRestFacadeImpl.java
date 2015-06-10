@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.TimeRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
@@ -28,7 +28,7 @@ public class TimeRestFacadeImpl implements TimeRestFacade {
 
     @Override
     public List<MetadataGranularityType> findTimeGranularities() throws MetamacException {
-        List<TimeGranularity> timeGranularities = indicatorsSystemsService.retrieveTimeGranularities(RestConstants.SERVICE_CONTEXT);
+        List<TimeGranularity> timeGranularities = indicatorsSystemsService.retrieveTimeGranularities(IndicatorsRestConstants.SERVICE_CONTEXT);
         return dto2TypeMapper.timeGranularityDoToType(timeGranularities);
     }
 

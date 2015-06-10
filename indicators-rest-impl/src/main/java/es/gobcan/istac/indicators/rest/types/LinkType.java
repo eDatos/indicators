@@ -8,6 +8,12 @@ public class LinkType {
     private String kind = null;
     private String href = null;
 
+    public LinkType(String kind, String href) {
+        super();
+        this.kind = kind;
+        this.href = href;
+    }
+
     public String getKind() {
         return kind;
     }

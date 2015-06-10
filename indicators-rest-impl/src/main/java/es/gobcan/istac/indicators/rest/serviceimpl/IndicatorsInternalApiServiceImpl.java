@@ -29,7 +29,7 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 
@@ -37,12 +37,12 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException {
-        return indicatorsService.retrieveSubjectsInLastVersionIndicators(RestConstants.SERVICE_CONTEXT);
+        return indicatorsService.retrieveSubjectsInLastVersionIndicators(IndicatorsRestConstants.SERVICE_CONTEXT);
     }
 
     @Override
     public PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        return indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+        return indicatorsService.findIndicators(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
         conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.indicator().code(), indicatorCode));
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
 
-        PagedResult<IndicatorVersion> result = indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+        PagedResult<IndicatorVersion> result = indicatorsService.findIndicators(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
 
         if (result.getValues().size() == 0) {
             throw new MetamacException();
@@ -66,7 +66,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
         conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.indicator().uuid(), uuid));
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
 
-        PagedResult<IndicatorVersion> result = indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+        PagedResult<IndicatorVersion> result = indicatorsService.findIndicators(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
 
         if (result.getValues().size() == 0) {
             throw new MetamacException();
@@ -77,7 +77,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
+        return indicatorsSystemsService.findIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, null, pagingParameter);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
         ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
         conditions.add(ConditionalCriteria.equal(IndicatorsSystemVersionProperties.indicatorsSystem().code(), idIndicatorSystem));
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
-        PagedResult<IndicatorsSystemVersion> result = indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+        PagedResult<IndicatorsSystemVersion> result = indicatorsSystemsService.findIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
 
         if (result.getValues().size() == 0) {
             throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator System not found");
@@ -96,7 +96,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        return indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
         conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.code(), idIndicatorInstance));
 
         PagingParameter pagingParameter = PagingParameter.pageAccess(1);
-        PagedResult<IndicatorInstance> result = indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+        PagedResult<IndicatorInstance> result = indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
 
         if (result.getValues().size() == 0) {
             throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator instance not found");
@@ -117,58 +117,58 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid) throws MetamacException {
-        String lastVersion = getLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorUuid);
-        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorUuid, lastVersion);
+        String lastVersion = getLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorUuid);
+        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorUuid, lastVersion);
     }
 
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveGeographicalGranularitiesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<GeographicalValueVO> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveGeographicalCodesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveGeographicalCodesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException {
-        return indicatorsCoverageService.retrieveMeasureValuesInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
+        return indicatorsCoverageService.retrieveMeasureValuesInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid);
     }
 
     @Override
     public IndicatorObservationsExtendedVO findObservationsExtendedInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
-        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
+        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
     }
 
     @Override
     public IndicatorObservationsVO findObservationsInIndicatorInstance(String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
-        return indicatorsDataService.findObservationsInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
+        return indicatorsDataService.findObservationsInIndicatorInstanceWithLastVersionIndicator(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, dataFilter);
     }
 
     @Override
     public IndicatorObservationsExtendedVO findObservationsExtendedInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
-        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, uuid, dataFilter);
+        return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorLastVersion(IndicatorsRestConstants.SERVICE_CONTEXT, uuid, dataFilter);
     }
 
     @Override
     public IndicatorObservationsVO findObservationsInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
-        return indicatorsDataService.findObservationsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, uuid, dataFilter);
+        return indicatorsDataService.findObservationsInIndicatorLastVersion(IndicatorsRestConstants.SERVICE_CONTEXT, uuid, dataFilter);
     }
 
     private String getLastVersionIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {

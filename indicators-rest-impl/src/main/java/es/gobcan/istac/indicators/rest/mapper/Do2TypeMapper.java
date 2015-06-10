@@ -30,18 +30,18 @@ import es.gobcan.istac.indicators.rest.types.SubjectType;
 public interface Do2TypeMapper {
 
     // Indicators systems
-    IndicatorsSystemType indicatorsSystemDoToType(final IndicatorsSystemVersion source, final String baseURL);
-    IndicatorsSystemBaseType indicatorsSystemDoToBaseType(final IndicatorsSystemVersion source, final String baseURL);
-    List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(final List<IndicatorsSystemVersion> sources, final String baseURL);
-    IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory systemHistory, final String baseURL);
+    IndicatorsSystemType indicatorsSystemDoToType(final IndicatorsSystemVersion source);
+    IndicatorsSystemBaseType indicatorsSystemDoToBaseType(final IndicatorsSystemVersion source);
+    List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(final List<IndicatorsSystemVersion> sources);
+    IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory systemHistory);
 
     // Indicators Instance
-    IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source, final String baseURL);
-    List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources, final String baseURL);
+    IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source);
+    List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources);
 
     // Indicator
-    IndicatorType indicatorDoToType(final IndicatorVersion sources, final String baseURL);
-    List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources, final String baseURL);
+    IndicatorType indicatorDoToType(final IndicatorVersion sources);
+    List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources);
 
     // Granularities
     MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity);
@@ -49,8 +49,8 @@ public interface Do2TypeMapper {
     List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
 
     // Subjects
-    SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators, String baseUrl);
-    List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects, String baseUrl);
+    SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators);
+    List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects);
 
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
@@ -60,7 +60,7 @@ public interface Do2TypeMapper {
 
     List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues);
 
-    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws MetamacException;
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException;
 
-    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target, String baseURL);
+    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target);
 }

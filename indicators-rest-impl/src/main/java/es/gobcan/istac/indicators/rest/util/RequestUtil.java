@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 
-public class RequestUtil {
+public final class RequestUtil {
 
     private RequestUtil() {
     }

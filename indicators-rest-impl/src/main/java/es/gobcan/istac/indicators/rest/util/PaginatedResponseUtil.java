@@ -1,9 +1,8 @@
 package es.gobcan.istac.indicators.rest.util;
 
-
 public abstract class PaginatedResponseUtil {
 
-    protected static int NO_OFFSET = -1;
+    protected final static int NO_OFFSET = -1;
 
     protected PaginatedResponseUtil() {
     }

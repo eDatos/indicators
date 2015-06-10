@@ -22,9 +22,9 @@ public class SubjectsRestFacadeImpl implements SubjectsRestFacade {
     private Do2TypeMapper        mapper               = null;
 
     @Override
-    public List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws MetamacException {
+    public List<SubjectBaseType> retrieveSubjects() throws MetamacException {
         List<SubjectIndicatorResult> subjects = indicatorsApiService.retrieveSubjectsInIndicators();
-        return mapper.subjectDoToBaseType(subjects, baseUrl);
+        return mapper.subjectDoToBaseType(subjects);
     }
 
 }

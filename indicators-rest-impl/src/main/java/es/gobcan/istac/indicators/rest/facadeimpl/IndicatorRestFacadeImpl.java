@@ -20,7 +20,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
@@ -51,7 +51,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
     @SuppressWarnings("unchecked")
     @Override
-    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
+    public PagedResultType<IndicatorBaseType> findIndicators(String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation)
             throws MetamacException {
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorsRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
@@ -63,7 +63,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
         // Mapping to type
-        List<IndicatorBaseType> result = dto2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues(), baseUrl);
+        List<IndicatorBaseType> result = dto2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues());
 
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
@@ -72,7 +72,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 IndicatorVersion indicatorVersion = indicatorsVersions.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                dto2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType, baseUrl);
+                dto2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType);
                 baseType.setMetadata(metadataType);
             }
         }
@@ -81,14 +81,14 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
             for (IndicatorBaseType indicatorType : result) {
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), representation, selectedGranularities, includeObservationsAttributes);
+                DataType dataType = retrieveIndicatorData(indicatorType.getCode(), representation, selectedGranularities, includeObservationsAttributes);
                 indicatorType.setData(dataType);
             }
         }
 
         // Pagegd result
         PagedResultType<IndicatorBaseType> resultType = new PagedResultType<IndicatorBaseType>();
-        resultType.setKind(RestConstants.KIND_INDICATORS);
+        resultType.setKind(IndicatorsRestConstants.KIND_INDICATORS);
         resultType.setLimit(paginator.getLimit());
         resultType.setOffset(paginator.getOffset());
         resultType.setTotal(indicatorsVersions.getTotalRows());
@@ -106,14 +106,14 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public IndicatorType retrieveIndicator(String baseUrl, String indicatorCode) throws MetamacException {
+    public IndicatorType retrieveIndicator(String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorsVersion = retrieveIndicatorByCode(indicatorCode);
-        return dto2TypeMapper.indicatorDoToType(indicatorsVersion, baseUrl);
+        return dto2TypeMapper.indicatorDoToType(indicatorsVersion);
     }
 
     @Override
-    public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            boolean includeObservationMetadata) throws MetamacException {
+    public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
+            throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);

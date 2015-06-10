@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"kind", "limit", "offset", "total", "selfLink", "firstLink", "previousLink", "nextLink", "lastLink", "items"})
+@JsonPropertyOrder({"kind", "limit", "offset", "total", "selfLink", "parentLink", "firstLink", "previousLink", "nextLink", "lastLink", "items"})
 public class PagedResultType<E extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 3350142395512943541L;
@@ -15,6 +15,7 @@ public class PagedResultType<E extends Serializable> implements Serializable {
     private Integer           offset           = null;
     private Integer           total            = null;
     private String            selfLink         = null;
+    private LinkType          parentLink       = null;
     private String            firstLink        = null;
     private String            lastLink         = null;
     private String            nextLink         = null;
@@ -67,6 +68,14 @@ public class PagedResultType<E extends Serializable> implements Serializable {
 
     public void setSelfLink(String selfLink) {
         this.selfLink = selfLink;
+    }
+
+    public LinkType getParentLink() {
+        return parentLink;
+    }
+
+    public void setParentLink(LinkType parentLink) {
+        this.parentLink = parentLink;
     }
 
     public String getFirstLink() {

@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.rest.util;
 
 import org.siemac.metamac.rest.utils.RestUtils;
 
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 
@@ -44,8 +44,8 @@ public class IndicatorsSystemsPaginatedResponseUtil extends PaginatedResponseUti
             return null;
         }
         String link = baseURL;
-        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_LIMIT, String.valueOf(limit));
-        link = RestUtils.createLinkWithQueryParam(link, RestConstants.PARAMETER_OFFSET, String.valueOf(offset));
+        link = RestUtils.createLinkWithQueryParam(link, IndicatorsRestConstants.PARAMETER_LIMIT, String.valueOf(limit));
+        link = RestUtils.createLinkWithQueryParam(link, IndicatorsRestConstants.PARAMETER_OFFSET, String.valueOf(offset));
         return link;
     }
 }
