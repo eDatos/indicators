@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class SubjectBaseType implements Serializable {
 
-    private static final long   serialVersionUID = -453903156267782786L;
-
+    private static final long serialVersionUID = -453903156267782786L;
+    
     private String              id;
     private String              kind;
     private String              selfLink;

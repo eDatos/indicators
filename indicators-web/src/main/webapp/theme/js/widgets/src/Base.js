@@ -384,7 +384,7 @@
                 });
                 
                 this._getTimeGranularities().success(function(response) {
-                	self.timeGranularities = response;
+                	self.timeGranularities = response.items;
                 	
                 	req.success(function (response) {                	                
                         var datasets = _.map(response.items, function (item) {
