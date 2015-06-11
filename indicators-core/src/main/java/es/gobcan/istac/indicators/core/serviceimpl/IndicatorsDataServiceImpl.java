@@ -229,40 +229,40 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         if (indicatorVersion != null) {
             Indicator indicator = indicatorVersion.getIndicator();
-            if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
-                String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
+            // if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
+            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
-                onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
-                rebuildCoveragesCache(ctx, indicatorVersion);
+            rebuildCoveragesCache(ctx, indicatorVersion);
 
-                // After diffusion version's data is populated all related systems must update their versions
-                if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
-                    indicator = changeDiffusionVersion(indicator);
-                    // update system version
-                    List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
-                    changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+            // After diffusion version's data is populated all related systems must update their versions
+            if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
+                indicator = changeDiffusionVersion(indicator);
+                // update system version
+                List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
+                changeVersionForModifiedIndicatorsSystems(modifiedSystems);
 
-                    buildLastValuesCache(ctx, indicatorVersion);
-                }
-            } else {
-                LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
+                buildLastValuesCache(ctx, indicatorVersion);
             }
+            // } else {
+            // LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
+            // }
             return indicator;
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, indicatorUuid, indicatorVersionNumber);
         }
     }
 
-    private boolean shouldIndicatorVersionBePopulated(IndicatorVersion indicatorVersion) {
-        if (indicatorVersion.getDataRepositoryId() == null || indicatorVersion.getNeedsUpdate() || indicatorVersion.getInconsistentData() || indicatorVersion.getLastPopulateDate() == null) {
-            return true;
-        }
-        // All dataGpeUuids from indicator version
-        List<String> dataGpeUuids = getDataSourceRepository().findDatasourceDataGpeUuidLinkedToIndicatorVersion(indicatorVersion.getId());
-        List<String> dataDefinitionsUpdated = getDataGpeRepository().filterDataDefinitionsWithDataUpdatedAfter(dataGpeUuids, indicatorVersion.getLastPopulateDate().toDate());
-        return dataDefinitionsUpdated.size() > 0;
-    }
+    // private boolean shouldIndicatorVersionBePopulated(IndicatorVersion indicatorVersion) {
+    // if (indicatorVersion.getDataRepositoryId() == null || indicatorVersion.getNeedsUpdate() || indicatorVersion.getInconsistentData() || indicatorVersion.getLastPopulateDate() == null) {
+    // return true;
+    // }
+    // // All dataGpeUuids from indicator version
+    // List<String> dataGpeUuids = getDataSourceRepository().findDatasourceDataGpeUuidLinkedToIndicatorVersion(indicatorVersion.getId());
+    // List<String> dataDefinitionsUpdated = getDataGpeRepository().filterDataDefinitionsWithDataUpdatedAfter(dataGpeUuids, indicatorVersion.getLastPopulateDate().toDate());
+    // return dataDefinitionsUpdated.size() > 0;
+    // }
 
     @Override
     public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
@@ -899,16 +899,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void rebuildLastValuesCache(IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
-        buildIndicatorVersionTimeCoverageCache(indicatorVersion);
-
-        LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
-    }
-
-    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         buildIndicatorVersionLatestValuesCache(ctx, indicatorVersion);
 
         List<String> instancesUuids = findAllIndicatorInstancesPublishedWithIndicator(indicatorVersion.getIndicator().getUuid());
@@ -918,6 +913,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             deleteIndicatorInstanceLastValuesCache(indicatorInstanceUuid);
             buildIndicatorInstanceLatestValuesCache(ctx, instance);
         }
+        LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
     }
 
     @Override
@@ -983,8 +979,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
 
         rebuildTimeCoverageCache(indicatorVersion);
-
-        rebuildLastValuesCache(indicatorVersion);
     }
 
     private void rebuildGeoCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
