@@ -468,7 +468,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         } catch (MetamacException metamacException) {
             throw metamacException;
         } catch (Exception e) {
-            LOG.error("Error deleting indicator version data", e);
             throw new MetamacException(e, ServiceExceptionType.DATA_DELETE_ERROR, indicatorUuid, indicatorVersionNumber);
         }
     }
