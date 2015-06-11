@@ -465,12 +465,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             getIndicatorVersionRepository().save(indicatorVersion);
 
             deleteIndicatorVersionLastValuesCache(indicatorVersion);
+        } catch (MetamacException metamacException) {
+            throw metamacException;
         } catch (Exception e) {
-            if (e instanceof MetamacException) {
-                throw (MetamacException) e;
-            } else {
-                throw new MetamacException(e, ServiceExceptionType.DATA_DELETE_ERROR, indicatorUuid, indicatorVersionNumber);
-            }
+            throw new MetamacException(e, ServiceExceptionType.DATA_DELETE_ERROR, indicatorUuid, indicatorVersionNumber);
         }
     }
 
