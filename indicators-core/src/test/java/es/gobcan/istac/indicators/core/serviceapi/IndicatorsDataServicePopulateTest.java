@@ -1,13 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,6 +10,7 @@ import java.util.Map;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -43,6 +36,15 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -1307,6 +1309,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
      * A second consecutive "populate" should not populate if no gpe data has changed
      */
     @Test
+    // ignore because for INDISTAC-919 we are populating always
+    @Ignore
     public void testPopulateIndicatorDataNotNecessaryAfterFirstPopulate() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
@@ -1331,6 +1335,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
      * A second consecutive "populate" should not populate if no gpe data has changed
      */
     @Test
+    // ignore because for INDISTAC-919 we are populating always
+    @Ignore
     public void testPopulateIndicatorDataNotNecessary() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         // Data gpe updated
