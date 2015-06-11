@@ -899,11 +899,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Override
-    public void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void rebuildLastValuesCache(IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
+        buildIndicatorVersionTimeCoverageCache(indicatorVersion);
+
+        LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
+    }
+
+    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         buildIndicatorVersionLatestValuesCache(ctx, indicatorVersion);
 
         List<String> instancesUuids = findAllIndicatorInstancesPublishedWithIndicator(indicatorVersion.getIndicator().getUuid());
@@ -913,7 +918,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             deleteIndicatorInstanceLastValuesCache(indicatorInstanceUuid);
             buildIndicatorInstanceLatestValuesCache(ctx, instance);
         }
-        LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
     }
 
     @Override
@@ -979,6 +983,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
 
         rebuildTimeCoverageCache(indicatorVersion);
+
+        rebuildLastValuesCache(indicatorVersion);
     }
 
     private void rebuildGeoCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
