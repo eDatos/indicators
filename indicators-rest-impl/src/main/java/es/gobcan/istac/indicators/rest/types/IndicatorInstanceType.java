@@ -8,9 +8,6 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 @JsonPropertyOrder({"id", "kind", "selfLink", "parentLink", "title", "conceptDescription", "subjectCode", "subjectTitle", "dimension", "decimalPlaces", "childLink"})
 public class IndicatorInstanceType extends IndicatorInstanceBaseType implements Serializable {
 
-    /**
-     *
-     */
     private static final long                  serialVersionUID = 4307766622180932870L;
 
     private Map<String, MetadataDimensionType> dimension        = null;

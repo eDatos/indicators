@@ -15,6 +15,10 @@ public class ListResultType<E extends Serializable> implements Serializable {
     private String            selfLink         = null;
     private List<E>           items            = null;
 
+    public ListResultType() {
+        // dummy constructor necessary for Jackson
+    }
+
     public ListResultType(String kind, String selfLink, List<E> items) {
         super();
         this.kind = kind;

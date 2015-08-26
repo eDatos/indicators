@@ -8,9 +8,6 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 @JsonPropertyOrder({"code", "value"})
 public class AttributeType implements Serializable {
 
-    /**
-     *
-     */
     private static final long   serialVersionUID = 7203753322975868294L;
 
     private String              code             = null;

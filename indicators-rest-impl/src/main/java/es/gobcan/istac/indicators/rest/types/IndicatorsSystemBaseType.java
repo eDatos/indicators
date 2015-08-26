@@ -11,9 +11,6 @@ import org.joda.time.DateTime;
 @JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "publicationDate", "title", "acronym", "statisticalOperationLink", "description", "objective"})
 public class IndicatorsSystemBaseType implements Serializable {
 
-    /**
-     *
-     */
     private static final long   serialVersionUID         = 5785494152459693755L;
 
     private String              id                       = null;

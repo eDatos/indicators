@@ -10,9 +10,6 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 @JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "title", "acronym", "subjectCode", "subjectTitle", "systemSurveyLinks", "quantity", "conceptDescription", "notes", "data"})
 public class IndicatorBaseType implements Serializable {
 
-    /**
-     *
-     */
     private static final long   serialVersionUID   = 6882302798656723943L;
 
     private String              id                 = null;

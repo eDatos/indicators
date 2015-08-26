@@ -6,6 +6,7 @@ public class RestCriteriaPaginator {
     private Integer offset = null;
 
     public RestCriteriaPaginator() {
+        // dummy constructor necessary for Jackson
     }
 
     public RestCriteriaPaginator(Integer limit, Integer offset) {

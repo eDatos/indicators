@@ -8,6 +8,10 @@ public class LinkType {
     private String kind = null;
     private String href = null;
 
+    public LinkType() {
+        // dummy constructor necessary for Jackson
+    }
+
     public LinkType(String kind, String href) {
         super();
         this.kind = kind;
