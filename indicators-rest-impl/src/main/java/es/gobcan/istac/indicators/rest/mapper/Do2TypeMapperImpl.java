@@ -802,7 +802,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private void removeUnitMultiplierIfRate(MeasureValue measureValue, MetadataRepresentationType metadataRepresentationType) {
         // INDISTAC-831 Las tasas no deben tener públicamente el metadato multiplicador de la unidad
-        if (measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE) || measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE)) {
+        if (measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE) || measureValue.getMeasureValue().equals(MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE)) {
             metadataRepresentationType.getQuantity().setUnitMultiplier(null);
         }
     }
