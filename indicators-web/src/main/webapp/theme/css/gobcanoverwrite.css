@@ -209,4 +209,29 @@
 	margin: 0;
 	padding: 0;
 	text-indent: -5000px;
+}+
+
+#pie { 
+    height: 26px;
+    vertical-align: middle;
+    display: inline;
+}
+
+#pie .dcha {
+    padding: 6px 16px 6px 0;
+    margin: 0;
+    display: inline;
+	font-size: 0.8em;
+}
+
+#pie .dcha img {
+	text-decoration: none;
+    vertical-align: middle;
+    border: none;
+}
+
+#pie .dcha a {
+   text-decoration: none;
+   margin-right: 7px;
+   color: black;
 }

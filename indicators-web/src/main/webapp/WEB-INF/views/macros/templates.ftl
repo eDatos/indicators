@@ -49,10 +49,9 @@
 			   <div id="pie">
 				<p class="izda">[@apph.messageEscape 'app.footer.gobcan' /]</p>
 				<div class="dcha">
-					<ul>
-						<li class="nobarra3"><a href="http://www.gobiernodecanarias.org/avisolegal.html">[@apph.messageEscape 'app.footer.legal-advice' /]</a></li>
-						<li><a href="http://www.gobiernodecanarias.org/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a></li>
-					</ul>
+					<a href="http://www.gobiernodecanarias.org/istac/Open-Definition.html" target="_blank"><img alt="Open Data" height="13px" src="[@spring.url "/theme/images/opendata_80x15_black.png" /]">
+					</a> | <a href="http://www.gobiernodecanarias.org/istac/aviso_legal.html">[@apph.messageEscape 'app.footer.legal-advice' /]
+					</a> | <a href="http://www.gobiernodecanarias.org/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
 				</div>
 			</div>
 		</div>
