@@ -119,6 +119,7 @@ module.exports = function (grunt) {
     grunt.registerTask('widgets', ["handlebars:widgets", "uglify:widgets"]);
     grunt.registerTask('widgets:dev', ["handlebars:widgets", "concat:widgets"]);
     grunt.registerTask("app", ["handlebars:app", "less:app"]);
-    grunt.registerTask('default', ["app", "widgets"]);
+    grunt.registerTask('default:dev', ["app", "widgets:dev"]);
+    grunt.registerTask('default', ["app", "widgets"]);    
 
 };
