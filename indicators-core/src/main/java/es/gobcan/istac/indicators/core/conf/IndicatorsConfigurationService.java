@@ -12,6 +12,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveWidgetsQueryToolsUrl() throws MetamacException;
 
     String retrieveWidgetsSparklineMax() throws MetamacException;
+    
+    String retrieveWidgetsOpendataUrl() throws MetamacException;
 
     String retrieveIndicatorsDocsPath() throws MetamacException;
 

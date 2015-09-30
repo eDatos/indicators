@@ -58,7 +58,8 @@ public class WidgetsController extends BaseController {
     private String getBreadCrumb(String type) throws Exception {
         String widgetTypeListUrl = configurationService.retrieveWidgetsTypeListUrl();
         String queryToolsUrl = configurationService.retrieveWidgetsQueryToolsUrl();
-        return "<li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
+        String opendataUrl = configurationService.retrieveWidgetsOpendataUrl();
+        return "<li><a href='" + opendataUrl + "'>Datos abiertos</a></li><li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
     }
 
     public String getTypeLabel(String type) {

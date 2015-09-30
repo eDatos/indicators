@@ -26,6 +26,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveWidgetsSparklineMax() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX);
     }
+    
+    @Override
+    public String retrieveWidgetsOpendataUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_OPENDATA_URL);
+    }
 
     @Override
     public String retrieveIndicatorsDocsPath() throws MetamacException {
