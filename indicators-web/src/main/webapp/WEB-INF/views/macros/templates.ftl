@@ -1,5 +1,5 @@
 [#ftl]
-[#macro base migas='']
+[#macro base migas='' page_title='' extra_keywords='' page_description='']
 <!DOCTYPE html>
 <html>
 	<head>

@@ -37,6 +37,7 @@ public class WidgetsController extends BaseController {
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
     public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type) throws Exception {
         String breadCrumb = getBreadCrumb(type);
+        String description = getTypeDescription(type);
 
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
@@ -51,6 +52,7 @@ public class WidgetsController extends BaseController {
         modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
         modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
         modelAndView.addObject("breadcrumb", breadCrumb);
+        modelAndView.addObject("description", description);
 
         return modelAndView;
     }
@@ -69,6 +71,16 @@ public class WidgetsController extends BaseController {
             return "Último dato más reciente";
         } else {
             return "Último dato";
+        }
+    }
+    
+    public String getTypeDescription(String type) {
+        if (type.equals("temporal")) {
+            return "Visualiza un gráfico con la serie de datos de un indicador a seleccionar para los territorios que sean elegidos";
+        } else if (type.equals("recent")) {
+            return "Visualiza un tabla con los últimos indicadores actualizados de un territorio específico";            
+        } else {
+            return "Visualiza un tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico";
         }
     }
 
