@@ -24,6 +24,7 @@
 						  <li class="inactive"><a href="/istac/el_istac.jsp" accesskey="3" title="El ISTAC (tecla de acceso: 3)">El ISTAC</a></li>
 						  <li class="inactive"><a href="/istac/webescolar" accesskey="4" title="WEB Escolar (tecla de acceso: 4)">WEB Escolar</a></li>
 					</ul>
+					[#include "/layout/buscador.ftl"]
 				</div>
 			</div>
 			<div style="clear:both;"></div>
