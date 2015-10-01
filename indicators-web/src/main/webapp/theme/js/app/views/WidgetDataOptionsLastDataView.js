@@ -26,6 +26,9 @@
 
             this.model.on('change:subjectCode', this._fetchIndicators, this);
             this.model.on('change:geographicalValues', this._fetchIndicators, this);
+            
+            this.model.on('change:instances', this.updatePreview, this);
+            this.model.on('change:measures', this.updatePreview, this);
 
             this.measures.resetDefaults();
         },
@@ -56,6 +59,7 @@
 
         _fetchGeographicalValuesAndTimeGranularities : function () {
             this.geographicalValues.reset([]);
+            this.model.set('instances', undefined);
 
             var geographicalGranularityCode = this.model.get('geographicalGranularityCode');
             var groupType = this.model.get('groupType');

@@ -71,7 +71,11 @@
         },
 
         updateData : function () {
-            this.widget.reloadData();
+        	// Force trigger change method on this model so is binded properly to the widget
+        	// and there are no problems with the event ordering
+        	this.model.trigger('change', this.model);
+        	
+            this.widget.reloadData();            
         }
 
     });

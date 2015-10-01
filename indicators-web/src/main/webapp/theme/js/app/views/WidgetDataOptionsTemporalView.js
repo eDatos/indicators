@@ -25,6 +25,10 @@
 
             this.model.on('change:indicatorSystem', this._fetchIndicatorInstances, this);
             this.model.on('change:instances', this._fetchGeographicalValuesAndTimeGranularities, this);
+            
+            this.model.on('change:geographicalValues', this.updatePreview, this);
+            this.model.on('change:timeGranularities', this.updatePreview, this);
+            this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
             this.systems.fetch();
@@ -43,7 +47,9 @@
             var self = this;
 
             this.geographicalValues.reset([]);
+            this.model.set("geographicalValues", []);
             this.timeGranularities.reset([]);
+            this.model.set("timeGranularities", []);
 
             var instances = this.model.get('instances');
             if (instances.length > 0) {
