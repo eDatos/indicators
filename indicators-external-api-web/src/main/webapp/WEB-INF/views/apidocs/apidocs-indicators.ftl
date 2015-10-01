@@ -1017,7 +1017,7 @@
                     "items" : {
                         "$ref" : "string"
                     },
-                    "description" : "Array de observaciones. Para obtener una observación específica lo que se debe hacer es multiplicar el índice de cada código de dimensión deseado y obtendremos la posición del array de observaciones en la que se encuentra la observación deseada. <br> Ejemplo: En un dataset de tres dimensiones con los siguientes valores SEXO(M,F), LUGAR(A,B) y EDAD(1,2). Para obtener el valor de la observación(M,B,2) tendremos que hacer la operación 1*2*2=4. Luego la observación deseada será la que ocupa la cuarta posición en el array de observaciones."
+                    "description" : "Array de observaciones. Las observaciones se encuentran ordenadas por la combinación de las categorías manteniendo fijada siempre la primera categoría de la primera dimensión e iterando sobre las categorías de la última dimensión del array. Por ejemplo, dadas las dimensiones A, B y C con 3, 2, y 4 categorías respectivamente, los valores estarán ordenados de tal manera que primero se itere sobre las 4 categorías de C, posteriormente sobre las dos de B y por último sobre las 3 de A. En dicho ejemplo, el resultado sería el siguiente: A1B1C1, A1B1C2, A1B1C3, A1B1C4, A1B2C1, A1B2C2, A1B2C3, A1B2C4, A2B1C1, A2B1C2, A2B1C3, A1B1C4, A2B2C1, A2B2C2, A2B2C3, A2B2C4, A3B1C1, A3B1C2, A3B1C3, A3B1C4, A3B2C1, A3B2C2, A3B2C3, A3B2C4"
                 },
                 "attribute" : {
                     "type" : "array",
