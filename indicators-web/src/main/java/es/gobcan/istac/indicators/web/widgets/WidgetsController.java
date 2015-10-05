@@ -66,11 +66,11 @@ public class WidgetsController extends BaseController {
 
     public String getTypeLabel(String type) {
         if (type.equals("temporal")) {
-            return "Temporal";
+            return "Gráfico de evolución";
         } else if (type.equals("recent")) {
-            return "Último dato más reciente";
+            return "Últimos indicadores actualizados";
         } else {
-            return "Último dato";
+            return "Últimos datos";
         }
     }
     
