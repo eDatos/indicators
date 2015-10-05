@@ -78,9 +78,9 @@ public class WidgetsController extends BaseController {
         if (type.equals("temporal")) {
             return "Visualiza un gráfico con la serie de datos de un indicador a seleccionar para los territorios que sean elegidos";
         } else if (type.equals("recent")) {
-            return "Visualiza un tabla con los últimos indicadores actualizados de un territorio específico";            
+            return "Visualiza una tabla con los últimos indicadores actualizados de un territorio específico";            
         } else {
-            return "Visualiza un tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico";
+            return "Visualiza una tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico";
         }
     }
 

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-language" content="es" />	
 <meta name="robots" content="all" />
 <meta http-equiv="pragma" content="no-cache" />
-<meta name="keywords" content="gobierno canariass, instituto canario de estadística, istac, indicadores, indicators ${extra_keywords}" />
+<meta name="keywords" content="gobierno canarias, instituto canario de estadística, istac, indicadores, indicators ${extra_keywords}" />
 [#if description?has_content]
 	<meta name="description" content="${description}" />
 [#else]
