@@ -907,7 +907,8 @@
             }
 
             y -= this.height + this.tooltipOffsetY;
-            x += this.tooltipOffsetX;
+            // Draw tooltipo to the left
+            x -= this.width + this.tooltipOffsetX;
 
             if (y < this.scrollTop) {
                 y = this.scrollTop;

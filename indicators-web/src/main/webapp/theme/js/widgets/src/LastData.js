@@ -115,7 +115,6 @@
                         lineWidth : 1.5,
                         highlightLineColor : null,
                         spotRadius : 0,
-                        tooltipOffsetX : -1 * this.options.sparklineWidth * 2,
                         tooltipFormatter : function (sparkline, options, fields) {
                             if (fields.y !== null) {
                                 var time = sparkline.$el.data('time');
