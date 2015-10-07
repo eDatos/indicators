@@ -1,4 +1,5 @@
 [#ftl]
+[#if indicatorsWidgetsSearchFormUrl??]
 <form name="gs" method="GET" action="${indicatorsWidgetsSearchFormUrl}">
 	<div id="formulario_google" style="padding-top: 1px;">
 		<input type="text" id="userQuery" name="userQuery" placeholder="texto de búsqueda" class="buscar" value="">
@@ -13,3 +14,4 @@
 		<input type="hidden" id="sort" name="sort" value="">
 	</div>
 </form>
+[/#if]
