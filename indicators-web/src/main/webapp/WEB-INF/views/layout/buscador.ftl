@@ -1,6 +1,6 @@
 [#ftl]
-[#if indicatorsWidgetsSearchFormUrl??]
-<form name="gs" method="GET" action="${indicatorsWidgetsSearchFormUrl}">
+[#if idxManagerSearchFormUrl??]
+<form name="gs" method="GET" action="${idxManagerSearchFormUrl}">
 	<div id="formulario_google" style="padding-top: 1px;">
 		<input type="text" id="userQuery" name="userQuery" placeholder="texto de búsqueda" class="buscar" value="">
 		<input type="submit" name="Buscar" value="Buscar" class="boton">

@@ -35,8 +35,8 @@ public class IndicatorsController extends BaseController {
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(configurationService.retrieveIndicatorsExternalApiUrlBase());
         modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
         
-        String indicatorsWidgetsSearchFormUrl = configurationService.retrieveWidgetsSearchFormUrl();
-        modelAndView.addObject("indicatorsWidgetsSearchFormUrl", indicatorsWidgetsSearchFormUrl);
+        String idxManagerSearchFormUrl = configurationService.retrieveIdxManagerSearchFormUrl();
+        modelAndView.addObject("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
         
         return modelAndView;
     }

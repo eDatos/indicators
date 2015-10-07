@@ -37,8 +37,8 @@ public class IndicatorsSystemsController extends BaseController {
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(configurationService.retrieveIndicatorsExternalApiUrlBase());
         modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
         
-        String indicatorsWidgetsSearchFormUrl = configurationService.retrieveWidgetsSearchFormUrl();
-        modelAndView.addObject("indicatorsWidgetsSearchFormUrl", indicatorsWidgetsSearchFormUrl);
+        String idxManagerSearchFormUrl = configurationService.retrieveIdxManagerSearchFormUrl();
+        modelAndView.addObject("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
         
         return modelAndView;
     }
@@ -58,12 +58,12 @@ public class IndicatorsSystemsController extends BaseController {
         
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(configurationService.retrieveIndicatorsExternalApiUrlBase());
         
-        String indicatorsWidgetsSearchFormUrl = configurationService.retrieveWidgetsSearchFormUrl();
+        String idxManagerSearchFormUrl = configurationService.retrieveIdxManagerSearchFormUrl();
 
         modelAndView.addObject("indicatorsSystemCode", code);
         modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
         modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
-        modelAndView.addObject("indicatorsWidgetsSearchFormUrl", indicatorsWidgetsSearchFormUrl);
+        modelAndView.addObject("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
         modelAndView.addObject("indicator", indicator);
         modelAndView.addObject("numberOfFixedDigitsInNumeration", numberOfFixedDigitsInNumeration);
 

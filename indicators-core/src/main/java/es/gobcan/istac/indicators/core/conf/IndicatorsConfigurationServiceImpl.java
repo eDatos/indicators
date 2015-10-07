@@ -31,11 +31,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveWidgetsOpendataUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_OPENDATA_URL);
     }
-    
-    @Override
-    public String retrieveWidgetsSearchFormUrl() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_SEARCH_FORM_URL);
-    }
 
     @Override
     public String retrieveIndicatorsDocsPath() throws MetamacException {
