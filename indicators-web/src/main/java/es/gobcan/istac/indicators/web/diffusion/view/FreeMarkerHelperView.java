@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -13,6 +14,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 /**
  * FreeMarker view implementation to expose additional helpers
  */
+@Component
 public class FreeMarkerHelperView extends FreeMarkerView {
 
     @Autowired
