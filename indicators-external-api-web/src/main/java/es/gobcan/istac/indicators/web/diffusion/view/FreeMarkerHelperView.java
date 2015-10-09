@@ -19,7 +19,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        model.put("serverURL", configurationService.retrieveIndicatorsExternalWebUrlBase());
+        model.put("serverURL", getConfigurationService().retrieveIndicatorsExternalWebUrlBase());
         super.doRender(model, request, response);
     }
 
