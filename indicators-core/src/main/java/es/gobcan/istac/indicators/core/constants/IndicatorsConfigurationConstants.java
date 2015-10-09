@@ -64,4 +64,7 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     // API
     public static final String ENDPOINT_INDICATORS_EXTERNAL_API             = "indicators.rest.external";
 
+    // APP
+    public static final String ENDPOINT_INDICATORS_EXTERNAL_WEB             = "indicators.web.extermal.url";
+
 }

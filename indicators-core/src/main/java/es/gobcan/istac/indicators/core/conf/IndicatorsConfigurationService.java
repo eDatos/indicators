@@ -12,8 +12,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveWidgetsQueryToolsUrl() throws MetamacException;
 
     String retrieveWidgetsSparklineMax() throws MetamacException;
-    
-    String retrieveWidgetsOpendataUrl() throws MetamacException;   
+
+    String retrieveWidgetsOpendataUrl() throws MetamacException;
 
     String retrieveIndicatorsDocsPath() throws MetamacException;
 
@@ -44,5 +44,7 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveQuartzExpressionUpdateIndicators() throws MetamacException;
 
     String retrieveIndicatorsExternalApiUrlBase() throws MetamacException;
+
+    String retrieveIndicatorsExternalWebUrlBase() throws MetamacException;
 
 }
