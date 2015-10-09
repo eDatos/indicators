@@ -21,7 +21,7 @@
             src="http://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
 
     <title>Istac widget</title>
-    <link rel="icon" type="image/png" href="http://www.gobcan.es/gcc/img/favicon.ico"/>
+    <link rel="icon" type="image/png" href="http://www.gobiernodecanarias.org/istac/galerias/imagenes/favicon.ico"/>
 
     <!-- Add your UWA preferences as needed -->
     <widget:preferences>
