@@ -47,7 +47,6 @@
 <!-- Global variables -->
 <script type="text/javascript">
 	var serverURL = "${serverURL}";
-    var context = "[@spring.url '' /]";
 	var currentLocale = "[@apph.locale /]";
 	var defaultLocale = "es";
 	[#if indicatorsExternalApiUrlBase??]

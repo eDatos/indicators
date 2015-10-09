@@ -13,7 +13,7 @@
 
 <script type="text/html" id="indicatorsSystemTmpl">
 	<div>
-		<p><a href='<%= context %>/indicatorsSystems/<%=code%>.html'><%= getLabel(title) %></a></p>
+		<p><a href='<%= serverURL %>/indicatorsSystems/<%=code%>.html'><%= getLabel(title) %></a></p>
 	</div>
 </script>
 

@@ -301,7 +301,7 @@
         isIstacDomain : function () {
             var result;
             var absoluteUrl = Istac.widget.helper.absoluteUrl(this.url);
-            if (window.location.href.substring(0, absoluteUrl.length) === absoluteUrl) {
+            if (window.location.href.indexOf(absoluteUrl) > -1) {
                 // Si estoy mostrando el widget en la misma página dodne está la API
                 // se muestra el footer para que el usuario lo vea igual que cuando
                 // lo va a incrustar

@@ -14,7 +14,7 @@
         },
 
         _getUrl : function () {
-            return serverURL + context;
+            return serverURL;
         },
 
         _getCode : function () {

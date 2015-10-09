@@ -29,8 +29,8 @@
         return new Handlebars.SafeString(ret);
     });
 
-    Handlebars.registerHelper('context', function (context) {
-        return baseUrl;
+    Handlebars.registerHelper('serverURL', function (context) {
+        return serverURL;
     });
     
 }());

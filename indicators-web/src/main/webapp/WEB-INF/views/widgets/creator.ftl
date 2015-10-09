@@ -94,8 +94,6 @@
 <script src="${metamacPortalUrlBase}/js/authentication.js"></script>
 
 <script>
-
-    var baseUrl = "[@spring.url ""/]";
     var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";
     var jaxiUrl = "${jaxiUrlBase}";
     var metamacPortalUrl = "${metamacPortalUrlBase}";
