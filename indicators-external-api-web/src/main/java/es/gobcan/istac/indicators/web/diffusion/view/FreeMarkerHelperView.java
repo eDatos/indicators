@@ -5,8 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -14,15 +13,21 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 /**
  * FreeMarker view implementation to expose additional helpers
  */
-@Component
 public class FreeMarkerHelperView extends FreeMarkerView {
 
-    @Autowired
-    IndicatorsConfigurationService configurationService;
+    private static IndicatorsConfigurationService configurationService;
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         model.put("serverURL", configurationService.retrieveIndicatorsExternalWebUrlBase());
         super.doRender(model, request, response);
     }
+
+    private static IndicatorsConfigurationService getConfigurationService() {
+        if (configurationService == null) {
+            configurationService = (IndicatorsConfigurationService) ApplicationContextProvider.getApplicationContext().getBean("configurationService");
+        }
+        return configurationService;
+    }
+
 }
