@@ -1,3 +1,10 @@
+html {
+	background-color: #C4D0DC;
+}
+
+body {
+	overflow: hidden;
+}
 #cabecera h1 a {
 	background: url("../images/logo_istac.jpg") no-repeat scroll
 		5px 5px transparent;
