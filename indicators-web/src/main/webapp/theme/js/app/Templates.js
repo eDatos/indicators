@@ -15,17 +15,17 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   else { stack1 = depth0.code; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += ");\r\n</script>\r\n    </textarea>\r\n\r\n    <p class=\"widget-import-netvibes\">\r\n        <a target=\"_blank\" href=\"";
-  foundHelper = helpers.context;
+  foundHelper = helpers.serverURL;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.serverURL; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "/widgets/example?";
   foundHelper = helpers.parameters;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.parameters; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "\">Ejemplo de uso</a> | <a class=\"widget-import-netvibes-link\" href=\"#\"><img src=\"";
-  foundHelper = helpers.context;
+  foundHelper = helpers.serverURL;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.serverURL; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "/theme/images/netvibes.png\" class=\"netvibes-icon\"> Añadir a Netvibes</a>\r\n    </p>\r\n\r\n    <div class=\"widget-netvibes-captcha\">\r\n\r\n    </div>\r\n\r\n</div>\r\n";
   return buffer;});
 

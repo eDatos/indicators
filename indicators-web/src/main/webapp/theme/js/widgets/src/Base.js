@@ -300,14 +300,13 @@
 
         isIstacDomain : function () {
             var result;
-            var absoluteUrl = Istac.widget.helper.absoluteUrl(this.url);
-            if (window.location.href.indexOf(absoluteUrl) > -1) {
+            if (window.location.href.indexOf(this.url) > -1) {
                 // Si estoy mostrando el widget en la misma página dodne está la API
                 // se muestra el footer para que el usuario lo vea igual que cuando
                 // lo va a incrustar
                 result = false;
             } else {
-                result = window.location.hostname === Istac.widget.helper.getHostname(absoluteUrl);
+                result = window.location.hostname === Istac.widget.helper.getHostname(this.url);
             }
             return result;
         },
