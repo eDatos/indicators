@@ -14,7 +14,7 @@
             }
             var widgetOptions = this.model.toJSON();
             widgetOptions.el = this.el;
-            widgetOptions.url = Istac.widget.helper.absoluteUrl(serverURL);
+            widgetOptions.url = serverURL;
             widgetOptions.apiUrl = apiUrl; 
 
             var self = this;
