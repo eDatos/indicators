@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>es.gobcan.istac.indicators</groupId>
-        <artifactId>indicators-parent</artifactId>
-        <version>4.2.3-SNAPSHOT</version>
-        <relativePath>indicators-parent/pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>es.gobcan.istac.indicators</groupId>
+		<artifactId>indicators-parent</artifactId>
+		<version>4.2.3-SNAPSHOT</version>
+		<relativePath>indicators-parent/pom.xml</relativePath>
+	</parent>
 
-    <groupId>es.gobcan.istac.indicators</groupId>
-    <artifactId>indicators</artifactId>
-    <packaging>pom</packaging>
-    <name>INDICATORS</name>
+	<groupId>es.gobcan.istac.indicators</groupId>
+	<artifactId>indicators</artifactId>
+	<packaging>pom</packaging>
+	<name>INDICATORS</name>
 
-    <scm>
-        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</connection>
-        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</developerConnection>
-        <url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/trunk/</url>
-    </scm>
+	<scm>
+		<connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</connection>
+		<developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</developerConnection>
+		<url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/trunk/</url>
+	</scm>
 
-    <modules>
-        <module>indicators-parent</module>
-        <module>indicators-core</module>
-        <module>indicators-rest-impl</module>
-        <module>indicators-web</module>
-        <module>indicators-internal-web</module>
-        <module>indicators-external-api-web</module>
-    </modules>
+	<modules>
+		<module>indicators-parent</module>
+		<module>indicators-core</module>
+		<module>indicators-rest-impl</module>
+		<module>indicators-web</module>
+		<module>indicators-internal-web</module>
+		<module>indicators-external-api-web</module>
+	</modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
