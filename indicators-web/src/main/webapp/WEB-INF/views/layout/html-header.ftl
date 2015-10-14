@@ -17,12 +17,12 @@
 [#else]
 	<title>[@spring.message "app.title" /]</title>
 [/#if]
-<link rel="shortcut icon" href="http://www.gobiernodecanarias.org/gc/img/favicon.ico"/>
+<link rel="shortcut icon" href="//www.gobiernodecanarias.org/gc/img/favicon.ico"/>
 
 <!-- Css -->
 
 <link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"/]" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="http://www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="//www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
 <link rel="stylesheet" href="[@spring.url "/theme/css/libs/jquery-ui/jquery-ui-1.8.18.custom.css"/]" type="text/css" media="screen, projection" />
 
 <link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />

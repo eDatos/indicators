@@ -10,7 +10,7 @@
 			<div id="cabecera">
 				<div id="cab_superior">
 					<ul>
-						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.jsp" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" /> RSS</a></li>
+						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" /> RSS</a></li>
 						<li>|</li>
 						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.jsp" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
 				
