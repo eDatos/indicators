@@ -45,14 +45,11 @@ public class WidgetsController extends BaseController {
         String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
         String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase());
         String metamacPortalPermalinksEndpoint = removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
-        String indicatorsExternalApiUrlBase = removeLastSlashInUrl(configurationService.retrieveIndicatorsExternalApiUrlBase());
-        String idxManagerSearchFormUrl = configurationService.retrieveIdxManagerSearchFormUrl();        
+
 
         modelAndView.addObject("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
         modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
-        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
-        modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
-        modelAndView.addObject("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
+        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);        
         modelAndView.addObject("breadcrumb", breadCrumb);
         modelAndView.addObject("description", description);
 

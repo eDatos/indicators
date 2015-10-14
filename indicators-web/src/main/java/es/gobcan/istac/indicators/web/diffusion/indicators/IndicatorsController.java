@@ -17,26 +17,13 @@ public class IndicatorsController extends BaseController {
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
-    
-    private String removeLastSlashInUrl(String url) {
-        if (url.endsWith("/")) {
-            return StringUtils.removeEnd(url, "/");
-        }
-        return url;
-    }
-   
+
     // Esta página no se va mostrar. es solo de prueba
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public ModelAndView indicators(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_LIST);
-        
-        String indicatorsExternalApiUrlBase = removeLastSlashInUrl(configurationService.retrieveIndicatorsExternalApiUrlBase());
-        modelAndView.addObject("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
-        
-        String idxManagerSearchFormUrl = configurationService.retrieveIdxManagerSearchFormUrl();
-        modelAndView.addObject("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
         
         return modelAndView;
     }
