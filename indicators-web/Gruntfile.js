@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-webfont');
 
     var templatesPath = 'src/main/webapp/theme/templates';
-    var lessPath = 'src/main/webapp/theme/css/';
+    var lessPath = 'src/main/webapp/theme/css';
     var jsPath = 'src/main/webapp/theme/js';
     var widgetsPath = 'src/main/webapp/theme/js/widgets';
 
