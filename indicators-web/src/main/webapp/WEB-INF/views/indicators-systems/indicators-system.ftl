@@ -31,7 +31,7 @@
         </li>
         [#elseif element.kind == "indicators#indicatorInstance"]
         <li>
-            <i class="icon-table" data-self-link="${element.selfLink}"></i>
+            <i class="icon-table" data-self-link="${element.selfLink?replace("^https:","","r")?replace("^http:","","r")}"></i>
             <span class="item-numeration">${idx?string?left_pad(numberOfFixedDigitsInNumeration, "0")}</span>
             <a class="nouline"
                href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
@@ -168,12 +168,12 @@
         <tr>
             <td><strong>Descarga: </strong></td>
             <td>
-                <a href="<%= selfLink %>" target="_blank" title="Metadatos" class="popup-metadata">
+                <a href="<%= selfLink.replace("https:","").replace("http:","") %>" target="_blank" title="Metadatos" class="popup-metadata">
                     <i class="icon-metadata"></i>
                     Metadatos
                 </a>
                 |
-                <a href="<%= selfLink %>/data" target="_blank" title="Datos" class="popup-data">
+                <a href="<%= selfLink.replace("https:","").replace("http:","") %>/data" target="_blank" title="Datos" class="popup-data">
                     <i class="icon-table"></i>
                     Datos
                 </a>
@@ -207,5 +207,4 @@
     });
 
 </script>
-
 [/@template.base]
