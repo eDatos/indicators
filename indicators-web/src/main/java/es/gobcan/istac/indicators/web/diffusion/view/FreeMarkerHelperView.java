@@ -26,13 +26,22 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String indicatorsExternalWebUrlBase = getIndicatorsExternalWebUrlBaseWithoutProtocol();
         model.put("serverURL", indicatorsExternalWebUrlBase);
-        
+
         String indicatorsExternalApiUrlBase = getIndicatorsExternalApiUrlBaseWithoutProtocol();
         model.put("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
-        
+
         String idxManagerSearchFormUrl = getIdxManagerSearchFormUrl();
         model.put("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
+
+        String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
+        model.put("jaxiUrlBase", jaxiUrlBase);
+
+        String metamacPortalUrlBase = getMetamacPortalExternalUrlBase();
+        model.put("metamacPortalUrlBase", metamacPortalUrlBase);
         
+        String metamacPortalPermalinksEndpoint = getMetamacPortalPermalinksEndpoint();
+        model.put("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
+
         super.doRender(model, request, response);
     }
 
@@ -40,14 +49,22 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         String indicatorsExternalWebUrlBase = getConfigurationService().retrieveIndicatorsExternalWebUrlBase();
         return removeUrlProtocol(indicatorsExternalWebUrlBase);
     }
-    
+
     private String getIndicatorsExternalApiUrlBaseWithoutProtocol() throws MetamacException {
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(getConfigurationService().retrieveIndicatorsExternalApiUrlBase());
         return removeUrlProtocol(indicatorsExternalApiUrlBase);
     }
-    
+
     private String getIdxManagerSearchFormUrl() throws MetamacException {
         return getConfigurationService().retrieveIdxManagerSearchFormUrl();
+    }
+    
+    private String getMetamacPortalExternalUrlBase() throws MetamacException {
+        return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase()));
+    }
+    
+    private String getMetamacPortalPermalinksEndpoint() throws MetamacException {
+        return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase()));
     }
 
     private String removeUrlProtocol(String url) {
@@ -59,7 +76,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             return url;
         }
     }
-    
+
     private String removeLastSlashInUrl(String url) {
         if (url.endsWith("/")) {
             return StringUtils.removeEnd(url, "/");

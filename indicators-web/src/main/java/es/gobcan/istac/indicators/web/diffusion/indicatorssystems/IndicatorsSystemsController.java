@@ -47,11 +47,7 @@ public class IndicatorsSystemsController extends BaseController {
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 
-        // Jaxi URL
-        String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
-
         modelAndView.addObject("indicatorsSystemCode", code);
-        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
         modelAndView.addObject("indicator", indicator);
         modelAndView.addObject("numberOfFixedDigitsInNumeration", numberOfFixedDigitsInNumeration);
 

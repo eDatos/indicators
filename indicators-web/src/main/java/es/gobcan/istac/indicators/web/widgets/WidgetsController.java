@@ -41,15 +41,7 @@ public class WidgetsController extends BaseController {
 
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
-
-        String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
-        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase());
-        String metamacPortalPermalinksEndpoint = removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
-
-
-        modelAndView.addObject("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
-        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
-        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);        
+         
         modelAndView.addObject("breadcrumb", breadCrumb);
         modelAndView.addObject("description", description);
 
@@ -97,9 +89,6 @@ public class WidgetsController extends BaseController {
     public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException, MetamacException {
         ModelAndView modelAndView = new ModelAndView("widgets/uwa");
         modelAndView.addObject("permalinkId", permalinkId);
-
-        String metamacPortalPermalinksEndpoint = removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
-        modelAndView.addObject("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
 
         return modelAndView;
     }
