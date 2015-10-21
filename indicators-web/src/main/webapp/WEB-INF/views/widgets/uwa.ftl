@@ -27,8 +27,8 @@
     <widget:preferences>
     </widget:preferences>
 
-    <link rel="stylesheet" type="text/css" href="[@spring.url "/theme/js/widgets/widgets.css"/]"/>
-    <script type="text/javascript" src="[@spring.url "/theme/js/widgets/widget.min.all.js"/]"></script>
+    <link rel="stylesheet" type="text/css" href="[serverURL "/theme/js/widgets/widgets.css"/]"/>
+    <script type="text/javascript" src="[serverURL "/theme/js/widgets/widget.min.all.js"/]"></script>
 
     <script type="text/javascript">
         widget.onLoad = function () {

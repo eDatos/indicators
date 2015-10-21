@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <script src="[@spring.url "/theme/js/widgets/widget.min.all.js"/]"></script>
+    <script src="[serverURL "/theme/js/widgets/widget.min.all.js"/]"></script>
     <div id="istac-widget"></div>
     <script>
         var options =  JSON.parse('${options}');
