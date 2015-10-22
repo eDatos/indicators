@@ -16,9 +16,9 @@
 
 
     <link rel="stylesheet" type="text/css"
-          href="http://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
+          href="//uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
     <script type="text/javascript"
-            src="http://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+            src="//uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
 
     <title>Istac widget</title>
     <link rel="icon" type="image/png" href="http://www.gobiernodecanarias.org/istac/galerias/imagenes/favicon.ico"/>
