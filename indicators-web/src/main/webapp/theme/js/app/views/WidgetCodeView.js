@@ -16,6 +16,10 @@
         _getUrl : function () {
             return serverURL;
         },
+        
+        _getHttpsUrl : function() {
+        	return "https:" + this._getUrl();
+        },
 
         _getCode : function () {
             var url = this._getUrl();
@@ -69,7 +73,9 @@
             var self = this;
             var request = metamac.authentication.ajax(ajaxParameters, captchaOptions);
             request.done(function (response) {
-                var url = self._getUrl() + "/widgets/uwa/" + response.id;
+            	// INDISTAC-945 - Using https for avoiding netvibes problems with http. 
+            	// Widget can´t be embeded on http because it generates mixed content errors on the https netvibes dashboard
+                var url = self._getHttpsUrl() + "/widgets/uwa/" + response.id;
                 window.open(url, '_new');
             });
 
