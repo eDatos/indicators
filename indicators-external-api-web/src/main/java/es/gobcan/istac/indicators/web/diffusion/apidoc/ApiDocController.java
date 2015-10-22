@@ -8,10 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -27,8 +25,8 @@ import freemarker.template.TemplateException;
 public class ApiDocController {
 
     @Autowired
-    private FreeMarkerConfigurer freeMarkerConfigurer;
-    
+    private FreeMarkerConfigurer           freeMarkerConfigurer;
+
     @Autowired
     private IndicatorsConfigurationService indicatorsConfigurationService;
 
@@ -75,12 +73,7 @@ public class ApiDocController {
         Map<String, String> viewModel = getViewModel(request);
         renderTemplate(templateName, viewModel, response);
     }
-    
-    @ModelAttribute("indicatorsExternalApiUrlBase")
-    public String getIndicatorsExternalApiUrlBase() throws MetamacException {
-        return indicatorsConfigurationService.retrieveIndicatorsExternalApiUrlBase();
-    }
-    
+
     private void renderTemplate(String templateName, Map<String, String> viewModel, HttpServletResponse response) throws IOException, TemplateException {
         Template template = freeMarkerConfigurer.getConfiguration().getTemplate(templateName);
         response.setContentType("application/json");
