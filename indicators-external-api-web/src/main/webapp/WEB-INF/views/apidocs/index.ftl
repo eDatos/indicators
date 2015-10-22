@@ -5,18 +5,18 @@
 <head>
     <title>ISTAC | Indicators</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
-    <link href='[serverURL "/apidocs/css/hightlight.default.css"/]' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='[serverURL "/apidocs/css/screen.css"/]' media='screen' rel='stylesheet' type='text/css'/>
-    <script src='[serverURL "/apidocs/lib/jquery-1.8.0.min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/jquery.slideto.min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/jquery.wiggle.min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/jquery.ba-bbq.min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/handlebars-1.0.rc.1.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/underscore-min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/backbone-min.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/swagger.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/swagger-ui.js"/]' type='text/javascript'></script>
-    <script src='[serverURL "/apidocs/lib/highlight.7.3.pack.js"/]' type='text/javascript'></script>
+    <link href="${indicatorsApiUrlBase}/apidocs/css/hightlight.default.css" media='screen' rel='stylesheet' type='text/css'/>
+    <link href="${indicatorsApiUrlBase}/apidocs/css/screen.css" media='screen' rel='stylesheet' type='text/css'/>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/jquery-1.8.0.min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/jquery.slideto.min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/jquery.wiggle.min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/jquery.ba-bbq.min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/handlebars-1.0.rc.1.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/underscore-min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/backbone-min.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/swagger.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/swagger-ui.js" type='text/javascript'></script>
+    <script src="${indicatorsApiUrlBase}/apidocs/lib/highlight.7.3.pack.js" type='text/javascript'></script>
 
     <style type="text/css">
         .swagger-ui-wrap {

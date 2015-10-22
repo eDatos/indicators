@@ -10,7 +10,7 @@
 			<div id="cabecera">
 				<div id="cab_superior">
 					<ul>
-						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="[serverURL "/theme/images/atom.png"/]" title="RSS" alt="RSS" /> RSS</a></li>
+						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="${indicatorsApiUrlBase}/theme/images/atom.png" title="RSS" alt="RSS" /> RSS</a></li>
 						<li>|</li>
 						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.jsp" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
 				
@@ -49,7 +49,7 @@
 			   <div id="pie">
 				<p class="izda">[@apph.messageEscape 'app.footer.gobcan' /]</p>
 				<div class="dcha">
-					<a href="http://www.gobiernodecanarias.org/istac/Open-Definition.html" target="_blank"><img alt="Open Data" height="13px" src="[serverURL "/theme/images/opendata_80x15_black.png" /]">
+					<a href="http://www.gobiernodecanarias.org/istac/Open-Definition.html" target="_blank"><img alt="Open Data" height="13px" src="${indicatorsApiUrlBase}/theme/images/opendata_80x15_black.png" />
 					</a> | <a href="http://www.gobiernodecanarias.org/istac/aviso_legal.html">[@apph.messageEscape 'app.footer.legal-advice' /]
 					</a> | <a href="http://www.gobiernodecanarias.org/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
 				</div>

@@ -75,7 +75,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="[serverURL "/theme/js/libs/jquery.qtip-1.0.0-rc3.min.js"/]"></script>
+<script type="text/javascript" src="${serverURL}/theme/js/libs/jquery.qtip-1.0.0-rc3.min.js"></script>
 <script>
     // Tree behaviour
     $(".tree-icon").click(function (e) {
@@ -92,7 +92,7 @@
 
         var $tooltip = $icon.qtip({
             content : {
-                text : '<img class="throbber" src="[serverURL "/theme/images/loading.gif" /]" alt="Cargando..." />',
+                text : '<img class="throbber" src="${serverURL}/theme/images/loading.gif" alt="Cargando..." />',
                 title : {
                     text : 'Información de descarga',
                     button : 'Cerrar'
