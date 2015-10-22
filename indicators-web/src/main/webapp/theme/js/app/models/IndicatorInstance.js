@@ -5,7 +5,7 @@
         idAttribute : "id",
 
         url : function () {
-            return this.get('selfLink');
+            return this.removeProtocol(this.get('selfLink'));
         }
 
     });

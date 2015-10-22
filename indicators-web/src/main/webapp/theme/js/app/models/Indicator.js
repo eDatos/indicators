@@ -4,7 +4,7 @@
     App.models.Indicator = App.models.IndicatorBase.extend({
 
         url : function () {
-            return this.get('selfLink');
+            return this.removeProtocol(this.get('selfLink'));
         }
 
     });

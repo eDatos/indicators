@@ -43,6 +43,10 @@
         getTimeGranularities : function () {
             var dimension = this.get("dimension");
             return dimension.TIME.granularity;
+        },
+        
+        removeProtocol: function (url) {
+        	return url.replace("https:","").replace("http:","");
         }
 
     });
