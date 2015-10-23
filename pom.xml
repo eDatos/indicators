@@ -44,6 +44,7 @@
 					<checkModificationExcludes>
 						<checkModificationExclude>Templates.js</checkModificationExclude>
 						<checkModificationExclude>widget.min.all.js</checkModificationExclude>
+                        <checkModificationExclude>main.css</checkModificationExclude>
 					</checkModificationExcludes>
 				</configuration>
 			</plugin>
