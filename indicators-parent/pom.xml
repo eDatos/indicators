@@ -119,7 +119,7 @@
         <statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
-        <metamac-core-common.version>3.0.3-SNAPSHOT</metamac-core-common.version>
+        <metamac-core-common.version>3.1.0</metamac-core-common.version>
         <metamac-web-common.version>2.0.3</metamac-web-common.version>
         <metamac-statistical-operations-rest-internal-api.version>1.5.2</metamac-statistical-operations-rest-internal-api.version>
         <metamac-statistical-operations-rest-external-api.version>2.0.0</metamac-statistical-operations-rest-external-api.version>
