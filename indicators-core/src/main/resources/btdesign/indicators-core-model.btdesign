@@ -235,14 +235,13 @@ Application Indicators {
 	    	List<@IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode) throws MetamacException;
 			List<IndicatorVersionLastValue> findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
 			List<IndicatorVersionLastValue> findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
-			buildIndicatorVersionLatestValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
 			
 			List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode) throws MetamacException;
 			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
 			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
 			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
 			
-			buildLastValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
+			rebuildCaches(IndicatorVersion indicatorVersion) throws MetamacException;
     	}
     	
     	"Provides access to indicators coverage"

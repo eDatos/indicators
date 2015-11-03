@@ -229,12 +229,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         if (indicatorVersion != null) {
             Indicator indicator = indicatorVersion.getIndicator();
-            // if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
             String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
             onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
-            rebuildCoveragesCache(ctx, indicatorVersion);
+            rebuildCaches(ctx, indicatorVersion);
 
             // After diffusion version's data is populated all related systems must update their versions
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -242,27 +241,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 // update system version
                 List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
                 changeVersionForModifiedIndicatorsSystems(modifiedSystems);
-
-                buildLastValuesCache(ctx, indicatorVersion);
             }
-            // } else {
-            // LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
-            // }
             return indicator;
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, indicatorUuid, indicatorVersionNumber);
         }
     }
-
-    // private boolean shouldIndicatorVersionBePopulated(IndicatorVersion indicatorVersion) {
-    // if (indicatorVersion.getDataRepositoryId() == null || indicatorVersion.getNeedsUpdate() || indicatorVersion.getInconsistentData() || indicatorVersion.getLastPopulateDate() == null) {
-    // return true;
-    // }
-    // // All dataGpeUuids from indicator version
-    // List<String> dataGpeUuids = getDataSourceRepository().findDatasourceDataGpeUuidLinkedToIndicatorVersion(indicatorVersion.getId());
-    // List<String> dataDefinitionsUpdated = getDataGpeRepository().filterDataDefinitionsWithDataUpdatedAfter(dataGpeUuids, indicatorVersion.getLastPopulateDate().toDate());
-    // return dataDefinitionsUpdated.size() > 0;
-    // }
 
     @Override
     public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
@@ -285,12 +269,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 try {
                     onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
-                    rebuildCoveragesCache(ctx, indicatorVersion);
+                    rebuildCaches(ctx, indicatorVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
-
-                    buildLastValuesCache(ctx, indicatorVersion);
                 } catch (MetamacException e) {
                     LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
                 }
@@ -900,7 +882,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    public void rebuildCaches(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+        buildLastValuesCache(ctx, indicatorVersion);
+        rebuildCoveragesCache(ctx, indicatorVersion);
+    }
+
+    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
@@ -916,8 +903,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
     }
 
-    @Override
-    public void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         List<String> geoCodesLeft = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
         List<TimeValue> timeValuesLeft = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
 
@@ -973,7 +959,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    protected void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
 
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
