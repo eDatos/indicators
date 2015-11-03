@@ -454,6 +454,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             getIndicatorVersionRepository().save(indicatorVersion);
 
             deleteIndicatorVersionLastValuesCache(indicatorVersion);
+            getIndicatorVersionGeoCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
+            getIndicatorVersionMeasureCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
+            getIndicatorVersionTimeCoverageRepository().deleteCoverageForIndicatorVersion(indicatorVersion);
         } catch (MetamacException metamacException) {
             throw metamacException;
         } catch (Exception e) {
