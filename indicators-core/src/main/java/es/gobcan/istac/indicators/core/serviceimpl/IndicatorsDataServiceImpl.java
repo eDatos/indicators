@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
@@ -231,9 +232,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             Indicator indicator = indicatorVersion.getIndicator();
             String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
-            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
-
-            rebuildCaches(ctx, indicatorVersion);
+            populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
             // After diffusion version's data is populated all related systems must update their versions
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -267,9 +266,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
-                    onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
-
-                    rebuildCaches(ctx, indicatorVersion);
+                    populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
@@ -329,6 +326,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(indicatorUuid);
     }
 
+    private void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+
+        IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+
+        rebuildCoveragesCache(ctx, indicatorVersion);
+
+        buildLastValuesCache(ctx, indicatorVersion);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
@@ -881,12 +889,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Override
-    public void rebuildCaches(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-        buildLastValuesCache(ctx, indicatorVersion);
-        rebuildCoveragesCache(ctx, indicatorVersion);
-    }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
@@ -904,8 +907,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-        List<String> geoCodesLeft = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
-        List<TimeValue> timeValuesLeft = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
+        List<String> geoCodesLeft = getCodesInGeographicalValue(calculateGeographicalValuesInIndicatorVersionFromData(indicatorVersion));
+        List<TimeValue> timeValuesLeft = createTimeValueWithoutTranslationsFromString(calculateTimeCodesInIndicatorVersionFromData(indicatorVersion));
 
         while (!geoCodesLeft.isEmpty() && !timeValuesLeft.isEmpty()) {
             TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValuesLeft);
@@ -923,6 +926,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
 
+    }
+    private List<TimeValue> createTimeValueWithoutTranslationsFromString(List<String> calculateTimeCodesInIndicatorVersionFromData) throws MetamacException {
+        List<TimeValue> timeValues = new ArrayList<TimeValue>();
+        for (String timeString : calculateTimeCodesInIndicatorVersionFromData) {
+
+            // Here we don't have the translations but we don't need this information
+            timeValues.add(TimeVariableUtils.buildTimeValue(timeString, null));
+        }
+        return timeValues;
     }
     private void deleteIndicatorVersionLastValuesCache(IndicatorVersion indicatorVersion) {
         getIndicatorVersionLastValueCacheRepository().deleteWithIndicatorVersion(indicatorVersion.getIndicator().getUuid());
@@ -959,6 +971,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
 
@@ -1197,6 +1210,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
+
+    private List<String> getCodesInGeographicalValue(List<GeographicalValue> geoValues) {
+        List<String> geoCodes = new ArrayList<String>();
+        for (GeographicalValue geoValue : geoValues) {
+            geoCodes.add(geoValue.getCode());
+        }
+        return geoCodes;
+    }
 
     private List<String> getCodesInGeographicalCodes(List<GeographicalCodeVO> geoValueCodes) {
         List<String> geoCodes = new ArrayList<String>();
