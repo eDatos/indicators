@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
@@ -336,7 +335,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         buildLastValuesCache(ctx, indicatorVersion);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "txManager")
     private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
@@ -889,7 +888,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "txManager")
     private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
@@ -971,7 +970,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "txManager")
     private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
 
