@@ -19,6 +19,8 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.InternationalStringProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +93,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Autowired
     private ConfigurationService                   configurationService;
+
+    private static final Logger                    LOG = LoggerFactory.getLogger(IndicatorsServiceFacadeImpl.class);
 
     public IndicatorsServiceFacadeImpl() {
     }
@@ -623,11 +627,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
 
-        // Publish
         PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
-
-        // Update caches
-        updateCachesForIndicator(ctx, uuid);
 
         // Transform to Dto
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(publishIndicatorResult.getIndicatorVersion());
@@ -657,9 +657,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Versioning
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().versioningIndicator(ctx, uuid, versionType);
-
-        // Update caches
-        updateCachesForIndicator(ctx, uuid);
 
         // Transform to Dto
         return do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
@@ -850,11 +847,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        // Update data
         getIndicatorsDataService().updateIndicatorsData(ctx);
-
-        // Update caches
-        updateCachesForAllIndicators(ctx);
     }
 
     @Override
@@ -863,11 +856,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        // Populate
         getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
-
-        // Update caches
-        updateCachesForIndicator(ctx, indicatorUuid);
     }
 
     // -------------------------------------------------------------------------------------------
@@ -1250,30 +1239,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         String defaultLanguage = configurationService.retrieveLanguageDefault();
         for (InternationalStringProperty property : properties) {
             sculptorCriteria.getConditions().add(ConditionalCriteria.equal(property.texts().locale(), defaultLanguage));
-        }
-    }
-    /**
-     * We can not update caches in the service because the transactional is in that level and we need the data populated to create the caches.
-     * Also we need the coverages caches in order to create last values cache.
-     *
-     * @param ctx
-     * @param indicatorUuid
-     * @throws MetamacException
-     */
-    private void updateCachesForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        List<IndicatorVersion> indicatorVersions = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid).getVersions();
-        updateCaches(ctx, indicatorVersions);
-    }
-
-    private void updateCachesForAllIndicators(ServiceContext ctx) throws MetamacException {
-        List<IndicatorVersion> indicatorVersions = getIndicatorsService().findIndicators(ctx);
-        updateCaches(ctx, indicatorVersions);
-    }
-
-    private void updateCaches(ServiceContext ctx, List<IndicatorVersion> indicatorVersions) throws MetamacException {
-        for (IndicatorVersion indicatorVersion : indicatorVersions) {
-            getIndicatorsDataService().rebuildCoveragesCache(ctx, indicatorVersion);
-            getIndicatorsDataService().rebuildLastValuesCache(ctx, indicatorVersion);
         }
     }
 }

@@ -124,7 +124,6 @@ Application Indicators {
 	    	@Indicator updateIndicator(@Indicator indicator) throws MetamacException;
 	    	@IndicatorVersion updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicators() throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
@@ -241,9 +240,6 @@ Application Indicators {
 			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
 			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
 			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
-			
-			rebuildCoveragesCache(IndicatorVersion indicatorVersion) throws MetamacException;
-			rebuildLastValuesCache(IndicatorVersion indicatorVersion) throws MetamacException;
     	}
     	
     	"Provides access to indicators coverage"
@@ -784,7 +780,6 @@ Application Indicators {
 			Repository IndicatorRepository {
 		   		@Indicator save(@Indicator entity);
 		   		delete;
-		   		findAll;
             	protected List<@Indicator> findByQuery;
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
@@ -865,7 +860,6 @@ Application Indicators {
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				delete;
-				findAll;
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);

@@ -17,6 +17,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -133,6 +136,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private final ObjectMapper               mapper                    = new ObjectMapper();
 
+    EntityManager                            entityManager             = null;
+
+    @PersistenceContext(unitName = "IndicatorsEntityManagerFactory")
+    protected void setEntityManagerDependency(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     public IndicatorsDataServiceImpl() {
     }
 
@@ -231,7 +241,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             Indicator indicator = indicatorVersion.getIndicator();
             String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
-            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+            populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
             // After diffusion version's data is populated all related systems must update their versions
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -265,7 +275,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
-                    onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
+                    populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
@@ -325,6 +335,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(indicatorUuid);
     }
 
+    private void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+
+        IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+
+        rebuildCoveragesCache(ctx, indicatorVersion);
+
+        entityManager.flush();
+
+        buildLastValuesCache(ctx, indicatorVersion);
+    }
     private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
@@ -880,8 +901,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Override
-    public void rebuildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
@@ -962,10 +982,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    @Override
-    public void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
+
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
+
         rebuildTimeCoverageCache(indicatorVersion);
     }
 
