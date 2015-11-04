@@ -563,6 +563,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkFindIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // Nothing specific to check
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkFindIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {

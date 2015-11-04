@@ -231,7 +231,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             Indicator indicator = indicatorVersion.getIndicator();
             String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
-            populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
             // After diffusion version's data is populated all related systems must update their versions
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -265,7 +265,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
-                    populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
+                    onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
 
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
@@ -325,17 +325,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(indicatorUuid);
     }
 
-    private void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
-
-        IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-
-        rebuildCoveragesCache(ctx, indicatorVersion);
-
-        buildLastValuesCache(ctx, indicatorVersion);
-    }
-
-    @Transactional(value = "txManager")
     private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
@@ -891,8 +880,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Transactional(value = "txManager")
-    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void rebuildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
@@ -973,12 +962,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    @Transactional(value = "txManager")
-    private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
-
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
-
         rebuildTimeCoverageCache(indicatorVersion);
     }
 

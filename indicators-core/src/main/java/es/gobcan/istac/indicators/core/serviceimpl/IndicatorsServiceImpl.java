@@ -272,6 +272,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public List<IndicatorVersion> findIndicators(ServiceContext ctx) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkFindIndicators(null);
+
+        // Find
+        List<IndicatorVersion> indicators = getIndicatorVersionRepository().findAll();
+        return indicators;
+    }
+
+    @Override
     public PagedResult<IndicatorVersion> findIndicators(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
 
         // Validation of parameters
@@ -1208,4 +1218,5 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             }
         }
     }
+
 }
