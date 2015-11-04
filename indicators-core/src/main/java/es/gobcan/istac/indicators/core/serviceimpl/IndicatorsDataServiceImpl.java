@@ -335,7 +335,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(indicatorUuid);
     }
 
-    private void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    @Override
+    public void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
@@ -346,7 +347,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         buildLastValuesCache(ctx, indicatorVersion);
     }
-    private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    @Override
+    public void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
         try {
@@ -901,7 +903,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
@@ -982,7 +985,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    @Override
+    public void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
 
         rebuildMeasureCoverageCache(ctx, indicatorVersion);

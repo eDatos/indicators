@@ -72,6 +72,8 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                 }
 
                 case geographicalValue: {
+                    // We can use "lastValuesCache" because this cache have all the geographicalValues of the indicator with the lastData for each value.
+                    // The lastValue for geocode01 and geocode02 can be different points of time.
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
                 }
             }
