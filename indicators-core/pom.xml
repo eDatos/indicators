@@ -130,10 +130,10 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
         </dependency>
-       	<dependency>
-			<groupId>p2.osgi.bundle</groupId>
-			<artifactId>com.google.collect</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>p2.osgi.bundle</groupId>
+            <artifactId>com.google.collect</artifactId>
+        </dependency>
 
         <!-- LOGGING -->
         <dependency>
@@ -441,6 +441,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version><!--$NO-MVN-MAN-VER$ -->
+                <!-- ************************* -->
+                <!-- FIXME: Eliminar skipTests -->
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+                <!-- ************************* -->
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
