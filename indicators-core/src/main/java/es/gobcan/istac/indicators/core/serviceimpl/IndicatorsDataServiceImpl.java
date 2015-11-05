@@ -17,9 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -135,13 +132,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     private final ObjectMapper               mapper                    = new ObjectMapper();
-
-    EntityManager                            entityManager             = null;
-
-    @PersistenceContext(unitName = "IndicatorsEntityManagerFactory")
-    protected void setEntityManagerDependency(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     public IndicatorsDataServiceImpl() {
     }
