@@ -69,7 +69,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
     public void deleteWithIndicatorVersion(String indicatorUuid) {
         String queryHql = "select tuple ";
         queryHql += "from IndicatorVersionLastValueCache tuple ";
-        queryHql += "where tuple.indicatorVersion.indicator.uuid = :indicatorUuid ";
+        queryHql += "where tuple.indicatorVersion.uuid = :indicatorUuid ";
 
         Query query = getEntityManager().createQuery(queryHql);
         query.setParameter(INDICATOR_UUID, indicatorUuid);
