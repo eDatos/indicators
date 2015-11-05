@@ -17,6 +17,7 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.core.common.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 @Component
-public class Dto2DoMapperImpl implements Dto2DoMapper {
+public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
     private IndicatorsSystemsService      indicatorsSystemsService;
@@ -370,6 +371,11 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
 
     private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
+        // Preprocess international string
+        internationalStringHtmlToTextPlain(source);
+
+        // Check it is valid
+        checkInternationalStringDtoValid(source, metadataName);
 
         if (source == null) {
             if (target != null) {
