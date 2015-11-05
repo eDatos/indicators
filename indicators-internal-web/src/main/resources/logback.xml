@@ -6,11 +6,12 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    
     <!-- To enable the debug level uncomment the following lines -->
-    <logger name="org.hibernate.type" level="TRACE" />
-    <logger name="org.hibernate" level="DEBUG" />
+    <!-- <logger name="org.hibernate.type" level="TRACE" /> -->
+    <!-- <logger name="org.hibernate" level="DEBUG" /> -->
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
