@@ -343,8 +343,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         rebuildCoveragesCache(ctx, indicatorVersion);
 
-        entityManager.flush();
-
         buildLastValuesCache(ctx, indicatorVersion);
     }
     @Override
