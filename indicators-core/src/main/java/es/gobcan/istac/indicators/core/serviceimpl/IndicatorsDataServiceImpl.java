@@ -909,8 +909,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private void buildIndicatorVersionLatestValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-        List<String> geoCodesLeft = getCodesInGeographicalValue(calculateGeographicalValuesInIndicatorVersionFromData(indicatorVersion));
-        List<TimeValue> timeValuesLeft = createTimeValueWithoutTranslationsFromString(calculateTimeCodesInIndicatorVersionFromData(indicatorVersion));
+        List<String> geoCodesLeft = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorVersion(ctx, indicatorVersion));
+        List<TimeValue> timeValuesLeft = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
 
         while (!geoCodesLeft.isEmpty() && !timeValuesLeft.isEmpty()) {
             TimeValue lastTimeValue = TimeVariableUtils.findLatestTimeValue(timeValuesLeft);
@@ -929,15 +929,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
     }
-    private List<TimeValue> createTimeValueWithoutTranslationsFromString(List<String> calculateTimeCodesInIndicatorVersionFromData) throws MetamacException {
-        List<TimeValue> timeValues = new ArrayList<TimeValue>();
-        for (String timeString : calculateTimeCodesInIndicatorVersionFromData) {
 
-            // Here we don't have the translations but we don't need this information
-            timeValues.add(TimeVariableUtils.buildTimeValue(timeString, null));
-        }
-        return timeValues;
-    }
     private void deleteIndicatorVersionLastValuesCache(IndicatorVersion indicatorVersion) {
         getIndicatorVersionLastValueCacheRepository().deleteWithIndicatorVersion(indicatorVersion.getIndicator().getUuid());
     }
@@ -1212,14 +1204,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
-
-    private List<String> getCodesInGeographicalValue(List<GeographicalValue> geoValues) {
-        List<String> geoCodes = new ArrayList<String>();
-        for (GeographicalValue geoValue : geoValues) {
-            geoCodes.add(geoValue.getCode());
-        }
-        return geoCodes;
-    }
 
     private List<String> getCodesInGeographicalCodes(List<GeographicalCodeVO> geoValueCodes) {
         List<String> geoCodes = new ArrayList<String>();
