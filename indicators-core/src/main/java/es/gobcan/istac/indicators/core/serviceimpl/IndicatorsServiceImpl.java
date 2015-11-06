@@ -621,6 +621,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         IndicatorVersion indicatorVersion = updatedDataSource.getIndicatorVersion();
         indicatorVersion.setInconsistentData(Boolean.TRUE);
+        indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
 
         return updatedDataSource;
@@ -640,6 +641,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getDataSourceRepository().delete(dataSource);
 
         indicatorVersion.setInconsistentData(Boolean.TRUE);
+        indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
     }
 
