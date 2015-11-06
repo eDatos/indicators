@@ -586,6 +586,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update indicator adding dataSource
         indicatorVersion.addDataSource(dataSource);
         indicatorVersion.setInconsistentData(Boolean.TRUE);
+        indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
 
         return dataSource;
