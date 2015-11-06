@@ -6,6 +6,7 @@ import org.siemac.metamac.web.common.client.widgets.MessagePanel;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.VersionFooter;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -22,7 +23,8 @@ import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 
 public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainView {
 
-    private static final int           NORTH_HEIGHT = 85;
+    private static final int           NORTH_HEIGHT   = 85;
+    private static final String        DEFAULT_MARGIN = "0px";
 
     private MainPageUiHandlers         uiHandlers;
 
@@ -38,6 +40,11 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     public MainPageViewImpl(IndicatorsMasterHead masterHead, MessagePanel messagePanel) {
         this.masterHead = masterHead;
         this.messagePanel = messagePanel;
+
+        // get rid of scroll bars, and clear out the window's built-in margin,
+        // because we want to take advantage of the entire client area
+        Window.enableScrolling(false);
+        Window.setMargin(DEFAULT_MARGIN);
 
         panel = new VLayout();
         panel.setWidth100();
