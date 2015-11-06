@@ -290,6 +290,10 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     @Override
     public List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(ServiceContext ctx, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion)
             throws MetamacException {
+
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalCodesInIndicatorInstanceForIndicatorVersion(indicatorInstance, indicatorVersion, null);
+
         return calculateGeoCodeCoverageInIndicatorInstance(indicatorInstance, indicatorVersion);
     }
 

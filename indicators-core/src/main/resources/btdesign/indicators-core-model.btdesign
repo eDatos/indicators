@@ -239,13 +239,10 @@ Application Indicators {
 			List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode) throws MetamacException;
 			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
 			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
-			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
 			
-			// We need public all these methods because interceptors are only for public methods. 
-			populateAndCreateCachesForIndicatorVersion(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-			onlyPopulateIndicatorVersion(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-			rebuildCoveragesCache(IndicatorVersion indicatorVersion) throws MetamacException;
-			buildLastValuesCache(IndicatorVersion indicatorVersion) throws MetamacException;
+			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
+			
+			@IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators coverage"

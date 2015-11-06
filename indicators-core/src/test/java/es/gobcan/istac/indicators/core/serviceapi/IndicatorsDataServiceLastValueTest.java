@@ -460,7 +460,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
                     measures, 1);
 
             assertNotNull(latestValues);
-            assertEquals(2, latestValues.size());
+            assertEquals(1, latestValues.size());
         }
     }
 

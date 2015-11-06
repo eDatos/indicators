@@ -1481,6 +1481,18 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveGeographicalCodesInIndicatorInstanceForIndicatorVersion(IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion,
+            List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorInstance, ServiceExceptionParameters.INDICATOR_INSTANCE, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(indicatorVersion, ServiceExceptionParameters.INDICATOR, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();

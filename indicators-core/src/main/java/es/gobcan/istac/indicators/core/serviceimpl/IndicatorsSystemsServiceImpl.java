@@ -33,6 +33,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.GeographicalValueProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemProperties;
@@ -759,10 +760,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     private void createIndicatorInstanceLastValuesCacheInIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
         for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
             IndicatorInstance instance = level.getIndicatorInstance();
             if (instance != null) {
-                getIndicatorsDataService().buildIndicatorInstanceLatestValuesCache(ctx, instance);
+                IndicatorVersion indicatorVersion = getIndicatorsDataService().getIndicatorPublishedVersion(ctx, instance.getIndicator().getUuid());
+                getIndicatorsDataService().buildIndicatorInstanceLatestValuesCache(ctx, instance, indicatorVersion);
             }
         }
     }

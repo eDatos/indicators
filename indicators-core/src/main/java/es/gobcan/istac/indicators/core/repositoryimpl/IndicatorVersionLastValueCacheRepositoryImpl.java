@@ -66,13 +66,13 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
 
     @SuppressWarnings("unchecked")
     @Override
-    public void deleteWithIndicatorVersion(String indicatorUuid) {
+    public void deleteWithIndicatorVersion(String indicatorVersionUuid) {
         String queryHql = "select tuple ";
         queryHql += "from IndicatorVersionLastValueCache tuple ";
         queryHql += "where tuple.indicatorVersion.uuid = :indicatorUuid ";
 
         Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter(INDICATOR_UUID, indicatorUuid);
+        query.setParameter(INDICATOR_UUID, indicatorVersionUuid);
 
         List<IndicatorVersionLastValueCache> entities = query.getResultList();
 

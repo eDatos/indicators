@@ -325,8 +325,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(indicatorUuid);
     }
 
-    @Override
-    public void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    private void populateAndCreateCachesForIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
@@ -335,8 +334,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         buildLastValuesCache(ctx, indicatorVersion);
     }
-    @Override
-    public void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+
+    private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
         try {
@@ -468,7 +467,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public IndicatorObservationsVO findObservationsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, IndicatorsDataFilterVO dataFilter) throws MetamacException {
-        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(ctx, indicatorUuid);
 
         return findObservationsInIndicatorVersion(ctx, indicatorVersion, dataFilter);
     }
@@ -501,7 +500,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Override
     public IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, IndicatorsDataFilterVO dataFilter)
             throws MetamacException {
-        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(ctx, indicatorUuid);
 
         return findObservationsExtendedInIndicatorVersion(ctx, indicatorVersion, dataFilter);
     }
@@ -536,7 +535,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public IndicatorObservationsVO findObservationsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid, IndicatorsDataFilterVO dataFilter)
             throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(ctx, indInstance.getIndicator().getUuid());
 
         return findObservationsInIndicatorInstanceWithIndicatorVersion(ctx, indInstance, indicatorVersion, dataFilter);
     }
@@ -692,7 +691,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid,
             IndicatorsDataFilterVO dataFilter) throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(ctx, indInstance.getIndicator().getUuid());
 
         return findObservationsExtendedInIndicatorInstanceWithIndicatorVersion(ctx, indInstance, indicatorVersion, dataFilter);
     }
@@ -891,8 +890,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    @Override
-    public void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void buildLastValuesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         LOG.info("Updating last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
         deleteIndicatorVersionLastValuesCache(indicatorVersion);
 
@@ -903,7 +901,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             IndicatorInstance instance = getIndicatorInstanceRepository().findIndicatorInstance(indicatorInstanceUuid);
 
             deleteIndicatorInstanceLastValuesCache(indicatorInstanceUuid);
-            buildIndicatorInstanceLatestValuesCache(ctx, instance);
+
+            // We have to transfer the indicatorVersion to this build instead of calculate inside.
+            // If we calculate the published indicatorVersion inside we get an error because the metadata of the indicatorVersion has not be update.
+            buildIndicatorInstanceLatestValuesCache(ctx, instance, indicatorVersion);
         }
         LOG.info("Updated last value cache data for indicator uuid:" + indicatorVersion.getIndicator().getUuid() + " version: " + indicatorVersion.getVersionNumber());
     }
@@ -931,16 +932,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private void deleteIndicatorVersionLastValuesCache(IndicatorVersion indicatorVersion) {
-        getIndicatorVersionLastValueCacheRepository().deleteWithIndicatorVersion(indicatorVersion.getIndicator().getUuid());
+        getIndicatorVersionLastValueCacheRepository().deleteWithIndicatorVersion(indicatorVersion.getUuid());
     }
 
     @Override
-    public void buildIndicatorInstanceLatestValuesCache(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
-        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorInstance.getIndicator().getUuid());
+    public void buildIndicatorInstanceLatestValuesCache(ServiceContext ctx, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion) throws MetamacException {
+        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(ctx, indicatorInstance, indicatorVersion));
 
-        List<String> geoCodes = getCodesInGeographicalCodes(getIndicatorsCoverageService().retrieveGeographicalCodesInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstance.getUuid()));
-
-        List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstance.getUuid());
+        List<TimeValue> timeValues = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorInstanceWithIndicatorVersion(ctx, indicatorInstance, indicatorVersion);
 
         List<String> geoValuesLeft = geoCodes;
 
@@ -960,13 +959,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
     }
-
     private void deleteIndicatorInstanceLastValuesCache(String indicatorInstanceUuid) {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
 
-    @Override
-    public void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void rebuildCoveragesCache(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         rebuildGeoCoverageCache(indicatorVersion);
 
         rebuildMeasureCoverageCache(ctx, indicatorVersion);
@@ -1285,7 +1282,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return observations;
     }
 
-    private IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException {
+    @Override
+    public IndicatorVersion getIndicatorPublishedVersion(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         if (indicator.getIsPublished()) {
             return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersionNumber());
@@ -1926,4 +1924,5 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
+
 }
