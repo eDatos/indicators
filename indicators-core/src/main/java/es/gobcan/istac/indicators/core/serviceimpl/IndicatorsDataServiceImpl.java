@@ -359,6 +359,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
+                LOG.info("DataOperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
@@ -377,7 +378,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
     }
-
     @Override
     public void manageDatabaseViewForLastVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
@@ -1610,11 +1610,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         // Check for dotted notation
         if (isSpecialString(value)) {
-            String text = getSpecialStringMeaning(value);
-            // Some Special Strings may not need to create an attribute
-            if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(value)));
-            }
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, value));
             observation.setPrimaryMeasure(null);
         } else {
             Double numValue = null;
@@ -1680,7 +1676,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         if (previousTimeValue == null) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, DOT_NOT_APPLICABLE));
             observation.setPrimaryMeasure(null);
             return observation;
         }
@@ -1702,7 +1698,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         /* Some observations were not found */
         if (currentObs == null || previousObs == null) {
             observation.setPrimaryMeasure(null);
-            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_UNAVAILABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, DOT_UNAVAILABLE));
             return observation;
         }
 
@@ -1726,7 +1722,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (dataOperation.isPercentageMethod()) {
                 if (Math.abs(previousValue) < ZERO_RANGE) {
                     observation.setPrimaryMeasure(null);
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_UNAVAILABLE)));
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, DOT_UNAVAILABLE));
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
@@ -1815,10 +1811,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Gets dot convention descriptions
      */
-    public static String getSpecialStringMeaning(String dottedStr) {
-        return SPECIAL_STRING_MAPPING.get(dottedStr);
-    }
-
     private boolean isSpecialString(String str) {
         return SPECIAL_STRING_MAPPING.containsKey(str);
     }

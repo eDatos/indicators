@@ -549,28 +549,31 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
             String key = generateObservationUniqueKey("ES", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "."));
         }
         {
             String key = generateObservationUniqueKey("ES61", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
         }
         {
             String key = generateObservationUniqueKey("ES611", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "..."));
         }
         {
             String key = generateObservationUniqueKey("ES612", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por secreto estadístico"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "...."));
         }
         {
             String key = generateObservationUniqueKey("ES613", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato incluido en otra categoría"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "....."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes
-                    .put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "......"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES61", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "-"));
         }
 
         checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
@@ -699,45 +702,48 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "..."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
         }
 
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key,
-                    createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad, No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "..., ."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".., -"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, ".."));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2009M10", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "-"));
         }
         checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
     }
