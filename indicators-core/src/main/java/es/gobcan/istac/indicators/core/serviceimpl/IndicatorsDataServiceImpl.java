@@ -1722,7 +1722,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (dataOperation.isPercentageMethod()) {
                 if (Math.abs(previousValue) < ZERO_RANGE) {
                     observation.setPrimaryMeasure(null);
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, DOT_UNAVAILABLE));
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, DOT_NOT_APPLICABLE));
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
