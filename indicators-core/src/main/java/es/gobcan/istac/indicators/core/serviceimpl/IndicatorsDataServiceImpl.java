@@ -1391,7 +1391,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (oldDatasetId != null) {
             try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
-            } catch (ApplicationException e) {
+            } catch (Exception e) {
                 // IDEA: send some kind of notification to get noticed when the old dataset repository couldn't be deleted INDISTAC-861
                 LOG.error("Old dataset repository could not be deleted", e);
             }
