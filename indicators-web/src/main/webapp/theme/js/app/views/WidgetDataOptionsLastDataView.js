@@ -29,6 +29,7 @@
             
             this.model.on('change:instances', this.updatePreview, this);
             this.model.on('change:measures', this.updatePreview, this);
+            this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
         },

@@ -131,9 +131,10 @@
                 }
             },
             
-            orderDatasetsByInstancesOrder : function(datasets) {
+            orderDatasetsBySelectionOrder : function(datasets) {
+            	var selectedOptions = this.options.groupType === 'system' ? this.options.instances : this.options.indicators;
             	return _.sortBy(datasets, function(dataset) {
-            		return _.indexOf(this.options.instances, dataset.request.id);
+            		return _.indexOf(selectedOptions, dataset.request.id);
             	}, this);
             },
 
@@ -143,7 +144,7 @@
                     return measuresLabels[measure];
                 });
                 
-                datasets = this.orderDatasetsByInstancesOrder(datasets);
+                datasets = this.orderDatasetsBySelectionOrder(datasets);
                 
                 context.datasets = _.map(datasets, this.parseDataset, this);
 
