@@ -45,16 +45,19 @@ body {
 }
 
 #cabecera #cab_superior ul li {
-	display: inline;
+	display: inline-block;
 	font-size: 0.9em;
 	list-style-type: none;
-	padding: 0 5px 0 0;
+	padding-right: 2px;
+	margin-right: 1px;
 }
 
 #cabecera #cab_superior ul li a {
 	color: #535353;
-	margin-right: 7px;
+	padding-right: 2px;
+	margin-right: 1px;
 	text-decoration: none;
+	display: inline-block;
 }
 
 #cabecera #cab_superior ul li a:hover {

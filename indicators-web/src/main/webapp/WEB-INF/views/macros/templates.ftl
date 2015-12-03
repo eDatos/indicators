@@ -10,10 +10,19 @@
 			<div id="cabecera">
 				<div id="cab_superior">
 					<ul>
-						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="${serverURL}/theme/images/atom.png" title="RSS" alt="RSS" /> RSS</a></li>
+						<li class="redes_sociales">Síguenos: 
+							<a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Canales RSS (tecla de acceso: r)">
+								<img src="${serverURL}/theme/images/atom.png" title="Canales RSS (tecla de acceso: r)" alt="Canales RSS (tecla de acceso: r)">
+							</a><a href="http://www.gobiernodecanarias.org/istac/twitter" accesskey="t" title="Seguir a istac_es en Twitter (tecla de acceso: t)">
+								<img src="${serverURL}/theme/images/t_mini-a.png" title="Seguir a istac_es en Twitter (tecla de acceso: t)" alt="Seguir a istac_es en Twitter (tecla de acceso: t)">
+							</a><a href="http://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
+								<img src="${serverURL}/theme/images/slideshare.jpg" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" alt="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
+							</a><a href="http://www.youtube.com/user/istacES" accesskey="s" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
+								<img src="${serverURL}/theme/images/youtube.png" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" alt="Seguir a ISTAC en Youtube (tecla de acceso: y)">
+							</a>
+						</li>
 						<li>|</li>
-						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.jsp" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
-				
+						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.html" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>				
 					</ul>
 				</div>
 
