@@ -1516,7 +1516,7 @@ Application Indicators {
 	    }
 	    
 	    "Dto for version of indicator. Summary information"
-	   	DataTransferObject IndicatorVersionSummaryDto {
+	   	DataTransferObject IndicatorVersionSummaryDto extends @AuditDto {
 			"Version number of this indicator version"	
 			String versionNumber;
 			"Processing status"
@@ -1527,6 +1527,27 @@ Application Indicators {
 			Boolean needsUpdate;
 			"Needs be populated"
 			Boolean needsBePopulated;
+
+       		"Date when the indicators system was sended to production validation"
+			JAVADATE productionValidationDate;
+			"User who sended to production validation"
+			String productionValidationUser;
+			"Date when the indicators system was sended to diffusion validation"
+			JAVADATE diffusionValidationDate;
+			"User who sended to diffusion validation"
+			String diffusionValidationUser;
+			"Date when publication failed"
+			JAVADATE publicationFailedDate;
+			"User who publication failed"
+			String publicationFailedUser;
+			"Date when the indicator was published"
+			JAVADATE publicationDate;
+			"User who published"
+			String publicationUser;
+			"Date when the indicators system was archived"
+			JAVADATE archiveDate;
+			"User who archived"
+			String archiveUser; 			
 	    }
 
 	    "Dto for dimension"

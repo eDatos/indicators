@@ -492,6 +492,19 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setNeedsUpdate(source.getNeedsUpdate());
         target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
+
+        target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
+        target.setProductionValidationUser(source.getProductionValidationUser());
+        target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));
+        target.setDiffusionValidationUser(source.getDiffusionValidationUser());
+        target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+        target.setPublicationUser(source.getPublicationUser());
+        target.setArchiveDate(dateDoToDto(source.getArchiveDate()));
+        target.setArchiveUser(source.getArchiveUser());
+        target.setCreatedBy(source.getCreatedBy());
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         return target;
     }
 
