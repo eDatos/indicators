@@ -490,6 +490,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setSubjectCode(source.getSubjectCode());
+        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
         target.setNeedsUpdate(source.getNeedsUpdate());
         target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
 

@@ -4,6 +4,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -29,6 +30,7 @@ public class IndicatorRecord extends Record {
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
         setUuid(indicatorSummaryDto.getUuid());
         setCode(indicatorSummaryDto.getCode());
+        setSubject(indicatorSummaryDto);
         // Diffusion version
         if (indicatorSummaryDto.getDiffusionVersion() != null) {
             setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
@@ -85,6 +87,18 @@ public class IndicatorRecord extends Record {
 
     public void setCode(String code) {
         setAttribute(IndicatorDS.CODE, code);
+    }
+
+    public void setSubject(IndicatorSummaryDto indicatorSummaryDto) {
+        String subjectCodeProd = indicatorSummaryDto.getProductionVersion() != null ? indicatorSummaryDto.getProductionVersion().getSubjectCode() : null;
+        String subjectCodeDiff = indicatorSummaryDto.getDiffusionVersion() != null ? indicatorSummaryDto.getDiffusionVersion().getSubjectCode() : null;
+        String subjectTitleProd = indicatorSummaryDto.getProductionVersion() != null ? getLocalisedString(indicatorSummaryDto.getProductionVersion().getSubjectTitle()) : null;
+        String subjectTitleDiff = indicatorSummaryDto.getDiffusionVersion() != null ? getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getSubjectTitle()) : null;
+        if (StringUtils.equals(subjectCodeProd, subjectCodeDiff)) {
+            setAttribute(IndicatorDS.SUBJECT_TITLE, subjectTitleProd);
+        }
+        setAttribute(IndicatorDS.SUBJECT_TITLE_PROD, subjectTitleProd);
+        setAttribute(IndicatorDS.SUBJECT_TITLE_DIFF, subjectTitleDiff);
     }
 
     public String getUuid() {

@@ -1523,6 +1523,10 @@ Application Indicators {
 			- @IndicatorProcStatusEnum procStatus;
        		"Title"
        		- @InternationalStringDto title;
+       		"Subject code"
+			String subjectCode;       		
+       		"Subject title"
+       		- @InternationalStringDto subjectTitle;
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
 			"Needs be populated"

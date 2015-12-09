@@ -30,6 +30,9 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICA
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICATION_FAILED_USER_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICATION_USER;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICATION_USER_DIFF;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.SUBJECT_TITLE;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.SUBJECT_TITLE_DIFF;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.SUBJECT_TITLE_PROD;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.TITLE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION_NUMBER;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION_NUMBER_DIFF;
@@ -54,9 +57,11 @@ public class IndicatorListGrid extends CustomListGrid {
         setUseAllDataSourceFields(false);
         setHeaderHeight(40);
 
-        ListGridField fieldCode = new ListGridField(CODE, getConstants().indicListHeaderIdentifier());
-        fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(TITLE, getConstants().indicDetailTitle());
+        ListGridField code = new ListGridField(CODE, getConstants().indicListHeaderIdentifier());
+        code.setAlign(Alignment.LEFT);
+        ListGridField name = new ListGridField(TITLE, getConstants().indicDetailTitle());
+        ListGridField subject = new ListGridField(SUBJECT_TITLE, getConstants().indicDetailSubject());
+
         ListGridField version = new ListGridField(VERSION_NUMBER, getConstants().indicDetailVersion());
         ListGridField status = new ListGridField(PROC_STATUS, getConstants().indicDetailProcStatus());
         ListGridField needsUpdate = new ListGridField(NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
@@ -64,6 +69,8 @@ public class IndicatorListGrid extends CustomListGrid {
         needsUpdate.setType(ListGridFieldType.IMAGE);
         needsUpdate.setAlign(Alignment.CENTER);
 
+        ListGridField subjectProd = new ListGridField(SUBJECT_TITLE_PROD, getConstants().indicDetailSubject());
+        subjectProd.setHidden(true);
         ListGridField productionValidationDate = new ListGridField(PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
         productionValidationDate.setHidden(true);
         ListGridField productionValidationUser = new ListGridField(PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
@@ -96,6 +103,8 @@ public class IndicatorListGrid extends CustomListGrid {
         diffusionNeedsUpdate.setType(ListGridFieldType.IMAGE);
         diffusionNeedsUpdate.setAlign(Alignment.CENTER);
 
+        ListGridField subjectDiff = new ListGridField(SUBJECT_TITLE_DIFF, getConstants().indicDetailSubject());
+        subjectDiff.setHidden(true);
         ListGridField productionValidationDateDiff = new ListGridField(PRODUCTION_VALIDATION_DATE_DIFF, getConstants().indicDetailProductionValidationDate());
         productionValidationDateDiff.setHidden(true);
         ListGridField productionValidationUserDiff = new ListGridField(PRODUCTION_VALIDATION_USER_DIFF, getConstants().indicDetailProductionValidationUser());
@@ -121,16 +130,17 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField creationUserDiff = new ListGridField(CREATION_USER_DIFF, getConstants().indicDetailCreatedUser());
         creationUserDiff.setHidden(true);
 
-        setFields(fieldCode, fieldName, version, status, needsUpdate, productionValidationDate, productionValidationUser, diffusionValidationDate, diffusionValidationUser, publicationDate,
-                publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion, diffusionStatus, diffusionNeedsUpdate,
-                productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff, publicationUserDiff,
-                publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
+        setFields(code, name, subject, version, status, needsUpdate, subjectProd, productionValidationDate, productionValidationUser, diffusionValidationDate, diffusionValidationUser,
+                publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion, diffusionStatus,
+                diffusionNeedsUpdate, subjectDiff, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff,
+                publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
 
         // @formatter:off
-        setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE}), 
+        setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, SUBJECT_TITLE}), 
                 new HeaderSpan(getConstants().indicatorProductionEnvironment(), new String[]{VERSION_NUMBER, 
                                                                                             PROC_STATUS, 
                                                                                             NEEDS_UPDATE,
+                                                                                            SUBJECT_TITLE_PROD,
                                                                                             PRODUCTION_VALIDATION_DATE,
                                                                                             PRODUCTION_VALIDATION_USER,
                                                                                             DIFFUSION_VALIDATION_DATE,
@@ -148,6 +158,7 @@ public class IndicatorListGrid extends CustomListGrid {
                 new HeaderSpan(getConstants().indicatorDiffusionEnvironment(), new String[]{VERSION_NUMBER_DIFF, 
                                                                                             PROC_STATUS_DIFF, 
                                                                                             NEEDS_UPDATE_DIFF,
+                                                                                            SUBJECT_TITLE_DIFF,
                                                                                             PRODUCTION_VALIDATION_DATE_DIFF,
                                                                                             PRODUCTION_VALIDATION_USER_DIFF,
                                                                                             DIFFUSION_VALIDATION_DATE_DIFF,
