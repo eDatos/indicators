@@ -54,7 +54,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListUiHandler> {
 
         void setIndicatorList(List<IndicatorSummaryDto> indicatorList, int firstResult, int totalResults);
-        void setSubjects(List<SubjectDto> subjectDtos);
+        void setSubjectsForCreateIndicator(List<SubjectDto> subjectDtos);
+        void setSubjectsForSearchIndicator(List<SubjectDto> subjectDtos);
 
         // Search
         void clearSearchSection();
@@ -155,12 +156,23 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     }
 
     @Override
-    public void retrieveSubjectsList() {
+    public void retrieveSubjectsListForCreateIndicator() {
         dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjects(result.getSubjectDtos());
+                getView().setSubjectsForCreateIndicator(result.getSubjectDtos());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveSubjectsListForSearchIndicator() {
+        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetSubjectsListResult result) {
+                getView().setSubjectsForSearchIndicator(result.getSubjectDtos());
             }
         });
     }

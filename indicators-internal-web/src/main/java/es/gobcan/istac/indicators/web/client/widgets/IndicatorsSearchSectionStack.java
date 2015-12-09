@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
@@ -19,6 +22,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientCriteriaUtils;
@@ -40,6 +44,8 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         advancedSearchForm.setVisible(false);
 
         TextItem title = new TextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+        SelectItem subject = new SelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
+        subject.setWidth(300);
         SelectItem productionVersionProcStatus = new SelectItem(IndicatorDS.PROC_STATUS, getConstants().indicatorProductionEnvironmentProcStatus());
         productionVersionProcStatus.setValueMap(CommonUtils.getProcStatusValueMap());
         SelectItem diffusionVersionProcStatus = new SelectItem(IndicatorDS.PROC_STATUS_DIFF, getConstants().indicatorDiffusionEnvironmentProcStatus());
@@ -72,7 +78,7 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
             }
         });
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{title, productionVersionProcStatus, diffusionVersionProcStatus, orderBy, orderType, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{title, subject, productionVersionProcStatus, diffusionVersionProcStatus, orderBy, orderType, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
@@ -81,13 +87,20 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         getUiHandlers().retrieveIndicators(getIndicatorCriteria());
     }
 
+    @Override
+    protected void showAdvancedSearchSection() {
+        super.showAdvancedSearchSection();
+        getUiHandlers().retrieveSubjectsListForSearchIndicator();
+    }
+
     public IndicatorCriteria getIndicatorCriteria() {
         IndicatorCriteria criteria = new IndicatorCriteria();
         criteria.setCriteria(searchForm.getValueAsString(SEARCH_ITEM_NAME));
         criteria.setTitle(advancedSearchForm.getValueAsString(IndicatorDS.TITLE));
         criteria.setProductionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS)));
         criteria.setDiffusionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS_DIFF)));
-
+        criteria.setSubjectCode(advancedSearchForm.getValueAsString(IndicatorDS.SUBJECT));
+        
         IndicatorCriteriaOrderEnum indicatorCriteriaOrderEnum = CommonUtils.getIndicatorCriteriaOrderEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_BY));
         if (indicatorCriteriaOrderEnum != null) {
             OrderTypeEnum orderTypeEnum = CommonUtils.getOrderTypeEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_TYPE));
@@ -95,6 +108,11 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         }
 
         return criteria;
+    }
+
+    public void setSubjects(List<SubjectDto> subjectDtos) {
+        LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
+        ((SelectItem) advancedSearchForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
     }
 
     public void setUiHandlers(IndicatorListUiHandler uiHandlers) {

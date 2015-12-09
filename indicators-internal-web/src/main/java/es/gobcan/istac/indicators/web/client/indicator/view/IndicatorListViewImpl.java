@@ -70,7 +70,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             @Override
             public void onClick(ClickEvent event) {
                 window = new NewIndicatorWindow(getConstants().indicCreateTitle());
-                getUiHandlers().retrieveSubjectsList();
+                getUiHandlers().retrieveSubjectsListForCreateIndicator();
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
@@ -175,10 +175,15 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     }
 
     @Override
-    public void setSubjects(List<SubjectDto> subjectDtos) {
+    public void setSubjectsForCreateIndicator(List<SubjectDto> subjectDtos) {
         if (window != null) {
             window.setSubjetcs(subjectDtos);
         }
+    }
+
+    @Override
+    public void setSubjectsForSearchIndicator(List<SubjectDto> subjectDtos) {
+        searchSectionStack.setSubjects(subjectDtos);
     }
 
     @Override

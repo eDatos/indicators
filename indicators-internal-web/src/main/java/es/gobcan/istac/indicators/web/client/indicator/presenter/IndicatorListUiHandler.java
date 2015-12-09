@@ -14,7 +14,8 @@ public interface IndicatorListUiHandler extends UiHandlers {
 
     void goToIndicator(String code);
 
-    void retrieveSubjectsList();
+    void retrieveSubjectsListForCreateIndicator();
+    void retrieveSubjectsListForSearchIndicator();
 
     void retrieveIndicators(IndicatorCriteria criteria);
 }

@@ -17,6 +17,7 @@ public class IndicatorCriteria extends PaginationWebCriteria {
     private String                     title;
     private IndicatorProcStatusEnum    productionVersionProcStatus;
     private IndicatorProcStatusEnum    diffusionVersionProcStatus;
+    private String                     subjectCode;
 
     private List<MetamacCriteriaOrder> orders           = new ArrayList<MetamacCriteriaOrder>();
 
@@ -55,6 +56,14 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     public void setDiffusionVersionProcStatus(IndicatorProcStatusEnum diffusionVersionProcStatus) {
         this.diffusionVersionProcStatus = diffusionVersionProcStatus;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
     }
 
     public List<MetamacCriteriaOrder> getOrders() {

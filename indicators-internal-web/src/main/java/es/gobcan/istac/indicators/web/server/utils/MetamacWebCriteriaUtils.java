@@ -47,6 +47,10 @@ public class MetamacWebCriteriaUtils {
                 conjunctionRestriction.getRestrictions().add(
                         new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.DIFFUSION_PROC_STATUS.name(), criteria.getDiffusionVersionProcStatus(), OperationType.EQ));
             }
+
+            if (!StringUtils.isBlank(criteria.getSubjectCode())) {
+                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), criteria.getSubjectCode(), OperationType.EQ));
+            }
         }
 
         return conjunctionRestriction;
