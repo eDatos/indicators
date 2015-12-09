@@ -10,7 +10,6 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
-import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.shared.CloseSessionAction;
 import org.siemac.metamac.web.common.shared.CloseSessionResult;
@@ -36,9 +35,8 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
-import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
-import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlResult;
-import es.gobcan.istac.indicators.web.shared.SharedTokens;
+import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetHelpUrlResult;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers, SetTitleHandler {
 
@@ -122,8 +120,8 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     }
 
     @Override
-    public void downloadUserGuide() {
-        dispatcher.execute(new GetUserGuideUrlAction(), new WaitingAsyncCallback<GetUserGuideUrlResult>() {
+    public void openHelpUrl() {
+        dispatcher.execute(new GetHelpUrlAction(), new WaitingAsyncCallback<GetHelpUrlResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -131,10 +129,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             }
 
             @Override
-            public void onWaitSuccess(GetUserGuideUrlResult result) {
-                CommonWebUtils.showDownloadFileWindow(SharedTokens.FILE_DOWNLOAD_DIR_PATH, SharedTokens.PARAM_DOC, result.getUserGuideUrl());
+            public void onWaitSuccess(GetHelpUrlResult result) {
+                Window.open(result.getHelpUrl(), "_blank", "");
             }
         });
     }
-
 }

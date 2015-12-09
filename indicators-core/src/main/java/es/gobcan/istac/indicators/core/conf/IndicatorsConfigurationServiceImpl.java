@@ -38,11 +38,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveIndicatorsUserGuideFilename() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME);
-    }
-
-    @Override
     public String retrieveDsplIndicatorsSystemUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
     }
@@ -110,5 +105,10 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveIndicatorsExternalWebUrlBase() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_WEB);
+    }
+
+    @Override
+    public String retrieveHelpUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.HELP_URL);
     }
 }

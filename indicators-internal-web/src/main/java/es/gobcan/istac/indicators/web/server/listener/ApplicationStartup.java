@@ -53,9 +53,9 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
         checkRequiredProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
 
         // OTHERS
-        checkRequiredProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
+        checkRequiredProperty(IndicatorsConfigurationConstants.HELP_URL);
     }
 
     @Override

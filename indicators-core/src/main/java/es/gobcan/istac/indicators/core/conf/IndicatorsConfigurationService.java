@@ -17,8 +17,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveIndicatorsDocsPath() throws MetamacException;
 
-    String retrieveIndicatorsUserGuideFilename() throws MetamacException;
-
     String retrieveDsplIndicatorsSystemUrl() throws MetamacException;
 
     String retrieveDsplProviderName() throws MetamacException;
@@ -47,4 +45,5 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveIndicatorsExternalWebUrlBase() throws MetamacException;
 
+    String retrieveHelpUrl() throws MetamacException;
 }

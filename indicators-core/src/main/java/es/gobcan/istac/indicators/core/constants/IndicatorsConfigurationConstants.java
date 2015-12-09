@@ -50,8 +50,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DSPL_PROVIDER_URL                            = "indicators.dspl.provider.url";
     public static final String DSPL_INDICATORS_SYSTEM_URL                   = "indicators.dspl.indicators.system.url";
 
-    public static final String USER_GUIDE_FILENAME                          = "indicators.user.guide.file.name";
-
     public static final String ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API = "metamac.statistical_operations.rest.internal";
     public static final String ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API = "metamac.statistical_operations.rest.external";
 
@@ -66,5 +64,8 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     // APP
     public static final String ENDPOINT_INDICATORS_EXTERNAL_WEB             = "indicators.web.external.url";
+
+    // Help URL
+    public static final String HELP_URL                                     = "indicators.help.url";
 
 }

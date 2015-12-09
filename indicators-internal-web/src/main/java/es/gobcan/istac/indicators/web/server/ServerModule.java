@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueAction
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesPaginatedListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetHelpUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstanceActionHandler;
@@ -64,7 +65,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndi
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersPaginatedListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetUserGuideUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetValuesListsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
@@ -121,6 +121,7 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
@@ -138,8 +139,6 @@ import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorActi
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersPaginatedListAction;
-import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
-import es.gobcan.istac.indicators.web.shared.GetValuesLists;
 import es.gobcan.istac.indicators.web.shared.GetValuesListsAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
@@ -279,8 +278,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
         bindHandler(GetNavigationBarUrlAction.class, GetNavigationBarUrlActionHandler.class);
         bindHandler(LoadConfigurationPropertiesAction.class, LoadConfigurationPropertiesActionHandler.class);
-
-        bindHandler(GetUserGuideUrlAction.class, GetUserGuideUrlActionHandler.class);
+        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);

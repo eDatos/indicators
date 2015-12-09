@@ -9,24 +9,23 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
-import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
-import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetHelpUrlResult;
 
 @Component
-public class GetUserGuideUrlActionHandler extends SecurityActionHandler<GetUserGuideUrlAction, GetUserGuideUrlResult> {
+public class GetHelpUrlActionHandler extends SecurityActionHandler<GetHelpUrlAction, GetHelpUrlResult> {
 
     @Autowired
     private IndicatorsConfigurationService configurationService = null;
 
-    public GetUserGuideUrlActionHandler() {
-        super(GetUserGuideUrlAction.class);
+    public GetHelpUrlActionHandler() {
+        super(GetHelpUrlAction.class);
     }
 
     @Override
-    public GetUserGuideUrlResult executeSecurityAction(GetUserGuideUrlAction action) throws ActionException {
+    public GetHelpUrlResult executeSecurityAction(GetHelpUrlAction action) throws ActionException {
         try {
-            String userGuideFileName = configurationService.retrieveIndicatorsUserGuideFilename();
-            return new GetUserGuideUrlResult(userGuideFileName);
+            return new GetHelpUrlResult(configurationService.retrieveHelpUrl());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
