@@ -40,7 +40,7 @@
                     var timeValue = timeValues[j];
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
-                    var unit = dataset.getUnit(measureValue);
+                    var unit = dataset.getUnit(measureValue, locale);
 
                     var date = Istac.widget.DateParser.parse(timeValue);
 

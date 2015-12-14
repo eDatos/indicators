@@ -63,9 +63,8 @@
             return null;
         },
 
-        getUnit : function (measure) {
+        getUnit : function (measure, locale) {
             var result = "";
-
             if (this.metadata) {
                 var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
                 if (measureRepresentation) {
@@ -83,6 +82,16 @@
                     } else {
                         result = result + quantity.unit.__default__;
                     }
+                    
+                    if (quantity.baseValue) {
+                    	result += " (";
+                    	if (quantity.baseLocation) {
+                    		result += this._getLabel(quantity.baseLocation.title);		
+                    	} else if (quantity.baseTime) {
+                    		result += this._getLabel(quantity.baseTime.title);
+                    	}
+                    	result += "&nbsp;=&nbsp;" + quantity.baseValue + ")";
+                    }                    
                 }
             }
             return result;

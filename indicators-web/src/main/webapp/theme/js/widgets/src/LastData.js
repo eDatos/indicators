@@ -38,7 +38,7 @@
                     });
 
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
-                    var unit = dataset.getUnit(measure);
+                    var unit = dataset.getUnit(measure, this.locale);
 
                     var showSparkline = this.options['sparkline_' + measure];
 
