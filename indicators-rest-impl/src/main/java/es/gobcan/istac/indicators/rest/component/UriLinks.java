@@ -98,12 +98,6 @@ public class UriLinks {
         return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
     }
 
-    // /vX/subjects/{id}
-    public String getSubjectLink(String id) {
-        return RestUtils.createLink(getSubjectsLink(), id);
-
-    }
-
     // ----------------------------------------------------------------------------------------------------
     // GEOGRAPHICAL VALUES
     // ----------------------------------------------------------------------------------------------------

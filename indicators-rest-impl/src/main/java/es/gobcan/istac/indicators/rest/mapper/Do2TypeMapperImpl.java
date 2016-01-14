@@ -289,7 +289,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         subjectBaseType.setId(subject.getId());
         subjectBaseType.setCode(subject.getId());
         subjectBaseType.setKind(IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
-        subjectBaseType.setSelfLink(uriLinks.getSubjectLink(subject.getId()));
         subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle()));
     }
 
