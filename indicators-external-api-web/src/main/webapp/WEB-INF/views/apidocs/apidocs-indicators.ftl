@@ -554,10 +554,6 @@
                     "type" : "string",
                     "description" : "Tipo del recurso."
                 },
-                "selfLink" : {
-                    "type" : "string",
-                    "description" : "Enlace al propio recurso."
-                },
                 "code" : {
                     "type" : "string",
                     "description" : "Código semántico del recurso."
