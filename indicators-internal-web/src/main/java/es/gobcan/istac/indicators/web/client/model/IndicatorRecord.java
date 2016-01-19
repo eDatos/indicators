@@ -4,7 +4,6 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -30,10 +29,10 @@ public class IndicatorRecord extends Record {
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
         setUuid(indicatorSummaryDto.getUuid());
         setCode(indicatorSummaryDto.getCode());
-        setSubject(indicatorSummaryDto);
         // Diffusion version
         if (indicatorSummaryDto.getDiffusionVersion() != null) {
             setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
+            setSubject(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getSubjectTitle()));
             setDiffusionProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
             setDiffusionNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
             setDiffusionVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
@@ -58,6 +57,8 @@ public class IndicatorRecord extends Record {
         if (indicatorSummaryDto.getProductionVersion() != null) {
             // Overwrite name if production version exists
             setName(getLocalisedString(indicatorSummaryDto.getProductionVersion().getTitle()));
+            // Overwrite subject if production version exists
+            setSubject(getLocalisedString(indicatorSummaryDto.getProductionVersion().getSubjectTitle()));
             setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getProductionVersion().getProcStatus()));
             setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
@@ -89,16 +90,8 @@ public class IndicatorRecord extends Record {
         setAttribute(IndicatorDS.CODE, code);
     }
 
-    public void setSubject(IndicatorSummaryDto indicatorSummaryDto) {
-        String subjectCodeProd = indicatorSummaryDto.getProductionVersion() != null ? indicatorSummaryDto.getProductionVersion().getSubjectCode() : null;
-        String subjectCodeDiff = indicatorSummaryDto.getDiffusionVersion() != null ? indicatorSummaryDto.getDiffusionVersion().getSubjectCode() : null;
-        String subjectTitleProd = indicatorSummaryDto.getProductionVersion() != null ? getLocalisedString(indicatorSummaryDto.getProductionVersion().getSubjectTitle()) : null;
-        String subjectTitleDiff = indicatorSummaryDto.getDiffusionVersion() != null ? getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getSubjectTitle()) : null;
-        if (StringUtils.equals(subjectCodeProd, subjectCodeDiff)) {
-            setAttribute(IndicatorDS.SUBJECT_TITLE, subjectTitleProd);
-        }
-        setAttribute(IndicatorDS.SUBJECT_TITLE_PROD, subjectTitleProd);
-        setAttribute(IndicatorDS.SUBJECT_TITLE_DIFF, subjectTitleDiff);
+    public void setSubject(String subject) {
+        setAttribute(IndicatorDS.SUBJECT_TITLE, subject);
     }
 
     public String getUuid() {
