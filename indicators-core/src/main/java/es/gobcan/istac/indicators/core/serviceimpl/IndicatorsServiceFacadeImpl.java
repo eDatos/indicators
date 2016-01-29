@@ -843,11 +843,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        getIndicatorsDataService().updateIndicatorsData(ctx);
+        return getIndicatorsDataService().updateIndicatorsData(ctx);
     }
 
     @Override

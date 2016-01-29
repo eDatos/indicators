@@ -247,8 +247,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException  {
         LOG.info("Starting Indicators data update process");
+        
+        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
 
         // Validation
         InvocationValidator.checkUpdateIndicatorsData(null);
@@ -271,11 +273,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
                 } catch (MetamacException e) {
                     LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
+                    failedPopulationIndicators.add(indicatorVersion);
                 }
             }
         }
         changeVersionForModifiedIndicatorsSystems(modifiedSystems);
         LOG.info("Finished Indicators data update process");
+        
+        return failedPopulationIndicators;
     }
 
     private void changeVersionForModifiedIndicatorsSystems(Collection<String> modifiedSystems) {

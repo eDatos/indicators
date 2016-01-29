@@ -205,7 +205,7 @@ Application Indicators {
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
-	    	updateIndicatorsData() throws MetamacException;
+	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
 	    	"Create a dataset repository definition"
 	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
 	    	"Link a dataset view to the latest version of the indicator"
@@ -524,7 +524,7 @@ Application Indicators {
 	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data"
-	    	updateIndicatorsData() throws MetamacException;
+	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
 	    	
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"

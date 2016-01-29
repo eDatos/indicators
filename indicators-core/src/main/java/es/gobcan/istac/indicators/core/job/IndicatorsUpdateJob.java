@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.job;
 
+import java.util.List;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -14,7 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
 @PersistJobDataAfterExecution
@@ -42,12 +48,19 @@ public class IndicatorsUpdateJob implements Job {
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
-        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);        
+        String user = serviceContext.getUserId();
 
         try {
-            getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
+            List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
+            
+            getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
         } catch (MetamacException e) {
             LOG.error("Error updating indicators Data", e);
         }
+    }
+    
+    private NoticesRestInternalService getNoticesRestInternalService() {
+        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
 }
