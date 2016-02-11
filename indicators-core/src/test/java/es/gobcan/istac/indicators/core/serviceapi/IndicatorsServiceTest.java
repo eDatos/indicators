@@ -1,5 +1,10 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +34,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -251,8 +257,42 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         }
     }
 
+    @Test
+    public void testExportIndicatorsTsv() throws Exception {
+
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            
+            String fileName = indicatorService.exportIndicatorsTsv(getServiceContextAdministrador(), conditions);
+            assertNotNull(fileName);
+            
+            // Validate
+            File file = new File(tempDirPath() + File.separatorChar + fileName);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line = bufferedReader.readLine();
+            assertEquals("code\tproduction-title#es\tproduction-title#en\tproduction-title#pt\tproduction-subject_title#es\tproduction-subject_title#en\tproduction-subject_title#pt\tproduction-version_number\tproduction-proc_status\tproduction-production_validation_date\tproduction-production_validation_user\tproduction-diffusion_validation_date\tproduction-diffusion_validation_user\tproduction-publication_date\tproduction-publication_user\tproduction-publication_failed_date\tproduction-publication_failed_user\tproduction-archive_date\tproduction-archive_user\tproduction-created_date\tproduction-created_by\tdiffusion-title#es\tdiffusion-title#en\tdiffusion-title#pt\tdiffusion-subject_title#es\tdiffusion-subject_title#en\tdiffusion-subject_title#pt\tdiffusion-version_number\tdiffusion-proc_status\tdiffusion-production_validation_date\tdiffusion-production_validation_user\tdiffusion-diffusion_validation_date\tdiffusion-diffusion_validation_user\tdiffusion-publication_date\tdiffusion-publication_user\tdiffusion-publication_failed_date\tdiffusion-publication_failed_user\tdiffusion-archive_date\tdiffusion-archive_user\tdiffusion-created_date\tdiffusion-created_by", line);
+            line = bufferedReader.readLine();
+            assertEquals("CODE-12\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1", line);
+            line = bufferedReader.readLine();
+            assertEquals("CODE-3\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1", line);
+            
+            bufferedReader.close();
+        }
+    }
+
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
+    }
+
+    private String tempDirPath() throws IOException {
+        File temp = File.createTempFile("temp-file-name", ".tmp");
+        String absolutePath = temp.getAbsolutePath();
+        String tempFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
+        temp.delete();
+        return tempFilePath;
     }
 }

@@ -15,4 +15,29 @@ public class Indicator extends IndicatorBase {
 
     public Indicator() {
     }
+    
+    // IDEA: Would be faster as repo queries?
+    public IndicatorVersion getProductionIndicatorVersion() {
+        String productionVersionNumber = getProductionVersionNumber();
+        if (productionVersionNumber != null) {
+            return getIndicatorVersion(productionVersionNumber);    
+        } else {
+            return getDiffusionIndicatorVersion();
+        }
+    }
+    
+    public IndicatorVersion getDiffusionIndicatorVersion() {
+        return getIndicatorVersion(getDiffusionVersionNumber());
+    }
+    
+    private IndicatorVersion getIndicatorVersion(String indicatorVersionNumber) {
+        if (indicatorVersionNumber != null) {
+            for (IndicatorVersion indicatorVersion : getVersions()) {
+                if (indicatorVersionNumber.equals(indicatorVersion.getVersionNumber())) {
+                    return indicatorVersion;
+                }
+            }
+        }
+        return null;        
+    }
 }

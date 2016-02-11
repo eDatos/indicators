@@ -6,6 +6,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.List;
 
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -34,10 +35,13 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
+import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.ExportIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
@@ -54,11 +58,14 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListUiHandler> {
 
         void setIndicatorList(List<IndicatorSummaryDto> indicatorList, int firstResult, int totalResults);
+
         void setSubjectsForCreateIndicator(List<SubjectDto> subjectDtos);
+
         void setSubjectsForSearchIndicator(List<SubjectDto> subjectDtos);
 
         // Search
         void clearSearchSection();
+
         IndicatorCriteria getIndicatorCriteria();
     }
 
@@ -146,6 +153,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 IndicatorCriteria criteria = getView().getIndicatorCriteria();
                 retrieveIndicators(criteria);
             }
+
             @Override
             public void onWaitSuccess(DeleteIndicatorsResult result) {
                 fireSuccessMessage(getMessages().indicDeleted());
@@ -174,6 +182,23 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
             public void onWaitSuccess(GetSubjectsListResult result) {
                 getView().setSubjectsForSearchIndicator(result.getSubjectDtos());
             }
+        });
+    }
+
+    @Override
+    public void exportIndicators(IndicatorCriteria criteria) {
+        dispatcher.execute(new ExportIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<ExportIndicatorsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ExportIndicatorsResult result) {
+                CommonUtils.downloadFile(result.getFileName());
+            }
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
+            }
+
         });
     }
 }

@@ -67,6 +67,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_NOT_POPULATED                                  = create("exception.indicators.indicator.not_populated");
     public static final CommonServiceExceptionType INDICATOR_FIND_DIMENSION_CODES_ERROR                     = create("exception.indicators.indicator.find_dimension_codes_error");
 
+    // Exportation
+    public static final CommonServiceExceptionType EXPORTATION_TSV_ERROR                                    = create("exception.indicators.exportation.tsv.error");
+
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                    = create("exception.indicators.data_source.not_found");
 

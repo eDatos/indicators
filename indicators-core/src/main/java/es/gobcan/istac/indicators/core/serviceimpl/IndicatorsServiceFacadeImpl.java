@@ -678,7 +678,20 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Transform
         return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result, sculptorCriteria.getPageSize());
     }
+    
+    @Override
+    public String exportIndicatorsTsv(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        
+        // Export
+        return getIndicatorsService().exportIndicatorsTsv(ctx, sculptorCriteria.getConditions());
+    }
+    
     @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
@@ -1229,7 +1242,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     /**
      * Adds a condition to the {@link SculptorCriteria} to filter the results by the edition language. The filtering allows the query to be faster and allows the resources to be sorted by a specific
      * locale of an {@link InternationalString}.
-     *
+     * 
      * @param sculptorCriteria
      * @param properties
      * @throws MetamacException

@@ -1,9 +1,16 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
@@ -15,6 +22,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
@@ -25,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
@@ -56,9 +65,12 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Autowired(required = false)
-    private SubjectRepository   subjectRepository;
+    private SubjectRepository              subjectRepository;
 
-    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+    @Autowired
+    private IndicatorsConfigurationService indicatorsConfigurationService;
+
+    private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     public IndicatorsServiceImpl() {
     }
@@ -286,6 +298,52 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Find
         PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
         return indicatorsVersions;
+    }
+
+    @Override
+    public String exportIndicatorsTsv(ServiceContext ctx, List<ConditionalCriteria> conditions) throws MetamacException {
+        LOG.info("Exporting indicators");
+
+        // Validation of parameters
+        InvocationValidator.checkExportIndicators(conditions, null);
+
+        List<IndicatorVersion> indicatorsVersions = findIndicators(ctx, conditions, PagingParameter.noLimits()).getValues();
+
+        List<String> languages = indicatorsConfigurationService.retrieveLanguages();
+
+        // Export
+        OutputStream outputStream = null;
+        OutputStreamWriter writer = null;
+
+        try {
+            File file = File.createTempFile("indicators", ".tsv");
+            outputStream = new FileOutputStream(file);
+            writer = new OutputStreamWriter(outputStream, IndicatorsConstants.TSV_EXPORTATION_ENCODING);
+
+            writeHeader(writer, languages);
+
+            for (IndicatorVersion indicatorVersion : indicatorsVersions) {
+                Indicator indicator = indicatorVersion.getIndicator();
+
+                if (indicator != null) {
+                    writer.write(IndicatorsConstants.TSV_LINE_SEPARATOR);
+                    
+                    writer.write(indicator.getCode());
+                    writeIndicatorVersion(writer, indicator.getProductionIndicatorVersion(), languages);
+                    writeIndicatorVersion(writer, indicator.getDiffusionIndicatorVersion(), languages);
+                } else {
+                    LOG.warn("Indicator is null for indicatorVersion ", indicatorVersion);
+                }
+            }
+
+            writer.flush();
+            return file.getName();
+        } catch (Exception e) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.EXPORTATION_TSV_ERROR).withMessageParameters(e).build();
+        } finally {
+            IOUtils.closeQuietly(outputStream);
+            IOUtils.closeQuietly(writer);
+        }
     }
 
     @Override
@@ -569,6 +627,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
         indicatorNewVersion.setInconsistentData(Boolean.TRUE);
     }
+
     @Override
     public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
 
@@ -1211,4 +1270,86 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             }
         }
     }
+
+    // Export helper methods
+    private void writeHeader(OutputStreamWriter writer, List<String> languages) throws IOException {
+        writer.write(IndicatorsConstants.TSV_HEADER_CODE);
+        writeHeaderSummaryColumns(writer, IndicatorsConstants.TSV_HEADER_PRODUCTION, languages);
+        writeHeaderSummaryColumns(writer, IndicatorsConstants.TSV_HEADER_DIFFUSION, languages);
+    }
+
+    private void writeHeaderSummaryColumns(OutputStreamWriter writer, String environment, List<String> languages) throws IOException {
+        for (String language : languages) {
+            writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_TITLE + IndicatorsConstants.TSV_HEADER_INTERNATIONAL_STRING_SEPARATOR + language);
+        }
+
+        for (String language : languages) {
+            writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_SUBJECT_TITLE + IndicatorsConstants.TSV_HEADER_INTERNATIONAL_STRING_SEPARATOR + language);
+        }
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_VERSION_NUMBER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PROC_STATUS);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PRODUCTION_VALIDATION_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PRODUCTION_VALIDATION_USER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_DIFFUSION_VALIDATION_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_DIFFUSION_VALIDATION_USER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PUBLICATION_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PUBLICATION_USER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PUBLICATION_FAILED_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PUBLICATION_FAILED_USER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_ARCHIVE_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_ARCHIVE_USER);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_CREATED_DATE);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_CREATED_BY);
+    }
+
+    private void writeEnvironmentHeader(OutputStreamWriter writer, String environment, String header) throws IOException {
+        writeCell(writer, environment + IndicatorsConstants.TSV_HEADER_ENVIRONMENT_SEPARATOR + header);
+    }    
+
+    private void writeIndicatorVersion(OutputStreamWriter writer, IndicatorVersion indicatorVersion, List<String> languages) throws IOException {
+        if (indicatorVersion != null) {
+            writeInternationalString(writer, indicatorVersion.getTitle(), languages);
+            writeInternationalString(writer, indicatorVersion.getSubjectTitle(), languages);
+            writeCell(writer, indicatorVersion.getVersionNumber());
+            writeCell(writer, indicatorVersion.getProcStatus());
+            writeCell(writer, indicatorVersion.getProductionValidationDate());
+            writeCell(writer, indicatorVersion.getProductionValidationUser());
+            writeCell(writer, indicatorVersion.getDiffusionValidationDate());
+            writeCell(writer, indicatorVersion.getDiffusionValidationUser());
+            writeCell(writer, indicatorVersion.getPublicationDate());
+            writeCell(writer, indicatorVersion.getPublicationUser());
+            writeCell(writer, indicatorVersion.getPublicationFailedDate());
+            writeCell(writer, indicatorVersion.getPublicationFailedUser());
+            writeCell(writer, indicatorVersion.getArchiveDate());
+            writeCell(writer, indicatorVersion.getArchiveUser());
+            writeCell(writer, indicatorVersion.getCreatedDate());
+            writeCell(writer, indicatorVersion.getCreatedBy());
+        } else {
+            writeEmptyIndicatorVersion(writer, languages);
+        }
+    }
+    
+    private void writeEmptyIndicatorVersion(OutputStreamWriter writer, List<String> languages) throws IOException {
+        int INDICATOR_VERSION_INTERNATIONALIZED_FIELDS = 2;
+        int INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS = 14;
+        writer.write(StringUtils.repeat(IndicatorsConstants.TSV_SEPARATOR, INDICATOR_VERSION_INTERNATIONALIZED_FIELDS * languages.size() + INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS));
+    }
+
+    private void writeInternationalString(OutputStreamWriter writer, InternationalString internationalString, List<String> languages) throws IOException {
+        for (String language : languages) {
+            if (internationalString != null) {
+                writeCell(writer, internationalString.getLocalisedLabel(language));
+            } else {
+                writeCell(writer, null);
+            }
+        }
+    }
+
+    private void writeCell(OutputStreamWriter writer, Object cell) throws IOException {
+        writer.write(IndicatorsConstants.TSV_SEPARATOR);
+        if (cell != null) {
+            writer.write(cell.toString());
+        }
+    }
+
 }

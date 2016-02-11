@@ -18,4 +18,6 @@ public interface IndicatorListUiHandler extends UiHandlers {
     void retrieveSubjectsListForSearchIndicator();
 
     void retrieveIndicators(IndicatorCriteria criteria);
+    
+    void exportIndicators(IndicatorCriteria criteria);
 }

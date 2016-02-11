@@ -235,13 +235,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         Indicator indicator = source.getIndicator();
         target.setUuid(indicator.getUuid());
         target.setCode(indicator.getCode());
-        for (IndicatorVersion indicatorVersionInIndicator : indicator.getVersions()) {
-            if (indicator.getProductionVersionNumber() != null && indicator.getProductionVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
-                target.setProductionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
-            } else if (indicator.getDiffusionVersionNumber() != null && indicator.getDiffusionVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
-                target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
-            }
-        }
+        target.setProductionVersion(indicatorVersionDoToDtoSummary(indicator.getProductionIndicatorVersion()));
+        target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicator.getDiffusionIndicatorVersion()));
+        
         return target;
     }
 
@@ -486,6 +482,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     private IndicatorVersionSummaryDto indicatorVersionDoToDtoSummary(IndicatorVersion source) {
+        if (source == null) { 
+            return null; 
+        }
+        
         IndicatorVersionSummaryDto target = new IndicatorVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());

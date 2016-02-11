@@ -125,6 +125,7 @@ Application Indicators {
 	    	@IndicatorVersion updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	String exportIndicatorsTsv(List<ConditionalCriteria> conditions) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
@@ -481,6 +482,8 @@ Application Indicators {
 	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators by criteria in any state, returning last versions"
 	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
+	    	"Export indicators list in TSV format"
+	    	String exportIndicatorsTsv(MetamacCriteria criteria) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"

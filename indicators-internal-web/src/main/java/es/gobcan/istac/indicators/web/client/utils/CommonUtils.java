@@ -15,6 +15,8 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -46,6 +48,7 @@ import es.gobcan.istac.indicators.web.client.enums.MultipleGeographicalValueOrde
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
+import es.gobcan.istac.indicators.web.shared.SharedTokens;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class CommonUtils {
@@ -428,5 +431,12 @@ public class CommonUtils {
             firstResult = listGrid.getFirstResult();
         }
         return firstResult;
+    }
+    
+    public static void downloadFile(String fileName) {
+        StringBuffer url = new StringBuffer();
+        url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
+        url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(fileName));
+        Window.open(url.toString(), "_blank", "");
     }
 }

@@ -47,6 +47,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
 
     private ToolStripButton              newIndicatorActor;
     private ToolStripButton              deleteIndicatorActor;
+    private ToolStripButton              exportIndicatorsButton;
 
     private IndicatorsSearchSectionStack searchSectionStack;
 
@@ -94,9 +95,20 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 deleteConfirmationWindow.show();
             }
         });
+        
+
+        exportIndicatorsButton = new ToolStripButton(getConstants().indicatorsExport(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.exportResource().getURL());
+        exportIndicatorsButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().exportIndicators(getIndicatorCriteria());
+            }
+        });        
 
         toolStrip.addButton(newIndicatorActor);
         toolStrip.addButton(deleteIndicatorActor);
+        toolStrip.addButton(exportIndicatorsButton);
 
         // Search
 

@@ -11,7 +11,6 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -43,12 +42,12 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
-import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -95,7 +94,6 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionVali
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationResult;
-import es.gobcan.istac.indicators.web.shared.SharedTokens;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
@@ -126,21 +124,32 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void init();
 
         void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
+
         void setIndicators(List<IndicatorSummaryDto> indicators);
+
         void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
+
         void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
+
         void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
+
         void onDimensionSaved(DimensionDto dimension);
+
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
 
         // void onIndicatorDataPopulated(IndicatorDto indicatorDto);
 
         // Instance
         void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums);
+
         void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues);
+
         void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos);
+
         void setGeographicalGranularity(GeographicalGranularityDto geographicalGranularityDto);
+
         void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos);
+
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
     }
@@ -323,6 +332,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 super.onWaitFailure(caught);
                 retrieveSystemStructure(); // Reload system structure
             }
+
             @Override
             public void onWaitSuccess(MoveSystemStructureContentResult result) {
                 retrieveSystemStructure();
@@ -539,10 +549,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                     public void onWaitSuccess(ExportSystemInDsplResult result) {
                         if (result.getFiles() != null) {
                             for (String file : result.getFiles()) {
-                                StringBuffer url = new StringBuffer();
-                                url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
-                                url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(file));
-                                Window.open(url.toString(), "_blank", "");
+                                CommonUtils.downloadFile(file);
                             }
                         }
                     }
