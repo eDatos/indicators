@@ -329,7 +329,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                     writer.write(IndicatorsConstants.TSV_LINE_SEPARATOR);
                     
                     writer.write(indicator.getCode());
-                    writeIndicatorVersion(writer, indicator.getProductionIndicatorVersion(), languages);
+                    writeIndicatorVersion(writer, calculateVisibleProductionIndicatorVersion(indicator.getProductionIndicatorVersion(), indicator.getDiffusionIndicatorVersion()), languages);
                     writeIndicatorVersion(writer, indicator.getDiffusionIndicatorVersion(), languages);
                 } else {
                     LOG.warn("Indicator is null for indicatorVersion ", indicatorVersion);
@@ -343,6 +343,28 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } finally {
             IOUtils.closeQuietly(outputStream);
             IOUtils.closeQuietly(writer);
+        }
+    }
+
+    // Replicating logic from es.gobcan.istac.indicators.web.client.model.IndicatorRecord
+    private IndicatorVersion calculateVisibleProductionIndicatorVersion(IndicatorVersion productionIndicatorVersion, IndicatorVersion diffusionIndicatorVersion) {
+        if (productionIndicatorVersion != null) {
+            return productionIndicatorVersion;
+        } else {
+            if (diffusionIndicatorVersion != null) {
+                IndicatorVersion visibleProductionIndicatorVersion = new IndicatorVersion();
+                
+                // Force to show this diffusion properties as production properties if there is no productionIndicatorVersion
+                visibleProductionIndicatorVersion.setTitle(diffusionIndicatorVersion.getTitle());
+                visibleProductionIndicatorVersion.setSubjectTitle(diffusionIndicatorVersion.getSubjectTitle());
+                visibleProductionIndicatorVersion.setProcStatus(diffusionIndicatorVersion.getProcStatus());
+                visibleProductionIndicatorVersion.setNeedsUpdate(diffusionIndicatorVersion.getNeedsUpdate());
+                visibleProductionIndicatorVersion.setVersionNumber(diffusionIndicatorVersion.getVersionNumber());
+                
+                return visibleProductionIndicatorVersion;
+            } else {
+                return null;
+            }
         }
     }
 

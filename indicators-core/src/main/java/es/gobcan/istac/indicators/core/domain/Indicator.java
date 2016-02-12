@@ -18,12 +18,7 @@ public class Indicator extends IndicatorBase {
     
     // IDEA: Would be faster as repo queries?
     public IndicatorVersion getProductionIndicatorVersion() {
-        String productionVersionNumber = getProductionVersionNumber();
-        if (productionVersionNumber != null) {
-            return getIndicatorVersion(productionVersionNumber);    
-        } else {
-            return getDiffusionIndicatorVersion();
-        }
+        return getIndicatorVersion(getProductionVersionNumber());
     }
     
     public IndicatorVersion getDiffusionIndicatorVersion() {
