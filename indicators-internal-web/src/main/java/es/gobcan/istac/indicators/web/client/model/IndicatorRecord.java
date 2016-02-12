@@ -11,6 +11,7 @@ import com.smartgwt.client.data.Record;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
@@ -20,62 +21,69 @@ public class IndicatorRecord extends Record {
         setUuid(indicatorDto.getUuid());
         setName(getLocalisedString(indicatorDto.getTitle()));
         setCode(indicatorDto.getCode());
-        setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
-        setNeedsUpdate(indicatorDto.getNeedsUpdate());
-        setVersionNumber(indicatorDto.getVersionNumber());
+        setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
+        setProductionIndicatorNeedsUpdate(indicatorDto.getNeedsUpdate());
+        setProductionIndicatorVersionNumber(indicatorDto.getVersionNumber());
         setIndicatorDto(indicatorDto);
     }
 
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
         setUuid(indicatorSummaryDto.getUuid());
         setCode(indicatorSummaryDto.getCode());
-        // Diffusion version
-        if (indicatorSummaryDto.getDiffusionVersion() != null) {
-            setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
-            setSubject(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getSubjectTitle()));
-            setDiffusionProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
-            setDiffusionNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
-            setDiffusionVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
-            // Force to show diffusion version as production version (if there is a production version, these values will be overwritten)
-            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
-            setNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
-            setVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
-            setProductionValidationDateDiff(indicatorSummaryDto.getDiffusionVersion().getProductionValidationDate());
-            setProductionValidationUserDiff(indicatorSummaryDto.getDiffusionVersion().getProductionValidationUser());
-            setDiffusionValidationDateDiff(indicatorSummaryDto.getDiffusionVersion().getDiffusionValidationDate());
-            setDiffusionValidationUserDiff(indicatorSummaryDto.getDiffusionVersion().getDiffusionValidationUser());
-            setPublicationDateDiff(indicatorSummaryDto.getDiffusionVersion().getPublicationDate());
-            setPublicationUserDiff(indicatorSummaryDto.getDiffusionVersion().getPublicationUser());
-            setPublicationFailedDateDiff(indicatorSummaryDto.getDiffusionVersion().getPublicationFailedDate());
-            setPublicationFailedUserDiff(indicatorSummaryDto.getDiffusionVersion().getPublicationFailedUser());
-            setArchivedDateDiff(indicatorSummaryDto.getDiffusionVersion().getArchiveDate());
-            setArchivedUserDiff(indicatorSummaryDto.getDiffusionVersion().getArchiveUser());
-            setCreationDateDiff(indicatorSummaryDto.getDiffusionVersion().getCreatedDate());
-            setCreationUserDiff(indicatorSummaryDto.getDiffusionVersion().getCreatedBy());
+        
+        IndicatorVersionSummaryDto visibleDiffusionVersion = indicatorSummaryDto.getDiffusionVersion();
+        // We´ll show the same info on production as the one on diffusion
+        IndicatorVersionSummaryDto visibleProductionVersion = indicatorSummaryDto.getProductionVersion() != null ? indicatorSummaryDto.getProductionVersion() : visibleDiffusionVersion;
+
+        if (visibleProductionVersion != null) {
+            setName(getLocalisedString(visibleProductionVersion.getTitle()));
+            setSubject(getLocalisedString(visibleProductionVersion.getSubjectTitle()));
         }
-        // Production version
-        if (indicatorSummaryDto.getProductionVersion() != null) {
-            // Overwrite name if production version exists
-            setName(getLocalisedString(indicatorSummaryDto.getProductionVersion().getTitle()));
-            // Overwrite subject if production version exists
-            setSubject(getLocalisedString(indicatorSummaryDto.getProductionVersion().getSubjectTitle()));
-            setProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorSummaryDto.getProductionVersion().getProcStatus()));
-            setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
-            setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
-            setProductionValidationDate(indicatorSummaryDto.getProductionVersion().getProductionValidationDate());
-            setProductionValidationUser(indicatorSummaryDto.getProductionVersion().getProductionValidationUser());
-            setDiffusionValidationDate(indicatorSummaryDto.getProductionVersion().getDiffusionValidationDate());
-            setDiffusionValidationUser(indicatorSummaryDto.getProductionVersion().getDiffusionValidationUser());
-            setPublicationDate(indicatorSummaryDto.getProductionVersion().getPublicationDate());
-            setPublicationUser(indicatorSummaryDto.getProductionVersion().getPublicationUser());
-            setPublicationFailedDate(indicatorSummaryDto.getProductionVersion().getPublicationFailedDate());
-            setPublicationFailedUser(indicatorSummaryDto.getProductionVersion().getPublicationFailedUser());
-            setArchivedDate(indicatorSummaryDto.getProductionVersion().getArchiveDate());
-            setArchivedUser(indicatorSummaryDto.getProductionVersion().getArchiveUser());
-            setCreationDate(indicatorSummaryDto.getProductionVersion().getCreatedDate());
-            setCreationUser(indicatorSummaryDto.getProductionVersion().getCreatedBy());
-        }
+        
+        setProductionIndicatorVersionSummary(visibleProductionVersion);
+        setDiffusionIndicatorVersionSummary(visibleDiffusionVersion);
+        
         setIndicatorDto(indicatorSummaryDto);
+    }
+
+    private void setProductionIndicatorVersionSummary(IndicatorVersionSummaryDto productionVersion) {
+        if (productionVersion != null) {
+            setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(productionVersion.getProcStatus()));
+            setProductionIndicatorNeedsUpdate(productionVersion.getNeedsUpdate());
+            setProductionIndicatorVersionNumber(productionVersion.getVersionNumber());
+            setProductionIndicatorProductionValidationDate(productionVersion.getProductionValidationDate());
+            setProductionIndicatorProductionValidationUser(productionVersion.getProductionValidationUser());
+            setProductionIndicatorDiffusionValidationDate(productionVersion.getDiffusionValidationDate());
+            setProductionIndicatorDiffusionValidationUser(productionVersion.getDiffusionValidationUser());
+            setProductionIndicatorPublicationDate(productionVersion.getPublicationDate());
+            setProductionIndicatorPublicationUser(productionVersion.getPublicationUser());
+            setProductionIndicatorPublicationFailedDate(productionVersion.getPublicationFailedDate());
+            setProductionIndicatorPublicationFailedUser(productionVersion.getPublicationFailedUser());
+            setProductionIndicatorArchivedDate(productionVersion.getArchiveDate());
+            setProductionIndicatorArchivedUser(productionVersion.getArchiveUser());
+            setProductionIndicatorCreationDate(productionVersion.getCreatedDate());
+            setProductionIndicatorCreationUser(productionVersion.getCreatedBy());
+        }
+    }
+
+    private void setDiffusionIndicatorVersionSummary(IndicatorVersionSummaryDto diffusionVersion) {  
+        if (diffusionVersion != null) {
+            setDiffusionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(diffusionVersion.getProcStatus()));
+            setDiffusionIndicatorNeedsUpdate(diffusionVersion.getNeedsUpdate());
+            setDiffusionIndicatorVersionNumber(diffusionVersion.getVersionNumber());               
+            setDiffusionIndicatorProductionValidationDate(diffusionVersion.getProductionValidationDate());
+            setDiffusionIndicatorProductionValidationUser(diffusionVersion.getProductionValidationUser());
+            setDiffusionIndicatorDiffusionValidationDate(diffusionVersion.getDiffusionValidationDate());
+            setDiffusionIndicatorDiffusionValidationUser(diffusionVersion.getDiffusionValidationUser());
+            setDiffusionIndicatorPublicationDate(diffusionVersion.getPublicationDate());
+            setDiffusionIndicatorPublicationUser(diffusionVersion.getPublicationUser());
+            setDiffusionIndicatorPublicationFailedDate(diffusionVersion.getPublicationFailedDate());
+            setDiffusionIndicatorPublicationFailedUser(diffusionVersion.getPublicationFailedUser());
+            setDiffusionIndicatorArchivedDate(diffusionVersion.getArchiveDate());
+            setDiffusionIndicatorArchivedUser(diffusionVersion.getArchiveUser());
+            setDiffusionIndicatorCreationDate(diffusionVersion.getCreatedDate());
+            setDiffusionIndicatorCreationUser(diffusionVersion.getCreatedBy());
+        }
     }
 
     public void setUuid(String uuid) {
@@ -98,15 +106,15 @@ public class IndicatorRecord extends Record {
         return getAttribute(IndicatorDS.UUID);
     }
 
-    public void setProcStatus(String value) {
+    public void setProductionIndicatorProcStatus(String value) {
         setAttribute(IndicatorDS.PROC_STATUS, value);
     }
 
-    public void setDiffusionProcStatus(String value) {
+    public void setDiffusionIndicatorProcStatus(String value) {
         setAttribute(IndicatorDS.PROC_STATUS_DIFF, value);
     }
 
-    public void setNeedsUpdate(Boolean value) {
+    public void setProductionIndicatorNeedsUpdate(Boolean value) {
         String imageURL = new String();
         if (value != null && value) {
             // Needs to be updated update
@@ -118,7 +126,7 @@ public class IndicatorRecord extends Record {
         setAttribute(IndicatorDS.NEEDS_UPDATE, imageURL);
     }
 
-    public void setDiffusionNeedsUpdate(Boolean value) {
+    public void setDiffusionIndicatorNeedsUpdate(Boolean value) {
         String imageURL = new String();
         if (value) {
             // Needs to be updated
@@ -130,11 +138,11 @@ public class IndicatorRecord extends Record {
         setAttribute(IndicatorDS.NEEDS_UPDATE_DIFF, imageURL);
     }
 
-    public void setVersionNumber(String value) {
+    public void setProductionIndicatorVersionNumber(String value) {
         setAttribute(IndicatorDS.VERSION_NUMBER, value);
     }
 
-    public void setDiffusionVersionNumber(String value) {
+    public void setDiffusionIndicatorVersionNumber(String value) {
         setAttribute(IndicatorDS.VERSION_NUMBER_DIFF, value);
     }
 
@@ -146,99 +154,99 @@ public class IndicatorRecord extends Record {
         return getAttributeAsObject(IndicatorDS.DTO);
     }
 
-    public void setProductionValidationDate(Date value) {
+    public void setProductionIndicatorProductionValidationDate(Date value) {
         setAttribute(IndicatorDS.PRODUCTION_VALIDATION_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setProductionValidationUser(String value) {
+    public void setProductionIndicatorProductionValidationUser(String value) {
         setAttribute(IndicatorDS.PRODUCTION_VALIDATION_USER, value);
     }
 
-    public void setDiffusionValidationDate(Date value) {
+    public void setProductionIndicatorDiffusionValidationDate(Date value) {
         setAttribute(IndicatorDS.DIFFUSION_VALIDATION_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setDiffusionValidationUser(String value) {
+    public void setProductionIndicatorDiffusionValidationUser(String value) {
         setAttribute(IndicatorDS.DIFFUSION_VALIDATION_USER, value);
     }
 
-    public void setPublicationDate(Date value) {
+    public void setProductionIndicatorPublicationDate(Date value) {
         setAttribute(IndicatorDS.PUBLICATION_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setPublicationUser(String value) {
+    public void setProductionIndicatorPublicationUser(String value) {
         setAttribute(IndicatorDS.PUBLICATION_USER, value);
     }
 
-    public void setPublicationFailedDate(Date value) {
+    public void setProductionIndicatorPublicationFailedDate(Date value) {
         setAttribute(IndicatorDS.PUBLICATION_FAILED_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setPublicationFailedUser(String value) {
+    public void setProductionIndicatorPublicationFailedUser(String value) {
         setAttribute(IndicatorDS.PUBLICATION_FAILED_USER, value);
     }
 
-    public void setArchivedDate(Date value) {
+    public void setProductionIndicatorArchivedDate(Date value) {
         setAttribute(IndicatorDS.ARCHIVED_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setArchivedUser(String value) {
+    public void setProductionIndicatorArchivedUser(String value) {
         setAttribute(IndicatorDS.ARCHIVED_USER, value);
     }
 
-    public void setCreationDate(Date value) {
+    public void setProductionIndicatorCreationDate(Date value) {
         setAttribute(IndicatorDS.CREATION_DATE, DateUtils.getFormattedDate(value));
     }
 
-    public void setCreationUser(String value) {
+    public void setProductionIndicatorCreationUser(String value) {
         setAttribute(IndicatorDS.CREATION_USER, value);
     }
 
-    public void setProductionValidationDateDiff(Date value) {
+    public void setDiffusionIndicatorProductionValidationDate(Date value) {
         setAttribute(IndicatorDS.PRODUCTION_VALIDATION_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setProductionValidationUserDiff(String value) {
+    public void setDiffusionIndicatorProductionValidationUser(String value) {
         setAttribute(IndicatorDS.PRODUCTION_VALIDATION_USER_DIFF, value);
     }
 
-    public void setDiffusionValidationDateDiff(Date value) {
+    public void setDiffusionIndicatorDiffusionValidationDate(Date value) {
         setAttribute(IndicatorDS.DIFFUSION_VALIDATION_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setDiffusionValidationUserDiff(String value) {
+    public void setDiffusionIndicatorDiffusionValidationUser(String value) {
         setAttribute(IndicatorDS.DIFFUSION_VALIDATION_USER_DIFF, value);
     }
 
-    public void setPublicationDateDiff(Date value) {
+    public void setDiffusionIndicatorPublicationDate(Date value) {
         setAttribute(IndicatorDS.PUBLICATION_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setPublicationUserDiff(String value) {
+    public void setDiffusionIndicatorPublicationUser(String value) {
         setAttribute(IndicatorDS.PUBLICATION_USER_DIFF, value);
     }
 
-    public void setPublicationFailedDateDiff(Date value) {
+    public void setDiffusionIndicatorPublicationFailedDate(Date value) {
         setAttribute(IndicatorDS.PUBLICATION_FAILED_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setPublicationFailedUserDiff(String value) {
+    public void setDiffusionIndicatorPublicationFailedUser(String value) {
         setAttribute(IndicatorDS.PUBLICATION_FAILED_USER_DIFF, value);
     }
 
-    public void setArchivedDateDiff(Date value) {
+    public void setDiffusionIndicatorArchivedDate(Date value) {
         setAttribute(IndicatorDS.ARCHIVED_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setArchivedUserDiff(String value) {
+    public void setDiffusionIndicatorArchivedUser(String value) {
         setAttribute(IndicatorDS.ARCHIVED_USER_DIFF, value);
     }
 
-    public void setCreationDateDiff(Date value) {
+    public void setDiffusionIndicatorCreationDate(Date value) {
         setAttribute(IndicatorDS.CREATION_DATE_DIFF, DateUtils.getFormattedDate(value));
     }
 
-    public void setCreationUserDiff(String value) {
+    public void setDiffusionIndicatorCreationUser(String value) {
         setAttribute(IndicatorDS.CREATION_USER_DIFF, value);
     }
 }
