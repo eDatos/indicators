@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.client;
+package es.gobcan.istac.indicators.core.navigation.shared;
 
 public class PlaceRequestParams {
 

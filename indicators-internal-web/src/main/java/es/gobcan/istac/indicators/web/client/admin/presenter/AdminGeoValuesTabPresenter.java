@@ -19,8 +19,8 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
-import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoValuesUiHandlers;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesResult;

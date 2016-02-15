@@ -11,6 +11,8 @@ import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.service.RestApiLocator;
+
 @Component
 public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalOperationsRestInternalFacade {
 

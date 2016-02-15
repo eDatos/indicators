@@ -13,7 +13,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 
-import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 
 public class ToolStripPresenterWidget extends PresenterWidget<ToolStripPresenterWidget.ToolStripView> {
 

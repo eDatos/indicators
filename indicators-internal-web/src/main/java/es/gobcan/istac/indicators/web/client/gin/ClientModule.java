@@ -4,9 +4,9 @@ import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 
+import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.web.client.IndicatorsPlaceManager;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
-import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;

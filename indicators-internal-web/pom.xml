@@ -132,10 +132,6 @@
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-web-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
-            <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
-        </dependency>
 
         <!-- INDICADORES-CORE -->
         <dependency>
@@ -243,6 +239,13 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwt-maven-plugin.version}</version>
+                <dependencies>
+                	<dependency>
+					    <groupId>org.codehaus.plexus</groupId>
+				    	<artifactId>plexus-utils</artifactId>
+				    	<version>2.0.5</version>
+					</dependency>
+				</dependencies>
                 <executions>
                     <execution>
                         <configuration>
