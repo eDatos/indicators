@@ -11,5 +11,6 @@
   <source path='core/util'/>
   <source path='core/constants'/>
   <source path='core/criteria'/>
+  <source path='core/navigation/shared'/>
   
 </module>
