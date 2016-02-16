@@ -46,7 +46,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getIndicatorsExternalWebUrlBaseWithoutProtocol() throws MetamacException {
-        String indicatorsExternalWebUrlBase = getConfigurationService().retrieveIndicatorsExternalWebUrlBase();
+        String indicatorsExternalWebUrlBase = getConfigurationService().retrieveIndicatorsExternalWebApplicationUrlBase();
         return removeUrlProtocol(indicatorsExternalWebUrlBase);
     }
 
