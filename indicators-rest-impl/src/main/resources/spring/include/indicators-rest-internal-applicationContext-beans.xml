@@ -18,6 +18,8 @@
     
     <bean class="es.gobcan.istac.indicators.rest.clients.RestApiLocatorInternal"/>
     
+    <bean class="es.gobcan.istac.indicators.rest.component.UriLinksInternal"/>
+    
     <bean class="es.gobcan.istac.indicators.rest.clients.StatisticalOperationsInternalRestInternalFacadeImpl"/>
 
 </beans>

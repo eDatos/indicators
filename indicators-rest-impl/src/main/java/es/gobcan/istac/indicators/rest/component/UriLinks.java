@@ -1,27 +1,19 @@
 package es.gobcan.istac.indicators.rest.component;
 
-import javax.annotation.PostConstruct;
-
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 
-@Component
-public class UriLinks {
+public abstract class UriLinks {
 
     @Autowired
     IndicatorsConfigurationService configurationService;
 
-    private String                 indicatorsApiExternalEndpointV10;
+    protected String                 indicatorsApiEndpointV10;
 
-    @PostConstruct
-    public void init() throws Exception {
-        String indicatorsApiExternalEndpoint = configurationService.retrieveIndicatorsExternalApiUrlBase();
-        indicatorsApiExternalEndpointV10 = RestUtils.createLink(indicatorsApiExternalEndpoint, IndicatorsRestConstants.API_VERSION_1_0);
-    }
+    public abstract void init() throws MetamacException;
 
     // ----------------------------------------------------------------------------------------------------
     // INDICATORS
@@ -29,9 +21,10 @@ public class UriLinks {
 
     // /vX/indicators
     public String getIndicatorsLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_INDICATORS);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_INDICATORS);
     }
 
+    // Atencion: La funcionalidad de este método está duplicada en es.gobcan.istac.indicators.core.service.NoticesRestInternalServiceImpl
     // /vX/indicators/{id}
     public String getIndicatorLink(String id) {
         return RestUtils.createLink(getIndicatorsLink(), id);
@@ -57,7 +50,7 @@ public class UriLinks {
 
     // /vX/indicatorsSystems
     public String getIndicatorsSystemsLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
     }
 
     // /vX/indicatorSystem/{id}
@@ -95,7 +88,7 @@ public class UriLinks {
 
     // /vX/subjects
     public String getSubjectsLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -104,7 +97,7 @@ public class UriLinks {
 
     // /vX/geographicalValues
     public String getGeographicalValuesLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
 
     }
 
@@ -123,7 +116,7 @@ public class UriLinks {
 
     // /vX/geographicGranularities
     public String getGeographicalGranularitiesLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
 
     }
 
@@ -141,7 +134,7 @@ public class UriLinks {
 
     // /vX/timeGranularities
     public String getTimeGranularitiesLink() {
-        return RestUtils.createLink(indicatorsApiExternalEndpointV10, IndicatorsRestConstants.API_INDICATORS_TIME_GRANULARITIES);
+        return RestUtils.createLink(indicatorsApiEndpointV10, IndicatorsRestConstants.API_INDICATORS_TIME_GRANULARITIES);
     }
 
 }
