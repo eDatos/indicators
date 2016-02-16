@@ -57,5 +57,9 @@ public class IndicatorsConstants {
     public static final String TSV_HEADER_CREATED_BY                     = "created_by";
 
     public static final String TSV_EXPORTATION_ENCODING                  = "UTF-8";
+    
+    // For building urls at core level
+    public static final String API_VERSION_1_0 = "v1.0";
+    public static final String API_INDICATORS_INDICATORS = "indicators";
 
 }

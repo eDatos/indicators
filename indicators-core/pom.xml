@@ -253,6 +253,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-rest-common</artifactId>
+            <version>${metamac-rest-common.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
         </dependency>

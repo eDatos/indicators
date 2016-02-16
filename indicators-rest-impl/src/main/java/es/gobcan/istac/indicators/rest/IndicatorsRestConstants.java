@@ -4,12 +4,14 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.constants.RestConstants;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+
 public final class IndicatorsRestConstants extends RestConstants {
 
     private IndicatorsRestConstants() {
     }
 
-    public static String               API_VERSION_1_0                          = "v1.0";
+    public static final String         API_VERSION_1_0                          = IndicatorsConstants.API_VERSION_1_0;                        ;
 
     public static final ServiceContext SERVICE_CONTEXT                          = new ServiceContext("admin", "amdmin", "rest");
 
@@ -38,7 +40,7 @@ public final class IndicatorsRestConstants extends RestConstants {
 
     public static final String         KIND_STATISTICAL_OPERATION               = TypeExternalArtefactsEnum.STATISTICAL_OPERATION.getValue();
 
-    public static final String         API_INDICATORS_INDICATORS                = "indicators";
+    public static final String         API_INDICATORS_INDICATORS                = IndicatorsConstants.API_INDICATORS_INDICATORS;
 
     public static final String         API_INDICATORS_TIME_GRANULARITIES        = "timeGranularities";
 

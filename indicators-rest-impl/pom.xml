@@ -32,10 +32,6 @@
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-rest-common</artifactId>
-        </dependency>
 
         <!-- WEB -->
         <dependency>

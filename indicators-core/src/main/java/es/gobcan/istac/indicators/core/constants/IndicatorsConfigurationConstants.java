@@ -59,12 +59,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String SECURITY_CAS_SERVER_URL_PREFIX               = "metamac.security.cas_server_url_prefix";
     public static final String SECURITY_TOLERANCE                           = "metamac.security.tolerance";
 
-    // API
-    public static final String ENDPOINT_INDICATORS_EXTERNAL_API             = "indicators.rest.external";
-
-    // APP
-    public static final String ENDPOINT_INDICATORS_EXTERNAL_WEB             = "indicators.web.external.url";
-
     // Help URL
     public static final String HELP_URL                                     = "indicators.help.url";
 

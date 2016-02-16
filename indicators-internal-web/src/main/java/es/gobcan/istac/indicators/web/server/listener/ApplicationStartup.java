@@ -37,6 +37,9 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
     public void checkApiProperties() {
         // Statistical Operations
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
+        
+        // Indicators
+        checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_INTERNAL_API);
     }
 
     @Override
