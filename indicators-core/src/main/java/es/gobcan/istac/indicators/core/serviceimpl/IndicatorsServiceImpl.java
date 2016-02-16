@@ -301,6 +301,23 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public PagedResult<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsPublished(conditions, pagingParameter, null);
+
+        // Retrieve published
+        if (conditions == null) {
+            conditions = new ArrayList<ConditionalCriteria>();
+        }
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.procStatus(), IndicatorProcStatusEnum.PUBLISHED));
+
+        // Find
+        PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+        return indicatorsVersions;
+    }
+
+    @Override
     public String exportIndicatorsTsv(ServiceContext ctx, List<ConditionalCriteria> conditions) throws MetamacException {
         LOG.info("Exporting indicators");
 
@@ -351,24 +368,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             IOUtils.closeQuietly(writer);
         }
     }
-
-    @Override
-    public PagedResult<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsPublished(conditions, pagingParameter, null);
-
-        // Retrieve published
-        if (conditions == null) {
-            conditions = new ArrayList<ConditionalCriteria>();
-        }
-        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.procStatus(), IndicatorProcStatusEnum.PUBLISHED));
-
-        // Find
-        PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
-        return indicatorsVersions;
-    }
-
+    
     @Override
     public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
