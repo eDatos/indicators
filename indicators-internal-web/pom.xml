@@ -1,297 +1,302 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>es.gobcan.istac.indicators</groupId>
-        <artifactId>indicators-parent</artifactId>
-        <version>4.4.1-SNAPSHOT</version>
-        <relativePath>../indicators-parent/pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>es.gobcan.istac.indicators</groupId>
+		<artifactId>indicators-parent</artifactId>
+		<version>4.4.1-SNAPSHOT</version>
+		<relativePath>../indicators-parent/pom.xml</relativePath>
+	</parent>
 
-    <groupId>es.gobcan.istac.indicators</groupId>
-    <artifactId>indicators-internal-web</artifactId>
-    <name>INDICATORS :: WEB :: INTERNAL</name>
-    <packaging>war</packaging>
+	<groupId>es.gobcan.istac.indicators</groupId>
+	<artifactId>indicators-internal-web</artifactId>
+	<name>INDICATORS :: WEB :: INTERNAL</name>
+	<packaging>war</packaging>
 
-    <properties>
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-    </properties>
+	<properties>
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+	</properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-        </dependency>        
-        <dependency>
-            <groupId>com.smartgwt</groupId>
-            <artifactId>smartgwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.smartgwt</groupId>
-            <artifactId>smartgwt-skins</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-all</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-context</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-beans</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.sourceforge.htmlunit</groupId>
-                    <artifactId>htmlunit</artifactId>
-                </exclusion>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.smartgwt</groupId>
+			<artifactId>smartgwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.smartgwt</groupId>
+			<artifactId>smartgwt-skins</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-all</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.sourceforge.htmlunit</groupId>
+					<artifactId>htmlunit</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>com.google.appengine</groupId>
 					<artifactId>appengine-api-1.0-sdk</artifactId>
-				</exclusion>                
-            </exclusions>
-        </dependency>
-        <!-- GIN -->
-        <dependency>
-            <groupId>com.google.gwt.inject</groupId>
-            <artifactId>gin</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.inject</groupId>
-                    <artifactId>guice</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.inject.extensions</groupId>
-                    <artifactId>guice-assistedinject</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-assistedinject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.icu</groupId>
-            <artifactId>icu4j</artifactId>
-        </dependency>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- GIN -->
+		<dependency>
+			<groupId>com.google.gwt.inject</groupId>
+			<artifactId>gin</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.inject</groupId>
+					<artifactId>guice</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.inject.extensions</groupId>
+					<artifactId>guice-assistedinject</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+		</dependency>
 
-        <!-- LOGGING -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
-        <!-- METAMAC -->
-        <dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-web-common</artifactId>
-        </dependency>
+		<!-- METAMAC -->
+		<dependency>
+			<groupId>org.siemac.metamac</groupId>
+			<artifactId>metamac-web-common</artifactId>
+		</dependency>
 
-        <!-- INDICADORES-CORE -->
-        <dependency>
-            <groupId>es.gobcan.istac.indicators</groupId>
-            <artifactId>indicators-core</artifactId>
-            <classifier>client</classifier>
-        </dependency>
+		<!-- INDICADORES-CORE -->
+		<dependency>
+			<groupId>es.gobcan.istac.indicators</groupId>
+			<artifactId>indicators-core</artifactId>
+			<classifier>client</classifier>
+		</dependency>
 
-        <!-- METAMAC SSO -->
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-sso</groupId>
-            <artifactId>metamac-sso-client</artifactId>
-        </dependency>
+		<!-- METAMAC SSO -->
+		<dependency>
+			<groupId>org.siemac.metamac.metamac-sso</groupId>
+			<artifactId>metamac-sso-client</artifactId>
+		</dependency>
 
-        <!-- CAS -->
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.opensaml</groupId>
-            <artifactId>opensaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xml-security</groupId>
-            <artifactId>xmlsec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xmlParserAPIs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-        </dependency>
+		<!-- CAS -->
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xml-security</groupId>
+			<artifactId>xmlsec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xmlParserAPIs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+		</dependency>
 
-        <!-- Public API -->
-        <dependency>
-            <groupId>es.gobcan.istac.indicators</groupId>
-            <artifactId>indicators-rest-impl</artifactId>
-        </dependency>
+		<!-- WEB -->
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+		</dependency>
 
-    </dependencies>
+		<!-- Public API -->
+		<dependency>
+			<groupId>es.gobcan.istac.indicators</groupId>
+			<artifactId>indicators-rest-impl</artifactId>
+		</dependency>
 
-    <build>
-    
-        <!-- Generate compiled stuff in the folder used for developing mode -->
-        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-        <finalName>indicators-internal-${project.version}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+	</dependencies>
 
-        <plugins>
+	<build>
 
-            <!-- Maven Compiler Plugin -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <compilerArgument>-proc:none</compilerArgument>
-                </configuration>
-            </plugin>
+		<!-- Generate compiled stuff in the folder used for developing mode -->
+		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+		<finalName>indicators-internal-${project.version}</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 
-            <!--
-                | WORKAROUND:
-                | El plugin de maven-compiler-plugin tiene un problema a la hora de crear clases usando anotaciones.
-                | Por ello se pasa en el compilar el argumento "-proc:none" y se añade el plugin: maven-processor-plugin:
-                | Véase:
-                | http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-annotation-processor.html#d0e3740
-                | http://jira.codehaus.org/browse/MCOMPILER-157
-                + -->
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>2.0.5</version>
-                <executions>
-                    <execution>
-                        <id>process</id>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <defaultOutputDirectory>${project.build.directory}/generated-sources/gwt</defaultOutputDirectory>
-                    <processors>
-                        <processor>com.gwtplatform.dispatch.annotation.processor.GenDispatchProcessor</processor>
-                    </processors>
-                </configuration>
-            </plugin>
+		<plugins>
 
-            <!-- GWT Maven Plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt-maven-plugin.version}</version>
-                <dependencies>
-                	<dependency>
-					    <groupId>org.codehaus.plexus</groupId>
-				    	<artifactId>plexus-utils</artifactId>
-				    	<version>2.0.5</version>
+			<!-- Maven Compiler Plugin -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<compilerArgument>-proc:none</compilerArgument>
+				</configuration>
+			</plugin>
+
+			<!-- | WORKAROUND: | El plugin de maven-compiler-plugin tiene un problema 
+				a la hora de crear clases usando anotaciones. | Por ello se pasa en el compilar 
+				el argumento "-proc:none" y se añade el plugin: maven-processor-plugin: | 
+				Véase: | http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-annotation-processor.html#d0e3740 
+				| http://jira.codehaus.org/browse/MCOMPILER-157 + -->
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.0.5</version>
+				<executions>
+					<execution>
+						<id>process</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<defaultOutputDirectory>${project.build.directory}/generated-sources/gwt</defaultOutputDirectory>
+					<processors>
+						<processor>com.gwtplatform.dispatch.annotation.processor.GenDispatchProcessor</processor>
+					</processors>
+				</configuration>
+			</plugin>
+
+			<!-- GWT Maven Plugin -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt-maven-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>2.0.5</version>
 					</dependency>
 				</dependencies>
-                <executions>
-                    <execution>
-                        <configuration>
-                            <servicePattern>**/client/service/**/*Service.java</servicePattern>
-                            <i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
-                            <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
-                            <i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
-                        </configuration>
-                        <goals>
-                            <goal>resources</goal>
-                            <goal>compile</goal>
-                            <goal>test</goal>
-                            <goal>generateAsync</goal>
-                            <goal>i18n</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
-                <configuration>
+				<executions>
+					<execution>
+						<configuration>
+							<servicePattern>**/client/service/**/*Service.java</servicePattern>
+							<i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
+							<i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
+							<i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
+						</configuration>
+						<goals>
+							<goal>resources</goal>
+							<goal>compile</goal>
+							<goal>test</goal>
+							<goal>generateAsync</goal>
+							<goal>i18n</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
+					documentation at codehaus.org -->
+				<configuration>
 					<extraJvmArgs>-Xms512M -Xmx1024M -XX:MaxPermSize=512M</extraJvmArgs>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <noServer>true</noServer>
-                    <runTarget>http://localhost:8090/indicators-internal/IndicatorsWeb.html</runTarget>
-                    <debugPort>9997</debugPort>
+					<hostedWebapp>${webappDirectory}</hostedWebapp>
+					<noServer>true</noServer>
+					<runTarget>http://localhost:8090/indicators-internal/IndicatorsWeb.html</runTarget>
+					<debugPort>9997</debugPort>
 					<compileSourcesArtifacts>
-                        <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
-                        <artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
-                        <artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
-                        <artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
-                    </compileSourcesArtifacts>
-                    <inplace>true</inplace>
-                </configuration>
-            </plugin>
+						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
+						<artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
+						<artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
+						<artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
+					</compileSourcesArtifacts>
+					<inplace>true</inplace>
+				</configuration>
+			</plugin>
 
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/src/main/webapp/IndicatorsWeb</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/src/main/webapp/IndicatorsWeb</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
