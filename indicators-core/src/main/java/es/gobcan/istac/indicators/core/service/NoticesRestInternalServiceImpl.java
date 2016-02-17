@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.navigation.InternalWebApplicationNavigation;
 
@@ -43,18 +44,18 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String indicatorsExternalWebUrlBase;
+    private String indicatorsInternalWebUrlBase;
     private String indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
         this.initEndpoints();
-        this.internalWebApplicationNavigation = new InternalWebApplicationNavigation(this.indicatorsExternalWebUrlBase);
+        this.internalWebApplicationNavigation = new InternalWebApplicationNavigation(this.indicatorsInternalWebUrlBase);
     }
     
     private void initEndpoints() throws MetamacException {
-        this.indicatorsExternalWebUrlBase = this.configurationService.retrieveIndicatorsExternalWebApplicationUrlBase();
-        this.indicatorsExternalWebUrlBase = StringUtils.removeEnd(this.indicatorsExternalWebUrlBase, "/");
+        this.indicatorsInternalWebUrlBase = this.configurationService.retrieveIndicatorsInternalWebApplicationUrlBase();
+        this.indicatorsInternalWebUrlBase = StringUtils.removeEnd(this.indicatorsInternalWebUrlBase, "/");
         
         this.indicatorsApiInternalEndpointV10 = configurationService.retrieveIndicatorsInternalApiUrlBase();
         this.indicatorsApiInternalEndpointV10 = RestUtils.createLink(this.indicatorsApiInternalEndpointV10, IndicatorsConstants.API_VERSION_1_0);
@@ -105,17 +106,17 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         if (indicatorVersion != null) {
             resource.setId(indicatorVersion.getIndicator().getCode());
             resource.setUrn(indicatorVersion.getUuid());
-            resource.setSelfLink(toIndicatorSelfLink(indicatorVersion.getIndicator().getCode()));
+            resource.setSelfLink(toIndicatorSelfLink(indicatorVersion.getIndicator()));
             resource.setKind(TypeExternalArtefactsEnum.INDICATOR.getValue());
             resource.setName(this.toInternationalString(indicatorVersion.getTitle()));
-            resource.setManagementAppLink(this.toIndicatorManagementApplicationLink(indicatorVersion.getUuid()));
+            resource.setManagementAppLink(this.toIndicatorManagementApplicationLink(indicatorVersion.getIndicator()));
         }
         return resource;
     }
 
     // Atención: Este método replica funcionalidad de es.gobcan.istac.indicators.rest.component.UriLinks.getIndicatorsLink()
-    private ResourceLink toIndicatorSelfLink(String code) {
-        return toResourceLink(TypeExternalArtefactsEnum.INDICATOR.getValue(), toIndicatorLink(code));     
+    private ResourceLink toIndicatorSelfLink(Indicator indicator) {
+        return toResourceLink(TypeExternalArtefactsEnum.INDICATOR.getValue(), toIndicatorLink(indicator.getCode()));     
     }
 
     private String toIndicatorLink(String code) {
@@ -133,8 +134,8 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         return target;
     }
     
-    public String toIndicatorManagementApplicationLink(String indicatorUuid) {
-        return this.internalWebApplicationNavigation.buildIndicatorUrl(indicatorUuid);
+    public String toIndicatorManagementApplicationLink(Indicator indicator) {
+        return this.internalWebApplicationNavigation.buildIndicatorUrl(indicator.getCode());
     }
 
     private InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources) {
