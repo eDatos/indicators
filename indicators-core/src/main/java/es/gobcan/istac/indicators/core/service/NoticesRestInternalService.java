@@ -9,6 +9,14 @@ public interface NoticesRestInternalService {
     public static final String BEAN_ID = "noticesRestInternalService";
 
     // Background Notifications
-    public void createErrorBackgroundNotification(String user, String actionCode, String message, List<IndicatorVersion> failedPopulationIndicators);    
+    public void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedPopulationIndicators, Object... messageParams);
+
+    public void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion indicatorVersion);
+
+    public void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode);
+
+    public void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
+
+    public void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
 
 }

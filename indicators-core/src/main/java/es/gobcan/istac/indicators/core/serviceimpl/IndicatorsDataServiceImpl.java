@@ -24,6 +24,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,9 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -247,9 +251,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException  {
+    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
         LOG.info("Starting Indicators data update process");
-        
+
         List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
 
         // Validation
@@ -279,7 +283,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         changeVersionForModifiedIndicatorsSystems(modifiedSystems);
         LOG.info("Finished Indicators data update process");
-        
+
         return failedPopulationIndicators;
     }
 
@@ -383,6 +387,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
     }
+
     @Override
     public void manageDatabaseViewForLastVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
@@ -395,7 +400,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
         } catch (Exception e) {
-            // IDEA: Would be nice to be notified when this happens INDISTAC-861
+            getNoticesRestInternalService().createAssignRolePermissionsDatasetErrorBackgroundNotification(getDataViewsRole(), viewCode);
             LOG.error("Error assigning SELECT permission to " + getDataViewsRole() + " over " + viewCode, e);
         }
     }
@@ -404,7 +409,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
         } catch (Exception e) {
-            // IDEA: Would be nice to be notified when this happens INDISTAC-861
+            getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
                     + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
         }
@@ -964,6 +969,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
     }
+
     private void deleteIndicatorInstanceLastValuesCache(String indicatorInstanceUuid) {
         getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(indicatorInstanceUuid);
     }
@@ -1162,7 +1168,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     /**
      * Retrieve observation from a specific IndicatorVersion
-     *
+     * 
      * @param indicatorVersion
      * @param geoValue
      * @param timeValue
@@ -1230,6 +1236,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return codes;
     }
+
     /* Private methods */
 
     private List<String> findCodesForDimensionInIndicator(IndicatorVersion indicatorVersion, IndicatorDataDimensionTypeEnum dimension) throws ApplicationException {
@@ -1397,12 +1404,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
             } catch (Exception e) {
-                // IDEA: send some kind of notification to get noticed when the old dataset repository couldn't be deleted INDISTAC-861
-                LOG.error("Old dataset repository could not be deleted", e);
+                getNoticesRestInternalService().createDeleteDatasetErrorBackgroundNotification(indicatorVersion, oldDatasetId);
+                LOG.error("Old dataset repository with id " + oldDatasetId + " could not be deleted", e);
             }
         }
         return updatedIndicatorVerison;
     }
+
     /*
      * Given a DataOperation and its Data, A list of observations is created
      */
@@ -1930,4 +1938,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
+    private NoticesRestInternalService getNoticesRestInternalService() {
+        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
+    }
 }

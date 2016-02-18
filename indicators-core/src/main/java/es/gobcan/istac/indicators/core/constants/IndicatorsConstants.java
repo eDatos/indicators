@@ -59,6 +59,7 @@ public class IndicatorsConstants {
     public static final String TSV_EXPORTATION_ENCODING                  = "UTF-8";
     
     // For building urls at core level
+    // Check also both urlrewrite.xml and other uses as ApiDocController
     public static final String API_VERSION_1_0 = "v1.0";
     public static final String API_INDICATORS_INDICATORS = "indicators";
 

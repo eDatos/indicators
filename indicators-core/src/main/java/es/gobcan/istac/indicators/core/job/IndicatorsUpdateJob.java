@@ -54,7 +54,9 @@ public class IndicatorsUpdateJob implements Job {
         try {
             List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
             
-            getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
+            if (failedPopulationIndicators.size() > 0) {
+                getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+            }
         } catch (MetamacException e) {
             LOG.error("Error updating indicators Data", e);
         }

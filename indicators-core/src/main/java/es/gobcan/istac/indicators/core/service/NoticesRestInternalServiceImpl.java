@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.core.service;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,72 +33,107 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.navigation.InternalWebApplicationNavigation;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger                  logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
     @Autowired
-    private RestApiLocator               restApiLocator;
+    private RestApiLocator                   restApiLocator;
 
     @Autowired
-    private IndicatorsConfigurationService configurationService;
-    
+    private IndicatorsConfigurationService   configurationService;
+
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String indicatorsInternalWebUrlBase;
-    private String indicatorsApiInternalEndpointV10;
+    private String                           indicatorsInternalWebUrlBase;
+    private String                           indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
         this.initEndpoints();
         this.internalWebApplicationNavigation = new InternalWebApplicationNavigation(this.indicatorsInternalWebUrlBase);
     }
-    
+
     private void initEndpoints() throws MetamacException {
         this.indicatorsInternalWebUrlBase = this.configurationService.retrieveIndicatorsInternalWebApplicationUrlBase();
         this.indicatorsInternalWebUrlBase = StringUtils.removeEnd(this.indicatorsInternalWebUrlBase, "/");
-        
+
         this.indicatorsApiInternalEndpointV10 = configurationService.retrieveIndicatorsInternalApiUrlBase();
         this.indicatorsApiInternalEndpointV10 = RestUtils.createLink(this.indicatorsApiInternalEndpointV10, IndicatorsConstants.API_VERSION_1_0);
     }
 
     @Override
-    public void createErrorBackgroundNotification(String user, String actionCode, String messageCode, List<IndicatorVersion> failedPopulationIndicators) {
-        try {
-            if (failedPopulationIndicators.size() > 0) {
-                Locale locale = configurationService.retrieveLanguageDefaultLocale();
-                String subject = LocaleUtil.getMessageForCode(actionCode, locale);
-                String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
-                String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
-                
-                ResourceInternal[] resources = this.indicatorVersionsToResourceInternal(failedPopulationIndicators);
-                
-                // @formatter:off
-                Message message = MessageBuilder.message().withText(localisedMessage)
-                    .withResources(resources).build();
-                
-                Notice notification = NoticeBuilder.notification()
-                        .withMessages(message)                                
-                        .withSendingApplication(sendingApp)
-                        .withSubject(subject)
-                        .withRoles(MetamacRolesEnum.ADMINISTRADOR)
-                        .build();
-                // @formatter:on
+    public void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator) {
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
+                failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName());
+    }
 
-                restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
-            }
+    @Override
+    public void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode) {
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, new ArrayList<IndicatorVersion>(),
+                dataViewsRole, viewCode);
+    }
+
+    @Override
+    public void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
+    }
+
+    @Override
+    public void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId) {
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), oldDatasetId);
+    }
+
+    @Override
+    public void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {
+        try {
+
+            Notice notification = createNotice(actionCode, messageCode, failedIndicators, messageParams);
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
+
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
 
     }
-    
+
+    private Notice createNotice(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) throws MetamacException {
+        Locale locale = configurationService.retrieveLanguageDefaultLocale();
+        String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+        String localisedMessage = getMessageForCodeWithParams(messageCode, locale, messageParams);
+        String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
+
+        ResourceInternal[] resources = this.indicatorVersionsToResourceInternal(failedIndicators);
+
+        // @formatter:off
+        Message message = MessageBuilder.message()
+            .withText(localisedMessage)
+            .withResources(resources)
+            .build();
+
+        Notice notification = NoticeBuilder.notification()
+            .withMessages(message)
+            .withSendingApplication(sendingApp)
+            .withSubject(subject)
+            .withRoles(MetamacRolesEnum.ADMINISTRADOR)
+            .build();
+        // @formatter:on
+        return notification;
+    }
+
+    private String getMessageForCodeWithParams(String actionCode, Locale locale, Object... messageParams) {
+        String localisedMessage = LocaleUtil.getMessageForCode(actionCode, locale);
+        return MessageFormat.format(localisedMessage, messageParams);
+    }
+
     private ResourceInternal[] indicatorVersionsToResourceInternal(List<IndicatorVersion> indicatorsVersions) {
         ResourceInternal[] resources = new ResourceInternal[indicatorsVersions.size()];
 
-        for(int i = 0; i < indicatorsVersions.size(); i++) {
+        for (int i = 0; i < indicatorsVersions.size(); i++) {
             resources[i] = indicatorVersionToResource(indicatorsVersions.get(i));
         }
         return resources;
@@ -116,13 +154,13 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     // Atención: Este método replica funcionalidad de es.gobcan.istac.indicators.rest.component.UriLinks.getIndicatorsLink()
     private ResourceLink toIndicatorSelfLink(Indicator indicator) {
-        return toResourceLink(TypeExternalArtefactsEnum.INDICATOR.getValue(), toIndicatorLink(indicator.getCode()));     
+        return toResourceLink(TypeExternalArtefactsEnum.INDICATOR.getValue(), toIndicatorLink(indicator.getCode()));
     }
 
     private String toIndicatorLink(String code) {
         return RestUtils.createLink(getIndicatorsLink(), code);
     }
-    
+
     private String getIndicatorsLink() {
         return RestUtils.createLink(this.indicatorsApiInternalEndpointV10, IndicatorsConstants.API_INDICATORS_INDICATORS);
     }
@@ -133,7 +171,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         target.setHref(href);
         return target;
     }
-    
+
     public String toIndicatorManagementApplicationLink(Indicator indicator) {
         return this.internalWebApplicationNavigation.buildIndicatorUrl(indicator.getCode());
     }
