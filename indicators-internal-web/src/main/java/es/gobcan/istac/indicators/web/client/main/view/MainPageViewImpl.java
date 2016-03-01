@@ -2,9 +2,10 @@ package es.gobcan.istac.indicators.web.client.main.view;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.utils.ApplicationOrganisation;
+import org.siemac.metamac.web.common.client.widgets.FooterLayout;
 import org.siemac.metamac.web.common.client.widgets.MessagePanel;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
-import org.siemac.metamac.web.common.client.widgets.VersionFooter;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,7 +32,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private VLayout                    panel;
     private VLayout                    northLayout;
     private HLayout                    southLayout;
-    private VLayout                    footerLayout;
+    private FooterLayout               footerLayout;
 
     private final IndicatorsMasterHead masterHead;
     private final MessagePanel         messagePanel;
@@ -62,9 +63,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         southLayout.setHeight100();
 
         // Footer
-        footerLayout = new VLayout();
-        footerLayout.addMember(messagePanel);
-        footerLayout.addMember(new VersionFooter(IndicatorsWeb.getProjectVersion()));
+        footerLayout = new FooterLayout(this.messagePanel, ApplicationOrganisation.getCurrentOrganisation(), IndicatorsWeb.getProjectVersion());
 
         // Set user name
         masterHead.getUserNameLabel().setContents(getUserName());
