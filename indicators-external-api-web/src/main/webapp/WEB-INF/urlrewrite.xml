@@ -3,7 +3,7 @@
         "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
 <urlrewrite>
     <rule>
-        <from>/indicators/latest</from>
-        <to type="redirect">%{context-path}/indicators/v1.0</to>
+        <from>/api/indicators/latest</from>
+        <to type="redirect">%{context-path}/api/indicators/v1.0</to>
     </rule>
 </urlrewrite>
