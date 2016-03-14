@@ -15,18 +15,16 @@
 
         fetchBySubjectCode : function (subjectCode) {
             var data = {
-                q : 'subjectCode EQ "' + subjectCode + '"',
-                limit : 9999
+                q : 'subjectCode EQ "' + subjectCode + '"'
             };
-            return this.fetch({data : data});
+            return this.fetchWithoutLimit({data : data});
         },
 
         fetchBySubjectCodeAndGeographicalValueCode : function (subjectCode, geographicalValue) {
             var data = {
-                q : 'subjectCode EQ "' + subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"',
-                limit : 9999
+                q : 'subjectCode EQ "' + subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"'
             };
-            return this.fetch({data : data});
+            return this.fetchWithoutLimit({data : data});
         }
 
     });

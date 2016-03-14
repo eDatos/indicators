@@ -23,6 +23,14 @@
             });
             return $.when.apply(this, requests);
         },
+        
+        fetchWithoutLimit : function(options) {
+        	options = options || { 
+        		data : {} 
+        	};
+        	_.defaults(options.data, { limit : 1 });
+        	return this.fetch(options);
+        },
 
         getGeographicalValues : function () {
             var all = [];

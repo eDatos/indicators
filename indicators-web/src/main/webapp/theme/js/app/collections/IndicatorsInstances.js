@@ -13,17 +13,16 @@
 
         fetchBySystemCodeAndGeographicalValueCode : function (systemCode, geographicalValueCode) {
             this.systemId = systemCode;
-            return this.fetch({
+            return this.fetchWithoutLimit({
                 data : {
-                    q : 'geographicalValue EQ "' + geographicalValueCode + '"',
-                    limit : 9999
+                    q : 'geographicalValue EQ "' + geographicalValueCode + '"'
                 }
             });
         },
 
         fetchBySystemCode : function (systemCode) {
             this.systemId = systemCode;
-            return this.fetch();
+            return this.fetchWithoutLimit();
         }
 
     });
