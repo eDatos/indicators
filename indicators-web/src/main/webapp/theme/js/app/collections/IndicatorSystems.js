@@ -14,6 +14,14 @@
 
         parse : function (response) {
             return response.items;
+        },
+        
+        fetchWithoutLimit : function(options) {
+        	options = options || { 
+        		data : {} 
+        	};
+        	_.defaults(options.data, { limit : 9999 });
+        	return this.fetch(options);
         }
 
     });

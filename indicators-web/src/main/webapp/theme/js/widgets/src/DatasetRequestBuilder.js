@@ -76,6 +76,7 @@
                 options.indicatorSystem +
                 "/indicatorsInstances/?q=id "
                 + this._eqOrIn(options.instances)
+                + this._limit()
                 + this._fieldsParameter()
                 + this._representation(options);
 
@@ -86,6 +87,7 @@
 
             return this.apiUrl + "/indicators/?q=id "
                 + this._eqOrIn(options.indicators)
+                + this._limit()
                 + this._fieldsParameter()
                 + this._representation(options);
         },
@@ -100,8 +102,8 @@
                 + options.indicatorSystem
                 + '/indicatorsInstances/?q=geographicalValue EQ "'
                 + geographicalValue
-                + '"&order=update DESC, id DESC&limit='
-                + options.nrecent
+                + '"&order=update DESC, id DESC'
+                + this._limit(options.nrecent)
                 + this._fieldsParameter()
                 + this._representation(options);
         },
@@ -116,10 +118,15 @@
                 + options.subjectCode
                 + '" AND geographicalValue EQ "'
                 + geographicalValue
-                + '"&order=update DESC, id DESC&limit='
-                + options.nrecent
+                + '"&order=update DESC, id DESC'
+                + this._limit(options.nrecent)
                 + this._fieldsParameter()
                 + this._representation(options);
+        },
+        
+        _limit : function(limit) {
+        	limit = limit || 9999;
+        	return '&limit=' + limit;
         },
 
         _temporalRequest : function (options) {
@@ -131,6 +138,7 @@
                 + '/indicatorsInstances/?q=id EQ "'
                 + options.instances[0]
                 + '"'
+                + this._limit()
                 + this._fieldsParameter()
                 + this._representation(options)
                 + this._granularity(options);

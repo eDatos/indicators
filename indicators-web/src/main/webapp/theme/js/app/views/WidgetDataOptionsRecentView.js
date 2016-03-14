@@ -203,7 +203,7 @@
             this._renderGroupType();
 
             this.measures.resetDefaults();
-            this.systems.fetch();
+            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
             return this;

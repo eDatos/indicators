@@ -255,7 +255,7 @@
             // Visible zones
             this._renderGroupType();
 
-            this.systems.fetch();
+            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
             return this;

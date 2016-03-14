@@ -31,7 +31,7 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
-            this.systems.fetch();
+            this.systems.fetchWithoutLimit();
         },
 
         _fetchIndicatorInstances : function () {
