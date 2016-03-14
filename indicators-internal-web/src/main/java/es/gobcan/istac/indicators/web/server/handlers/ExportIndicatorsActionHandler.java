@@ -35,6 +35,8 @@ public class ExportIndicatorsActionHandler extends SecurityActionHandler<ExportI
         restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(action.getCriteria()));
         criteria.setRestriction(restriction);
         
+        criteria.setOrdersBy(action.getCriteria().getOrders());
+        
         try {
             String fileName = indicatorsServiceFacade.exportIndicatorsTsv(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new ExportIndicatorsResult(fileName);
