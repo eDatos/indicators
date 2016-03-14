@@ -28,7 +28,7 @@
         	options = options || { 
         		data : {} 
         	};
-        	_.defaults(options.data, { limit : 1 });
+        	_.defaults(options.data, { limit : 9999 });
         	return this.fetch(options);
         },
 
