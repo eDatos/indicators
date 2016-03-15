@@ -385,6 +385,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorInProduction.setProductionValidationDate(new DateTime());
         indicatorInProduction.setProductionValidationUser(ctx.getUserId());
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -408,6 +409,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProductionValidationUser(null);
         indicatorInProduction.setDiffusionValidationDate(null);
         indicatorInProduction.setDiffusionValidationUser(null);
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -428,7 +430,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorInProduction.setDiffusionValidationDate(new DateTime());
-        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
+        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());        
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos        
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -451,7 +454,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProductionValidationDate(null);
         indicatorInProduction.setProductionValidationUser(null);
         indicatorInProduction.setDiffusionValidationDate(null);
-        indicatorInProduction.setDiffusionValidationUser(null);
+        indicatorInProduction.setDiffusionValidationUser(null);        
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos        
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -480,6 +484,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());
+            
+            indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir ordenamientos y busquedas
+            
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
             return new PublishIndicatorResult(indicatorInProduction, e);
         }
@@ -517,7 +524,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setDiffusionProcStatus(indicatorInProduction.getProcStatus());
         indicator.setProductionIdIndicatorVersion(null);
         indicator.setProductionVersionNumber(null);
-        indicator.setProductionProcStatus(null);
+        indicator.setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir ordenamientos y busquedas
         getIndicatorRepository().save(indicator);
 
         return new PublishIndicatorResult(indicatorInProduction);
@@ -555,6 +562,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update proc status
         Indicator indicator = indicatorInDiffusion.getIndicator();
         indicator.setIsPublished(Boolean.FALSE);
+        indicator.setDiffusionProcStatus(IndicatorProcStatusEnum.ARCHIVED);
+        indicator.setProductionProcStatus(IndicatorProcStatusEnum.ARCHIVED); // Para permitir busquedas y ordenaciones
         getIndicatorRepository().save(indicator);
 
         indicatorInDiffusion.setProcStatus(IndicatorProcStatusEnum.ARCHIVED);

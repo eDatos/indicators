@@ -28,6 +28,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -83,6 +84,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, version);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
         assertTrue(indicatorVersionCreated.getIsLastVersion());
+        assertEquals(indicatorCreated.getProcStatus(), indicatorCreated.getIndicator().getProductionProcStatus());        
     }
 
     @Test
@@ -181,6 +183,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertTrue(indicatorCreated.getIndicator().getIsPublished());
+        
+        assertEquals(indicatorCreated.getProcStatus(), indicatorCreated.getIndicator().getProductionProcStatus());
     }
 
     @Test
@@ -212,6 +216,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
+        assertEquals(indicatorCreated.getIndicator().getProductionProcStatus(), IndicatorProcStatusEnum.ARCHIVED);
+        assertEquals(indicatorCreated.getProcStatus(), indicatorCreated.getIndicator().getProductionProcStatus());
     }
 
     @Test
