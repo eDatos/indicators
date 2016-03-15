@@ -183,8 +183,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertTrue(indicatorCreated.getIndicator().getIsPublished());
-        
-        assertEquals(indicatorCreated.getProcStatus(), indicatorCreated.getIndicator().getProductionProcStatus());
     }
 
     @Test
@@ -216,8 +214,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
-        assertEquals(indicatorCreated.getIndicator().getProductionProcStatus(), IndicatorProcStatusEnum.ARCHIVED);
-        assertEquals(indicatorCreated.getProcStatus(), indicatorCreated.getIndicator().getProductionProcStatus());
+        assertEquals(indicatorCreated.getIndicator().getDiffusionProcStatus(), IndicatorProcStatusEnum.ARCHIVED);
     }
 
     @Test

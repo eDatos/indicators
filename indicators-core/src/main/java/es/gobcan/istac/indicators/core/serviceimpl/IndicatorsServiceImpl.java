@@ -524,7 +524,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setDiffusionProcStatus(indicatorInProduction.getProcStatus());
         indicator.setProductionIdIndicatorVersion(null);
         indicator.setProductionVersionNumber(null);
-        indicator.setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir ordenamientos y busquedas
+        indicator.setProductionProcStatus(null);
         getIndicatorRepository().save(indicator);
 
         return new PublishIndicatorResult(indicatorInProduction);
@@ -563,7 +563,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         Indicator indicator = indicatorInDiffusion.getIndicator();
         indicator.setIsPublished(Boolean.FALSE);
         indicator.setDiffusionProcStatus(IndicatorProcStatusEnum.ARCHIVED);
-        indicator.setProductionProcStatus(IndicatorProcStatusEnum.ARCHIVED); // Para permitir busquedas y ordenaciones
         getIndicatorRepository().save(indicator);
 
         indicatorInDiffusion.setProcStatus(IndicatorProcStatusEnum.ARCHIVED);
