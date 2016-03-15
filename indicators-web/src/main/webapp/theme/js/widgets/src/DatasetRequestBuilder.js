@@ -125,7 +125,7 @@
         },
         
         _limit : function(limit) {
-        	limit = limit || 9999;
+        	limit = limit || 1000;
         	return '&limit=' + limit;
         },
 
