@@ -18,10 +18,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DB_REPO_PASSWORD                             = "indicators.dsrepo.db.password";
     public static final String DB_REPO_DRIVER_NAME                          = "indicators.dsrepo.db.driver_name";
 
-    public static final String DB_SUBJECTS_URL                              = "indicators.subjects.db.url";
-    public static final String DB_SUBJECTS_USERNAME                         = "indicators.subjects.db.username";
-    public static final String DB_SUBJECTS_PASSWORD                         = "indicators.subjects.db.password";
-    public static final String DB_SUBJECTS_DRIVER_NAME                      = "indicators.subjects.db.driver_name";
     public static final String DB_SUBJECTS_TABLE                            = "indicators.subjects.db.table";
     public static final String DB_SUBJECTS_COLUMN_CODE                      = "indicators.subjects.db.column_code";
     public static final String DB_SUBJECTS_COLUMN_TITLE                     = "indicators.subjects.db.column_title";

@@ -30,7 +30,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     private static final Logger            LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
 
     @Autowired
-    @Qualifier("dataSourceSubjects")
+    @Qualifier("dataSource")
     private DataSource                     dataSource;
 
     public SubjectRepositoryImpl() {

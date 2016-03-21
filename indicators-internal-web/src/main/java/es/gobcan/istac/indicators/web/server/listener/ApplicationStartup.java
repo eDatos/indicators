@@ -18,10 +18,6 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_USERNAME);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
 
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_URL);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_DRIVER_NAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_USERNAME);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_PASSWORD);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
