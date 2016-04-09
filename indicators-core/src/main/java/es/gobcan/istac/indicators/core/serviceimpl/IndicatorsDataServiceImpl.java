@@ -81,8 +81,6 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
-import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
@@ -252,7 +250,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
-        LOG.info("Starting Indicators data update process");
+        LOG.debug("Starting Indicators data update process");
 
         List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
 
@@ -262,27 +260,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
 
         markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
-        Set<String> modifiedSystems = new HashSet<String>();
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
+
+        LOG.debug("Total indicatorsVersions that needs to be updated: " + pendingIndicators.size());
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
-            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
 
-            String indicatorUuid = indicator.getUuid();
-            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
-                try {
-                    populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
-
-                    changeDiffusionVersion(indicator);
-                    modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
-                } catch (MetamacException e) {
-                    LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
-                    failedPopulationIndicators.add(indicatorVersion);
-                }
+            try {
+                LOG.debug("Updating indicatorVersion with code " + indicatorVersion.getIndicator().getCode() + " and version " + indicatorVersion.getVersionNumber());
+                populateIndicatorVersionData(ctx, indicator.getUuid(), indicatorVersion.getVersionNumber());
+            } catch (MetamacException e) {
+                LOG.error("Error populating indicatorVersion. Indicator: " + indicatorVersion.getIndicator().getCode() + " . Version: " + indicatorVersion.getVersionNumber(), e);
+                failedPopulationIndicators.add(indicatorVersion);
             }
         }
-        changeVersionForModifiedIndicatorsSystems(modifiedSystems);
-        LOG.info("Finished Indicators data update process");
+        LOG.debug("Finished Indicators data update process");
 
         return failedPopulationIndicators;
     }
@@ -373,11 +365,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
 
-            // No more inconsistent data, no more needs update
-            markIndicatorVersionAsDataUpdated(indicatorVersion);
-
             // Update view if it's necessary
             manageDatabaseViewForLastVersion(ctx, indicatorVersion);
+
+            // No more inconsistent data, no more needs update
+            markIndicatorVersionAsDataUpdated(indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
             if (e instanceof MetamacException) {
@@ -1168,7 +1160,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     /**
      * Retrieve observation from a specific IndicatorVersion
-     * 
+     *
      * @param indicatorVersion
      * @param geoValue
      * @param timeValue

@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
-import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
-import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
@@ -48,12 +46,12 @@ public class IndicatorsUpdateJob implements Job {
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
-        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);        
-        String user = serviceContext.getUserId();
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
 
         try {
+            LOG.debug("Updating indicators Data...");
             List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
-            
+
             if (failedPopulationIndicators.size() > 0) {
                 getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
             }
@@ -61,7 +59,7 @@ public class IndicatorsUpdateJob implements Job {
             LOG.error("Error updating indicators Data", e);
         }
     }
-    
+
     private NoticesRestInternalService getNoticesRestInternalService() {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
