@@ -49,7 +49,7 @@ public class IndicatorsUpdateJob implements Job {
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
 
         try {
-            LOG.debug("Updating indicators Data...");
+            LOG.info("Updating indicators Data...");
             List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
 
             if (failedPopulationIndicators.size() > 0) {

@@ -250,7 +250,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
-        LOG.debug("Starting Indicators data update process");
+        LOG.info("Starting Indicators data update process");
 
         List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
 
@@ -262,19 +262,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
 
-        LOG.debug("Total indicatorsVersions that needs to be updated: " + pendingIndicators.size());
+        LOG.info("Total indicatorsVersions that needs to be updated: " + pendingIndicators.size());
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
 
             try {
-                LOG.debug("Updating indicatorVersion with code " + indicatorVersion.getIndicator().getCode() + " and version " + indicatorVersion.getVersionNumber());
+                LOG.info("Updating indicatorVersion with code " + indicatorVersion.getIndicator().getCode() + " and version " + indicatorVersion.getVersionNumber());
                 populateIndicatorVersionData(ctx, indicator.getUuid(), indicatorVersion.getVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicatorVersion. Indicator: " + indicatorVersion.getIndicator().getCode() + " . Version: " + indicatorVersion.getVersionNumber(), e);
                 failedPopulationIndicators.add(indicatorVersion);
             }
         }
-        LOG.debug("Finished Indicators data update process");
+        LOG.info("Finished Indicators data update process");
 
         return failedPopulationIndicators;
     }
