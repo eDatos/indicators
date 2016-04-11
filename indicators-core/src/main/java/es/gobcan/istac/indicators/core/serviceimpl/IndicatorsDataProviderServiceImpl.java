@@ -7,8 +7,11 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,19 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 @Service("indicatorsDataProviderService")
 public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProviderService {
 
+    private static final String            JAXI_URL_SUFFIX_TABLA_DO         = "/tabla.do";
+
+    private static final String            JAXI_PARAM_TYPE                  = "type";
+    private static final String            JAXI_PARAM_TYPE_VALUE_STRUCTURE  = "structure";
+    private static final String            JAXI_PARAM_TYPE_VALUE_DATA       = "data";
+
+    private static final String            JAXI_PARAM_ACCION                = "accion";
+    private static final String            JAXI_PARAM_ACCION_VALUE_JSON_MTD = "jsonMtd";
+
+    private static final String            JAXI_PARAM_UUID_CONSULTA         = "uuidConsulta";
+
+    private static final Logger            LOG                              = LoggerFactory.getLogger(IndicatorsDataProviderServiceImpl.class);
+
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
@@ -33,9 +49,9 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
     public String retrieveDataStructureJson(ServiceContext ctx, String uuid) throws MetamacException {
         try {
             Map<String, String> params = new HashMap<String, String>();
-            params.put("uuidConsulta", uuid);
-            params.put("type", "structure");
-            return requestForJson(getJaxiUrl() + "/tabla.do", uuid);
+            params.put(JAXI_PARAM_UUID_CONSULTA, uuid);
+            params.put(JAXI_PARAM_TYPE, JAXI_PARAM_TYPE_VALUE_STRUCTURE);
+            return requestForJson(getJaxiUrl(), uuid);
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
@@ -44,15 +60,15 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
     @Override
     public String retrieveDataJson(ServiceContext ctx, String uuid) throws MetamacException {
         try {
+            LOG.info("Retriving data form URL: " + getJaxiUrl() + "?accion=jsonMtd&uuidConsulta=" + uuid);
             Map<String, String> params = new HashMap<String, String>();
-            params.put("uuidConsulta", uuid);
-            params.put("type", "data");
-            return requestForJson(getJaxiUrl() + "/tabla.do", uuid);
+            params.put(JAXI_PARAM_UUID_CONSULTA, uuid);
+            params.put(JAXI_PARAM_TYPE, JAXI_PARAM_TYPE_VALUE_DATA);
+            return requestForJson(getJaxiUrl(), uuid);
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DATA_RETRIEVE_ERROR, uuid);
         }
     }
-
     // retrieve from jaxi
     private String requestForJson(String url, String param) {
         Client client = new Client();
@@ -60,15 +76,16 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         WebResource wresource = client.resource(url);
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (param != null) {
-            params.add("uuidConsulta", param);
+            params.add(JAXI_PARAM_UUID_CONSULTA, param);
         }
         // Overrides accion
-        params.put("accion", Arrays.asList("jsonMtd"));
+        params.put(JAXI_PARAM_ACCION, Arrays.asList(JAXI_PARAM_ACCION_VALUE_JSON_MTD));
         String result = wresource.queryParams(params).accept(MediaType.APPLICATION_JSON).get(String.class);
         return result;
     }
 
     private String getJaxiUrl() throws MetamacException {
-        return configurationService.retrieveJaxiLocalUrl();
+        String jaxiUrlBase = StringUtils.removeEnd(configurationService.retrieveJaxiLocalUrl(), "/");
+        return jaxiUrlBase + JAXI_URL_SUFFIX_TABLA_DO;
     }
 }
