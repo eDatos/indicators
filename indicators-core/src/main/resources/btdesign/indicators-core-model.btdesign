@@ -825,8 +825,6 @@ Application Indicators {
        		String dataRepositoryTableName nullable;
        		"True if indicator needs to be updated"
             Boolean needsUpdate not nullable;  		
-       		"True if some fields are related to Data and has changed since last population"
-            Boolean inconsistentData not nullable;  		
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -1473,8 +1471,6 @@ Application Indicators {
 			
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
-			"Indicates whether data is inconsistent with the indicator definition"
-			Boolean inconsistentData;
        		"Needs be populated"
 			Boolean needsBePopulated;
        		"Identifier in repository of observations"

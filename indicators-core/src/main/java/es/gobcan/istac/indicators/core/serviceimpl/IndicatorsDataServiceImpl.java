@@ -1370,7 +1370,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     // No more inconsistent data, no more needs update, update last populate date
     private void markIndicatorVersionAsDataUpdated(IndicatorVersion indicatorVersion) {
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
-        indicatorVersion.setInconsistentData(Boolean.FALSE);
         indicatorVersion.setLastPopulateDate(new DateTime());
         getIndicatorVersionRepository().save(indicatorVersion);
     }

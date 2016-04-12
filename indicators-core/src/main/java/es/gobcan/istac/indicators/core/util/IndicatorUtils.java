@@ -50,10 +50,9 @@ public class IndicatorUtils {
         return QuantityTypeEnum.CHANGE_RATE.equals(type);
     }
 
-    public static Boolean isIndicatorNeedsBePopulated(String dataRepositoryId, Boolean needsUpdate, Boolean inconsistentData) {
+    public static Boolean isIndicatorNeedsBePopulated(String dataRepositoryId, Boolean needsUpdate) {
         boolean recentlyCreated = dataRepositoryId == null;
         boolean updateHasFailed = needsUpdate;
-        boolean modifiedAfterPopulate = inconsistentData;
-        return recentlyCreated || updateHasFailed || modifiedAfterPopulate;
+        return recentlyCreated || updateHasFailed;
     }
 }

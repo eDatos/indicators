@@ -268,7 +268,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         }
 
         if (hasIndicatorDecimalPlacesChanged(source, target)) {
-            target.setInconsistentData(Boolean.TRUE);
+            target.setNeedsUpdate(Boolean.TRUE);
         }
 
         // Related entities

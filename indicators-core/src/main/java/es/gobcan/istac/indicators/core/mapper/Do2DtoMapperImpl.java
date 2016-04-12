@@ -203,8 +203,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
 
         target.setNeedsUpdate(source.getNeedsUpdate());
-        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
-        target.setInconsistentData(source.getInconsistentData());
+        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate()));
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
 
@@ -237,7 +236,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(indicator.getCode());
         target.setProductionVersion(indicatorVersionDoToDtoSummary(indicator.getProductionIndicatorVersion()));
         target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicator.getDiffusionIndicatorVersion()));
-        
+
         return target;
     }
 
@@ -482,10 +481,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     private IndicatorVersionSummaryDto indicatorVersionDoToDtoSummary(IndicatorVersion source) {
-        if (source == null) { 
-            return null; 
+        if (source == null) {
+            return null;
         }
-        
+
         IndicatorVersionSummaryDto target = new IndicatorVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
@@ -493,7 +492,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
         target.setNeedsUpdate(source.getNeedsUpdate());
-        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
+        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate()));
 
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());

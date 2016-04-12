@@ -1092,22 +1092,6 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         }
     }
 
-    /*
-     * Indicator has the inconsistent Data mark
-     */
-    @Test
-    public void testPopulateIndicatorDataInconsistentMark() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR22_DS_GPE_UUID))).thenReturn(INDICATOR22_GPE_JSON_DATA);
-        IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicator(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
-
-        assertTrue(indicatorVersion.getInconsistentData());
-
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR22_UUID);
-
-        indicatorVersion = indicatorsService.retrieveIndicator(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
-        assertFalse(indicatorVersion.getInconsistentData());
-    }
-
     @Test
     public void testDeleteIndicatorData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
@@ -1433,7 +1417,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
 
         // Suppose last populate failed, so version has needs_update, should populate data
-        indicatorVersion.setInconsistentData(true);
+        indicatorVersion.setNeedsUpdate(true);
         indicatorVersionRepository.save(indicatorVersion);
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);

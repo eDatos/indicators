@@ -95,7 +95,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Save draft version
         indicatorVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
         indicatorVersion.setIsLastVersion(Boolean.TRUE);
-        indicatorVersion.setInconsistentData(Boolean.FALSE);
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersionTypeEnum.MAJOR));
         indicatorVersion.setIndicator(indicator);
@@ -344,15 +343,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
                 if (indicator != null) {
                     writer.write(IndicatorsConstants.TSV_LINE_SEPARATOR);
-                    
+
                     writer.write(indicator.getCode());
-                    
+
                     if (indicator.getProductionIndicatorVersion() == null) {
                         writeIndicatorVersion(writer, indicator.getDiffusionIndicatorVersion(), languages);
                     } else {
                         writeIndicatorVersion(writer, indicator.getProductionIndicatorVersion(), languages);
                     }
-                    
+
                     writeIndicatorVersion(writer, indicator.getDiffusionIndicatorVersion(), languages);
                 } else {
                     LOG.warn("Indicator is null for indicatorVersion ", indicatorVersion);
@@ -368,7 +367,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             IOUtils.closeQuietly(writer);
         }
     }
-    
+
     @Override
     public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -430,8 +429,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorInProduction.setDiffusionValidationDate(new DateTime());
-        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());        
-        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos        
+        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -454,8 +453,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProductionValidationDate(null);
         indicatorInProduction.setProductionValidationUser(null);
         indicatorInProduction.setDiffusionValidationDate(null);
-        indicatorInProduction.setDiffusionValidationUser(null);        
-        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos        
+        indicatorInProduction.setDiffusionValidationUser(null);
+        indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir busquedas y ordenamientos
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         return indicatorInProduction;
@@ -484,9 +483,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());
-            
+
             indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir ordenamientos y busquedas
-            
+
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
             return new PublishIndicatorResult(indicatorInProduction, e);
         }
@@ -599,7 +598,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
-        indicatorNewVersion.setInconsistentData(Boolean.FALSE);
 
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);
@@ -639,7 +637,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // We set that data needs update
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
-        indicatorNewVersion.setInconsistentData(Boolean.TRUE);
     }
 
     @Override
@@ -658,7 +655,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update indicator adding dataSource
         indicatorVersion.addDataSource(dataSource);
-        indicatorVersion.setInconsistentData(Boolean.TRUE);
         indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
 
@@ -693,7 +689,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         DataSource updatedDataSource = getDataSourceRepository().save(dataSource);
 
         IndicatorVersion indicatorVersion = updatedDataSource.getIndicatorVersion();
-        indicatorVersion.setInconsistentData(Boolean.TRUE);
         indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
 
@@ -713,7 +708,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Delete
         getDataSourceRepository().delete(dataSource);
 
-        indicatorVersion.setInconsistentData(Boolean.TRUE);
         indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
     }
@@ -1318,7 +1312,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     private void writeEnvironmentHeader(OutputStreamWriter writer, String environment, String header) throws IOException {
         writeCell(writer, environment + IndicatorsConstants.TSV_HEADER_ENVIRONMENT_SEPARATOR + header);
-    }    
+    }
 
     private void writeIndicatorVersion(OutputStreamWriter writer, IndicatorVersion indicatorVersion, List<String> languages) throws IOException {
         if (indicatorVersion != null) {
@@ -1342,7 +1336,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writeEmptyIndicatorVersion(writer, languages);
         }
     }
-    
+
     private void writeEmptyIndicatorVersion(OutputStreamWriter writer, List<String> languages) throws IOException {
         int INDICATOR_VERSION_INTERNATIONALIZED_FIELDS = 2;
         int INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS = 14;

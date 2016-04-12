@@ -60,7 +60,6 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
             assertFalse(indicatorVersion1.getNeedsUpdate());
-            assertFalse(indicatorVersion1.getInconsistentData());
         }
 
         // Versioning
@@ -72,13 +71,11 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
             assertFalse(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
             assertFalse(indicatorVersion1.getNeedsUpdate());
-            assertFalse(indicatorVersion1.getInconsistentData());
 
             IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorVersion2.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion2.getDataRepositoryId()));
             assertFalse(indicatorVersion2.getNeedsUpdate());
-            assertFalse(indicatorVersion2.getInconsistentData());
 
             assertNotSame(indicatorVersion1.getDataRepositoryId(), indicatorVersion2.getDataRepositoryId());
         }
@@ -98,7 +95,6 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
             assertFalse(indicatorVersion1.getNeedsUpdate());
-            assertFalse(indicatorVersion1.getInconsistentData());
         }
 
         // Versioning
@@ -111,13 +107,11 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
             assertFalse(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
             assertFalse(indicatorVersion1.getNeedsUpdate());
-            assertFalse(indicatorVersion1.getInconsistentData());
 
             IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorVersion2.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion2.getDataRepositoryId()));
             assertTrue(indicatorVersion2.getNeedsUpdate());
-            assertTrue(indicatorVersion2.getInconsistentData());
 
             assertNotSame(indicatorVersion1.getDataRepositoryId(), indicatorVersion2.getDataRepositoryId());
         }

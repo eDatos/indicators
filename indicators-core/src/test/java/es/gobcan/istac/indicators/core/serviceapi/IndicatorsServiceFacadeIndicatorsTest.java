@@ -1,11 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,6 +50,12 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators, data sources
@@ -3348,7 +3348,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(dataSourceDtoCreated.getUuid(), dataSourcesDto.get(2).getUuid());
 
         IndicatorDto indicator = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, INDICATOR_1_V2);
-        assertTrue(indicator.getInconsistentData());
+        assertTrue(indicator.getNeedsUpdate());
     }
 
     @Test
@@ -3862,7 +3862,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             IndicatorDto indicator = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, INDICATOR_1_V2);
-            assertTrue(indicator.getInconsistentData());
+            assertTrue(indicator.getNeedsUpdate());
         }
     }
 
@@ -3968,7 +3968,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
 
         IndicatorDto indicator = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, INDICATOR_1_V2);
-        assertTrue(indicator.getInconsistentData());
+        assertTrue(indicator.getNeedsUpdate());
     }
 
     @Test
