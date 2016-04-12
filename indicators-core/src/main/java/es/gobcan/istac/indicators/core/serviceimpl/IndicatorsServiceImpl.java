@@ -1296,6 +1296,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
         writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_VERSION_NUMBER);
         writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PROC_STATUS);
+        writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_NEEDS_UPDATE);
         writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PRODUCTION_VALIDATION_DATE);
         writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_PRODUCTION_VALIDATION_USER);
         writeEnvironmentHeader(writer, environment, IndicatorsConstants.TSV_HEADER_DIFFUSION_VALIDATION_DATE);
@@ -1320,6 +1321,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writeInternationalString(writer, indicatorVersion.getSubjectTitle(), languages);
             writeCell(writer, indicatorVersion.getVersionNumber());
             writeCell(writer, indicatorVersion.getProcStatus());
+            writeCell(writer, indicatorVersion.getNeedsUpdate());
             writeCell(writer, indicatorVersion.getProductionValidationDate());
             writeCell(writer, indicatorVersion.getProductionValidationUser());
             writeCell(writer, indicatorVersion.getDiffusionValidationDate());
@@ -1339,7 +1341,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     private void writeEmptyIndicatorVersion(OutputStreamWriter writer, List<String> languages) throws IOException {
         int INDICATOR_VERSION_INTERNATIONALIZED_FIELDS = 2;
-        int INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS = 14;
+        int INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS = 15;
         writer.write(StringUtils.repeat(IndicatorsConstants.TSV_SEPARATOR, INDICATOR_VERSION_INTERNATIONALIZED_FIELDS * languages.size() + INDICATOR_VERSION_NON_INTERNATIONALIZED_FIELDS));
     }
 
