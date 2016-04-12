@@ -14,17 +14,18 @@ public class Indicator extends IndicatorBase {
     private static final long serialVersionUID = 1L;
 
     public Indicator() {
+        setNotifyPopulationErrors(Boolean.TRUE);
     }
-    
+
     // IDEA: Would be faster as repo queries?
     public IndicatorVersion getProductionIndicatorVersion() {
         return getIndicatorVersion(getProductionVersionNumber());
     }
-    
+
     public IndicatorVersion getDiffusionIndicatorVersion() {
         return getIndicatorVersion(getDiffusionVersionNumber());
     }
-    
+
     private IndicatorVersion getIndicatorVersion(String indicatorVersionNumber) {
         if (indicatorVersionNumber != null) {
             for (IndicatorVersion indicatorVersion : getVersions()) {
@@ -33,6 +34,6 @@ public class Indicator extends IndicatorBase {
                 }
             }
         }
-        return null;        
+        return null;
     }
 }

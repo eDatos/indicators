@@ -3133,6 +3133,43 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testMarkIndicatorNotNotifyPopulationErrors() throws Exception {
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertTrue(indicatorDto.getNotifyPopulationErrors());
+
+        indicatorDto.setNotifyPopulationErrors(Boolean.FALSE);
+
+        // Mark
+        indicatorsServiceFacade.markIndicatorNotNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
+
+        // Validation
+        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(Boolean.FALSE, indicatorDtoUpdated.getNotifyPopulationErrors());
+    }
+
+    @Test
+    public void testMarkIndicatorNotifyPopulationErrors() throws Exception {
+        String uuid = INDICATOR_2;
+        String versionNumber = "1.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(Boolean.FALSE, indicatorDto.getNotifyPopulationErrors());
+
+        indicatorDto.setNotifyPopulationErrors(Boolean.TRUE);
+
+        // Mark
+        indicatorsServiceFacade.markIndicatorNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
+
+        // Validation
+        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertTrue(indicatorDtoUpdated.getNotifyPopulationErrors());
+
+    }
+
+    @Test
     public void testRetrieveDataSource() throws Exception {
 
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V2);

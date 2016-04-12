@@ -9,14 +9,9 @@ public interface NoticesRestInternalService {
     public static final String BEAN_ID = "noticesRestInternalService";
 
     // Background Notifications
-    public void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedPopulationIndicators, Object... messageParams);
-
-    public void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion indicatorVersion);
-
-    public void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode);
-
-    public void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
-
-    public void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
+    void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion indicatorVersion);
+    void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode);
+    void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
+    void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
 
 }

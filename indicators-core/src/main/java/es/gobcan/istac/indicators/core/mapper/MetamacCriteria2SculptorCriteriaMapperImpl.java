@@ -303,6 +303,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case SUBJECT_CODE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case NOTIFY_POPULATION_ERRORS:
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().notifyPopulationErrors(), propertyRestriction.getBooleanValue(), propertyRestriction.getOperationType());
                 case TITLE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case PRODUCTION_PROC_STATUS:

@@ -134,6 +134,10 @@ Application Indicators {
 	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
+	    	"Mark indicator for not notify population errors"
+            markIndicatorNotNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+            "Mark indicator for notify population errors"
+            markIndicatorNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -482,6 +486,10 @@ Application Indicators {
 	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators by criteria in any state, returning last versions"
 	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
+	    	"Mark indicator for not notif population errors"
+	    	markIndicatorNotNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+	    	"Mark indicator for not notif population errors"
+            markIndicatorNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	"Export indicators list in TSV format"
 	    	String exportIndicatorsTsv(MetamacCriteria criteria) throws MetamacException;
 	    	
@@ -782,6 +790,9 @@ Application Indicators {
 			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";
 			"Indicator instances"
 			- Bag<@IndicatorInstance> indicatorsInstances cascade="none" fetch="lazy" inverse <-> indicator;
+			
+			"True if user decied to receive notifications when data population fail in this indicator"
+			Boolean notifyPopulationErrors not nullable;
 			
 			Repository IndicatorRepository {
 		   		@Indicator save(@Indicator entity);
@@ -1497,7 +1508,10 @@ Application Indicators {
 			"User who archived"
 			String archiveUser; 
 			"Version to optimistic locking"
-			Long versionOptimisticLocking;					    
+			Long versionOptimisticLocking;
+			
+			"True if user decied to receive notifications when data population fail in this indicator"
+            Boolean notifyPopulationErrors not nullable;					    
 	    }
 	    
 	    "Dto for indicator. Summary information"
@@ -1506,6 +1520,8 @@ Application Indicators {
 			String uuid;
 			"Code"
 			String code;
+			"True if user decied to receive notifications when data population fail in this indicator"
+            Boolean notifyPopulationErrors not nullable;                        
        		"Production version: draft, in validation..."
        		- @IndicatorVersionSummaryDto productionVersion;
        		"Diffusion version: published, archived"

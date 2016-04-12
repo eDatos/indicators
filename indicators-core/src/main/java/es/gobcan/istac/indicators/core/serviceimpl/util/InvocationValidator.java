@@ -578,16 +578,35 @@ public class InvocationValidator {
         checkFindIndicators(conditions, pagingParameter, exceptions);
     }
 
+    public static void checkMarkIndicatorNotNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkMarkIndicatorNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkExportIndicators(List<ConditionalCriteria> conditions, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-
 
     // --------------------------------------------------------------------------------------------
     // DATA SOURCES
@@ -2044,4 +2063,5 @@ public class InvocationValidator {
             checkQuantity(rateDerivation.getQuantity(), parameterName, true, exceptions);
         }
     }
+
 }

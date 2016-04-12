@@ -90,6 +90,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setDiffusionVersionNumber(null);
         indicator.setDiffusionProcStatus(null);
         indicator.setIsPublished(Boolean.FALSE);
+        indicator.setNotifyPopulationErrors(Boolean.TRUE);
         indicator = getIndicatorRepository().save(indicator);
 
         // Save draft version
@@ -627,6 +628,36 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion = retrieveIndicator(ctx, indicatorsUuid, indicatorVersionNumber);
 
         return indicatorNewVersion;
+    }
+
+    @Override
+    public void markIndicatorNotNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkMarkIndicatorNotNotifyPopulationErrors(indicatorUuid, null);
+
+        // Retrieve
+        Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
+
+        // Set notifyPopulationErros
+        indicator.setNotifyPopulationErrors(Boolean.FALSE);
+
+        // Update
+        updateIndicator(ctx, indicator);
+    }
+
+    @Override
+    public void markIndicatorNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkMarkIndicatorNotifyPopulationErrors(indicatorUuid, null);
+
+        // Retrieve
+        Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
+
+        // Set notifyPopulationErros
+        indicator.setNotifyPopulationErrors(Boolean.TRUE);
+
+        // Update
+        updateIndicator(ctx, indicator);
     }
 
     private void createDatasetRepositoryAndUpdateViewReference(ServiceContext ctx, IndicatorVersion indicatorNewVersion, String indicatorsUuid, String indicatorVersionNumber) throws MetamacException {

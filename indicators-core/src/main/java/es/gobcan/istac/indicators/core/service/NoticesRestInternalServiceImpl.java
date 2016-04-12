@@ -88,8 +88,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         createBackgroundNotification(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), oldDatasetId);
     }
 
-    @Override
-    public void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {
+    private void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {
         try {
 
             Notice notification = createNotice(actionCode, messageCode, failedIndicators, messageParams);

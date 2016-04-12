@@ -201,6 +201,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
             target.setArchivedVersion(source.getIndicator().getDiffusionVersionNumber());
         }
 
+        target.setNotifyPopulationErrors(source.getIndicator().getNotifyPopulationErrors());
+
         target.setNeedsUpdate(source.getNeedsUpdate());
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
@@ -232,6 +234,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         Indicator indicator = source.getIndicator();
         target.setUuid(indicator.getUuid());
         target.setCode(indicator.getCode());
+        target.setNotifyPopulationErrors(indicator.getNotifyPopulationErrors());
         target.setProductionVersion(indicatorVersionDoToDtoSummary(indicator.getProductionIndicatorVersion()));
         target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicator.getDiffusionIndicatorVersion()));
 
