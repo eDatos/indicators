@@ -2705,13 +2705,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
             assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
             assertEquals(Boolean.TRUE, indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
-            assertEquals(Boolean.TRUE, indicatorSummaryDto.getDiffusionVersion().getNeedsBePopulated());
             IndicatorsAsserts.assertEqualsInternationalString(indicatorSummaryDto.getDiffusionVersion().getTitle(), "es", "Título Indicator-1-v1 Educación", "en", "Title Indicator-1-v1");
 
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorSummaryDto.getProductionVersion().getProcStatus());
             assertEquals("2.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
             assertEquals(Boolean.FALSE, indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
-            assertEquals(Boolean.TRUE, indicatorSummaryDto.getProductionVersion().getNeedsBePopulated());
             IndicatorsAsserts.assertEqualsInternationalString(indicatorSummaryDto.getProductionVersion().getTitle(), "es", "Título Indicator-1-v2 Educación", "en", "Title Indicator-1-v2");
         }
         {

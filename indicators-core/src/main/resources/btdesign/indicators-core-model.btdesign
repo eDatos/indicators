@@ -1471,8 +1471,6 @@ Application Indicators {
 			
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
-       		"Needs be populated"
-			Boolean needsBePopulated;
        		"Identifier in repository of observations"
        		String dataRepositoryId;       		
        		"Table name in repository of observations"
@@ -1528,8 +1526,6 @@ Application Indicators {
        		- @InternationalStringDto subjectTitle;
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
-			"Needs be populated"
-			Boolean needsBePopulated;
 
        		"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;

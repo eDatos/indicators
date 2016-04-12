@@ -49,10 +49,4 @@ public class IndicatorUtils {
     public static Boolean isChangeRateOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.CHANGE_RATE.equals(type);
     }
-
-    public static Boolean isIndicatorNeedsBePopulated(String dataRepositoryId, Boolean needsUpdate) {
-        boolean recentlyCreated = dataRepositoryId == null;
-        boolean updateHasFailed = needsUpdate;
-        return recentlyCreated || updateHasFailed;
-    }
 }
