@@ -393,11 +393,11 @@ public class CommonUtils {
         }
     }
 
-    public static Boolean getIndicatorNeedsBePopulated(IndicatorSummaryDto indicatorSummaryDto) {
+    public static Boolean getIndicatorNeedsUpdate(IndicatorSummaryDto indicatorSummaryDto) {
         if (indicatorSummaryDto.getDiffusionVersion() != null && indicatorSummaryDto.getProductionVersion() == null) {
-            return indicatorSummaryDto.getDiffusionVersion().getNeedsBePopulated();
+            return indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate();
         } else {
-            return indicatorSummaryDto.getProductionVersion().getNeedsBePopulated();
+            return indicatorSummaryDto.getProductionVersion().getNeedsUpdate();
         }
     }
 

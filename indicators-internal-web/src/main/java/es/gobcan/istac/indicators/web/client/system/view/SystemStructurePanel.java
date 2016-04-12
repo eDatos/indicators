@@ -1134,7 +1134,7 @@ public class SystemStructurePanel extends HLayout {
                 protected boolean condition(Object value) {
                     if (value != null && !StringUtils.isBlank(String.valueOf(value))) {
                         if (selectedIndicator != null && String.valueOf(value).equals(selectedIndicator.getUuid())) {
-                            return !CommonUtils.getIndicatorNeedsBePopulated(selectedIndicator);
+                            return !CommonUtils.getIndicatorNeedsUpdate(selectedIndicator);
                         }
                     }
                     return false;
@@ -1459,7 +1459,7 @@ public class SystemStructurePanel extends HLayout {
                             // indicatorText.setShowIcons(Boolean.FALSE); // Hide warning population data icon
                             if (!StringUtils.isBlank(indicatorSummaryDto.getUuid())) {
                                 // Check if it is necessary to populate indicators data
-                                // if (indicatorDto.needsBePopulated()) {
+                                // if (indicatorDto.needsUpdate()) {
                                 // indicatorText.setShowIcons(Boolean.TRUE);
                                 // }
                                 // Load indicators temporal and geographical granularities and values
