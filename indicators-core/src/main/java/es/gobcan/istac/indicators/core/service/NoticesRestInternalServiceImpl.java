@@ -74,8 +74,8 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Override
     public void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode) {
-        createBackgroundNotification(ServiceNoticeAction.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, new ArrayList<IndicatorVersion>(),
-                dataViewsRole, viewCode);
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR,
+                new ArrayList<IndicatorVersion>(), dataViewsRole, viewCode);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     private ResourceInternal indicatorVersionToResource(IndicatorVersion indicatorVersion) {
         ResourceInternal resource = new ResourceInternal();
         if (indicatorVersion != null) {
-            resource.setId(indicatorVersion.getIndicator().getCode());
+            resource.setId(composeCodeWithVersion(indicatorVersion));
             resource.setUrn(indicatorVersion.getUuid());
             resource.setSelfLink(toIndicatorSelfLink(indicatorVersion.getIndicator()));
             resource.setKind(TypeExternalArtefactsEnum.INDICATOR.getValue());
@@ -150,6 +150,10 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             resource.setManagementAppLink(this.toIndicatorManagementApplicationLink(indicatorVersion.getIndicator()));
         }
         return resource;
+    }
+
+    private String composeCodeWithVersion(IndicatorVersion indicatorVersion) {
+        return indicatorVersion.getIndicator().getCode().concat(" - v").concat(indicatorVersion.getVersionNumber());
     }
 
     // Atención: Este método replica funcionalidad de es.gobcan.istac.indicators.rest.component.UriLinks.getIndicatorsLink()
