@@ -352,7 +352,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="111"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -505,7 +504,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="211"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -658,7 +656,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="311"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -811,7 +808,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="411"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -966,7 +962,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="511"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -1242,7 +1237,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="611"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -1519,7 +1513,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="711"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -1673,7 +1666,6 @@
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="811"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="1"
 
                 PRODUCTION_VALIDATION_DATE="[null]"

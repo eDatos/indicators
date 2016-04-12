@@ -259,7 +259,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="111"
                 IS_LAST_VERSION="0"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -380,7 +379,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="121"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -527,7 +525,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="211"
                 IS_LAST_VERSION="0"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -673,7 +670,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="311"
                 IS_LAST_VERSION="0"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -819,7 +815,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="411"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
@@ -965,7 +960,6 @@
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="511"
                 IS_LAST_VERSION="1"
-                INCONSISTENT_DATA="0"
                 NEEDS_UPDATE="0"
 
                 PRODUCTION_VALIDATION_DATE="[null]"
