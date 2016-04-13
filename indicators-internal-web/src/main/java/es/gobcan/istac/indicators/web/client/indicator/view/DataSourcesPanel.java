@@ -110,7 +110,8 @@ public class DataSourcesPanel extends VLayout {
         dataSourcesListGrid.setHeight(150);
         ListGridField uuidField = new ListGridField(DataSourceDS.UUID, IndicatorsWeb.getConstants().dataSourceUuid());
         ListGridField pxField = new ListGridField(DataSourceDS.PX, IndicatorsWeb.getConstants().dataSourcePx());
-        dataSourcesListGrid.setFields(uuidField, pxField);
+        ListGridField dataGpeUuidField = new ListGridField(DataSourceDS.QUERY_UUID, IndicatorsWeb.getConstants().dataSourceDataGpeUuid());
+        dataSourcesListGrid.setFields(uuidField, dataGpeUuidField, pxField);
         // Show data source details when record clicked
         dataSourcesListGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
 
