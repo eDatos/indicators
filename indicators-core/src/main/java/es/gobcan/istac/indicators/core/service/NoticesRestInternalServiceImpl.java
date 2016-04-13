@@ -68,8 +68,10 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Override
     public void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator) {
-        createBackgroundNotification(ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
-                failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName());
+        if (checkIfNotifyPopulationErrors(failedIndicator)) {
+            createBackgroundNotification(ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
+                    failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName());
+        }
     }
 
     @Override
@@ -80,12 +82,31 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Override
     public void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
-        createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
+        List<IndicatorVersion> notifiableIndicators = getIndicatorsWithNotifyPopulationErrors(failedPopulationIndicators);
+        if (!notifiableIndicators.isEmpty()) {
+            createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
+        }
     }
 
     @Override
     public void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId) {
-        createBackgroundNotification(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), oldDatasetId);
+        if (checkIfNotifyPopulationErrors(failedIndicator)) {
+            createBackgroundNotification(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), oldDatasetId);
+        }
+    }
+
+    private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {
+        List<IndicatorVersion> notifiableIndicators = new ArrayList<IndicatorVersion>();
+        for (IndicatorVersion failedIndicatorVersion : failedPopulationIndicators) {
+            if (checkIfNotifyPopulationErrors(failedIndicatorVersion)) {
+                notifiableIndicators.add(failedIndicatorVersion);
+            }
+        }
+        return notifiableIndicators;
+    }
+
+    private boolean checkIfNotifyPopulationErrors(IndicatorVersion failedIndicator) {
+        return failedIndicator.getIndicator().getNotifyPopulationErrors();
     }
 
     private void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {
@@ -106,7 +127,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         String localisedMessage = getMessageForCodeWithParams(messageCode, locale, messageParams);
         String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
 
-        ResourceInternal[] resources = this.indicatorVersionsToResourceInternal(failedIndicators);
+        List<ResourceInternal> resources = indicatorVersionsToResourceInternal(failedIndicators);
 
         // @formatter:off
         Message message = MessageBuilder.message()
@@ -129,12 +150,13 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         return MessageFormat.format(localisedMessage, messageParams);
     }
 
-    private ResourceInternal[] indicatorVersionsToResourceInternal(List<IndicatorVersion> indicatorsVersions) {
-        ResourceInternal[] resources = new ResourceInternal[indicatorsVersions.size()];
+    private List<ResourceInternal> indicatorVersionsToResourceInternal(List<IndicatorVersion> indicatorsVersions) {
+        List<ResourceInternal> resources = new ArrayList<ResourceInternal>();
 
-        for (int i = 0; i < indicatorsVersions.size(); i++) {
-            resources[i] = indicatorVersionToResource(indicatorsVersions.get(i));
+        for (IndicatorVersion indicatorVersion : indicatorsVersions) {
+            resources.add(indicatorVersionToResource(indicatorVersion));
         }
+
         return resources;
     }
 
