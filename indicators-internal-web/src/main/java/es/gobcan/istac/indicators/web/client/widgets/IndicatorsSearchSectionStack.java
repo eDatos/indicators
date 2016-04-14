@@ -12,6 +12,7 @@ import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -77,8 +78,12 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
                 retrieveResources();
             }
         });
+        
+        SelectItem notifyPopulationErrors = new SelectItem(IndicatorDS.NOTIFY_POPULATION_ERRORS, getConstants().indicDetailNotifyPopulationErrors());
+        notifyPopulationErrors.setValueMap(CommonUtils.getIndicatorNotifyPopulationErrorsValueMap());
+        notifyPopulationErrors.setWidth(200);
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{title, subject, productionVersionProcStatus, diffusionVersionProcStatus, orderBy, orderType, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{title, subject, productionVersionProcStatus, diffusionVersionProcStatus, notifyPopulationErrors, orderBy, orderType, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
@@ -100,6 +105,11 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         criteria.setProductionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS)));
         criteria.setDiffusionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS_DIFF)));
         criteria.setSubjectCode(advancedSearchForm.getValueAsString(IndicatorDS.SUBJECT));
+        
+        String notifyPopulationErrors = advancedSearchForm.getValueAsString(IndicatorDS.NOTIFY_POPULATION_ERRORS);
+        if (!StringUtils.isBlank(notifyPopulationErrors)) {
+            criteria.setNotifyPopulationErrors(new Boolean(notifyPopulationErrors));
+        }
         
         IndicatorCriteriaOrderEnum indicatorCriteriaOrderEnum = CommonUtils.getIndicatorCriteriaOrderEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_BY));
         if (indicatorCriteriaOrderEnum != null) {

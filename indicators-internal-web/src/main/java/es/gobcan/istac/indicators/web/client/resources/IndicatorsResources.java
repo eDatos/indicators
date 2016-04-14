@@ -85,4 +85,12 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/export.png")
     ImageResource export();
+    
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/enable_mail.png")
+    ImageResource enableNotification();
+    
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/disable_mail.png")
+    ImageResource disableNotification();
 }

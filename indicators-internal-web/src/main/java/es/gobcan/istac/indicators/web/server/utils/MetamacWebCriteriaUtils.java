@@ -51,6 +51,10 @@ public class MetamacWebCriteriaUtils {
             if (!StringUtils.isBlank(criteria.getSubjectCode())) {
                 conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), criteria.getSubjectCode(), OperationType.EQ));
             }
+            
+            if (criteria.getNotifyPopulationErrors() != null) {
+                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.NOTIFY_POPULATION_ERRORS.name(), criteria.getNotifyPopulationErrors(), OperationType.EQ));
+            }
         }
 
         return conjunctionRestriction;

@@ -578,7 +578,7 @@ public class InvocationValidator {
         checkFindIndicators(conditions, pagingParameter, exceptions);
     }
 
-    public static void checkMarkIndicatorNotNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkDisableNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -588,7 +588,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkMarkIndicatorNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkEnableNotifyPopulationErrors(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }

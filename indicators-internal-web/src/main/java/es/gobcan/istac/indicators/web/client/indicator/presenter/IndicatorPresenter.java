@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +50,10 @@ import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsResult;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsResult;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeResult;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
@@ -122,38 +127,54 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         // Indicator
 
         void setIndicator(IndicatorDto indicator);
+
         void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos);
+
         void setDiffusionIndicator(IndicatorDto indicator);
 
         void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators);
+
         void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators);
+
         void setIndicatorListQuantityIndicatorBase(List<IndicatorSummaryDto> indicators);
 
         void setIndicatorQuantityDenominator(IndicatorDto indicator);
+
         void setIndicatorQuantityNumerator(IndicatorDto indicator);
+
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
         void setSubjectsList(List<SubjectDto> subjectDtos);
+
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
+
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
         // Data source
 
         void setDataDefinitionsOperationCodes(List<String> operationCodes);
+
         void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
+
         void setDataDefinition(DataDefinitionDto dataDefinitionDto);
+
         void setDataStructure(DataStructureDto dataStructureDto);
+
         void setDataStructureForEdition(DataStructureDto dataStructureDto);
 
         void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
+
         void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
 
         void onDataSourceSaved(DataSourceDto dataSourceDto);
 
         void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+
         void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
 
         void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos);
+
+        void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors);
     }
 
     @Inject
@@ -321,6 +342,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 logger.log(Level.SEVERE, "Error publishing indicator with uuid  = " + uuid);
                 retrieveIndicatorByCode();
             }
+
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
                 fireSuccessMessage(getMessages().indicatorPublished());
@@ -606,6 +628,44 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     private void setUnitMultipliers() {
         getView().setUnitMultipliers(this.unitMultiplierDtos);
+    }
+
+    @Override
+    public void enableNotifyPopulationErrors(final String uuid) {
+        dispatcher.execute(new EnableNotifyPopulationErrorsAction(Arrays.asList(uuid)), new WaitingAsyncCallbackHandlingError<EnableNotifyPopulationErrorsResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                logger.log(Level.SEVERE, "Error enabling notify population errors for indicator with uuid  = " + uuid);
+                retrieveIndicatorByCode();
+            }
+
+            @Override
+            public void onWaitSuccess(EnableNotifyPopulationErrorsResult result) {
+                fireSuccessMessage(getMessages().indicatorEnabledNotifyPopulationErrors());
+                getView().updateVisibilityNotifyPopulateErrors(true);
+            }
+        });
+    }
+
+    @Override
+    public void disableNotifyPopulationErrors(final String uuid) {
+        dispatcher.execute(new DisableNotifyPopulationErrorsAction(Arrays.asList(uuid)), new WaitingAsyncCallbackHandlingError<DisableNotifyPopulationErrorsResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                logger.log(Level.SEVERE, "Error disabling notify population errors for indicator with uuid  = " + uuid);
+                retrieveIndicatorByCode();
+            }
+
+            @Override
+            public void onWaitSuccess(DisableNotifyPopulationErrorsResult result) {
+                fireSuccessMessage(getMessages().indicatorDisabledNotifyPopulationErrors());
+                getView().updateVisibilityNotifyPopulateErrors(false);
+            }
+        });
     }
 
 }

@@ -31,12 +31,13 @@ public class IndicatorsConstants {
     public static final String TSV_SEPARATOR                             = "\t";
     public static final String TSV_LINE_SEPARATOR                        = "\n";
     public static final String TSV_HEADER_INTERNATIONAL_STRING_SEPARATOR = "#";
-    public static final String TSV_HEADER_ENVIRONMENT_SEPARATOR = "-";
-    public static final String TSV_HEADER_PRODUCTION = "production";
-    public static final String TSV_HEADER_DIFFUSION = "diffusion";
+    public static final String TSV_HEADER_ENVIRONMENT_SEPARATOR          = "-";
+    public static final String TSV_HEADER_PRODUCTION                     = "production";
+    public static final String TSV_HEADER_DIFFUSION                      = "diffusion";
 
     public static final String TSV_HEADER_CODE                           = "code";
-    public static final String TSV_HEADER_TITLE                          = "title";
+    public static final String TSV_HEADER_NOTIFY_POPULATION_ERRORS       = "notify_population_errors";
+    public static final String TSV_HEADER_TITLE                          = "title";    
     public static final String TSV_HEADER_SUBJECT_TITLE                  = "subject_title";
     public static final String TSV_HEADER_VERSION_NUMBER                 = "version_number";
     public static final String TSV_HEADER_SUBJECT_CODE                   = "subject_code";
@@ -57,10 +58,10 @@ public class IndicatorsConstants {
     public static final String TSV_HEADER_CREATED_BY                     = "created_by";
 
     public static final String TSV_EXPORTATION_ENCODING                  = "UTF-8";
-    
+
     // For building urls at core level
     // Check also both urlrewrite.xml and other uses as ApiDocController
-    public static final String API_VERSION_1_0 = "v1.0";
-    public static final String API_INDICATORS_INDICATORS = "indicators";
+    public static final String API_VERSION_1_0                           = "v1.0";
+    public static final String API_INDICATORS_INDICATORS                 = "indicators";
 
 }

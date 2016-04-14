@@ -21,6 +21,8 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private PublishToolStripButton  versioning;
     private ToolStripButton         populateData;
     private ToolStripButton         previewData;
+    private ToolStripButton         enableNotifyPopulationErrors;
+    private ToolStripButton         disableNotifyPopulationErrors;
 
     private IndicatorProcStatusEnum status;
 
@@ -48,6 +50,11 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
 
         previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.preview().getURL());
+        
+        enableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorEnableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.enableNotification().getURL());
+        enableNotifyPopulationErrors.hide();
+        disableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorDisableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.disableNotification().getURL());
+        disableNotifyPopulationErrors.hide();
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
@@ -57,6 +64,8 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(versioning);
         toolStrip.addButton(populateData);
         toolStrip.addButton(previewData);
+        toolStrip.addButton(enableNotifyPopulationErrors);
+        toolStrip.addButton(disableNotifyPopulationErrors);
     }
 
     public void updatePublishSection(IndicatorProcStatusEnum status) {
@@ -132,7 +141,15 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getPreviewData() {
         return previewData;
     }
-
+    
+    public ToolStripButton getEnableNotifyPopulationErrors() {
+        return enableNotifyPopulationErrors;
+    }
+    
+    public ToolStripButton getDisableNotifyPopulationErrors() {
+        return disableNotifyPopulationErrors;
+    }
+    
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
@@ -182,6 +199,29 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         if (ClientSecurityUtils.canVersioningIndicator()) {
             versioning.show();
         }
+    }
+    
+    private void showEnableNotifyPopulationErrors() {
+        if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
+            enableNotifyPopulationErrors.show();
+            disableNotifyPopulationErrors.hide();
+        }
+    }
+    
+    private void showDisableNotifyPopulationErrors() {
+        if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
+            disableNotifyPopulationErrors.show();
+            enableNotifyPopulationErrors.hide();
+        }
+    }
+
+    public void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors) {
+        if (notifyPopulationErrors) {
+            showDisableNotifyPopulationErrors();
+        } else {
+            showEnableNotifyPopulationErrors();
+        }
+        
     }
 
 }

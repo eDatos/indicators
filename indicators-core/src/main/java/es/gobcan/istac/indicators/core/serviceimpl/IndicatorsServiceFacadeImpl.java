@@ -693,19 +693,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void markIndicatorNotNotifyPopulationErrors(ServiceContext ctx, String indicatorVersionUuid) throws MetamacException {
+    public void disableNotifyPopulationErrors(ServiceContext ctx, String indicatorVersionUuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
 
-        getIndicatorsService().markIndicatorNotNotifyPopulationErrors(ctx, indicatorVersionUuid);
+        getIndicatorsService().disableNotifyPopulationErrors(ctx, indicatorVersionUuid);
     }
 
     @Override
-    public void markIndicatorNotifyPopulationErrors(ServiceContext ctx, String indicatorVersionUuid) throws MetamacException {
+    public void enableNotifyPopulationErrors(ServiceContext ctx, String indicatorVersionUuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
 
-        getIndicatorsService().markIndicatorNotifyPopulationErrors(ctx, indicatorVersionUuid);
+        getIndicatorsService().enableNotifyPopulationErrors(ctx, indicatorVersionUuid);
     }
 
     @Override

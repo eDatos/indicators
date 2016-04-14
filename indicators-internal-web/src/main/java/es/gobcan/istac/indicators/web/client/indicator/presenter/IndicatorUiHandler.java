@@ -57,5 +57,8 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void searchRateIndicators(IndicatorCriteria criteria, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+    
+    void enableNotifyPopulationErrors(String indicatorUuid);
+    void disableNotifyPopulationErrors(String indicatorUuid);
 
 }

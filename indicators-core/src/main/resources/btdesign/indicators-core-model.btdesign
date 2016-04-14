@@ -135,9 +135,9 @@ Application Indicators {
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Mark indicator for not notify population errors"
-            markIndicatorNotNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+            disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
             "Mark indicator for notify population errors"
-            markIndicatorNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+            enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -487,9 +487,9 @@ Application Indicators {
 	    	"Finds indicators by criteria in any state, returning last versions"
 	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
 	    	"Mark indicator for not notif population errors"
-	    	markIndicatorNotNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+	    	disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	"Mark indicator for not notif population errors"
-            markIndicatorNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+            enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	"Export indicators list in TSV format"
 	    	String exportIndicatorsTsv(MetamacCriteria criteria) throws MetamacException;
 	    	

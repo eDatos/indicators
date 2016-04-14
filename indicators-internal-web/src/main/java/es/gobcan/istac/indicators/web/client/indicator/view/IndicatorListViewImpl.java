@@ -11,6 +11,7 @@ import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -34,6 +35,7 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUi
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
@@ -48,6 +50,9 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     private ToolStripButton              newIndicatorActor;
     private ToolStripButton              deleteIndicatorActor;
     private ToolStripButton              exportIndicatorsButton;
+
+    private ToolStripButton              enableNotifyPopulationErrors;
+    private ToolStripButton              disableNotifyPopulationErrors;
 
     private IndicatorsSearchSectionStack searchSectionStack;
 
@@ -95,7 +100,6 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 deleteConfirmationWindow.show();
             }
         });
-        
 
         exportIndicatorsButton = new ToolStripButton(getConstants().indicatorsExport(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.exportResource().getURL());
         exportIndicatorsButton.addClickHandler(new ClickHandler() {
@@ -104,12 +108,34 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             public void onClick(ClickEvent event) {
                 getUiHandlers().exportIndicators(getIndicatorCriteria());
             }
-        });        
+        });
+        
+        enableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorEnableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.enableNotification().getURL());
+        enableNotifyPopulationErrors.setVisibility(Visibility.HIDDEN);
+        enableNotifyPopulationErrors.addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().enableNotifyPopulationErrors(getUuidsFromSelected());
+            }
+        });
+        
+        disableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorDisableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.disableNotification().getURL());
+        disableNotifyPopulationErrors.setVisibility(Visibility.HIDDEN);
+        disableNotifyPopulationErrors.addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().disableNotifyPopulationErrors(getUuidsFromSelected());
+            }
+        });
 
         toolStrip.addButton(newIndicatorActor);
         toolStrip.addButton(deleteIndicatorActor);
         toolStrip.addButton(exportIndicatorsButton);
-
+        toolStrip.addButton(enableNotifyPopulationErrors);
+        toolStrip.addButton(disableNotifyPopulationErrors);
+        
         // Search
 
         searchSectionStack = new IndicatorsSearchSectionStack();
@@ -230,6 +256,22 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                         deleteIndicatorActor.show();
                     } else {
                         deleteIndicatorActor.hide();
+                    }
+                }
+                
+                if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
+                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                        enableNotifyPopulationErrors.show();
+                    } else {
+                        enableNotifyPopulationErrors.hide();
+                    }
+                }
+                
+                if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
+                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                        disableNotifyPopulationErrors.show();
+                    } else {
+                        disableNotifyPopulationErrors.hide();
                     }
                 }
             }

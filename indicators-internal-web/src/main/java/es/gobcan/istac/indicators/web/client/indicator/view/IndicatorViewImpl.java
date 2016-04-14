@@ -206,5 +206,10 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         generalPanel.setUnitMultipliers(unitMultiplierDtos);
         dataSourcesPanel.setUnitMultipliers(unitMultiplierDtos);
     }
+    
+    @Override
+    public void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors) {
+        generalPanel.updateVisibilityNotifyPopulateErrors(notifyPopulationErrors);
+    }
 
 }

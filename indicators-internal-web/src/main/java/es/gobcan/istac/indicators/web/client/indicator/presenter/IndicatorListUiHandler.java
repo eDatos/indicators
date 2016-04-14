@@ -20,4 +20,7 @@ public interface IndicatorListUiHandler extends UiHandlers {
     void retrieveIndicators(IndicatorCriteria criteria);
     
     void exportIndicators(IndicatorCriteria criteria);
+    
+    void enableNotifyPopulationErrors(List<String> uuids);
+    void disableNotifyPopulationErrors(List<String> uuids);
 }

@@ -21,16 +21,17 @@ public class IndicatorRecord extends Record {
         setUuid(indicatorDto.getUuid());
         setName(getLocalisedString(indicatorDto.getTitle()));
         setCode(indicatorDto.getCode());
+        setNotifyPopulationErrors(indicatorDto.getNotifyPopulationErrors());
         setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
         setProductionIndicatorNeedsUpdate(indicatorDto.getNeedsUpdate());
         setProductionIndicatorVersionNumber(indicatorDto.getVersionNumber());
-        setIndicatorDto(indicatorDto);
+        setIndicatorDto(indicatorDto);        
     }
 
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
         setUuid(indicatorSummaryDto.getUuid());
         setCode(indicatorSummaryDto.getCode());
-        
+        setNotifyPopulationErrors(indicatorSummaryDto.getNotifyPopulationErrors());
         IndicatorVersionSummaryDto visibleDiffusionVersion = indicatorSummaryDto.getDiffusionVersion();
         // We´ll show the same info on production as the one on diffusion
         IndicatorVersionSummaryDto visibleProductionVersion = indicatorSummaryDto.getProductionVersion() != null ? indicatorSummaryDto.getProductionVersion() : visibleDiffusionVersion;
@@ -101,7 +102,18 @@ public class IndicatorRecord extends Record {
     public void setSubject(String subject) {
         setAttribute(IndicatorDS.SUBJECT_TITLE, subject);
     }
-
+    
+    private void setNotifyPopulationErrors(Boolean value) {
+//        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, value);
+        String imageURL = new String();
+        if (value != null && value) {
+            imageURL = GlobalResources.RESOURCE.success().getURL();            
+        } else {
+            imageURL = GlobalResources.RESOURCE.disable().getURL();
+        }
+        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, imageURL);
+    }
+    
     public String getUuid() {
         return getAttribute(IndicatorDS.UUID);
     }
@@ -249,4 +261,5 @@ public class IndicatorRecord extends Record {
     public void setDiffusionIndicatorCreationUser(String value) {
         setAttribute(IndicatorDS.CREATION_USER_DIFF, value);
     }
+
 }

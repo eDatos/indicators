@@ -3133,7 +3133,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testMarkIndicatorNotNotifyPopulationErrors() throws Exception {
+    public void testDisableNotifyPopulationErrors() throws Exception {
         String uuid = INDICATOR_1;
         String versionNumber = "2.000";
 
@@ -3143,7 +3143,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotifyPopulationErrors(Boolean.FALSE);
 
         // Mark
-        indicatorsServiceFacade.markIndicatorNotNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
+        indicatorsServiceFacade.disableNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
 
         // Validation
         IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
@@ -3151,7 +3151,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testMarkIndicatorNotifyPopulationErrors() throws Exception {
+    public void testEnableNotifyPopulationErrors() throws Exception {
         String uuid = INDICATOR_2;
         String versionNumber = "1.000";
 
@@ -3161,7 +3161,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotifyPopulationErrors(Boolean.TRUE);
 
         // Mark
-        indicatorsServiceFacade.markIndicatorNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
+        indicatorsServiceFacade.enableNotifyPopulationErrors(getServiceContextAdministrador(), uuid);
 
         // Validation
         IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);

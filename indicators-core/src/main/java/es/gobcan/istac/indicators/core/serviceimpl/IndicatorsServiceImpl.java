@@ -346,6 +346,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                     writer.write(IndicatorsConstants.TSV_LINE_SEPARATOR);
 
                     writer.write(indicator.getCode());
+                    writeCell(writer, indicator.getNotifyPopulationErrors());
 
                     if (indicator.getProductionIndicatorVersion() == null) {
                         writeIndicatorVersion(writer, indicator.getDiffusionIndicatorVersion(), languages);
@@ -631,9 +632,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void markIndicatorNotNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void disableNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation of parameters
-        InvocationValidator.checkMarkIndicatorNotNotifyPopulationErrors(indicatorUuid, null);
+        InvocationValidator.checkDisableNotifyPopulationErrors(indicatorUuid, null);
 
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
@@ -646,9 +647,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void markIndicatorNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void enableNotifyPopulationErrors(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation of parameters
-        InvocationValidator.checkMarkIndicatorNotifyPopulationErrors(indicatorUuid, null);
+        InvocationValidator.checkEnableNotifyPopulationErrors(indicatorUuid, null);
 
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
@@ -1313,6 +1314,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     // Export helper methods
     private void writeHeader(OutputStreamWriter writer, List<String> languages) throws IOException {
         writer.write(IndicatorsConstants.TSV_HEADER_CODE);
+        writeCell(writer, IndicatorsConstants.TSV_HEADER_NOTIFY_POPULATION_ERRORS);
         writeHeaderSummaryColumns(writer, IndicatorsConstants.TSV_HEADER_PRODUCTION, languages);
         writeHeaderSummaryColumns(writer, IndicatorsConstants.TSV_HEADER_DIFFUSION, languages);
     }

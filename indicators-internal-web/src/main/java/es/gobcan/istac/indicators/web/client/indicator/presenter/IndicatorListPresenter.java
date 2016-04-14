@@ -40,6 +40,10 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsResult;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsResult;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
@@ -199,6 +203,46 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
             }
 
+        });
+    }
+
+    @Override
+    public void enableNotifyPopulationErrors(List<String> uuids) {
+        dispatcher.execute(new EnableNotifyPopulationErrorsAction(uuids), new WaitingAsyncCallbackHandlingError<EnableNotifyPopulationErrorsResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                IndicatorCriteria criteria = getView().getIndicatorCriteria();
+                retrieveIndicators(criteria);
+            }
+
+            @Override
+            public void onWaitSuccess(EnableNotifyPopulationErrorsResult result) {
+                fireSuccessMessage(getMessages().indicatorEnabledNotifyPopulationErrors());
+                IndicatorCriteria criteria = getView().getIndicatorCriteria();
+                retrieveIndicators(criteria);
+            }
+        });
+    }
+
+    @Override
+    public void disableNotifyPopulationErrors(List<String> uuids) {
+        dispatcher.execute(new DisableNotifyPopulationErrorsAction(uuids), new WaitingAsyncCallbackHandlingError<DisableNotifyPopulationErrorsResult>(this) {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                IndicatorCriteria criteria = getView().getIndicatorCriteria();
+                retrieveIndicators(criteria);
+            }
+
+            @Override
+            public void onWaitSuccess(DisableNotifyPopulationErrorsResult result) {
+                fireSuccessMessage(getMessages().indicatorDisabledNotifyPopulationErrors());
+                IndicatorCriteria criteria = getView().getIndicatorCriteria();
+                retrieveIndicators(criteria);
+            }
         });
     }
 }

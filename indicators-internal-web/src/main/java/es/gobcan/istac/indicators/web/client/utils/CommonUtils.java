@@ -270,6 +270,14 @@ public class CommonUtils {
         valueMap.put(IndicatorCriteriaOrderEnum.DIFFUSION_PROC_STATUS.name(), getConstants().indicatorDiffusionEnvironmentProcStatus());
         return valueMap;
     }
+    
+    public static LinkedHashMap<String, String> getIndicatorNotifyPopulationErrorsValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        valueMap.put(Boolean.TRUE.toString(), getConstants().indicDetailNotifyPopulationErrors());
+        valueMap.put(Boolean.FALSE.toString(), getConstants().indicDetailNotNotifyPopulationErrors());
+        return valueMap;
+    }
 
     public static IndicatorCriteriaOrderEnum getIndicatorCriteriaOrderEnum(String value) {
         try {

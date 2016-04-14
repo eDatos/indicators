@@ -94,6 +94,7 @@ public class IndicatorDS extends DataSource {
     public static String CREATION_USER                         = "ind-created-by";
     public static String CREATION_USER_DIFF                    = "diff-ind-created-by";
 
+    public static String NOTIFY_POPULATION_ERRORS              = "ind-notify-popul-err";
     public static String DTO                                   = "ind-dto";
 
     public IndicatorDS() {

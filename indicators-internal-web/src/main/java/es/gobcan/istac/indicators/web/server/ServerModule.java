@@ -29,6 +29,8 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHand
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteQuantityUnitsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteUnitMultipliersActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DisableNotifyPopulationErrorsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.EnableNotifyPopulationErrorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ExportIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ExportSystemInDsplActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.FindDataDefinitionsByOperationCodeActionHandler;
@@ -104,6 +106,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteQuantityUnitsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplAction;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
@@ -281,7 +285,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
         bindHandler(GetNavigationBarUrlAction.class, GetNavigationBarUrlActionHandler.class);
         bindHandler(LoadConfigurationPropertiesAction.class, LoadConfigurationPropertiesActionHandler.class);
-        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);
+        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);        
+        bindHandler(EnableNotifyPopulationErrorsAction.class, EnableNotifyPopulationErrorsActionHandler.class);
+        bindHandler(DisableNotifyPopulationErrorsAction.class, DisableNotifyPopulationErrorsActionHandler.class);
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);

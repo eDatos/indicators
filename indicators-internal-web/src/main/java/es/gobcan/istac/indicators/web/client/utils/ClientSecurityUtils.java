@@ -292,4 +292,12 @@ public class ClientSecurityUtils {
         return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
+    public static boolean canEnableNotifyPopulationErrors() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDisableNotifyPopulationErrors() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
 }

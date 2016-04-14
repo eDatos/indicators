@@ -233,6 +233,22 @@ public class IndicatorGeneralPanel extends VLayout {
                 uiHandlers.previewData(indicator.getCode());
             }
         });
+        
+        mainFormLayout.getEnableNotifyPopulationErrors().addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.enableNotifyPopulationErrors(indicator.getUuid());
+            }
+        });
+        
+        mainFormLayout.getDisableNotifyPopulationErrors().addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.disableNotifyPopulationErrors(indicator.getUuid());
+            }
+        });
     }
 
     /**
@@ -425,6 +441,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
         mainFormLayout.updatePublishSection(indicatorDto.getProcStatus());
         mainFormLayout.setViewMode();
+        mainFormLayout.updateVisibilityNotifyPopulateErrors(indicatorDto.getNotifyPopulationErrors());
 
         setIndicatorViewMode(indicatorDto);
         setIndicatorEditionMode(indicatorDto);
@@ -620,6 +637,10 @@ public class IndicatorGeneralPanel extends VLayout {
         FormItemIcon icon = new FormItemIcon();
         icon.setSrc(needsUpdate ? GlobalResources.RESOURCE.errorSmart().getURL() : GlobalResources.RESOURCE.success().getURL());
         return icon;
+    }
+
+    public void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors) {
+        mainFormLayout.updateVisibilityNotifyPopulateErrors(notifyPopulationErrors);
     }
 
 }

@@ -21,6 +21,8 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     private List<MetamacCriteriaOrder> orders           = new ArrayList<MetamacCriteriaOrder>();
 
+    private Boolean notifyPopulationErrors;
+
     public IndicatorCriteria() {
         setFirstResult(0);
         setMaxResults(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
@@ -72,5 +74,13 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     public void setOrders(List<MetamacCriteriaOrder> orders) {
         this.orders = orders;
+    }
+
+    public void setNotifyPopulationErrors(Boolean notifyPopulationErrors) {
+        this.notifyPopulationErrors = notifyPopulationErrors;
+    }    
+    
+    public Boolean getNotifyPopulationErrors() {
+        return notifyPopulationErrors;
     }
 }
