@@ -5,7 +5,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetIndicatorPreviewUrl {
+public class GetIndicatorPreviewProductionUrl {
 
     @In(1)
     String indicatorCode;

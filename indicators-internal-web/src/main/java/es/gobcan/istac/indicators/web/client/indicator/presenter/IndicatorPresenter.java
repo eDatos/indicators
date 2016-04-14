@@ -74,8 +74,10 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
@@ -616,11 +618,22 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void previewData(String code) {
-        dispatcher.execute(new GetIndicatorPreviewUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewUrlResult>(this) {
+    public void previewDataProduction(String code) {
+        dispatcher.execute(new GetIndicatorPreviewProductionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewProductionUrlResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetIndicatorPreviewUrlResult result) {
+            public void onWaitSuccess(GetIndicatorPreviewProductionUrlResult result) {
+                Window.open(result.getUrl(), "_blank", "");
+            }
+        });
+    }
+    
+    @Override
+    public void previewDataDiffusion(String code) {
+        dispatcher.execute(new GetIndicatorPreviewDiffusionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewDiffusionUrlResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetIndicatorPreviewDiffusionUrlResult result) {
                 Window.open(result.getUrl(), "_blank", "");
             }
         });

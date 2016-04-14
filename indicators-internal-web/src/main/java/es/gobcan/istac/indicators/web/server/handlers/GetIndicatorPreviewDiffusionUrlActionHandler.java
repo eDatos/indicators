@@ -11,26 +11,26 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.web.server.utils.JaxiConstants;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlResult;
 
 @Component
-public class GetIndicatorPreviewUrlActionHandler extends SecurityActionHandler<GetIndicatorPreviewUrlAction, GetIndicatorPreviewUrlResult> {
+public class GetIndicatorPreviewDiffusionUrlActionHandler extends SecurityActionHandler<GetIndicatorPreviewDiffusionUrlAction, GetIndicatorPreviewDiffusionUrlResult> {
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
-    public GetIndicatorPreviewUrlActionHandler() {
-        super(GetIndicatorPreviewUrlAction.class);
+    public GetIndicatorPreviewDiffusionUrlActionHandler() {
+        super(GetIndicatorPreviewDiffusionUrlAction.class);
     }
 
     @Override
-    public GetIndicatorPreviewUrlResult executeSecurityAction(GetIndicatorPreviewUrlAction action) throws ActionException {
+    public GetIndicatorPreviewDiffusionUrlResult executeSecurityAction(GetIndicatorPreviewDiffusionUrlAction action) throws ActionException {
         try {
-            String indicatorUrl = configurationService.retrieveJaxiLocalUrlIndicator();
+            String indicatorUrl = configurationService.retrieveJaxiRemoteUrlIndicator();
             // Add the indicator code in the URL
             indicatorUrl = StringUtils.replace(indicatorUrl, JaxiConstants.INDICATOR_CODE_PARAM, action.getIndicatorCode());
-            return new GetIndicatorPreviewUrlResult(indicatorUrl);
+            return new GetIndicatorPreviewDiffusionUrlResult(indicatorUrl);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

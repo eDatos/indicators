@@ -57,7 +57,8 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstanceAction
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstancePreviewUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPaginatedListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewUrlActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewDiffusionUrlActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewProductionUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
@@ -134,7 +135,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
@@ -276,7 +278,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(FindDataDefinitionsByOperationCodeAction.class, FindDataDefinitionsByOperationCodeActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
 
-        bindHandler(GetIndicatorPreviewUrlAction.class, GetIndicatorPreviewUrlActionHandler.class);
+        bindHandler(GetIndicatorPreviewProductionUrlAction.class, GetIndicatorPreviewProductionUrlActionHandler.class);
+        bindHandler(GetIndicatorPreviewDiffusionUrlAction.class, GetIndicatorPreviewDiffusionUrlActionHandler.class);
         bindHandler(GetIndicatorInstancePreviewUrlAction.class, GetIndicatorInstancePreviewUrlActionHandler.class);
 
         // Other

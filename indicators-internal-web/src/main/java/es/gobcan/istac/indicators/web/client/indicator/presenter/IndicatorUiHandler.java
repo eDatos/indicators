@@ -30,7 +30,8 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void populateData(String uuid);
 
-    void previewData(String code);
+    void previewDataProduction(String code);
+    void previewDataDiffusion(String code);
 
     // DataSource
 
@@ -59,6 +60,6 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     
     void enableNotifyPopulationErrors(String indicatorUuid);
-    void disableNotifyPopulationErrors(String indicatorUuid);
+    void disableNotifyPopulationErrors(String indicatorUuid);    
 
 }

@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
@@ -35,6 +36,7 @@ import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorDiffusionMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
@@ -49,7 +51,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
     private IndicatorMainFormLayout         mainFormLayout;
 
-    private InternationalViewMainFormLayout diffusionMainFormLayout;
+    private IndicatorDiffusionMainFormLayout diffusionMainFormLayout;
     private GroupDynamicForm                diffusionIdentifiersForm;
 
     /* View Form */
@@ -94,7 +96,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // DIFFUSION ENVIRONMENT
         // ......................
 
-        diffusionMainFormLayout = new InternationalViewMainFormLayout();
+        diffusionMainFormLayout = new IndicatorDiffusionMainFormLayout();
         diffusionMainFormLayout.setTitleLabelContents(getConstants().indicatorDiffusionEnvironment());
         diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
         diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
@@ -103,6 +105,14 @@ public class IndicatorGeneralPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
                 diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
+            }
+        });
+                
+        diffusionMainFormLayout.getPreviewDataDiffusion().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.previewDataDiffusion(indicator.getCode());
             }
         });
 
@@ -226,11 +236,11 @@ public class IndicatorGeneralPanel extends VLayout {
         });
 
         // Preview data
-        mainFormLayout.getPreviewData().addClickHandler(new ClickHandler() {
+        mainFormLayout.getPreviewDataProduction().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.previewData(indicator.getCode());
+                uiHandlers.previewDataProduction(indicator.getCode());
             }
         });
         

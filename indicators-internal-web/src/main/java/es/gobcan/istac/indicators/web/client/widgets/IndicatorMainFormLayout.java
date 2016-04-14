@@ -138,7 +138,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         return populateData;
     }
 
-    public HasClickHandlers getPreviewData() {
+    public HasClickHandlers getPreviewDataProduction() {
         return previewData;
     }
     

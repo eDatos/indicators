@@ -13,6 +13,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveJaxiRemoteUrlIndicator() throws MetamacException {
+       return retrieveProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL_INDICATOR);
+    }
+    
+    @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);
     }
@@ -101,4 +106,5 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveHelpUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.HELP_URL);
     }
+
 }
