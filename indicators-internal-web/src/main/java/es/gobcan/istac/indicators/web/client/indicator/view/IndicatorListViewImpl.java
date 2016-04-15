@@ -11,7 +11,6 @@ import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -109,21 +108,21 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 getUiHandlers().exportIndicators(getIndicatorCriteria());
             }
         });
-        
+
         enableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorEnableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.enableNotification().getURL());
         enableNotifyPopulationErrors.setVisibility(Visibility.HIDDEN);
         enableNotifyPopulationErrors.addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 getUiHandlers().enableNotifyPopulationErrors(getUuidsFromSelected());
             }
         });
-        
+
         disableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorDisableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.disableNotification().getURL());
         disableNotifyPopulationErrors.setVisibility(Visibility.HIDDEN);
         disableNotifyPopulationErrors.addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 getUiHandlers().disableNotifyPopulationErrors(getUuidsFromSelected());
@@ -135,7 +134,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
         toolStrip.addButton(exportIndicatorsButton);
         toolStrip.addButton(enableNotifyPopulationErrors);
         toolStrip.addButton(disableNotifyPopulationErrors);
-        
+
         // Search
 
         searchSectionStack = new IndicatorsSearchSectionStack();
@@ -251,24 +250,39 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
+                ListGridRecord[] selectedRecords = indicatorList.getListGrid().getSelectedRecords();
+                
+                boolean someIndicatorsEnabledNotifyPopulationErrors = false;
+                boolean someIndicatorsDisabledNotifyPopulationErrors = false;
+                if (selectedRecords != null && selectedRecords.length > 0) {
+                    for (ListGridRecord record : selectedRecords) {
+                        boolean notifyPopulationErrors = record.getAttributeAsBoolean(IndicatorDS.NOTIFY_POPULATION_ERRORS);
+                        if (notifyPopulationErrors) {
+                            someIndicatorsEnabledNotifyPopulationErrors = true;
+                        } else {
+                            someIndicatorsDisabledNotifyPopulationErrors = true;
+                        }
+                    }
+                }
+
                 if (ClientSecurityUtils.canDeleteIndicator()) {
-                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                    if (selectedRecords.length > 0) {
                         deleteIndicatorActor.show();
                     } else {
                         deleteIndicatorActor.hide();
                     }
                 }
-                
+
                 if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
-                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                    if (someIndicatorsDisabledNotifyPopulationErrors) {
                         enableNotifyPopulationErrors.show();
                     } else {
                         enableNotifyPopulationErrors.hide();
                     }
                 }
-                
+
                 if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
-                    if (indicatorList.getListGrid().getSelectedRecords().length > 0) {
+                    if (someIndicatorsEnabledNotifyPopulationErrors) {
                         disableNotifyPopulationErrors.show();
                     } else {
                         disableNotifyPopulationErrors.hide();
@@ -276,6 +290,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 }
             }
         });
+
         indicatorList.getListGrid().addRecordClickHandler(new RecordClickHandler() {
 
             @Override
@@ -286,5 +301,6 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 }
             }
         });
+
     }
 }
