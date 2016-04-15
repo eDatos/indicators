@@ -6,8 +6,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     public static final String DATA_URL                                     = "environment.indicators.data";
 
-    public static final String INDICATORS_DOCS_PATH                         = "indicators.data.docs.path";
-
     public static final String DB_INDICATORS_URL                            = "indicators.core.db.url";
     public static final String DB_INDICATORS_USERNAME                       = "indicators.core.db.username";
     public static final String DB_INDICATORS_PASSWORD                       = "indicators.core.db.password";

@@ -38,11 +38,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveIndicatorsDocsPath() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_DOCS_PATH);
-    }
-
-    @Override
     public String retrieveDsplIndicatorsSystemUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
     }

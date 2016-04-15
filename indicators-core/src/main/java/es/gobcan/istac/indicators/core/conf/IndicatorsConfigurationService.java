@@ -17,8 +17,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveWidgetsOpendataUrl() throws MetamacException;
 
-    String retrieveIndicatorsDocsPath() throws MetamacException;
-
     String retrieveDsplIndicatorsSystemUrl() throws MetamacException;
 
     String retrieveDsplProviderName() throws MetamacException;

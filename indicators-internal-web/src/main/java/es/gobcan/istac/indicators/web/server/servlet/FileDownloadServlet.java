@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cxf.common.util.StringUtils;
 import org.opensaml.artifact.InvalidArgumentException;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.web.common.server.servlet.FileDownloadServletBase;
 import org.siemac.metamac.web.common.shared.utils.SharedTokens;
 
@@ -14,11 +13,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 
 public class FileDownloadServlet extends FileDownloadServletBase {
 
-    /**
-     * 
-     */
-    private static final long              serialVersionUID = 6267996624034326676L;
-    private IndicatorsConfigurationService configurationService;
+    private static final long serialVersionUID = 6267996624034326676L;
 
     @Override
     protected File getFileToDownload(HttpServletRequest request) throws Exception {
@@ -34,15 +29,6 @@ public class FileDownloadServlet extends FileDownloadServletBase {
 
     private File getFileFromDocs(String fileName) throws Exception {
         checkValidFileName(fileName);
-        String docsPath = getConfigurationService().retrieveIndicatorsDocsPath();
-        return new File(docsPath + File.separatorChar + fileName);
+        return new File(File.separatorChar + fileName);
     }
-
-    private IndicatorsConfigurationService getConfigurationService() {
-        if (configurationService == null) {
-            configurationService = ApplicationContextProvider.getApplicationContext().getBean(IndicatorsConfigurationService.class);
-        }
-        return configurationService;
-    }
-
 }
