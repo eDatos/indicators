@@ -37,7 +37,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String WIDGETS_QUERY_TOOLS_URL                      = "indicators.querytools.url";
     public static final String WIDGETS_SPARKLINE_MAX                        = "indicators.widgets.sparkline.max";
     public static final String WIDGETS_OPENDATA_URL                         = "indicators.opendata.url";
-    public static final String WIDGETS_SEARCH_FORM_URL                      = "indicators.search.form.url";
 
     public static final String QUARTZ_EXPRESSION_UPDATE_INDICATORS          = "indicators.update.quartz.expression";
 
