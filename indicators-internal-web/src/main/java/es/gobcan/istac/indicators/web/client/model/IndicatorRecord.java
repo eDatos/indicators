@@ -104,14 +104,14 @@ public class IndicatorRecord extends Record {
     }
     
     private void setNotifyPopulationErrors(Boolean value) {
-//        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, value);
         String imageURL = new String();
         if (value != null && value) {
             imageURL = GlobalResources.RESOURCE.success().getURL();            
         } else {
             imageURL = GlobalResources.RESOURCE.disable().getURL();
         }
-        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, imageURL);
+        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, value);
+        setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS_IMAGE, imageURL);
     }
     
     public String getUuid() {
