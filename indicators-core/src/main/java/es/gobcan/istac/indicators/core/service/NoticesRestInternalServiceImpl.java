@@ -84,7 +84,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     public void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
         List<IndicatorVersion> notifiableIndicators = getIndicatorsWithNotifyPopulationErrors(failedPopulationIndicators);
         if (!notifiableIndicators.isEmpty()) {
-            createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, failedPopulationIndicators);
+            createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, notifiableIndicators);
         }
     }
 
