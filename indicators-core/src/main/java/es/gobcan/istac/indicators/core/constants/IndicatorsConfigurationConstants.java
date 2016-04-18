@@ -44,15 +44,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DSPL_PROVIDER_URL                            = "indicators.dspl.provider.url";
     public static final String DSPL_INDICATORS_SYSTEM_URL                   = "indicators.dspl.indicators.system.url";
 
-    public static final String ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API = "metamac.statistical_operations.rest.internal";
-    public static final String ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API = "metamac.statistical_operations.rest.external";
-
-    // SECURITY
-    public static final String SECURITY_CAS_SERVICE_LOGIN_URL               = "metamac.security.cas_service_login_url";
-    public static final String SECURITY_CAS_SERVICE_LOGOUT_URL              = "metamac.security.cas_service_logout_url";
-    public static final String SECURITY_CAS_SERVER_URL_PREFIX               = "metamac.security.cas_server_url_prefix";
-    public static final String SECURITY_TOLERANCE                           = "metamac.security.tolerance";
-
     // Help URL
     public static final String HELP_URL                                     = "indicators.help.url";
 
