@@ -1,3 +1,5 @@
+CREATE ROLE INDICATORS_DATA_ROLE_TEST;
+
 CREATE TABLE TB_DATA_CONFIGURATIONS (
   ID NUMBER(19) NOT NULL,
   CONF_KEY VARCHAR2(255 CHAR) NOT NULL,
@@ -24,5 +26,28 @@ insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VAL
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(8,1,1,'indicators.subjects.db.column_title','DESCRIPCION');
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(9,1,1,'indicators.bbbd.data_views_role','INDICATORS_DATA_ROLE_TEST');
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(9,1,0,'metamac.edition.languages','es,en,pt');
+
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('10','metamac.statistical_operations.rest.internal','http://localhost:8080/metamac-statistical-operations-web/apis/operations-internal','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('11','metamac.statistical_operations.rest.external','http://localhost:8080/metamac-statistical-operations-web/apis/operations-external','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('12','metamac.notices.rest.internal','http://localhost:8080/metamac-notifications-web/apis','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('13','indicators.web.internal.url','http://localhost:8080/indicators','1',null,null,null,null,null,null,null,null,'1');
+
+
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('14','indicators.bbbd.data_views_role','INDICATORS_DATA','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('15','indicators.subjects.db.table','TV_AREAS_TEMATICAS','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('16','indicators.subjects.db.column_code','ID_AREA_TEMATICA','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('17','indicators.subjects.db.column_title','DESCRIPCION','1',null,null,null,null,null,null,null,null,'1');
+
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('18','indicators.jaxi.local.url','http://localhost','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('19','indicators.jaxi.local.url.indicator','http://localhost/tabla.do?indicador=INDICATOR','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('20','indicators.jaxi.local.url.instance','DESCRIPCION','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('21','indicators.jaxi.remote.url','http://localhost','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('22','indicators.jaxi.remote.url.indicator','http://localhost/tabla.do?indicador=INDICATOR','1',null,null,null,null,null,null,null,null,'1');
+
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('23','indicators.rest.external','http://localhost','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('24','indicators.rest.internal','http://localhost','1',null,null,null,null,null,null,null,null,'1');
+Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION) values ('25','idxmanager.search.form.url','http://localhost','1',null,null,null,null,null,null,null,null,'1');
+
+
 
 commit;
