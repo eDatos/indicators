@@ -44,6 +44,11 @@
 		<filter-name>JsonpCallbackFilter</filter-name>
 		<filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
 	</filter>
+	
+	<filter>
+		<filter-name>CORSFilter</filter-name>
+		<filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.CORSFilter</filter-class>
+	</filter>
 
 	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
@@ -60,10 +65,15 @@
 		<filter-name>JsonpCallbackFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
-
+		
 	<filter-mapping>
 		<filter-name>JsonpCallbackFilter</filter-name>
 		<url-pattern>/widgets/external/configuration</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CORSFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
 	<!-- URL rewriting -->
