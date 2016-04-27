@@ -336,12 +336,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
     @Test
     public void testPopulateIndicatorDataDraftNoDatasources() throws Exception {
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR27_UUID);
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR27_UUID);
     }
 
     @Test
@@ -365,11 +360,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataNoDatasources() throws Exception {
         List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID);
-        assertEquals(1, errors.size());
-        assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), errors.get(0).getCode());
-        assertEquals(2, errors.get(0).getMessageParameters().length);
-        assertEquals(INDICATOR23_UUID, errors.get(0).getMessageParameters()[0]);
-        assertEquals(INDICATOR23_VERSION, errors.get(0).getMessageParameters()[1]);
+        assertEquals(0, errors.size());
     }
 
     @Test

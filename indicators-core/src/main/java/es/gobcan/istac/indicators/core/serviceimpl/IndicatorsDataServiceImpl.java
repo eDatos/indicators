@@ -1328,9 +1328,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private void checkIndicatorVersionPopulateCapabilities(IndicatorVersion indicatorVersion) throws MetamacException {
         List<DataSource> dataSources = indicatorVersion.getDataSources();
-        if (dataSources.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
-        } else {
+        if (dataSources.size() != 0) {
             for (DataSource dataSource : dataSources) {
                 if (dataSource.getAbsoluteMethod() != null && indicatorVersion.getQuantity().getDecimalPlaces() == null) {
                     throw new MetamacException(ServiceExceptionType.DATA_POPULATE_NO_DECIMAL_PLACES, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
