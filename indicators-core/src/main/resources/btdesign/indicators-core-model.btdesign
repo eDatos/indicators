@@ -204,7 +204,7 @@ Application Indicators {
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
-	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
@@ -533,7 +533,7 @@ Application Indicators {
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
-	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data"
 	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
 	    	

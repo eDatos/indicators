@@ -19,6 +19,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.InternationalStringProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -880,12 +881,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<MetamacExceptionItem> populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
+        return getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
     }
 
     // -------------------------------------------------------------------------------------------

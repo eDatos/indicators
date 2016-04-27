@@ -1,14 +1,12 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -41,6 +39,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -102,6 +101,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
@@ -493,7 +494,12 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
             @Override
             public void onWaitSuccess(PopulateIndicatorDataResult result) {
-                fireSuccessMessage(getMessages().indicatorDataPopulated());
+                if (result.getWarnings() != null) {
+                    ShowMessageEvent.fireWarningMessageWithError(IndicatorPresenter.this, IndicatorsWeb.getMessages().populationWithErrors(), result.getWarnings());
+                } else {
+                    fireSuccessMessage(getMessages().indicatorDataPopulated());
+                }
+
                 // Indicator and its data sources must be reloaded (after populating data, indicator version changes)
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
@@ -627,7 +633,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
         });
     }
-    
+
     @Override
     public void previewDataDiffusion(String code) {
         dispatcher.execute(new GetIndicatorPreviewDiffusionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewDiffusionUrlResult>(this) {

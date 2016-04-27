@@ -1,9 +1,14 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +33,16 @@ public class PopulateIndicatorDataActionHandler extends SecurityActionHandler<Po
     @Override
     public PopulateIndicatorDataResult executeSecurityAction(PopulateIndicatorDataAction action) throws ActionException {
         try {
-            indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
+            List<MetamacExceptionItem> serviceExceptionItems = indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), null);
-            return new PopulateIndicatorDataResult(indicatorDto);
+
+            if (serviceExceptionItems.isEmpty()) {
+                return new PopulateIndicatorDataResult(indicatorDto, null);
+            } else {
+                List<MetamacWebExceptionItem> webExceptionItems = WebExceptionUtils.getMetamacWebExceptionItems(null, serviceExceptionItems);
+                MetamacWebException webException = new MetamacWebException(webExceptionItems);
+                return new PopulateIndicatorDataResult(indicatorDto, webException);
+            }
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

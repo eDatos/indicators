@@ -192,7 +192,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<MetamacExceptionItem> populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkPopulateIndicatorData(indicatorUuid, null);
 
@@ -217,9 +217,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
 
-        if (exceptionItems.size() > 0) {
-            throw new MetamacException(exceptionItems);
-        }
+        return exceptionItems;
     }
 
     @Override

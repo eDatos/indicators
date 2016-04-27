@@ -3,11 +3,13 @@
 -- --------------------------------------------------------------------------------------------------
 
 -- Añadir propiedad con el endpoint de la api interna de indicadores
-insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,1,'indicators.rest.internal','FILL_ME');
+-- Ejemplo: http://estadisticas.arte-consultores.com/indicators-internal/internal/api/indicators
+insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,1,'indicators.rest.internal','http://FILL_ME_WITH_INDICATORS_INTERNAL_WAR/internal/api/indicators');
 UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQUENCE_NAME = 'DATA_CONFIGURATIONS';
 
 -- Añadir propiedad con el endpoint de la web interna de indicadores 
-insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,1,'indicators.web.internal.url','FILL_ME');
+-- Ejemplo: http://estadisticas.arte-consultores.com/indicators-internal
+insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,1,'indicators.web.internal.url','http://FILL_ME_WITH_INDICATORS_INTERNAL_WAR');
 UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQUENCE_NAME = 'DATA_CONFIGURATIONS';
 
 commit;
