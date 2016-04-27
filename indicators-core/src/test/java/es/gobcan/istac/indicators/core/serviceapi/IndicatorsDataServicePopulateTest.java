@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -363,16 +364,12 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
     @Test
     public void testPopulateIndicatorDataNoDatasources() throws Exception {
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID);
-            fail("Should throw an exception for not having data sources");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATOR23_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(INDICATOR23_VERSION, e.getExceptionItems().get(0).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), errors.get(0).getCode());
+        assertEquals(2, errors.get(0).getMessageParameters().length);
+        assertEquals(INDICATOR23_UUID, errors.get(0).getMessageParameters()[0]);
+        assertEquals(INDICATOR23_VERSION, errors.get(0).getMessageParameters()[1]);
     }
 
     @Test
@@ -392,32 +389,24 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataGPEUuidNotExist() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR14_DS_GPE_UUID))).thenReturn(INDICATOR14_GPE_JSON_DATA);
 
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR14_UUID);
-            fail("Should fail, because of data gpe not exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATOR14_DS_GPE_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(INDICATOR14_DS_UUID, e.getExceptionItems().get(0).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR14_UUID);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY.getCode(), errors.get(0).getCode());
+        assertEquals(2, errors.get(0).getMessageParameters().length);
+        assertEquals(INDICATOR14_DS_GPE_UUID, errors.get(0).getMessageParameters()[0]);
+        assertEquals(INDICATOR14_DS_UUID, errors.get(0).getMessageParameters()[1]);
     }
 
     @Test
     public void testPopulateIndicatorDataDataGPEError() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR15_DS_GPE_UUID))).thenReturn(INDICATOR15_GPE_JSON_DATA);
 
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR15_UUID);
-            fail("Should fail, because of data gpe is bad formatted");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATOR15_DS_GPE_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(INDICATOR15_DS_UUID, e.getExceptionItems().get(0).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR15_UUID);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR.getCode(), errors.get(0).getCode());
+        assertEquals(2, errors.get(0).getMessageParameters().length);
+        assertEquals(INDICATOR15_DS_GPE_UUID, errors.get(0).getMessageParameters()[0]);
+        assertEquals(INDICATOR15_DS_UUID, errors.get(0).getMessageParameters()[1]);
     }
 
     /*
@@ -428,14 +417,10 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataWrongAbsoluteMethod() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR11_DS_GPE_UUID))).thenReturn(INDICATOR11_GPE_JSON_DATA);
 
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR11_UUID);
-            fail("Should NOT accept other absoluteMethd than OBS_VALUE");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR11_UUID);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(0).getCode());
     }
 
     /*
@@ -446,14 +431,10 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataWrongAbsoluteMethodContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR12_DS_GPE_UUID))).thenReturn(INDICATOR12_GPE_JSON_DATA);
 
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR12_UUID);
-            fail("Should NOT accept other absoluteMethd than a CONT_VARIABLE category");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR12_UUID);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(0).getCode());
     }
 
     /*
@@ -917,15 +898,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataRemovedGeographicVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_GEO_NOT_EXIST);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_EXISTS.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
+        assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_EXISTS.getCode(), errors.get(0).getCode());
     }
 
     /*
@@ -934,17 +911,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataIllegalGeographicVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_GEO_NOT_GEO);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(2, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_GEOGRAPHIC.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals("Provincias por CC.AA.", e.getExceptionItems().get(1).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
+        assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
+        assertNotNull(errors);
+        assertEquals(2, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_GEOGRAPHIC.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), errors.get(1).getCode());
+        assertEquals("Provincias por CC.AA.", errors.get(1).getMessageParameters()[1]);
     }
 
     /*
@@ -953,15 +926,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataRemovedTimeVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_TEMP_NOT_EXIST);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VARIABLE_NOT_EXISTS.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
+        assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VARIABLE_NOT_EXISTS.getCode(), errors.get(0).getCode());
     }
 
     /*
@@ -970,17 +939,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataIllegalTimeVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_TEMP_NOT_TEMP);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(2, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VARIABLE_NOT_TEMPORAL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals("Periodos", e.getExceptionItems().get(1).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
+        assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
+        assertNotNull(errors);
+        assertEquals(2, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VARIABLE_NOT_TEMPORAL.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), errors.get(1).getCode());
+        assertEquals("Periodos", errors.get(1).getMessageParameters()[1]);
     }
 
     /*
@@ -990,16 +955,12 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataIllegalGeographicValueIllegalTimeValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR18_DS_GPE_UUID))).thenReturn(INDICATOR18_GPE_JSON_DATA);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR18_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR18_UUID, INDICATOR18_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(2, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VALUE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VALUE_ILLEGAL.getCode(), e.getExceptionItems().get(1).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR18_UUID);
+        assertIndicatorEmptyData(INDICATOR18_UUID, INDICATOR18_VERSION);
+        assertNotNull(errors);
+        assertEquals(2, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VALUE_ILLEGAL.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VALUE_ILLEGAL.getCode(), errors.get(1).getCode());
     }
 
     /*
@@ -1008,23 +969,19 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataIllegalMethodsContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR19_DS_GPE_UUID))).thenReturn(INDICATOR19_GPE_JSON_DATA);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR19_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR19_UUID, INDICATOR19_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(5, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR19_UUID);
+        assertIndicatorEmptyData(INDICATOR19_UUID, INDICATOR19_VERSION);
+        assertNotNull(errors);
+        assertEquals(5, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(1).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, errors.get(1).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(2).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, errors.get(2).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(3).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, errors.get(3).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), errors.get(4).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, errors.get(4).getMessageParameters()[1]);
     }
 
     /*
@@ -1033,23 +990,19 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataIllegalMethodsNoContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR20_DS_GPE_UUID))).thenReturn(INDICATOR20_GPE_JSON_DATA);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR20_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR20_UUID, INDICATOR20_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(5, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR20_UUID);
+        assertIndicatorEmptyData(INDICATOR20_UUID, INDICATOR20_VERSION);
+        assertNotNull(errors);
+        assertEquals(5, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(1).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, errors.get(1).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(2).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, errors.get(2).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(3).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, errors.get(3).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), errors.get(4).getCode());
+        assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, errors.get(4).getMessageParameters()[1]);
     }
 
     /*
@@ -1059,20 +1012,16 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataWrongOtherVariables() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR21_DS_GPE_UUID))).thenReturn(INDICATOR21_GPE_JSON_DATA);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR21_UUID);
-            fail("Compatibility errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR21_UUID, INDICATOR21_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(4, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals("Naturaleza jurídica", e.getExceptionItems().get(2).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(3).getMessageParameters()[1]);
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR21_UUID);
+        assertIndicatorEmptyData(INDICATOR21_UUID, INDICATOR21_VERSION);
+        assertNotNull(errors);
+        assertEquals(4, errors.size());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED.getCode(), errors.get(0).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED.getCode(), errors.get(1).getCode());
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), errors.get(2).getCode());
+        assertEquals("Naturaleza jurídica", errors.get(2).getMessageParameters()[1]);
+        assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES.getCode(), errors.get(3).getCode());
+        assertEquals("NOT REAL VARIABLE", errors.get(3).getMessageParameters()[1]);
     }
 
     /*
@@ -1081,15 +1030,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataWrongObservationLength() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR24_DS_GPE_UUID))).thenReturn(INDICATOR24_GPE_JSON_DATA);
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR24_UUID);
-            fail("errors should throw an exception");
-        } catch (MetamacException e) {
-            assertIndicatorEmptyData(INDICATOR24_UUID, INDICATOR24_VERSION);
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR24_UUID);
+        assertIndicatorEmptyData(INDICATOR24_UUID, INDICATOR24_VERSION);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH.getCode(), errors.get(0).getCode());
     }
 
     @Test
