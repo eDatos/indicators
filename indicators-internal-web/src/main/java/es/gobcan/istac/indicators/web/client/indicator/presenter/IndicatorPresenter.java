@@ -180,6 +180,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos);
 
         void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors);
+        
+        void setHasDiffusionIndicatorDatasources(boolean hasDatasources);
     }
 
     @Inject
@@ -400,6 +402,18 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         return datasourcesDtos != null && !datasourcesDtos.isEmpty();
     }
 
+    @Override
+    public void hasDiffusionIndicatorDatasources(String indicatorUuid, String indicatorVersion) {
+        dispatcher.execute(new GetDataSourcesListAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallbackHandlingError<GetDataSourcesListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDataSourcesListResult result) {
+                List<DataSourceDto> datasourcesDtos = result.getDataSourceDtos();
+                getView().setHasDiffusionIndicatorDatasources(datasourcesDtos != null && !datasourcesDtos.isEmpty());
+            }
+        });
+    }
+    
     @Override
     public void retrieveDataDefinitionsByOperationCode(final String operationCode) {
         dispatcher.execute(new FindDataDefinitionsByOperationCodeAction(operationCode), new WaitingAsyncCallbackHandlingError<FindDataDefinitionsByOperationCodeResult>(this) {

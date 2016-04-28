@@ -36,6 +36,7 @@ public interface IndicatorUiHandler extends UiHandlers {
     // DataSource
 
     boolean hasDatasources();
+    void hasDiffusionIndicatorDatasources(String indicatorUuid, String indicatorVersion);
     
     void retrieveDataDefinitionsOperationsCodes();
     void retrieveDataDefinitionsByOperationCode(String operationCode);

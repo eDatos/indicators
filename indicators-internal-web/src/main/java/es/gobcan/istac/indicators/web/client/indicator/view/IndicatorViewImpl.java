@@ -122,6 +122,11 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setHasDiffusionIndicatorDatasources(boolean hasDatasources) {
+        generalPanel.setHasDiffusionIndicatorDatasources(hasDatasources);
+    }
+    
+    @Override
     public void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos) {
         dataSourcesPanel.setDataDefinitions(dataDefinitionDtos);
     }

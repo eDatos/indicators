@@ -48,6 +48,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
     /* Data */
     private IndicatorDto                    indicator;
+    private IndicatorDto                    diffusionIndicator;
 
     /* UiHandlers */
     private IndicatorUiHandler              uiHandlers;
@@ -110,18 +111,22 @@ public class IndicatorGeneralPanel extends VLayout {
                 diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
             }
         });
-                
+
         diffusionMainFormLayout.getPreviewDataDiffusion().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                previewData(EnvironmentTypeEnum.DIFFUSION);
+                uiHandlers.hasDiffusionIndicatorDatasources(diffusionIndicator.getUuid(), diffusionIndicator.getVersionNumber());
             }
         });
 
         createDiffusionViewForm();
         this.addMember(diffusionMainFormLayout);
 
+    }
+
+    public void setHasDiffusionIndicatorDatasources(boolean hasDatasources) {
+        previewData(diffusionIndicator, hasDatasources, EnvironmentTypeEnum.DIFFUSION);
     }
 
     private void bindEvents() {
@@ -243,7 +248,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                previewData(EnvironmentTypeEnum.PRODUCTION);
+                previewData(indicator, uiHandlers.hasDatasources(), EnvironmentTypeEnum.PRODUCTION);
             }
         });
 
@@ -256,7 +261,7 @@ public class IndicatorGeneralPanel extends VLayout {
         });
 
         mainFormLayout.getDisableNotifyPopulationErrors().addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.disableNotifyPopulationErrors(indicator.getUuid());
@@ -264,11 +269,11 @@ public class IndicatorGeneralPanel extends VLayout {
         });
     }
 
-    private void previewData(final EnvironmentTypeEnum environmentType) {
-        if (!uiHandlers.hasDatasources()) {
+    private void previewData(final IndicatorDto indicatorDto, boolean hasDataSources, final EnvironmentTypeEnum environmentType) {
+        if (!hasDataSources) {
             WarningWindow warningWindow = new WarningWindow(getConstants().indicatorPreviewData(), getConstants().indicatorPreviewDataWarningNoDatasources());
             warningWindow.show();
-        } else if (BooleanUtils.isTrue(indicator.getNeedsUpdate())) {
+        } else if (BooleanUtils.isTrue(indicatorDto.getNeedsUpdate())) {
             final WarningWindow warningWindow = new WarningWindow(getConstants().indicatorPreviewData(), getConstants().indicatorPreviewDataWarningDataNotUpdated());
             warningWindow.getAcceptButtonHandlerRegistration().removeHandler();
             warningWindow.getAcceptButton().setTitle(getConstants().actionPreview());
@@ -276,7 +281,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    uiHandlers.previewData(indicator.getCode(), environmentType);
+                    uiHandlers.previewData(indicatorDto.getCode(), environmentType);
                     warningWindow.destroy();
                 }
             });
@@ -291,7 +296,7 @@ public class IndicatorGeneralPanel extends VLayout {
             warningWindow.getButtonsLayout().addMember(cancelButton, 0);
             warningWindow.show();
         } else {
-            uiHandlers.previewData(indicator.getCode(), environmentType);
+            uiHandlers.previewData(indicatorDto.getCode(), environmentType);
         }
     }
 
@@ -495,6 +500,8 @@ public class IndicatorGeneralPanel extends VLayout {
     }
 
     public void setDiffusionIndicator(IndicatorDto indicatorDto) {
+        diffusionIndicator = indicatorDto;
+        
         diffusionIdentifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
         diffusionIdentifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         diffusionIdentifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
