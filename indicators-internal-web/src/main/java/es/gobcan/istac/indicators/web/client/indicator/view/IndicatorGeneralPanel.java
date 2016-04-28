@@ -6,11 +6,13 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
+import org.siemac.metamac.web.common.client.widgets.WarningWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
@@ -18,12 +20,12 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguag
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.types.Visibility;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
@@ -31,6 +33,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
@@ -112,7 +115,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.previewDataDiffusion(indicator.getCode());
+                previewData(EnvironmentTypeEnum.DIFFUSION);
             }
         });
 
@@ -240,18 +243,18 @@ public class IndicatorGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.previewDataProduction(indicator.getCode());
+                previewData(EnvironmentTypeEnum.PRODUCTION);
             }
         });
-        
+
         mainFormLayout.getEnableNotifyPopulationErrors().addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.enableNotifyPopulationErrors(indicator.getUuid());
             }
         });
-        
+
         mainFormLayout.getDisableNotifyPopulationErrors().addClickHandler(new ClickHandler() {
             
             @Override
@@ -259,6 +262,37 @@ public class IndicatorGeneralPanel extends VLayout {
                 uiHandlers.disableNotifyPopulationErrors(indicator.getUuid());
             }
         });
+    }
+
+    private void previewData(final EnvironmentTypeEnum environmentType) {
+        if (!uiHandlers.hasDatasources()) {
+            WarningWindow warningWindow = new WarningWindow(getConstants().indicatorPreviewData(), getConstants().indicatorPreviewDataWarningNoDatasources());
+            warningWindow.show();
+        } else if (BooleanUtils.isTrue(indicator.getNeedsUpdate())) {
+            final WarningWindow warningWindow = new WarningWindow(getConstants().indicatorPreviewData(), getConstants().indicatorPreviewDataWarningDataNotUpdated());
+            warningWindow.getAcceptButtonHandlerRegistration().removeHandler();
+            warningWindow.getAcceptButton().setTitle(getConstants().actionPreview());
+            warningWindow.getAcceptButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    uiHandlers.previewData(indicator.getCode(), environmentType);
+                    warningWindow.destroy();
+                }
+            });
+            IButton cancelButton = new IButton(MetamacWebCommon.getConstants().actionCancel());
+            cancelButton.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    warningWindow.destroy();
+                }
+            });
+            warningWindow.getButtonsLayout().addMember(cancelButton, 0);
+            warningWindow.show();
+        } else {
+            uiHandlers.previewData(indicator.getCode(), environmentType);
+        }
     }
 
     /**

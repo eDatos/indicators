@@ -41,6 +41,7 @@ import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
+import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
@@ -111,6 +112,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     private DispatchAsync            dispatcher;
     private String                   indicatorCode;
     private IndicatorDto             indicatorDto;
+    private List<DataSourceDto>      datasourcesDtos;
 
     private List<UnitMultiplierDto>  unitMultiplierDtos;
 
@@ -387,9 +389,15 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
             @Override
             public void onWaitSuccess(GetDataSourcesListResult result) {
+                datasourcesDtos = result.getDataSourceDtos();
                 getView().setIndicatorDataSources(result.getDataSourceDtos());
             }
         });
+    }
+
+    @Override
+    public boolean hasDatasources() {
+        return datasourcesDtos != null && !datasourcesDtos.isEmpty();
     }
 
     @Override
@@ -624,25 +632,24 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void previewDataProduction(String code) {
-        dispatcher.execute(new GetIndicatorPreviewProductionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewProductionUrlResult>(this) {
+    public void previewData(String code, EnvironmentTypeEnum environmentType) {
+        if (EnvironmentTypeEnum.PRODUCTION.equals(environmentType)) {
+            dispatcher.execute(new GetIndicatorPreviewProductionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewProductionUrlResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetIndicatorPreviewProductionUrlResult result) {
-                Window.open(result.getUrl(), "_blank", "");
-            }
-        });
-    }
+                @Override
+                public void onWaitSuccess(GetIndicatorPreviewProductionUrlResult result) {
+                    Window.open(result.getUrl(), "_blank", "");
+                }
+            });
+        } else if (EnvironmentTypeEnum.DIFFUSION.equals(environmentType)) {
+            dispatcher.execute(new GetIndicatorPreviewDiffusionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewDiffusionUrlResult>(this) {
 
-    @Override
-    public void previewDataDiffusion(String code) {
-        dispatcher.execute(new GetIndicatorPreviewDiffusionUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewDiffusionUrlResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetIndicatorPreviewDiffusionUrlResult result) {
-                Window.open(result.getUrl(), "_blank", "");
-            }
-        });
+                @Override
+                public void onWaitSuccess(GetIndicatorPreviewDiffusionUrlResult result) {
+                    Window.open(result.getUrl(), "_blank", "");
+                }
+            });
+        }
     }
 
     private void setUnitMultipliers() {

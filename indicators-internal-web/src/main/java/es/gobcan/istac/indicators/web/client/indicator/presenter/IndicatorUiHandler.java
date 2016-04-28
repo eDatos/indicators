@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
@@ -30,11 +31,12 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void populateData(String uuid);
 
-    void previewDataProduction(String code);
-    void previewDataDiffusion(String code);
+    void previewData(String code, EnvironmentTypeEnum environmentType);
 
     // DataSource
 
+    boolean hasDatasources();
+    
     void retrieveDataDefinitionsOperationsCodes();
     void retrieveDataDefinitionsByOperationCode(String operationCode);
     void retrieveDataDefinition(String uuid);
