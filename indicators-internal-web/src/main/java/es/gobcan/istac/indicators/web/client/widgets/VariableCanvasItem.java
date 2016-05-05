@@ -23,7 +23,6 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableCanvasItem extends CustomCanvasItem {
 
-    // private final static Integer SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH - 64;
     private final static String SELECT_ITEM_WIDTH  = FormItemUtils.FORM_ITEM_WIDTH;
 
     private Logger              logger             = Logger.getLogger(VariableCanvasItem.class.getName());
