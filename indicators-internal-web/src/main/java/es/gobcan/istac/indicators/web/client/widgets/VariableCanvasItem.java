@@ -142,10 +142,8 @@ public class VariableCanvasItem extends CustomCanvasItem {
      */
     private boolean includeVariable(DataStructureDto dataStructureDto, String var) {
         String temporalVariable = dataStructureDto.getTemporalVariable();
-        // String geographicalVariable = dataStructureDto.getSpatialVariables();
-        // FIXME:
         String measureVariable = dataStructureDto.getContVariable();
-        if (var.equals(temporalVariable) || /* var.equals(geographicalVariable) || */var.equals(measureVariable)) {
+        if (var.equals(temporalVariable) || var.equals(measureVariable)) {
             return false;
         }
         return true;
