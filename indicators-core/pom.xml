@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>es.gobcan.istac.indicators</groupId>
 		<artifactId>indicators-parent</artifactId>
-		<version>4.4.1-SNAPSHOT</version>
+		<version>4.5.0</version>
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
 
@@ -471,22 +470,16 @@
 								<!-- Delete spring configuration files -->
 								<delete file="${basedir}/src/main/resources/spring.properties" />
 								<delete file="${basedir}/src/main/resources/more.xml" />
-								<delete
-									file="${basedir}/src/generated/resources/applicationContext.xml" />
+								<delete file="${basedir}/src/generated/resources/applicationContext.xml" />
 								<delete file="${basedir}/src/generated/resources/pub-sub.xml" />
-								<delete
-									file="${basedir}/src/generated/resources/EntityManagerFactory.xml" />
+								<delete file="${basedir}/src/generated/resources/EntityManagerFactory.xml" />
 								<delete file="${basedir}/src/generated/resources/Interceptor.xml" />
 								<delete file="${basedir}/src/generated/resources/beanRefContext.xml" />
-								<delete
-									file="${basedir}/src/generated/resources/generated-spring.properties" />
+								<delete file="${basedir}/src/generated/resources/generated-spring.properties" />
 								<delete file="${basedir}/src/test/resources/more-test.xml" />
-								<delete
-									file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
-								<delete
-									file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
-								<delete
-									file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
 								<delete file="${basedir}/src/test/resources/spring-test.properties" />
 							</target>
 						</configuration>
