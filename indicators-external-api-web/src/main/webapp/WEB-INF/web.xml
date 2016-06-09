@@ -79,7 +79,7 @@
 	<!-- URL rewriting -->
 	<filter-mapping>
 		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/api/indicators/latest/*</url-pattern>
 	</filter-mapping>
 
 	<!-- SERVLET -->
