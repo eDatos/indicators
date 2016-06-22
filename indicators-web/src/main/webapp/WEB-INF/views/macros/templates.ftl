@@ -29,9 +29,10 @@
 				<h1><a href="http://www.gobiernodecanarias.org/istac" title="P&aacute;gina principal del Instituto Canario de Estadística (ISTAC) - Opciones de accesibilidad (tecla de acceso: i)" accesskey="i">Instituto Canario de Estadística</a></h1>
 				<div id="menu_contextual">
 					<ul class="menu">
-						  <li class="selec"><a href="/istac/estadisticas.jsp" accesskey="2" title="Estadísticas (tecla de acceso: 2)">Estadísticas</a></li>
-						  <li class="inactive"><a href="/istac/el_istac.jsp" accesskey="3" title="El ISTAC (tecla de acceso: 3)">El ISTAC</a></li>
-						  <li class="inactive"><a href="/istac/webescolar" accesskey="4" title="WEB Escolar (tecla de acceso: 4)">WEB Escolar</a></li>
+						  <li class="selec"><a href="/istac/temas_estadisticos/" accesskey="1" title="Estadísticas (tecla de acceso: 1)">Estadísticas</a></li>
+						  <li class="inactive"><a href="/istac/istac/" accesskey="2" title="El ISTAC (tecla de acceso: 2)">El ISTAC</a></li>
+						  <li class="inactive"><a href="/istac/webescolar/" accesskey="3" title="WEB Escolar (tecla de acceso: 3)">WEB Escolar</a></li>
+						  <li class="inactive"><a href="/istac/noticias/" accesskey="4" title="Noticias (tecla de acceso: 4)">Noticias</a></li>
 					</ul>
 					[#include "/layout/buscador.ftl"]
 				</div>
