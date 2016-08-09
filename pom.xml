@@ -15,9 +15,10 @@
 	<name>INDICATORS</name>
 
 	<scm>
-		<connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</connection>
-		<developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</developerConnection>
-		<url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/trunk/</url>
+        <connection>scm:git:http://git.arte-consultores.com/istac/indicators</connection>
+        <developerConnection>scm:git:http://git.arte-consultores.com/istac/indicators</developerConnection>
+        <url>http://git.arte-consultores.com/istac/indicators</url>
+        <tag>HEAD</tag>
 	</scm>
 
 	<modules>
