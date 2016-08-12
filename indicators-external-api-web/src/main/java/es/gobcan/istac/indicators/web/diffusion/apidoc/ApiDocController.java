@@ -60,16 +60,9 @@ public class ApiDocController {
         return mv;
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/docs")
-    public void apis(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String templateName = "apidocs/apidocs.ftl";
-        Map<String, String> viewModel = getViewModel(request);
-        renderTemplate(templateName, viewModel, response);
-    }
-
-    @RequestMapping(value = "/api/indicators/v1.0/docs/indicators", produces = "application/json")
+    @RequestMapping(value = "/api/indicators/v1.0/docs", produces = "application/json")
     public void indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String templateName = "apidocs/apidocs-indicators.ftl";
+        String templateName = "apidocs/v1.0/swagger.ftl";
         Map<String, String> viewModel = getViewModel(request);
         renderTemplate(templateName, viewModel, response);
     }
