@@ -5,7 +5,6 @@
       "version":"4.5.2-SNAPSHOT",
       "title":"API de Indicadores v1.0"
    },
-  "basePath" : "${appBaseUrl}/v1.0/docs",
   "host": "${indicatorsExternalApiUrlBase}",
    "schemes":[
 
@@ -1105,7 +1104,7 @@
         "operationId": "findGeographicGranularities",
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/GeographicalGranularityList"
             }
@@ -1144,7 +1143,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/GeographicalValueList"
             }
@@ -1200,7 +1199,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/IndicatorsPagination"
             }
@@ -1225,7 +1224,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/Indicator"
             }
@@ -1268,7 +1267,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/Data"
             }
@@ -1300,7 +1299,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/IndicatorsSystemsPagination"
             }
@@ -1325,7 +1324,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/IndicatorSystem"
             }
@@ -1394,7 +1393,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/InstancesPagination"
             }
@@ -1426,7 +1425,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/Instance"
             }
@@ -1476,7 +1475,7 @@
         ],
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/Data"
             }
@@ -1492,7 +1491,7 @@
         "operationId": "findSubjects",
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/SubjectList"
             }
@@ -1508,7 +1507,7 @@
         "operationId": "retrieveTimeGranularities",
         "responses": {
           "200": {
-            "description": "No response was specified",
+            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
             "schema": {
               "$ref": "#/definitions/TimeGranularitiesList"
             }

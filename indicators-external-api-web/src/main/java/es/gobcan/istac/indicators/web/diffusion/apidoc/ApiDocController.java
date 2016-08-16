@@ -1,9 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.apidoc;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +16,6 @@ import org.springframework.web.util.UriTemplate;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.util.RESTURIUtil;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 @Controller
 public class ApiDocController {
@@ -55,33 +51,14 @@ public class ApiDocController {
         response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems, linkToIndicators, linkToGeographicGranularities, linkToThemes));
 
         // Body: Documentation
-        Map<String, String> viewModel = getViewModel(request);
-        ModelAndView mv = new ModelAndView("apidocs/index", viewModel);
-        return mv;
+        return new ModelAndView("apidocs/index", new HashMap<String, String>());
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/docs", produces = "application/json")
-    public void indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String templateName = "apidocs/v1.0/swagger.ftl";
-        Map<String, String> viewModel = getViewModel(request);
-        renderTemplate(templateName, viewModel, response);
-    }
-
-    private void renderTemplate(String templateName, Map<String, String> viewModel, HttpServletResponse response) throws IOException, TemplateException {
-        Template template = freeMarkerConfigurer.getConfiguration().getTemplate(templateName);
+    public ModelAndView indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
-        template.process(viewModel, response.getWriter());
-    }
 
-    private Map<String, String> getViewModel(HttpServletRequest request) {
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("appBaseUrl", getServerUrlWithContextPath(request));
-        return parameters;
-    }
-
-    public String getServerUrlWithContextPath(HttpServletRequest request) {
-        String url = request.getRequestURL().toString();
-        return url.substring(0, url.length() - request.getPathInfo().length());
+        return new ModelAndView("apidocs/v1.0/swagger", new HashMap<String, String>());
     }
 
 }

@@ -91,13 +91,21 @@
       }
   });
   </script>
+  
+  [#if apiStyleCssUrl?has_content]
+    <link href="${apiStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
+  [/#if]
+  
 </head>
 <body>
+    
+    ${apiStyleHeader!}
     
     <div class="swagger-section">
         <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
         <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
     </div>
 
+    ${apiStyleFooter!}
 </body>
 </html>
