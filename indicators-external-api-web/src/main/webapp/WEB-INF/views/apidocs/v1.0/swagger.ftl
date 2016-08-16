@@ -1097,7 +1097,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/geographicGranularities": {
+    "/v1.0/geographicGranularities": {
       "get": {
         "tags": [ "Tablas de valores auxiliares" ],
         "description": "<p>Esta petición devuelve la lista de granularidades geográficas tratadas en el banco de datos ISTAC-indicadores. Por ejemplo granularidad provincial, insular o municipal.</p><br>",
@@ -1113,7 +1113,7 @@
         "summary": "Granularidades geográficas"
       }
     },
-    "/geographicalValues": {
+    "/v1.0/geographicalValues": {
       "get": {
         "tags": [ "Tablas de valores auxiliares" ],
         "description": "<p>Esta petición devuelve los valores de una granularidad geográfica que a su vez forman parte de una un tema o un sistema de indicadores específicos.</p><br><p>Es importante tener en cuenta que de los parátemeros opcionales (<strong>subjectCode</strong> y <strong>systemCode</strong>) podrá estar cumplimentado uno de ellos o ninguno. En caso de que estén cumplimentados ambos, sólo se tendrá en cuenta el último.</p> <br>",
@@ -1152,7 +1152,7 @@
         "summary": "Valores geográficos"
       }
     },
-    "/indicators": {
+    "/v1.0/indicators": {
       "get": {
         "tags": [ "Indicadores" ],
         "description": "<p>Esta petición aporta la lista de indicadores publicados en el banco de datos ISTAC-indicadores. Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales o temporales. Por ejemplo \"Tasa de paro\" es un indicador con diversas granularidades espaciales (insular, provincial y autonómica) y con el trimestre como una única granulariad temporal.</p><br>",
@@ -1208,7 +1208,7 @@
         "summary": "Listado de indicadores"
       }
     },
-    "/indicators/{indicatorCode}": {
+    "/v1.0/indicators/{indicatorCode}": {
       "get": {
         "tags": [ "Indicadores" ],
         "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses. A través de esta petición se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido; asimismo a través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador.</p><br>",
@@ -1233,7 +1233,7 @@
         "summary": "Indicador"
       }
     },
-    "/indicators/{indicatorCode}/data": {
+    "/v1.0/indicators/{indicatorCode}/data": {
       "get": {
         "tags": [ "Indicadores" ],
         "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
@@ -1276,7 +1276,7 @@
         "summary": "Observaciones de un indicador"
       }
     },
-    "/indicatorsSystems": {
+    "/v1.0/indicatorsSystems": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición aporta la lista de sistemas de indicadores publicados en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuáles se integran los indicadores. En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
@@ -1308,7 +1308,7 @@
         "summary": "Listado de sistemas de indicadores"
       }
     },
-    "/indicatorsSystems/{indicatorSystemCode}": {
+    "/v1.0/indicatorsSystems/{indicatorSystemCode}": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición ofrece los metadatos de un sistema de indicadores publicado en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuales se integran los indicadores.  En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
@@ -1333,7 +1333,7 @@
         "summary": "Sistema de indicadores"
       }
     },
-    "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances": {
+    "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición devuelve las instacias de indicadores asociadas a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
@@ -1402,7 +1402,7 @@
         "summary": "Instancias de sistema de indicadores"
       }
     },
-    "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}": {
+    "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición devuelve los meteadatos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
@@ -1434,7 +1434,7 @@
         "summary": "Instancia de un sistema de indicadores"
       }
     },
-    "/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}/data": {
+    "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}/data": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición devuelve los datos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
@@ -1484,7 +1484,7 @@
         "summary": "Observaciones instancia de indicador"
       }
     },
-    "/subjects": {
+    "/v1.0/subjects": {
       "get": {
         "tags": [ "Tablas de valores auxiliares" ],
         "description": "<p>Esta petición devuelve los temas en los que el ISTAC clasifica sus operaciones estadísticas.</p><br>",
@@ -1500,7 +1500,7 @@
         "summary": "Temas estadísticos"
       }
     },
-    "/timeGranularities": {
+    "/v1.0/timeGranularities": {
       "get": {
         "tags": [ "Tablas de valores auxiliares" ],
         "description": "<p>Esta petición devuelve la lista de granularidades temporales tratadas en el banco de datos ISTAC-indicadores ordenadas de mayor a menor granularidad. Por ejemplo granularidad anual, trimestral o mensual.</p><br>",
