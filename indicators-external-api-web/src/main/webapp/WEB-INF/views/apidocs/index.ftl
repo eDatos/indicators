@@ -4,27 +4,27 @@
 <html>
 <head>
     <title>ISTAC | Indicators</title>
-  <link href="${indicatorsExternalApiUrlBase}/swagger-ui/css/typography.css" media='screen' rel='stylesheet' type='text/css'/>
-  <link href="${indicatorsExternalApiUrlBase}/swagger-ui/css/reset.css" media='screen' rel='stylesheet' type='text/css'/>
-  <link href="${indicatorsExternalApiUrlBase}/swagger-ui/css/screen.css" media='screen' rel='stylesheet' type='text/css'/>
-  <link href="${indicatorsExternalApiUrlBase}/swagger-ui/css/reset.css" media='print' rel='stylesheet' type='text/css'/>
-  <link href="${indicatorsExternalApiUrlBase}/swagger-ui/css/print.css" media='print' rel='stylesheet' type='text/css'/>
+  <link href="${indicatorsExternalApiUrlBase}/apidocs/css/typography.css" media='screen' rel='stylesheet' type='text/css'/>
+  <link href="${indicatorsExternalApiUrlBase}/apidocs/css/reset.css" media='screen' rel='stylesheet' type='text/css'/>
+  <link href="${indicatorsExternalApiUrlBase}/apidocs/css/screen.css" media='screen' rel='stylesheet' type='text/css'/>
+  <link href="${indicatorsExternalApiUrlBase}/apidocs/css/reset.css" media='print' rel='stylesheet' type='text/css'/>
+  <link href="${indicatorsExternalApiUrlBase}/apidocs/css/print.css" media='print' rel='stylesheet' type='text/css'/>
   <link rel="shortcut icon" href="//www.gobiernodecanarias.org/gc/img/favicon.ico"/>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/jquery-1.8.0.min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/jquery.slideto.min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/jquery.wiggle.min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/jquery.ba-bbq.min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/handlebars-2.0.0.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/underscore-min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/backbone-min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/swagger-ui.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/highlight.7.3.pack.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/jsoneditor.min.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/marked.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lib/swagger-oauth.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery-1.8.0.min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery.slideto.min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery.wiggle.min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery.ba-bbq.min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/handlebars-2.0.0.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/underscore-min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/backbone-min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/swagger-ui.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/highlight.7.3.pack.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jsoneditor.min.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/marked.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/swagger-oauth.js" type='text/javascript'></script>
   
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lang/translator.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/swagger-ui/lang/es.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/translator.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/es.js" type='text/javascript'></script>
       
     <script type="text/javascript">
     $(function () {
