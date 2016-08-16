@@ -38,7 +38,6 @@ ssh deploy@estadisticas.arte-consultores.com <<EOF
     ###
     
     # Update Process
-    q
     sudo rm -rf $DEPLOY_TARGET_PATH/indicators
     sudo mv $TRANSFER_PATH/indicators.war $DEPLOY_TARGET_PATH/indicators.war
     sudo unzip $DEPLOY_TARGET_PATH/indicators.war -d $DEPLOY_TARGET_PATH/indicators
@@ -65,8 +64,10 @@ ssh deploy@estadisticas.arte-consultores.com <<EOF
     
     sudo chown -R metamac.metamac /servers/metamac
     sudo service metamac01 start
-    checkURL "http://estadisticas.arte-consultores.com/indicators-internal/" "metamac01"
-    checkURL "http://estadisticas.arte-consultores.com/indicators/v1.0/~latest" "metamac01"
-    checkURL "http://estadisticas.arte-consultores.com/indicators-visualizations/indicatorsSystems" "metamac01"
+
+    echo "Finished deploy"
+#    checkURL "http://estadisticas.arte-consultores.com/indicators-internal/" "metamac01"
+#    checkURL "http://estadisticas.arte-consultores.com/indicators/v1.0/~latest" "metamac01"
+#    checkURL "http://estadisticas.arte-consultores.com/indicators-visualizations/indicatorsSystems" "metamac01"
 
 EOF
