@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,21 +23,36 @@ import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 
 class IndicatorsRewriteMatch extends RewriteMatch {
 
-    private Pattern              urlPattern           = Pattern.compile(".*/api/indicators/" + API_LATEST + "(/(.*)?)?");
+    private Pattern              apiUrlPattern           = Pattern.compile(".*/api/indicators/(v\\d+\\.\\d+|" + API_LATEST + ")(/(.*)?)?");
+    private Pattern              swaggerResourcesPattern = Pattern.compile(".*/api/indicatoris(/apidocs/.*)");
 
-    private ConfigurationService configurationService = null;
+    private ConfigurationService configurationService    = null;
 
     @Override
     public boolean execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestURI = ((HttpServletRequest) request).getRequestURI();
         String queryString = ((HttpServletRequest) request).getQueryString();
-        Matcher matcher = urlPattern.matcher(requestURI);
-        if (matcher.matches() && matcher.groupCount() > 1) {
-            String requestPathAfterVersion = matcher.group(1);
-            String location = buildTargetLocation(IndicatorsRestConstants.API_VERSION_1_0, requestPathAfterVersion, queryString);
-            response.sendRedirect(location);
+        Matcher apiUrlmatcher = apiUrlPattern.matcher(requestURI);
+        if (apiUrlmatcher.matches() && apiUrlmatcher.groupCount() > 2) {
+            String requestApiVersion = apiUrlmatcher.group(1);
+            String requestPathAfterVersion = apiUrlmatcher.group(2);
+            if (API_LATEST.equals(requestApiVersion)) {
+                String location = buildTargetLocation(IndicatorsRestConstants.API_VERSION_1_0, requestPathAfterVersion, queryString);
+                response.sendRedirect(location);
+                return true;
+            } else if (requestPathAfterVersion == null && requestURI.endsWith(requestApiVersion) && isBlank(queryString)) {
+                String location = buildTargetLocation(requestApiVersion, requestPathAfterVersion, queryString);
+                response.sendRedirect(location);
+                return true;
+            }
         }
-        return true;
+        Matcher swaggerResourcesMatcher = swaggerResourcesPattern.matcher(requestURI);
+        if (swaggerResourcesMatcher.matches() && apiUrlmatcher.groupCount() > 1) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(swaggerResourcesMatcher.group(2));
+            requestDispatcher.forward(request, response);
+            return true;
+        }
+        return false;
     }
 
     private String buildTargetLocation(String apiVersion, String requestPathAfterVersion, String queryString) throws ServletException {

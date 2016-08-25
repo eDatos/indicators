@@ -2,13 +2,13 @@
 # Project Specific
 ######################
 /src/main/webapp/content/css/main.css
-/target/www/**
-**/generated/**
-**/IndicatorsWeb/**
+target/
+generated/
+IndicatorsWeb/
 widget.min.all.js
 Templates.js
 main.css
-environment-local.xml
+environment-LOCAL.xml
 
 ######################
 # Node
@@ -37,7 +37,7 @@ environment-local.xml
 *~.nib
 local.properties
 .classpath
-/**/.settings/**
+.settings/
 .loadpath
 /src/main/resources/rebel.xml
 
