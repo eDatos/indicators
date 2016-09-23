@@ -124,7 +124,7 @@
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>5.0.0</metamac-core-common.version>
-		<metamac-web-common.version3.0.0</metamac-web-common.version>
+		<metamac-web-common.version>3.0.0</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
 		<metamac-sso-client.version>2.0.0</metamac-sso-client.version>
