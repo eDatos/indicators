@@ -25,8 +25,12 @@
 	</distributionManagement>
 
 	<properties>
+	    
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+		
+		<!--MVN -->
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>
 
 		<!-- PLUGINS -->
@@ -923,7 +927,7 @@
 
 				<plugin>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
+					<version>2.5</version>
 					<configuration>
 						<tagNameFormat>${maven.build.timestamp}-v@{project.version}</tagNameFormat>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
