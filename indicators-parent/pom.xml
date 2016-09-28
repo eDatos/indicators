@@ -32,13 +32,6 @@
 			<uniqueVersion>true</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
-	
-	<scm>
-        <connection>scm:git:http://git.arte-consultores.com/istac/indicators</connection>
-        <developerConnection>scm:git:http://git.arte-consultores.com/istac/indicators</developerConnection>
-        <url>http://git.arte-consultores.com/istac/indicators</url>
-        <tag>HEAD</tag>
-    </scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
