@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>es.gobcan.istac.indicators</groupId>
 	<artifactId>indicators-parent</artifactId>
 	<name>INDICATORS :: PARENT</name>
+	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
 	<version>4.5.2-SNAPSHOT</version>
 
+    <organization>
+        <name>Arte Consultores, S.L.</name>
+        <url>http://www.arte-consultores.com</url>
+    </organization>
+
+    <issueManagement>
+        <system>Jira</system>
+        <url>http://jira.arte-consultores.com/browse/INDISTAC</url>
+    </issueManagement>
+
 	<distributionManagement>
-		<!-- Use the following if you're not using a snapshot version. -->
 		<repository>
 			<id>arte-repository</id>
 			<name>Arte Releases</name>
 			<url>http://repository.arte-consultores.com/content/repositories/releases</url>
 		</repository>
-		<!-- use the following if you ARE using a snapshot version. -->
 		<snapshotRepository>
 			<id>arte-repository</id>
 			<name>Arte Snapshots</name>
@@ -23,9 +32,15 @@
 			<uniqueVersion>true</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
+	
+	<scm>
+        <connection>scm:git:http://git.arte-consultores.com/istac/indicators</connection>
+        <developerConnection>scm:git:http://git.arte-consultores.com/istac/indicators</developerConnection>
+        <url>http://git.arte-consultores.com/istac/indicators</url>
+        <tag>HEAD</tag>
+    </scm>
 
 	<properties>
-	    
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 		
@@ -921,7 +936,7 @@
 						<inputEncoding>UTF-8</inputEncoding>
 						<outputEncoding>UTF-8</outputEncoding>
 						<forkMode>once</forkMode>
-						<argLine>-Dfile.encoding=UTF-8 -Xms32m -Xmx1024m</argLine>
+						<argLine>-Xms512m -Xmx1256m -XX:PermSize=64m -XX:MaxPermSize=128m -Dfile.encoding=UTF-8</argLine>
 					</configuration>
 				</plugin>
 
@@ -934,24 +949,6 @@
 						<useReleaseProfile>false</useReleaseProfile>
 						<releaseProfiles>indicators-perform-release</releaseProfiles>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
-							<artifactId>maven-scm-provider-svnjava</artifactId>
-							<version>2.0</version>
-							<exclusions>
-								<exclusion>
-									<groupId>org.tmatesoft.svnkit</groupId>
-									<artifactId>svnkit</artifactId>
-								</exclusion>
-							</exclusions>
-						</dependency>
-						<dependency>
-							<groupId>org.tmatesoft.svnkit</groupId>
-							<artifactId>svnkit</artifactId>
-							<version>1.7.4-v1</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 
 				<plugin>
