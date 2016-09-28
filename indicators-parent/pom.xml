@@ -933,10 +933,6 @@
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<useReleaseProfile>false</useReleaseProfile>
 						<releaseProfiles>indicators-perform-release</releaseProfiles>
-						<providerImplementations>
-							<svn>javasvn</svn>
-						</providerImplementations>
-						<preparationGoals>clean install</preparationGoals>
 					</configuration>
 					<dependencies>
 						<dependency>
