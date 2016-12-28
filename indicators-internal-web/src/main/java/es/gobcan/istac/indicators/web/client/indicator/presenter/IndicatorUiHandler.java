@@ -11,6 +11,7 @@ import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public interface IndicatorUiHandler extends UiHandlers {
 
@@ -43,6 +44,10 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveDataDefinition(String uuid);
     void retrieveDataStructure(String uuid);
     void retrieveDataStructureEdition(String uuid);
+    
+    void retrieveStatisticalOperationsForQuerySelection();    
+    void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria);
+    void retrieveQueryForRelatedQuery(String queryUrn);
 
     void retrieveGeographicalValueDS(String uuid);
 
@@ -63,6 +68,5 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     
     void enableNotifyPopulationErrors(String indicatorUuid);
-    void disableNotifyPopulationErrors(String indicatorUuid);    
-
+    void disableNotifyPopulationErrors(String indicatorUuid);
 }

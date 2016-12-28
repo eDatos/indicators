@@ -11,8 +11,8 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -37,7 +37,6 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
-import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -66,10 +65,7 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 @Component
-public class Do2DtoMapperImpl implements Do2DtoMapper {
-
-    @Autowired
-    private UnitMultiplierRepository unitMultiplierRepository;
+public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMapper {
 
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
@@ -242,11 +238,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     @Override
-    public DataSourceDto dataSourceDoToDto(DataSource source) {
+    public DataSourceDto dataSourceDoToDto(DataSource source) throws MetamacException {
         DataSourceDto target = new DataSourceDto();
         target.setUuid(source.getUuid());
         target.setDataGpeUuid(source.getDataGpeUuid());
+        target.setQueryEnvironment(source.getQueryEnvironment());
         target.setPxUri(source.getPxUri());
+        target.setQueryArtefact(externalItemDoToDto(source.getQueryArtefact()));
+        
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());

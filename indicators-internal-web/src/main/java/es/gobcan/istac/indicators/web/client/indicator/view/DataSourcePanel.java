@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
@@ -14,14 +15,17 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
+import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -46,6 +50,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
@@ -54,47 +59,50 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHand
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.widgets.DataDefinitionsSearchWindow;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.SearchSingleQueryPaginatedWindow;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class DataSourcePanel extends VLayout {
 
     // View Form
-    private ViewDataSourceGeneralForm   generalForm;
-    private GroupDynamicForm            dataForm;
-    private ViewRateDerivationForm      interperiodPuntualRateForm;
-    private ViewRateDerivationForm      annualPuntualRateForm;
-    private ViewRateDerivationForm      interperiodPercentageRateForm;
-    private ViewRateDerivationForm      annualPercentageRateForm;
+    private ViewDataSourceGeneralForm        generalForm;
+    private GroupDynamicForm                 dataForm;
+    private ViewRateDerivationForm           interperiodPuntualRateForm;
+    private ViewRateDerivationForm           annualPuntualRateForm;
+    private ViewRateDerivationForm           interperiodPercentageRateForm;
+    private ViewRateDerivationForm           annualPercentageRateForm;
 
     // Edition Form
-    private GroupDynamicForm            generalEditionForm;
-    private ViewDataSourceGeneralForm   generalStaticEditionForm;
-    private GroupDynamicForm            dataEditionForm;
-    private RateDerivationForm          interperiodPuntualRateEditionForm;
-    private RateDerivationForm          annualPuntualRateEditionForm;
-    private RateDerivationForm          interperiodPercentageRateEditionForm;
-    private RateDerivationForm          annualPercentageRateEditionForm;
+    private GroupDynamicForm                 generalEditionForm;
+    private ViewDataSourceGeneralForm        generalStaticEditionForm;
+    private GroupDynamicForm                 dataEditionForm;
+    private RateDerivationForm               interperiodPuntualRateEditionForm;
+    private RateDerivationForm               annualPuntualRateEditionForm;
+    private RateDerivationForm               interperiodPercentageRateEditionForm;
+    private RateDerivationForm               annualPercentageRateEditionForm;
 
-    private DataDefinitionsSearchWindow dataDefinitionsSearchWindow;
-    private List<String>                dataDefinitionsOperationCodes;
-    private DataSourceMainFormLayout    mainFormLayout;
+    private DataDefinitionsSearchWindow      dataDefinitionsSearchWindow;
+    private List<String>                     dataDefinitionsOperationCodes;
+    private DataSourceMainFormLayout         mainFormLayout;
 
     // When we are editing the form, but query dependent fields are in view mode
-    private boolean                     queryEditionViewMode;
+    private boolean                          queryEditionViewMode;
 
-    private DataSourceDto               dataSourceDto;
-    private DataStructureDto            dataStructureDtoEdition;
-    private IndicatorDto                indicatorDto;
-    private IndicatorUiHandler          uiHandlers;
+    private DataSourceDto                    dataSourceDto;
+    private DataStructureDto                 dataStructureDtoEdition;
+    private IndicatorDto                     indicatorDto;
+    private IndicatorUiHandler               uiHandlers;
+
+    private SearchSingleQueryPaginatedWindow searchQueryMetamacWindow;
 
     public DataSourcePanel() {
         // MainFormLayout
@@ -238,9 +246,21 @@ public class DataSourcePanel extends VLayout {
 
     public DataSourceDto getDataSourceDto() {
         // If query form has been touched
+
+        if (generalEditionForm.isVisible()) {
+            String queryEnvironmentAsString = dataEditionForm.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+            if (!StringUtils.isEmpty(queryEnvironmentAsString)) {
+                dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.valueOf(queryEnvironmentAsString));
+            }
+        }
+
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
+            // TODO METAMAC-2503 query METAMAC!
         }
+
+        dataSourceDto.setQueryArtefact(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.QUERY_METAMAC));
+
         dataSourceDto.setPxUri(dataStructureDtoEdition.getPxUri());
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
@@ -306,6 +326,7 @@ public class DataSourcePanel extends VLayout {
 
         return dataSourceDto;
     }
+
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
         this.dataStructureDtoEdition = dataStructureDto;
 
@@ -420,6 +441,10 @@ public class DataSourcePanel extends VLayout {
         generalStaticEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
     }
 
+    private void setSelectedRelatedQueryInEditionForm(ExternalItemDto relatedDsdDto) {
+        generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, relatedDsdDto);
+    }
+
     public void setDataSource(DataSourceDto dataSourceDto) {
         this.dataSourceDto = dataSourceDto;
         if (dataSourceDto.getUuid() != null) {
@@ -504,9 +529,54 @@ public class DataSourcePanel extends VLayout {
         generalEditionForm = new GroupDynamicForm(getConstants().datasourceGeneral());
 
         // Search data definition (query)
+        RequiredSelectItem dataSourceQueryEnvironment = new RequiredSelectItem(DataSourceDS.QUERY_ENVIRONMENT, getConstants().dataSourceQueryEnvironment());
+        dataSourceQueryEnvironment.setValueMap(CommonUtils.getQueryEnvironmentEnumValueMap());
+        dataSourceQueryEnvironment.addChangedHandler(new ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                clearAllQueryValues();
+                generalEditionForm.markForRedraw();
+            }
+        });
+        dataSourceQueryEnvironment.setValue(QueryEnvironmentEnum.METAMAC.toString());
+
+        // Query from GPE
         RequiredTextItem queryUuid = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuery());
         queryUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
         SearchViewTextItem query = getQueryItem();
+        query.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    if (QueryEnvironmentEnum.GPE.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        // Query from METAMAC
+        // queryMetamacView.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        SearchExternalItemLinkItem queryMetamacItem = getQueryMetamacItem();
+        queryMetamacItem.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    if (QueryEnvironmentEnum.METAMAC.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
@@ -608,8 +678,8 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValueMulti,
-                measureVariable, variables);
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue,
+                geographicalVariable, geographicalValueMulti, measureVariable, variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -781,6 +851,55 @@ public class DataSourcePanel extends VLayout {
         return query;
     }
 
+    private SearchExternalItemLinkItem getQueryMetamacItem() {
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuerySelection()) {
+
+            @Override
+            public void onSearch() {
+
+                searchQueryMetamacWindow = new SearchSingleQueryPaginatedWindow(getConstants().resourceSelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<QueryWebCriteria>() {
+
+                            @Override
+                            public void retrieveResultSet(int firstResult, int maxResults, QueryWebCriteria criteria) {
+                                retrieveResourcesForRelatedQuery(firstResult, maxResults, criteria);
+                            }
+                        });
+
+                // Load resources (to populate the selection window)
+                retrieveStatisticalOperationsForQuerySelection();
+
+                searchQueryMetamacWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        ExternalItemDto selectedResource = searchQueryMetamacWindow.getSelectedResource();
+                        retrieveQueryForRelatedQuery(selectedResource.getUrn());
+
+                        searchQueryMetamacWindow.markForDestroy();
+                        // Set selected resource in form
+                        setSelectedRelatedQueryInEditionForm(selectedResource);
+                        generalForm.validate(false);
+                    }
+                });
+            }
+        };
+
+        return item;
+    }
+
+    public void retrieveStatisticalOperationsForQuerySelection() {
+        uiHandlers.retrieveStatisticalOperationsForQuerySelection();
+    }
+
+    public void retrieveResourcesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+        uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
+    }
+
+    public void retrieveQueryForRelatedQuery(String queryUrn) {
+        uiHandlers.retrieveQueryForRelatedQuery(queryUrn);
+    }
+
     /**
      * In edition mode, shows query form in edition mode
      */
@@ -885,6 +1004,7 @@ public class DataSourcePanel extends VLayout {
     void clearAllQueryValues() {
         ((RequiredTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_UUID)).clearValue();
         ((SearchViewTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_TEXT)).clearValue();
+        ((SearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.QUERY_METAMAC)).clearValue();
         clearQueryDependentFields();
     }
 
@@ -919,6 +1039,7 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
         ((ViewTextItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
     }
+
     private void redrawForms() {
         generalForm.markForRedraw();
         generalStaticEditionForm.markForRedraw();
@@ -946,6 +1067,23 @@ public class DataSourcePanel extends VLayout {
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
         this.dataDefinitionsOperationCodes = operationCodes;
     }
+
+    public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
+        if (searchQueryMetamacWindow != null) {
+            searchQueryMetamacWindow.setStatisticalOperations(statisticalOperations);
+            // searchQueryMetamacWindow.setSelectedStatisticalOperation(statisticalOperation);
+            searchQueryMetamacWindow.setFixedQueryCode(null);
+            searchQueryMetamacWindow.setOnlyLastVersion(true);
+        }
+    }
+
+    public void setQueries(List<ExternalItemDto> queriesDtos, int firstResult, int elementsInPage, int totalResults) {
+        if (searchQueryMetamacWindow != null) {
+            searchQueryMetamacWindow.setResources(queriesDtos);
+            searchQueryMetamacWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
+        }
+    }
+
     // UTILS
 
     private boolean dataStructureHasGeoVariable() {

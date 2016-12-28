@@ -24,6 +24,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -497,6 +498,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     @Test
     public void testCreateDataSource() throws Exception {
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");

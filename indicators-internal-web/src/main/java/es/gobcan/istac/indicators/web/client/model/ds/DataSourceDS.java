@@ -11,6 +11,8 @@ public class DataSourceDS extends DataSource {
     public static String QUERY_UUID                        = "ds-query-uuid";
     public static String QUERY_TEXT                        = "ds-query-text";        // Not mapped in DTO
     public static String PX                                = "ds-px";
+    public static String QUERY_METAMAC                     = "ds-query-metamac";
+    public static String QUERY_ENVIRONMENT                 = "ds-query-environment";
 
     public static String ABSOLUTE_METHOD                   = "ds-abs-met";
     public static String ABSOLUTE_METHOD_VIEW              = "ds-abs-met-view";

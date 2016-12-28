@@ -986,7 +986,11 @@ Application Indicators {
 			String sourceSurveyUrl nullable length="4000";
 			"Publishers (with ## as separator)"
 			String publishers not nullable length="4000";
-						
+			"Query Environment"
+            - @QueryEnvironmentEnum queryEnvironment not nullable;
+			"Query Artefact (Metamac) related with the data source"
+            - @ExternalItem queryArtefact nullable cascade="all" databaseColumn="QUERY_ARTEFACT_FK";
+            		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
 						
@@ -1590,6 +1594,10 @@ Application Indicators {
 			String dataGpeUuid;
 			"Px"
 			String pxUri;
+		    "Query Environment"
+            - @QueryEnvironmentEnum queryEnvironment;
+            "Query Artefact (Metamac) related with the data source"
+            - @ExternalItemDto queryArtefact;
 			"Time variable"
 			String timeVariable;
 			"Time value, if time variable is not provided"
@@ -1990,5 +1998,11 @@ Application Indicators {
     		TECNICO_DIFUSION,
     		ANY_ROLE_ALLOWED
     	}
+    	
+    	"Query Source"
+        enum QueryEnvironmentEnum {
+            METAMAC,
+            GPE
+        }
 	}
 }

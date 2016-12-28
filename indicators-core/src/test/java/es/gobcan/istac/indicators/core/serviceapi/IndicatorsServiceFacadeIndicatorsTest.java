@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -3303,6 +3304,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3392,6 +3394,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeValue("2010");
@@ -3425,6 +3428,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testCreateDataSourceErrorParametersRequired() throws Exception {
 
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid(null);
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setPxUri("px1");
@@ -3517,6 +3521,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3602,6 +3607,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource: timeValue and decimalPlaces incorrect
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeValue("xxx");
@@ -3649,6 +3655,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
 
@@ -3692,6 +3699,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3718,6 +3726,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3745,6 +3754,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3792,6 +3802,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3838,6 +3849,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
@@ -3983,6 +3995,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
         dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("newData");
         dataSourceDto.setTimeVariable("newTime");
         dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
@@ -4012,6 +4025,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = DATA_SOURCE_1_INDICATOR_11;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
         dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setDataGpeUuid("newData");
         dataSourceDto.setTimeVariable("newTime");
 

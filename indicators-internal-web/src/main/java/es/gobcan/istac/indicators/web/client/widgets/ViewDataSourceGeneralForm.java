@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -13,6 +14,7 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 
@@ -23,8 +25,42 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
     public ViewDataSourceGeneralForm(String groupTitle) {
         super(groupTitle);
 
+        ViewTextItem dataSourceQueryEnvironment = new ViewTextItem(DataSourceDS.QUERY_ENVIRONMENT, getConstants().dataSourceQueryEnvironment());
+        
         ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuery());
-
+        query.setShowIfCondition(new FormItemIfFunction() {
+            
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    if (QueryEnvironmentEnum.GPE.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        
+        ExternalItemLinkItem queryMetamac = new ExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuery());
+        queryMetamac.setShowIfCondition(new FormItemIfFunction() {
+            
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    if (QueryEnvironmentEnum.METAMAC.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        
+        
+        
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
         ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
@@ -82,11 +118,12 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
         ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
+        setFields(dataSourceQueryEnvironment, query, queryMetamac, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
 
     }
 
     public void setValue(DataSourceDto dataSourceDto) {
+        setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().toString() : StringUtils.EMPTY);
         setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
         if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid())) {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());

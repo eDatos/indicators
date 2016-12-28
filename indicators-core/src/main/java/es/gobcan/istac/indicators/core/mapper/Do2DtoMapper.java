@@ -2,6 +2,10 @@ package es.gobcan.istac.indicators.core.mapper;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.exception.MetamacException;
+
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -39,7 +43,7 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
-public interface Do2DtoMapper {
+public interface Do2DtoMapper extends CommonDo2DtoMapper {
 
     // Indicators systems
     IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
@@ -56,7 +60,7 @@ public interface Do2DtoMapper {
     IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source);
 
     // Data sources
-    DataSourceDto dataSourceDoToDto(DataSource source);
+    DataSourceDto dataSourceDoToDto(DataSource source) throws MetamacException;
 
     // Elements levels
     List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
@@ -94,4 +98,7 @@ public interface Do2DtoMapper {
 
     // Unit multipliers
     UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
+    
+    // External Item
+    ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 }

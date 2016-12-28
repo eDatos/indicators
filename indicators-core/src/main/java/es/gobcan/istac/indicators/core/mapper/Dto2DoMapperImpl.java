@@ -12,12 +12,10 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.InternationalStringRepository;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +61,13 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 @Component
-public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapper {
+public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
     private IndicatorsSystemsService      indicatorsSystemsService;
 
     @Autowired
     private IndicatorsService             indicatorsService;
-
-    @Autowired
-    private InternationalStringRepository internationalStringRepository;
 
     @Autowired
     private RateDerivationRepository      rateDerivationRepository;
@@ -128,7 +123,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.DIMENSION_TITLE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.DIMENSION_TITLE));
 
         // Related entities
         if (source.getParentUuid() != null) {
@@ -173,7 +168,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE));
 
         if (source.getGeographicalGranularityUuid() != null) {
             target.setGeographicalGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGeographicalGranularityUuid()));
@@ -244,11 +239,11 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         target.setUpdateDate(new DateTime());
 
         // Attributes modifiables
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
-        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATOR_ACRONYM));
-        target.setComments(internationalStringToDo(ctx, source.getComments(), target.getComments(), ServiceExceptionParameters.INDICATOR_COMMENTS));
-        target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), ServiceExceptionParameters.INDICATOR_CONCEPT_DESCRIPTION));
-        target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), ServiceExceptionParameters.INDICATOR_NOTES));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
+        target.setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATOR_ACRONYM));
+        target.setComments(internationalStringDtoToDo(source.getComments(), target.getComments(), ServiceExceptionParameters.INDICATOR_COMMENTS));
+        target.setConceptDescription(internationalStringDtoToDo(source.getConceptDescription(), target.getConceptDescription(), ServiceExceptionParameters.INDICATOR_CONCEPT_DESCRIPTION));
+        target.setNotes(internationalStringDtoToDo(source.getNotes(), target.getNotes(), ServiceExceptionParameters.INDICATOR_NOTES));
 
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
@@ -261,7 +256,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
             subjectTitleIntDto.addText(localised);
 
             target.setSubjectCode(source.getSubjectCode());
-            target.setSubjectTitle(internationalStringToDo(ctx, subjectTitleIntDto, target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
+            target.setSubjectTitle(internationalStringDtoToDo(subjectTitleIntDto, target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
         } else {
             target.setSubjectCode(null);
             target.setSubjectTitle(null);
@@ -296,8 +291,12 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
+        target.setQueryEnvironment(source.getQueryEnvironment());
         target.setDataGpeUuid(source.getDataGpeUuid());
         target.setPxUri(source.getPxUri());
+
+        target.setQueryArtefact(externalItemDtoToDo(source.getQueryArtefact(), target.getQueryArtefact(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT));
+
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
@@ -308,8 +307,8 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         }
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setSourceSurveyCode(source.getSourceSurveyCode());
-        target.setSourceSurveyTitle(internationalStringToDo(ctx, source.getSourceSurveyTitle(), target.getSourceSurveyTitle(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE));
-        target.setSourceSurveyAcronym(internationalStringToDo(ctx, source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
+        target.setSourceSurveyTitle(internationalStringDtoToDo(source.getSourceSurveyTitle(), target.getSourceSurveyTitle(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE));
+        target.setSourceSurveyAcronym(internationalStringDtoToDo(source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.dtoList2DtoString(source.getPublishers()));
 
@@ -342,7 +341,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
             target = new InternationalString();
         }
 
-        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts(), target);
+        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(source.getTexts(), target.getTexts(), target);
         target.getTexts().clear();
         target.getTexts().addAll(localisedStringEntities);
 
@@ -367,73 +366,6 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         target.setRounding(source.getRounding());
         target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
 
-        return target;
-    }
-
-    private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
-        // Preprocess international string
-        internationalStringHtmlToTextPlain(source);
-
-        // Check it is valid
-        checkInternationalStringDtoValid(source, metadataName);
-
-        if (source == null) {
-            if (target != null) {
-                // delete previous entity
-                internationalStringRepository.delete(target);
-            }
-            return null;
-        }
-
-        if (target == null) {
-            target = new InternationalString();
-        }
-
-        if (ValidationUtils.isEmpty(source)) {
-            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
-        }
-
-        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts(), target);
-        target.getTexts().clear();
-        target.getTexts().addAll(localisedStringEntities);
-
-        return target;
-    }
-
-    /**
-     * Transform LocalisedString, reusing existing locales
-     */
-    private Set<LocalisedString> localisedStringDtoToDo(ServiceContext ctx, Set<LocalisedStringDto> sources, Set<LocalisedString> targets, InternationalString internationalStringTarget) {
-
-        Set<LocalisedString> targetsBefore = targets;
-        targets = new HashSet<LocalisedString>();
-
-        for (LocalisedStringDto source : sources) {
-            boolean existsBefore = false;
-            for (LocalisedString target : targetsBefore) {
-                if (source.getLocale().equals(target.getLocale())) {
-                    targets.add(localisedStringDtoToDo(ctx, source, target, internationalStringTarget));
-                    existsBefore = true;
-                    break;
-                }
-            }
-            if (!existsBefore) {
-                targets.add(localisedStringDtoToDo(ctx, source, internationalStringTarget));
-            }
-        }
-        return targets;
-    }
-
-    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source, InternationalString internationalStringTarget) {
-        LocalisedString target = new LocalisedString();
-        localisedStringDtoToDo(ctx, source, target, internationalStringTarget);
-        return target;
-    }
-
-    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source, LocalisedString target, InternationalString internationalStringTarget) {
-        target.setLabel(source.getLabel());
-        target.setLocale(source.getLocale());
-        target.setInternationalString(internationalStringTarget);
         return target;
     }
 
@@ -509,7 +441,7 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
             target.setDenominator(null);
         }
         target.setIsPercentage(source.getIsPercentage());
-        target.setPercentageOf(internationalStringToDo(ctx, source.getPercentageOf(), target.getPercentageOf(), ServiceExceptionParameters.INDICATOR_QUANTITY_PERCENTAGE_OF));
+        target.setPercentageOf(internationalStringDtoToDo(source.getPercentageOf(), target.getPercentageOf(), ServiceExceptionParameters.INDICATOR_QUANTITY_PERCENTAGE_OF));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
 
@@ -679,4 +611,5 @@ public class Dto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dto2DoMapp
         return target;
 
     }
+
 }
