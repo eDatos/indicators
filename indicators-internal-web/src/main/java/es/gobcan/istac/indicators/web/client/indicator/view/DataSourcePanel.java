@@ -247,21 +247,24 @@ public class DataSourcePanel extends VLayout {
     public DataSourceDto getDataSourceDto() {
         // If query form has been touched
 
-        if (generalEditionForm.isVisible()) {
-            String queryEnvironmentAsString = dataEditionForm.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
-            if (!StringUtils.isEmpty(queryEnvironmentAsString)) {
-                dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.valueOf(queryEnvironmentAsString));
-            }
-        }
-
-        if (generalEditionForm.isVisible()) {
-            dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
-            // TODO METAMAC-2503 query METAMAC!
+        String queryEnvironmentAsString = generalEditionForm.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+        if (!StringUtils.isEmpty(queryEnvironmentAsString)) {
+            dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.valueOf(queryEnvironmentAsString));
         }
 
         dataSourceDto.setQueryArtefact(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.QUERY_METAMAC));
-
         dataSourceDto.setPxUri(dataStructureDtoEdition.getPxUri());
+        
+        if (generalEditionForm.isVisible()) {
+            
+            // TODO METAMAC-2503 query METAMAC!
+            if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+                dataSourceDto.setDataGpeUuid(dataStructureDtoEdition.getPxUri());
+            }
+            else {
+                dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
+            }
+        }
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
         dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
@@ -897,7 +900,7 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void retrieveQueryForRelatedQuery(String queryUrn) {
-        uiHandlers.retrieveQueryForRelatedQuery(queryUrn);
+        uiHandlers.retrieveDataStructureEdition(queryUrn);
     }
 
     /**

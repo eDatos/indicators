@@ -63,6 +63,8 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
                 target = srmExternalItemDoToDto(source, target);
             } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(source.getType())) {
                 target = statisticalOperationsExternalItemDoToDto(source, target);
+            } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalResourcesApp(source.getType())) {
+                target = statisticalResourcesExternalItemDoToDto(source, target);
             } else {
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of externalItem not defined for externalItemDoToDto");
             }
@@ -106,7 +108,12 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         return target;
     }
 
-
+    private ExternalItemDto statisticalResourcesExternalItemDoToDto(ExternalItem source, ExternalItemDto target) throws MetamacException {
+        target.setUri(statisticalResourcesInternalApiUrlDoToDto(source.getUri()));
+        target.setManagementAppUrl(statisticalResourcesInternalWebAppUrlDoToDto(source.getManagementAppUrl()));
+        return target;
+    }
+    
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
     // ------------------------------------------------------------

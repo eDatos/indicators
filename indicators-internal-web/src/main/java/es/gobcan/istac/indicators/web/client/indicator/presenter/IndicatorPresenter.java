@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -82,8 +85,6 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlRes
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetQueryAction;
-import es.gobcan.istac.indicators.web.shared.GetQueryResult;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
@@ -110,9 +111,6 @@ import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
-
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
@@ -489,17 +487,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(GetQueriesPaginatedListResult result) {
                 getView().setQueriesForRelatedQuery(result);
-            }
-        });
-    }
-    
-    @Override
-    public void retrieveQueryForRelatedQuery(String queryUrn) {
-        dispatcher.execute(new GetQueryAction(queryUrn), new WaitingAsyncCallbackHandlingError<GetQueryResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetQueryResult result) {
-                getView().setDataStructureForEdition(result.getDataStructureDto());
             }
         });
     }

@@ -113,6 +113,8 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
                 target = srmExternalItemDtoToDo(source, target);
             } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(source.getType())) {
                 target = statisticalOperationsExternalItemDtoToDo(source, target);
+            } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalResourcesApp(source.getType())) {
+                target = statisticalResourcesExternalItemDtoToDo(source, target);
             } else {
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of externalItem not defined for externalItemDtoToEntity");
             }
@@ -157,6 +159,12 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
     private ExternalItem statisticalOperationsExternalItemDtoToDo(ExternalItemDto source, ExternalItem target) throws MetamacException {
         target.setUri(statisticalOperationsInternalApiUrlDtoToDo(source.getUri()));
         target.setManagementAppUrl(statisticalOperationsInternalWebAppUrlDtoToDo(source.getManagementAppUrl()));
+        return target;
+    }
+    
+    private ExternalItem statisticalResourcesExternalItemDtoToDo(ExternalItemDto source, ExternalItem target) throws MetamacException {
+        target.setUri(statisticalResourcesInternalApiUrlDtoToDo(source.getUri()));
+        target.setManagementAppUrl(statisticalResourcesInternalWebAppUrlDtoToDo(source.getManagementAppUrl()));
         return target;
     }
 

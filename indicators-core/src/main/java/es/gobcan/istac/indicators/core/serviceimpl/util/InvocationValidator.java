@@ -1983,7 +1983,7 @@ public class InvocationValidator {
         if (dataSource == null) {
             return;
         }
-        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryEnvironment(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryEnvironment(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ENVIRONMENT, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getPxUri(), ServiceExceptionParameters.DATA_SOURCE_PX_URI, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_CODE, exceptions);

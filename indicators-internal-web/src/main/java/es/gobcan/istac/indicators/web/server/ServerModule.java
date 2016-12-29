@@ -65,7 +65,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructu
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQueriesPaginatedListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetQueryActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetStatisticalOperationsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
@@ -269,7 +268,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
 
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
-        bindHandler(GetQueryAction.class, GetQueryActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
 
         bindHandler(PopulateIndicatorDataAction.class, PopulateIndicatorDataActionHandler.class);

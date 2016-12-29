@@ -47,7 +47,6 @@ public interface IndicatorUiHandler extends UiHandlers {
     
     void retrieveStatisticalOperationsForQuerySelection();    
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria);
-    void retrieveQueryForRelatedQuery(String queryUrn);
 
     void retrieveGeographicalValueDS(String uuid);
 

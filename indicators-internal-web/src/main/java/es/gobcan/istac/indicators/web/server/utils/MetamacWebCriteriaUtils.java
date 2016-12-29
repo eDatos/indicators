@@ -171,6 +171,8 @@ public class MetamacWebCriteriaUtils {
         StringBuilder queryBuilder = new StringBuilder();
         if (queryWebCriteria != null) {
             
+            addSimpleRestCriteria(queryBuilder, webCriteria, QueryCriteriaPropertyRestriction.NAME, QueryCriteriaPropertyRestriction.ID);
+            
             String statisticalOperationUrn = queryWebCriteria.getStatisticalOperationUrn();
             if (StringUtils.isNotBlank(statisticalOperationUrn)) {
                 String schemeCondition = fieldComparison(QueryCriteriaPropertyRestriction.STATISTICAL_OPERATION_URN, ComparisonOperator.EQ, statisticalOperationUrn);

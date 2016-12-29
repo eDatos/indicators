@@ -9,6 +9,7 @@ public class QueryFilterForm extends VersionableStatisticalResourceFilterBaseFor
 
     public QueryFilterForm() {
         this.fixedQueryCode = null;
+        super.onlyLastVersionFacet.getFormItem().setVisible(false); // No needed for queries
     }
 
     public void setFixedQueryCode(String fixedQueryCode) {
@@ -21,7 +22,7 @@ public class QueryFilterForm extends VersionableStatisticalResourceFilterBaseFor
         criteria.setFixedQueryCode(fixedQueryCode);
         return criteria;
     }
-    
+
     @Override
     protected QueryWebCriteria buildEmptySearchCriteria() {
         return new QueryWebCriteria();

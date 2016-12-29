@@ -124,10 +124,13 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
     public void setValue(DataSourceDto dataSourceDto) {
         setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().toString() : StringUtils.EMPTY);
+        
         setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
-        if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid())) {
+        if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid()) && QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment())) {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
         }
+        
+        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getQueryArtefact());
 
         setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
         setValue(DataSourceDS.SOURCE_SURVEY_TITLE, dataSourceDto.getSourceSurveyTitle());

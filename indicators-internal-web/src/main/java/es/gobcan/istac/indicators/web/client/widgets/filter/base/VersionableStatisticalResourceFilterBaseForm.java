@@ -18,8 +18,8 @@ public abstract class VersionableStatisticalResourceFilterBaseForm<T extends Ver
     public VersionableStatisticalResourceFilterBaseForm() {
         super();
         statisticalOperationFacet = new StatisticalOperationFacetFilter();
-         onlyLastVersionFacet = new OnlyLastVersionFacetFilter();
-         onlyLastVersionFacet.setColSpan(2);
+        onlyLastVersionFacet = new OnlyLastVersionFacetFilter();
+        onlyLastVersionFacet.setColSpan(2);
         criteriaFacet.setColSpan(2);
     }
 
@@ -45,6 +45,6 @@ public abstract class VersionableStatisticalResourceFilterBaseForm<T extends Ver
 
     @Override
     public List<FacetFilter> getFacets() {
-        return Arrays.asList(statisticalOperationFacet, criteriaFacet);
+        return Arrays.asList(statisticalOperationFacet, onlyLastVersionFacet, criteriaFacet);
     }
 }
