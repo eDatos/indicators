@@ -100,7 +100,7 @@
 	<!--  CORS -->
 	<filter>
 		<filter-name>CORSFilter</filter-name>
-		<filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.CORSFilter</filter-class>
+		<filter-class>org.siemac.metamac.core.common.filter.CORSFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>
