@@ -963,9 +963,9 @@ Application Indicators {
         	gap
         	
 			"Query in GPE"
-			String dataGpeUuid not nullable;
+			String dataGpeUuid not nullable databaseColumn="QUERY_UUID";
 			"Px"
-			String pxUri not nullable;
+			String pxUri not nullable databaseColumn="QUERY_URN";
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -988,9 +988,9 @@ Application Indicators {
 			String publishers not nullable length="4000";
 			"Query Environment"
             - @QueryEnvironmentEnum queryEnvironment not nullable;
-			"Query Artefact (Metamac) related with the data source"
-            - @ExternalItem queryArtefact nullable cascade="all" databaseColumn="QUERY_ARTEFACT_FK";
-            		
+			"Structural Resource Code (Metamac) related with the data source"
+            - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
+             		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
 						
@@ -1596,8 +1596,8 @@ Application Indicators {
 			String pxUri;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
-            "Query Artefact (Metamac) related with the data source"
-            - @ExternalItemDto queryArtefact;
+            "Statistical Resource Query (Metamac) related with the data source"
+            - @ExternalItemDto statResource;
 			"Time variable"
 			String timeVariable;
 			"Time value, if time variable is not provided"
@@ -1856,8 +1856,12 @@ Application Indicators {
     		List<String> variables;
     		"Temporal variable"
     		String temporalVariable; 
+    		"Temporal value"
+            String temporalValue; 
     		"Spatial variable"
     		List<String> spatialVariables;
+    		"Spatial value"
+    		- @GeographicalValueDto geographicalValueDto;
     		"Contvariable"
     		String contVariable;
     		"Labels for every value in every variable"

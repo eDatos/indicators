@@ -167,7 +167,7 @@ public class DoCopyUtils {
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setDataGpeUuid(source.getDataGpeUuid());
         target.setPxUri(source.getPxUri());
-        target.setQueryArtefact(copy(source.getQueryArtefact()));
+        target.setStatResource(copy(source.getStatResource()));
         target.setTimeValue(source.getTimeValue());
         target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalValue(source.getGeographicalValue());

@@ -130,7 +130,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
         }
         
-        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getQueryArtefact());
+        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
         setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
         setValue(DataSourceDS.SOURCE_SURVEY_TITLE, dataSourceDto.getSourceSurveyTitle());

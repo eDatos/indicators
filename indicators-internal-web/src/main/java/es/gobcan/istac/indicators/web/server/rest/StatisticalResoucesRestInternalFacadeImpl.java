@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.server.rest;
 
 import static es.gobcan.istac.indicators.web.server.utils.MetamacWebCriteriaUtils.buildQueryForQueryVersion;
-import static org.siemac.metamac.core.common.constants.shared.UrnConstants.COLON;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +11,6 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
@@ -26,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
 @Component
@@ -36,6 +34,9 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
 
     @Autowired
     private RestExceptionUtils   restExceptionUtils;
+    
+    @Autowired
+    private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -48,7 +49,7 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
             String offset = String.valueOf(firstResult);
             String orderBy = null;
             
-            Queries findQueriesResult = restApiLocator.getStatisticalResourcesRestInternalFacacadeV10().findQueries(query, orderBy, limit, offset, null);
+            Queries findQueriesResult = statisticalResoucesRestInternalService.findQueries(query, orderBy, limit, offset, null);
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findQueriesResult.getQueries(), TypeExternalArtefactsEnum.QUERY);
 
@@ -62,14 +63,9 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
     @Override
     public DataStructureDto retrieveDataDefinitionFromQuery(ServiceContext serviceContext, String queryUrn) throws MetamacWebException {
         try {
-            
-            String universalIdentifier = UrnUtils.removePrefix(queryUrn);
-            String agencyID = StringUtils.substringBefore(universalIdentifier, COLON.toString());
-            String resourceID = StringUtils.substringAfter(universalIdentifier, COLON);
-            
+            // TODO METAMAC-2503 con DATOS y METADATOS, si no se necesitan datos, OPTIMIZAR
             String languageDefault = configurationService.retrieveLanguageDefault();
-
-            Query query = restApiLocator.getStatisticalResourcesRestInternalFacacadeV10().retrieveQuery(agencyID, resourceID, Arrays.asList(languageDefault), null);
+            Query query = statisticalResoucesRestInternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
 
             DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query);
             return dataStructureDto;

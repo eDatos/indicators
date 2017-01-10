@@ -1,26 +1,15 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ProcStatus;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attributes;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ComponentType;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionRepresentation;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionType;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
 
@@ -29,6 +18,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
@@ -140,8 +130,9 @@ public class DtoUtils {
      * 
      * @param query
      * @return
+     * @throws MetamacException
      */
-    public static DataStructureDto createDataStructureDto(Query query) {
+    public static DataStructureDto createDataStructureDto(Query query) throws MetamacException {
         if (query == null) {
             return null;
         }
@@ -152,7 +143,7 @@ public class DtoUtils {
         dataStructureDto.setUuid(query.getUrn());
 
         // Title
-        dataStructureDto.setTitle(extractValueForDefaultLanguage(query.getName()));
+        dataStructureDto.setTitle(QueryMetamacUtils.extractValueForDefaultLanguage(query.getName()));
 
         // PX Uri
         dataStructureDto.setPxUri(query.getUrn());
@@ -163,92 +154,46 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(QueryMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Maintainer
         ResourceInternal maintainer = query.getMetadata().getMaintainer();
-        dataStructureDto.setPublishers(Arrays.asList(extractValueForDefaultLanguage(maintainer.getName())));
+        String extractValueForDefaultLanguage = QueryMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
+            dataStructureDto.setPublishers(Collections.emptyList());
+        } else {
+            dataStructureDto.setPublishers(Arrays.asList(extractValueForDefaultLanguage));
+        }
 
         // Variables
-        dataStructureDto.setVariables(extractVariablesFromDimensions(query.getMetadata().getDimensions()));
+        dataStructureDto.setVariables(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         // Temporal Variables
-        String temporalDimension = extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.TIME_DIMENSION);
-        dataStructureDto.setTemporalVariable(temporalDimension);
+        dataStructureDto.setTemporalVariable(QueryMetamacUtils.extractTemporalVariable(query));
+
+        // Temporal Value
+        dataStructureDto.setTemporalValue(QueryMetamacUtils.extractTemporalValue(query));
 
         // Spatial Variables
-        String geographicDimension = extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.GEOGRAPHIC_DIMENSION);
-        dataStructureDto.setSpatialVariables(Arrays.asList(geographicDimension));
+        dataStructureDto.setSpatialVariables(QueryMetamacUtils.extractSpatialVariableList(query));
+
+        // Spatial Value
+        dataStructureDto.setGeographicalValueDto(QueryMetamacUtils.extractGeographicalValueDto(query));
 
         // Cont Variable
-        String measureDimension = extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.MEASURE_DIMENSION);
-        dataStructureDto.setContVariable(measureDimension);
+        dataStructureDto.setContVariable(QueryMetamacUtils.extractContVariable(query));
 
         // Value Labels
-        // TODO METAMAC-2503, cubrimientos???? ValueLabels
-        Map<String, List<String>> values = extractCoverages(query.getData());
-        dataStructureDto.setValueLabels(values);
+        // TODO METAMAC-2503 Valores y Códigos idénditcos. No tenemos cubrimiento de Labels por ahora en Metamac.
+        // TODO METAMAC-2503 Perfomance: Si existiese una forma de obtener el cubrimiento sin hacer petición de datos a la Query, no necesitaríamos recibir la Query con datos, lo cuál sería más
+        // eficiente, en ese caso pasarle "?fields=-data" a la petición
+        Map<String, List<String>> codes = QueryMetamacUtils.extractCoverages(query.getData());
+        dataStructureDto.setValueLabels(codes);
 
         // Value Codes
-        // TODO METAMAC-2503, cubrimientos???? ValueCodes
-        dataStructureDto.setValueCodes(values);
+        dataStructureDto.setValueCodes(codes);
 
         return dataStructureDto;
     }
 
-    public static String extractValueForDefaultLanguage(InternationalString internationalString) {
-        if (internationalString != null && !internationalString.getTexts().isEmpty()) {
-            LocalisedString localisedString = internationalString.getTexts().iterator().next();
-            return localisedString.getValue();
-        }
-        return null;
-    }
-
-    public static List<String> extractVariablesFromDimensions(Dimensions dimensions) {
-        List<String> result = new ArrayList<String>();
-        for (Dimension dimension : dimensions.getDimensions()) {
-            result.add(dimension.getId());
-        }
-
-        return result;
-    }
-
-    public static String extractSpecificDimensionFromDimensions(Dimensions dimensions, DimensionType dimensionType) {
-        for (Dimension dimension : dimensions.getDimensions()) {
-            if (dimensionType.equals(dimension.getType())) {
-                return dimension.getId();
-            }
-        }
-
-        return null;
-    }
-
-    public static String extractSpecificAttributeFromAttributes(Attributes attributes, ComponentType componentType) {
-
-        for (Attribute attribute : attributes.getAttributes()) {
-            if (componentType.equals(attribute.getType())) {
-                return attribute.getId();
-            }
-        }
-
-        return null;
-    }
-
-    public static Map<String, List<String>> extractCoverages(Data data) {
-        Map<String, List<String>> result = new HashMap<String, List<String>>();
-
-        if (data.getDimensions() == null) {
-            return result;
-        }
-
-        for (DimensionRepresentation dimensionRepresentation : data.getDimensions().getDimensions()) {
-            List<String> values = new LinkedList<String>();
-            for (CodeRepresentation codeRepresentation : dimensionRepresentation.getRepresentations().getRepresentations()) {
-                values.add(codeRepresentation.getCode());
-            }
-            result.put(dimensionRepresentation.getDimensionId(), values);
-        }
-
-        return result;
-    }
 }

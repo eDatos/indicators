@@ -25,6 +25,8 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,7 @@ import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -82,9 +85,11 @@ import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
@@ -103,6 +108,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private IndicatorsConfigurationService   configurationService;
+    
+    @Autowired
+    private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
+    
     private static final Logger              LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
     public static final String               GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
@@ -121,6 +130,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
+        SPECIAL_STRING_MAPPING.put("", "");
         SPECIAL_STRING_MAPPING.put("-", "");
         SPECIAL_STRING_MAPPING.put(".", "No procede");
         SPECIAL_STRING_MAPPING.put("..", "Dato no disponible");
@@ -1483,13 +1493,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Map<String, Data> dataCache = new HashMap<String, Data>();
         for (DataSource dataSource : dataSources) {
             try {
+                
                 Data data = dataCache.get(dataSource.getDataGpeUuid());
                 if (data == null) {
-                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getDataGpeUuid());
-                    if (json == null) {
-                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                    // Recalculte
+                    if (StringUtils.startsWithIgnoreCase(dataSource.getDataGpeUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                        // Metamac
+                        Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getDataGpeUuid(), es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
+                        data = QueryMetamacUtils.queryMetamacToData(query);
                     }
-                    data = jsonToData(json);
+                    else {
+                        // GPE-JAXI
+                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getDataGpeUuid());
+                        if (json == null) {
+                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                        }
+                        data = jsonToData(json);
+
+                    }
                     dataCache.put(dataSource.getDataGpeUuid(), data);
                 }
             } catch (MetamacException e) {
@@ -1608,6 +1629,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
+        if (StringUtils.isEmpty(value)) {
+            value = "..";
+        }
+        
         // Check for dotted notation
         if (isSpecialString(value)) {
             String text = getSpecialStringMeaning(value);

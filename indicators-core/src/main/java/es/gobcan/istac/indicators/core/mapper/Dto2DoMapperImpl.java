@@ -295,7 +295,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setDataGpeUuid(source.getDataGpeUuid());
         target.setPxUri(source.getPxUri());
 
-        target.setQueryArtefact(externalItemDtoToDo(source.getQueryArtefact(), target.getQueryArtefact(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT));
+        target.setStatResource(externalItemDtoToDo(source.getStatResource(), target.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT));
 
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());

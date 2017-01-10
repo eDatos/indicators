@@ -244,7 +244,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setDataGpeUuid(source.getDataGpeUuid());
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setPxUri(source.getPxUri());
-        target.setQueryArtefact(externalItemDoToDto(source.getQueryArtefact()));
+        target.setStatResource(externalItemDoToDto(source.getStatResource()));
         
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
@@ -422,6 +422,13 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSurveyTitle(source.getSurveyTitle());
         target.setPublishers(source.getPublishers());
         target.setTemporalVariable(source.getTemporalVariable());
+
+        if (source instanceof Data) {
+            // En GPE estos valores son nulos en el DataStructure origen, se rellenan posteriormente a mano.
+            target.setTemporalValue(((Data) source).getTemporalValue());
+            target.setGeographicalValueDto(((Data) source).getGeographicalValueDto());
+        }
+
         target.setSpatialVariables(source.getSpatialVariables());
 
         if (source.getValueCodes() != null) {

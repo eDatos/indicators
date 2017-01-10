@@ -1991,7 +1991,7 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getPublishers(), ServiceExceptionParameters.DATA_SOURCE_PUBLISHERS, exceptions);
         
         if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
-            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryArtefact(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
         }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
