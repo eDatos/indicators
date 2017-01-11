@@ -1,5 +1,11 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,12 +57,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators, data sources
@@ -2556,8 +2556,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             List<DataSourceDto> dataSources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextAdministrador(), indicatorDtoProduction.getUuid(),
                     indicatorDtoProduction.getProductionVersion());
             assertEquals(1, dataSources.size());
-            assertEquals("query-gpe Indicator-3-v1-DataSource-1", dataSources.get(0).getDataGpeUuid());
-            assertEquals("px Indicator-3-v1-DataSource-1", dataSources.get(0).getPxUri());
+            assertEquals("query-gpe Indicator-3-v1-DataSource-1", dataSources.get(0).getQueryUuid());
+            assertEquals("px Indicator-3-v1-DataSource-1", dataSources.get(0).getQueryUrn());
             assertEquals("time v Indicator-3-v1-DataSource-1", dataSources.get(0).getTimeVariable());
             assertEquals("geographical v Indicator-3-v1-DataSource-1", dataSources.get(0).getGeographicalVariable());
             assertEquals(1, dataSources.get(0).getOtherVariables().size());
@@ -3177,8 +3177,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertNotNull(dataSourceDto);
         assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourceDto.getUuid());
-        assertEquals("query-gpe Indicator-1-v2-DataSource-1", dataSourceDto.getDataGpeUuid());
-        assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPxUri());
+        assertEquals("query-gpe Indicator-1-v2-DataSource-1", dataSourceDto.getQueryUuid());
+        assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getQueryUrn());
         assertEquals("time v Indicator-1-v2-DataSource-1", dataSourceDto.getTimeVariable());
         assertEquals("geographical v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicalVariable());
         assertEquals("absolute-method-1-v2-1", dataSourceDto.getAbsoluteMethod());
@@ -3305,8 +3305,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3395,8 +3395,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeValue("2010");
         dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3429,9 +3429,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid(null);
+        dataSourceDto.setQueryUuid(null);
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
         dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
         dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
@@ -3522,8 +3522,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -3608,8 +3608,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeValue("xxx");
         dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -3656,8 +3656,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
 
         dataSourceDto.setTimeVariable("timeVariable");
         dataSourceDto.setTimeValue("2010");
@@ -3700,8 +3700,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3727,8 +3727,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3755,8 +3755,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3803,8 +3803,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3850,8 +3850,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
@@ -3994,9 +3994,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
-        dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setQueryUrn("newPx");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("newData");
+        dataSourceDto.setQueryUuid("newData");
         dataSourceDto.setTimeVariable("newTime");
         dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
         DataSourceVariableDto dataSourceVariableDto3 = new DataSourceVariableDto();
@@ -4024,9 +4024,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = DATA_SOURCE_1_INDICATOR_11;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
-        dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setQueryUrn("newPx");
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
-        dataSourceDto.setDataGpeUuid("newData");
+        dataSourceDto.setQueryUuid("newData");
         dataSourceDto.setTimeVariable("newTime");
 
         // Update
@@ -4099,7 +4099,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         DataSourceDto dataSourceDtoSession1 = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dataSourceDtoSession1.getVersionOptimisticLocking());
-        dataSourceDtoSession1.setPxUri("newPx");
+        dataSourceDtoSession1.setQueryUrn("newPx");
 
         DataSourceDto dataSourceDtoSession2 = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dataSourceDtoSession2.getVersionOptimisticLocking());
@@ -4121,7 +4121,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Session 2 can modify because has last version
-        dataSourceDtoSession2AfterUpdate.setDataGpeUuid("dataGpeNewUuid");
+        dataSourceDtoSession2AfterUpdate.setQueryUuid("dataGpeNewUuid");
         DataSourceDto dataSourceDtoSession2AfterUpdate2 = indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDtoSession2AfterUpdate);
         assertEquals(Long.valueOf(3), dataSourceDtoSession2AfterUpdate2.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDtoSession2AfterUpdate, dataSourceDtoSession2AfterUpdate2);

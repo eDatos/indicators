@@ -241,9 +241,9 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     public DataSourceDto dataSourceDoToDto(DataSource source) throws MetamacException {
         DataSourceDto target = new DataSourceDto();
         target.setUuid(source.getUuid());
-        target.setDataGpeUuid(source.getDataGpeUuid());
+        target.setQueryUuid(source.getQueryUuid());
         target.setQueryEnvironment(source.getQueryEnvironment());
-        target.setPxUri(source.getPxUri());
+        target.setQueryUrn(source.getQueryUrn());
         target.setStatResource(externalItemDoToDto(source.getStatResource()));
         
         target.setTimeVariable(source.getTimeVariable());
@@ -417,7 +417,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         DataStructureDto target = new DataStructureDto();
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
-        target.setPxUri(source.getPxUri());
+        target.setQueryUrn(source.getPxUri());
         target.setSurveyCode(source.getSurveyCode());
         target.setSurveyTitle(source.getSurveyTitle());
         target.setPublishers(source.getPublishers());

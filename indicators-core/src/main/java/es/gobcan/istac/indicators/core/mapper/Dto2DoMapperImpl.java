@@ -292,8 +292,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
         // Metadata modifiable
         target.setQueryEnvironment(source.getQueryEnvironment());
-        target.setDataGpeUuid(source.getDataGpeUuid());
-        target.setPxUri(source.getPxUri());
+        target.setQueryUuid(source.getQueryUuid());
+        target.setQueryUrn(source.getQueryUrn());
 
         target.setStatResource(externalItemDtoToDo(source.getStatResource(), target.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT));
 

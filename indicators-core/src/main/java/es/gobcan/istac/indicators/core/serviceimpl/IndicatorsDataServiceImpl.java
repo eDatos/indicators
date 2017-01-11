@@ -77,7 +77,6 @@ import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -1350,7 +1349,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void checkDataSourcesDataCompatibility(List<DataSource> dataSources, Map<String, Data> dataCache) throws MetamacException {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (DataSource dataSource : dataSources) {
-            Data data = dataCache.get(dataSource.getDataGpeUuid());
+            Data data = dataCache.get(dataSource.getQueryUuid());
             exceptionItems.addAll(DataSourceCompatibilityChecker.check(dataSource, data));
         }
         if (exceptionItems.size() > 0) {
@@ -1494,29 +1493,30 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         for (DataSource dataSource : dataSources) {
             try {
                 
-                Data data = dataCache.get(dataSource.getDataGpeUuid());
+                Data data = dataCache.get(dataSource.getQueryUuid());
                 if (data == null) {
                     // Recalculte
-                    if (StringUtils.startsWithIgnoreCase(dataSource.getDataGpeUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                         // Metamac
-                        Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getDataGpeUuid(), es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
+                        Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
                     }
                     else {
                         // GPE-JAXI
-                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getDataGpeUuid());
+                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
                         if (json == null) {
-                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
                         }
                         data = jsonToData(json);
 
                     }
-                    dataCache.put(dataSource.getDataGpeUuid(), data);
+                    dataCache.put(dataSource.getQueryUuid(), data);
                 }
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
-                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getQueryUuid(), dataSource.getUuid());
             }
         }
         return dataCache;
@@ -1543,7 +1543,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             if (unknownCodes.size() > 0) {
                 String codes = StringUtils.join(unknownCodes, ",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getQueryUuid(), codes);
             }
         } else {
             geoValues = new ArrayList<String>();
@@ -1575,7 +1575,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             if (unknownCodes.size() > 0) {
                 String codes = StringUtils.join(unknownCodes, ",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getQueryUuid(), codes);
             }
 
         } else {

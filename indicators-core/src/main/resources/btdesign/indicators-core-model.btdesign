@@ -963,9 +963,9 @@ Application Indicators {
         	gap
         	
 			"Query in GPE"
-			String dataGpeUuid not nullable databaseColumn="QUERY_UUID";
+			String queryUuid not nullable databaseColumn="QUERY_UUID";
 			"Px"
-			String pxUri not nullable databaseColumn="QUERY_URN";
+			String queryUrn not nullable databaseColumn="QUERY_URN";
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -1591,9 +1591,9 @@ Application Indicators {
 			"Unique uuid"
 			String uuid;
 			"Query in GPE"
-			String dataGpeUuid;
-			"Px"
-			String pxUri;
+			String queryUuid;
+			"QueryUrn"
+			String queryUrn;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"
@@ -1844,8 +1844,8 @@ Application Indicators {
     		String uuid;
     		"Title"
     		String title;
-    		"Uri px associated"
-    		String pxUri;
+    		"Urn associated"
+    		String queryUrn;
     		"Survey code"
     		String surveyCode;
     		"Survey Title"

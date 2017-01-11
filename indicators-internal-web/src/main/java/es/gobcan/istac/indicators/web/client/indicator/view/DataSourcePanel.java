@@ -254,13 +254,13 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setStatResource(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.QUERY_METAMAC));
-        dataSourceDto.setPxUri(dataStructureDtoEdition.getPxUri());
+        dataSourceDto.setQueryUrn(dataStructureDtoEdition.getQueryUrn());
 
         if (generalEditionForm.isVisible()) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
-                dataSourceDto.setDataGpeUuid(dataStructureDtoEdition.getPxUri());
+                dataSourceDto.setQueryUuid(dataStructureDtoEdition.getQueryUrn());
             } else {
-                dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
+                dataSourceDto.setQueryUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
             }
         }
 
@@ -492,8 +492,8 @@ public class DataSourcePanel extends VLayout {
         }
 
         // Load data structure (common)
-        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
-            this.uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
+        if (dataSourceDto.getQueryUuid() != null && !dataSourceDto.getQueryUuid().isEmpty()) {
+            this.uiHandlers.retrieveDataStructure(dataSourceDto.getQueryUuid());
         }
 
         setDataSourceViewMode(dataSourceDto);

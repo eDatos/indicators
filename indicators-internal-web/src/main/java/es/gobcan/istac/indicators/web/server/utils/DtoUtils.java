@@ -146,7 +146,7 @@ public class DtoUtils {
         dataStructureDto.setTitle(QueryMetamacUtils.extractValueForDefaultLanguage(query.getName()));
 
         // PX Uri
-        dataStructureDto.setPxUri(query.getUrn());
+        dataStructureDto.setQueryUrn(query.getUrn());
 
         ResourceInternal statisticalOperation = query.getMetadata().getStatisticalOperation();
 
