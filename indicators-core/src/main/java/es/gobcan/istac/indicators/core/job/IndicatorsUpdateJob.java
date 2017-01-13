@@ -50,7 +50,7 @@ public class IndicatorsUpdateJob implements Job {
 
         try {
             LOG.info("Updating indicators Data...");
-            List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsData(serviceContext);
+            List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsDataFromGpe(serviceContext);
 
             if (failedPopulationIndicators.size() > 0) {
                 getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);

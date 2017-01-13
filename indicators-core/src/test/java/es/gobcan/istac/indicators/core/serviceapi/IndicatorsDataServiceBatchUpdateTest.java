@@ -145,7 +145,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion = INDICATOR1_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR1_UUID, newDiffusionVersion);
 
@@ -170,7 +170,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion = INDICATOR2_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR2_UUID, newDiffusionVersion);
 
@@ -190,7 +190,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(getServiceContextAdministrador(), INDICATOR3_UUID);
         // Could not be populated, data should be null
@@ -218,7 +218,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String newDiffusionVersion4 = ServiceUtils.generateVersionNumber(oldDiffusionVersion4, VersionTypeEnum.MINOR);
         String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, newDiffusionVersion4);
         checkDataContentForIndicator(INDICATOR5_UUID, newDiffusionVersion5);
@@ -253,7 +253,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
         String newDiffusionVersion6 = ServiceUtils.generateVersionNumber(oldDiffusionVersion6, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, newDiffusionVersion4);
         checkDataContentForIndicator(INDICATOR5_UUID, newDiffusionVersion5);
@@ -285,7 +285,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR6_UUID, newDiffusionVersion6);
 
@@ -311,7 +311,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
         String newProductionVersion = ServiceUtils.generateVersionNumber(oldProductionVersion, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR8_UUID, newDiffusionVersion);
 
@@ -346,7 +346,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String productionVersion = INDICATOR9_PROD_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
+        indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR9_UUID, newDiffusionVersion);
 

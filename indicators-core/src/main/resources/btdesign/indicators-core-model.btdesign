@@ -210,7 +210,9 @@ Application Indicators {
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
-	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
+	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Updates data for all published indicators"
+            List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
 	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
 	    	"Link a dataset view to the latest version of the indicator"
@@ -534,8 +536,10 @@ Application Indicators {
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
-	    	"Update indicators data"
-	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
+	    	"Update indicators data GPE"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators data METAMAC"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"

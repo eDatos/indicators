@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -27,6 +29,8 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,17 +260,36 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
-        LOG.info("Starting Indicators data update process");
-
-        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
+    public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
+        LOG.info("Starting Indicators data update process (GPE DATA)");
 
         // Validation
         InvocationValidator.checkUpdateIndicatorsData(null);
 
         Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
 
-        markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
+        markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ctx, lastQueryDate);
+        return updateIndicatorsData(ctx);
+    }
+
+    @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromMetamac(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        QueryVersionAvro queryVersionAvro = null;
+        if (message instanceof QueryVersionAvro) {
+            queryVersionAvro = (QueryVersionAvro) message;
+        }
+        else {
+            return Collections.emptyList();
+        }
+        
+        LOG.info("Starting Indicators data update process (METAMAC DATA)");
+
+        markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, queryVersionAvro);
+        return updateIndicatorsData(ctx);
+    }
+
+    private List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
 
         LOG.info("Total indicatorsVersions that needs to be updated: " + pendingIndicators.size());
@@ -1358,7 +1381,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /* Mark only diffusionVersion */
-    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
+    private void markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
         Date newQueryDate = Calendar.getInstance().getTime();
         List<String> dataDefinitionsUuids = null;
         try {
@@ -1367,9 +1390,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
         }
 
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
+    }
+
+    private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, QueryVersionAvro queryVersionAvro) throws MetamacException {
+        List<String> dataDefinitionsUuids = new ArrayList<>(1);
+
+        IdentifiableStatisticalResourceAvro identifiableStatisticalResourceAvro = queryVersionAvro.getLifecycleStatisticalResource().getVersionableStatisticalResource()
+                .getNameableStatisticalResource().getIdentifiableStatisticalResource();
+
+        if (!StringUtils.isEmpty(identifiableStatisticalResourceAvro.getUrn())) {
+            dataDefinitionsUuids.add(identifiableStatisticalResourceAvro.getUrn());
+        }
+
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+    }
+
+    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, List<String> dataDefinitionsUuids) throws MetamacException {
+        // Date newQueryDate = Calendar.getInstance().getTime();
+        // List<String> dataDefinitionsUuids = null;
+        // try {
+        // dataDefinitionsUuids = getDataGpeRepository().findDataDefinitionsWithDataUpdatedAfter(lastQuery);
+        // } catch (Exception e) {
+        // throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
+        // }
+
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
         markIndicatorsNeedsUpdateTransactional(pendingIndicators);
-        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
     }
 
     // No more inconsistent data, no more needs update, update last populate date
@@ -1495,7 +1543,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 
                 Data data = dataCache.get(dataSource.getQueryUuid());
                 if (data == null) {
-                    // Recalculte
+                    // Recalculate
                     if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                         // Metamac
                         Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),

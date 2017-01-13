@@ -135,8 +135,8 @@
 		<statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
 		
 		<!--  KAFKA -->
-        <kafka-avro-serializer.version>3.0.1</kafka-avro-serializer.version>
-        <kafka-clients.version>0.10.0.1-cp1</kafka-clients.version>
+        <kafka-avro-serializer.version>3.1.1</kafka-avro-serializer.version>
+        <kafka-clients.version>0.10.1.0-cp2</kafka-clients.version>
         <avro.version>1.8.1</avro.version>
 
 		<!-- METAMAC -->
@@ -148,6 +148,7 @@
 		<metamac-sso-client.version>2.0.1-SNAPSHOT</metamac-sso-client.version>
 		<metamac-rest-common.version>2.0.0</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
+        <metamac-statistical-resources-kafka.version>2.0.1-SNAPSHOT</metamac-statistical-resources-kafka.version>
 	</properties>
 
 	<dependencyManagement>
@@ -831,6 +832,34 @@
 				<artifactId>xercesImpl</artifactId>
 				<version>${xerces.version}</version>
 			</dependency>
+            
+            <!-- KAFKA -->
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-avro-serializer</artifactId>
+                <version>${kafka-avro-serializer.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-clients.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+                <artifactId>metamac-statistical-resources-kafka</artifactId>
+                <version>${metamac-statistical-resources-kafka.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
