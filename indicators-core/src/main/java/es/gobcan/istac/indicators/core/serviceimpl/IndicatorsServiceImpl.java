@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -56,7 +58,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 /**
  * Implementation of IndicatorsService

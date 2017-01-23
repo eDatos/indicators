@@ -1,5 +1,13 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.DATA_GPE_UUIDS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PROC_STATUS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PUBLISHED_STATUS;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.VERSION_NUMBER;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +25,6 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.DATA_GPE_UUIDS;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_CODE;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PROC_STATUS;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PUBLISHED_STATUS;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.VERSION_NUMBER;
 
 /**
  * Repository implementation for IndicatorVersion
@@ -176,7 +177,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
                 querySql.append("select indV ");
                 querySql.append("from IndicatorVersion as indV ");
                 querySql.append("inner join indV.dataSources as ds ");
-                querySql.append("where ds.dataGpeUuid in (:dataGpeUuids)");
+                querySql.append("where ds.queryUuid in (:dataGpeUuids)");
 
                 Query query = getEntityManager().createQuery(querySql.toString());
                 query.setParameter(DATA_GPE_UUIDS, sublist);

@@ -79,8 +79,8 @@ public class IndicatorsAsserts extends MetamacAsserts {
     }
 
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
-        assertEquals(expected.getDataGpeUuid(), actual.getDataGpeUuid());
-        assertEquals(expected.getPxUri(), actual.getPxUri());
+        assertEquals(expected.getQueryUuid(), actual.getQueryUuid());
+        assertEquals(expected.getQueryUrn(), actual.getQueryUrn());
         assertEquals(expected.getTimeVariable(), actual.getTimeVariable());
         assertEquals(expected.getTimeValue(), actual.getTimeValue());
         assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());

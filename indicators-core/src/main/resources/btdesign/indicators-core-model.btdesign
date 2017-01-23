@@ -210,7 +210,9 @@ Application Indicators {
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
-	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
+	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Updates data for all published indicators"
+            List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
 	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
 	    	"Link a dataset view to the latest version of the indicator"
@@ -534,8 +536,10 @@ Application Indicators {
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
-	    	"Update indicators data"
-	    	List<@IndicatorVersion> updateIndicatorsData() throws MetamacException;
+	    	"Update indicators data GPE"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators data METAMAC"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"
@@ -963,9 +967,9 @@ Application Indicators {
         	gap
         	
 			"Query in GPE"
-			String dataGpeUuid not nullable;
+			String queryUuid not nullable databaseColumn="QUERY_UUID";
 			"Px"
-			String pxUri not nullable;
+			String queryUrn not nullable databaseColumn="QUERY_URN";
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -986,7 +990,11 @@ Application Indicators {
 			String sourceSurveyUrl nullable length="4000";
 			"Publishers (with ## as separator)"
 			String publishers not nullable length="4000";
-						
+			"Query Environment"
+            - @QueryEnvironmentEnum queryEnvironment not nullable;
+			"Structural Resource Code (Metamac) related with the data source"
+            - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
+             		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
 						
@@ -1587,9 +1595,13 @@ Application Indicators {
 			"Unique uuid"
 			String uuid;
 			"Query in GPE"
-			String dataGpeUuid;
-			"Px"
-			String pxUri;
+			String queryUuid;
+			"QueryUrn"
+			String queryUrn;
+		    "Query Environment"
+            - @QueryEnvironmentEnum queryEnvironment;
+            "Statistical Resource Query (Metamac) related with the data source"
+            - @ExternalItemDto statResource;
 			"Time variable"
 			String timeVariable;
 			"Time value, if time variable is not provided"
@@ -1836,8 +1848,8 @@ Application Indicators {
     		String uuid;
     		"Title"
     		String title;
-    		"Uri px associated"
-    		String pxUri;
+    		"Urn associated"
+    		String queryUrn;
     		"Survey code"
     		String surveyCode;
     		"Survey Title"
@@ -1848,8 +1860,12 @@ Application Indicators {
     		List<String> variables;
     		"Temporal variable"
     		String temporalVariable; 
+    		"Temporal value"
+            String temporalValue; 
     		"Spatial variable"
     		List<String> spatialVariables;
+    		"Spatial value"
+    		- @GeographicalValueDto geographicalValueDto;
     		"Contvariable"
     		String contVariable;
     		"Labels for every value in every variable"
@@ -1990,5 +2006,11 @@ Application Indicators {
     		TECNICO_DIFUSION,
     		ANY_ROLE_ALLOWED
     	}
+    	
+    	"Query Source"
+        enum QueryEnvironmentEnum {
+            METAMAC,
+            GPE
+        }
 	}
 }

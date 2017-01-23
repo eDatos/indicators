@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +13,6 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
 
 /**
  * Repository implementation for DataSource
@@ -37,7 +38,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> findDatasourceDataGpeUuidLinkedToIndicatorVersion(Long indicatorVersionId) {
-        String querySql = "select distinct(ds.dataGpeUuid) " + "from DataSource ds " + "where ds.dataGpeUuid is not null " + "and ds.indicatorVersion.id = :id";
+        String querySql = "select distinct(ds.queryUuid) " + "from DataSource ds " + "where ds.queryUuid is not null " + "and ds.indicatorVersion.id = :id";
         Query query = getEntityManager().createQuery(querySql);
         query.setParameter(ID, indicatorVersionId);
         return query.getResultList();

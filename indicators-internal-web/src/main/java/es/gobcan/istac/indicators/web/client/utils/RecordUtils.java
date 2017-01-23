@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -51,7 +52,7 @@ public class RecordUtils {
     }
 
     public static DataSourceRecord getDataSourceRecord(DataSourceDto dataSourceDto) {
-        DataSourceRecord record = new DataSourceRecord(dataSourceDto.getUuid(), dataSourceDto.getDataGpeUuid(), dataSourceDto.getPxUri(), dataSourceDto);
+        DataSourceRecord record = new DataSourceRecord(dataSourceDto.getUuid(), dataSourceDto.getQueryUuid(), dataSourceDto.getQueryUrn(), dataSourceDto);
         return record;
     }
 

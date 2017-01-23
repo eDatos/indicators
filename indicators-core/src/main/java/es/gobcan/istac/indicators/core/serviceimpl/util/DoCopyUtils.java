@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 
@@ -163,8 +164,10 @@ public class DoCopyUtils {
      */
     private static DataSource copy(DataSource source) {
         DataSource target = new DataSource();
-        target.setDataGpeUuid(source.getDataGpeUuid());
-        target.setPxUri(source.getPxUri());
+        target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setQueryUuid(source.getQueryUuid());
+        target.setQueryUrn(source.getQueryUrn());
+        target.setStatResource(copy(source.getStatResource()));
         target.setTimeValue(source.getTimeValue());
         target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalValue(source.getGeographicalValue());
@@ -240,5 +243,21 @@ public class DoCopyUtils {
             targets.add(target);
         }
         return targets;
+    }
+    
+    /**
+     * Copy a data external item
+     */
+    private static ExternalItem copy(ExternalItem source) {
+        ExternalItem target = new ExternalItem();
+        target.setCode(source.getCode());
+        target.setCodeNested(source.getCodeNested());
+        target.setManagementAppUrl(source.getManagementAppUrl());
+        target.setTitle(copy(source.getTitle()));
+        target.setType(source.getType());
+        target.setUri(source.getUri());
+        target.setUrn(source.getUrn());
+        target.setUrnProvider(source.getUrnProvider());
+        return target;
     }
 }

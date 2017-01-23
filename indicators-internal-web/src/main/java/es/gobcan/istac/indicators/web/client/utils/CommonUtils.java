@@ -38,6 +38,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -214,6 +215,14 @@ public class CommonUtils {
         valueMap.put(RateDerivationForm.NOT_APPLICABLE, getCoreMessages().rateDerivationMethodTypeEnumNOT_APPLICABLE());
         for (RateDerivationMethodTypeEnum type : RateDerivationMethodTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + type.getName()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getQueryEnvironmentEnumValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
+            valueMap.put(environment.toString(), environment.getName());
         }
         return valueMap;
     }

@@ -9,5 +9,10 @@
   <import resource="classpath:/spring/include/indicators-datasources-internal.xml"/>  
   
   
+    <!-- Kafka -->
+    <bean id="kafkaTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="10" />
+    </bean>
   
 </beans>

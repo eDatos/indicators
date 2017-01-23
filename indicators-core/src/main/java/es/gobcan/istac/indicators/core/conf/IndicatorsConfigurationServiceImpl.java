@@ -7,6 +7,8 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstant
 
 public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl implements IndicatorsConfigurationService {
 
+    final String INDICATOR_CONSUMER_GROUP = "INDICATOR_CONSUMER_GROUP";
+
     @Override
     public String retrieveJaxiRemoteUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL);
@@ -100,6 +102,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveHelpUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.HELP_URL);
+    }
+
+    @Override
+    public String retrieveKafkaGroup() throws MetamacException {
+        return INDICATOR_CONSUMER_GROUP; // Hard coded for evit manual edition
     }
 
 }

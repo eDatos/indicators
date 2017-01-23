@@ -26,7 +26,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
-public interface Dto2DoMapper {
+public interface Dto2DoMapper extends CommonDto2DoMapper {
 
     // Indicators systems
     IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException;
