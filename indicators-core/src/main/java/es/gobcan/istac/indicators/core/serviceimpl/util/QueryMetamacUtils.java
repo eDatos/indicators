@@ -16,19 +16,16 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.AttributeValues;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ComponentType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttribute;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttributes;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimensions;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedAttributeValue;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedAttributeValues;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedAttributeValue;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
@@ -145,7 +142,7 @@ public class QueryMetamacUtils {
     }
     
     public static String extractTemporalValue(Query query) {
-        return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), ComponentType.TEMPORAL);
+        return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.TEMPORAL);
     }
 
     public static List<String> extractSpatialVariableList(Query query) {
@@ -162,7 +159,7 @@ public class QueryMetamacUtils {
     }
 
     public static String extractSpatialValue(Query query) {
-        return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), ComponentType.SPATIAL);
+        return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
     }
 
     public static GeographicalValueDto extractGeographicalValueDto(Query query) throws MetamacException {
@@ -226,21 +223,16 @@ public class QueryMetamacUtils {
         return null;
     }
 
-    public static String extractSpecificAttributeValuesByType(Attributes attributes, ComponentType componentType) {
-        if (attributes == null) {
+    public static String extractSpecificAttributeValuesByType(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
+        if (attributes == null || dataAttributes == null) {
             return null;
         }
 
         for (Attribute attribute : attributes.getAttributes()) {
             if (componentType.equals(attribute.getType())) {
-                AttributeValues attributeValues = attribute.getAttributeValues();
-                if (attributeValues instanceof NonEnumeratedAttributeValues) {
-                    for (NonEnumeratedAttributeValue nonEnumeratedAttributeValue : ((NonEnumeratedAttributeValues) attributeValues).getValues()) {
-                        return extractValueForDefaultLanguage(nonEnumeratedAttributeValue.getName());
-                    }
-                } else if (attributeValues instanceof EnumeratedAttributeValues) {
-                    for (EnumeratedAttributeValue enumeratedAttributeValue : ((EnumeratedAttributeValues) attributeValues).getValues()) {
-                        return enumeratedAttributeValue.getId();
+                for (DataAttribute dataAttribute : dataAttributes.getAttributes()) {
+                    if (attribute.getId().equals(dataAttribute.getId())) {
+                        return dataAttribute.getValue();
                     }
                 }
             }
