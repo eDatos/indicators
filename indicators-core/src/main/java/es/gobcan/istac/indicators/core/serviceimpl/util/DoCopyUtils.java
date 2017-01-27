@@ -249,6 +249,9 @@ public class DoCopyUtils {
      * Copy a data external item
      */
     private static ExternalItem copy(ExternalItem source) {
+        if (source == null) {
+            return null;
+        }
         ExternalItem target = new ExternalItem();
         target.setCode(source.getCode());
         target.setCodeNested(source.getCodeNested());
