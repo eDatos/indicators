@@ -1716,8 +1716,8 @@
                     <TB_DATA_SOURCES
                         ID="111"
                         UUID="Indicator-1-v1-DataSource-1"
-                        DATA_GPE_UUID="Indicator-1-v1-DataSource-1-GPE-GEO-TIME"
-                        PX_URI="px Indicator-1-v1-DataSource-1"
+                        QUERY_UUID="Indicator-1-v1-DataSource-1-GPE-GEO-TIME"
+                        QUERY_URN="px Indicator-1-v1-DataSource-1"
                         TIME_VARIABLE="Periodos"
                         TIME_VALUE="[null]"
                         GEOGRAPHICAL_VALUE_FK="[null]"
@@ -1952,8 +1952,8 @@
                 <TB_DATA_SOURCES
                         ID="311"
                         UUID="Indicator-3-v1-DataSource-1"
-                        DATA_GPE_UUID="Indicator-3-v1-DataSource-1-GPE-GEO-TIME"
-                        PX_URI="px Indicator-3-v1-DataSource-1"
+                        QUERY_UUID="Indicator-3-v1-DataSource-1-GPE-GEO-TIME"
+                        QUERY_URN="px Indicator-3-v1-DataSource-1"
                         TIME_VARIABLE="Periodos"
                         TIME_VALUE="[null]"
                         GEOGRAPHICAL_VALUE_FK="[null]"
@@ -2099,8 +2099,8 @@
                     <TB_DATA_SOURCES
                         ID="411"
                         UUID="Indicator-4-v1-DataSource-1"
-                        DATA_GPE_UUID="Indicator-4-v1-DataSource-1-GPE-GEO-TIME"
-                        PX_URI="px Indicator-4-v1-DataSource-1"
+                        QUERY_UUID="Indicator-4-v1-DataSource-1-GPE-GEO-TIME"
+                        QUERY_URN="px Indicator-4-v1-DataSource-1"
                         TIME_VARIABLE="Periodos"
                         TIME_VALUE="[null]"
                         GEOGRAPHICAL_VALUE_FK="[null]"
@@ -2246,8 +2246,8 @@
                     <TB_DATA_SOURCES
                         ID="511"
                         UUID="Indicator-5-v1-DataSource-1"
-                        DATA_GPE_UUID="Indicator-5-v1-DataSource-1-GPE-GEO-TIME"
-                        PX_URI="px Indicator-5-v1-DataSource-1"
+                        QUERY_UUID="Indicator-5-v1-DataSource-1-GPE-GEO-TIME"
+                        QUERY_URN="px Indicator-5-v1-DataSource-1"
                         TIME_VARIABLE="Periodos"
                         TIME_VALUE="[null]"
                         GEOGRAPHICAL_VALUE_FK="[null]"
