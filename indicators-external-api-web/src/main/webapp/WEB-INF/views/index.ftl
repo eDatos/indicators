@@ -24,7 +24,7 @@
     	       </li>
     	       
     	       <li>
-                   <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/1.0" alt="Versión 1.0">/v1.0</a></h3>
+                   <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/v1.0" alt="Versión 1.0">/v1.0</a></h3>
                    <div class="version-description">
                         <p>Versión 1.0 de la API</p>    
                    </div>

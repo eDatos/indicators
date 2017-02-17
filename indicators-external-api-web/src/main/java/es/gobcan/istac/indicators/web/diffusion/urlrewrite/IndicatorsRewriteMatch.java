@@ -24,14 +24,14 @@ import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 class IndicatorsRewriteMatch extends RewriteMatch {
 
     private Pattern              apiUrlPattern           = Pattern.compile(".*/api/indicators/(v\\d+\\.\\d+|" + API_LATEST + ")(/(.*)?)?");
-    private Pattern              swaggerResourcesPattern = Pattern.compile(".*/api/indicatoris(/apidocs/.*)");
+    private Pattern              swaggerResourcesPattern = Pattern.compile(".*/api/indicators(/apidocs/.*)");
 
     private ConfigurationService configurationService    = null;
 
     @Override
     public boolean execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String requestURI = ((HttpServletRequest) request).getRequestURI();
-        String queryString = ((HttpServletRequest) request).getQueryString();
+        String requestURI = request.getRequestURI();
+        String queryString = request.getQueryString();
         Matcher apiUrlmatcher = apiUrlPattern.matcher(requestURI);
         if (apiUrlmatcher.matches() && apiUrlmatcher.groupCount() > 2) {
             String requestApiVersion = apiUrlmatcher.group(1);
