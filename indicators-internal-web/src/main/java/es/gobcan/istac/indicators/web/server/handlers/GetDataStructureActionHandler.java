@@ -1,6 +1,8 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -12,6 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.rest.StatisticalResoucesRestInternalFacade;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 
@@ -20,6 +23,9 @@ public class GetDataStructureActionHandler extends SecurityActionHandler<GetData
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
+    
+    @Autowired
+    private StatisticalResoucesRestInternalFacade statisticalResoucesRestExternalFacade;
 
     public GetDataStructureActionHandler() {
         super(GetDataStructureAction.class);
@@ -28,7 +34,13 @@ public class GetDataStructureActionHandler extends SecurityActionHandler<GetData
     @Override
     public GetDataStructureResult executeSecurityAction(GetDataStructureAction action) throws ActionException {
         try {
-            DataStructureDto dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
+            DataStructureDto dataStructureDto = null;
+            if (StringUtils.startsWithIgnoreCase(action.getUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                dataStructureDto = statisticalResoucesRestExternalFacade.retrieveDataDefinitionFromQuery(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
+            }
+            else {
+                dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
+            }
             return new GetDataStructureResult(dataStructureDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

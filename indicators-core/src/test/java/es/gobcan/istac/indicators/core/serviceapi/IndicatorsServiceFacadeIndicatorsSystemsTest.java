@@ -1,5 +1,13 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,16 +60,8 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceimpl.util.GpeTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators systems, dimensions, indicators instances
@@ -3911,27 +3911,27 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Invalid
-        assertFalse(TimeVariableUtils.isTimeValue("912"));
-        assertFalse(TimeVariableUtils.isTimeValue("3000"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012q1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012Q00"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012Q0"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012Q5"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012m1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012M111"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012M1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012M14"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012w1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012W111"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012W1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012W54"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012W60"));
-        assertFalse(TimeVariableUtils.isTimeValue("20121"));
-        assertFalse(TimeVariableUtils.isTimeValue("201212"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012121"));
-        assertFalse(TimeVariableUtils.isTimeValue("201211223"));
-        assertFalse(TimeVariableUtils.isTimeValue("afas"));
-        assertFalse(TimeVariableUtils.isTimeValue("201 2"));
+        assertFalse(GpeTimeUtils.isTimeValue("912"));
+        assertFalse(GpeTimeUtils.isTimeValue("3000"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012q1"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012Q00"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012Q0"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012Q5"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012m1"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012M111"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012M1"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012M14"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012w1"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012W111"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012W1"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012W54"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012W60"));
+        assertFalse(GpeTimeUtils.isTimeValue("20121"));
+        assertFalse(GpeTimeUtils.isTimeValue("201212"));
+        assertFalse(GpeTimeUtils.isTimeValue("2012121"));
+        assertFalse(GpeTimeUtils.isTimeValue("201211223"));
+        assertFalse(GpeTimeUtils.isTimeValue("afas"));
+        assertFalse(GpeTimeUtils.isTimeValue("201 2"));
     }
 
     @Test

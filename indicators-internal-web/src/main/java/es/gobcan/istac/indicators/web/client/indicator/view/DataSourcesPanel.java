@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
@@ -36,6 +37,7 @@ import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 
 public class DataSourcesPanel extends VLayout {
 
@@ -244,6 +246,15 @@ public class DataSourcesPanel extends VLayout {
 
     public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
         datasourcePanel.setDataDefinition(dataDefinitionDto);
+    }
+    
+    public void setStatisticalOperations(List<ExternalItemDto> operationsList) {
+        datasourcePanel.setStatisticalOperations(operationsList);
+    }
+    
+    public void setQueries(GetQueriesPaginatedListResult result) {
+        List<ExternalItemDto> queriesList = result.getQueriesList();
+        datasourcePanel.setQueries(queriesList, result.getFirstResultOut(), queriesList.size(), result.getTotalResults());
     }
 
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {

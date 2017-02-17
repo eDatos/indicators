@@ -1,11 +1,24 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
+import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
+import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ProcStatusType;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryCriteriaPropertyRestriction;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
@@ -13,6 +26,7 @@ import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaPropertyEnum
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
+import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class MetamacWebCriteriaUtils {
 
@@ -109,4 +123,69 @@ public class MetamacWebCriteriaUtils {
 
         return conjunctionRestriction;
     }
+    
+
+    // -------------------------------------------------------------------------------------------------------------
+    // STATISTICAL OPERATION
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static String buildQueryStatisticalOperation(MetamacWebCriteria webCriteria) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (webCriteria != null) {
+            addSimpleRestCriteria(queryBuilder, webCriteria, OperationCriteriaPropertyRestriction.TITLE, OperationCriteriaPropertyRestriction.ID);
+        }
+        return queryBuilder.toString();
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static void addSimpleRestCriteria(StringBuilder queryBuilder, HasSimpleCriteria criteria, Enum... fields) {
+        String simpleCriteria = criteria.getCriteria();
+        if (StringUtils.isNotBlank(simpleCriteria)) {
+            StringBuilder conditionBuilder = new StringBuilder();
+            
+            List<String> conditions = new ArrayList<String>();
+            for (Enum field : fields) {
+                conditions.add(fieldComparison(field, ComparisonOperator.ILIKE, simpleCriteria));
+            }
+            
+            conditionBuilder.append("(");
+            for (int i = 0; i < conditions.size(); i++) {
+                if (i > 0) {
+                    conditionBuilder.append(" ").append(LogicalOperator.OR).append(" ");
+                }
+                conditionBuilder.append(conditions.get(i));
+            }
+            conditionBuilder.append(")");
+            appendConditionToQuery(queryBuilder, conditionBuilder.toString());
+        }
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------
+    // QUERY
+    // -------------------------------------------------------------------------------------------------------------
+    
+    public static String buildQueryForQueryVersion(MetamacWebCriteria webCriteria) {
+        
+        QueryWebCriteria queryWebCriteria = (QueryWebCriteria)webCriteria;
+        
+        StringBuilder queryBuilder = new StringBuilder();
+        if (queryWebCriteria != null) {
+            
+            addSimpleRestCriteria(queryBuilder, webCriteria, QueryCriteriaPropertyRestriction.NAME, QueryCriteriaPropertyRestriction.ID);
+            
+            String statisticalOperationUrn = queryWebCriteria.getStatisticalOperationUrn();
+            if (StringUtils.isNotBlank(statisticalOperationUrn)) {
+                String schemeCondition = fieldComparison(QueryCriteriaPropertyRestriction.STATISTICAL_OPERATION_URN, ComparisonOperator.EQ, statisticalOperationUrn);
+                appendConditionToQuery(queryBuilder, schemeCondition);
+            }
+
+            // Only published
+            String dsdCodeCondition = fieldComparison(QueryCriteriaPropertyRestriction.PROC_STATUS, ComparisonOperator.EQ, ProcStatusType.PUBLISHED);
+            appendConditionToQuery(queryBuilder, dsdCodeCondition);
+
+        }
+        
+        return queryBuilder.toString();
+    }
+    
 }

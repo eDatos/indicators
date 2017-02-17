@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -873,11 +874,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        return getIndicatorsDataService().updateIndicatorsData(ctx);
+        return getIndicatorsDataService().updateIndicatorsDataFromGpe(ctx);
+    }
+
+    @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromMetamac(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        return getIndicatorsDataService().updateIndicatorsDataFromMetamac(ctx, message);
     }
 
     @Override

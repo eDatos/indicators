@@ -5,6 +5,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -26,6 +27,7 @@ import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
@@ -215,6 +217,17 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors) {
         generalPanel.updateVisibilityNotifyPopulateErrors(notifyPopulationErrors);
+    }
+
+    @Override
+    public void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result) {
+        dataSourcesPanel.setQueries(result);
+    }
+
+    @Override
+    public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList) {
+        dataSourcesPanel.setStatisticalOperations(operationsList);
+        
     }
 
 }

@@ -122,7 +122,7 @@ public class DataOperation {
     }
 
     public String getDataGpeUuid() {
-        return dataSource.getDataGpeUuid();
+        return dataSource.getQueryUuid();
     }
 
     public boolean hasGeographicalVariable() {

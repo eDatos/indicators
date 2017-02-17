@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.Date;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -24,14 +27,12 @@ import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Security tester.
@@ -497,8 +498,9 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     @Test
     public void testCreateDataSource() throws Exception {
         DataSourceDto dataSourceDto = new DataSourceDto();
-        dataSourceDto.setDataGpeUuid("queryGpe1");
-        dataSourceDto.setPxUri("px1");
+        dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
+        dataSourceDto.setQueryUuid("queryGpe1");
+        dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");

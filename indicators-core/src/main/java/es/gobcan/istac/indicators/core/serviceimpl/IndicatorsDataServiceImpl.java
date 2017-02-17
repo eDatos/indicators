@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -25,6 +27,10 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +88,11 @@ import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
@@ -103,6 +111,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private IndicatorsConfigurationService   configurationService;
+    
+    @Autowired
+    private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
+    
     private static final Logger              LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
     public static final String               GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
@@ -121,6 +133,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
+        SPECIAL_STRING_MAPPING.put("", "");
         SPECIAL_STRING_MAPPING.put("-", "");
         SPECIAL_STRING_MAPPING.put(".", "No procede");
         SPECIAL_STRING_MAPPING.put("..", "Dato no disponible");
@@ -247,17 +260,36 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
-        LOG.info("Starting Indicators data update process");
-
-        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
+    public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
+        LOG.info("Starting Indicators data update process (GPE DATA)");
 
         // Validation
         InvocationValidator.checkUpdateIndicatorsData(null);
 
         Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
 
-        markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
+        markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ctx, lastQueryDate);
+        return updateIndicatorsData(ctx);
+    }
+
+    @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromMetamac(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        QueryVersionAvro queryVersionAvro = null;
+        if (message instanceof QueryVersionAvro) {
+            queryVersionAvro = (QueryVersionAvro) message;
+        }
+        else {
+            return Collections.emptyList();
+        }
+        
+        LOG.info("Starting Indicators data update process (METAMAC DATA)");
+
+        markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, queryVersionAvro);
+        return updateIndicatorsData(ctx);
+    }
+
+    private List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<IndicatorVersion>();
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
 
         LOG.info("Total indicatorsVersions that needs to be updated: " + pendingIndicators.size());
@@ -1340,7 +1372,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void checkDataSourcesDataCompatibility(List<DataSource> dataSources, Map<String, Data> dataCache) throws MetamacException {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (DataSource dataSource : dataSources) {
-            Data data = dataCache.get(dataSource.getDataGpeUuid());
+            Data data = dataCache.get(dataSource.getQueryUuid());
             exceptionItems.addAll(DataSourceCompatibilityChecker.check(dataSource, data));
         }
         if (exceptionItems.size() > 0) {
@@ -1349,7 +1381,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /* Mark only diffusionVersion */
-    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
+    private void markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
         Date newQueryDate = Calendar.getInstance().getTime();
         List<String> dataDefinitionsUuids = null;
         try {
@@ -1358,9 +1390,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
         }
 
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
+    }
+
+    private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, QueryVersionAvro queryVersionAvro) throws MetamacException {
+        List<String> dataDefinitionsUuids = new ArrayList<>(1);
+
+        IdentifiableStatisticalResourceAvro identifiableStatisticalResourceAvro = queryVersionAvro.getLifecycleStatisticalResource().getVersionableStatisticalResource()
+                .getNameableStatisticalResource().getIdentifiableStatisticalResource();
+
+        if (!StringUtils.isEmpty(identifiableStatisticalResourceAvro.getUrn())) {
+            dataDefinitionsUuids.add(identifiableStatisticalResourceAvro.getUrn());
+        }
+
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+    }
+
+    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, List<String> dataDefinitionsUuids) throws MetamacException {
+        // Date newQueryDate = Calendar.getInstance().getTime();
+        // List<String> dataDefinitionsUuids = null;
+        // try {
+        // dataDefinitionsUuids = getDataGpeRepository().findDataDefinitionsWithDataUpdatedAfter(lastQuery);
+        // } catch (Exception e) {
+        // throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
+        // }
+
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
         markIndicatorsNeedsUpdateTransactional(pendingIndicators);
-        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
     }
 
     // No more inconsistent data, no more needs update, update last populate date
@@ -1483,19 +1540,31 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Map<String, Data> dataCache = new HashMap<String, Data>();
         for (DataSource dataSource : dataSources) {
             try {
-                Data data = dataCache.get(dataSource.getDataGpeUuid());
+                
+                Data data = dataCache.get(dataSource.getQueryUuid());
                 if (data == null) {
-                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getDataGpeUuid());
-                    if (json == null) {
-                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                    // Recalculate
+                    if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                        // Metamac
+                        Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
+                        data = QueryMetamacUtils.queryMetamacToData(query);
                     }
-                    data = jsonToData(json);
-                    dataCache.put(dataSource.getDataGpeUuid(), data);
+                    else {
+                        // GPE-JAXI
+                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
+                        if (json == null) {
+                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
+                        }
+                        data = jsonToData(json);
+
+                    }
+                    dataCache.put(dataSource.getQueryUuid(), data);
                 }
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
-                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getQueryUuid(), dataSource.getUuid());
             }
         }
         return dataCache;
@@ -1522,7 +1591,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             if (unknownCodes.size() > 0) {
                 String codes = StringUtils.join(unknownCodes, ",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getQueryUuid(), codes);
             }
         } else {
             geoValues = new ArrayList<String>();
@@ -1554,7 +1623,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             if (unknownCodes.size() > 0) {
                 String codes = StringUtils.join(unknownCodes, ",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getQueryUuid(), codes);
             }
 
         } else {
@@ -1608,6 +1677,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
+        if (StringUtils.isEmpty(value)) {
+            value = "..";
+        }
+        
         // Check for dotted notation
         if (isSpecialString(value)) {
             String text = getSpecialStringMeaning(value);

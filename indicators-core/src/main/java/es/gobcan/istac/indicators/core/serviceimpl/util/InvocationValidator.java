@@ -29,6 +29,7 @@ import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -1982,11 +1983,16 @@ public class InvocationValidator {
         if (dataSource == null) {
             return;
         }
-        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
-        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getPxUri(), ServiceExceptionParameters.DATA_SOURCE_PX_URI, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryEnvironment(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ENVIRONMENT, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryUrn(), ServiceExceptionParameters.DATA_SOURCE_PX_URI, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyTitle(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getPublishers(), ServiceExceptionParameters.DATA_SOURCE_PUBLISHERS, exceptions);
+        
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
+        }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
             // If absoluteMethod is null, any rate must be load

@@ -1,10 +1,14 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
@@ -79,6 +83,10 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlResu
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
@@ -102,8 +110,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
@@ -182,6 +189,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors);
         
         void setHasDiffusionIndicatorDatasources(boolean hasDatasources);
+
+        void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
+
+        void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
     }
 
     @Inject
@@ -458,6 +469,28 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         });
     }
 
+    @Override
+    public void retrieveStatisticalOperationsForQuerySelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForQuerySelection(result.getOperationsList());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+        dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetQueriesPaginatedListResult result) {
+                getView().setQueriesForRelatedQuery(result);
+            }
+        });
+    }
+    
     @Override
     public void retrieveGeographicalValueDS(final String uuid) {
         dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {

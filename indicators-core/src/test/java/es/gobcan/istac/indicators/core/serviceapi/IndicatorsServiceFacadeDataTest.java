@@ -106,7 +106,7 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
     private void compareDoDto(DataStructure dbo, DataStructureDto dto) {
         assertEquals(dbo.getUuid(), dto.getUuid());
         assertEquals(dbo.getTitle(), dto.getTitle());
-        assertEquals(dbo.getPxUri(), dto.getPxUri());
+        assertEquals(dbo.getPxUri(), dto.getQueryUrn());
         assertEquals(dbo.getSurveyCode(), dto.getSurveyCode());
         assertEquals(dbo.getSurveyTitle(), dto.getSurveyTitle());
         assertEquals(dbo.getPublishers(), dto.getPublishers());

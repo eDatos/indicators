@@ -11,14 +11,19 @@ public class DataSourceDS extends DataSource {
     public static String QUERY_UUID                        = "ds-query-uuid";
     public static String QUERY_TEXT                        = "ds-query-text";        // Not mapped in DTO
     public static String PX                                = "ds-px";
+    public static String QUERY_METAMAC                     = "ds-query-metamac";
+    public static String QUERY_ENVIRONMENT                 = "ds-query-environment";
 
     public static String ABSOLUTE_METHOD                   = "ds-abs-met";
     public static String ABSOLUTE_METHOD_VIEW              = "ds-abs-met-view";
 
     public static String TIME_VARIABLE                     = "ds-time-var";
     public static String TIME_VALUE                        = "ds-time-value";
+    public static String TIME_VALUE_METAMAC                = "ds-time-value-metamac";
     public static String GEO_VARIABLE                      = "ds-geo-var";
     public static String GEO_VALUE                         = "ds-geo-val";
+    public static String GEO_VALUE_UUID_METAMAC            = "ds-geo-va-uuid-metamac";
+    public static String GEO_VALUE_TEXT_METAMAC            = "ds-geo-val-text-metamac";
     public static String MEASURE_VARIABLE                  = "ds-meas-var";
     public static String SOURCE_SURVEY_CODE                = "ds-sur-code";
     public static String SOURCE_SURVEY_TITLE               = "ds-sur-title";
