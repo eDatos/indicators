@@ -31,7 +31,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     protected static Log                   LOGGER                = LogFactory.getLog(KafkaConsumerLauncher.class);
 
     private Map<String, Future<?>>         futuresMap;
-    private final String                   CONSUMER_QUERY_1_NAME = "consumer_query_1";
+    private final String                   CONSUMER_QUERY_1_NAME = "indicators_consumer_query_1";
 
     @Autowired
     private ThreadPoolTaskExecutor         threadPoolTaskExecutor;
@@ -65,17 +65,18 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     private Future<?> startConsumerForQueryTopic(ApplicationContext context) throws MetamacException {
         String topicDatasetsPublication = configurationService.retrieveKafkaTopicQueryPublication();
         KafkaConsumerThread<DatasetVersionAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
-        KafkaConsumer<String, DatasetVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicDatasetsPublication);
+        KafkaConsumer<String, DatasetVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicDatasetsPublication, CONSUMER_QUERY_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
         consumerThread.setTopicName(topicDatasetsPublication);
         consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
-    private Properties getConsumerProperties() throws MetamacException {
+    private Properties getConsumerProperties(String clientId) throws MetamacException {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, configurationService.retrieveKafkaGroup());
+        props.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
 
@@ -91,8 +92,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return props;
     }
 
-    private KafkaConsumer<String, DatasetVersionAvro> createConsumerFromCurrentOffset(String topic) throws MetamacException {
-        KafkaConsumer<String, DatasetVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties());
+    private KafkaConsumer<String, DatasetVersionAvro> createConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, DatasetVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId));
         kafkaConsumer.subscribe(Collections.singletonList(topic));
         return kafkaConsumer;
     }
