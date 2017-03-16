@@ -11,15 +11,17 @@
 				<div id="cab_superior">
 					<ul>
 						<li class="redes_sociales">Síguenos: 
-							<a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Canales RSS (tecla de acceso: r)">
+							<a href="https://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Canales RSS (tecla de acceso: r)">
 								<img src="${serverURL}/theme/images/atom.png" title="Canales RSS (tecla de acceso: r)" alt="Canales RSS (tecla de acceso: r)">
-							</a><a href="http://www.gobiernodecanarias.org/istac/twitter" accesskey="t" title="Seguir a istac_es en Twitter (tecla de acceso: t)">
+							</a><a href="https://www.gobiernodecanarias.org/istac/twitter" accesskey="t" title="Seguir a istac_es en Twitter (tecla de acceso: t)">
 								<img src="${serverURL}/theme/images/t_mini-a.png" title="Seguir a istac_es en Twitter (tecla de acceso: t)" alt="Seguir a istac_es en Twitter (tecla de acceso: t)">
-							</a><a href="http://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
+							</a><a href="https://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
 								<img src="${serverURL}/theme/images/slideshare.jpg" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" alt="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
-							</a><a href="http://www.youtube.com/user/istacES" accesskey="s" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
+							</a><a href="https://www.youtube.com/user/istacES" accesskey="s" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
 								<img src="${serverURL}/theme/images/youtube.png" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" alt="Seguir a ISTAC en Youtube (tecla de acceso: y)">
-							</a>
+							</a><a href="https://public.tableau.com/profile/istac#!/" accesskey="s" title="Seguir a ISTAC en Tableau (tecla de acceso: u)">
+                                <img src="${serverURL}/theme/images/tableau.png" title="Seguir a ISTAC en Tableau (tecla de acceso: u)" alt="Seguir a ISTAC en Tableau (tecla de acceso: u)">
+                            </a>
 						</li>
 						<li>|</li>
 						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.html" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>				
@@ -62,7 +64,7 @@
 				<div class="dcha">
 					<a href="http://www.gobiernodecanarias.org/istac/Open-Definition.html" target="_blank"><img alt="Open Data" height="13px" src="${serverURL}/theme/images/opendata_80x15_black.png" >
 					</a> | <a href="http://www.gobiernodecanarias.org/istac/aviso_legal.html">[@apph.messageEscape 'app.footer.legal-advice' /]
-					</a> | <a href="http://www.gobiernodecanarias.org/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
+					</a> | <a href="http://www.gobiernodecanarias.org/principal/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
 				</div>
 			</div>
 		</div>
