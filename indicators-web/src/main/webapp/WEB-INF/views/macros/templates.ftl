@@ -17,9 +17,9 @@
 								<img src="${serverURL}/theme/images/t_mini-a.png" title="Seguir a istac_es en Twitter (tecla de acceso: t)" alt="Seguir a istac_es en Twitter (tecla de acceso: t)">
 							</a><a href="https://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
 								<img src="${serverURL}/theme/images/slideshare.jpg" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" alt="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
-							</a><a href="https://www.youtube.com/user/istacES" accesskey="s" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
+							</a><a href="https://www.youtube.com/user/istacES" accesskey="y" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
 								<img src="${serverURL}/theme/images/youtube.png" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" alt="Seguir a ISTAC en Youtube (tecla de acceso: y)">
-							</a><a href="https://public.tableau.com/profile/istac#!/" accesskey="s" title="Seguir a ISTAC en Tableau (tecla de acceso: u)">
+							</a><a href="https://public.tableau.com/profile/istac#!/" accesskey="u" title="Seguir a ISTAC en Tableau (tecla de acceso: u)">
                                 <img src="${serverURL}/theme/images/tableau.png" title="Seguir a ISTAC en Tableau (tecla de acceso: u)" alt="Seguir a ISTAC en Tableau (tecla de acceso: u)">
                             </a>
 						</li>
