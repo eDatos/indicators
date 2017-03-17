@@ -167,6 +167,10 @@ public class ClientSecurityUtils {
         return false;
     }
 
+    public static boolean canPopulateIndicatorData() {
+        return SharedSecurityUtils.canPopulateIndicatorData(IndicatorsWeb.getCurrentUser());
+    }
+
     // DATA SOURCES
 
     public static boolean canCreateDataSource() {

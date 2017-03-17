@@ -55,7 +55,7 @@ public class SharedSecurityUtils {
 
     public static Boolean isAnyIndicatorsRole(MetamacPrincipal metamacPrincipal) {
         return isAdministrator(metamacPrincipal) || isTecnicoSistemaIndicadores(metamacPrincipal) || isTecnicoProduccion(metamacPrincipal) || isTecnicoApoyoProduccion(metamacPrincipal)
-                || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal);
+                || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal) || isLector(metamacPrincipal);
     }
 
     public static Boolean isTecnicoSistemaIndicadores(MetamacPrincipal metamacPrincipal) {
@@ -76,5 +76,14 @@ public class SharedSecurityUtils {
 
     public static Boolean isTecnicoDifusion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_DIFUSION);
+    }
+
+    public static Boolean isLector(MetamacPrincipal metamacPrincipal) {
+        return isRoleInAccesses(metamacPrincipal, RoleEnum.LECTOR);
+    }
+
+    public static boolean canPopulateIndicatorData(MetamacPrincipal metamacPrincipal) {
+        return isAdministrator(metamacPrincipal) || isTecnicoSistemaIndicadores(metamacPrincipal) || isTecnicoProduccion(metamacPrincipal) || isTecnicoApoyoProduccion(metamacPrincipal)
+                || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal);
     }
 }

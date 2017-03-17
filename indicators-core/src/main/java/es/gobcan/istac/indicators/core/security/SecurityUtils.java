@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.security;
 
+import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.haveAccessToOperationInRol;
+import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.isAdministrator;
+import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.isUserInRol;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
@@ -9,7 +13,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
 
-public class SecurityUtils extends SharedSecurityUtils {
+public class SecurityUtils extends org.siemac.metamac.sso.utils.SecurityUtils {
 
     /**
      * Checks user can execute any operation, if has any role of requested roles
@@ -72,4 +76,9 @@ public class SecurityUtils extends SharedSecurityUtils {
         return metamacPrincipal;
     }
 
+    public static void canPopulateIndicatorData(ServiceContext ctx) throws MetamacException {
+        if (!SharedSecurityUtils.canPopulateIndicatorData(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 }

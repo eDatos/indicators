@@ -48,9 +48,10 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
 
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
+        populateData.setVisible(ClientSecurityUtils.canPopulateIndicatorData());
 
         previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.preview().getURL());
-        
+
         enableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorEnableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.enableNotification().getURL());
         enableNotifyPopulationErrors.hide();
         disableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorDisableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.disableNotification().getURL());
@@ -141,15 +142,15 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getPreviewDataProduction() {
         return previewData;
     }
-    
+
     public ToolStripButton getEnableNotifyPopulationErrors() {
         return enableNotifyPopulationErrors;
     }
-    
+
     public ToolStripButton getDisableNotifyPopulationErrors() {
         return disableNotifyPopulationErrors;
     }
-    
+
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
@@ -200,14 +201,14 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
             versioning.show();
         }
     }
-    
+
     private void showEnableNotifyPopulationErrors() {
         if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
             enableNotifyPopulationErrors.show();
             disableNotifyPopulationErrors.hide();
         }
     }
-    
+
     private void showDisableNotifyPopulationErrors() {
         if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
             disableNotifyPopulationErrors.show();
@@ -221,7 +222,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         } else {
             showEnableNotifyPopulationErrors();
         }
-        
+
     }
 
 }

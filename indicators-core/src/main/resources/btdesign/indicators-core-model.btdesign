@@ -2004,6 +2004,7 @@ Application Indicators {
     		TECNICO_PRODUCCION,
     		TECNICO_APOYO_DIFUSION,
     		TECNICO_DIFUSION,
+    		LECTOR,
     		ANY_ROLE_ALLOWED
     	}
     	
