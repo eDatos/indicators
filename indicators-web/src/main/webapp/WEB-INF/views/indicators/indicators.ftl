@@ -6,7 +6,7 @@
 
 <script type="text/html" id="indicatorTmpl">
 	<div>
-		<p><%= getLabel(title) %></p>		
+		<p><a href="<%= getVisualizerUrl(id) %>" title="<%= getLabel(title) %>"><%= getLabel(title) %></a></p>		
 	</div>
 </script>
 
