@@ -6,10 +6,10 @@
         resetDefaults : function () {
             this.reset([
                 {id : 'ABSOLUTE', text : 'Dato'},
-                {id : 'ANNUAL_PERCENTAGE_RATE', text : 'Tasa Variación Anual'},
-                {id : 'ANNUAL_PUNTUAL_RATE', text : 'Variación Anual'},
-                {id : 'INTERPERIOD_PERCENTAGE_RATE', text : 'Tasa Variación Interperiódica'},
-                {id : 'INTERPERIOD_PUNTUAL_RATE', text : 'Variación Interperiódica'}
+                {id : 'ANNUAL_PERCENTAGE_RATE', text : 'Tasa variación anual'},
+                {id : 'ANNUAL_PUNTUAL_RATE', text : 'Variación anual'},
+                {id : 'INTERPERIOD_PERCENTAGE_RATE', text : 'Tasa variación interperiódica'},
+                {id : 'INTERPERIOD_PUNTUAL_RATE', text : 'Variación interperiódica'}
             ]);
         }
 
