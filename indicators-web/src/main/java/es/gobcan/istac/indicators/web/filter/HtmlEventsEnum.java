@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public enum HtmlEventsEnum {
+
     // @formatter:off
     ONAFTERPRINT("ONAFTERPRINT"),
     ONBEFOREPRINT("ONBEFOREPRINT"),
@@ -80,7 +82,6 @@ public enum HtmlEventsEnum {
     ONWAITING("ONWAITING"),
     ONSHOW("ONSHOW"),
     ONTOGGLE("ONTOGGLE");
-
     // @formatter:on
 
     private String                                   event;
@@ -88,6 +89,7 @@ public enum HtmlEventsEnum {
     private static final Map<String, HtmlEventsEnum> LOOKUP_MAP = new HashMap<String, HtmlEventsEnum>();
     private static final Set<String>                 CONTAINS   = new HashSet<String>();
     private static String                            REGEXP     = null;
+    private static Pattern                           PATTERN    = null;
 
     static {
         for (HtmlEventsEnum s : EnumSet.allOf(HtmlEventsEnum.class)) {
@@ -99,8 +101,8 @@ public enum HtmlEventsEnum {
             } else {
                 REGEXP += "|" + key;
             }
-
         }
+        PATTERN = Pattern.compile("(?i)(?:" + REGEXP + ")");
     }
 
     public static HtmlEventsEnum fromEventString(String campo) {
@@ -113,6 +115,10 @@ public enum HtmlEventsEnum {
 
     public static String getRegexp() {
         return REGEXP;
+    }
+
+    public static Pattern getPattern() {
+        return PATTERN;
     }
 
     private HtmlEventsEnum(String event) {

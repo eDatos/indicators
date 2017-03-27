@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public enum ForbiddenTagsEnum {
+
     // @formatter:off
     SCRIPT("SCRIPT"),
     EMBED("EMBED"),
@@ -19,7 +21,6 @@ public enum ForbiddenTagsEnum {
     LINK("LINK"),
     IMPORT("IMPORT"),
     XML("XML");
-
     // @formatter:on
 
     private String                                      field;
@@ -27,6 +28,7 @@ public enum ForbiddenTagsEnum {
     private static final Map<String, ForbiddenTagsEnum> LOOKUP_MAP   = new HashMap<String, ForbiddenTagsEnum>();
     private static final Set<String>                    CONTAINS_SET = new HashSet<String>();
     private static String                               REGEXP       = null;
+    private static Pattern                              PATTERN      = null;
 
     static {
         for (ForbiddenTagsEnum s : EnumSet.allOf(ForbiddenTagsEnum.class)) {
@@ -38,8 +40,8 @@ public enum ForbiddenTagsEnum {
             } else {
                 REGEXP += "|" + key;
             }
-
         }
+        PATTERN = Pattern.compile("(?i)(?:" + REGEXP + ")");
     }
 
     public static ForbiddenTagsEnum fromEventString(String campo) {
@@ -54,7 +56,12 @@ public enum ForbiddenTagsEnum {
         return REGEXP;
     }
 
-    private ForbiddenTagsEnum(String event) {
-        this.field = event;
+    public static Pattern getPattern() {
+        return PATTERN;
     }
+
+    private ForbiddenTagsEnum(String event) {
+        field = event;
+    }
+
 }
