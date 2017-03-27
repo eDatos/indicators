@@ -1,7 +1,7 @@
 <div class="istac-widget-lateral">
     {{#each datasets}}
         <div class="istac-widget-lateral-dataset">
-            <div class="istac-widget-lateral-title"><a href="{{jaxiUrl}}">{{title}}</a></div>
+            <div class="istac-widget-lateral-title"><a href="{{titleLink}}">{{title}}</a></div>
             {{#each observations}}
                 {{#if hasValue}}
                     <div class="istac-widget-lateral-subtitle">{{../../temporalLabel}} - {{ measure }} ({{unit}})</div>
