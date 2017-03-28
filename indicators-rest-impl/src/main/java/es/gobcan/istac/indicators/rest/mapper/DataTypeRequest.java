@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.rest.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;

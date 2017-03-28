@@ -18,10 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
