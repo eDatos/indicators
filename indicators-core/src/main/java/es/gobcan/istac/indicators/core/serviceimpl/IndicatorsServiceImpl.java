@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;

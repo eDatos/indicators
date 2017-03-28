@@ -34,16 +34,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-import com.arte.statistic.dataset.repository.util.DtoUtils;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ConditionObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;

@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
