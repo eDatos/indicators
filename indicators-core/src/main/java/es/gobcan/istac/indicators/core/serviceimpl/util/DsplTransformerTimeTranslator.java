@@ -14,8 +14,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.util.DtoUtils;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 

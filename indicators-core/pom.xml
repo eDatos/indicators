@@ -234,8 +234,8 @@
 
 		<!-- Dataset repository -->
 		<dependency>
-			<groupId>com.arte.statistic</groupId>
-			<artifactId>statistic-dataset-repository</artifactId>
+			<groupId>es.gobcan.istac</groupId>
+			<artifactId>edatos-dataset-repository</artifactId>
 			<classifier>client</classifier>
 		</dependency>
 

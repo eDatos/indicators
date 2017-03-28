@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.core.serviceapi.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 
 
 

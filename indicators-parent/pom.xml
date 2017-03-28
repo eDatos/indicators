@@ -131,8 +131,8 @@
 		<!-- ARTE -->
 		<arte-maven-enforcer.version>1.0.0</arte-maven-enforcer.version>
 
-		<!-- STATISTIC DATASET REPOSITORY -->
-		<statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
+		<!-- EDATOS DATASET REPOSITORY -->
+		<edatos-dataset-repository.version>1.0.0-SNAPSHOT</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>3.1.1</kafka-avro-serializer.version>
@@ -506,9 +506,9 @@
 
 			<!-- Dataset repository -->
 			<dependency>
-				<groupId>com.arte.statistic</groupId>
-				<artifactId>statistic-dataset-repository</artifactId>
-				<version>${statistic-dataset-repository.version}</version>
+				<groupId>es.gobcan.istac</groupId>
+				<artifactId>edatos-dataset-repository</artifactId>
+				<version>${edatos-dataset-repository.version}</version>
 				<classifier>client</classifier>
 				<exclusions>
 					<exclusion>

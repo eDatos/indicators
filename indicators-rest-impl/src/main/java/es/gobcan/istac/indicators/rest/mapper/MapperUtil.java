@@ -7,8 +7,8 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 

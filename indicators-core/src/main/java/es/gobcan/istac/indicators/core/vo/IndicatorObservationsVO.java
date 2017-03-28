@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.core.vo;
 
 import java.util.Map;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 
 public class IndicatorObservationsVO extends IndicatorObservationsBaseVO {
 

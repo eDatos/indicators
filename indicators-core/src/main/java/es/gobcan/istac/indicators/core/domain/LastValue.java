@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 

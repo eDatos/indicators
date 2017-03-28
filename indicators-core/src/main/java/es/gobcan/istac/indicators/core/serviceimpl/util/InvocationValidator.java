@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 
-import com.arte.statistic.dataset.repository.util.ValidationUtils;
+import es.gobcan.istac.edatos.dataset.repository.util.ValidationUtils;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
