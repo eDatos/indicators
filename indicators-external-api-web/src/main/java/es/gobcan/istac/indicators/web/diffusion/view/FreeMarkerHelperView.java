@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.WebUtils;
+import org.siemac.metamac.core.common.util.swagger.SwaggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
@@ -25,8 +27,6 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 public class FreeMarkerHelperView extends FreeMarkerView {
 
     private static final String                   API_STYLE_HTML_ENCODING = "UTF-8";
-    private static final String                   HTTP                    = "http:";
-    private static final String                   HTTPS                   = "https:";
 
     private static IndicatorsConfigurationService configurationService;
 
@@ -34,8 +34,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String indicatorsExternalApiEndpoint = normalizeEndpointWithoutProtocol(getConfigurationService().retrieveIndicatorsExternalApiUrlBase());
-        model.put("indicatorsExternalApiUrlBase", indicatorsExternalApiEndpoint);
+        String indicatorsExternalApiUrlBase = getConfigurationService().retrieveIndicatorsExternalApiUrlBase();
+        model.put("indicatorsExternalApiUrlBase", WebUtils.normalizeUrl(indicatorsExternalApiUrlBase));
+        model.put("indicatorsExternalApiUrlBaseSwagger", SwaggerUtils.normalizeUrlForSwagger(indicatorsExternalApiUrlBase));
         fillOptionalApiStyleHeaderUrl(model);
         fillOptionalApiStyleFooterUrl(model);
         fillOptionalApiStyleCssUrl(model);
@@ -70,27 +71,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
             }
-        }
-    }
-
-    private String normalizeEndpointWithoutProtocol(String url) {
-        return removeUrlProtocol(removeLastSlashInUrl(url));
-    }
-
-    private String removeLastSlashInUrl(String url) {
-        if (url.endsWith("/")) {
-            return StringUtils.removeEnd(url, "/");
-        }
-        return url;
-    }
-
-    private String removeUrlProtocol(String url) {
-        if (StringUtils.startsWith(url, HTTP)) {
-            return StringUtils.removeStart(url, HTTP);
-        } else if (StringUtils.startsWith(url, HTTPS)) {
-            return StringUtils.removeStart(url, HTTPS);
-        } else {
-            return url;
         }
     }
 

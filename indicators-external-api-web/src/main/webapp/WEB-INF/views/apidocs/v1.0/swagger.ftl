@@ -5,7 +5,7 @@
       "version":"4.5.2-SNAPSHOT",
       "title":"API de Indicadores v1.0"
    },
-  "host": "${indicatorsExternalApiUrlBase}",
+  "host": "${indicatorsExternalApiUrlBaseSwagger}",
    "schemes":[
 
    ],
