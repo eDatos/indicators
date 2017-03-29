@@ -282,8 +282,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicator.getVersions().get(0).setIsLastVersion(Boolean.TRUE);
 
             // Update
-            getIndicatorRepository().save(indicator);
+            indicator = getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorVersion);
+
+            // Update view for the last version of the indicator
+            getIndicatorsDataService().manageDatabaseViewForLastVersion(ctx, indicator.getVersions().get(0));
         }
 
         if (indicatorVersion.getDataRepositoryId() != null) {
