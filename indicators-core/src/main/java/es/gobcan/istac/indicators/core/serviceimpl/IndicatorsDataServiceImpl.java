@@ -49,7 +49,6 @@ import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
-
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
@@ -418,6 +417,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
+    @Override
+    public void deleteDatabaseView(ServiceContext ctx, String viewName) throws MetamacException {
+        try {
+            datasetRepositoriesServiceFacade.dropDatasetRepositoryView(viewName);
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_VIEW_DELETE_ERROR, viewName);
+        }
+    }
+
     private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) throws MetamacException {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
@@ -492,6 +500,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw metamacException;
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DATA_DELETE_ERROR, indicatorUuid, indicatorVersionNumber);
+        }
+    }
+
+    @Override
+    public void deleteDatasetRepository(ServiceContext ctx, String datasetRepositoryId) throws MetamacException {
+        try {
+            datasetRepositoriesServiceFacade.deleteDatasetRepository(datasetRepositoryId);
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.DATASET_REPOSITORY_DELETE_ERROR, datasetRepositoryId);
         }
     }
 

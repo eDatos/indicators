@@ -252,11 +252,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Retrieve version in production
         IndicatorVersion indicatorVersion = retrieveIndicatorProcStatusInProduction(ctx, uuid, true);
+        Indicator indicator = indicatorVersion.getIndicator();
 
         // Delete whole indicator or only last version
         if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorVersion.getVersionNumber())) {
             // If indicator is not published or archived, delete whole indicator
-            Indicator indicator = indicatorVersion.getIndicator();
 
             // Check not exists any indicator instance for this indicator
             if (indicator.getIndicatorsInstances().size() != 0) {
@@ -269,8 +269,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             }
 
             getIndicatorRepository().delete(indicator);
+            if (StringUtils.isNotBlank(indicator.getViewCode())) {
+                getIndicatorsDataService().deleteDatabaseView(ctx, indicator.getViewCode());
+            }
+
         } else {
-            Indicator indicator = indicatorVersion.getIndicator();
             indicator.getVersions().remove(indicatorVersion);
             indicator.setProductionIdIndicatorVersion(null);
             indicator.setProductionVersionNumber(null);
@@ -281,6 +284,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             // Update
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorVersion);
+        }
+
+        if (indicatorVersion.getDataRepositoryId() != null) {
+            getIndicatorsDataService().deleteDatasetRepository(ctx, indicatorVersion.getDataRepositoryId());
         }
     }
 

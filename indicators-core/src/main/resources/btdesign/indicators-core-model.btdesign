@@ -209,6 +209,8 @@ Application Indicators {
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Delete a dataset reposotory"
+	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Updates data for all published indicators"
@@ -217,6 +219,8 @@ Application Indicators {
 	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
 	    	"Link a dataset view to the latest version of the indicator"
 	    	manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) throws MetamacException;
+	    	"Delete a dataset view"
+	    	deleteDatabaseView(String viewName) throws MetamacException;
 	    	"Replace old datasetRepository for the new one"
             IndicatorVersion setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException;
 

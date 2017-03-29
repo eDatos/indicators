@@ -99,6 +99,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR                   = create("exception.indicators.data.update.indicators.gpe.check.error");
 
     public static final CommonServiceExceptionType DATA_DELETE_ERROR                                        = create("exception.indicators.data.delete.error");
+    public static final CommonServiceExceptionType DATASET_REPOSITORY_DELETE_ERROR                          = create("exception.indicators.data.repository.delete.error");
+    public static final CommonServiceExceptionType DATA_VIEW_DELETE_ERROR                                   = create("exception.indicators.data.view.delete.error");
 
     public static final CommonServiceExceptionType CONFIGURATION_NOT_FOUND                                  = create("exception.indicators.configuration.not_found");
 
