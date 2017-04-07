@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -41,7 +42,6 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEn
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
@@ -66,7 +66,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getTimeGranularityValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
-        for (TimeGranularityEnum type : TimeGranularityEnum.values()) {
+        for (IstacTimeGranularityEnum type : IstacTimeGranularityEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
         }
         return valueMap;
@@ -218,7 +218,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getQueryEnvironmentEnumValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
@@ -279,7 +279,7 @@ public class CommonUtils {
         valueMap.put(IndicatorCriteriaOrderEnum.DIFFUSION_PROC_STATUS.name(), getConstants().indicatorDiffusionEnvironmentProcStatus());
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getIndicatorNotifyPopulationErrorsValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
@@ -449,7 +449,7 @@ public class CommonUtils {
         }
         return firstResult;
     }
-    
+
     public static void downloadFile(String fileName) {
         StringBuffer url = new StringBuffer();
         url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));

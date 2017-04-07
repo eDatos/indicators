@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
@@ -48,19 +48,19 @@ public class GpeTimeUtils {
     /**
      * Guess time granularity of a time value
      */
-    public static TimeGranularityEnum guessTimeGranularity(String value) throws MetamacException {
+    public static IstacTimeGranularityEnum guessTimeGranularity(String value) throws MetamacException {
         if (patternYearlyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.YEARLY;
+            return IstacTimeGranularityEnum.YEARLY;
         } else if (patternBiyearlyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.BIYEARLY;
+            return IstacTimeGranularityEnum.BIYEARLY;
         } else if (patternQuaterlyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.QUARTERLY;
+            return IstacTimeGranularityEnum.QUARTERLY;
         } else if (patternMonthlyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.MONTHLY;
+            return IstacTimeGranularityEnum.MONTHLY;
         } else if (patternWeeklyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.WEEKLY;
+            return IstacTimeGranularityEnum.WEEKLY;
         } else if (patternDailyValue.matcher(value).matches()) {
-            return TimeGranularityEnum.DAILY;
+            return IstacTimeGranularityEnum.DAILY;
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
@@ -70,7 +70,7 @@ public class GpeTimeUtils {
         TimeValue timeValueFields = new TimeValue();
         timeValueFields.setTimeValue(timeValue);
 
-        TimeGranularityEnum timeGranularity = guessTimeGranularity(timeValue);
+        IstacTimeGranularityEnum timeGranularity = guessTimeGranularity(timeValue);
         timeValueFields.setGranularity(timeGranularity);
 
         switch (timeGranularity) {
@@ -137,7 +137,7 @@ public class GpeTimeUtils {
         if (value == null) {
             return null;
         }
-        TimeGranularityEnum timeGranularity = guessTimeGranularity(value);
+        IstacTimeGranularityEnum timeGranularity = guessTimeGranularity(value);
         switch (timeGranularity) {
             case YEARLY: {
                 Matcher matcher = patternYearlyValue.matcher(value);

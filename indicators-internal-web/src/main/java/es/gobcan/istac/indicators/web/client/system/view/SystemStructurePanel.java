@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.FormItemUtils;
@@ -82,7 +83,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.DimensionDS;
@@ -943,7 +943,7 @@ public class SystemStructurePanel extends HLayout {
             if (indicatorInstanceDto.getUuid() == null) {
                 indicatorInstanceDto.setTitle(creationForm.getValueAsInternationalStringDto(IndicatorInstanceDS.TITLE));
                 indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(creationForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
-                indicatorInstanceDto.setTimeGranularity(creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(creationForm
+                indicatorInstanceDto.setTimeGranularity(creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? IstacTimeGranularityEnum.valueOf(creationForm
                         .getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
                 indicatorInstanceDto.setTimeValues(creationForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible()
                         ? ((TimeValuesDragAndDropItem) creationForm.getItem(IndicatorInstanceDS.TIME_VALUE)).getSelectedValues()
@@ -1175,7 +1175,7 @@ public class SystemStructurePanel extends HLayout {
                     timeValues.clearSourceTimeValues();
                     // Set values with selected granularity
                     if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
-                        TimeGranularityEnum timeGranularity = TimeGranularityEnum.valueOf(event.getValue().toString());
+                        IstacTimeGranularityEnum timeGranularity = IstacTimeGranularityEnum.valueOf(event.getValue().toString());
                         if (creationForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(creationForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
                             if (selectedIndicator != null) {
                                 uiHandlers.retrieveTimeValuesWithGranularityInIndicator(selectedIndicator.getUuid(), CommonUtils.getIndicatorVersionNumber(selectedIndicator), timeGranularity);

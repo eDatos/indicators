@@ -1,11 +1,12 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
+
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -48,7 +49,7 @@ public interface SystemUiHandler extends UiHandlers {
 
     // Geographical and temporal values and variables for indicators (in instance creation)
     void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
-    void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, TimeGranularityEnum timeGranularity);
+    void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, IstacTimeGranularityEnum timeGranularity);
     void retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
     void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid);
 

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,7 +21,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -28,7 +28,6 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
@@ -455,7 +454,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<TimeGranularity> timeGranularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
-        String[] expectedGranularities = new String[]{TimeGranularityEnum.MONTHLY.name(), TimeGranularityEnum.YEARLY.name()};
+        String[] expectedGranularities = new String[]{IstacTimeGranularityEnum.MONTHLY.name(), IstacTimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
     }
 
@@ -466,7 +465,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<TimeGranularity> timeGranularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
-        String[] expectedGranularities = new String[]{TimeGranularityEnum.YEARLY.name()};
+        String[] expectedGranularities = new String[]{IstacTimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
     }
 
@@ -477,7 +476,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<TimeGranularity> timeGranularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
-        String[] expectedGranularities = new String[]{TimeGranularityEnum.MONTHLY.name(), TimeGranularityEnum.YEARLY.name()};
+        String[] expectedGranularities = new String[]{IstacTimeGranularityEnum.MONTHLY.name(), IstacTimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
     }
 
@@ -511,20 +510,20 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
         List<TimeValue> yearTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
-                TimeGranularityEnum.YEARLY);
+                IstacTimeGranularityEnum.YEARLY);
         List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
         List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
-                TimeGranularityEnum.MONTHLY);
+                IstacTimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
         List<TimeValue> dayTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
-                TimeGranularityEnum.DAILY);
+                IstacTimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
@@ -536,21 +535,21 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
 
         List<TimeValue> yearTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
-                TimeGranularityEnum.YEARLY);
+                IstacTimeGranularityEnum.YEARLY);
         List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
         // NOT EXIST
         List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
-                TimeGranularityEnum.MONTHLY);
+                IstacTimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{};
         checkElementsInCollection(expectedMonthValues, monthValues);
 
         // NOT EXIST
         List<TimeValue> dayTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
-                TimeGranularityEnum.DAILY);
+                IstacTimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
@@ -561,18 +560,21 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
-        List<TimeValue> yearTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
+                IstacTimeGranularityEnum.YEARLY);
         List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
-        List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
+                IstacTimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<TimeValue> dayTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsCoverageService
+                .retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, IstacTimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);

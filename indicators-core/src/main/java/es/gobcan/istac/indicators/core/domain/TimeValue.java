@@ -1,23 +1,23 @@
 package es.gobcan.istac.indicators.core.domain;
 
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 
 /**
  * It is not an entity. Only to returns in Service
  */
 
 public class TimeValue {
-    private String              timeValue;
-    private TimeGranularityEnum granularity;
-    private String              year;
-    private String              subperiod;
-    private String              month;
-    private String              week;
-    private String              day;
-    private InternationalString title;
-    private InternationalString titleSummary;
+
+    private String                   timeValue;
+    private IstacTimeGranularityEnum granularity;
+    private String                   year;
+    private String                   subperiod;
+    private String                   month;
+    private String                   week;
+    private String                   day;
+    private InternationalString      title;
+    private InternationalString      titleSummary;
 
     public String getTimeValue() {
         return timeValue;
@@ -27,11 +27,11 @@ public class TimeValue {
         this.timeValue = timeValue;
     }
 
-    public TimeGranularityEnum getGranularity() {
+    public IstacTimeGranularityEnum getGranularity() {
         return granularity;
     }
 
-    public void setGranularity(TimeGranularityEnum granularity) {
+    public void setGranularity(IstacTimeGranularityEnum granularity) {
         this.granularity = granularity;
     }
 
@@ -82,11 +82,11 @@ public class TimeValue {
     public void setTitle(InternationalString title) {
         this.title = title;
     }
-    
+
     public InternationalString getTitleSummary() {
         return titleSummary;
     }
-    
+
     public void setTitleSummary(InternationalString titleSummary) {
         this.titleSummary = titleSummary;
     }

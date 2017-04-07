@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_CODES;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_GRANULARITY;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,6 +12,7 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
@@ -16,14 +21,10 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionTimeCoverage;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_CODES;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.TIME_GRANULARITY;
 
 /**
  * Repository implementation for IndicatorVersionTimeCoverage
@@ -52,7 +53,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
             Translation translation = (Translation) fields[1];
 
             TimeGranularity granularity = new TimeGranularity();
-            granularity.setGranularity(TimeGranularityEnum.valueOf(timeGranularityCode));
+            granularity.setGranularity(IstacTimeGranularityEnum.valueOf(timeGranularityCode));
             if (translation != null) {
                 granularity.setTitle(translation.getTitle());
                 granularity.setTitleSummary(translation.getTitleSummary());
@@ -96,7 +97,7 @@ public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersion
             String timeGranularityCode = (String) fields[0];
             Translation translation = (Translation) fields[1];
 
-            TimeGranularity timeGranularity = TimeVariableUtils.buildTimeGranularity(TimeGranularityEnum.valueOf(timeGranularityCode), translation);
+            TimeGranularity timeGranularity = TimeVariableUtils.buildTimeGranularity(IstacTimeGranularityEnum.valueOf(timeGranularityCode), translation);
             timeGranularities.add(timeGranularity);
         }
 

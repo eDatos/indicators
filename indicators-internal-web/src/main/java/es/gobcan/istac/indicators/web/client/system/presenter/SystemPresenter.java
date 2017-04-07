@@ -6,6 +6,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
@@ -40,7 +41,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
@@ -472,7 +472,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, TimeGranularityEnum timeGranularity) {
+    public void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, IstacTimeGranularityEnum timeGranularity) {
         dispatcher.execute(new GetTimeValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, timeGranularity),
                 new WaitingAsyncCallbackHandlingError<GetTimeValuesByGranularityInIndicatorResult>(this) {
 

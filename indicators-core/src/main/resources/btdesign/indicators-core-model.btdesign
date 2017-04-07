@@ -1,6 +1,7 @@
 
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum-time.btdesign"
 
 Application Indicators {
     basePackage=es.gobcan.istac.indicators
@@ -93,7 +94,7 @@ Application Indicators {
 
 	    	// Time granularities
 	    	List<TimeGranularity> retrieveTimeGranularities() throws MetamacException;
-	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
+	    	TimeGranularity retrieveTimeGranularity(@IstacTimeGranularityEnum timeGranularity) throws MetamacException;
 	    	
 	    	// Measure value
 	    	MeasureValue retrieveMeasureValue(@MeasureDimensionTypeEnum measureValue) throws MetamacException;
@@ -312,11 +313,11 @@ Application Indicators {
 	    	"Retrieves time granularities in the indicator instance with last version indicator"
 	    	List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstanceWithLastVersionIndicator(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves time values granularities in the indicator"
-	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @IstacTimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
-	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @IstacTimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values with granularity in the indicator instance"
-	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, @IstacTimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values in the indicator"
 	    	List<TimeValue> retrieveTimeValuesInIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves time values in the indicator instance with published indicator"
@@ -463,7 +464,7 @@ Application Indicators {
 	    	
 	    	// TIME VALUES
 	    	"Retrieves time values granularities in the indicator"
-	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @IstacTimeGranularityEnum granularity) throws MetamacException;
 
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -725,7 +726,7 @@ Application Indicators {
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
         	"Time granularity"
-        	- @TimeGranularityEnum timeGranularity nullable;
+        	- @IstacTimeGranularityEnum timeGranularity nullable;
         	"Time value"
         	Clob timeValues nullable;
 			"Last update to optimistic locking"
@@ -1659,7 +1660,7 @@ Application Indicators {
 			"Indicator"
 			String indicatorUuid;
         	"Time granularity"
-        	- @TimeGranularityEnum timeGranularity;
+        	- @IstacTimeGranularityEnum timeGranularity;
         	"Time values"
         	List<String> timeValues;
         	"Geographical granularity"
@@ -1815,13 +1816,13 @@ Application Indicators {
        		"Summary title"
        		- @InternationalStringDto titleSummary;
        		"Granularity"
-			- @TimeGranularityEnum granularity;
+			- @IstacTimeGranularityEnum granularity;
     	}
 
     	"Dto for time granularities"
     	DataTransferObject TimeGranularityDto {
 	   		"Granularity"
-			- @TimeGranularityEnum granularity;
+			- @IstacTimeGranularityEnum granularity;
        		"Title"
        		- @InternationalStringDto title;
        		"Summary title"
@@ -1966,17 +1967,6 @@ Application Indicators {
     		UPWARD,
     		DOWN
     	}
-    	
-    	"Time granularities"
-    	enum TimeGranularityEnum {
-    	"List of results in the order of bigger to smaller."  
-    		YEARLY,
-    		BIYEARLY,
-    		QUARTERLY,
-    		MONTHLY,
-    		WEEKLY,
-    		DAILY
-    	}		
     	
     	"Types of Measure Dimensions"
     	enum MeasureDimensionTypeEnum {

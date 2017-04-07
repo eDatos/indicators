@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -406,7 +406,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     /* TIME VALUES BY GRANULARITY */
 
     @Override
-    public List<TimeValue> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, IstacTimeGranularityEnum granularity)
+            throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
 
@@ -415,7 +416,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     }
 
     @Override
-    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, IstacTimeGranularityEnum granularity) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorPublished(indicatorUuid, granularity, null);
 
@@ -424,7 +425,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     }
 
     @Override
-    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, TimeGranularityEnum granularity) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, IstacTimeGranularityEnum granularity) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorInstance(indicatorInstanceUuid, granularity, null);
 
@@ -435,7 +436,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         return calculateTimeCoverageByGranularityInIndicatorInstance(granularity, indicatorInstance, indicatorVersion);
     }
 
-    private List<TimeValue> calculateTimeCoverageByGranularityInIndicatorInstance(TimeGranularityEnum granularity, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion)
+    private List<TimeValue> calculateTimeCoverageByGranularityInIndicatorInstance(IstacTimeGranularityEnum granularity, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion)
             throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
@@ -460,7 +461,7 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         }
     }
 
-    private List<TimeValue> retrieveTimeCoverageByGranularityFromCache(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> retrieveTimeCoverageByGranularityFromCache(IstacTimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
         List<TimeValue> timeValuesInIndicator = getIndicatorVersionTimeCoverageRepository().retrieveCoverageByGranularity(indicatorVersion, granularity.getName());

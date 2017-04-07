@@ -10,15 +10,16 @@ import java.util.Set;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
-import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -33,7 +34,6 @@ import es.gobcan.istac.indicators.core.dspl.DsplInstanceData;
 import es.gobcan.istac.indicators.core.dspl.DsplSlice;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
@@ -81,12 +81,12 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             List<DsplConcept> metrics = buildMetricsForInstances(ctx, instances);
             concepts.addAll(metrics);
 
-            TimeGranularityEnum minTimeGranularity = computeMinTimeGranularity(getIndicatorsInstancesTimeGranularities(ctx, instances));
+            IstacTimeGranularityEnum minTimeGranularity = computeMinTimeGranularity(getIndicatorsInstancesTimeGranularities(ctx, instances));
 
             // Min granularity weekly can cause problems,
             // 2009 will be translated to 2009W53 and then translated to 3/01/2010
-            if (TimeGranularityEnum.WEEKLY.equals(minTimeGranularity)) {
-                minTimeGranularity = TimeGranularityEnum.DAILY;
+            if (IstacTimeGranularityEnum.WEEKLY.equals(minTimeGranularity)) {
+                minTimeGranularity = IstacTimeGranularityEnum.DAILY;
             }
 
             // slides
@@ -115,15 +115,15 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         }
     }
 
-    private Set<TimeGranularityEnum> getIndicatorsInstancesTimeGranularities(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
-        Set<TimeGranularityEnum> granularities = new HashSet<TimeGranularityEnum>();
+    private Set<IstacTimeGranularityEnum> getIndicatorsInstancesTimeGranularities(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
+        Set<IstacTimeGranularityEnum> granularities = new HashSet<IstacTimeGranularityEnum>();
         for (IndicatorInstance instance : instances) {
             List<TimeGranularity> instanceGranularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
 
             for (TimeGranularity granularity : instanceGranularities) {
                 granularities.add(granularity.getGranularity());
             }
-            if (granularities.size() == TimeGranularityEnum.values().length) {
+            if (granularities.size() == IstacTimeGranularityEnum.values().length) {
                 // All granularities found, no more searching
                 return granularities;
             }
@@ -131,9 +131,9 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         return granularities;
     }
 
-    private TimeGranularityEnum computeMinTimeGranularity(Set<TimeGranularityEnum> timeGranularities) {
-        TimeGranularityEnum min = null;
-        for (TimeGranularityEnum candidate : timeGranularities) {
+    private IstacTimeGranularityEnum computeMinTimeGranularity(Set<IstacTimeGranularityEnum> timeGranularities) {
+        IstacTimeGranularityEnum min = null;
+        for (IstacTimeGranularityEnum candidate : timeGranularities) {
             if (min != null) {
                 if (TimeVariableUtils.getTimeGranularityOrder(candidate) < TimeVariableUtils.getTimeGranularityOrder(min)) {
                     min = candidate;
@@ -146,7 +146,8 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     }
 
     @Override
-    protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) throws MetamacException {
+    protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity)
+            throws MetamacException {
 
         IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
         dataFilter.setGeoFilter(IndicatorsDataGeoDimensionFilterVO.buildGeoGranularityFilter(geoGranularity.getCode()));
@@ -185,7 +186,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
      * @return
      * @throws MetamacException
      */
-    private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, TimeGranularityEnum timeGranularity) throws MetamacException {
+    private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         BiMap<String, String> mapping = new HashBiMap<String, String>();
         for (String timeCode : timeCodes) {
             String transformed = transformTimeValueToGranularity(timeCode, timeGranularity);
@@ -202,7 +203,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         }
         return mapping;
     }
-    private String transformTimeValueToGranularity(String timeCode, TimeGranularityEnum timeGranularity) throws MetamacException {
+    private String transformTimeValueToGranularity(String timeCode, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         TimeValue timeValue = TimeVariableUtils.parseTimeValue(timeCode);
         DateTime date = new DateTime(TimeVariableUtils.timeValueToLastPossibleDate(timeValue));
 

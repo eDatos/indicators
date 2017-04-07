@@ -15,13 +15,13 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
-
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -52,7 +52,6 @@ import es.gobcan.istac.indicators.core.dspl.DsplSlice;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
@@ -106,10 +105,10 @@ public class DsplTransformer {
             List<IndicatorInstance> instances = filterIndicatorsInstances(structure);
 
             // organize by time granularity
-            Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = organizeIndicatorsInstancesByTimeGranularity(ctx, instances);
+            Map<IstacTimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = organizeIndicatorsInstancesByTimeGranularity(ctx, instances);
 
             List<DsplDataset> datasets = new ArrayList<DsplDataset>();
-            for (TimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
+            for (IstacTimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
                 LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
 
                 List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
@@ -173,7 +172,7 @@ public class DsplTransformer {
         return providerInfo;
     }
 
-    protected DsplInfo buildDatasetInfo(ServiceContext ctx, IndicatorsSystemVersion systemVersion, InternationalString title, InternationalString description, TimeGranularityEnum timeGranularity)
+    protected DsplInfo buildDatasetInfo(ServiceContext ctx, IndicatorsSystemVersion systemVersion, InternationalString title, InternationalString description, IstacTimeGranularityEnum timeGranularity)
             throws MetamacException {
         DsplInfo datasetInfo = new DsplInfo();
 
@@ -206,7 +205,7 @@ public class DsplTransformer {
         return url + "?language=" + locale;
     }
 
-    protected String buildDatasetId(IndicatorsSystemVersion indicatorsSystemVersion, TimeGranularityEnum timeGranularity) {
+    protected String buildDatasetId(IndicatorsSystemVersion indicatorsSystemVersion, IstacTimeGranularityEnum timeGranularity) {
         return indicatorsSystemVersion.getIndicatorsSystem().getCode() + "_" + timeGranularity.name().toLowerCase();
     }
 
@@ -222,8 +221,8 @@ public class DsplTransformer {
         return instances;
     }
 
-    private Map<TimeGranularityEnum, List<IndicatorInstance>> organizeIndicatorsInstancesByTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
-        Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = new HashMap<TimeGranularityEnum, List<IndicatorInstance>>();
+    private Map<IstacTimeGranularityEnum, List<IndicatorInstance>> organizeIndicatorsInstancesByTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
+        Map<IstacTimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = new HashMap<IstacTimeGranularityEnum, List<IndicatorInstance>>();
 
         for (IndicatorInstance instance : instances) {
             List<TimeGranularity> granularities = indicatorsCoverageService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
@@ -637,7 +636,7 @@ public class DsplTransformer {
         }
     }
 
-    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, TimeGranularityEnum timeGranularity) throws MetamacException {
+    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         Set<DsplSlice> slices = new HashSet<DsplSlice>();
 
         Set<GeographicalGranularity> granularitiesUsed = calculateGeoGranularitiesUsedInInstances(ctx, instances);
@@ -662,7 +661,7 @@ public class DsplTransformer {
         return granularities.contains(geoGranularity);
     }
 
-    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
+    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
             throws MetamacException {
         DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
 
@@ -687,7 +686,7 @@ public class DsplTransformer {
         return slice;
     }
 
-    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
+    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
             throws MetamacException {
         String sliceId = getIdForSlice(geoGranularity, timeGranularity);
         DsplTable table = new DsplTable(getTableIdForSlice(sliceId));
@@ -698,7 +697,8 @@ public class DsplTransformer {
         return table;
     }
 
-    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances) throws MetamacException {
+    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances)
+            throws MetamacException {
         DsplData data = new DsplData();
 
         Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity);
@@ -712,8 +712,8 @@ public class DsplTransformer {
 
         return data;
     }
-    private Set<Row> createTableDataRowsForSliceInIndicatorsInstances(ServiceContext ctx, Set<IndicatorInstance> instances, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity)
-            throws MetamacException {
+    private Set<Row> createTableDataRowsForSliceInIndicatorsInstances(ServiceContext ctx, Set<IndicatorInstance> instances, GeographicalGranularity geoGranularity,
+            IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         Set<String> geoCodes = new HashSet<String>();
         Set<String> timeCodes = new HashSet<String>();
 
@@ -748,7 +748,8 @@ public class DsplTransformer {
         return rows;
     }
 
-    protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) throws MetamacException {
+    protected DsplInstanceData buildInstanceData(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity)
+            throws MetamacException {
 
         IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
         dataFilter.setGeoFilter(IndicatorsDataGeoDimensionFilterVO.buildGeoGranularityFilter(geoGranularity.getCode()));
@@ -794,7 +795,7 @@ public class DsplTransformer {
         return indicatorsDataService.findObservationsInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid(), dataFilter);
     }
 
-    private DateColumn getColumnForTime(TimeGranularityEnum timeGranularity) throws MetamacException {
+    private DateColumn getColumnForTime(IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         switch (timeGranularity) {
             case YEARLY:
                 return new DateColumn("year", "yyyy");
@@ -820,7 +821,7 @@ public class DsplTransformer {
     }
 
     // Id builders
-    private String getIdForTimeConcept(TimeGranularityEnum timeGranularity) throws MetamacException {
+    private String getIdForTimeConcept(IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         switch (timeGranularity) {
             case YEARLY:
                 return "time:year";
@@ -840,7 +841,7 @@ public class DsplTransformer {
         return "topic_" + dim.getUuid();
     }
 
-    private String getIdForSlice(GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) {
+    private String getIdForSlice(GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity) {
         return "slice_" + geoGranularity.getCode().toLowerCase() + "_" + timeGranularity.name().toLowerCase();
     }
 

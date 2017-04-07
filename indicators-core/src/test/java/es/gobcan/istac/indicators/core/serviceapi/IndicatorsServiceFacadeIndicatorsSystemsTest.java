@@ -32,6 +32,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -54,7 +55,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -2682,7 +2682,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
-        assertEquals(TimeGranularityEnum.YEARLY, indicatorInstanceDto.getTimeGranularity());
+        assertEquals(IstacTimeGranularityEnum.YEARLY, indicatorInstanceDto.getTimeGranularity());
         assertEquals(0, indicatorInstanceDto.getTimeValues().size());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, indicatorInstanceDto.getGeographicalGranularityUuid());
         assertEquals(0, indicatorInstanceDto.getGeographicalValues().size());
@@ -2903,7 +2903,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
-        indicatorInstanceDto.setTimeGranularity(TimeGranularityEnum.DAILY);
+        indicatorInstanceDto.setTimeGranularity(IstacTimeGranularityEnum.DAILY);
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -4054,12 +4054,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testGuessTimeGranularity() throws Exception {
 
-        assertEquals(TimeGranularityEnum.YEARLY, TimeVariableUtils.guessTimeGranularity("2012"));
-        assertEquals(TimeGranularityEnum.BIYEARLY, TimeVariableUtils.guessTimeGranularity("2012H2"));
-        assertEquals(TimeGranularityEnum.QUARTERLY, TimeVariableUtils.guessTimeGranularity("2012Q1"));
-        assertEquals(TimeGranularityEnum.MONTHLY, TimeVariableUtils.guessTimeGranularity("2012M02"));
-        assertEquals(TimeGranularityEnum.DAILY, TimeVariableUtils.guessTimeGranularity("20120102"));
-        assertEquals(TimeGranularityEnum.WEEKLY, TimeVariableUtils.guessTimeGranularity("2012W51"));
+        assertEquals(IstacTimeGranularityEnum.YEARLY, TimeVariableUtils.guessTimeGranularity("2012"));
+        assertEquals(IstacTimeGranularityEnum.BIYEARLY, TimeVariableUtils.guessTimeGranularity("2012H2"));
+        assertEquals(IstacTimeGranularityEnum.QUARTERLY, TimeVariableUtils.guessTimeGranularity("2012Q1"));
+        assertEquals(IstacTimeGranularityEnum.MONTHLY, TimeVariableUtils.guessTimeGranularity("2012M02"));
+        assertEquals(IstacTimeGranularityEnum.DAILY, TimeVariableUtils.guessTimeGranularity("20120102"));
+        assertEquals(IstacTimeGranularityEnum.WEEKLY, TimeVariableUtils.guessTimeGranularity("2012W51"));
     }
 
     @Test

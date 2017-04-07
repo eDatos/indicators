@@ -24,6 +24,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -82,7 +83,6 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -109,26 +109,26 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService   configurationService;
-    
+    private IndicatorsConfigurationService         configurationService;
+
     @Autowired
     private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
-    
-    private static final Logger              LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String               GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String               TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String               MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String               CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String               OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String               DATASET_REPOSITORY_LOCALE = "es";
+    private static final Logger                    LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String               DOT_NOT_APPLICABLE        = ".";
-    public static final String               DOT_UNAVAILABLE           = "..";
-    public static final Double               ZERO_RANGE                = 1E-6;
-    public static final int                  MAX_MEASURE_LENGTH        = 50;
+    public static final String                     GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String                     TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String                     MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String                     CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String                     OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String                     DATASET_REPOSITORY_LOCALE = "es";
 
-    private static final Map<String, String> SPECIAL_STRING_MAPPING;
+    public static final String                     DOT_NOT_APPLICABLE        = ".";
+    public static final String                     DOT_UNAVAILABLE           = "..";
+    public static final Double                     ZERO_RANGE                = 1E-6;
+    public static final int                        MAX_MEASURE_LENGTH        = 50;
+
+    private static final Map<String, String>       SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -143,9 +143,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade       datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper               mapper                    = new ObjectMapper();
+    private final ObjectMapper                     mapper                    = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -276,11 +276,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         QueryVersionAvro queryVersionAvro = null;
         if (message instanceof QueryVersionAvro) {
             queryVersionAvro = (QueryVersionAvro) message;
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
-        
+
         LOG.info("Starting Indicators data update process (METAMAC DATA)");
 
         markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, queryVersionAvro);
@@ -1102,15 +1101,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void buildIndicatorVersionTimeCoverageCache(IndicatorVersion indicatorVersion) throws MetamacException {
         List<String> timeCodes = calculateTimeCodesInIndicatorVersionFromData(indicatorVersion);
 
-        List<TimeGranularityEnum> granularities = getTimeCodesGranularities(timeCodes);
+        List<IstacTimeGranularityEnum> granularities = getTimeCodesGranularities(timeCodes);
 
-        Map<TimeGranularityEnum, Translation> granularitiesTranslations = getTimeGranularitiesTranslations(granularities);
+        Map<IstacTimeGranularityEnum, Translation> granularitiesTranslations = getTimeGranularitiesTranslations(granularities);
 
         Map<String, Translation> translations = getTimeCodesTranslations(timeCodes);
 
         for (String timeCode : timeCodes) {
             TimeValue timeValue = TimeVariableUtils.parseTimeValue(timeCode);
-            TimeGranularityEnum timeGranularity = timeValue.getGranularity();
+            IstacTimeGranularityEnum timeGranularity = timeValue.getGranularity();
 
             IndicatorVersionTimeCoverage timeCoverage = new IndicatorVersionTimeCoverage(timeCode, indicatorVersion);
             timeCoverage.setTimeGranularity(timeGranularity.getName());
@@ -1136,29 +1135,29 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return translationsByTimeCode;
     }
 
-    private Map<TimeGranularityEnum, Translation> getTimeGranularitiesTranslations(List<TimeGranularityEnum> granularities) throws MetamacException {
+    private Map<IstacTimeGranularityEnum, Translation> getTimeGranularitiesTranslations(List<IstacTimeGranularityEnum> granularities) throws MetamacException {
         List<String> translationCodes = new ArrayList<String>();
-        for (TimeGranularityEnum granularity : granularities) {
+        for (IstacTimeGranularityEnum granularity : granularities) {
             String translationCode = TimeVariableUtils.getTimeGranularityTranslationCode(granularity);
             translationCodes.add(translationCode);
         }
 
         Map<String, Translation> translations = getTranslationRepository().findTranslationsByCodes(translationCodes);
-        Map<TimeGranularityEnum, Translation> translationsByGranularity = new HashMap<TimeGranularityEnum, Translation>();
-        for (TimeGranularityEnum granularity : granularities) {
+        Map<IstacTimeGranularityEnum, Translation> translationsByGranularity = new HashMap<IstacTimeGranularityEnum, Translation>();
+        for (IstacTimeGranularityEnum granularity : granularities) {
             String translationCode = TimeVariableUtils.getTimeGranularityTranslationCode(granularity);
             translationsByGranularity.put(granularity, translations.get(translationCode));
         }
         return translationsByGranularity;
     }
 
-    private List<TimeGranularityEnum> getTimeCodesGranularities(List<String> timeCodes) throws MetamacException {
-        Set<TimeGranularityEnum> granularities = new HashSet<TimeGranularityEnum>();
+    private List<IstacTimeGranularityEnum> getTimeCodesGranularities(List<String> timeCodes) throws MetamacException {
+        Set<IstacTimeGranularityEnum> granularities = new HashSet<IstacTimeGranularityEnum>();
         for (String timeCode : timeCodes) {
             granularities.add(TimeVariableUtils.guessTimeGranularity(timeCode));
         }
 
-        return new ArrayList<TimeGranularityEnum>(granularities);
+        return new ArrayList<IstacTimeGranularityEnum>(granularities);
     }
 
     private List<String> calculateTimeCodesInIndicatorVersionFromData(IndicatorVersion indicatorVersion) throws MetamacException {
@@ -1557,7 +1556,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Map<String, Data> dataCache = new HashMap<String, Data>();
         for (DataSource dataSource : dataSources) {
             try {
-                
+
                 Data data = dataCache.get(dataSource.getQueryUuid());
                 if (data == null) {
                     // Recalculate
@@ -1566,8 +1565,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
-                    }
-                    else {
+                    } else {
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
                         if (json == null) {
@@ -1697,7 +1695,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (StringUtils.isEmpty(value)) {
             value = "..";
         }
-        
+
         // Check for dotted notation
         if (isSpecialString(value)) {
             String text = getSpecialStringMeaning(value);

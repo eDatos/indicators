@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.MutableDateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import com.ibm.icu.util.Calendar;
@@ -17,7 +18,6 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
@@ -26,24 +26,23 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 public class TimeVariableUtils {
 
     // @formatter:off
-    private static final List<TimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(TimeGranularityEnum.DAILY,
-                                                                                        TimeGranularityEnum.WEEKLY,
-                                                                                        TimeGranularityEnum.MONTHLY,
-                                                                                        TimeGranularityEnum.QUARTERLY,
-                                                                                        TimeGranularityEnum.BIYEARLY,
-                                                                                        TimeGranularityEnum.YEARLY);
+    private static final List<IstacTimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(IstacTimeGranularityEnum.DAILY,
+                                                                                        IstacTimeGranularityEnum.WEEKLY,
+                                                                                        IstacTimeGranularityEnum.MONTHLY,
+                                                                                        IstacTimeGranularityEnum.QUARTERLY,
+                                                                                        IstacTimeGranularityEnum.BIYEARLY,
+                                                                                        IstacTimeGranularityEnum.YEARLY);
     // @formatter:on
 
     public static Boolean isTimeValue(String value) {
         if (GpeTimeUtils.isTimeValue(value)) {
-                return true;
-        }
-        else if (MetamacTimeUtils.isTimeValue(value)) {
+            return true;
+        } else if (MetamacTimeUtils.isTimeValue(value)) {
             return true;
         }
         return false;
     }
-    
+
     public static TimeValue parseTimeValue(String timeValue) throws MetamacException {
         if (GpeTimeUtils.isTimeValue(timeValue)) {
             return GpeTimeUtils.parseTimeValue(timeValue);
@@ -52,16 +51,16 @@ public class TimeVariableUtils {
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
     }
-    
-    public static TimeGranularityEnum guessTimeGranularity(String value) throws MetamacException {
+
+    public static IstacTimeGranularityEnum guessTimeGranularity(String value) throws MetamacException {
         if (GpeTimeUtils.isTimeValue(value)) {
             return GpeTimeUtils.guessTimeGranularity(value);
         } else if (MetamacTimeUtils.isTimeValue(value)) {
-            return MetamacTimeUtils.guessTimeGranularity(value);
+            return org.siemac.metamac.core.common.time.IstacTimeUtils.guessTimeGranularity(value);
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
-    
+
     public static String calculatePreviousTimeValue(String value) throws MetamacException {
         if (GpeTimeUtils.isTimeValue(value)) {
             return GpeTimeUtils.calculatePreviousTimeValue(value);
@@ -70,7 +69,7 @@ public class TimeVariableUtils {
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
-    
+
     public static TimeValue convertToLastMonth(TimeValue timeValue) throws MetamacException {
         Date date = timeValueToLastPossibleDate(timeValue);
 
@@ -105,7 +104,7 @@ public class TimeVariableUtils {
         return GRANULARITY_ORDER.indexOf(timeValue.getGranularity()) + 1;
     }
 
-    public static int getTimeGranularityOrder(TimeGranularityEnum timeGranularity) {
+    public static int getTimeGranularityOrder(IstacTimeGranularityEnum timeGranularity) {
         return GRANULARITY_ORDER.indexOf(timeGranularity) + 1;
     }
 
@@ -297,7 +296,7 @@ public class TimeVariableUtils {
         return timeValue;
     }
 
-    public static TimeGranularity buildTimeGranularity(TimeGranularityEnum timeGranularityEnum, Translation translation) throws MetamacException {
+    public static TimeGranularity buildTimeGranularity(IstacTimeGranularityEnum timeGranularityEnum, Translation translation) throws MetamacException {
         TimeGranularity timeGranularity = new TimeGranularity();
         timeGranularity.setGranularity(timeGranularityEnum);
 
@@ -355,7 +354,7 @@ public class TimeVariableUtils {
         return getTimeValueTranslationCode(timeValueDo);
     }
 
-    public static String getTimeGranularityTranslationCode(TimeGranularityEnum timeGranularity) {
+    public static String getTimeGranularityTranslationCode(IstacTimeGranularityEnum timeGranularity) {
         return new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
     }
 
