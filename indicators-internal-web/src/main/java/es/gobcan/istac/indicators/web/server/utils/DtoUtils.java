@@ -2,8 +2,6 @@ package es.gobcan.istac.indicators.web.server.utils;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -169,29 +167,25 @@ public class DtoUtils {
         dataStructureDto.setVariables(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         // Temporal Variables
-        dataStructureDto.setTemporalVariable(QueryMetamacUtils.extractTemporalVariable(query));
+        dataStructureDto.setTemporalVariable(QueryMetamacUtils.extractTemporalVariable(query.getMetadata()));
 
         // Temporal Value
         dataStructureDto.setTemporalValue(QueryMetamacUtils.extractTemporalValue(query));
 
         // Spatial Variables
-        dataStructureDto.setSpatialVariables(QueryMetamacUtils.extractSpatialVariableList(query));
+        dataStructureDto.setSpatialVariables(QueryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
 
         // Spatial Value
         dataStructureDto.setGeographicalValueDto(QueryMetamacUtils.extractGeographicalValueDto(query));
 
         // Cont Variable
-        dataStructureDto.setContVariable(QueryMetamacUtils.extractContVariable(query));
+        dataStructureDto.setContVariable(QueryMetamacUtils.extractContVariable(query.getMetadata()));
 
         // Value Labels
-        // TODO METAMAC-2503 Valores y Códigos idénditcos. No tenemos cubrimiento de Labels por ahora en Metamac.
-        // TODO METAMAC-2503 Perfomance: Si existiese una forma de obtener el cubrimiento sin hacer petición de datos a la Query, no necesitaríamos recibir la Query con datos, lo cuál sería más
-        // eficiente, en ese caso pasarle "?fields=-data" a la petición
-        Map<String, List<String>> codes = QueryMetamacUtils.extractCoverages(query.getData());
-        dataStructureDto.setValueLabels(codes);
+        dataStructureDto.setValueLabels(QueryMetamacUtils.extractValuesCoverages(query.getMetadata()));
 
         // Value Codes
-        dataStructureDto.setValueCodes(codes);
+        dataStructureDto.setValueCodes(QueryMetamacUtils.extractCodesCoverages(query.getMetadata()));
 
         return dataStructureDto;
     }

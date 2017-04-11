@@ -63,7 +63,6 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
     @Override
     public DataStructureDto retrieveDataDefinitionFromQuery(ServiceContext serviceContext, String queryUrn) throws MetamacWebException {
         try {
-            // TODO METAMAC-2503 con DATOS y METADATOS, si no se necesitan datos, OPTIMIZAR
             String languageDefault = configurationService.retrieveLanguageDefault();
             Query query = statisticalResoucesRestInternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
 

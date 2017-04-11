@@ -17,15 +17,18 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attributes;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ComponentType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttribute;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttributes;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionType;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionValues;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
@@ -66,26 +69,23 @@ public class QueryMetamacUtils {
         target.setHeading(extractHeading(query.getMetadata()));
 
         // Value Labels
-        // TODO METAMAC-2503, cubrimientos???? ValueLabels --> Si NOS podemos evitar aquí el cubrimiento, no necesitaríamos recibir la Query con datos, lo cuál sería más eficiente, en ese caso pasarle "?fields=-data" a la petición
-        Map<String, List<String>> values = extractCoverages(query.getData());
-        target.setValueLabels(values);
+        target.setValueLabels(extractValuesCoverages(query.getMetadata()));
 
         // Value Codes
-        // TODO METAMAC-2503, cubrimientos???? ValueCodes
-        target.setValueCodes(values);
+        target.setValueCodes(extractCodesCoverages(query.getMetadata()));
         
         // Temporal Variables
-        target.setTemporalVariable(extractTemporalVariable(query));
+        target.setTemporalVariable(extractTemporalVariable(query.getMetadata()));
         
         // Temporal Value
         target.setTemporalValue(extractTemporalValue(query));
 
         // Spatial Variables
-        target.setSpatialVariables(extractSpatialVariableList(query));
+        target.setSpatialVariables(extractSpatialVariableList(query.getMetadata()));
         target.setGeographicalValueDto(extractGeographicalValueDto(query));
 
         // Cont Variable
-        target.setContVariable(extractContVariable(query));
+        target.setContVariable(extractContVariable(query.getMetadata()));
         
         // Notes: We do not need it for calculations.
         
@@ -137,28 +137,28 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    public static String extractTemporalVariable(Query query) {
-        return extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.TIME_DIMENSION);
+    public static String extractTemporalVariable(QueryMetadata metadata) {
+        return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.TIME_DIMENSION);
     }
     
     public static String extractTemporalValue(Query query) {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.TEMPORAL);
     }
 
-    public static List<String> extractSpatialVariableList(Query query) {
+    public static List<String> extractSpatialVariableList(QueryMetadata metadata) {
         List<String> result = new ArrayList<>(1);
-        String extractSpatialVariable = extractSpatialVariable(query);
+        String extractSpatialVariable = extractSpatialVariable(metadata);
         if (!StringUtils.isEmpty(extractSpatialVariable)) {
             result.add(extractSpatialVariable);
         }
         return result;
     }
 
-    public static String extractSpatialVariable(Query query) {
-        return extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.GEOGRAPHIC_DIMENSION);
+    private static String extractSpatialVariable(QueryMetadata metadata) {
+        return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.GEOGRAPHIC_DIMENSION);
     }
 
-    public static String extractSpatialValue(Query query) {
+    private static String extractSpatialValue(Query query) {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
     }
 
@@ -177,13 +177,14 @@ public class QueryMetamacUtils {
         return getDo2DtoMapper().geographicalValueDoToDto(geographicalValue);
     }
 
-    public static String extractContVariable(Query query) {
-        return extractSpecificDimensionFromDimensions(query.getMetadata().getDimensions(), DimensionType.MEASURE_DIMENSION);
+    public static String extractContVariable(QueryMetadata metadata) {
+        return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.MEASURE_DIMENSION);
     }
 
     public static String extractValueForDefaultLanguage(InternationalString internationalString) {
         // Find in Dimensions or Attributes
         if (internationalString != null && !internationalString.getTexts().isEmpty()) {
+            // Only one locale was received in the API, the default locale. Therefore, this code is valid.
             LocalisedString localisedString = internationalString.getTexts().iterator().next();
             return localisedString.getValue();
         }
@@ -199,24 +200,10 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    public static String extractSpecificDimensionFromDimensions(Dimensions dimensions, DimensionType dimensionType) {
+    private static String extractSpecificDimensionFromDimensions(Dimensions dimensions, DimensionType dimensionType) {
         for (Dimension dimension : dimensions.getDimensions()) {
             if (dimensionType.equals(dimension.getType())) {
                 return dimension.getId();
-            }
-        }
-
-        return null;
-    }
-
-    public static String extractSpecificAttributeFromAttributes(Attributes attributes, ComponentType componentType) {
-        if (attributes == null) {
-            return null;
-        }
-
-        for (Attribute attribute : attributes.getAttributes()) {
-            if (componentType.equals(attribute.getType())) {
-                return attribute.getId();
             }
         }
 
@@ -240,20 +227,58 @@ public class QueryMetamacUtils {
 
         return null;
     }
+    
+    public static Map<String, List<String>> extractCodesCoverages(QueryMetadata metadata) {
+        return extractCoverages(metadata, false);
 
-    public static Map<String, List<String>> extractCoverages(Data data) {
+    }
+
+    public static Map<String, List<String>> extractValuesCoverages(QueryMetadata metadata) {
+        return extractCoverages(metadata, true);
+
+    }
+
+    private static Map<String, List<String>> extractCoverages(QueryMetadata metadata, boolean trylabels) {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        if (data.getDimensions() == null) {
+        Dimensions dimensions = metadata.getDimensions();
+
+        if (dimensions == null) {
             return result;
         }
 
-        for (DimensionRepresentation dimensionRepresentation : data.getDimensions().getDimensions()) {
-            List<String> values = new LinkedList<String>();
-            for (CodeRepresentation codeRepresentation : dimensionRepresentation.getRepresentations().getRepresentations()) {
-                values.add(codeRepresentation.getCode());
+        for (Dimension dimension : dimensions.getDimensions()) {
+            List<String> valuesResult = new LinkedList<String>();
+            DimensionValues dimensionValues = dimension.getDimensionValues();
+
+            if (dimensionValues instanceof NonEnumeratedDimensionValues) {
+                List<NonEnumeratedDimensionValue> values = ((NonEnumeratedDimensionValues) dimensionValues).getValues();
+                for (NonEnumeratedDimensionValue nonEnumeratedDimensionValue: values) {
+                    String extractValue;
+                    if (trylabels) {
+                        extractValue = extractValueForDefaultLanguage(nonEnumeratedDimensionValue.getName());
+                        valuesResult.add(extractValue);
+                    }
+                    else {
+                        extractValue = nonEnumeratedDimensionValue.getId();
+                    }
+                    valuesResult.add(extractValue);
+                }
             }
-            result.put(dimensionRepresentation.getDimensionId(), values);
+            else {
+                List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
+                for (EnumeratedDimensionValue enumeratedDimensionValue : values) {
+                    String extractValue;
+                    if (trylabels) {
+                        extractValue = extractValueForDefaultLanguage(enumeratedDimensionValue.getName());
+                    } else {
+                        extractValue = enumeratedDimensionValue.getId();
+                    }
+                    valuesResult.add(extractValue);
+                }
+
+            }
+            result.put(dimension.getId(), valuesResult);
         }
 
         return result;
