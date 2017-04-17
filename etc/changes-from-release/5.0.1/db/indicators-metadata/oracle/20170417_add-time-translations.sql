@@ -1,0 +1,27 @@
+-- ----------------------------------------------------------------------------------------
+-- INDISTAC-1019 - Dar soporte a la granularidad temporal de tipo cuatrimestre
+-- ----------------------------------------------------------------------------------------
+
+-- Time granularity
+INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) values (SEQ_I18NSTRS.nextval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, 'Quaterly', 'en', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, 'Cuatrimestral', 'es', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_TRANSLATIONS (ID, CODE, TITLE_FK) values (SEQ_TRANSLATIONS.nextval, 'TIME_GRANULARITY.FOUR_MONTHLY', SEQ_I18NSTRS.currval);
+
+-- Time value FOUR MONTH
+INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) values (SEQ_I18NSTRS.nextval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} First four month period', 'en', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} Primer cuatrimestre', 'es', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_TRANSLATIONS (ID, CODE, TITLE_FK) values (SEQ_TRANSLATIONS.nextval, 'TIME_VALUE.FOUR_MONTHLY.T1', SEQ_I18NSTRS.currval);
+
+INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) values (SEQ_I18NSTRS.nextval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} Second four month period', 'en', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} Segundo cuatrimestre', 'es', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_TRANSLATIONS (ID, CODE, TITLE_FK) values (SEQ_TRANSLATIONS.nextval, 'TIME_VALUE.FOUR_MONTHLY.T2', SEQ_I18NSTRS.currval);
+
+INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) values (SEQ_I18NSTRS.nextval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} Third four month period', 'en', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (SEQ_L10NSTRS.nextval, '{yyyy} Tercer cuatrimestre', 'es', SEQ_I18NSTRS.currval, 1);
+INSERT INTO TB_TRANSLATIONS (ID, CODE, TITLE_FK) values (SEQ_TRANSLATIONS.nextval, 'TIME_VALUE.FOUR_MONTHLY.T3', SEQ_I18NSTRS.currval);
+
+commit;

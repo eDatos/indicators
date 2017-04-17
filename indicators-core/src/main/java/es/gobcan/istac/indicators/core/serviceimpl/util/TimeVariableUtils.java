@@ -30,6 +30,7 @@ public class TimeVariableUtils {
                                                                                         IstacTimeGranularityEnum.WEEKLY,
                                                                                         IstacTimeGranularityEnum.MONTHLY,
                                                                                         IstacTimeGranularityEnum.QUARTERLY,
+                                                                                        IstacTimeGranularityEnum.FOUR_MONTHLY,
                                                                                         IstacTimeGranularityEnum.BIYEARLY,
                                                                                         IstacTimeGranularityEnum.YEARLY);
     // @formatter:on
@@ -112,6 +113,11 @@ public class TimeVariableUtils {
     public static Date timeValueToLastPossibleDate(TimeValue timeValue) {
         MutableDateTime dt = new MutableDateTime();
         switch (timeValue.getGranularity()) {
+            case YEARLY: {
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
+                dt.setDayOfYear(dt.dayOfYear().getMaximumValue());
+                break;
+            }
             case BIYEARLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
                 // Ignore granularity character
@@ -120,9 +126,12 @@ public class TimeVariableUtils {
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
-            case YEARLY: {
+            case FOUR_MONTHLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
-                dt.setDayOfYear(dt.dayOfYear().getMaximumValue());
+                // Ignore granularity character
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
+                dt.setMonthOfYear(subPeriod * 4);
+                dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
             case QUARTERLY: {
@@ -364,20 +373,23 @@ public class TimeVariableUtils {
             case YEARLY:
                 translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_YEARLY;
                 break;
-            case DAILY:
-                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
-                break;
-            case WEEKLY:
-                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_WEEKLY;
-                break;
             case BIYEARLY:
                 translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_BIYEARLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case FOUR_MONTHLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_FOUR_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
                 break;
             case QUARTERLY:
                 translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_QUARTERLY).append(".").append(timeValueDo.getSubperiod()).toString();
                 break;
             case MONTHLY:
                 translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case WEEKLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_WEEKLY;
+                break;
+            case DAILY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
                 break;
         }
         return translationCode;

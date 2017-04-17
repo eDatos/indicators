@@ -4056,6 +4056,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertEquals(IstacTimeGranularityEnum.YEARLY, TimeVariableUtils.guessTimeGranularity("2012"));
         assertEquals(IstacTimeGranularityEnum.BIYEARLY, TimeVariableUtils.guessTimeGranularity("2012H2"));
+        assertEquals(IstacTimeGranularityEnum.FOUR_MONTHLY, TimeVariableUtils.guessTimeGranularity("2012T2"));
         assertEquals(IstacTimeGranularityEnum.QUARTERLY, TimeVariableUtils.guessTimeGranularity("2012Q1"));
         assertEquals(IstacTimeGranularityEnum.MONTHLY, TimeVariableUtils.guessTimeGranularity("2012M02"));
         assertEquals(IstacTimeGranularityEnum.DAILY, TimeVariableUtils.guessTimeGranularity("20120102"));

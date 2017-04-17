@@ -1,18 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.END;
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.GROUP_LEFT;
+import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.GROUP_RIGHT;
 import static org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants.START;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.DAILY_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.TIME_VALUE_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_PATTERN;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.YEARLY_PATTERN;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +21,34 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 public class GpeTimeUtils {
 
+    // Constants
+    /**
+     * Regular expressions to time variables
+     * Possibilities:
+     * - Yearly: yyyy (Example: 1999)
+     * - Biyearly: yyyyHs (Example: 1999H1)
+     * - Quarterly: yyyyQt (Example: 1999Q1)
+     * - FourMonth: yyyyTt (Example: 1999T1)
+     * - Monthly: yyyyMmm (Example: 1999M01)
+     * - Weekly: yyyyWss (Example: 1999W51)
+     * - Daily: yyyymmdd (Example: 19990101)
+     */
+    public static final String BIYEARLY_CHARACTER    = "H";
+    public static final String QUARTERLY_CHARACTER   = "Q";
+    public static final String MONTHLY_CHARACTER     = "M";
+    public static final String WEEKLY_CHARACTER      = "W";
+
+    public static final String YEAR_PATTERN          = "[1-2]\\d{3}";
+    public static final String YEARLY_PATTERN        = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT;
+    public static final String BIYEARLY_PATTERN      = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT + BIYEARLY_CHARACTER + GROUP_LEFT + "[1-2]" + GROUP_RIGHT;
+    public static final String QUARTERLY_PATTERN     = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT + QUARTERLY_CHARACTER + GROUP_LEFT + "[1-4]" + GROUP_RIGHT;
+    public static final String MONTH_PATTERN         = "0[1-9]|1[0-2]";
+    public static final String MONTHLY_PATTERN       = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT + MONTHLY_CHARACTER + GROUP_LEFT + MONTH_PATTERN + GROUP_RIGHT;
+    public static final String WEEKLY_PATTERN        = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT + WEEKLY_CHARACTER + GROUP_LEFT + "0[1-9]|[1-4][0-9]|5[0-3]" + GROUP_RIGHT;
+    public static final String DAILY_PATTERN         = GROUP_LEFT + YEAR_PATTERN + GROUP_RIGHT + GROUP_LEFT + MONTH_PATTERN + GROUP_RIGHT + GROUP_LEFT + "0[1-9]|[1-2][0-9]|3[0-1]" + GROUP_RIGHT;
+    public static final String TIME_VALUE_PATTERN    = YEARLY_PATTERN + "|" + BIYEARLY_PATTERN + "|" + QUARTERLY_PATTERN + "|" + MONTHLY_PATTERN + "|" + WEEKLY_PATTERN + "|" + DAILY_PATTERN;
+
+    // Patterns
     protected static Pattern patternTimeValue     = Pattern.compile(START + TIME_VALUE_PATTERN + END);
 
     protected static Pattern patternYearlyValue   = Pattern.compile(START + YEARLY_PATTERN + END);
@@ -163,8 +182,9 @@ public class GpeTimeUtils {
                     return new DateTime(year, month, day, 0, 0, 0, 0).minusDays(1).toString("yyyyMMdd");
                 }
             }
+            default:
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
         }
-        throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
     private static String calculatePreviousTimeValueWithSubperiod(Pattern pattern, String timeValue, String subperiodCharacter, String maximumSubperiodAtYear, int subperiodStringSize)

@@ -216,6 +216,14 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                 } else {
                     return buildBiyearlyTimeValue(date.getYear(), 2);
                 }
+            case FOUR_MONTHLY:
+                if (date.getMonthOfYear() <= 4) {
+                    return buildFourMonthTimeValue(date.getYear(), 1);
+                } else if (date.getMonthOfYear() <= 8) {
+                    return buildFourMonthTimeValue(date.getYear(), 2);
+                } else {
+                    return buildFourMonthTimeValue(date.getYear(), 3);
+                }
             case QUARTERLY:
                 if (date.getMonthOfYear() <= 3) {
                     return buildQuarterlyTimeValue(date.getYear(), 1);
@@ -245,6 +253,10 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
 
     private String buildBiyearlyTimeValue(int year, int sem) {
         return year + "H" + sem;
+    }
+
+    private String buildFourMonthTimeValue(int year, int quarter) {
+        return year + "T" + quarter;
     }
 
     private String buildQuarterlyTimeValue(int year, int quarter) {

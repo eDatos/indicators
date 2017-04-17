@@ -800,6 +800,7 @@ public class DsplTransformer {
             case YEARLY:
                 return new DateColumn("year", "yyyy");
             case BIYEARLY:
+            case FOUR_MONTHLY:
             case QUARTERLY:
             case MONTHLY:
                 return new DateColumn("month", "yyyy'M'MM");
@@ -826,6 +827,7 @@ public class DsplTransformer {
             case YEARLY:
                 return "time:year";
             case BIYEARLY:
+            case FOUR_MONTHLY:
             case QUARTERLY:
             case MONTHLY:
                 return "time:month";

@@ -1,14 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
-import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.time.TimeSdmx;
@@ -18,15 +11,6 @@ import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class MetamacTimeUtils {
-
-    // @formatter:off
-    private static final List<IstacTimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(IstacTimeGranularityEnum.DAILY,
-                                                                                        IstacTimeGranularityEnum.WEEKLY,
-                                                                                        IstacTimeGranularityEnum.MONTHLY,
-                                                                                        IstacTimeGranularityEnum.QUARTERLY,
-                                                                                        IstacTimeGranularityEnum.BIYEARLY,
-                                                                                        IstacTimeGranularityEnum.YEARLY);
-    // @formatter:on
 
     public static Boolean isTimeValue(String value) {
         return SdmxTimeUtils.isObservationalTimePeriod(value);
@@ -49,24 +33,29 @@ public class MetamacTimeUtils {
             }
             case BIYEARLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(BIYEARLY_CHARACTER, calculateBiyearlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_SEMESTER_PERIOD_INDICATOR, calculateBiyearlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
+                break;
+            }
+            case FOUR_MONTHLY: {
+                timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_TRIMESTER_PERIOD_INDICATOR, calculateQuarterlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case QUARTERLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(QUARTERLY_CHARACTER, calculateQuarterlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_QUARTER_PERIOD_INDICATOR, calculateQuarterlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case MONTHLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(MONTHLY_CHARACTER, String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case WEEKLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
                 String week = String.valueOf(parseTime.getStartDateTime().getWeekOfWeekyear());
                 timeValueFields.setWeek(week);
-                timeValueFields.setSubperiod(WEEKLY_CHARACTER, week);
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR, week);
                 break;
             }
             case DAILY: {
@@ -113,19 +102,26 @@ public class MetamacTimeUtils {
             }
             case BIYEARLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(6);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(BIYEARLY_CHARACTER).append(calculateBiyearlyFromMonth(previous.getMonthOfYear())).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_SEMESTER_PERIOD_INDICATOR)
+                        .append(calculateBiyearlyFromMonth(previous.getMonthOfYear())).toString();
+            }
+            case FOUR_MONTHLY: {
+                DateTime previous = parseTime.getStartDateTime().minusMonths(4);
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_TRIMESTER_PERIOD_INDICATOR)
+                        .append(calculateQuarterlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case QUARTERLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(3);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(QUARTERLY_CHARACTER).append(calculateQuarterlyFromMonth(previous.getMonthOfYear())).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_QUARTER_PERIOD_INDICATOR)
+                        .append(calculateQuarterlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case MONTHLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(1);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(MONTHLY_CHARACTER).append(previous.getMonthOfYear()).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR).append(previous.getMonthOfYear()).toString();
             }
             case WEEKLY: {
                 DateTime previous = parseTime.getStartDateTime().minusWeeks(1);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(WEEKLY_CHARACTER).append(previous.getWeekOfWeekyear()).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR).append(previous.getWeekOfWeekyear()).toString();
             }
             case DAILY: {
                 DateTime previous = parseTime.getStartDateTime().minusDays(1);
