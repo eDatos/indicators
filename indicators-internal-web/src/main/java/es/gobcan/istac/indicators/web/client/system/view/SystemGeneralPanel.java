@@ -205,7 +205,12 @@ public class SystemGeneralPanel extends VLayout {
         ViewTextItem prodVersion = new ViewTextItem(IndicatorsSystemsDS.PROD_VERSION, getConstants().systemDetailProdVersion());
         ViewTextItem prodValidDate = new ViewTextItem(IndicatorsSystemsDS.PROD_VALID_DATE, getConstants().systemDetailProdValidDate());
         ViewTextItem prodValidUser = new ViewTextItem(IndicatorsSystemsDS.PROD_VALID_USER, getConstants().systemDetailProdValidUser());
-        productionForm.setFields(prodVersion, prodValidDate, prodValidUser);
+        ViewTextItem creationDate = new ViewTextItem(IndicatorsSystemsDS.CREATION_DATE, getConstants().systemDetailCreationDate());
+        creationDate.setStartRow(true);
+        ViewTextItem creationUser = new ViewTextItem(IndicatorsSystemsDS.CREATION_USER, getConstants().systemDetailCreationUser());
+        ViewTextItem lastUpdateDate = new ViewTextItem(IndicatorsSystemsDS.LAST_UPDATE_DATE, getConstants().systemDetailLastUpdateDate());
+        ViewTextItem lastUpdateUser = new ViewTextItem(IndicatorsSystemsDS.LAST_UPDATE_USER, getConstants().systemDetailLastUpdateUser());
+        productionForm.setFields(prodVersion, prodValidDate, prodValidUser, creationDate, creationUser, lastUpdateDate, lastUpdateUser);
 
         // Diffusion Descriptors
         diffusionForm = new GroupDynamicForm(getConstants().systemDetailDiffusionDescriptors());
@@ -275,6 +280,10 @@ public class SystemGeneralPanel extends VLayout {
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
         productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getProductionValidationDate()));
         productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_USER, indicatorSystemDto.getProductionValidationUser());
+        productionForm.setValue(IndicatorsSystemsDS.CREATION_DATE, indicatorSystemDto.getCreatedDate());
+        productionForm.setValue(IndicatorsSystemsDS.CREATION_USER, indicatorSystemDto.getCreatedBy());
+        productionForm.setValue(IndicatorsSystemsDS.LAST_UPDATE_DATE, indicatorSystemDto.getLastUpdated());
+        productionForm.setValue(IndicatorsSystemsDS.LAST_UPDATE_USER, indicatorSystemDto.getLastUpdatedBy());
 
         // Diffusion Descriptors
         diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getDiffusionValidationDate()));

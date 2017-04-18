@@ -47,38 +47,38 @@ import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
 public class IndicatorGeneralPanel extends VLayout {
 
     /* Data */
-    private IndicatorDto                    indicator;
-    private IndicatorDto                    diffusionIndicator;
+    private IndicatorDto                     indicator;
+    private IndicatorDto                     diffusionIndicator;
 
     /* UiHandlers */
-    private IndicatorUiHandler              uiHandlers;
+    private IndicatorUiHandler               uiHandlers;
 
-    private IndicatorMainFormLayout         mainFormLayout;
+    private IndicatorMainFormLayout          mainFormLayout;
 
     private IndicatorDiffusionMainFormLayout diffusionMainFormLayout;
-    private GroupDynamicForm                diffusionIdentifiersForm;
+    private GroupDynamicForm                 diffusionIdentifiersForm;
 
     /* View Form */
-    private GroupDynamicForm                identifiersForm;
-    private GroupDynamicForm                contentClassifiersForm;
-    private GroupDynamicForm                contentDescriptorsForm;
-    private GroupDynamicForm                productionDescriptorsForm;
-    private ViewQuantityForm                quantityForm;
-    private GroupDynamicForm                diffusionDescriptorsForm;
-    private GroupDynamicForm                publicationDescriptorsForm;
-    private GroupDynamicForm                annotationsForm;
+    private GroupDynamicForm                 identifiersForm;
+    private GroupDynamicForm                 contentClassifiersForm;
+    private GroupDynamicForm                 contentDescriptorsForm;
+    private GroupDynamicForm                 productionDescriptorsForm;
+    private ViewQuantityForm                 quantityForm;
+    private GroupDynamicForm                 diffusionDescriptorsForm;
+    private GroupDynamicForm                 publicationDescriptorsForm;
+    private GroupDynamicForm                 annotationsForm;
 
     /* Edit Form */
-    private GroupDynamicForm                identifiersEditionForm;
-    private GroupDynamicForm                contentClassifiersEditionForm;
-    private GroupDynamicForm                contentDescriptorsEditionForm;
-    private GroupDynamicForm                productionDescriptorsEditionForm;
-    private QuantityForm                    quantityEditionForm;
-    private GroupDynamicForm                diffusionDescriptorsEditionForm;
-    private GroupDynamicForm                publicationDescriptorsEditionForm;
-    private GroupDynamicForm                annotationsEditionForm;
+    private GroupDynamicForm                 identifiersEditionForm;
+    private GroupDynamicForm                 contentClassifiersEditionForm;
+    private GroupDynamicForm                 contentDescriptorsEditionForm;
+    private GroupDynamicForm                 productionDescriptorsEditionForm;
+    private QuantityForm                     quantityEditionForm;
+    private GroupDynamicForm                 diffusionDescriptorsEditionForm;
+    private GroupDynamicForm                 publicationDescriptorsEditionForm;
+    private GroupDynamicForm                 annotationsEditionForm;
 
-    private List<SubjectDto>                subjectDtos;
+    private List<SubjectDto>                 subjectDtos;
 
     public IndicatorGeneralPanel() {
         super();
@@ -336,7 +336,12 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem prodVersion = new ViewTextItem(IndicatorDS.PRODUCTION_VERSION, getConstants().indicDetailProductionVersion());
         ViewTextItem prodValDate = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
         ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
-        productionDescriptorsForm.setFields(prodVersion, prodValDate, prodValUser);
+        ViewTextItem creationDate = new ViewTextItem(IndicatorDS.CREATION_DATE, getConstants().indicDetailCreationDate());
+        creationDate.setStartRow(true);
+        ViewTextItem creationUser = new ViewTextItem(IndicatorDS.CREATION_USER, getConstants().indicDetailCreationUser());
+        ViewTextItem lastUpdateDate = new ViewTextItem(IndicatorDS.LAST_UPDATE_DATE, getConstants().indicDetailLastUpdateDate());
+        ViewTextItem lastUpdateUser = new ViewTextItem(IndicatorDS.LAST_UPDATE_USER, getConstants().indicDetailLastUpdateUser());
+        productionDescriptorsForm.setFields(prodVersion, prodValDate, prodValUser, creationDate, creationUser, lastUpdateDate, lastUpdateUser);
 
         // Quantity Form
         quantityForm = new ViewQuantityForm(getConstants().indicDetailQuantity());
@@ -424,7 +429,12 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem prodVersion = new ViewTextItem(IndicatorDS.PRODUCTION_VERSION, getConstants().indicDetailProductionVersion());
         ViewTextItem prodValDate = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
         ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
-        productionDescriptorsEditionForm.setFields(prodVersion, prodValDate, prodValUser);
+        ViewTextItem creationDate = new ViewTextItem(IndicatorDS.CREATION_DATE, getConstants().indicDetailCreationDate());
+        creationDate.setStartRow(true);
+        ViewTextItem creationUser = new ViewTextItem(IndicatorDS.CREATION_USER, getConstants().indicDetailCreationUser());
+        ViewTextItem lastUpdateDate = new ViewTextItem(IndicatorDS.LAST_UPDATE_DATE, getConstants().indicDetailLastUpdateDate());
+        ViewTextItem lastUpdateUser = new ViewTextItem(IndicatorDS.LAST_UPDATE_USER, getConstants().indicDetailLastUpdateUser());
+        productionDescriptorsEditionForm.setFields(prodVersion, prodValDate, prodValUser, creationDate, creationUser, lastUpdateDate, lastUpdateUser);
 
         // Quantity Form
         quantityEditionForm = new QuantityForm(getConstants().indicDetailQuantity());
@@ -501,7 +511,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
     public void setDiffusionIndicator(IndicatorDto indicatorDto) {
         diffusionIndicator = indicatorDto;
-        
+
         diffusionIdentifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
         diffusionIdentifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         diffusionIdentifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
@@ -537,6 +547,10 @@ public class IndicatorGeneralPanel extends VLayout {
         productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
         productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getProductionValidationDate()));
         productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
+        productionDescriptorsForm.setValue(IndicatorDS.CREATION_DATE, indicatorDto.getCreatedDate());
+        productionDescriptorsForm.setValue(IndicatorDS.CREATION_USER, indicatorDto.getCreatedBy());
+        productionDescriptorsForm.setValue(IndicatorDS.LAST_UPDATE_DATE, indicatorDto.getLastUpdated());
+        productionDescriptorsForm.setValue(IndicatorDS.LAST_UPDATE_USER, indicatorDto.getLastUpdatedBy());
 
         // Quantity
         quantityForm.setValue(indicatorDto.getQuantity());
@@ -581,6 +595,10 @@ public class IndicatorGeneralPanel extends VLayout {
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getProductionValidationDate()));
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
+        productionDescriptorsEditionForm.setValue(IndicatorDS.CREATION_DATE, indicatorDto.getCreatedDate());
+        productionDescriptorsEditionForm.setValue(IndicatorDS.CREATION_USER, indicatorDto.getCreatedBy());
+        productionDescriptorsEditionForm.setValue(IndicatorDS.LAST_UPDATE_DATE, indicatorDto.getLastUpdated());
+        productionDescriptorsEditionForm.setValue(IndicatorDS.LAST_UPDATE_USER, indicatorDto.getLastUpdatedBy());
 
         // Quantity
         quantityEditionForm.setIndicator(indicatorDto);

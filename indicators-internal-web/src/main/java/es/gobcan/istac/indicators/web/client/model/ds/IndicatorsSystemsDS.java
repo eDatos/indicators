@@ -24,6 +24,10 @@ public class IndicatorsSystemsDS extends DataSource {
     public static String PROD_VERSION     = "indsys-prod-v";
     public static String PROD_VALID_DATE  = "indsys-prod-date";
     public static String PROD_VALID_USER  = "indsys-prod-user";
+    public static String CREATION_DATE    = "indsys-creation-date";
+    public static String CREATION_USER    = "indsys-creation-user";
+    public static String LAST_UPDATE_DATE = "indsys-last-update-date";
+    public static String LAST_UPDATE_USER = "indsys-last-update-user";
     // DIFFUSION DESCRIPTORS
     public static String DIFF_VALID_DATE  = "indsys-diff-date";
     public static String DIFF_VALID_USER  = "indsys-diff-user";

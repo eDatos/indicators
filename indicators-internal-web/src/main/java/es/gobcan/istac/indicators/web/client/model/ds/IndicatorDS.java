@@ -36,6 +36,8 @@ public class IndicatorDS extends DataSource {
     public static String PRODUCTION_VALIDATION_DATE_DIFF       = "ind-prod-date-diff";
     public static String PRODUCTION_VALIDATION_USER            = "ind-prod-user";
     public static String PRODUCTION_VALIDATION_USER_DIFF       = "ind-prod-user-diff";
+    public static String LAST_UPDATE_DATE                      = "ind-last-update-date";
+    public static String LAST_UPDATE_USER                      = "ind-last-update-user";
     // QUANTITY
     public static String QUANTITY_UNIT_UUID                    = "q-unit-uuid";
     public static String QUANTITY_UNIT_MULTIPLIER              = "q-unit-mul";
@@ -44,21 +46,21 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_MINIMUM                      = "q-min";
     public static String QUANTITY_MAXIMUM                      = "q-max";
     public static String QUANTITY_DENOMINATOR_INDICATOR_UUID   = "q-den";
-    public static String QUANTITY_DENOMINATOR_INDICATOR_TEXT   = "q-den-dtext";           // Not mapped in DTO
+    public static String QUANTITY_DENOMINATOR_INDICATOR_TEXT   = "q-den-dtext";             // Not mapped in DTO
     public static String QUANTITY_NUMERATOR_INDICATOR_UUID     = "q-num";
-    public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";           // Not mapped in DTO
+    public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";             // Not mapped in DTO
 
     public static String QUANTITY_IS_PERCENTAGE                = "q-is-perc";
-    public static String QUANTITY_IS_PERCENTAGE_TEXT           = "q-is-perc-text";        // Not mapped in DTO
+    public static String QUANTITY_IS_PERCENTAGE_TEXT           = "q-is-perc-text";          // Not mapped in DTO
 
-    public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";           // Not mapped in DTO
+    public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";             // Not mapped in DTO
     public static String QUANTITY_BASE_VALUE                   = "q-value";
     public static String QUANTITY_BASE_TIME                    = "q-time";
     public static String QUANTITY_BASE_LOCATION                = "q-loc";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_UUID = "q-ind-uuid";
-    public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext";      // Not mapped in DTO
+    public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext";        // Not mapped in DTO
     public static String QUANTITY_TYPE                         = "q-type";
-    public static String QUANTITY_TYPE_TEXT                    = "q-type-text";           // Not mapped in DTO
+    public static String QUANTITY_TYPE_TEXT                    = "q-type-text";             // Not mapped in DTO
     public static String QUANTITY_PERCENTAGE_OF                = "q-perc-of";
     // DIFUSSION DESCRIPTORS
     public static String DIFFUSION_VALIDATION_DATE             = "ind-diff-date";
