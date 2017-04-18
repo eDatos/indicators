@@ -1440,7 +1440,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void markIndicatorVersionAsDataUpdated(IndicatorVersion indicatorVersion) {
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setLastPopulateDate(new DateTime());
-        getIndicatorVersionRepository().save(indicatorVersion);
+        indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
+        markIndicatorInstancesAsDataUpdated(indicatorVersion);
+    }
+
+    private void markIndicatorInstancesAsDataUpdated(IndicatorVersion indicatorVersion) {
+        for (IndicatorInstance instance : indicatorVersion.getIndicator().getIndicatorsInstances()) {
+            instance.setLastPopulateDate(new DateTime());
+            getIndicatorInstanceRepository().save(instance);
+        }
     }
 
     @Transactional(value = "txManager")

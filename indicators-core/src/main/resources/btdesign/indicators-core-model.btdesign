@@ -720,7 +720,7 @@ Application Indicators {
         	databaseTable = "TB_INDICATORS_INSTANCES"
         	hint="idSequence=INDICATORS_INSTANCES"
 			gap
-			
+
 			"Code to indicator instance. Not unique (its duplicated when indicators system is versioned). Non modifiable"
        		String code not nullable;
 			"Title"
@@ -731,7 +731,9 @@ Application Indicators {
         	Clob timeValues nullable;
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
-			
+			"Date when the indicator instance was populated for the last time"
+			DateTimeTZ lastPopulateDate nullable;
+
 			// Relations
 			"Last value cache"
 			- Set<@IndicatorInstanceLastValueCache> lastValuesCache cascade="delete-orphan" fetch="lazy" inverse <-> indicatorInstance;

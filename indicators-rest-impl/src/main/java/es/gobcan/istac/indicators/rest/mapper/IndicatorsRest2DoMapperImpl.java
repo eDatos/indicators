@@ -86,7 +86,8 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             IndicatorsPropertyOrder propertyNameCriteria = IndicatorsPropertyOrder.valueOf(order.getPropertyName());
             switch (propertyNameCriteria) {
                 case update: {
-                    return new LeafProperty<IndicatorVersion>(IndicatorVersionProperties.lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, IndicatorVersion.class);
+                    return new LeafProperty<IndicatorVersion>(IndicatorVersionProperties.lastPopulateDate().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true,
+                            IndicatorVersion.class);
                 }
                 case id: {
                     return IndicatorVersionProperties.id();
