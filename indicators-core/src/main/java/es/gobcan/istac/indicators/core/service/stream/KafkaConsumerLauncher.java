@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
@@ -22,16 +23,20 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 
 @Component
 public class KafkaConsumerLauncher implements ApplicationListener<ContextRefreshedEvent> {
 
-    protected static Log                   LOGGER                = LogFactory.getLog(KafkaConsumerLauncher.class);
+    protected static Log                   LOGGER                  = LogFactory.getLog(KafkaConsumerLauncher.class);
 
     private Map<String, Future<?>>         futuresMap;
-    private final String                   CONSUMER_QUERY_1_NAME = "indicators_consumer_query_1";
+    private static final String            CONSUMER_QUERY_1_NAME   = "indicators_consumer_query_1";
+    private static final String            KAFKA_FAILED_CACHE_NAME = "kafkaFailed";
 
     @Autowired
     private ThreadPoolTaskExecutor         threadPoolTaskExecutor;
@@ -42,11 +47,18 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
+    @Autowired
+    private NoticesRestInternalService     noticesRestInternalService;
+
+    private Cache                          kafkaFailedMessagesCache;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext ac = event.getApplicationContext();
         if (ac.getParent() == null) {
             try {
+                prepareFailedMessageCache();
+
                 futuresMap = new HashMap<>();
                 futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
                 startKeepAliveKafkaThread(ac);
@@ -54,6 +66,13 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 LOGGER.error(e);
             }
         }
+    }
+
+    private void prepareFailedMessageCache() {
+        CacheManager cacheManager = CacheManager.getInstance();
+        cacheManager.addCache(KAFKA_FAILED_CACHE_NAME);
+        Cache cache = cacheManager.getCache(KAFKA_FAILED_CACHE_NAME);
+        kafkaFailedMessagesCache = cache;
     }
 
     public void startKeepAliveKafkaThread(ApplicationContext context) throws MetamacException {
@@ -68,7 +87,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         KafkaConsumer<String, DatasetVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicDatasetsPublication, CONSUMER_QUERY_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
         consumerThread.setTopicName(topicDatasetsPublication);
-        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade, noticesRestInternalService, kafkaFailedMessagesCache);
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
@@ -77,7 +96,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, configurationService.retrieveKafkaGroup());
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
 
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false); // Default is True

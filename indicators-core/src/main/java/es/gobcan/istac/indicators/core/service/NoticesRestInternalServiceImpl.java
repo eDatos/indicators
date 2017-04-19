@@ -95,6 +95,11 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         }
     }
 
+    @Override
+    public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage) {
+        createBackgroundNotification(ServiceNoticeAction.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, ServiceNoticeMessage.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, new ArrayList<IndicatorVersion>(), keyMessage);
+    }
+
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {
         List<IndicatorVersion> notifiableIndicators = new ArrayList<IndicatorVersion>();
         for (IndicatorVersion failedIndicatorVersion : failedPopulationIndicators) {

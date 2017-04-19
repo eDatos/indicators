@@ -13,5 +13,6 @@ public interface NoticesRestInternalService {
     void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode);
     void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
     void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
+    public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage);
 
 }

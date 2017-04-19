@@ -1424,14 +1424,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, List<String> dataDefinitionsUuids) throws MetamacException {
-        // Date newQueryDate = Calendar.getInstance().getTime();
-        // List<String> dataDefinitionsUuids = null;
-        // try {
-        // dataDefinitionsUuids = getDataGpeRepository().findDataDefinitionsWithDataUpdatedAfter(lastQuery);
-        // } catch (Exception e) {
-        // throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
-        // }
-
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
         markIndicatorsNeedsUpdateTransactional(pendingIndicators);
     }

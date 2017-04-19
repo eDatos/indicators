@@ -24,7 +24,10 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 
 @Component
 @Scope("prototype")
@@ -32,9 +35,13 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
 
     protected static Log LOGGER = LogFactory.getLog(KafkaConsumerThread.class);
 
+    private static final String      MAX_POOL_MSG = "We have set a poll of 1 message at most. This error can not be given.";
+
     private KafkaConsumer<String, T> consumer;
     private String                   topicName;
     private IndicatorsServiceFacade  indicatorsServiceFacade;
+    private NoticesRestInternalService noticesRestInternalService;
+    private Cache                      kafkaFailedMessagesCache;
 
     public void setConsumer(KafkaConsumer<String, T> consumer) {
         this.consumer = consumer;
@@ -44,8 +51,10 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         this.topicName = topicName;
     }
 
-    public void setIndicatorsServiceFacade(IndicatorsServiceFacade indicatorsServiceFacade) {
+    public void setIndicatorsServiceFacade(IndicatorsServiceFacade indicatorsServiceFacade, NoticesRestInternalService noticesRestInternalService, Cache kafkaFailedMessagesCache) {
         this.indicatorsServiceFacade = indicatorsServiceFacade;
+        this.noticesRestInternalService = noticesRestInternalService;
+        this.kafkaFailedMessagesCache = kafkaFailedMessagesCache;
     }
 
     @Override
@@ -57,12 +66,12 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             Map<Integer, Long> pendigOffsetsToCommit = new HashMap<Integer, Long>(); // K:partition, V:offset
             
             while (alwaysWithDelay()) {
-                ConsumerRecords<String, T> records = consumer.poll(100); // milliseconds, spent waiting in poll if data is not available in the buffer
+                // Milliseconds, spent waiting in poll if data is not available in the buffer
+                ConsumerRecords<String, T> records = consumer.poll(100);
 
                 if (records.count() > 1) {
-                    String msg = "Tenemos configurado un poll de 1 mensaje como máximo. Este error no puede darse";
-                    LOGGER.error(msg);
-                    throw new RuntimeException(msg);
+                    LOGGER.error(MAX_POOL_MSG);
+                    throw new RuntimeException(MAX_POOL_MSG);
                 }
 
                 if (records.isEmpty()) {
@@ -73,14 +82,15 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                 ConsumerRecord<String, T> record = records.iterator().next();
 
                 if (pendigOffsetsToCommit.containsKey(record.partition()) && record.offset() == pendigOffsetsToCommit.get(record.partition())) {
-                    System.out.println("El mensaje actual ya lo procesamos satisfactoriamente");
+                    LOGGER.info("The current message already processed successfully");
                     if (commitSync(record)) {
                         pendigOffsetsToCommit.remove(record.partition());
+                        removeFromErrorCacheMessagesIfNeccesary(record);
                     }
                     continue;
                 }
 
-                StringBuilder logMessageBldr = new StringBuilder("Recibido mensaje desde KAFKA -> Topic Name: ");
+                StringBuilder logMessageBldr = new StringBuilder("Received message from Kafka -> Topic Name: ");
                 // @formatter:off
                 logMessageBldr
                     .append(topicName)
@@ -101,15 +111,18 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                     indicatorsServiceFacade.updateIndicatorsDataFromMetamac(serviceContext, record.value());
                     commitSync(record);
                 } catch (Exception e) {
-                    LOGGER.error("Imposible procesar recurso recibido desde KAFKA", e);
+                    LOGGER.error("Unable to process resource received from KAFKA. The business of application has failed", e);
 
-                    // TODO METAMAC-2503 Que hacemos con los mensajes que provocan error siempre (por ej pq el mensaje está mal, pq nuestra lógica está mal, etc)
-                    // Los errores por servicios caidos y demás se supone que en algun intento volveran a funcionar. El problema son los que nunca funcionaran y que
-                    // impiden el avance del resto de mensajes de la cola.
-                    pendigOffsetsToCommit.remove(record.partition()); // Para no commitearlo en la siguiente iteracion
+                    // Send a erro notification, the error message will send only if not exist in error cache
+                    sendErrorMessageIfNeccesary(record);
+
+                    // For evict commit
+                    pendigOffsetsToCommit.remove(record.partition());
                 }
-
             }
+        } catch (Exception e) {
+            LOGGER.error("An error has occurred in the Kafka client. Finishing the client.", e);
+            LOGGER.error(e);
         } finally {
             consumer.close();
         }
@@ -129,16 +142,29 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             consumer.commitSync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset() + 1)));
             LOGGER.debug("Commited message: " + record.partition() + " : " + record.offset());
         } catch (CommitFailedException e) {
-            // The message processing takes longer than the session timeout. The coordinator kicks the consumer out of the group (rebalanced)
             LOGGER.debug("The message processing takes longer than the session timeout. The coordinator kicks the consumer out of the group (rebalanced)");
             return false;
         }
         return true;
     }
 
+    private void sendErrorMessageIfNeccesary(ConsumerRecord<String, T> record) {
+        if (!kafkaFailedMessagesCache.isKeyInCache(record.key())) {
+            Element element = new Element(record.key(), record.value());
+            element.setEternal(true);
+            kafkaFailedMessagesCache.put(element);
+            noticesRestInternalService.createConsumerFromKafkaErrorBackgroundNotification(record.key());
+        }
+    }
+
+    private void removeFromErrorCacheMessagesIfNeccesary(ConsumerRecord<String, T> record) {
+        if (kafkaFailedMessagesCache.isKeyInCache(record.key())) {
+            kafkaFailedMessagesCache.remove(record.key());
+        }
+    }
+
     private boolean alwaysWithDelay() {
         try {
-            // sleep(2000);
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             LOGGER.error(e);
