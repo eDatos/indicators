@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,12 +58,13 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         ApplicationContext ac = event.getApplicationContext();
         if (ac.getParent() == null) {
             try {
+                KafkaInitializeTopics.propagateCreationOfTopics(configurationService);
                 prepareFailedMessageCache();
 
                 futuresMap = new HashMap<>();
                 futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
                 startKeepAliveKafkaThread(ac);
-            } catch (MetamacException e) {
+            } catch (MetamacException | IllegalArgumentException | IOException e) {
                 LOGGER.error(e);
             }
         }
@@ -87,14 +89,16 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         KafkaConsumer<String, DatasetVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicDatasetsPublication, CONSUMER_QUERY_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
         consumerThread.setTopicName(topicDatasetsPublication);
-        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade, noticesRestInternalService, kafkaFailedMessagesCache);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setNoticesRestInternalService(noticesRestInternalService);
+        consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
     private Properties getConsumerProperties(String clientId) throws MetamacException {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, configurationService.retrieveKafkaGroup());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, configurationService.retrieveKafkaQueryGroup());
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);

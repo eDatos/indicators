@@ -51,15 +51,21 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         this.topicName = topicName;
     }
 
-    public void setIndicatorsServiceFacade(IndicatorsServiceFacade indicatorsServiceFacade, NoticesRestInternalService noticesRestInternalService, Cache kafkaFailedMessagesCache) {
+    public void setIndicatorsServiceFacade(IndicatorsServiceFacade indicatorsServiceFacade) {
         this.indicatorsServiceFacade = indicatorsServiceFacade;
+    }
+
+    public void setNoticesRestInternalService(NoticesRestInternalService noticesRestInternalService) {
         this.noticesRestInternalService = noticesRestInternalService;
+    }
+
+    public void setKafkaFailedMessagesCache(Cache kafkaFailedMessagesCache) {
         this.kafkaFailedMessagesCache = kafkaFailedMessagesCache;
     }
 
     @Override
     public void run() {
-        LOGGER.debug("Reading KAFKA topic: " + topicName);
+        LOGGER.info("Reading KAFKA topic: " + topicName);
 
         try {
             
@@ -82,7 +88,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                 ConsumerRecord<String, T> record = records.iterator().next();
 
                 if (pendigOffsetsToCommit.containsKey(record.partition()) && record.offset() == pendigOffsetsToCommit.get(record.partition())) {
-                    LOGGER.info("The current message already processed successfully");
+                    LOGGER.debug("The current message already processed successfully");
                     if (commitSync(record)) {
                         pendigOffsetsToCommit.remove(record.partition());
                         removeFromErrorCacheMessagesIfNeccesary(record);
@@ -111,19 +117,18 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                     indicatorsServiceFacade.updateIndicatorsDataFromMetamac(serviceContext, record.value());
                     commitSync(record);
                 } catch (Exception e) {
-                    LOGGER.error("Unable to process resource received from KAFKA. The business of application has failed", e);
+                    LOGGER.error("Unable to process resource received from Kafka. The business of application has failed", e);
 
-                    // Send a erro notification, the error message will send only if not exist in error cache
+                    // Send a error notification, the error message will send only if not exist in error cache
                     sendErrorMessageIfNeccesary(record);
 
-                    // For evict commit
-                    pendigOffsetsToCommit.remove(record.partition());
+                    LOGGER.error("Process the next resource and discard the current message, key of message: " + record.key());
                 }
             }
         } catch (Exception e) {
             LOGGER.error("An error has occurred in the Kafka client. Finishing the client.", e);
-            LOGGER.error(e);
         } finally {
+            LOGGER.info("Closing the consumer...");
             consumer.close();
         }
     }
