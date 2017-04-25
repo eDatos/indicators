@@ -1,8 +1,6 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
-import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -57,6 +55,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext ac = event.getApplicationContext();
         if (ac.getParent() == null) {
+            // @formatter:off
+            /*
             try {
                 KafkaInitializeTopics.propagateCreationOfTopics(configurationService);
                 prepareFailedMessageCache();
@@ -67,6 +67,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
             } catch (MetamacException | IllegalArgumentException | IOException e) {
                 LOGGER.error(e);
             }
+            */
+            // @formatter:on
         }
     }
 
