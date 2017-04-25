@@ -1,6 +1,8 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -13,7 +15,7 @@ import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -56,7 +58,6 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         ApplicationContext ac = event.getApplicationContext();
         if (ac.getParent() == null) {
             // @formatter:off
-            /*
             try {
                 KafkaInitializeTopics.propagateCreationOfTopics(configurationService);
                 prepareFailedMessageCache();
@@ -67,7 +68,6 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
             } catch (MetamacException | IllegalArgumentException | IOException e) {
                 LOGGER.error(e);
             }
-            */
             // @formatter:on
         }
     }
@@ -86,11 +86,11 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Future<?> startConsumerForQueryTopic(ApplicationContext context) throws MetamacException {
-        String topicDatasetsPublication = configurationService.retrieveKafkaTopicQueryPublication();
-        KafkaConsumerThread<DatasetVersionAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
-        KafkaConsumer<String, DatasetVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicDatasetsPublication, CONSUMER_QUERY_1_NAME);
+        String topicQueryPublication = configurationService.retrieveKafkaTopicQueryPublication();
+        KafkaConsumerThread<QueryVersionAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
+        KafkaConsumer<String, QueryVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicQueryPublication, CONSUMER_QUERY_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
-        consumerThread.setTopicName(topicDatasetsPublication);
+        consumerThread.setTopicName(topicQueryPublication);
         consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
         consumerThread.setNoticesRestInternalService(noticesRestInternalService);
         consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
@@ -117,8 +117,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return props;
     }
 
-    private KafkaConsumer<String, DatasetVersionAvro> createConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
-        KafkaConsumer<String, DatasetVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId));
+    private KafkaConsumer<String, QueryVersionAvro> createConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, QueryVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId));
         kafkaConsumer.subscribe(Collections.singletonList(topic));
         return kafkaConsumer;
     }
