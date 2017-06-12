@@ -34,7 +34,8 @@
             <i class="icon-table" data-self-link="${element.selfLink?replace("^https:","","r")?replace("^http:","","r")}"></i>
             <span class="item-numeration">${idx?string?left_pad(numberOfFixedDigitsInNumeration, "0")}</span>
             <a class="nouline"
-               href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
+               href="${statisticalVisualizerUtil.buildIndicatorInstanceUrl(visualizerApplicationExternalUrlBase, element.id, indicatorsSystemCode)}">[@localizeTitle element.title/]</a>
+               
         </li>
             [#global idx = idx + 1]
         [/#if]
@@ -182,7 +183,7 @@
         <tr>
             <td colspan="2">
                 <strong>
-                    <a href="${jaxiUrlBase}/tabla.do?instanciaIndicador=<%= id %>&sistemaIndicadores=<%= systemCode %>&accion=html">
+                    <a href="${statisticalVisualizerUtil.buildIndicatorInstanceUrl(visualizerApplicationExternalUrlBase, id, systemCode)}">
                         Consultar datos
                     </a>
                 </strong>

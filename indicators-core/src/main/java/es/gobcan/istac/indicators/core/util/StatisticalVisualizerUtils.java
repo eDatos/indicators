@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.server.utils;
+package es.gobcan.istac.indicators.core.util;
 
 import org.siemac.metamac.rest.utils.RestUtils;
 

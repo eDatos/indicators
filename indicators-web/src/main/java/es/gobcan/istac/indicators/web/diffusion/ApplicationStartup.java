@@ -15,7 +15,7 @@ public class ApplicationStartup extends ApplicationStartupListener {
     @Override
     public void checkApplicationProperties() throws MetamacException {
         // Other
-        checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL);
+        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_API);
 

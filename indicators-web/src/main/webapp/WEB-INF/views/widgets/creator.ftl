@@ -91,13 +91,12 @@
 <script src="${serverURL}/theme/js/app/views/WidgetStyleOptionsView.js"></script>
 <script src="${serverURL}/theme/js/app/views/WidgetView.js"></script>
 
-<script src="${metamacPortalUrlBase}/js/authentication.js"></script>
+<script src="${visualizerExternalUrlBase}/js/authentication.js"></script>
 
 <script>
     var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";
-    var jaxiUrl = "${jaxiUrlBase}";
-    var metamacPortalUrl = "${metamacPortalUrlBase}";
-    var metamacPortalPermalinksEndpoint = "${metamacPortalPermalinksEndpoint}"
+    var visualizerUrl = "${visualizerExternalUrlBase}";
+    var permalinksUrlBase = "${permalinksUrlBase}"
 
     var options = {};
     [#if RequestParameters.type??]

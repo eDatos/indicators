@@ -25,10 +25,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     // JAXI
     public static final String JAXI_LOCAL_URL                               = "indicators.jaxi.local.url";
-    public static final String JAXI_LOCAL_URL_INDICATOR                     = "indicators.jaxi.local.url.indicator";
-    public static final String JAXI_LOCAL_URL_INSTANCE                      = "indicators.jaxi.local.url.instance";
-    public static final String JAXI_REMOTE_URL                              = "indicators.jaxi.remote.url";
-    public static final String JAXI_REMOTE_URL_INDICATOR                    = "indicators.jaxi.remote.url.indicator";
 
     // WIDGETS
     public static final String WIDGETS_TYPE_LIST_URL                        = "indicators.widgets.typelist.url";

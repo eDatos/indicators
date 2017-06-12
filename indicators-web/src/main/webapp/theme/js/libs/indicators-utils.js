@@ -22,8 +22,8 @@ function getLabel (internationalString) {
     return '';
 }
 
-function getVisualizerUrl (indicatorId) {
-    return jaxiUrlBase + '/tabla.do?indicador=' + indicatorId + '&accion=html';
+function getVisualizerUrlForIndicator(indicatorId) {
+    return visualizerUrl + '/data.html?resourceType=indicator&resourceId=' + indicatorId;
 }
 
 function getLabelLocale(internationalString, locale) {

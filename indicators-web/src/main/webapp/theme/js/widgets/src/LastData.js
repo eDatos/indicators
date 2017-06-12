@@ -66,32 +66,44 @@
 
                 var temporalLabel = dataset.getTimeValuesTitles(this.locale)[lastTimeValue];
 
-                var jaxiBaseUrl = Istac.widget.configuration['indicators.jaxi.remote.url'];
-
-                var jaxiUrl = jaxiBaseUrl;
-                if (this.options.groupType === 'system') {
-                    jaxiUrl += '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem;
-                } else {
-                    jaxiUrl += '/tabla.do?indicador=' + dataset.request.id;
-                }
-
-                jaxiUrl += '&accion=html';
-                jaxiUrl += '&measure=' + this.measures.join(",");
-                jaxiUrl += "&geo=" + geographicalValue;
+                var visualizerUrl = this._getVisualizerIndicatorUrl(dataset, geographicalValue);
 
                 return {
-                    title : dataset.getTitle(this.locale),
-                    titleLink : jaxiUrl,
-                    temporalLabel : temporalLabel,
-                    observations : observations,
-                    description : dataset.getDescription(this.locale)
+                    title: dataset.getTitle(this.locale),
+                    titleLink: visualizerUrl,
+                    temporalLabel: temporalLabel,
+                    observations: observations,
+                    description: dataset.getDescription(this.locale)
                 };
             },
 
-            render : function () {
+            _getVisualizerIndicatorUrl: function (dataset, geographicalValue) {
+                var visualizerUrl = "";
+                if (this.options.groupType === 'system') {
+                    visualizerUrl = this.getVisualizerUrlForIndicatorInstance(dataset.request.id, this.indicatorSystem);
+                } else {
+                    visualizerUrl = this.getVisualizerUrlForIndicator(dataset.request.id);
+                }
+
+                // FIXME METAMAC-2610
+                visualizerUrl += '&measure=' + this.measures.join(",");
+                visualizerUrl += "&geo=" + geographicalValue;
+
+                return visualizerUrl;
+            },
+
+            getVisualizerUrlForIndicator: function (indicatorId) {
+                return Istac.widget.configuration['metamac.portal.web.external'] + '/data.html?resourceType=indicator&resourceId=' + indicatorId;
+            },
+
+            getVisualizerUrlForIndicatorInstance: function (indicatorInstanceId, indicatorSystem) {
+                return Istac.widget.configuration['metamac.portal.web.external'] + '/data.html?resourceType=indicatorInstance&resourceId=' + indicatorInstanceId + '&indicatorSystem=' + indicatorSystem;
+            },
+
+            render: function () {
                 this.renderTable(this.datasets);
                 this.updateTitle();
-                
+
                 this.onAfterRender();
             },
 

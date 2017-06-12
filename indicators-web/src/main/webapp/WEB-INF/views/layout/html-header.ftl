@@ -52,5 +52,5 @@
 	[#if indicatorsExternalApiUrlBase??]
 		var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';
 	[/#if]
-	var jaxiUrlBase = "${jaxiUrlBase}";
+	var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
 </script>

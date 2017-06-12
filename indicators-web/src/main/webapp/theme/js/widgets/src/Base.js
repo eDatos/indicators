@@ -64,7 +64,7 @@
             // urls
             this.url = options.url || "";
             this.apiUrl = options.apiUrl || "";
-            this.jaxiUrl = options.jaxiUrl || "";
+            this.visualizerUrl = options.visualizerUrl || "";
 
             // Request builder
             this.datasetRequestBuilder = new DatasetRequestBuilder({apiUrl : this.apiUrl});
@@ -352,7 +352,7 @@
             var code = '<div id="' + el + '"></div>';            
             filteredOptions.el = '#' + el;
             
-            filteredOptions.jaxiUrl = this._getJaxiUrl();
+            filteredOptions.visualizerUrl = this._getVisualizerUrl();
             filteredOptions.width = this.options.widgetWith;
 
             code += this.openTag('script', {src : this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
@@ -362,10 +362,10 @@
             this.embedContainer.show();
         },
         
-        _getJaxiUrl : function() {
-        	if (typeof jaxiUrl !== "undefined") return jaxiUrl;
-        	
-        	return this.options.jaxiUrl;
+        _getVisualizerUrl: function() {
+            if (typeof visualizerUrl !== "undefined") return visualizerUrl;
+            
+            return this.options.visualizerUrl;
         },
 
         hideEmbed : function () {

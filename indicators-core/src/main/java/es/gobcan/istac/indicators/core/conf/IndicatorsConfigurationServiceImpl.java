@@ -10,16 +10,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     final String INDICATOR_QUERY_GROUP = "INDICATOR_QUERY_GROUP";
 
     @Override
-    public String retrieveJaxiRemoteUrl() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL);
-    }
-
-    @Override
-    public String retrieveJaxiRemoteUrlIndicator() throws MetamacException {
-       return retrieveProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL_INDICATOR);
-    }
-    
-    @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);
     }
@@ -82,16 +72,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveJaxiLocalUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
-    }
-
-    @Override
-    public String retrieveJaxiLocalUrlIndicator() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INDICATOR);
-    }
-
-    @Override
-    public String retrieveJaxiLocalUrlInstance() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INSTANCE);
     }
 
     @Override

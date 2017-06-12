@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
-import es.gobcan.istac.indicators.web.server.utils.StatisticalVisualizerUtils;
+import es.gobcan.istac.indicators.core.util.StatisticalVisualizerUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlResult;
 

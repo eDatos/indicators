@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
-import es.gobcan.istac.indicators.web.server.utils.StatisticalVisualizerUtils;
+import es.gobcan.istac.indicators.core.util.StatisticalVisualizerUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlResult;
 
@@ -26,7 +26,7 @@ public class GetIndicatorPreviewProductionUrlActionHandler extends SecurityActio
     @Override
     public GetIndicatorPreviewProductionUrlResult executeSecurityAction(GetIndicatorPreviewProductionUrlAction action) throws ActionException {
         try {
-            String visualizerEndpoint = configurationService.retrievePortalExternalWebApplicationUrlBase();
+            String visualizerEndpoint = configurationService.retrievePortalInternalWebApplicationUrlBase();
             return new GetIndicatorPreviewProductionUrlResult(StatisticalVisualizerUtils.buildIndicatorUrl(visualizerEndpoint, action.getIndicatorCode()));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

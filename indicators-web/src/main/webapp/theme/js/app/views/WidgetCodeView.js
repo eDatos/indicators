@@ -26,7 +26,7 @@
             var code = _.extend(this.model.toJSON(), {
                 el : "#istac-widget",
                 url : url,
-                jaxiUrl : jaxiUrl,
+                visualizerUrl: visualizerUrl,
                 apiUrl : apiUrl
             });
             return code;
@@ -58,7 +58,7 @@
             };
 
             var ajaxParameters = {
-                url : metamacPortalPermalinksEndpoint + "/v1.0/permalinks",
+                url : permalinksUrlBase + "/v1.0/permalinks",
                 type : "POST",
                 data : JSON.stringify(permalink),
                 contentType : "application/json; charset=utf-8",

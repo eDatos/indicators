@@ -11,6 +11,9 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 
 /**
  * FreeMarker view implementation to expose additional helpers
@@ -33,16 +36,29 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         String idxManagerSearchFormUrl = getIdxManagerSearchFormUrl();
         model.put("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
 
-        String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
-        model.put("jaxiUrlBase", jaxiUrlBase);
+        String visualizerExternalUrlBase = getVisualizerExternalUrlBase();
+        model.put("visualizerExternalUrlBase", visualizerExternalUrlBase);
 
-        String metamacPortalUrlBase = getMetamacPortalExternalUrlBase();
-        model.put("metamacPortalUrlBase", metamacPortalUrlBase);
-        
-        String metamacPortalPermalinksEndpoint = getMetamacPortalPermalinksEndpoint();
-        model.put("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
+        model.put("visualizerApplicationExternalUrlBase", getVisualizerApplicationExternalUrlBase());
+
+        String permalinksUrlBase = getPermalinksUrlBase();
+        model.put("permalinksUrlBase", permalinksUrlBase);
+
+        addStatisticalVisualizerUtils(model);
 
         super.doRender(model, request, response);
+    }
+
+    private void addStatisticalVisualizerUtils(Map<String, Object> model) {
+        try {
+            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+            TemplateHashModel staticModels = wrapper.getStaticModels();
+            TemplateHashModel statisticalVisualizerUtil = (TemplateHashModel) staticModels.get("es.gobcan.istac.indicators.core.util.StatisticalVisualizerUtils");
+            model.put("statisticalVisualizerUtil", statisticalVisualizerUtil);
+        } catch (TemplateModelException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private String getIndicatorsExternalWebUrlBaseWithoutProtocol() throws MetamacException {
@@ -58,12 +74,16 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private String getIdxManagerSearchFormUrl() throws MetamacException {
         return getConfigurationService().retrieveIdxManagerSearchFormUrl();
     }
-    
-    private String getMetamacPortalExternalUrlBase() throws MetamacException {
+
+    private String getVisualizerExternalUrlBase() throws MetamacException {
         return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase()));
     }
-    
-    private String getMetamacPortalPermalinksEndpoint() throws MetamacException {
+
+    private String getVisualizerApplicationExternalUrlBase() throws MetamacException {
+        return removeLastSlashInUrl(getConfigurationService().retrievePortalExternalWebApplicationUrlBase());
+    }
+
+    private String getPermalinksUrlBase() throws MetamacException {
         return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase()));
     }
 
