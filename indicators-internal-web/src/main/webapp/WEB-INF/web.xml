@@ -117,7 +117,17 @@
 	<filter-mapping>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<url-pattern>/internal/api/*</url-pattern>
-	</filter-mapping>	
+	</filter-mapping>
+    
+    <!-- JSONP -->
+    <filter>
+        <filter-name>JsonpCallbackFilter</filter-name>
+        <filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>JsonpCallbackFilter</filter-name>
+        <url-pattern>/internal/api/*</url-pattern>
+    </filter-mapping>	
 		
     <!-- Default page to serve -->
     <welcome-file-list>
