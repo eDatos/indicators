@@ -41,8 +41,8 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
     @Override
     public void checkOtherModuleProperties() {
         // VISUALIZER
-        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB);
-        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB_VISUALIZER);
+        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER);
 
         // JAXI
         checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);

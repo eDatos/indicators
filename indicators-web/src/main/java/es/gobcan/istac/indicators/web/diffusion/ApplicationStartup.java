@@ -16,6 +16,7 @@ public class ApplicationStartup extends ApplicationStartupListener {
     public void checkApplicationProperties() throws MetamacException {
         // Other
         checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        checkRequiredProperty(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_API);
 

@@ -26,7 +26,7 @@ public class GetIndicatorPreviewProductionUrlActionHandler extends SecurityActio
     @Override
     public GetIndicatorPreviewProductionUrlResult executeSecurityAction(GetIndicatorPreviewProductionUrlAction action) throws ActionException {
         try {
-            String visualizerEndpoint = configurationService.retrievePortalInternalWebApplicationUrlBase();
+            String visualizerEndpoint = configurationService.retrievePortalInternalWebApplicationUrlVisualizer();
             return new GetIndicatorPreviewProductionUrlResult(StatisticalVisualizerUtils.buildIndicatorUrl(visualizerEndpoint, action.getIndicatorCode()));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

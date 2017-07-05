@@ -80,7 +80,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getVisualizerApplicationExternalUrlBase() throws MetamacException {
-        return removeLastSlashInUrl(getConfigurationService().retrievePortalExternalWebApplicationUrlBase());
+        return removeLastSlashInUrl(getConfigurationService().retrievePortalExternalWebApplicationUrlVisualizer());
     }
 
     private String getPermalinksUrlBase() throws MetamacException {

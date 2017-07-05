@@ -79,14 +79,14 @@ public class WidgetsController extends BaseController {
     @ResponseBody
     public Map<String, String> properties() throws Exception {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(WebConstants.VISUALIZER_APPLICATION_EXTERNAL_URL_PROPERTY, getVisualizerApplicationExternalUrlBase());
+        properties.put(WebConstants.VISUALIZER_APPLICATION_EXTERNAL_URL_PROPERTY, getVisualizerApplicationExternalUrlVisualizer());
         properties.put(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY, configurationService.retrieveWidgetsTypeListUrl());
         properties.put(WebConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
         return properties;
     }
 
-    private String getVisualizerApplicationExternalUrlBase() throws MetamacException {
-        return removeLastSlashInUrl(configurationService.retrievePortalExternalWebApplicationUrlBase());
+    private String getVisualizerApplicationExternalUrlVisualizer() throws MetamacException {
+        return removeLastSlashInUrl(configurationService.retrievePortalExternalWebApplicationUrlVisualizer());
     }
 
     @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)

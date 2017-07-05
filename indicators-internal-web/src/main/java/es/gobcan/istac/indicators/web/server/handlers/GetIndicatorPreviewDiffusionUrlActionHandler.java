@@ -26,7 +26,7 @@ public class GetIndicatorPreviewDiffusionUrlActionHandler extends SecurityAction
     @Override
     public GetIndicatorPreviewDiffusionUrlResult executeSecurityAction(GetIndicatorPreviewDiffusionUrlAction action) throws ActionException {
         try {
-            String visualizerEndpoint = configurationService.retrievePortalExternalWebApplicationUrlBase();
+            String visualizerEndpoint = configurationService.retrievePortalExternalWebApplicationUrlVisualizer();
             return new GetIndicatorPreviewDiffusionUrlResult(StatisticalVisualizerUtils.buildIndicatorUrl(visualizerEndpoint, action.getIndicatorCode()));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
