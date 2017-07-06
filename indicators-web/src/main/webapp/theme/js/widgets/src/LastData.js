@@ -93,11 +93,11 @@
             },
 
             getVisualizerUrlForIndicator: function (indicatorId) {
-                return Istac.widget.configuration['metamac.portal.web.external'] + '/data.html?resourceType=indicator&resourceId=' + indicatorId;
+                return Istac.widget.configuration['metamac.portal.web.external.visualizer'] + '/data.html?resourceType=indicator&resourceId=' + indicatorId;
             },
 
             getVisualizerUrlForIndicatorInstance: function (indicatorInstanceId, indicatorSystem) {
-                return Istac.widget.configuration['metamac.portal.web.external'] + '/data.html?resourceType=indicatorInstance&resourceId=' + indicatorInstanceId + '&indicatorSystem=' + indicatorSystem;
+                return Istac.widget.configuration['metamac.portal.web.external.visualizer'] + '/data.html?resourceType=indicatorInstance&resourceId=' + indicatorInstanceId + '&indicatorSystem=' + indicatorSystem;
             },
 
             render: function () {
