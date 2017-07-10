@@ -26,7 +26,7 @@ public class GetIndicatorInstancePreviewUrlActionHandler extends SecurityActionH
     @Override
     public GetIndicatorInstancePreviewUrlResult executeSecurityAction(GetIndicatorInstancePreviewUrlAction action) throws ActionException {
         try {
-            String visualizerEndpoint = configurationService.retrievePortalInternalWebApplicationUrlBase();
+            String visualizerEndpoint = configurationService.retrievePortalInternalWebApplicationUrlVisualizer();
 
             return new GetIndicatorInstancePreviewUrlResult(
                     StatisticalVisualizerUtils.buildIndicatorInstanceUrl(visualizerEndpoint, action.getIndicatorInstanceCode(), action.getIndicatorsSystemCode()));
