@@ -41,10 +41,19 @@
     };
 
     Istac.widget.helper.getHostname = function(url) {
-        var l = document.createElement("a");
-        l.href = url;
-        return l.hostname;
+        var location = createLocationObject(url);
+        return location.hostname;
     };
+    
+    Istac.widget.helper.isIstacPage = function(location) {
+        return location.pathname.indexOf('/istac') === 0;
+    };
+    
+    function createLocationObject(url) {
+        var location = document.createElement("a");
+        location.href = url;
+        return location;
+    }
     
     Istac.widget.helper.getKeys = function(hash) {
         var keys = [];

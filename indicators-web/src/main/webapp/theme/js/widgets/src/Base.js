@@ -95,9 +95,8 @@
 
             this.el.addClass("istac-widget");
             this.el.addClass(this.containerClass);
-
-            var includeLogo = this.options.uwa ? true : !this.isIstacDomain();
-            this.includeLogo(includeLogo);
+            
+            this.initializeLogo();
             this.initializeEmbed();
 
             // Initialize style
@@ -298,21 +297,21 @@
             }
         },
 
-        isIstacDomain : function () {
-            var result;
-            if (window.location.href.indexOf(this.url) > -1) {
-                // Si estoy mostrando el widget en la misma página dodne está la API
-                // se muestra el footer para que el usuario lo vea igual que cuando
+        includeLogo : function () {
+            if (this.options.uwa) {
+                return true
+            } else if (window.location.href.indexOf(this.url) > -1) {
+                // Si estoy mostrando el widget en la misma página donde está la API
+                // se muestra el logo para que el usuario lo vea igual que cuando
                 // lo va a incrustar
-                result = false;
+                return true;
             } else {
-                result = window.location.hostname === Istac.widget.helper.getHostname(this.url);
+                return !Istac.widget.helper.isIstacPage(window.location);
             }
-            return result;
         },
 
-        includeLogo : function (include) {
-            this.creditsContainer.toggle(include);
+        initializeLogo : function () {            
+            this.creditsContainer.toggle(this.includeLogo());
         },
 
         initializeEmbed : function () {
