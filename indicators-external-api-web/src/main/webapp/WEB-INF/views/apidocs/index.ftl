@@ -1,5 +1,4 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
 <!DOCTYPE html>
 <html>
 <head>
