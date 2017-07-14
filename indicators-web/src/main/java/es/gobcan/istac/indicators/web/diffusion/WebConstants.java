@@ -26,4 +26,5 @@ public interface WebConstants {
     public String WIDGETS_TYPE_LIST_URL_PROPERTY                                    = "indicators.widgets.typelist.url";
     public String WIDGETS_QUERY_TOOLS_URL_PROPERTY                                  = "indicators.querytools.url";
     public String WIDGETS_SPARKLINE_MAX                                             = "indicators.widgets.sparkline.max";
+    public String ANALYTICS_GOOGLE_TRACKING_ID                                      = "metamac.analytics.google.tracking_id";
 }

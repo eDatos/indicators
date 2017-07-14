@@ -19,8 +19,7 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
         widgetsPath + '/libs/jquery.sparkline.js',
         widgetsPath + '/libs/highcharts.js',
-        widgetsPath + '/libs/moment.js',
-        widgetsPath + '/src/analytics.js',
+        widgetsPath + '/libs/moment.js',        
         widgetsPath + '/src/Templates.js',
         widgetsPath + '/src/Istac.js',
         widgetsPath + '/src/Helper.js',
@@ -32,7 +31,8 @@ module.exports = function (grunt) {
         widgetsPath + '/src/Temporal.js',
         widgetsPath + '/src/Loader.js',
         widgetsPath + '/src/Factory.js',
-        widgetsPath + '/src/DateParser.js'
+        widgetsPath + '/src/DateParser.js',
+        widgetsPath + '/src/analytics.js',
     ];
 
 

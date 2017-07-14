@@ -42,10 +42,12 @@
                 if (initCallback) {
                 	initCallback(widget);
                 }
+                Istac.widget.analytics.trackPageView(options);
             });
         } else {
             showError("Error, no se ha especificado la url del servicio web");
         }
+        
     };
 
     //Global export

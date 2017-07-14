@@ -40,6 +40,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("visualizerExternalUrlBase", visualizerExternalUrlBase);
 
         model.put("visualizerApplicationExternalUrlBase", getVisualizerApplicationExternalUrlBase());
+        model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
 
         String permalinksUrlBase = getPermalinksUrlBase();
         model.put("permalinksUrlBase", permalinksUrlBase);
