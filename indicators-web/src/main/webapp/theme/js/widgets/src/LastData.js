@@ -85,7 +85,6 @@
                     visualizerUrl = this.getVisualizerUrlForIndicator(dataset.request.id);
                 }
 
-                // FIXME METAMAC-2610
                 visualizerUrl += '&measure=' + this.measures.join(",");
                 visualizerUrl += "&geo=" + geographicalValue;
 
