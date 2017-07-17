@@ -50,16 +50,11 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         super.doRender(model, request, response);
     }
 
-    private void addStatisticalVisualizerUtils(Map<String, Object> model) {
-        try {
-            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-            TemplateHashModel staticModels = wrapper.getStaticModels();
-            TemplateHashModel statisticalVisualizerUtil = (TemplateHashModel) staticModels.get("es.gobcan.istac.indicators.core.util.StatisticalVisualizerUtils");
-            model.put("statisticalVisualizerUtil", statisticalVisualizerUtil);
-        } catch (TemplateModelException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    private void addStatisticalVisualizerUtils(Map<String, Object> model) throws TemplateModelException {
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        TemplateHashModel staticModels = wrapper.getStaticModels();
+        TemplateHashModel statisticalVisualizerUtil = (TemplateHashModel) staticModels.get("es.gobcan.istac.indicators.core.util.StatisticalVisualizerUtils");
+        model.put("statisticalVisualizerUtil", statisticalVisualizerUtil);
     }
 
     private String getIndicatorsExternalWebUrlBaseWithoutProtocol() throws MetamacException {
