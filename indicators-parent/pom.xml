@@ -140,12 +140,12 @@
         <avro.version>1.8.1</avro.version>
 
 		<!-- METAMAC -->
-		<metamac-core-common.version>5.2.0</metamac-core-common.version>
-		<metamac-web-common.version>3.1.0</metamac-web-common.version>
+		<metamac-core-common.version>5.2.1-SNAPSHOT</metamac-core-common.version>
+		<metamac-web-common.version>.1.2-SNAPSHOT</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-internal-api.version>3.0.0</metamac-statistical-resources-rest-internal-api.version>
-		<metamac-sso-client.version>2.0.1</metamac-sso-client.version>
+		<metamac-sso-client.version>2.0.3-SNAPSHOT</metamac-sso-client.version>
 		<metamac-rest-common.version>2.0.0</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
         <metamac-statistical-resources-kafka.version>3.0.0</metamac-statistical-resources-kafka.version>
