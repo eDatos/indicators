@@ -53,7 +53,7 @@ public final class RequestUtil {
 
     public static Set<String> parseFields(String fields) {
         Set<String> result = new HashSet<String>();
-        if (!org.siemac.metamac.core.common.util.shared.StringUtils.isEmpty(fields)) {
+        if (!StringUtils.isEmpty(fields)) {
             String[] fieldsParts = fields.split(",");
             for (String fieldPart : fieldsParts) {
                 // WORKAROUND: INDISTAC-899
