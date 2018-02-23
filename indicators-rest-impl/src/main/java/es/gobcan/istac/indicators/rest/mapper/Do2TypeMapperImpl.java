@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,6 +42,8 @@ import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
@@ -105,6 +108,27 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                                                                                                           MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
                                                                                                           MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
                                                                                                           MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    private static final EnumMap<QuantityUnitSymbolPositionEnum, es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(
+            es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.class);
+    static {
+        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.START,
+                es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum.START);
+        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.END,
+                es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum.END);
+    }
+
+    private static final EnumMap<QuantityTypeEnum, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum> QUANTITY_TYPE_MAPPING = new EnumMap<>(
+            es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.class);
+    static {
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.AMOUNT, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.AMOUNT);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.CHANGE_RATE, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.CHANGE_RATE);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.FRACTION, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.FRACTION);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.INDEX, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.INDEX);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.MAGNITUDE, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.MAGNITUDE);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.QUANTITY, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.QUANTITY);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.RATE, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.RATE);
+        QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.RATIO, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.RATIO);
+    }
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source) {
@@ -446,11 +470,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(source);
 
         QuantityType quantityType = new QuantityType();
-        quantityType.setType(source.getQuantityType());
+        quantityType.setType(QUANTITY_TYPE_MAPPING.get(source.getQuantityType()));
         if (source.getUnit() != null) {
             quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle()));
             quantityType.setUnitSymbol(source.getUnit().getSymbol());
-            quantityType.setUnitSymbolPosition(source.getUnit().getSymbolPosition());
+            quantityType.setUnitSymbolPosition(QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.get(source.getUnit().getSymbolPosition()));
         }
         if (source.getUnitMultiplier() != null) {
             quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle()));
