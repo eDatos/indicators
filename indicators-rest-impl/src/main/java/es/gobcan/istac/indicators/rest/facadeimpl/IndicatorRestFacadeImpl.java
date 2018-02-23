@@ -41,7 +41,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     protected Logger                logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper           dto2TypeMapper;
+    private Do2TypeMapper           do2TypeMapper;
 
     @Autowired
     protected IndicatorsApiService  indicatorsApiService;
@@ -63,7 +63,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
         // Mapping to type
-        List<IndicatorBaseType> result = dto2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues());
+        List<IndicatorBaseType> result = do2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues());
 
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
@@ -72,7 +72,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 IndicatorVersion indicatorVersion = indicatorsVersions.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                dto2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType);
+                do2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType);
                 baseType.setMetadata(metadataType);
             }
         }
@@ -108,7 +108,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public IndicatorType retrieveIndicator(String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorsVersion = retrieveIndicatorByCode(indicatorCode);
-        return dto2TypeMapper.indicatorDoToType(indicatorsVersion);
+        return do2TypeMapper.indicatorDoToType(indicatorsVersion);
     }
 
     @Override
@@ -131,13 +131,13 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservationsExtended.getGeographicalCodes(), indicatorObservationsExtended.getTimeCodes(),
                     indicatorObservationsExtended.getMeasureCodes(), indicatorObservationsExtended.getObservations());
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            dataType = do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
         } else {
             IndicatorObservationsVO indicatorObservations = indicatorsApiService.findObservationsInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservations.getGeographicalCodes(), indicatorObservations.getTimeCodes(),
                     indicatorObservations.getMeasureCodes(), indicatorObservations.getObservations());
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            dataType = do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
         }
         return dataType;
     }

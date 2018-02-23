@@ -83,32 +83,28 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks                                                     uriLinks;
+    UriLinks                                                                                                                           uriLinks;
 
-    private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_EN = "Observation confidenciality";
-    private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_ES = "Confidencialidad de la observación";
+    private static final String                                                                                                        PROP_ATTRIBUTE_OBS_CONF_LABEL_EN      = "Observation confidenciality";
+    private static final String                                                                                                        PROP_ATTRIBUTE_OBS_CONF_LABEL_ES      = "Confidencialidad de la observación";
 
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>>                                                                       requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                      @Override
-                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                          return new HashMap<String, Map<String, Object>>();
-                                                                                                      }
-
-                                                                                                      ;
-                                                                                                  };
+                                                                                                                                                                                 @Override
+                                                                                                                                                                                 protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                                                                                                     return new HashMap<String, Map<String, Object>>();
+                                                                                                                                                                                 }
+                                                                                                                                                                             };
+    @Autowired
+    private final IndicatorsApiService                                                                                                 indicatorsApiService                  = null;
 
     @Autowired
-    private final IndicatorsApiService                           indicatorsApiService             = null;
+    private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
 
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade        statisticalOperations            = null;
+    private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
+            MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+            MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
-    private static final List<String>                            measuresOrder                    = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
-                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
-                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
     private static final EnumMap<QuantityUnitSymbolPositionEnum, es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(
             es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.class);
     static {

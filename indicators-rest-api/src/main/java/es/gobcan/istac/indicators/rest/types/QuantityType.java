@@ -5,9 +5,6 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
-
 @JsonPropertyOrder({"type", "unit", "unitSymbol", "unitSymbolPosition", "unitMultiplier", "significantDigits", "decimalPlaces", "min", "max", "denominatorLink", "numeratorLink", "isPercentage",
         "percentageOf", "baseValue", "baseTime", "baseLocation", "baseQuantity"})
 public class QuantityType implements Serializable {
@@ -62,7 +59,7 @@ public class QuantityType implements Serializable {
     }
 
     public void setUnitSymbolPosition(QuantityUnitSymbolPositionEnum untiSymbolPosition) {
-        this.unitSymbolPosition = untiSymbolPosition;
+        unitSymbolPosition = untiSymbolPosition;
     }
 
     public Map<String, String> getUnitMultiplier() {
