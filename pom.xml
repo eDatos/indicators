@@ -23,6 +23,7 @@
 	<modules>
 		<module>indicators-parent</module>
 		<module>indicators-core</module>
+        <module>indicators-rest-api</module>
 		<module>indicators-rest-impl</module>
 		<module>indicators-web</module>
 		<module>indicators-internal-web</module>

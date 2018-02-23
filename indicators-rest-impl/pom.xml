@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>indicators-rest-impl</artifactId>
-	<name>INDICATORS :: REST</name>
+	<name>INDICATORS :: REST :: IMPL</name>
 
 	<dependencies>
 		<!-- INDICATORS -->
@@ -18,6 +18,11 @@
 			<artifactId>indicators-core</artifactId>
 			<classifier>client</classifier>
 		</dependency>
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-rest-api</artifactId>
+            <version>${indicators-rest-api.version}</version>
+        </dependency>
 
 		<!-- METAMAC -->
 		<dependency>
