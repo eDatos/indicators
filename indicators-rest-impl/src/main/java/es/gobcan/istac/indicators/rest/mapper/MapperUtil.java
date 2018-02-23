@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT_LANGUAGE;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,9 +19,6 @@ public class MapperUtil {
 
     private MapperUtil() {
     }
-
-    public static String  DEFAULT          = "__default__";
-    private static String DEFAULT_LANGUAGE = "es";
 
     public static Map<String, String> getDefaultLabel(Object defaultLabel) {
         if (defaultLabel == null) {

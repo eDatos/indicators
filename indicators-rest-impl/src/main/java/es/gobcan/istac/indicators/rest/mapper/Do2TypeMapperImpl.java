@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.PROP_ATTRIBUTE_OBS_CONF;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,7 +87,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_EN = "Observation confidenciality";
     private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_ES = "Confidencialidad de la observación";
-    private static final String                                  PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
 
     private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
