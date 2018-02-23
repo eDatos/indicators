@@ -7,6 +7,10 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 @JsonPropertyOrder({"title"})
 public class TitleLinkType extends LinkType {
 
+    public TitleLinkType() {
+        // dummy constructor necessary for Jackson
+    }
+
     public TitleLinkType(String kind, String href) {
         super(kind, href);
     }
