@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.gobcan.istac.indicators</groupId>
 		<artifactId>indicators-parent</artifactId>
-		<version>7.1.1-SNAPSHOT</version>
+		<version>7.2.0</version>
 		<relativePath>indicators-parent/pom.xml</relativePath>
 	</parent>
 
@@ -17,7 +17,7 @@
         <connection>scm:git:http://git.arte-consultores.com/istac/indicators</connection>
         <developerConnection>scm:git:http://git.arte-consultores.com/istac/indicators</developerConnection>
         <url>http://git.arte-consultores.com/istac/indicators</url>
-        <tag>HEAD</tag>
+        <tag>20180517-2256-v7.2.0</tag>
 	</scm>
 
 	<modules>
