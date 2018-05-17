@@ -16,12 +16,13 @@
 		<dependency>
 			<groupId>es.gobcan.istac.indicators</groupId>
 			<artifactId>indicators-core</artifactId>
+			<version>${project.version}</version>
 			<classifier>client</classifier>
 		</dependency>
         <dependency>
             <groupId>es.gobcan.istac.indicators</groupId>
             <artifactId>indicators-rest-api</artifactId>
-            <version>${indicators-rest-api.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
 		<!-- METAMAC -->
