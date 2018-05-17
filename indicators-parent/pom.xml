@@ -149,7 +149,6 @@
 		<metamac-rest-common.version>2.0.0</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
         <metamac-statistical-resources-kafka.version>3.0.0</metamac-statistical-resources-kafka.version>
-        <indicators-rest-api.version>7.1.1-SNAPSHOT</indicators-rest-api.version>
 	</properties>
 
 	<dependencyManagement>
