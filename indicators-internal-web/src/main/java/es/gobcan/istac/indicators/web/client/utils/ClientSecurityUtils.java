@@ -4,7 +4,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
-import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
+import es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 
 public class ClientSecurityUtils {

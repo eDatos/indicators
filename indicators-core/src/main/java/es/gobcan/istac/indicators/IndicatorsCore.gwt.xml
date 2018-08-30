@@ -8,7 +8,7 @@
    	<exclude name="**/PublishIndicatorResultDto.*" />
   </source>
   <source path='core/enume/domain'/>
-  <source path='core/util'/>
+  <source path='core/util/shared'/>
   <source path='core/constants'/>
   <source path='core/criteria'/>
   <source path='core/navigation/shared'/>

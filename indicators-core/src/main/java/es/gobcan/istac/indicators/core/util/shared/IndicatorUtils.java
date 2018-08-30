@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.util;
+package es.gobcan.istac.indicators.core.util.shared;
 
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 

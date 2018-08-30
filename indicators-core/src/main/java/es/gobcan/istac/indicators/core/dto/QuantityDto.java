@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.core.dto;
 
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.util.IndicatorUtils;
+import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
 
 /**
  * Dto for quantity

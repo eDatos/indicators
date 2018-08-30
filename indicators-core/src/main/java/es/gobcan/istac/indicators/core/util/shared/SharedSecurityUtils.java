@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.util;
+package es.gobcan.istac.indicators.core.util.shared;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;

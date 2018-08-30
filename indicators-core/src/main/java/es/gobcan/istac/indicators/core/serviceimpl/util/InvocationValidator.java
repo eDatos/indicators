@@ -35,7 +35,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.util.IndicatorUtils;
+import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
 
 public class InvocationValidator {
 

@@ -15,7 +15,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.util.IndicatorUtils;
+import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;

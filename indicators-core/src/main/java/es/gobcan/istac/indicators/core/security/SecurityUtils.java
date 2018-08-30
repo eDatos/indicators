@@ -1,8 +1,8 @@
 package es.gobcan.istac.indicators.core.security;
 
-import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.haveAccessToOperationInRol;
-import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.isAdministrator;
-import static es.gobcan.istac.indicators.core.util.SharedSecurityUtils.isUserInRol;
+import static es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils.haveAccessToOperationInRol;
+import static es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils.isAdministrator;
+import static es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils.isUserInRol;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -11,7 +11,7 @@ import org.siemac.metamac.sso.client.SsoClientConstants;
 
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
+import es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils;
 
 public class SecurityUtils extends org.siemac.metamac.sso.utils.SecurityUtils {
 
