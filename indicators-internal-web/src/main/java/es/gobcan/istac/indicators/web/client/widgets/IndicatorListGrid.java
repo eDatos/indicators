@@ -40,7 +40,6 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -51,7 +50,6 @@ import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 public class IndicatorListGrid extends CustomListGrid {
 
     public IndicatorListGrid() {
-        setAutoFitData(Autofit.VERTICAL);
         setAutoFitMaxRecords(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
         setDataSource(new IndicatorDS());
         setUseAllDataSourceFields(false);

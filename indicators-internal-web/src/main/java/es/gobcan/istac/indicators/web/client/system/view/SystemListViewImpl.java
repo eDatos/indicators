@@ -16,7 +16,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -105,15 +104,11 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
 
         indSystemListGrid.getListGrid().setData(records);
 
+        indSystemListGrid.setHeight100();
+
         panel = new VLayout();
-        panel.setHeight100();
-
-        VLayout subpanel = new VLayout();
-        subpanel.setOverflow(Overflow.SCROLL);
-        subpanel.addMember(toolStrip);
-        subpanel.addMember(indSystemListGrid);
-
-        panel.addMember(subpanel);
+        panel.addMember(toolStrip);
+        panel.addMember(indSystemListGrid);
 
         // Delete confirmation window
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemDeleteConfirm());

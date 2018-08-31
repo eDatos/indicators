@@ -14,7 +14,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -144,15 +143,9 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
         createIndicatorList();
 
         panel = new VLayout();
-        panel.setHeight100();
-
-        VLayout subpanel = new VLayout();
-        subpanel.setOverflow(Overflow.SCROLL);
-        subpanel.addMember(toolStrip);
-        subpanel.addMember(searchSectionStack);
-        subpanel.addMember(indicatorList);
-
-        panel.addMember(subpanel);
+        panel.addMember(toolStrip);
+        panel.addMember(searchSectionStack);
+        panel.addMember(indicatorList);
 
         // Delete confirmation window
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
@@ -251,7 +244,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 ListGridRecord[] selectedRecords = indicatorList.getListGrid().getSelectedRecords();
-                
+
                 boolean someIndicatorsEnabledNotifyPopulationErrors = false;
                 boolean someIndicatorsDisabledNotifyPopulationErrors = false;
                 if (selectedRecords != null && selectedRecords.length > 0) {
@@ -301,6 +294,6 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 }
             }
         });
-
+        indicatorList.setHeight100();
     }
 }
