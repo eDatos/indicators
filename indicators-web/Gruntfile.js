@@ -12,6 +12,18 @@ module.exports = function (grunt) {
     var jsPath = 'src/main/webapp/theme/js';
     var widgetsPath = 'src/main/webapp/theme/js/widgets';
 
+    var vendorSrc = [
+        jsPath + '/libs/indicators-utils.js',
+        jsPath + '/libs/jquery-1.7.1.js',
+        jsPath + '/libs/jquery-ui-1.8.17.custom.js',
+        jsPath + '/libs/jquery.json-2.3.min.js',
+        jsPath + '/libs/jquery-disable-text-selection-1.0.0.js',
+        jsPath + '/libs/underscore-min-1.3.1.js',
+        jsPath + '/libs/underscore.string.min-v.2.0.0-57.js',
+        jsPath + '/libs/backbone-min-0.9.2.js',
+        jsPath + '/libs/i18n.js',
+        jsPath + '/libs/colorpicker/js/colorpicker.js'
+    ]
 
     var widgetsSrc = [
         widgetsPath + '/libs/underscore.js',
@@ -35,6 +47,81 @@ module.exports = function (grunt) {
         widgetsPath + '/src/analytics.js',
     ];
 
+    var appsSrc = [
+        // lib
+        jsPath + '/libs/underscore.string.min-v.2.0.0-57.js',
+        jsPath + '/libs/handlebars-1.0.0.beta.6.js',
+        jsPath + '/libs/Backbone.ModelBinder.js',
+        jsPath + '/libs/select2/select2.js',
+        jsPath + '/libs/jquery.qtip-1.0.0-rc3.min.js',
+        // App
+        jsPath + '/app/App.js',
+        jsPath + '/app/Templates.js',
+
+        // helpers
+        jsPath + '/app/helpers/I18n.js',
+        jsPath + '/app/helpers/HandlebarsHelpers.js',
+
+        // Mixin
+        jsPath + '/app/mixins/JsonpSync.js',
+
+
+        // Model
+        jsPath + '/app/models/Subject.js',
+        jsPath + '/app/models/WidgetOptions.js',
+        jsPath + '/app/models/IndicatorSystem.js',
+        jsPath + '/app/models/GeographicalGranularity.js',
+        jsPath + '/app/models/GeographicalValue.js',
+        jsPath + '/app/models/IndicatorBase.js',
+        jsPath + '/app/models/Indicator.js',
+        jsPath + '/app/models/IndicatorInstance.js',
+        jsPath + '/app/models/TimeGranularity.js',
+
+        jsPath + '/app/collections/Measures.js',
+        jsPath + '/app/collections/IndicatorsBase.js',
+        jsPath + '/app/collections/IndicatorsInstances.js',
+        jsPath + '/app/collections/IndicatorSystems.js',
+        jsPath + '/app/collections/ToggleSelection.js',
+        jsPath + '/app/collections/Subjects.js',
+        jsPath + '/app/collections/Indicators.js',
+        jsPath + '/app/collections/GeographicalGranularities.js',
+        jsPath + '/app/collections/GeographicalValues.js',
+        jsPath + '/app/collections/TimeGranularities.js',
+
+
+        // Widget
+        jsPath + '/widgets/libs/Class.js',
+        jsPath + '/widgets/libs/raphael-min.js',
+        jsPath + '/widgets/libs/highcharts.js',
+        jsPath + '/widgets/libs/jquery.sparkline.js',
+        jsPath + '/widgets/libs/moment.js',
+
+
+        jsPath + '/widgets/src/Templates.js',
+        jsPath + '/widgets/src/Istac.js',
+        jsPath + '/widgets/src/Helper.js',
+        jsPath + '/widgets/src/Dataset.js',
+        jsPath + '/widgets/src/DatasetRequestBuilder.js',
+        jsPath + '/widgets/src/Base.js',
+        jsPath + '/widgets/src/LastData.js',
+        jsPath + '/widgets/src/NaturalScale.js',
+        jsPath + '/widgets/src/Temporal.js',
+        jsPath + '/widgets/src/Loader.js',
+        jsPath + '/widgets/src/Factory.js',
+        jsPath + '/widgets/src/DateParser.js',
+
+        // Vistas
+        jsPath + '/app/views/TabView.js',
+
+        jsPath + '/app/views/Select2View.js',
+        jsPath + '/app/views/WidgetCodeView.js',
+        jsPath + '/app/views/WidgetDataOptionsLastDataView.js',
+        jsPath + '/app/views/WidgetDataOptionsRecentView.js',
+        jsPath + '/app/views/WidgetDataOptionsTemporalView.js',
+        jsPath + '/app/views/WidgetPreviewView.js',
+        jsPath + '/app/views/WidgetStyleOptionsView.js',
+        jsPath + '/app/views/WidgetView.js'
+    ]
 
     grunt.initConfig({
         handlebars: {
@@ -59,6 +146,16 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            vendor: {
+                src: vendorSrc,
+                dest: jsPath + '/vendor.min.js',
+                separator: ';'
+            },
+            app: {
+                src: appsSrc,
+                dest: jsPath + '/app.min.js',
+                separator: ';'
+            },
             widgets: {
                 src: widgetsSrc,
                 dest: widgetsPath + '/widget.min.all.js',
@@ -118,7 +215,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('widgets', ["handlebars:widgets", "uglify:widgets"]);
     grunt.registerTask('widgets:dev', ["handlebars:widgets", "concat:widgets"]);
-    grunt.registerTask("app", ["handlebars:app", "less:app"]);
+    grunt.registerTask("app", ["handlebars:app", "less:app", "uglify:app", "uglify:vendor"]);
     grunt.registerTask('default:dev', ["app", "widgets:dev"]);
     grunt.registerTask('default', ["app", "widgets"]);
 
