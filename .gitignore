@@ -145,3 +145,5 @@ Desktop.ini
 **/bower_components/**
 /target/
 
+indicators-web/src/main/webapp/theme/js/app.min.js
+indicators-web/src/main/webapp/theme/js/vendor.min.js
