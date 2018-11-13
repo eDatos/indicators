@@ -10,21 +10,9 @@
 			<div id="cabecera">
 				<div id="cab_superior">
 					<ul>
-						<li class="redes_sociales">Síguenos: 
-							<a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Canales RSS (tecla de acceso: r)">
-								<img src="${serverURL}/theme/images/atom.png" title="Canales RSS (tecla de acceso: r)" alt="Canales RSS (tecla de acceso: r)">
-							</a><a href="http://www.gobiernodecanarias.org/istac/twitter" accesskey="t" title="Seguir a istac_es en Twitter (tecla de acceso: t)">
-								<img src="${serverURL}/theme/images/t_mini-a.png" title="Seguir a istac_es en Twitter (tecla de acceso: t)" alt="Seguir a istac_es en Twitter (tecla de acceso: t)">
-							</a><a href="https://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
-								<img src="${serverURL}/theme/images/slideshare.jpg" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" alt="Seguir a ISTAC en Slideshare (tecla de acceso: s)">
-							</a><a href="https://www.youtube.com/user/istacES" accesskey="y" title="Seguir a ISTAC en Youtube (tecla de acceso: y)">
-								<img src="${serverURL}/theme/images/youtube.png" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" alt="Seguir a ISTAC en Youtube (tecla de acceso: y)">
-							</a><a href="https://public.tableau.com/profile/istac#!/" accesskey="u" title="Seguir a ISTAC en Tableau (tecla de acceso: u)">
-                                <img src="${serverURL}/theme/images/tableau.png" title="Seguir a ISTAC en Tableau (tecla de acceso: u)" alt="Seguir a ISTAC en Tableau (tecla de acceso: u)">
-                            </a>
-						</li>
+						<li><a href="https://sede.gobcan.es/hacienda/" target="" accesskey="e" title="Sede electrónica">Sede electrónica</a></li>
 						<li>|</li>
-						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.html" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>				
+						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.html" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
 					</ul>
 				</div>
 
@@ -50,6 +38,13 @@
                         ${migas}
                     [/#if]
 				</ul>
+				<div class="redes_sociales">
+					<a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.html" accesskey="r" title="Canales RSS (tecla de acceso: r)" target="_blank"><img src="${serverURL}/theme/images/rss_20x20.png" title="Canales RSS (tecla de acceso: r)" alt="Canales RSS (tecla de acceso: r)"></a>
+					<a href="https://twitter.com/istac_es" accesskey="t" title="Seguir a istac_es en Twitter (tecla de acceso: t)" target="_blank"><img src="${serverURL}/theme/images/twitter_20x20.png" title="Seguir a istac_es en Twitter (tecla de acceso: t)" alt="Seguir a istac_es en Twitter (tecla de acceso: t)"></a> 
+					<a href="https://www.slideshare.net/ISTAC" accesskey="s" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" target="_blank"><img src="${serverURL}/theme/images/Slideshare_20x20.png" title="Seguir a ISTAC en Slideshare (tecla de acceso: s)" alt="Seguir a ISTAC en Slideshare (tecla de acceso: s)"></a> 
+					<a href="https://www.youtube.com/user/istacES" accesskey="s" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" target="_blank"><img src="${serverURL}/theme/images/youtube_20x20.png" title="Seguir a ISTAC en Youtube (tecla de acceso: y)" alt="Seguir a ISTAC en Youtube (tecla de acceso: y)"></a> 
+					<a href="https://public.tableau.com/profile/istac#!/" accesskey="s" title="Seguir a ISTAC en Tableau (tecla de acceso: u)" target="_blank"><img src="${serverURL}/theme/images/tableau_20.png" title="Seguir a ISTAC en Tableau (tecla de acceso: u)" alt="Seguir a ISTAC en Tableau (tecla de acceso: u)"></a>
+				</div>
 			</div>
 
 			<div id="bloq_interior">

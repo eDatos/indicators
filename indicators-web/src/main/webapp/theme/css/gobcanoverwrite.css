@@ -20,6 +20,11 @@ body {
 	font-weight: bold;
 }
 
+#migas .redes_sociales {
+    float: right;
+    margin-top: 7px;
+}
+
 .left-cellOFF2 ul {
 	margin: -1em 0 0;
 }
