@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
         widgetsPath + '/libs/jquery.sparkline.js',
         widgetsPath + '/libs/highcharts.js',
-        widgetsPath + '/libs/moment.js',        
+        widgetsPath + '/libs/moment.js',
         widgetsPath + '/src/Templates.js',
         widgetsPath + '/src/Istac.js',
         widgetsPath + '/src/Helper.js',
@@ -37,56 +37,56 @@ module.exports = function (grunt) {
 
 
     grunt.initConfig({
-        handlebars : {
-            app : {
-                root : templatesPath,
-                src : templatesPath + "/**/*.html",
-                dest : jsPath + '/app/Templates.js'
+        handlebars: {
+            app: {
+                root: templatesPath,
+                src: templatesPath + "/**/*.html",
+                dest: jsPath + '/app/Templates.js'
             },
-            widgets : {
-                root : widgetsPath + '/templates',
-                src : widgetsPath + '/templates/*.html',
-                dest : widgetsPath + '/src/Templates.js'
+            widgets: {
+                root: widgetsPath + '/templates',
+                src: widgetsPath + '/templates/*.html',
+                dest: widgetsPath + '/src/Templates.js'
             }
         },
-        less : {
-            app : {
-                src : lessPath + '/main.less',
-                dest : lessPath + '/main.css',
-                options : {
-                    compress : true
+        less: {
+            app: {
+                src: lessPath + '/main.less',
+                dest: lessPath + '/main.css',
+                options: {
+                    compress: true
                 }
             }
         },
-        uglify : {
-            widgets : {
-                src : widgetsSrc,
-                dest : widgetsPath + '/widget.min.all.js',
-                separator : ';'
+        uglify: {
+            widgets: {
+                src: widgetsSrc,
+                dest: widgetsPath + '/widget.min.all.js',
+                separator: ';'
             }
         },
-        concat : {
-            widgets : {
-                src : widgetsSrc,
-                dest : widgetsPath + '/widget.min.all.js'
+        concat: {
+            widgets: {
+                src: widgetsSrc,
+                dest: widgetsPath + '/widget.min.all.js'
             }
         },
-        watch : {
-            less : {
-                files : lessPath + "/**/*.less",
-                tasks : 'less'
+        watch: {
+            less: {
+                files: lessPath + "/**/*.less",
+                tasks: 'less'
             },
-            handlebarsWeb : {
-                files : templatesPath + "/**/*.html",
-                tasks : 'handlebars:app'
+            handlebarsWeb: {
+                files: templatesPath + "/**/*.html",
+                tasks: 'handlebars:app'
             },
-            handlebarsWidgets : {
-                files : widgetsPath + '/templates/*.html',
-                tasks : 'handlebars:widgets'
+            handlebarsWidgets: {
+                files: widgetsPath + '/templates/*.html',
+                tasks: 'handlebars:widgets'
             },
-            widgets : {
-                files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js', widgetsPath + "/libs/*.js"],
-                tasks : ['handlebars:widgets', 'concat:widgets']
+            widgets: {
+                files: [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js', widgetsPath + "/libs/*.js"],
+                tasks: ['handlebars:widgets', 'concat:widgets']
             }
         },
         webfont: {
@@ -97,22 +97,22 @@ module.exports = function (grunt) {
                 options: {
                     relativeFontPath: "../fonts/",
                     destHtml: 'src/main/webapp/theme/fonts',
-                    stylesheet : "less",
+                    stylesheet: "less",
                     hashes: false,
                     syntax: "bootstrap"
                 }
             },
-	        css: {
-	        	src: 'src/main/webapp/theme/icons/*.svg',
-	        	dest: 'src/main/webapp/theme/fonts',
-	        	destCss: 'src/main/webapp/theme/css',
-	        	options: {
-	        		relativeFontPath: "../fonts/",
-	        		destHtml: 'src/main/webapp/theme/fonts',
-	        		hashes: false,
-	        		syntax: "bootstrap"
-	        	}
-	        }
+            css: {
+                src: 'src/main/webapp/theme/icons/*.svg',
+                dest: 'src/main/webapp/theme/fonts',
+                destCss: 'src/main/webapp/theme/css',
+                options: {
+                    relativeFontPath: "../fonts/",
+                    destHtml: 'src/main/webapp/theme/fonts',
+                    hashes: false,
+                    syntax: "bootstrap"
+                }
+            }
         }
     });
 
@@ -120,6 +120,6 @@ module.exports = function (grunt) {
     grunt.registerTask('widgets:dev', ["handlebars:widgets", "concat:widgets"]);
     grunt.registerTask("app", ["handlebars:app", "less:app"]);
     grunt.registerTask('default:dev', ["app", "widgets:dev"]);
-    grunt.registerTask('default', ["app", "widgets"]);    
+    grunt.registerTask('default', ["app", "widgets"]);
 
 };
