@@ -7,7 +7,7 @@
 	<name>INDICATORS :: PARENT</name>
 	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
-	<version>7.3.2-SNAPSHOT</version>
+	<version>7.3.2</version>
 
     <organization>
         <name>Arte Consultores, S.L.</name>
