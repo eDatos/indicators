@@ -1,7 +1,7 @@
 {
    "swagger":"2.0",
    "info":{
-      "description":"Operaciones de indicadores",
+      "description":"Un indicador es una medida de la intensidad de un fenómeno en el espacio-tiempo. Esa medida tiene datos de distintas granularidades espaciales (por ejemplo: islas y municipios), o de distintas unidades temporales (por ejemplo: años y meses). Un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida o la escolarización entre tantos otros. Los sistemas de indicadores están diseñados para aportar información más precisa sobre un fenómeno, y para ello se organizan en dimensiones o áreas de análisis, bajo las que se integran los indicadores. El objetivo de esta API es permitir el acceso a datos y metadatos de: Sistemas de indicadores, indicadores e instancias de indicadores.",
       "version":"4.5.2-SNAPSHOT",
       "title":"API de Indicadores v1.0"
    },
@@ -1092,9 +1092,6 @@
         }
       }
     }
-  },
-  "info": {
-    "version": "1.0"
   },
   "paths": {
     "/v1.0/geographicGranularities": {
