@@ -48,7 +48,7 @@ public class MetamacTimeUtils {
             }
             case MONTHLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, calculateTwoDigitsMonth(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case WEEKLY: {
@@ -85,6 +85,10 @@ public class MetamacTimeUtils {
         } else {
             return "4";
         }
+    }
+
+    private static String calculateTwoDigitsMonth(int monthOfYear) {
+        return String.format("%02d", monthOfYear);
     }
 
     /**
