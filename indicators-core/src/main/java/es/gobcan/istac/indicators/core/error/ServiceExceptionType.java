@@ -130,4 +130,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType DSPL_STRUCTURE_CREATE_ERROR                              = create("exception.indicators.dspl.structure.create_error");
     public static final CommonServiceExceptionType DSPL_FILES_CREATE_ERROR                                  = create("exception.indicators.dspl.files.create_error");
+
+    public static final CommonServiceExceptionType RESOURCE_MAXIMUM_VERSION_REACHED                         = create("exception.indicators.version.max_version_reached");
 }

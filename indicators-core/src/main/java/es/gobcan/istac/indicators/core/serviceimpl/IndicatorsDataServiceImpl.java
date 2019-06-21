@@ -25,6 +25,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationExcepti
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -83,7 +84,6 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
@@ -94,6 +94,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
@@ -143,9 +144,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Autowired
-    private DatasetRepositoriesServiceFacade       datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper                     mapper                    = new ObjectMapper();
+    private final ObjectMapper               mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -313,13 +314,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
                 IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getIsPublished() ? indicatorsSystem.getDiffusionVersion() : null;
                 if (diffusionVersionInfo != null) {
-                    String newDiffusionVersion = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+                    // TODO INDISTAC-1054 what if maximum minor version is reached?
+                    String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR).getValue();
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
 
                     // check version collision
                     if (productionVersionInfo != null && newDiffusionVersion.equals(productionVersionInfo.getVersionNumber())) {
                         IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
-                        String newProductionVersion = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+                        // TODO INDISTAC-1054 what if maximum minor version is reached?
+                        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR).getValue();
                         // new production version, new update date
                         productionVersion.setVersionNumber(newProductionVersion);
                         productionVersion.setLastUpdated(new DateTime());
@@ -447,11 +450,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
         String diffusionVersionNumber = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
         if (diffusionVersionNumber != null) {
-            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionNumber, VersionTypeEnum.MINOR);
+            // TODO INDISTAC-1054 what if maximum minor version is reached?
+            String nextDiffusionVersionNumber = IndicatorsVersionUtils.createNextVersion(diffusionVersionNumber, VersionTypeEnum.MINOR).getValue();
             // Check if new version number is the same as production version
             String productionVersionNumber = indicator.getProductionVersionNumber();
             if (productionVersionNumber != null && productionVersionNumber.equals(nextDiffusionVersionNumber)) {
-                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionNumber, VersionTypeEnum.MINOR);
+                // TODO INDISTAC-1054 what if maximum minor version is reached?
+                String nextProductionVersionNumber = IndicatorsVersionUtils.createNextVersion(productionVersionNumber, VersionTypeEnum.MINOR).getValue();
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionNumber);
                 productionVersion.setVersionNumber(nextProductionVersionNumber);
                 productionVersion.setUpdateDate(new DateTime());
@@ -1288,8 +1293,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return fillEmptyDataCross(datasetRepositoriesServiceFacade.findObservationsByDimensions(indicatorVersion.getDataRepositoryId(), conditions));
     }
 
-    private Map<String, ObservationExtendedDto> findObservationsExtendedByDimensions(IndicatorVersion indicatorVersion, List<ConditionDimensionDto> conditions) throws MetamacException,
-            ApplicationException {
+    private Map<String, ObservationExtendedDto> findObservationsExtendedByDimensions(IndicatorVersion indicatorVersion, List<ConditionDimensionDto> conditions)
+            throws MetamacException, ApplicationException {
 
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 

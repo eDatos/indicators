@@ -17,6 +17,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,15 +27,13 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -104,7 +103,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
     // Groups with different data
     private static final List<String>        INDICATORS_GROUP1         = Arrays.asList(INDICATOR1_UUID, INDICATOR3_UUID, INDICATOR4_UUID, INDICATOR5_UUID, INDICATOR6_UUID, INDICATOR7_UUID,
-                                                                               INDICATOR8_UUID, INDICATOR9_UUID);
+            INDICATOR8_UUID, INDICATOR9_UUID);
     private static final List<String>        INDICATORS_GROUP2         = Arrays.asList(INDICATOR2_UUID);
 
     @Autowired
@@ -143,7 +142,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
         String oldDiffusionVersion = INDICATOR1_VERSION;
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -168,7 +167,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
         String oldDiffusionVersion = INDICATOR2_VERSION;
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -215,8 +214,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion4 = INDICATOR4_VERSION;
         String oldDiffusionVersion5 = INDICATOR5_VERSION;
-        String newDiffusionVersion4 = ServiceUtils.generateVersionNumber(oldDiffusionVersion4, VersionTypeEnum.MINOR);
-        String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
+        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion4, VersionTypeEnum.MINOR).getValue();
+        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion5, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -249,9 +248,9 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion4 = INDICATOR4_VERSION;
         String oldDiffusionVersion5 = INDICATOR5_VERSION;
         String oldDiffusionVersion6 = INDICATOR6_VERSION;
-        String newDiffusionVersion4 = ServiceUtils.generateVersionNumber(oldDiffusionVersion4, VersionTypeEnum.MINOR);
-        String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
-        String newDiffusionVersion6 = ServiceUtils.generateVersionNumber(oldDiffusionVersion6, VersionTypeEnum.MINOR);
+        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion4, VersionTypeEnum.MINOR).getValue();
+        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion5, VersionTypeEnum.MINOR).getValue();
+        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion6, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -280,7 +279,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         List<String> indicatorsToUpdate = Arrays.asList();
 
         String oldDiffusionVersion6 = INDICATOR6_VERSION;
-        String newDiffusionVersion6 = ServiceUtils.generateVersionNumber(oldDiffusionVersion6, VersionTypeEnum.MINOR);
+        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion6, VersionTypeEnum.MINOR).getValue();
 
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
@@ -308,8 +307,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR8_VERSION;
         String oldProductionVersion = INDICATOR8_PROD_VERSION;
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
-        String newProductionVersion = ServiceUtils.generateVersionNumber(oldProductionVersion, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR).getValue();
+        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(oldProductionVersion, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -344,7 +343,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR9_VERSION;
         String productionVersion = INDICATOR9_PROD_VERSION;
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR).getValue();
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 

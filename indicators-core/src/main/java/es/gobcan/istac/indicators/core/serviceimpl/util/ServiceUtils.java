@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,45 +8,34 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.VersionResult;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.HasVersionNumber;
 import es.gobcan.istac.indicators.core.domain.LastValue;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public class ServiceUtils {
 
+    private static final String SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
+
+    public static final int     ORACLE_IN_MAX                   = 1000;
+
     private ServiceUtils() {
     }
 
-    private static final NumberFormat formatterMajor                  = new DecimalFormat("0");
-    private static final NumberFormat formatterMinor                  = new DecimalFormat("000");
-    private static final String       SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
+    public static void setNextVersion(HasVersionNumber oldEntity, HasVersionNumber newEntity, VersionTypeEnum versionTypeEnum) throws MetamacException {
+        VersionResult versionResult = IndicatorsVersionUtils.createNextVersion(oldEntity.getVersionNumber(), versionTypeEnum);
 
-    public static final int           ORACLE_IN_MAX                   = 1000;
+        newEntity.setVersionNumber(versionResult.getValue());
 
-    public static String generateVersionNumber(String actualVersionNumber, VersionTypeEnum versionType) throws MetamacException {
-
-        if (actualVersionNumber == null) {
-            return IndicatorsConstants.VERSION_NUMBER_INITIAL;
+        if (VersionTypeEnum.MINOR.equals(versionTypeEnum) && VersionTypeEnum.MAJOR.equals(versionResult.getType())) {
+            // TODO INDISTAC-1054 send notification to who?
         }
-
-        String[] versionNumberSplited = actualVersionNumber.split("\\.");
-        Integer versionNumberMajor = Integer.valueOf(versionNumberSplited[0]);
-        Integer versionNumberMinor = Integer.valueOf(versionNumberSplited[1]);
-
-        if (VersionTypeEnum.MAJOR.equals(versionType)) {
-            versionNumberMajor++;
-            versionNumberMinor = 0;
-        } else if (VersionTypeEnum.MINOR.equals(versionType)) {
-            versionNumberMinor++;
-        } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Unsupported value for " + VersionTypeEnum.class.getCanonicalName() + ": " + versionType);
-        }
-        return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
     }
 
     public static String dtoList2DtoString(List<String> source) {

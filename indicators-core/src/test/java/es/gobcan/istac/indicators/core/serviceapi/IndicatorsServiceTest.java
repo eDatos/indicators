@@ -1,5 +1,11 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +20,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,14 +37,7 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
@@ -219,8 +219,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsByCriteria() throws Exception {
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -233,8 +233,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_3, indicatorsVersion.getValues().get(2).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("FR").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("FR")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -263,8 +263,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testExportIndicatorsTsv() throws Exception {
 
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             String fileName = indicatorService.exportIndicatorsTsv(getServiceContextAdministrador(), conditions);
             assertNotNull(fileName);

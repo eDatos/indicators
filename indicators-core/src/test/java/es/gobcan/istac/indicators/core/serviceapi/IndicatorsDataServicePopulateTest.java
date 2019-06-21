@@ -1,5 +1,13 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,6 +22,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
@@ -32,20 +40,10 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import static org.mockito.Mockito.when;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -514,8 +512,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION);
-        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, null, "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46",
-                "26", "2156", "321", "41", "29", "19");
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, null, "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46", "26",
+                "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, data);
 
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
@@ -541,8 +539,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes
-                    .put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
+            mapAttributes.put(key,
+                    createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
         }
 
         checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
@@ -861,7 +859,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
         // After populate, version has changed
-        String newVersion = ServiceUtils.generateVersionNumber(INDICATOR16_VERSION, VersionTypeEnum.MINOR);
+        String newVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR16_VERSION, VersionTypeEnum.MINOR).getValue();
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
@@ -1086,8 +1084,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR25_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
-        String newProductionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1134,7 +1132,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR26_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1174,7 +1172,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
-        String newSystemVersion = ServiceUtils.generateVersionNumber(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+        String newSystemVersion = IndicatorsVersionUtils.createNextVersion(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         /* System's diffusion version no longer exists */
         try {

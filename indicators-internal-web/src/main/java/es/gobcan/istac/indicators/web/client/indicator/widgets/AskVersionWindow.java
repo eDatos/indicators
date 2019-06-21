@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.indicator.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
@@ -11,7 +12,6 @@ import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class AskVersionWindow extends CustomWindow {

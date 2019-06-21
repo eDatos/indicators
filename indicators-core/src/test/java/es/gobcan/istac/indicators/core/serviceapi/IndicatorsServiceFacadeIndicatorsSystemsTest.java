@@ -33,6 +33,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,7 +56,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -4281,8 +4281,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         {
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(
-                    new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
+            conjuction.getRestrictions()
+                    .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
@@ -4299,8 +4299,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         {
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(
-                    new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
+            conjuction.getRestrictions()
+                    .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();
@@ -4323,8 +4323,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         {
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(
-                    new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
+            conjuction.getRestrictions()
+                    .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();

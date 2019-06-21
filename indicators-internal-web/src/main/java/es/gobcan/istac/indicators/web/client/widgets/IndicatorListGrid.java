@@ -38,6 +38,7 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION_NUMBER_DIFF;
 
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
+import org.siemac.metamac.web.common.client.widgets.utils.VersionFieldSortNormalizer;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -54,24 +55,27 @@ public class IndicatorListGrid extends CustomListGrid {
         setDataSource(new IndicatorDS());
         setUseAllDataSourceFields(false);
         setHeaderHeight(40);
-        
+        setCanMultiSort(Boolean.FALSE);
+
         ListGridField code = new ListGridField(CODE, getConstants().indicListHeaderIdentifier());
         code.setAlign(Alignment.LEFT);
         ListGridField name = new ListGridField(TITLE, getConstants().indicDetailTitle());
         ListGridField subject = new ListGridField(SUBJECT_TITLE, getConstants().indicDetailSubject());
-        
+
         ListGridField notifyPopulationErrorsImage = new ListGridField(NOTIFY_POPULATION_ERRORS_IMAGE, getConstants().indicDetailNotifyPopulationErrors());
         notifyPopulationErrorsImage.setHidden(true);
         notifyPopulationErrorsImage.setWidth(140);
         notifyPopulationErrorsImage.setType(ListGridFieldType.IMAGE);
         notifyPopulationErrorsImage.setAlign(Alignment.CENTER);
-        
+
         // Not visible
         ListGridField notifyPopulationErrors = new ListGridField(NOTIFY_POPULATION_ERRORS, getConstants().indicDetailNotifyPopulationErrors());
         notifyPopulationErrors.setHidden(true);
         notifyPopulationErrors.setCanHide(false);
-        
+
         ListGridField version = new ListGridField(VERSION_NUMBER, getConstants().indicDetailVersion());
+        version.setSortNormalizer(new VersionFieldSortNormalizer());
+
         ListGridField status = new ListGridField(PROC_STATUS, getConstants().indicDetailProcStatus());
         ListGridField needsUpdate = new ListGridField(NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         needsUpdate.setWidth(140);
@@ -104,6 +108,8 @@ public class IndicatorListGrid extends CustomListGrid {
         creationUser.setHidden(true);
 
         ListGridField diffusionVersion = new ListGridField(VERSION_NUMBER_DIFF, getConstants().indicDetailVersion());
+        diffusionVersion.setSortNormalizer(new VersionFieldSortNormalizer());
+
         ListGridField diffusionStatus = new ListGridField(PROC_STATUS_DIFF, getConstants().indicDetailProcStatus());
         ListGridField diffusionNeedsUpdate = new ListGridField(NEEDS_UPDATE_DIFF, getConstants().indicatorUpdateStatus());
         diffusionNeedsUpdate.setWidth(140);
@@ -135,10 +141,10 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField creationUserDiff = new ListGridField(CREATION_USER_DIFF, getConstants().indicDetailCreatedUser());
         creationUserDiff.setHidden(true);
 
-        setFields(code, name, subject, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, productionValidationDate, productionValidationUser, diffusionValidationDate, diffusionValidationUser, publicationDate,
-                publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion, diffusionStatus, diffusionNeedsUpdate,
-                productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff, publicationUserDiff,
-                publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
+        setFields(code, name, subject, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, productionValidationDate, productionValidationUser, diffusionValidationDate,
+                diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion,
+                diffusionStatus, diffusionNeedsUpdate, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff,
+                publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
 
         // @formatter:off
         setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, SUBJECT_TITLE, NOTIFY_POPULATION_ERRORS_IMAGE}), 
