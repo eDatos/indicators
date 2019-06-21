@@ -125,9 +125,9 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         // Retrieve before delete
         {
-            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertFalse(indicatorVersion1.getIsLastVersion());
-            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "2.000");
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.SECOND_VERSION);
             assertTrue(indicatorVersion2.getIsLastVersion());
         }
 
@@ -137,7 +137,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validation
         // Retrieve after delete
         {
-            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertNull(indicatorVersion1.getIndicator().getProductionIdIndicatorVersion());
             assertNull(indicatorVersion1.getIndicator().getProductionVersionNumber());
@@ -174,7 +174,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testPublishIndicator() throws Exception {
 
         String uuid = INDICATOR_5;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         // Publish
         indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
@@ -188,7 +188,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testPublishIndicatorSubjectTitleChange() throws Exception {
 
         String uuid = INDICATOR_13;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         String subjectTitleOld = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber).getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH);
         // Publish
@@ -280,11 +280,11 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
                     line);
             line = bufferedReader.readLine();
             assertEquals(
-                    "CODE-12\ttrue\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
+                    "CODE-12\ttrue\tTítulo\t\t\tÁrea temática 3\t\t\t1.0\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo\t\t\tÁrea temática 3\t\t\t1.0\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
                     line);
             line = bufferedReader.readLine();
             assertEquals(
-                    "CODE-3\ttrue\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
+                    "CODE-3\ttrue\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.33\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.33\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
                     line);
 
             bufferedReader.close();

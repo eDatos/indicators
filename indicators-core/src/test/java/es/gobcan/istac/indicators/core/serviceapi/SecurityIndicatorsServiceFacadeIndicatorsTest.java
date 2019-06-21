@@ -135,7 +135,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     @Test
     public void testUpdateIndicator() throws Exception {
 
-        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, "2.000");
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, IndicatorsDataBaseTest.SECOND_VERSION);
 
         // With access
         indicatorDto = indicatorsServiceFacade.updateIndicator(getServiceContextTecnicoProduccion(), indicatorDto);
@@ -618,12 +618,12 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testRetrieveDataSourcesByIndicator() throws Exception {
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextAdministrador(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoProduccion(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, "1.000");
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextAdministrador(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoProduccion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
     }
 
     @Test

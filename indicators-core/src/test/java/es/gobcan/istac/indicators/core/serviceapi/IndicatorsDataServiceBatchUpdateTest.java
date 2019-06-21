@@ -48,7 +48,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static final String              INDICATOR1_UUID           = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR1_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR1_VERSION        = "1.000";
+    private static final String              INDICATOR1_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Using multiple datasources */
     private static final String              INDICATOR2_UUID           = "Indicator-2";
@@ -56,50 +56,46 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static final String              INDICATOR2_DS2_GPE_UUID   = "Indicator-2-v1-DataSource-2-GPE-TIME";
     private static final String              INDICATOR2_GPE_JSON_DATA1 = readFile("json/data_batchupdate_multids_part1.json");
     private static final String              INDICATOR2_GPE_JSON_DATA2 = readFile("json/data_batchupdate_multids_part2.json");
-    private static final String              INDICATOR2_VERSION        = "1.000";
+    private static final String              INDICATOR2_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Wrong DataGpeUuid this indicator will fail */
     private static final String              INDICATOR3_UUID           = "Indicator-3";
     private static final String              INDICATOR3_DS_GPE_UUID    = "Indicator-3-v1-DataSource-1-GPE-NOT-EXIST";
     private static final String              INDICATOR3_GPE_JSON_DATA  = null;
-    private static final String              INDICATOR3_VERSION        = "1.000";
 
     /* Will be marked as pending */
     private static final String              INDICATOR4_UUID           = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID    = "Indicator-4-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR4_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR4_VERSION        = "1.000";
+    private static final String              INDICATOR4_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Will be marked as pending */
     private static final String              INDICATOR5_UUID           = "Indicator-5";
     private static final String              INDICATOR5_DS_GPE_UUID    = "Indicator-5-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR5_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR5_VERSION        = "1.000";
+    private static final String              INDICATOR5_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Using one datasource */
     private static final String              INDICATOR6_UUID           = "Indicator-6";
     private static final String              INDICATOR6_DS_GPE_UUID    = "Indicator-6-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR6_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR6_VERSION        = "1.000";
+    private static final String              INDICATOR6_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Using one datasource */
     private static final String              INDICATOR7_UUID           = "Indicator-7";
-    private static final String              INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME";
-    private static final String              INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR7_VERSION        = "1.000";
 
     /* Production and Diffusion versions */
     private static final String              INDICATOR8_UUID           = "Indicator-8";
     private static final String              INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR8_VERSION        = "1.000";
-    private static final String              INDICATOR8_PROD_VERSION   = "1.001";
+    private static final String              INDICATOR8_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR8_PROD_VERSION   = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     private static final String              INDICATOR9_UUID           = "Indicator-9";
     private static final String              INDICATOR9_DS_GPE_UUID    = "Indicator-9-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR9_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
-    private static final String              INDICATOR9_VERSION        = "1.000";
-    private static final String              INDICATOR9_PROD_VERSION   = "1.322";
+    private static final String              INDICATOR9_VERSION        = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR9_PROD_VERSION   = IndicatorsDataBaseTest.INIT_VERSION_HUGE_INCREMENT_SOME_MINOR_INCREMENTS;
 
     // Groups with different data
     private static final List<String>        INDICATORS_GROUP1         = Arrays.asList(INDICATOR1_UUID, INDICATOR3_UUID, INDICATOR4_UUID, INDICATOR5_UUID, INDICATOR6_UUID, INDICATOR7_UUID,

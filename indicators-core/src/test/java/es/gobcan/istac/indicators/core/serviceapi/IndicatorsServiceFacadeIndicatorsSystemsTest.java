@@ -89,14 +89,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testRetrieveIndicatorsSystemByCode() throws Exception {
 
         String code = "CODE-1";
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
 
         assertNotNull(indicatorsSystemDto);
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
-        assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
-        assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
-        assertEquals("1.000", indicatorsSystemDto.getPublishedVersion());
+        assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getVersionNumber());
+        assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemDto.getProductionVersion());
+        assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getPublishedVersion());
         assertEquals(null, indicatorsSystemDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
     }
@@ -112,8 +112,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNotNull(indicatorsSystemDto);
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
         assertEquals(indicatorsSystemDto.getProductionVersion(), indicatorsSystemDto.getVersionNumber());
-        assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
-        assertEquals("1.000", indicatorsSystemDto.getPublishedVersion());
+        assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemDto.getProductionVersion());
+        assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getPublishedVersion());
         assertEquals(null, indicatorsSystemDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
     }
@@ -139,10 +139,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testRetrieveIndicatorsSystemStructure() throws Exception {
 
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemStructureDto.getUuid());
-        assertEquals("2.000", indicatorsSystemStructureDto.getVersionNumber());
+        assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemStructureDto.getVersionNumber());
 
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
 
@@ -217,7 +218,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
                 indicatorsSystemDtoCreated.getVersionNumber());
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoCreated.getProcStatus());
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoRetrieved.getProcStatus());
-        assertEquals("1.000", indicatorsSystemDtoRetrieved.getProductionVersion());
+        assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDtoRetrieved.getProductionVersion());
         assertNull(indicatorsSystemDtoRetrieved.getPublishedVersion());
         assertNull(indicatorsSystemDtoRetrieved.getArchivedVersion());
         assertNull(indicatorsSystemDtoRetrieved.getProductionValidationDate());
@@ -345,11 +346,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Retrieve: version 1 is diffusion; version 2 is in production
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
-            assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
-            assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals("1.000", indicatorsSystemDto.getPublishedVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getPublishedVersion());
             assertEquals(null, indicatorsSystemDto.getArchivedVersion());
         }
 
@@ -380,16 +381,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Validation
         // Version 1 exists
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
-            assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getVersionNumber());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
-            assertEquals("1.000", indicatorsSystemDto.getPublishedVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getPublishedVersion());
             assertEquals(null, indicatorsSystemDto.getArchivedVersion());
         }
         // Version 2 not exists
         try {
-            indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "2.000");
+            indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.SECOND_VERSION);
             fail("Indicators system version deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -466,8 +467,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_1;
         String code = INDICATORS_SYSTEM_1_CODE;
-        String diffusionVersion = "1.000";
-        String productionVersion = "2.000";
+        String diffusionVersion = IndicatorsDataBaseTest.INIT_VERSION;
+        String productionVersion = IndicatorsDataBaseTest.SECOND_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, diffusionVersion);
@@ -518,7 +519,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_9;
         String code = INDICATORS_SYSTEM_9_CODE;
-        String productionVersion = "1.000";
+        String productionVersion = IndicatorsDataBaseTest.INIT_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, productionVersion);
@@ -603,13 +604,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_4;
         String code = INDICATORS_SYSTEM_4_CODE;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
@@ -629,7 +630,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorsSystemDto.getProductionValidationDate());
@@ -666,9 +667,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_2_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
         }
@@ -720,13 +721,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_4;
         String code = INDICATORS_SYSTEM_4_CODE;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
@@ -750,7 +751,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
 
             assertNull(indicatorsSystemDto.getProductionValidationDate());
@@ -787,9 +788,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_2_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
         }
@@ -812,13 +813,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_5;
         String code = INDICATORS_SYSTEM_5_CODE;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
@@ -830,7 +831,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
         }
     }
@@ -858,9 +859,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_2_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
         }
@@ -913,7 +914,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_5;
         String code = INDICATORS_SYSTEM_5_CODE;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
@@ -980,8 +981,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_6;
         String code = INDICATORS_SYSTEM_6_CODE;
-        String previousPublishedversionNumber = "1.500";
-        String versionNumber = "2.000";
+        String previousPublishedversionNumber = IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT;
+        String versionNumber = IndicatorsDataBaseTest.SECOND_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
@@ -1058,8 +1059,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_6;
         String code = INDICATORS_SYSTEM_6_CODE;
-        String diffusionVersionBefore = "1.501"; // WAS 1.000, but it was changed to 1.001 after populating linked indicator 1
-        String productionVersionBefore = "2.000"; // will be published
+        String diffusionVersionBefore = IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT_WITH_MINOR_INCREMENT; // WAS 1.0, but it was changed to 1.1 after populating linked indicator 1
+        String productionVersionBefore = IndicatorsDataBaseTest.SECOND_VERSION; // will be published
 
         {
             IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, diffusionVersionBefore);
@@ -1090,7 +1091,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Actual version in diffusion is version 2
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
-            assertEquals("2.000", indicatorsSystemDto.getPublishedVersion());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemDto.getPublishedVersion());
             assertEquals(null, indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         }
@@ -1105,8 +1106,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_7;
         String code = INDICATORS_SYSTEM_7_CODE;
-        String archivedVersionBefore = "1.000"; // will be deleted when publish current version in diffusion validation
-        String productionVersionBefore = "2.000"; // will be published
+        String archivedVersionBefore = IndicatorsDataBaseTest.INIT_VERSION; // will be deleted when publish current version in diffusion validation
+        String productionVersionBefore = IndicatorsDataBaseTest.SECOND_VERSION; // will be published
 
         {
             IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, archivedVersionBefore);
@@ -1138,7 +1139,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Actual version in diffusion is version 2
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
-            assertEquals("2.000", indicatorsSystemDto.getPublishedVersion());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemDto.getPublishedVersion());
             assertEquals(null, indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         }
@@ -1167,9 +1168,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_2_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
         }
@@ -1333,8 +1334,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_1;
         String code = INDICATORS_SYSTEM_1_CODE;
-        String diffusionVersion = "1.000";
-        String productionVersion = "2.000";
+        String diffusionVersion = IndicatorsDataBaseTest.INIT_VERSION;
+        String productionVersion = IndicatorsDataBaseTest.SECOND_VERSION;
 
         {
             IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, diffusionVersion);
@@ -1382,9 +1383,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_2_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
-            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
         }
@@ -1410,11 +1411,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = INDICATORS_SYSTEM_8_CODE;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, IndicatorsDataBaseTest.INIT_VERSION);
             assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDto.getProcStatus());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getPublishedVersion());
-            assertEquals("1.000", indicatorsSystemDto.getArchivedVersion());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemDto.getArchivedVersion());
         }
 
         try {
@@ -1435,7 +1436,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_3;
         String code = INDICATORS_SYSTEM_3_CODE;
-        String newVersionExpected = "12.000";
+        String newVersionExpected = IndicatorsDataBaseTest.ANOTHER_NOT_INITIAL_VERSION;
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, null);
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getVersionNumber());
@@ -1510,7 +1511,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_3;
         String code = INDICATORS_SYSTEM_3_CODE;
-        String newVersionExpected = "11.034";
+        String newVersionExpected = IndicatorsDataBaseTest.NOT_INITIAL_VERSION_WITH_MINOR_INCREMENT;
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, null);
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getVersionNumber());
@@ -1596,10 +1597,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-1", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("2.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(1);
@@ -1609,7 +1610,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemSummaryDto.getDiffusionVersion());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(2);
@@ -1617,7 +1618,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-3", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("11.033", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.NOT_INITIAL_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertNull(indicatorsSystemSummaryDto.getProductionVersion());
         }
@@ -1629,7 +1630,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemSummaryDto.getDiffusionVersion());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(4);
@@ -1639,7 +1640,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemSummaryDto.getDiffusionVersion());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(5);
@@ -1647,10 +1648,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-6", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.500", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("2.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(6);
@@ -1658,10 +1659,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-7", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("2.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(7);
@@ -1669,7 +1670,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-8", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertNull(indicatorsSystemSummaryDto.getProductionVersion());
         }
@@ -1681,7 +1682,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemSummaryDto.getDiffusionVersion());
 
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
         {
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(9);
@@ -1689,10 +1690,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-10", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
-            assertEquals("1.001", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
     }
 
@@ -1847,7 +1848,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -1881,7 +1883,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -1917,7 +1920,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
         assertEquals(3, elementLevelDto.getSubelements().size());
@@ -1950,7 +1954,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
         assertEquals(3, elementLevelDto.getSubelements().size());
@@ -1983,7 +1988,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(0);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
         assertEquals(1, elementLevelDto.getSubelements().size());
@@ -2160,7 +2166,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Validate new structure
         // Checks orders of other elements are updated in same level
         // Subdimensions and indicators instances are deleted too
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(3, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2202,7 +2209,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2414,7 +2422,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             assertEquals(3, indicatorsSystemStructureDto.getElements().size());
             assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2426,7 +2435,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2);
             assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -2456,7 +2466,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2).getSubelements().get(1);
             assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -2464,7 +2475,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             assertEquals(5, indicatorsSystemStructureDto.getElements().size());
             assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2501,7 +2513,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
             assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -2509,7 +2522,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(0);
             assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -2539,7 +2553,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(4), dimensionDtoChanged.getOrderInLevel());
 
         // Validate source and target
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2572,7 +2587,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(2), dimensionDtoChanged.getOrderInLevel());
 
         // Validate source and target
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
         assertEquals(2, elementLevelDto.getSubelements().size());
@@ -2751,7 +2767,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2793,7 +2810,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2833,7 +2851,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2877,7 +2896,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(1, indicatorInstanceDtoRetrieved.getGeographicalValues().size());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2914,7 +2934,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
         assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -2956,7 +2977,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, indicatorInstanceDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
@@ -2995,7 +3017,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNull(indicatorInstanceDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
 
         {
@@ -3061,7 +3084,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorInstanceDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
 
         {
@@ -3102,7 +3126,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, indicatorInstanceDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
@@ -3141,7 +3166,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentUuid, indicatorInstanceDtoRetrieved.getParentUuid());
 
         // Validate new structure
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
@@ -3448,7 +3474,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNotNull(indicatorDto);
 
         // Checks orders of other elements are updated
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(3, indicatorsSystemStructureDto.getElements().size());
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getDimension().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -3670,7 +3697,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             assertEquals(3, indicatorsSystemStructureDto.getElements().size());
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getDimension().getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -3682,7 +3710,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2);
             assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -3712,7 +3741,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2).getSubelements().get(1);
             assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -3720,7 +3750,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             assertEquals(5, indicatorsSystemStructureDto.getElements().size());
             assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -3756,7 +3787,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate source
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
             assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -3764,7 +3796,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validate target
         {
-            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                    IndicatorsDataBaseTest.SECOND_VERSION);
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(0);
             assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
             assertEquals(1, elementLevelDto.getSubelements().size());
@@ -3792,7 +3825,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(4), indicatorInstanceDtoChanged.getOrderInLevel());
 
         // Validate source and target
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getDimension().getUuid());
         assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
@@ -3828,7 +3862,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(1), indicatorInstanceDtoChanged.getOrderInLevel());
 
         // Validate source and target
-        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1,
+                IndicatorsDataBaseTest.SECOND_VERSION);
         ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
         assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
         assertEquals(2, elementLevelDto.getSubelements().size());

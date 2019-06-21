@@ -79,9 +79,9 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
         // Retrieve before delete
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertFalse(indicatorsSystemVersion1.getIsLastVersion());
-            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "2.000");
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.SECOND_VERSION);
             assertTrue(indicatorsSystemVersion2.getIsLastVersion());
         }
 
@@ -91,7 +91,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         // Validation
         // Retrieve after delete
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertTrue(indicatorsSystemVersion1.getIsLastVersion());
             assertNull(indicatorsSystemVersion1.getIndicatorsSystem().getProductionVersion());
         }
@@ -127,7 +127,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
 
         String uuid = INDICATORS_SYSTEM_5;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         // Publish
         indicatorsSystemService.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
@@ -293,11 +293,11 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             assertEquals(3, history.size());
 
             assertEquals(uuid, history.get(0).getIndicatorsSystem().getUuid());
-            assertEquals("1.500", history.get(0).getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT, history.get(0).getVersionNumber());
             assertEquals(uuid, history.get(1).getIndicatorsSystem().getUuid());
-            assertEquals("1.300", history.get(1).getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_HUGE_INCREMENT, history.get(1).getVersionNumber());
             assertEquals(uuid, history.get(2).getIndicatorsSystem().getUuid());
-            assertEquals("1.000", history.get(2).getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, history.get(2).getVersionNumber());
         }
     }
 

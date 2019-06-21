@@ -52,33 +52,32 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR1_PUBLISHED_DS_GPE_UUID            = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR1_DRAFT_DS_GPE_UUID                = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR1_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_PUBLISHED_VERSION                = "1.000";
-    private static final String              INDICATOR1_PUBLISHED_AFTER_POPULATE_VERSION = "1.001";
-    private static final String              INDICATOR1_DRAFT_VERSION                    = "2.000";
+    private static final String              INDICATOR1_PUBLISHED_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR1_PUBLISHED_AFTER_POPULATE_VERSION = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    private static final String              INDICATOR1_DRAFT_VERSION                    = IndicatorsDataBaseTest.SECOND_VERSION;
 
     /* Has geographic and time variables */
     private static final String              INDICATOR2_UUID                             = "Indicator-2";
     private static final String              INDICATOR2_DS_GPE_UUID                      = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR2_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR2_VERSION                          = "1.000";
 
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR3_UUID                             = "Indicator-3";
     private static final String              INDICATOR3_DS_GPE_UUID                      = "Indicator-3-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR3_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR3_VERSION                          = "1.000";
+    private static final String              INDICATOR3_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR4_UUID                             = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID                      = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR4_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR4_VERSION                          = "1.000";
+    private static final String              INDICATOR4_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR5_UUID                             = "Indicator-5";
     private static final String              INDICATOR5_DS_GPE_UUID                      = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR5_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR5_VERSION                          = "1.000";
+    private static final String              INDICATOR5_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator instances */
     /* GEO Granularity provinces, time granularity yearly */
@@ -573,8 +572,8 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<TimeValue> dayTimeValues = indicatorsCoverageService
-                .retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, IstacTimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
+                IstacTimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);

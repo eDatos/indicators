@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
@@ -44,6 +45,15 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsDataService         indicatorsDataService;
 
+    /*
+     * This test tries to ensure that the version constants used in tests have the same format than the version constant used in the application. If the format of this constant changes, the test fails
+     * and it will be necessary to change the format of the test constants
+     */
+    @Test
+    public void testInitialVersion() {
+        assertTrue(StringUtils.equals(IndicatorsDataBaseTest.INIT_VERSION, IndicatorsVersionUtils.INITIAL_VERSION));
+    }
+
     @Test
     public void testVersioningIndicator() throws Exception {
 
@@ -53,7 +63,7 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
         // Retrieve before versioning
         {
-            indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), uuid, "1.000");
+            indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR1_VERSION);
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
@@ -88,7 +98,7 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
         // Retrieve before versioning
         {
-            indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), uuid, "1.000");
+            indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR1_VERSION);
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
