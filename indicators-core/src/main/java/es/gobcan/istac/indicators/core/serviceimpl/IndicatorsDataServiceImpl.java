@@ -247,7 +247,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
             // After diffusion version's data is populated all related systems must update their versions
-            if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
+            if (IndicatorsVersionUtils.equalsVersion(indicatorVersion.getVersionNumber(), diffusionVersion) && indicator.getIsPublished()) {
                 indicator = changeDiffusionVersion(indicator);
                 // update system version
                 List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
@@ -314,17 +314,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
                 IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getIsPublished() ? indicatorsSystem.getDiffusionVersion() : null;
                 if (diffusionVersionInfo != null) {
-                    // TODO INDISTAC-1054 what if maximum minor version is reached?
                     String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR).getValue();
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
 
                     // check version collision
-                    if (productionVersionInfo != null && newDiffusionVersion.equals(productionVersionInfo.getVersionNumber())) {
+                    if (productionVersionInfo != null && IndicatorsVersionUtils.equalsVersion(newDiffusionVersion, productionVersionInfo.getVersionNumber())) {
                         IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
-                        // TODO INDISTAC-1054 what if maximum minor version is reached?
-                        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR).getValue();
                         // new production version, new update date
-                        productionVersion.setVersionNumber(newProductionVersion);
+                        IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersion.getVersionNumber(), VersionTypeEnum.MINOR, getNoticesRestInternalService(),
+                                productionVersion.getIndicatorsSystem().getCode());
                         productionVersion.setLastUpdated(new DateTime());
                         productionVersion = getIndicatorsSystemVersionRepository().save(productionVersion);
 
@@ -334,7 +332,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                     // update diffusion version
                     IndicatorsSystemVersion diffusionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, diffusionVersionInfo.getVersionNumber());
-                    diffusionVersion.setVersionNumber(newDiffusionVersion);
+                    IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR, getNoticesRestInternalService(),
+                            diffusionVersion.getIndicatorsSystem().getCode());
                     diffusionVersion.setLastUpdated(new DateTime());
                     diffusionVersion = getIndicatorsSystemVersionRepository().save(diffusionVersion);
 
@@ -450,15 +449,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
         String diffusionVersionNumber = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
         if (diffusionVersionNumber != null) {
-            // TODO INDISTAC-1054 what if maximum minor version is reached?
             String nextDiffusionVersionNumber = IndicatorsVersionUtils.createNextVersion(diffusionVersionNumber, VersionTypeEnum.MINOR).getValue();
             // Check if new version number is the same as production version
             String productionVersionNumber = indicator.getProductionVersionNumber();
-            if (productionVersionNumber != null && productionVersionNumber.equals(nextDiffusionVersionNumber)) {
-                // TODO INDISTAC-1054 what if maximum minor version is reached?
-                String nextProductionVersionNumber = IndicatorsVersionUtils.createNextVersion(productionVersionNumber, VersionTypeEnum.MINOR).getValue();
+            if (productionVersionNumber != null && IndicatorsVersionUtils.equalsVersion(productionVersionNumber, nextDiffusionVersionNumber)) {
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionNumber);
-                productionVersion.setVersionNumber(nextProductionVersionNumber);
+                IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersionNumber, VersionTypeEnum.MINOR, getNoticesRestInternalService(), productionVersion.getIndicator().getCode());
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
                 indicator.setProductionIdIndicatorVersion(productionVersion.getId());
@@ -468,7 +464,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
             // update diffusion version
             IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionNumber);
-            diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
+            IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionNumber, VersionTypeEnum.MINOR, getNoticesRestInternalService(), diffusionVersion.getIndicator().getCode());
             diffusionVersion.setUpdateDate(new DateTime());
             diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
             indicator.setDiffusionIdIndicatorVersion(diffusionVersion.getId());

@@ -8,15 +8,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.shared.VersionResult;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
-import es.gobcan.istac.indicators.core.domain.HasVersionNumber;
 import es.gobcan.istac.indicators.core.domain.LastValue;
-import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public class ServiceUtils {
@@ -26,16 +21,6 @@ public class ServiceUtils {
     public static final int     ORACLE_IN_MAX                   = 1000;
 
     private ServiceUtils() {
-    }
-
-    public static void setNextVersion(HasVersionNumber oldEntity, HasVersionNumber newEntity, VersionTypeEnum versionTypeEnum) throws MetamacException {
-        VersionResult versionResult = IndicatorsVersionUtils.createNextVersion(oldEntity.getVersionNumber(), versionTypeEnum);
-
-        newEntity.setVersionNumber(versionResult.getValue());
-
-        if (VersionTypeEnum.MINOR.equals(versionTypeEnum) && VersionTypeEnum.MAJOR.equals(versionResult.getType())) {
-            // TODO INDISTAC-1054 send notification to who?
-        }
     }
 
     public static String dtoList2DtoString(List<String> source) {

@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -100,6 +101,17 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         createBackgroundNotification(ServiceNoticeAction.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, ServiceNoticeMessage.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, new ArrayList<IndicatorVersion>(), keyMessage);
     }
 
+    @Override
+    public void createMinorVersionExpectedMajorVersionOccurredBackgroundNotification(String resourceCode) {
+        createBackgroundNotification(ServiceNoticeAction.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED, ServiceNoticeMessage.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED, Collections.emptyList(),
+                resourceCode);
+    }
+
+    @Override
+    public void createMaximumVersionReachedBackgroundNotification(List<String> messageParams) {
+        createBackgroundNotification(ServiceNoticeAction.MAX_VERSION_REACHED_ERROR, ServiceNoticeMessage.MAX_VERSION_REACHED_ERROR, Collections.emptyList(), messageParams.toArray());
+    }
+
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {
         List<IndicatorVersion> notifiableIndicators = new ArrayList<IndicatorVersion>();
         for (IndicatorVersion failedIndicatorVersion : failedPopulationIndicators) {
@@ -178,7 +190,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         return resource;
     }
 
-    private String composeCodeWithVersion(IndicatorVersion indicatorVersion) {
+    private String composeCodeWithVersion(IndicatorVersion indicatorVersion) { // TODO INDISTAC-1054 check this!
         return indicatorVersion.getIndicator().getCode().concat(" - v").concat(indicatorVersion.getVersionNumber());
     }
 

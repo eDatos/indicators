@@ -63,6 +63,7 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 @Component
 public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMapper {
@@ -111,9 +112,11 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setUuid(indicatorsSystem.getUuid());
         target.setCode(indicatorsSystem.getCode());
         for (IndicatorsSystemVersion indicatorsSystemVersionInIndicatorsSystem : indicatorsSystem.getVersions()) {
-            if (indicatorsSystem.getProductionVersion() != null && indicatorsSystem.getProductionVersion().getVersionNumber().equals(indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+            if (indicatorsSystem.getProductionVersion() != null
+                    && IndicatorsVersionUtils.equalsVersion(indicatorsSystem.getProductionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
                 target.setProductionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
-            } else if (indicatorsSystem.getDiffusionVersion() != null && indicatorsSystem.getDiffusionVersion().getVersionNumber().equals(indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+            } else if (indicatorsSystem.getDiffusionVersion() != null
+                    && IndicatorsVersionUtils.equalsVersion(indicatorsSystem.getDiffusionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
                 target.setDiffusionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
             }
         }
@@ -245,7 +248,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setQueryUrn(source.getQueryUrn());
         target.setStatResource(externalItemDoToDto(source.getStatResource()));
-        
+
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
