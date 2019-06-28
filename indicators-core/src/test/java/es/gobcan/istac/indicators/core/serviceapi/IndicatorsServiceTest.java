@@ -185,8 +185,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION, indicatorVersion1.getVersionNumber());
         }
 
-        // Mockito.doNothing().when(noticesRestInternalService).createMinorVersionExpectedMajorVersionOccurredBackgroundNotification(Matchers.anyString());
-
         // Versioning
         IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MINOR);
 

@@ -41,13 +41,11 @@ public class IndicatorsVersionUtils {
 
     public static void setVersionNumber(HasVersionNumber versionNumberEntity, String versionNumber, VersionTypeEnum versionTypeEnum, NoticesRestInternalService noticesRestInternalService,
             String resourceCode) throws MetamacException {
-        // TODO INDISTAC-1054 Temporary, notifications are sent to the administrator, it's necessary to check it and define others roles if necessary
         try {
             VersionResult versionResult = createNextVersion(versionNumber, versionTypeEnum);
 
             versionNumberEntity.setVersionNumber(versionResult.getValue());
 
-            sendMinorVersionExpectedMajorVersionOccurredBackgroudNotificationIfOccurred(versionTypeEnum, noticesRestInternalService, resourceCode, versionResult);
         } catch (MetamacException e) {
             sendMaximumVersionReachedBackgroundNotificationIfOccurred(versionNumber, versionTypeEnum, noticesRestInternalService, resourceCode, e);
             throw e;
@@ -59,17 +57,6 @@ public class IndicatorsVersionUtils {
         if (checkResourceMaximumVersionReachedException(e)) {
             noticesRestInternalService.createMaximumVersionReachedBackgroundNotification(Arrays.asList(versionTypeEnum.getName(), resourceCode, versionNumber));
         }
-    }
-
-    private static void sendMinorVersionExpectedMajorVersionOccurredBackgroudNotificationIfOccurred(VersionTypeEnum versionTypeEnum, NoticesRestInternalService noticesRestInternalService,
-            String resourceCode, VersionResult versionResult) {
-        if (checkMinorVersionExpectedMajorVersionOccurred(versionTypeEnum, versionResult)) {
-            noticesRestInternalService.createMinorVersionExpectedMajorVersionOccurredBackgroundNotification(resourceCode);
-        }
-    }
-
-    private static boolean checkMinorVersionExpectedMajorVersionOccurred(VersionTypeEnum versionTypeEnum, VersionResult versionResult) {
-        return VersionTypeEnum.MINOR.equals(versionTypeEnum) && VersionTypeEnum.MAJOR.equals(versionResult.getType());
     }
 
     private static boolean checkResourceMaximumVersionReachedException(MetamacException metamacException) {

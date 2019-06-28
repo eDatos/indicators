@@ -102,12 +102,6 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createMinorVersionExpectedMajorVersionOccurredBackgroundNotification(String resourceCode) {
-        createBackgroundNotification(ServiceNoticeAction.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED, ServiceNoticeMessage.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED, Collections.emptyList(),
-                resourceCode);
-    }
-
-    @Override
     public void createMaximumVersionReachedBackgroundNotification(List<String> messageParams) {
         createBackgroundNotification(ServiceNoticeAction.MAX_VERSION_REACHED_ERROR, ServiceNoticeMessage.MAX_VERSION_REACHED_ERROR, Collections.emptyList(), messageParams.toArray());
     }
@@ -190,7 +184,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         return resource;
     }
 
-    private String composeCodeWithVersion(IndicatorVersion indicatorVersion) { // TODO INDISTAC-1054 check this!
+    private String composeCodeWithVersion(IndicatorVersion indicatorVersion) {
         return indicatorVersion.getIndicator().getCode().concat(" - v").concat(indicatorVersion.getVersionNumber());
     }
 

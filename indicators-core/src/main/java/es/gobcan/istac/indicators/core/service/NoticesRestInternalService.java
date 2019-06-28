@@ -14,7 +14,5 @@ public interface NoticesRestInternalService {
     void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
     void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
     public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage);
-    void createMinorVersionExpectedMajorVersionOccurredBackgroundNotification(String resourceCode);
     void createMaximumVersionReachedBackgroundNotification(List<String> messageParams);
-
 }
