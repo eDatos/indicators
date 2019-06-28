@@ -1627,6 +1627,406 @@
     />
     
 	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 11											                   	-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS_SYSTEMS
+		ID="110"
+		UUID="IndSys-11"
+		CODE="CODE-11"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="111"
+		DIFFUSION_VERSION_NUMBER="1.99999"
+		IS_PUBLISHED="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TB_INDIC_SYSTEMS_VERSIONS
+				ID="111"
+				UUID="IndSys-11-v1"
+				VERSION_NUMBER="1.99999"
+	  			INDICATORS_SYSTEM_FK="110"
+	  			PROC_STATUS="PUBLISHED"
+				IS_LAST_VERSION="0"
+				
+				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-04-04 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-05-05 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user11"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+				<TB_ELEMENTS_LEVELS
+					ID="1111"
+					UUID="uuid-ignored-1170"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					
+					IND_SYSTEM_VERSION_ALL_FK="111"
+					IND_SYSTEM_VERSION_FIRST_FK="111"
+					DIMENSION_FK="1111"
+					INDICATOR_INSTANCE_FK="[null]"
+					VERSION="1"
+				/>
+				<TB_DIMENSIONS
+					ID="1111"
+					UUID="IndSys-11-v1-Dimension-1"
+					TITLE_FK="25"
+							
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>					
+				
+					<TB_ELEMENTS_LEVELS
+						ID="11111"
+						UUID="uuid-ignored-1178"
+						PARENT_FK="1111"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="111"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="11111"
+						VERSION="1"
+					/>
+					<TB_INDICATORS_INSTANCES
+						ID="11111"
+						UUID="IndSys-11-v1-IInstance-1A"
+                        CODE="IndSys-11-v1-IInstance-1A-CODE"
+						TIME_GRANULARITY="YEARLY"
+						TIME_VALUES="[null]"
+						GEOGRAPHICAL_GRANULARITY_FK="1"
+						TITLE_FK="111"
+						INDICATOR_FK="6"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"				
+					/>		
+					
+					<TB_ELEMENTS_LEVELS
+						ID="11112"
+						UUID="uuid-ignored-1180"
+						PARENT_FK="1111"
+						ORDER_IN_LEVEL="2"
+						
+						IND_SYSTEM_VERSION_ALL_FK="111"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="11112"
+						INDICATOR_INSTANCE_FK="[null]"
+						VERSION="1"
+					/>
+					<TB_DIMENSIONS
+						ID="11112"
+						UUID="IndSys-11-v1-Dimension-1A"						
+						TITLE_FK="27"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+				
+				<TB_ELEMENTS_LEVELS
+					ID="1112"
+					UUID="uuid-ignored-1175"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="111"
+					IND_SYSTEM_VERSION_FIRST_FK="111"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="1112"
+					VERSION="1"
+				/>
+				<TB_INDICATORS_INSTANCES
+					ID="1112"
+					UUID="IndSys-11-v1-IInstance-2"
+                    CODE="IndSys-11-v1-IInstance-2-CODE"
+					TIME_GRANULARITY="YEARLY"
+					TIME_VALUES="[null]"
+					GEOGRAPHICAL_GRANULARITY_FK="1"
+					TITLE_FK="110"
+					INDICATOR_FK="6"
+						
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"				
+				/>	
+                
+    <TB_INDIC_INST_LAST_VALUE
+        ID="111111"
+        INDICATOR_INSTANCE_FK="11111"
+        GEOGRAPHICAL_CODE="UK"
+        LAST_TIME_VALUE="2010"
+        LAST_DATA_UPDATED="2011-03-04 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="111112"
+        INDICATOR_INSTANCE_FK="11111"
+        GEOGRAPHICAL_CODE="FR"
+        LAST_TIME_VALUE="2010"
+        LAST_DATA_UPDATED="2011-03-04 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="11121"
+        INDICATOR_INSTANCE_FK="1112"
+        GEOGRAPHICAL_CODE="UK"
+        LAST_TIME_VALUE="2011"
+        LAST_DATA_UPDATED="2011-03-06 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="11122"
+        INDICATOR_INSTANCE_FK="1112"
+        GEOGRAPHICAL_CODE="FR"
+        LAST_TIME_VALUE="2011"
+        LAST_DATA_UPDATED="2011-03-06 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />    
+	
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 12											                   	-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS_SYSTEMS
+		ID="120"
+		UUID="IndSys-12"
+		CODE="CODE-12"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="121"
+		DIFFUSION_VERSION_NUMBER="99999.9"
+		IS_PUBLISHED="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TB_INDIC_SYSTEMS_VERSIONS
+				ID="121"
+				UUID="IndSys-12-v1"
+				VERSION_NUMBER="99999.9"
+	  			INDICATORS_SYSTEM_FK="120"
+	  			PROC_STATUS="PUBLISHED"
+				IS_LAST_VERSION="0"
+				
+				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-04-04 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-05-05 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user12"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+				<TB_ELEMENTS_LEVELS
+					ID="1211"
+					UUID="uuid-ignored-1270"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					
+					IND_SYSTEM_VERSION_ALL_FK="121"
+					IND_SYSTEM_VERSION_FIRST_FK="121"
+					DIMENSION_FK="1211"
+					INDICATOR_INSTANCE_FK="[null]"
+					VERSION="1"
+				/>
+				<TB_DIMENSIONS
+					ID="1211"
+					UUID="IndSys-12-v1-Dimension-1"
+					TITLE_FK="25"
+							
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>					
+				
+					<TB_ELEMENTS_LEVELS
+						ID="12111"
+						UUID="uuid-ignored-1278"
+						PARENT_FK="1211"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="121"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="12111"
+						VERSION="1"
+					/>
+					<TB_INDICATORS_INSTANCES
+						ID="12111"
+						UUID="IndSys-12-v1-IInstance-1A"
+                        CODE="IndSys-12-v1-IInstance-1A-CODE"
+						TIME_GRANULARITY="YEARLY"
+						TIME_VALUES="[null]"
+						GEOGRAPHICAL_GRANULARITY_FK="1"
+						TITLE_FK="121"
+						INDICATOR_FK="6"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"				
+					/>		
+					
+					<TB_ELEMENTS_LEVELS
+						ID="12112"
+						UUID="uuid-ignored-1280"
+						PARENT_FK="1211"
+						ORDER_IN_LEVEL="2"
+						
+						IND_SYSTEM_VERSION_ALL_FK="121"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="12112"
+						INDICATOR_INSTANCE_FK="[null]"
+						VERSION="1"
+					/>
+					<TB_DIMENSIONS
+						ID="12112"
+						UUID="IndSys-12-v1-Dimension-1A"						
+						TITLE_FK="27"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+				
+				<TB_ELEMENTS_LEVELS
+					ID="1212"
+					UUID="uuid-ignored-1275"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="121"
+					IND_SYSTEM_VERSION_FIRST_FK="121"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="1212"
+					VERSION="1"
+				/>
+				<TB_INDICATORS_INSTANCES
+					ID="1212"
+					UUID="IndSys-12-v1-IInstance-2"
+                    CODE="IndSys-12-v1-IInstance-2-CODE"
+					TIME_GRANULARITY="YEARLY"
+					TIME_VALUES="[null]"
+					GEOGRAPHICAL_GRANULARITY_FK="1"
+					TITLE_FK="120"
+					INDICATOR_FK="6"
+						
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"				
+				/>	
+                
+    <TB_INDIC_INST_LAST_VALUE
+        ID="121111"
+        INDICATOR_INSTANCE_FK="12111"
+        GEOGRAPHICAL_CODE="UK"
+        LAST_TIME_VALUE="2010"
+        LAST_DATA_UPDATED="2011-03-04 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="121112"
+        INDICATOR_INSTANCE_FK="12111"
+        GEOGRAPHICAL_CODE="FR"
+        LAST_TIME_VALUE="2010"
+        LAST_DATA_UPDATED="2011-03-04 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="12121"
+        INDICATOR_INSTANCE_FK="1212"
+        GEOGRAPHICAL_CODE="UK"
+        LAST_TIME_VALUE="2011"
+        LAST_DATA_UPDATED="2011-03-06 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />
+    <TB_INDIC_INST_LAST_VALUE
+        ID="12122"
+        INDICATOR_INSTANCE_FK="1212"
+        GEOGRAPHICAL_CODE="FR"
+        LAST_TIME_VALUE="2011"
+        LAST_DATA_UPDATED="2011-03-06 05:06:07"
+        LAST_DATA_UPDATED_TZ="Europe/London" 
+    />    
+    
+	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 1											                      			-->
 	<!--		- Version 1: published															-->
 	<!-- *************************************************************************************	-->
@@ -2303,7 +2703,155 @@
                         LAST_UPDATED="2011-03-04 05:06:07"
                         LAST_UPDATED_TZ="Europe/London"
                     />
+
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 6											                      			-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	
+	<TB_INDICATORS
+		ID="6"
+		UUID="Indicator-6"
+		CODE="CODE-6"
+        VIEW_CODE="VIEWCODE_6"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.0"
+		IS_PUBLISHED="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TB_INDICATORS_VERSIONS
+				ID="611"
+				UUID="Indicator-6-v1"
+				VERSION_NUMBER="1.0"
+				TITLE_FK="39"
+				ACRONYM_FK="[null]"
+	  			COMMENTS_FK="[null]"
+	  			
+				NOTES_FK="[null]"
+	  			
+				SUBJECT_CODE="1"
+				SUBJECT_TITLE_FK="42"
+				QUANTITY_FK="6111"
+				DATA_REPOSITORY_ID="[null]"
+  				DATA_REPOSITORY_TABLE_NAME="[null]"
+
+	  			INDICATOR_FK="6"
+	  			PROC_STATUS="PUBLISHED"
+	  			IS_LAST_VERSION="1"
+	  			NEEDS_UPDATE="0"
 				
+				PRODUCTION_VALIDATION_DATE="2011-01-02 02:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-01-03 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-01-04 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>				
+
+  				<TB_QUANTITIES
+				  	ID="6111"
+  					UUID="Quantity-6111"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER_FK="2"
+  					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"                    
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+                    <TB_DATA_SOURCES
+                        ID="6111"
+                        UUID="Indicator-6-v1-DataSource-1"
+                        QUERY_UUID="Indicator-6-v1-DataSource-1-GPE-GEO-TIME"
+                        QUERY_URN="px Indicator-6-v1-DataSource-1"
+                        TIME_VARIABLE="Periodos"
+                        TIME_VALUE="[null]"
+                        GEOGRAPHICAL_VALUE_FK="[null]"
+                        GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+                        INDICATOR_VERSION_FK="611"
+                        ABSOLUTE_METHOD="##OBS_VALUE##"
+                        INTERPERIOD_PUNTUAL_RATE_FK="[null]"
+                        INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+                        ANNUAL_PUNTUAL_RATE_FK="[null]"
+                        ANNUAL_PERCENTAGE_RATE_FK="[null]"
+                        SOURCE_SURVEY_CODE="code-Indicator-6-v1-DataSource-1"
+                        SOURCE_SURVEY_URL="http Indicator-6-v1-DataSource-1"
+                        PUBLISHERS="ISTAC##INE"
+                        SOURCE_SURVEY_TITLE_FK="80"
+                        SOURCE_SURVEY_ACRONYM_FK="81"
+  
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-3 01:02:04"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />
+                    <TB_DATA_SOURCES_VARIABLES
+                        ID="61111"
+                        UUID="Indicator-6-v1-DataSource-1-Var-1"
+                        VARIABLE="Indicadores"
+                        CATEGORY="NumSoc"
+                        DATA_SOURCE_FK="6111"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-04 05:06:07"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />
+                    
+                    <TB_DATA_SOURCES_VARIABLES
+                        ID="61112"
+                        UUID="Indicator-6-v1-DataSource-1-Var-2"
+                        VARIABLE="Naturaleza jurídica"
+                        CATEGORY="T"
+                        DATA_SOURCE_FK="6111"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-04 05:06:07"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />				
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 QUANTITIES UNITS		                              -->
@@ -4618,5 +5166,88 @@
         VERSION="1"
     />
 
+	<TB_INTERNATIONAL_STRINGS
+		ID="110"
+		VERSION="1"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1154"
+		LABEL="Título IndSys-11-v1-IInstance-2"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="110"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1155"
+		LABEL="Title IndSys-11-v1-IInstance-2"
+		LOCALE="en"
+		VERSION="1"		
+		INTERNATIONAL_STRING_FK="110"
+	/>
+
+	<TB_INTERNATIONAL_STRINGS
+		ID="111"
+		VERSION="1"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1156"
+		LABEL="Título IndSys-11-v1-IInstance-1A"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="111"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1157"
+		LABEL="Title IndSys-11-v1-IInstance-1A"
+		LOCALE="en"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="111"
+	/>
+	
+	<TB_INTERNATIONAL_STRINGS
+		ID="120"
+		VERSION="1"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1254"
+		LABEL="Título IndSys-12-v1-IInstance-2"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="120"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1255"
+		LABEL="Title IndSys-12-v1-IInstance-2"
+		LOCALE="en"
+		VERSION="1"		
+		INTERNATIONAL_STRING_FK="120"
+	/>
+
+	<TB_INTERNATIONAL_STRINGS
+		ID="121"
+		VERSION="1"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1256"
+		LABEL="Título IndSys-12-v1-IInstance-1A"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="121"
+	/>
+	
+	<TB_LOCALISED_STRINGS
+		ID="1257"
+		LABEL="Title IndSys-12-v1-IInstance-1A"
+		LOCALE="en"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="121"
+	/>	
 		
 </dataset>

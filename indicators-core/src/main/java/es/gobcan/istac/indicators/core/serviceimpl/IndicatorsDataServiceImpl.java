@@ -247,7 +247,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             populateAndCreateCachesForIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
 
             // After diffusion version's data is populated all related systems must update their versions
-            if (IndicatorsVersionUtils.equalsVersion(indicatorVersion.getVersionNumber(), diffusionVersion) && indicator.getIsPublished()) {
+            if (IndicatorsVersionUtils.equalsVersionNumber(indicatorVersion.getVersionNumber(), diffusionVersion) && indicator.getIsPublished()) {
                 indicator = changeDiffusionVersion(indicator);
                 // update system version
                 List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
@@ -318,7 +318,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
 
                     // check version collision
-                    if (productionVersionInfo != null && IndicatorsVersionUtils.equalsVersion(newDiffusionVersion, productionVersionInfo.getVersionNumber())) {
+                    if (productionVersionInfo != null && IndicatorsVersionUtils.equalsVersionNumber(newDiffusionVersion, productionVersionInfo.getVersionNumber())) {
                         IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
                         // new production version, new update date
                         IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersion.getVersionNumber(), VersionTypeEnum.MINOR, getNoticesRestInternalService(),
@@ -452,7 +452,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String nextDiffusionVersionNumber = IndicatorsVersionUtils.createNextVersion(diffusionVersionNumber, VersionTypeEnum.MINOR).getValue();
             // Check if new version number is the same as production version
             String productionVersionNumber = indicator.getProductionVersionNumber();
-            if (productionVersionNumber != null && IndicatorsVersionUtils.equalsVersion(productionVersionNumber, nextDiffusionVersionNumber)) {
+            if (productionVersionNumber != null && IndicatorsVersionUtils.equalsVersionNumber(productionVersionNumber, nextDiffusionVersionNumber)) {
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionNumber);
                 IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersionNumber, VersionTypeEnum.MINOR, getNoticesRestInternalService(), productionVersion.getIndicator().getCode());
                 productionVersion.setUpdateDate(new DateTime());

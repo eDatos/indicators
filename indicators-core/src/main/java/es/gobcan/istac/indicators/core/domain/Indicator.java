@@ -31,7 +31,7 @@ public class Indicator extends IndicatorBase {
     private IndicatorVersion getIndicatorVersion(String indicatorVersionNumber) {
         if (indicatorVersionNumber != null) {
             for (IndicatorVersion indicatorVersion : getVersions()) {
-                if (IndicatorsVersionUtils.equalsVersion(indicatorVersionNumber, indicatorVersion.getVersionNumber())) {
+                if (IndicatorsVersionUtils.equalsVersionNumber(indicatorVersionNumber, indicatorVersion.getVersionNumber())) {
                     return indicatorVersion;
                 }
             }

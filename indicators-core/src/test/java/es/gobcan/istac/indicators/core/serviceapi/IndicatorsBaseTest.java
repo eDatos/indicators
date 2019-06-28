@@ -68,6 +68,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_9                              = "IndSys-9";
     protected static String               INDICATORS_SYSTEM_9_CODE                         = "CODE-9";
     protected static String               INDICATORS_SYSTEM_10                             = "IndSys-10";
+    protected static String               INDICATORS_SYSTEM_11                             = "IndSys-11";
+    protected static String               INDICATORS_SYSTEM_11_VERSION                     = IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION;
+    protected static String               INDICATORS_SYSTEM_12                             = "IndSys-12";
+    protected static String               INDICATORS_SYSTEM_12_VERSION                     = IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION;
 
     // Dimensions
     protected static String               DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
@@ -104,6 +108,11 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_10_V2_IINSTANCE_1              = "IndSys-10-v2-IInstance-1";
     protected static String               INDICATORS_SYSTEM_10_IINSTANCE_2                 = "IndSys-10-v1-IInstance-2";
     protected static String               INDICATORS_SYSTEM_10_IINSTANCE_3                 = "IndSys-10-v1-IInstance-3";
+
+    protected static String               INDICATORS_SYSTEM_11_IINSTANCE_1A                = "IndSys-11-v1-IInstance-1A";
+    protected static String               INDICATORS_SYSTEM_11_IINSTANCE_2                 = "IndSys-11-v1-IInstance-2";
+    protected static String               INDICATORS_SYSTEM_12_IINSTANCE_1A                = "IndSys-12-v1-IInstance-1A";
+    protected static String               INDICATORS_SYSTEM_12_IINSTANCE_2                 = "IndSys-12-v1-IInstance-2";
 
     // Geographical values
     protected static String               GEOGRAPHICAL_VALUE_1                             = "1";
@@ -153,6 +162,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATOR_11                                     = "Indicator-11";
     protected static String               INDICATOR_12                                     = "Indicator-12";
     protected static String               INDICATOR_13                                     = "Indicator-13";
+    protected static String               INDICATOR_14                                     = "Indicator-14";
+    protected static String               INDICATOR_14_VERSION                             = IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION;
+    protected static String               INDICATOR_15                                     = "Indicator-15";
+    protected static String               INDICATOR_15_VERSION                             = IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION;
 
     // Data sources
     protected static String               DATA_SOURCE_1_INDICATOR_1_V1                     = "Indicator-1-v1-DataSource-1";

@@ -66,9 +66,6 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 @Service("indicatorsSystemService")
 public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
 
-    public IndicatorsSystemsServiceImpl() {
-    }
-
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
     // --------------------------------------------------------------------------------------------

@@ -113,10 +113,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setCode(indicatorsSystem.getCode());
         for (IndicatorsSystemVersion indicatorsSystemVersionInIndicatorsSystem : indicatorsSystem.getVersions()) {
             if (indicatorsSystem.getProductionVersion() != null
-                    && IndicatorsVersionUtils.equalsVersion(indicatorsSystem.getProductionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+                    && IndicatorsVersionUtils.equalsVersionNumber(indicatorsSystem.getProductionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
                 target.setProductionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
             } else if (indicatorsSystem.getDiffusionVersion() != null
-                    && IndicatorsVersionUtils.equalsVersion(indicatorsSystem.getDiffusionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+                    && IndicatorsVersionUtils.equalsVersionNumber(indicatorsSystem.getDiffusionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
                 target.setDiffusionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
             }
         }

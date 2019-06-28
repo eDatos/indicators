@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,6 +31,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -37,7 +40,8 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-data-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
@@ -118,6 +122,67 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorsSystemVersion2.getIsLastVersion());
         }
+    }
+
+    @Test
+    public void testVersioningIndicatorsSystemMaximumMinorVersionReached() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_11;
+
+        // Retrieve before versioning
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_11_VERSION);
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION, indicatorsSystemVersion1.getVersionNumber());
+        }
+
+        // Versioning
+        indicatorsSystemService.versioningIndicatorsSystem(getServiceContextAdministrador(), uuid, VersionTypeEnum.MINOR);
+
+        // Retrieve after delete
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_11_VERSION);
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION, indicatorsSystemVersion1.getVersionNumber());
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.SECOND_VERSION);
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorsSystemVersion2.getVersionNumber());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorsSystemMinorVersionLimitReachedError() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_12;
+
+        // Retrieve before versioning
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_12_VERSION);
+            assertEquals(IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION, indicatorsSystemVersion1.getVersionNumber());
+        }
+
+        // Minor versioning
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(VersionTypeEnum.MINOR, INDICATORS_SYSTEM_12_VERSION).build());
+
+        indicatorsSystemService.versioningIndicatorsSystem(getServiceContextAdministrador(), uuid, VersionTypeEnum.MINOR);
+        fail("Should not allow minor versioning when the indicator system version number rearches 99999.9");
+    }
+
+    @Test
+    public void testVersioningIndicatorsSystemMajorVersionLimitReachedError() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_12;
+
+        // Retrieve before versioning
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_12_VERSION);
+            assertEquals(IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION, indicatorsSystemVersion1.getVersionNumber());
+        }
+
+        // Major versioning
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(VersionTypeEnum.MAJOR, INDICATORS_SYSTEM_12_VERSION).build());
+
+        indicatorsSystemService.versioningIndicatorsSystem(getServiceContextAdministrador(), uuid, VersionTypeEnum.MAJOR);
+        fail("Should not allow major versioning when the indicator system version number rearches 99999.9");
     }
 
     @Test

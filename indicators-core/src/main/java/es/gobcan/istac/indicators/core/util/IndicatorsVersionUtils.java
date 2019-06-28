@@ -27,16 +27,16 @@ public class IndicatorsVersionUtils {
         return VersionUtil.isInitialVersion(version);
     }
 
-    public static VersionResult createNextVersion(String olderVersion, VersionTypeEnum versionType) throws MetamacException {
+    public static VersionResult createNextVersion(String olderVersionNumber, VersionTypeEnum versionType) throws MetamacException {
         try {
-            return VersionUtil.createNextVersion(olderVersion, versionType);
+            return VersionUtil.createNextVersion(olderVersionNumber, versionType);
         } catch (UnsupportedOperationException e) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, olderVersion).build();
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, olderVersionNumber).build();
         }
     }
 
-    public static boolean equalsVersion(String version, String otherVersion) {
-        return VersionUtil.versionStringToLong(version) == VersionUtil.versionStringToLong(otherVersion);
+    public static boolean equalsVersionNumber(String versionNumber, String otherVersionNumber) {
+        return VersionUtil.versionStringToLong(versionNumber) == VersionUtil.versionStringToLong(otherVersionNumber);
     }
 
     public static void setVersionNumber(HasVersionNumber versionNumberEntity, String versionNumber, VersionTypeEnum versionTypeEnum, NoticesRestInternalService noticesRestInternalService,

@@ -75,9 +75,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
-    public IndicatorsServiceImpl() {
-    }
-
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
