@@ -1,5 +1,13 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,6 +22,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
@@ -32,20 +40,10 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import static org.mockito.Mockito.when;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -60,45 +58,45 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR1_UUID                          = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID                   = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR1_GPE_JSON_DATA                 = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_VERSION                       = "1.000";
+    private static final String              INDICATOR1_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has geographic variable */
     private static final String              INDICATOR2_UUID                          = "Indicator-2";
     private static final String              INDICATOR2_DS_GPE_UUID                   = "Indicator-2-v1-DataSource-1-GPE-GEO";
     private static final String              INDICATOR2_GPE_JSON_DATA                 = readFile("json/data_spatials.json");
-    private static final String              INDICATOR2_VERSION                       = "1.000";
+    private static final String              INDICATOR2_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has time variable */
     private static final String              INDICATOR3_UUID                          = "Indicator-3";
     private static final String              INDICATOR3_DS_UUID                       = "Indicator-3-v1-DataSource-1";
     private static final String              INDICATOR3_DS_GPE_UUID                   = "Indicator-3-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR3_GPE_JSON_DATA                 = readFile("json/data_temporals.json");
-    private static final String              INDICATOR3_VERSION                       = "1.000";
+    private static final String              INDICATOR3_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR4_UUID                          = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID                   = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR4_GPE_JSON_DATA                 = readFile("json/data_fixed.json");
-    private static final String              INDICATOR4_VERSION                       = "1.000";
+    private static final String              INDICATOR4_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* uses contvariable for absolute method */
     private static final String              INDICATOR5_UUID                          = "Indicator-5";
     private static final String              INDICATOR5_DS_GPE_UUID                   = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
     private static final String              INDICATOR5_GPE_JSON_DATA                 = readFile("json/data_fixed_contvariable.json");
-    private static final String              INDICATOR5_VERSION                       = "1.000";
+    private static final String              INDICATOR5_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has "." in data */
     private static final String              INDICATOR6_UUID                          = "Indicator-6";
     private static final String              INDICATOR6_DS_GPE_UUID                   = "Indicator-6-v1-DataSource-1-GPE-DOTS";
     private static final String              INDICATOR6_GPE_JSON_DATA                 = readFile("json/data_dots.json");
-    private static final String              INDICATOR6_VERSION                       = "1.000";
+    private static final String              INDICATOR6_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Calculates all rates */
     private static final String              INDICATOR7_UUID                          = "Indicator-7";
     private static final String              INDICATOR7_DS_GPE_UUID                   = "Indicator-7-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR7_GPE_JSON_DATA_29FEB           = readFile("json/data_temporals_calculate_29feb.json");
     private static final String              INDICATOR7_GPE_JSON_DATA                 = readFile("json/data_temporals_calculate.json");
-    private static final String              INDICATOR7_VERSION                       = "1.000";
+    private static final String              INDICATOR7_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Calculates all rates from two different data sources */
     private static final String              INDICATOR8_UUID                          = "Indicator-8";
@@ -108,13 +106,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR8_GPE_JSON_DATA2                = readFile("json/data_increase_temporal_part2.json");
     private static final String              INDICATOR8_GPE_JSON_DECIMALS_DATA1       = readFile("json/data_increase_temporal_decimals_part1.json");
     private static final String              INDICATOR8_GPE_JSON_DECIMALS_DATA2       = readFile("json/data_increase_temporal_decimals_part2.json");
-    private static final String              INDICATOR8_VERSION                       = "1.000";
+    private static final String              INDICATOR8_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Loads all rates from one data source using contvariable */
     private static final String              INDICATOR9_UUID                          = "Indicator-9";
     private static final String              INDICATOR9_DS_GPE_UUID                   = "Indicator-9-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR9_GPE_JSON_DATA                 = readFile("json/data_allrates_contvariable.json");
-    private static final String              INDICATOR9_VERSION                       = "1.000";
+    private static final String              INDICATOR9_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Loads all rates, all from different data sources, using OBS_VALUE */
     private static final String              INDICATOR10_UUID                         = "Indicator-10";
@@ -128,50 +126,44 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR10_GPE_JSON_DATA3               = readFile("json/data_rates_obsvalue_split3_annual_puntual.json");
     private static final String              INDICATOR10_GPE_JSON_DATA4               = readFile("json/data_rates_obsvalue_split4_inter_percentage.json");
     private static final String              INDICATOR10_GPE_JSON_DATA5               = readFile("json/data_rates_obsvalue_split5_inter_puntual.json");
-    private static final String              INDICATOR10_VERSION                      = "1.000";
+    private static final String              INDICATOR10_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Error wrong absoluteMethod without contvariable */
     private static final String              INDICATOR11_UUID                         = "Indicator-11";
     private static final String              INDICATOR11_DS_GPE_UUID                  = "Indicator-11-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR11_GPE_JSON_DATA                = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR11_VERSION                      = "1.000";
 
     /* Error wrong absoluteMethod with contvariable */
     private static final String              INDICATOR12_UUID                         = "Indicator-12";
     private static final String              INDICATOR12_DS_GPE_UUID                  = "Indicator-12-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
     private static final String              INDICATOR12_GPE_JSON_DATA                = readFile("json/data_fixed_contvariable.json");
-    private static final String              INDICATOR12_VERSION                      = "1.000";
 
     /* Calculates all rates, with some dots values */
     private static final String              INDICATOR13_UUID                         = "Indicator-13";
     private static final String              INDICATOR13_DS_GPE_UUID                  = "Indicator-13-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR13_GPE_JSON_DATA                = readFile("json/data_temporals_calculate_dots.json");
-    private static final String              INDICATOR13_VERSION                      = "1.000";
+    private static final String              INDICATOR13_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Error getting data from json EMPTY */
     private static final String              INDICATOR14_UUID                         = "Indicator-14";
     private static final String              INDICATOR14_DS_UUID                      = "Indicator-14-v1-DataSource-1";
     private static final String              INDICATOR14_DS_GPE_UUID                  = "Indicator-14-v1-DataSource-1-GPE-NOT-EXISTS";
     private static final String              INDICATOR14_GPE_JSON_DATA                = null;
-    private static final String              INDICATOR14_VERSION                      = "1.000";
 
     /* Error getting data from json */
     private static final String              INDICATOR15_UUID                         = "Indicator-15";
     private static final String              INDICATOR15_DS_UUID                      = "Indicator-15-v1-DataSource-1";
     private static final String              INDICATOR15_DS_GPE_UUID                  = "Indicator-15-v1-DataSource-1-GPE-WRONG";
     private static final String              INDICATOR15_GPE_JSON_DATA                = readFile("json/data_temporals_wrong_format.json");
-    private static final String              INDICATOR15_VERSION                      = "1.000";
 
     /* A PUBLISHED VERSION */
     private static final String              INDICATOR16_UUID                         = "Indicator-16";
-    private static final String              INDICATOR16_DS_UUID                      = "Indicator-16-v1-DataSource-1";
     private static final String              INDICATOR16_DS_GPE_UUID                  = "Indicator-16-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR16_GPE_JSON_DATA                = readFile("json/data_temporals.json");
-    private static final String              INDICATOR16_VERSION                      = "1.000";
+    private static final String              INDICATOR16_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator with a geographic or time problems depending on the json */
     private static final String              INDICATOR17_UUID                         = "Indicator-17";
-    private static final String              INDICATOR17_DS_UUID                      = "Indicator-17-v1-DataSource-1";
     private static final String              INDICATOR17_DS_GPE_UUID                  = "Indicator-17-v1-DataSource-1-GPE-TIME-GEO";
     /* Geographic variable not exist */
     private static final String              INDICATOR17_GPE_JSON_DATA_GEO_NOT_EXIST  = readFile("json/data_temporals.json");
@@ -181,86 +173,68 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR17_GPE_JSON_DATA_TEMP_NOT_EXIST = readFile("json/data_spatials.json");
     /* Time variable is not temporal */
     private static final String              INDICATOR17_GPE_JSON_DATA_TEMP_NOT_TEMP  = readFile("json/data_nottemporals_spatials.json");
-    private static final String              INDICATOR17_VERSION                      = "1.000";
+    private static final String              INDICATOR17_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator with a compatibility issues depending on the json */
     private static final String              INDICATOR18_UUID                         = "Indicator-18";
-    private static final String              INDICATOR18_DS_UUID                      = "Indicator-18-v1-DataSource-1";
     private static final String              INDICATOR18_DS_GPE_UUID                  = "Indicator-18-v1-DataSource-1-GPE-TIMEVAL-GEOVAL";
     /* Geographic variable not exist */
     private static final String              INDICATOR18_GPE_JSON_DATA                = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR18_VERSION                      = "1.000";
+    private static final String              INDICATOR18_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator with compatibility issues */
     private static final String              INDICATOR19_UUID                         = "Indicator-19";
-    private static final String              INDICATOR19_DS_UUID                      = "Indicator-19-v1-DataSource-1";
     private static final String              INDICATOR19_DS_GPE_UUID                  = "Indicator-19-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR19_GPE_JSON_DATA                = readFile("json/data_temporals_spatials_contvariable.json");
-    private static final String              INDICATOR19_VERSION                      = "1.000";
+    private static final String              INDICATOR19_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator with a compatibility issues depending on the json */
     private static final String              INDICATOR20_UUID                         = "Indicator-20";
-    private static final String              INDICATOR20_DS_UUID                      = "Indicator-20-v1-DataSource-1";
     private static final String              INDICATOR20_DS_GPE_UUID                  = "Indicator-20-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR20_GPE_JSON_DATA                = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR20_VERSION                      = "1.000";
+    private static final String              INDICATOR20_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Indicator with a compatibility issues related to other variables */
     private static final String              INDICATOR21_UUID                         = "Indicator-21";
-    private static final String              INDICATOR21_DS_UUID                      = "Indicator-21-v1-DataSource-1";
     private static final String              INDICATOR21_DS_GPE_UUID                  = "Indicator-21-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR21_GPE_JSON_DATA                = readFile("json/data_temporals_spatials_contvariable.json");
-    private static final String              INDICATOR21_VERSION                      = "1.000";
-
-    /* Error wrong absoluteMethod with contvariable */
-    private static final String              INDICATOR22_UUID                         = "Indicator-22";
-    private static final String              INDICATOR22_DS_GPE_UUID                  = "Indicator-22-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
-    private static final String              INDICATOR22_GPE_JSON_DATA                = readFile("json/data_fixed_contvariable.json");
-    private static final String              INDICATOR22_VERSION                      = "1.000";
+    private static final String              INDICATOR21_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Error indicator has no data sources */
     private static final String              INDICATOR23_UUID                         = "Indicator-23";
-    private static final String              INDICATOR23_VERSION                      = "1.000";
 
     /* too many digits in one observation */
     private static final String              INDICATOR24_UUID                         = "Indicator-24";
     private static final String              INDICATOR24_DS_GPE_UUID                  = "Indicator-24-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR24_GPE_JSON_DATA                = readFile("json/data_temporals_calculate.json");
-    private static final String              INDICATOR24_VERSION                      = "1.000";
+    private static final String              INDICATOR24_VERSION                      = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* DIFFUSION AND PRODUCTION VERSION (consecutive minor) */
     private static final String              INDICATOR25_UUID                         = "Indicator-25";
-    private static final String              INDICATOR25_DS_UUID                      = "Indicator-25-v1-DataSource-1";
     private static final String              INDICATOR25_DS_GPE_UUID_V1               = "Indicator-25-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR25_DS_GPE_UUID_V2               = "Indicator-25-v2-DataSource-1-GPE-TIME";
     private static final String              INDICATOR25_GPE_JSON_DATA                = readFile("json/data_temporals.json");
-    private static final String              INDICATOR25_DIFFUSION_VERSION            = "1.000";
-    private static final String              INDICATOR25_PRODUCTION_VERSION           = "1.001";
+    private static final String              INDICATOR25_DIFFUSION_VERSION            = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR25_PRODUCTION_VERSION           = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     /* DIFFUSION AND PRODUCTION VERSION (major) */
     private static final String              INDICATOR26_UUID                         = "Indicator-26";
-    private static final String              INDICATOR26_DS_UUID                      = "Indicator-26-v1-DataSource-1";
     private static final String              INDICATOR26_DS_GPE_UUID_V1               = "Indicator-26-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR26_DS_GPE_UUID_V2               = "Indicator-26-v2-DataSource-1-GPE-TIME";
     private static final String              INDICATOR26_GPE_JSON_DATA                = readFile("json/data_temporals.json");
-    private static final String              INDICATOR26_DIFFUSION_VERSION            = "1.000";
-    private static final String              INDICATOR26_PRODUCTION_VERSION           = "2.000";
+    private static final String              INDICATOR26_DIFFUSION_VERSION            = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR26_PRODUCTION_VERSION           = IndicatorsDataBaseTest.SECOND_VERSION;
 
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR27_UUID                         = "Indicator-27";
-    private static final String              INDICATOR27_VERSION                      = "1.000";
 
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR28_UUID                         = "Indicator-28";
-    private static final String              INDICATOR28_VERSION                      = "1.000";
-    private static final String              INDICATOR28_DS_UUID                      = "Indicator-28-v1-DataSource-1";
     private static final String              INDICATOR28_DS_GPE_UUID                  = "Indicator-28-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR28_GPE_JSON_DATA                = readFile("json/data_temporals.json");
 
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR29_UUID                         = "Indicator-29";
-    private static final String              INDICATOR29_VERSION                      = "1.000";
-    private static final String              INDICATOR29_DS_UUID                      = "Indicator-29-v1-DataSource-1";
     private static final String              INDICATOR29_DS_GPE_UUID                  = "Indicator-29-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR29_GPE_JSON_DATA                = readFile("json/data_temporals.json");
 
@@ -268,17 +242,17 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
     /* PRODUCTION & DIFFUSION VERSION (MAJOR DIFFERENCE) */
     private static final String              INDICATORS_SYSTEM1_UUID                  = "IndSys-1";
-    private static final String              INDICATORS_SYSTEM1_DIFFUSION_VERSION     = "1.000";
-    private static final String              INDICATORS_SYSTEM1_PRODUCTION_VERSION    = "2.000";
+    private static final String              INDICATORS_SYSTEM1_DIFFUSION_VERSION     = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATORS_SYSTEM1_PRODUCTION_VERSION    = IndicatorsDataBaseTest.SECOND_VERSION;
 
     /* PRODUCTION & DIFFUSION VERSION CONSECUTIVE */
     private static final String              INDICATORS_SYSTEM2_UUID                  = "IndSys-2";
-    private static final String              INDICATORS_SYSTEM2_DIFFUSION_VERSION     = "1.000";
-    private static final String              INDICATORS_SYSTEM2_PRODUCTION_VERSION    = "1.001";
+    private static final String              INDICATORS_SYSTEM2_DIFFUSION_VERSION     = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATORS_SYSTEM2_PRODUCTION_VERSION    = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     /* PRODUCTION VERSION ONLY */
     private static final String              INDICATORS_SYSTEM3_UUID                  = "IndSys-3";
-    private static final String              INDICATORS_SYSTEM3_PRODUCTION_VERSION    = "1.001";
+    private static final String              INDICATORS_SYSTEM3_PRODUCTION_VERSION    = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -514,8 +488,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION);
-        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, null, "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46",
-                "26", "2156", "321", "41", "29", "19");
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, null, "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46", "26",
+                "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, data);
 
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
@@ -541,8 +515,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes
-                    .put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
+            mapAttributes.put(key,
+                    createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
         }
 
         checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
@@ -861,7 +835,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
         // After populate, version has changed
-        String newVersion = ServiceUtils.generateVersionNumber(INDICATOR16_VERSION, VersionTypeEnum.MINOR);
+        String newVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR16_VERSION, VersionTypeEnum.MINOR).getValue();
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
@@ -1086,8 +1060,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR25_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
-        String newProductionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1134,7 +1108,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR26_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1174,7 +1148,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
-        String newSystemVersion = ServiceUtils.generateVersionNumber(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+        String newSystemVersion = IndicatorsVersionUtils.createNextVersion(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
 
         /* System's diffusion version no longer exists */
         try {

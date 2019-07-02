@@ -1,5 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +21,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,14 +39,8 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
@@ -45,7 +48,8 @@ import static org.junit.Assert.assertTrue;
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsServiceTest extends IndicatorsBaseTest {
@@ -125,9 +129,9 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         // Retrieve before delete
         {
-            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertFalse(indicatorVersion1.getIsLastVersion());
-            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "2.000");
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.SECOND_VERSION);
             assertTrue(indicatorVersion2.getIsLastVersion());
         }
 
@@ -137,7 +141,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validation
         // Retrieve after delete
         {
-            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, "1.000");
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, IndicatorsDataBaseTest.INIT_VERSION);
             assertTrue(indicatorVersion1.getIsLastVersion());
             assertNull(indicatorVersion1.getIndicator().getProductionIdIndicatorVersion());
             assertNull(indicatorVersion1.getIndicator().getProductionVersionNumber());
@@ -171,10 +175,71 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testVersioningIndicatorMaximumMinorVersionReached() throws Exception {
+
+        String uuid = INDICATOR_14;
+
+        // Retrieve before versioning
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_14_VERSION);
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION, indicatorVersion1.getVersionNumber());
+        }
+
+        // Versioning
+        IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MINOR);
+
+        // Retrieve after delete
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_14_VERSION);
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION, indicatorVersion1.getVersionNumber());
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
+            assertEquals(IndicatorsDataBaseTest.SECOND_VERSION, indicatorVersion2.getVersionNumber());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorMinorVersionLimitReachedError() throws Exception {
+
+        String uuid = INDICATOR_15;
+
+        // Retrieve before versioning
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_15_VERSION);
+            assertEquals(IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION, indicatorVersion1.getVersionNumber());
+        }
+
+        // Minor versioning
+        expectedMetamacException(
+                MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(VersionTypeEnum.MINOR, INDICATOR_15_VERSION).build());
+
+        indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MINOR);
+        fail("Should not allow minor versioning when the indicator system version number rearches 99999.9");
+    }
+
+    @Test
+    public void testVersioningIndicatorMajorVersionLimitReachedError() throws Exception {
+
+        String uuid = INDICATOR_15;
+
+        // Retrieve before versioning
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_15_VERSION);
+            assertEquals(IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION, indicatorVersion1.getVersionNumber());
+        }
+
+        // Major versioning
+        expectedMetamacException(
+                MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(VersionTypeEnum.MAJOR, INDICATOR_15_VERSION).build());
+
+        indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MAJOR);
+        fail("Should not allow major versioning when the indicator system version number rearches 99999.9");
+    }
+
+    @Test
     public void testPublishIndicator() throws Exception {
 
         String uuid = INDICATOR_5;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         // Publish
         indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
@@ -188,7 +253,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testPublishIndicatorSubjectTitleChange() throws Exception {
 
         String uuid = INDICATOR_13;
-        String versionNumber = "1.000";
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
 
         String subjectTitleOld = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber).getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH);
         // Publish
@@ -219,8 +284,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsByCriteria() throws Exception {
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -233,8 +298,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_3, indicatorsVersion.getValues().get(2).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("FR").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("FR")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -263,8 +328,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testExportIndicatorsTsv() throws Exception {
 
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES").orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             String fileName = indicatorService.exportIndicatorsTsv(getServiceContextAdministrador(), conditions);
             assertNotNull(fileName);
@@ -280,11 +345,11 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
                     line);
             line = bufferedReader.readLine();
             assertEquals(
-                    "CODE-12\ttrue\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo\t\t\tÁrea temática 3\t\t\t1.000\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
+                    "CODE-12\ttrue\tTítulo\t\t\tÁrea temática 3\t\t\t1.0\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo\t\t\tÁrea temática 3\t\t\t1.0\tPUBLISHED\tfalse\t\t\t\t\t\t\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
                     line);
             line = bufferedReader.readLine();
             assertEquals(
-                    "CODE-3\ttrue\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.033\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
+                    "CODE-3\ttrue\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.33\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1\tTítulo Indicator-3-v1 Educación\tTitle Indicator-3-v1 Education\t\tÁrea temática 3\t\t\t11.33\tPUBLISHED\tfalse\t2011-03-03T01:02:04.000Z\tuser1\t2011-04-04T03:02:04.000+01:00\tuser2\t2011-05-05T04:02:04.000+01:00\tuser3\t\t\t\t\t2011-01-01T01:02:04.000Z\tuser1",
                     line);
 
             bufferedReader.close();

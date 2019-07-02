@@ -1,5 +1,10 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +14,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValue;
@@ -28,14 +33,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCacheRepo
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.domain.LastValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import static org.mockito.Mockito.when;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -56,8 +54,8 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     private static final String                      INDICATOR1_V2_DS_GPE_UUID         = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
     private static final String                      INDICATOR1_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
     private static final String                      INDICATOR1_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
-    private static final String                      INDICATOR1_VERSION_DIFFUSION      = "1.001";
-    private static final String                      INDICATOR1_VERSION_PRODUCTION     = "2.000";
+    private static final String                      INDICATOR1_VERSION_DIFFUSION      = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    private static final String                      INDICATOR1_VERSION_PRODUCTION     = IndicatorsDataBaseTest.SECOND_VERSION;
     private static final String                      INDICATOR1_INSTANCE_111_UUID      = "IndSys-1-v1-IInstance-1";
     private static final String                      INDICATOR1_INSTANCE_111_CODE      = "IndSys-1-v1-IInstance-1-CODE";
 
@@ -65,31 +63,25 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     private static final String                      INDICATOR2_CODE                   = "Indicator-2-CODE";
     private static final String                      INDICATOR2_DS_GPE_UUID            = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                      INDICATOR2_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR2_VERSION                = "1.000";
+    private static final String                      INDICATOR2_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
     private static final String                      INDICATOR2_INSTANCE_112_UUID      = "IndSys-1-v1-IInstance-2";
     private static final String                      INDICATOR2_INSTANCE_112_CODE      = "IndSys-1-v1-IInstance-2-CODE";
 
     private static final String                      INDICATOR3_UUID                   = "Indicator-3";
-    private static final String                      INDICATOR3_CODE                   = "Indicator-3-CODE";
+
     private static final String                      INDICATOR3_DS_GPE_UUID            = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                      INDICATOR3_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR3_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
-    private static final String                      INDICATOR3_VERSION                = "1.000";
 
     private static final String                      INDICATOR4_UUID                   = "Indicator-4";
-    private static final String                      INDICATOR4_CODE                   = "Indicator-4-CODE";
     private static final String                      INDICATOR4_DS_GPE_UUID            = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                      INDICATOR4_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR4_VERSION                = "1.000";
+    private static final String                      INDICATOR4_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
     private static final String                      INDICATOR4_INSTANCE_211_UUID      = "IndSys-2-v1-IInstance-1";
-    private static final String                      INDICATOR4_INSTANCE_211_CODE      = "IndSys-2-v1-IInstance-1-CODE";
 
     private static final String                      INDICATOR5_UUID                   = "Indicator-5";
-    private static final String                      INDICATOR5_CODE                   = "Indicator-5-CODE";
     private static final String                      INDICATOR5_DS_GPE_UUID            = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                      INDICATOR5_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR5_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
-    private static final String                      INDICATOR5_VERSION                = "1.000";
+    private static final String                      INDICATOR5_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
     private static final String                      INDICATOR5_INSTANCE_311_UUID      = "IndSys-1-v1-IInstance-3";
     private static final String                      INDICATOR5_INSTANCE_311_CODE      = "IndSys-1-v1-IInstance-3-CODE";
 
@@ -330,12 +322,12 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
         {
             /* mark for update */
-            String indicator2VersionNumber = ServiceUtils.generateVersionNumber(INDICATOR2_VERSION, VersionTypeEnum.MINOR);
+            String indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR2_VERSION, VersionTypeEnum.MINOR).getValue();
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicator(ctx, INDICATOR2_UUID, indicator2VersionNumber);
             indicatorVersion.setNeedsUpdate(true);
             indicatorVersionRepository.save(indicatorVersion);
 
-            String indicator1VersionNumber = ServiceUtils.generateVersionNumber(INDICATOR1_VERSION_DIFFUSION, VersionTypeEnum.MINOR);
+            String indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR1_VERSION_DIFFUSION, VersionTypeEnum.MINOR).getValue();
             indicatorVersion = indicatorsService.retrieveIndicator(ctx, INDICATOR1_UUID, indicator1VersionNumber);
             indicatorVersion.setNeedsUpdate(true);
             indicatorVersionRepository.save(indicatorVersion);
@@ -477,7 +469,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_V2_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR1_UUID, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = ServiceUtils.generateVersionNumber(indicatorVersionNumber, VersionTypeEnum.MINOR);
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, geoCode,
                     measures, 5);
@@ -500,7 +492,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR1_UUID, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = ServiceUtils.generateVersionNumber(indicatorVersionNumber, VersionTypeEnum.MINOR);
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, geoCode,
                     measures, 5);
@@ -528,7 +520,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
             indicatorsDataService.populateIndicatorVersionData(ctx, indicatorUuid, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = ServiceUtils.generateVersionNumber(indicatorVersionNumber, VersionTypeEnum.MINOR);
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, subjectCode, geoCode, measures,
                     5);
@@ -657,9 +649,9 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, indicator2VersionNumber);
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR5_UUID, indicator5VersionNumber); // most recent
 
-        indicator1VersionNumber = ServiceUtils.generateVersionNumber(indicator1VersionNumber, VersionTypeEnum.MINOR);
-        indicator2VersionNumber = ServiceUtils.generateVersionNumber(indicator2VersionNumber, VersionTypeEnum.MINOR);
-        indicator5VersionNumber = ServiceUtils.generateVersionNumber(indicator5VersionNumber, VersionTypeEnum.MINOR);
+        indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR).getValue();
+        indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR).getValue();
+        indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR).getValue();
 
         GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, GEO_CODE);
         {
@@ -732,9 +724,9 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, indicator2VersionNumber);
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR5_UUID, indicator5VersionNumber); // most recent
 
-            indicator1VersionNumber = ServiceUtils.generateVersionNumber(indicator1VersionNumber, VersionTypeEnum.MINOR);
-            indicator2VersionNumber = ServiceUtils.generateVersionNumber(indicator2VersionNumber, VersionTypeEnum.MINOR);
-            indicator5VersionNumber = ServiceUtils.generateVersionNumber(indicator5VersionNumber, VersionTypeEnum.MINOR);
+            indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR).getValue();
 
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, GEO_CODE);
 
@@ -899,8 +891,8 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         {
             String GEO_CODE = "ES611";
 
-            List<IndicatorInstance> indicatorsInstances = indicatorsDataService
-                    .findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE, GEO_CODE);
+            List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
+                    GEO_CODE);
 
             assertNotNull(indicatorsInstances);
             assertEquals(3, indicatorsInstances.size());
@@ -912,8 +904,8 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         {
             String GEO_CODE = "ES612";
 
-            List<IndicatorInstance> indicatorsInstances = indicatorsDataService
-                    .findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE, GEO_CODE);
+            List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
+                    GEO_CODE);
 
             assertNotNull(indicatorsInstances);
             assertEquals(3, indicatorsInstances.size());
@@ -925,8 +917,8 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         {
             String GEO_CODE = "ES613";
 
-            List<IndicatorInstance> indicatorsInstances = indicatorsDataService
-                    .findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE, GEO_CODE);
+            List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
+                    GEO_CODE);
 
             assertNotNull(indicatorsInstances);
             assertEquals(3, indicatorsInstances.size());

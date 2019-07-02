@@ -1,13 +1,13 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 

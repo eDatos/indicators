@@ -9,7 +9,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "TB_INDICATORS_VERSIONS", uniqueConstraints = {@UniqueConstraint(columnNames = {"DATA_REPOSITORY_ID"}), @UniqueConstraint(columnNames = {"DATA_REPOSITORY_TABLE_NAME"})})
-public class IndicatorVersion extends IndicatorVersionBase {
+public class IndicatorVersion extends IndicatorVersionBase implements HasVersionNumber {
 
     private static final long serialVersionUID = 1L;
 

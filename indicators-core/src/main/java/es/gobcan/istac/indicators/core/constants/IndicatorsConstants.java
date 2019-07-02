@@ -5,7 +5,6 @@ public class IndicatorsConstants {
     private IndicatorsConstants() {
     }
 
-    public static final String VERSION_NUMBER_INITIAL                    = "1.000";
     public static final String LOCALE_SPANISH                            = "es";
     public static final String LOCALE_ENGLISH                            = "en";
     public static final String SECURITY_APPLICATION_ID                   = "GESTOR_INDICADORES";
@@ -38,7 +37,7 @@ public class IndicatorsConstants {
 
     public static final String TSV_HEADER_CODE                           = "code";
     public static final String TSV_HEADER_NOTIFY_POPULATION_ERRORS       = "notify_population_errors";
-    public static final String TSV_HEADER_TITLE                          = "title";    
+    public static final String TSV_HEADER_TITLE                          = "title";
     public static final String TSV_HEADER_SUBJECT_TITLE                  = "subject_title";
     public static final String TSV_HEADER_VERSION_NUMBER                 = "version_number";
     public static final String TSV_HEADER_SUBJECT_CODE                   = "subject_code";

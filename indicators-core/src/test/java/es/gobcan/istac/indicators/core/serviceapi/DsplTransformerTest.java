@@ -23,7 +23,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -68,22 +67,18 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     private static final String                                                 INDICATOR1_UUID           = "Indicator-1";
     private static final String                                                 INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR1_GPE_JSON_DATA  = readFile("json/data_temporal_spatials.json");
-    private static final String                                                 INDICATOR1_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR2_UUID           = "Indicator-2";
     private static final String                                                 INDICATOR2_DS_GPE_UUID    = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR2_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_countries.json");
-    private static final String                                                 INDICATOR2_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR3_UUID           = "Indicator-3";
     private static final String                                                 INDICATOR3_DS_GPE_UUID    = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR3_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String                                                 INDICATOR3_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR4_UUID           = "Indicator-4";
     private static final String                                                 INDICATOR4_DS_GPE_UUID    = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR4_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String                                                 INDICATOR4_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR5_UUID           = "Indicator-5";
     private static final String                                                 INDICATOR5_DS1_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
@@ -92,7 +87,6 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     private static final String                                                 INDICATOR5_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
     private static final String                                                 INDICATOR5_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
     private static final String                                                 INDICATOR5_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String                                                 INDICATOR5_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR6_UUID           = "Indicator-6";
     private static final String                                                 INDICATOR6_DS1_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
@@ -101,17 +95,14 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     private static final String                                                 INDICATOR6_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
     private static final String                                                 INDICATOR6_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
     private static final String                                                 INDICATOR6_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String                                                 INDICATOR6_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR7_UUID           = "Indicator-7";
     private static final String                                                 INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String                                                 INDICATOR7_VERSION        = "1.000";
 
     private static final String                                                 INDICATOR8_UUID           = "Indicator-8";
     private static final String                                                 INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String                                                 INDICATOR8_VERSION        = "1.000";
 
     @Before
     public void createTransformer() {

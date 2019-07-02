@@ -14,21 +14,19 @@ public class IndicatorsSystemVersionMock {
     private static String                               INDICATORS_SYSTEM_VERSION_1 = "IndicatorsSystemVersion_1";
     private static String                               INDICATORS_SYSTEM_VERSION_2 = "IndicatorsSystemVersion_2";
 
+    public static final String                          INIT_VERSION                = "1.0";
+    public static final String                          SECOND_VERSION              = "2.0";
+
     public static IndicatorsSystemVersion mockIndicatorsSystemVersion1() {
         IndicatorsSystemVersion indicatorsSystemVersion = INSTANCES.get(INDICATORS_SYSTEM_VERSION_1);
         if (indicatorsSystemVersion != null) {
             return indicatorsSystemVersion;
         }
 
-        // private IndicatorsSystemProcStatusEnum procStatus;
-        // private IndicatorsSystem indicatorsSystem;
-        // private List<ElementLevel> childrenAllLevels = new ArrayList<ElementLevel>();
-        // private List<ElementLevel> childrenFirstLevel = new ArrayList<ElementLevel>();
-
         indicatorsSystemVersion = new IndicatorsSystemVersion();
         INSTANCES.put(INDICATORS_SYSTEM_VERSION_1, indicatorsSystemVersion);
 
-        indicatorsSystemVersion.setVersionNumber("1.0");
+        indicatorsSystemVersion.setVersionNumber(IndicatorsSystemVersionMock.INIT_VERSION);
         indicatorsSystemVersion.setIsLastVersion(Boolean.TRUE);
         indicatorsSystemVersion.setProductionValidationDate(new DateTime());
         indicatorsSystemVersion.setProductionValidationUser("user1");
@@ -60,7 +58,7 @@ public class IndicatorsSystemVersionMock {
         indicatorsSystemVersion = new IndicatorsSystemVersion();
         INSTANCES.put(INDICATORS_SYSTEM_VERSION_2, indicatorsSystemVersion);
 
-        indicatorsSystemVersion.setVersionNumber("2.0");
+        indicatorsSystemVersion.setVersionNumber(IndicatorsSystemVersionMock.SECOND_VERSION);
         indicatorsSystemVersion.setIsLastVersion(Boolean.TRUE);
         indicatorsSystemVersion.setProductionValidationDate(new DateTime());
         indicatorsSystemVersion.setProductionValidationUser("user2");

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
@@ -40,7 +41,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
@@ -187,7 +187,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos);
 
         void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors);
-        
+
         void setHasDiffusionIndicatorDatasources(boolean hasDatasources);
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
@@ -424,7 +424,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
         });
     }
-    
+
     @Override
     public void retrieveDataDefinitionsByOperationCode(final String operationCode) {
         dispatcher.execute(new FindDataDefinitionsByOperationCodeAction(operationCode), new WaitingAsyncCallbackHandlingError<FindDataDefinitionsByOperationCodeResult>(this) {
@@ -490,7 +490,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
         });
     }
-    
+
     @Override
     public void retrieveGeographicalValueDS(final String uuid) {
         dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {

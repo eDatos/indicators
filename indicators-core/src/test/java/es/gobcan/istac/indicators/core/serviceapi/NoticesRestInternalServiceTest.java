@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,8 +25,6 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalServiceImpl;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 // "classpath:spring/include/indicators-service-mockito.xml"
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNotNull;
 public class NoticesRestInternalServiceTest {
 
     private static final String MY_DATA_REPOSITORY_TABLE_NAME = "MYDATAREPOSITORYTABLENAME";
-    private static final String MY_VERSION                    = "1.005";
     private static final String MY_CODE                       = "MYCODE";
     private static final String MY_VIEW_CODE                  = "MYVIEWCODE";
     private static final String MY_DATA_VIEWS_ROLE            = "MYDATAVIEWSROLE";
@@ -92,7 +91,7 @@ public class NoticesRestInternalServiceTest {
         indicatorVersion.setIndicator(new Indicator());
         indicatorVersion.getIndicator().setCode(MY_CODE);
         indicatorVersion.getIndicator().setViewCode(MY_VIEW_CODE);
-        indicatorVersion.setVersionNumber(MY_VERSION);
+        indicatorVersion.setVersionNumber(IndicatorsDataBaseTest.INIT_VERSION_SOME_MINOR_INCREMENTS);
         indicatorVersion.setDataRepositoryTableName(MY_DATA_REPOSITORY_TABLE_NAME);
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));

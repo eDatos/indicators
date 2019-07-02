@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -98,6 +99,11 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     @Override
     public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage) {
         createBackgroundNotification(ServiceNoticeAction.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, ServiceNoticeMessage.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, new ArrayList<IndicatorVersion>(), keyMessage);
+    }
+
+    @Override
+    public void createMaximumVersionReachedBackgroundNotification(List<String> messageParams) {
+        createBackgroundNotification(ServiceNoticeAction.MAX_VERSION_REACHED_ERROR, ServiceNoticeMessage.MAX_VERSION_REACHED_ERROR, Collections.emptyList(), messageParams.toArray());
     }
 
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {

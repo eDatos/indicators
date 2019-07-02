@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
+
 /**
  * Indicator entity
  */
@@ -29,7 +31,7 @@ public class Indicator extends IndicatorBase {
     private IndicatorVersion getIndicatorVersion(String indicatorVersionNumber) {
         if (indicatorVersionNumber != null) {
             for (IndicatorVersion indicatorVersion : getVersions()) {
-                if (indicatorVersionNumber.equals(indicatorVersion.getVersionNumber())) {
+                if (IndicatorsVersionUtils.equalsVersionNumber(indicatorVersionNumber, indicatorVersion.getVersionNumber())) {
                     return indicatorVersion;
                 }
             }

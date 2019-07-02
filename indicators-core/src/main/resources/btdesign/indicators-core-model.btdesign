@@ -1,6 +1,7 @@
 
 import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum-time.btdesign"
 
 Application Indicators {
@@ -619,6 +620,7 @@ Application Indicators {
 		Entity IndicatorsSystemVersion {
 			databaseTable="TB_INDIC_SYSTEMS_VERSIONS"
 			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
+			gap
 			
 			"Processing status"
 			- @IndicatorsSystemProcStatusEnum procStatus not nullable;
@@ -1933,11 +1935,6 @@ Application Indicators {
     		PUBLICATION_FAILED,    		
     		PUBLISHED,
     		ARCHIVED
-    	}	
-    	"Type of version of the change"
-    	enum VersionTypeEnum {
-    		MAJOR,
-    		MINOR
     	}
     	
     	"Type of quantity"

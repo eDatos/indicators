@@ -8,6 +8,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
@@ -31,7 +32,6 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -1923,8 +1923,8 @@ public class InvocationValidator {
             if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
                 IndicatorsValidationUtils.checkMetadataRequired(quantity.getBaseValue(), parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_VALUE, exceptions);
                 if (IndicatorsValidationUtils.isEmpty(quantity.getBaseTime()) && IndicatorsValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME, parameterName
-                            + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID));
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME,
+                            parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_LOCATION_UUID));
                 }
             }
             if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {

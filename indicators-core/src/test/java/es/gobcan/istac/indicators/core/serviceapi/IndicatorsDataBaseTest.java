@@ -44,7 +44,6 @@ import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
-
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -56,6 +55,20 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
+
+    public static final String INIT_VERSION                                             = "1.0";
+    public static final String INIT_VERSION_MINOR_INCREMENT                             = "1.1";
+    public static final String INIT_VERSION_SOME_MINOR_INCREMENTS                       = "1.5";
+    public static final String INIT_VERSION_HUGE_INCREMENT                              = "1.300";
+    public static final String INIT_VERSION_HUGE_INCREMENT_SOME_MINOR_INCREMENTS        = "1.322";
+    public static final String INIT_VERSION_ANOTHER_HUGE_INCREMENT                      = "1.500";
+    public static final String INIT_VERSION_ANOTHER_HUGE_INCREMENT_WITH_MINOR_INCREMENT = "1.501";
+    public static final String INIT_VERSION_MAXIMUM_MINOR_VERSION                       = "1.99999";
+    public static final String SECOND_VERSION                                           = "2.0";
+    public static final String NOT_INITIAL_VERSION                                      = "11.33";
+    public static final String NOT_INITIAL_VERSION_WITH_MINOR_INCREMENT                 = "11.34";
+    public static final String ANOTHER_NOT_INITIAL_VERSION                              = "12.0";
+    public static final String MAXIMUM_LIMIT_VERSION                                    = "99999.9";
 
     @Before
     public void onBefore() throws Exception {
@@ -172,8 +185,8 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
     }
 
-    protected void checkDataAttributes(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, String attrId, Map<String, AttributeInstanceObservationDto> expectedAttributes)
-            throws Exception {
+    protected void checkDataAttributes(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, String attrId,
+            Map<String, AttributeInstanceObservationDto> expectedAttributes) throws Exception {
         IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());

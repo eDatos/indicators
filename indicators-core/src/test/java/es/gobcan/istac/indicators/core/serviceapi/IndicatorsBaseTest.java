@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -22,9 +25,6 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
 
@@ -54,7 +54,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_2_CODE                         = "CODE-2";
     protected static String               INDICATORS_SYSTEM_3                              = "IndSys-3";
     protected static String               INDICATORS_SYSTEM_3_CODE                         = "CODE-3";
-    protected static String               INDICATORS_SYSTEM_3_VERSION                      = "11.033";
+    protected static String               INDICATORS_SYSTEM_3_VERSION                      = IndicatorsDataBaseTest.NOT_INITIAL_VERSION;
     protected static String               INDICATORS_SYSTEM_4                              = "IndSys-4";
     protected static String               INDICATORS_SYSTEM_4_CODE                         = "CODE-4";
     protected static String               INDICATORS_SYSTEM_5                              = "IndSys-5";
@@ -68,6 +68,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_9                              = "IndSys-9";
     protected static String               INDICATORS_SYSTEM_9_CODE                         = "CODE-9";
     protected static String               INDICATORS_SYSTEM_10                             = "IndSys-10";
+    protected static String               INDICATORS_SYSTEM_11                             = "IndSys-11";
+    protected static String               INDICATORS_SYSTEM_11_VERSION                     = IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION;
+    protected static String               INDICATORS_SYSTEM_12                             = "IndSys-12";
+    protected static String               INDICATORS_SYSTEM_12_VERSION                     = IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION;
 
     // Dimensions
     protected static String               DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
@@ -105,6 +109,11 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_10_IINSTANCE_2                 = "IndSys-10-v1-IInstance-2";
     protected static String               INDICATORS_SYSTEM_10_IINSTANCE_3                 = "IndSys-10-v1-IInstance-3";
 
+    protected static String               INDICATORS_SYSTEM_11_IINSTANCE_1A                = "IndSys-11-v1-IInstance-1A";
+    protected static String               INDICATORS_SYSTEM_11_IINSTANCE_2                 = "IndSys-11-v1-IInstance-2";
+    protected static String               INDICATORS_SYSTEM_12_IINSTANCE_1A                = "IndSys-12-v1-IInstance-1A";
+    protected static String               INDICATORS_SYSTEM_12_IINSTANCE_2                 = "IndSys-12-v1-IInstance-2";
+
     // Geographical values
     protected static String               GEOGRAPHICAL_VALUE_1                             = "1";
     protected static String               GEOGRAPHICAL_VALUE_2                             = "2";
@@ -127,16 +136,16 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static final String         INDICATOR1_UUID                                  = "Indicator-1";
     protected static final String         INDICATOR1_DS_GPE_UUID                           = "Indicator-1-v1-DataSource-1-GPE-TIME";
     protected static final String         INDICATOR1_GPE_JSON_DATA                         = readFile("json/data_temporals_batch_update.json");
-    protected static final String         INDICATOR1_VERSION                               = "1.001";
+    protected static final String         INDICATOR1_VERSION                               = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     protected static String               INDICATOR_1                                      = "Indicator-1";
-    protected static String               INDICATOR_1_V2                                   = "2.000";
+    protected static String               INDICATOR_1_V2                                   = IndicatorsDataBaseTest.SECOND_VERSION;
     protected static String               INDICATOR_1_DS_GPE_UUID                          = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
     protected static String               INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_1_CODE                                 = "CODE-1";
     protected static String               INDICATOR_2                                      = "Indicator-2";
     protected static String               INDICATOR_3                                      = "Indicator-3";
-    protected static String               INDICATOR_3_VERSION                              = "11.033";
+    protected static String               INDICATOR_3_VERSION                              = IndicatorsDataBaseTest.NOT_INITIAL_VERSION;
     protected static String               INDICATOR_3_DS_GPE_UUID                          = "Indicator-3-v1-DataSource-1-GPE-GEO-TIME";
     protected static String               INDICATOR_3_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_4                                      = "Indicator-4";
@@ -153,6 +162,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATOR_11                                     = "Indicator-11";
     protected static String               INDICATOR_12                                     = "Indicator-12";
     protected static String               INDICATOR_13                                     = "Indicator-13";
+    protected static String               INDICATOR_14                                     = "Indicator-14";
+    protected static String               INDICATOR_14_VERSION                             = IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION;
+    protected static String               INDICATOR_15                                     = "Indicator-15";
+    protected static String               INDICATOR_15_VERSION                             = IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION;
 
     // Data sources
     protected static String               DATA_SOURCE_1_INDICATOR_1_V1                     = "Indicator-1-v1-DataSource-1";

@@ -14,9 +14,9 @@
         VIEW_CODE="VIEWCODE_1"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="2"
-		PRODUCTION_VERSION_NUMBER="2.000"
+		PRODUCTION_VERSION_NUMBER="2.0"
 		DIFFUSION_ID="1"
-		DIFFUSION_VERSION_NUMBER="1.000"
+		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="1"
 				
 		VERSION="1"
@@ -31,7 +31,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="11"
 				UUID="Indicator-1-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="1"
 				ACRONYM_FK="2"
 	  			COMMENTS_FK="4"
@@ -208,7 +208,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="12"
 				UUID="Indicator-1-v2"
-				VERSION_NUMBER="2.000"
+				VERSION_NUMBER="2.0"
 				TITLE_FK="5"
 				ACRONYM_FK="6"
 	  			NOTES_FK="7"
@@ -705,7 +705,7 @@
         NOTIFY_POPULATION_ERRORS = "0"
         VIEW_CODE="VIEWCODE_2"
 		PRODUCTION_ID="1"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -722,7 +722,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="21"
 				UUID="Indicator-2-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="9"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -795,7 +795,7 @@
 		PRODUCTION_ID="[null]"
 		PRODUCTION_VERSION_NUMBER="[null]"
 		DIFFUSION_ID="1"
-		DIFFUSION_VERSION_NUMBER="11.033"
+		DIFFUSION_VERSION_NUMBER="11.33"
 		IS_PUBLISHED="1"
 		
 		VERSION="1"
@@ -810,7 +810,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="31"
 				UUID="Indicator-3-v1"
-				VERSION_NUMBER="11.033"
+				VERSION_NUMBER="11.33"
 				TITLE_FK="10"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1060,7 +1060,7 @@
         VIEW_CODE="VIEWCODE_4"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="1"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -1077,7 +1077,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="41"
 				UUID="Indicator-4-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="11"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1250,7 +1250,7 @@
         VIEW_CODE="VIEWCODE_5"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="1"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -1267,7 +1267,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="51"
 				UUID="Indicator-5-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="12"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1542,9 +1542,9 @@
         VIEW_CODE="VIEWCODE_6"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="2"
-		PRODUCTION_VERSION_NUMBER="2.000"
+		PRODUCTION_VERSION_NUMBER="2.0"
 		DIFFUSION_ID="1"
-		DIFFUSION_VERSION_NUMBER="1.000"
+		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="1"
 		
 		VERSION="1"
@@ -1559,7 +1559,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="61"
 				UUID="Indicator-6-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="13"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1623,7 +1623,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="62"
 				UUID="Indicator-6-v2"
-				VERSION_NUMBER="2.000"
+				VERSION_NUMBER="2.0"
 				TITLE_FK="14"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1797,9 +1797,9 @@
         VIEW_CODE="VIEWCODE_7"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="2"
-		PRODUCTION_VERSION_NUMBER="2.000"
+		PRODUCTION_VERSION_NUMBER="2.0"
 		DIFFUSION_ID="1"
-		DIFFUSION_VERSION_NUMBER="1.000"
+		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="0"
 		
 		VERSION="1"
@@ -1814,7 +1814,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="71"
 				UUID="Indicator-7-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="15"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -1878,7 +1878,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="72"
 				UUID="Indicator-7-v2"
-				VERSION_NUMBER="2.000"
+				VERSION_NUMBER="2.0"
 				TITLE_FK="16"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2053,7 +2053,7 @@
 		PRODUCTION_ID="[null]"
 		PRODUCTION_VERSION_NUMBER="[null]"
 		DIFFUSION_ID="1"
-		DIFFUSION_VERSION_NUMBER="1.000"
+		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="0"
 		
 		VERSION="1"
@@ -2068,7 +2068,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="81"
 				UUID="Indicator-8-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="17"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2140,7 +2140,7 @@
         VIEW_CODE="VIEWCODE_9"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="1"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -2157,7 +2157,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="91"
 				UUID="Indicator-9-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="18"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2329,7 +2329,7 @@
         VIEW_CODE="VIEWCODE_10"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="101"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"		
@@ -2345,7 +2345,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="101"
 				UUID="Indicator-10-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="29"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2416,7 +2416,7 @@
         VIEW_CODE="VIEWCODE_11"
         NOTIFY_POPULATION_ERRORS = "1"
 		PRODUCTION_ID="111"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -2433,7 +2433,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="111"
 				UUID="Indicator-11-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="62"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2535,7 +2535,7 @@
 		PRODUCTION_ID="[null]"
 		PRODUCTION_VERSION_NUMBER="[null]"
 		DIFFUSION_ID="112"
-		DIFFUSION_VERSION_NUMBER="1.000"
+		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="1"
 		
 		VERSION="1"
@@ -2550,7 +2550,7 @@
 			<TB_INDICATORS_VERSIONS
 				ID="112"
 				UUID="Indicator-12-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 				TITLE_FK="62"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
@@ -2677,7 +2677,7 @@
         VIEW_CODE="VIEWCODE_13"
         NOTIFY_POPULATION_ERRORS = "1"
         PRODUCTION_ID="1"
-        PRODUCTION_VERSION_NUMBER="1.000"
+        PRODUCTION_VERSION_NUMBER="1.0"
         DIFFUSION_ID="[null]"
         DIFFUSION_VERSION_NUMBER="[null]"
         IS_PUBLISHED="0"
@@ -2695,7 +2695,7 @@
             <TB_INDICATORS_VERSIONS
                 ID="131"
                 UUID="Indicator-13-v1"
-                VERSION_NUMBER="1.000"
+                VERSION_NUMBER="1.0"
                 TITLE_FK="75"
                 ACRONYM_FK="[null]"
                 NOTES_FK="[null]"
@@ -2786,7 +2786,541 @@
                     LAST_UPDATED_TZ="Europe/London"
                 />
 
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 14											                        	-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS
+		ID="14"
+		UUID="Indicator-14"
+		CODE="CODE-14"
+        VIEW_CODE="VIEWCODE_14"
+        NOTIFY_POPULATION_ERRORS = "1"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.99999"
+		IS_PUBLISHED="1"
 
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TB_INDICATORS_VERSIONS
+				ID="141"
+				UUID="Indicator-14-v1"
+				VERSION_NUMBER="1.99999"
+				TITLE_FK="10"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTS_FK="[null]"
+	  			
+	  			INDICATOR_FK="14"
+	  			PROC_STATUS="PUBLISHED"
+				
+				SUBJECT_CODE="14"
+				SUBJECT_TITLE_FK="146"
+				QUANTITY_FK="1411"
+				IS_LAST_VERSION="0"
+				NEEDS_UPDATE="0"
+				DATA_REPOSITORY_ID="data:repository:141"
+  				DATA_REPOSITORY_TABLE_NAME="TABLE_NAME_141"
+				
+				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-04-04 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-05-05 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user14"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+				<TB_QUANTITIES
+				  	ID="1411"
+  					UUID="Quantity-1411"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER_FK="2"
+  					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TB_DATA_SOURCES
+					ID="1411"
+					UUID="Indicator-14-v1-DataSource-1"
+					QUERY_UUID="query-gpe Indicator-14-v1-DataSource-1"
+					QUERY_URN="px Indicator-14-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-14-v1-DataSource-1"
+					TIME_VALUE="[null]"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="geographical v Indicator-14-v1-DataSource-1"
+					INDICATOR_VERSION_FK="141"
+					ABSOLUTE_METHOD="[null]"
+					INTERPERIOD_PUNTUAL_RATE_FK="14111"
+					ANNUAL_PUNTUAL_RATE_FK="14112"
+					ANNUAL_PERCENTAGE_RATE_FK="14113"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-14-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-14-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="54"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TB_RATES_DERIVATIONS
+						ID="14111"
+						UUID="RateDerivation-14111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiodPuntual"
+						ROUNDING="DOWN"
+						QUANTITY_FK="141111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="141111"
+		  					UUID="Quantity-141111"
+							QUANTITY_TYPE="CHANGE_RATE"
+		  					UNIT_MULTIPLIER_FK="2"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+		  					MINIMUM="100"
+		  					MAXIMUM="200"
+		  					IS_PERCENTAGE="1"
+							PERCENTAGE_OF_FK="48"
+		  					BASE_VALUE="5"
+		  					BASE_TIME="2010"
+		  					BASE_LOCATION_FK="1"
+		  					BASE_QUANTITY_FK="14"
+							UNIT_FK="1"
+							NUMERATOR_FK="14"
+							DENOMINATOR_FK="6"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TB_RATES_DERIVATIONS
+						ID="14112"
+						UUID="RateDerivation-14112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfAnnualPuntual"
+						ROUNDING="DOWN"
+						QUANTITY_FK="141121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="141121"
+		  					UUID="Quantity-141121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER_FK="5"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TB_RATES_DERIVATIONS
+						ID="14113"
+						UUID="RateDerivation-14113"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfAnnualPercentage"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="141131"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="141131"
+		  					UUID="Quantity-141131"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER_FK="7"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+								
+				
+					<TB_DATA_SOURCES_VARIABLES
+						ID="14111"
+						UUID="Indicator-14-v1-DataSource-1-Var-1"
+						VARIABLE="variable Indicator-14-v1-DataSource-1-Var-1"
+						CATEGORY="category Indicator-14-v1-DataSource-1-Var-1"
+						DATA_SOURCE_FK="1411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+    <TB_INDIC_VERSION_LAST_VALUE
+        ID="1411"
+        LAST_TIME_VALUE="2010"
+        GEOGRAPHICAL_CODE="UK"
+        INDICATOR_VERSION_FK="141"
+        LAST_DATA_UPDATED="2011-01-22 11:02:04"
+        LAST_DATA_UPDATED_TZ="Europe/London"
+    />
+    <TB_INDIC_VERSION_LAST_VALUE
+        ID="1412"
+        LAST_TIME_VALUE="2010"
+        GEOGRAPHICAL_CODE="EN-LN"
+        INDICATOR_VERSION_FK="141"
+        LAST_DATA_UPDATED="2011-01-22 12:02:04"
+        LAST_DATA_UPDATED_TZ="Europe/London"
+    />
+
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 15																		-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS
+		ID="15"
+		UUID="Indicator-15"
+		CODE="CODE-15"
+        VIEW_CODE="VIEWCODE_15"
+        NOTIFY_POPULATION_ERRORS = "1"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="99999.9"
+		IS_PUBLISHED="1"
+
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TB_INDICATORS_VERSIONS
+				ID="151"
+				UUID="Indicator-15-v1"
+				VERSION_NUMBER="99999.9"
+				TITLE_FK="10"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTS_FK="[null]"
+	  			
+	  			INDICATOR_FK="15"
+	  			PROC_STATUS="PUBLISHED"
+				
+				SUBJECT_CODE="15"
+				SUBJECT_TITLE_FK="156"
+				QUANTITY_FK="1511"
+				IS_LAST_VERSION="0"
+				NEEDS_UPDATE="0"
+				DATA_REPOSITORY_ID="data:repository:151"
+  				DATA_REPOSITORY_TABLE_NAME="TABLE_NAME_151"
+				
+				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-04-04 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-05-05 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user15"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+				<TB_QUANTITIES
+				  	ID="1511"
+  					UUID="Quantity-1511"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER_FK="2"
+  					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TB_DATA_SOURCES
+					ID="1511"
+					UUID="Indicator-15-v1-DataSource-1"
+					QUERY_UUID="query-gpe Indicator-15-v1-DataSource-1"
+					QUERY_URN="px Indicator-15-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-15-v1-DataSource-1"
+					TIME_VALUE="[null]"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="geographical v Indicator-15-v1-DataSource-1"
+					INDICATOR_VERSION_FK="151"
+					ABSOLUTE_METHOD="[null]"
+					INTERPERIOD_PUNTUAL_RATE_FK="15111"
+					ANNUAL_PUNTUAL_RATE_FK="15112"
+					ANNUAL_PERCENTAGE_RATE_FK="15113"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-15-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-15-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="54"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TB_RATES_DERIVATIONS
+						ID="15111"
+						UUID="RateDerivation-15111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiodPuntual"
+						ROUNDING="DOWN"
+						QUANTITY_FK="151111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="151111"
+		  					UUID="Quantity-151111"
+							QUANTITY_TYPE="CHANGE_RATE"
+		  					UNIT_MULTIPLIER_FK="2"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+		  					MINIMUM="100"
+		  					MAXIMUM="200"
+		  					IS_PERCENTAGE="1"
+							PERCENTAGE_OF_FK="48"
+		  					BASE_VALUE="5"
+		  					BASE_TIME="2010"
+		  					BASE_LOCATION_FK="1"
+		  					BASE_QUANTITY_FK="15"
+							UNIT_FK="1"
+							NUMERATOR_FK="15"
+							DENOMINATOR_FK="6"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TB_RATES_DERIVATIONS
+						ID="15112"
+						UUID="RateDerivation-15112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfAnnualPuntual"
+						ROUNDING="DOWN"
+						QUANTITY_FK="151121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="151121"
+		  					UUID="Quantity-151121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER_FK="5"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TB_RATES_DERIVATIONS
+						ID="15113"
+						UUID="RateDerivation-15113"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfAnnualPercentage"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="151131"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="151131"
+		  					UUID="Quantity-151131"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER_FK="7"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+								
+				
+					<TB_DATA_SOURCES_VARIABLES
+						ID="15111"
+						UUID="Indicator-15-v1-DataSource-1-Var-1"
+						VARIABLE="variable Indicator-15-v1-DataSource-1-Var-1"
+						CATEGORY="category Indicator-15-v1-DataSource-1-Var-1"
+						DATA_SOURCE_FK="1511"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+    <TB_INDIC_VERSION_LAST_VALUE
+        ID="1511"
+        LAST_TIME_VALUE="2010"
+        GEOGRAPHICAL_CODE="UK"
+        INDICATOR_VERSION_FK="151"
+        LAST_DATA_UPDATED="2011-01-22 11:02:04"
+        LAST_DATA_UPDATED_TZ="Europe/London"
+    />
+    <TB_INDIC_VERSION_LAST_VALUE
+        ID="1512"
+        LAST_TIME_VALUE="2010"
+        GEOGRAPHICAL_CODE="EN-LN"
+        INDICATOR_VERSION_FK="151"
+        LAST_DATA_UPDATED="2011-01-22 12:02:04"
+        LAST_DATA_UPDATED_TZ="Europe/London"
+    />
 			  			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 1											                      	-->
@@ -2797,7 +3331,7 @@
 		UUID="IndSys-1"
 		CODE="CODE-1"
 		PRODUCTION_ID="11"
-		PRODUCTION_VERSION_NUMBER="1.000"
+		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
@@ -2814,7 +3348,7 @@
 			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="11"
 				UUID="IndSys-1-v1"
-				VERSION_NUMBER="1.000"
+				VERSION_NUMBER="1.0"
 	  			INDICATORS_SYSTEM_FK="1"
 	  			PROC_STATUS="DRAFT"
 				IS_LAST_VERSION="1"
@@ -2883,7 +3417,7 @@
         PRODUCTION_ID="[null]"
         PRODUCTION_VERSION_NUMBER="[null]"
         DIFFUSION_ID="12"
-        DIFFUSION_VERSION_NUMBER="1.000"
+        DIFFUSION_VERSION_NUMBER="1.0"
         IS_PUBLISHED="1"
         
         VERSION="1"
@@ -2898,7 +3432,7 @@
             <TB_INDIC_SYSTEMS_VERSIONS
                 ID="12"
                 UUID="IndSys-2-v1"
-                VERSION_NUMBER="1.000"
+                VERSION_NUMBER="1.0"
                 INDICATORS_SYSTEM_FK="2"
                 PROC_STATUS="PUBLISHED"
                 IS_LAST_VERSION="1"
@@ -2966,7 +3500,7 @@
         PRODUCTION_ID="[null]"
         PRODUCTION_VERSION_NUMBER="[null]"
         DIFFUSION_ID="13"
-        DIFFUSION_VERSION_NUMBER="1.000"
+        DIFFUSION_VERSION_NUMBER="1.0"
         IS_PUBLISHED="0"
         
         VERSION="1"
@@ -2981,7 +3515,7 @@
             <TB_INDIC_SYSTEMS_VERSIONS
                 ID="13"
                 UUID="IndSys-3-v1"
-                VERSION_NUMBER="1.000"
+                VERSION_NUMBER="1.0"
                 INDICATORS_SYSTEM_FK="3"
                 PROC_STATUS="ARCHIVED"
                 IS_LAST_VERSION="1"
@@ -4599,6 +5133,31 @@
         INTERNATIONAL_STRING_FK="95"
         VERSION="1"
     />
-
+    
+    <TB_INTERNATIONAL_STRINGS
+    	ID="146"
+    	VERSION="1"
+    />
+    	
+    <TB_LOCALISED_STRINGS
+    	ID="1465"
+    	LABEL="Área temática 14"
+    	LOCALE="es"
+    	VERSION="1"
+    	INTERNATIONAL_STRING_FK="146"
+	/>
+	
+	<TB_INTERNATIONAL_STRINGS
+    	ID="156"
+    	VERSION="1"
+    />
+    	
+    <TB_LOCALISED_STRINGS
+    	ID="1565"
+    	LABEL="Área temática 15"
+    	LOCALE="es"
+    	VERSION="1"
+    	INTERNATIONAL_STRING_FK="156"
+	/>
         
 </dataset>

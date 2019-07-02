@@ -2,11 +2,12 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
-import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -38,14 +39,14 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     boolean hasDatasources();
     void hasDiffusionIndicatorDatasources(String indicatorUuid, String indicatorVersion);
-    
+
     void retrieveDataDefinitionsOperationsCodes();
     void retrieveDataDefinitionsByOperationCode(String operationCode);
     void retrieveDataDefinition(String uuid);
     void retrieveDataStructure(String uuid);
     void retrieveDataStructureEdition(String uuid);
-    
-    void retrieveStatisticalOperationsForQuerySelection();    
+
+    void retrieveStatisticalOperationsForQuerySelection();
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria);
 
     void retrieveGeographicalValueDS(String uuid);
@@ -65,7 +66,7 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void searchRateIndicators(IndicatorCriteria criteria, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
-    
+
     void enableNotifyPopulationErrors(String indicatorUuid);
     void disableNotifyPopulationErrors(String indicatorUuid);
 }
