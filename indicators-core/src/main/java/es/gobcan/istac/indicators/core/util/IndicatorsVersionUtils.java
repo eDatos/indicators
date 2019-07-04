@@ -2,12 +2,10 @@ package es.gobcan.istac.indicators.core.util;
 
 import java.util.Arrays;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.VersionResult;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 
@@ -27,10 +25,12 @@ public class IndicatorsVersionUtils {
         return VersionUtil.isInitialVersion(version);
     }
 
-    public static VersionResult createNextVersion(String olderVersionNumber, VersionTypeEnum versionType) throws MetamacException {
+    public static VersionResult createNextVersion(String olderVersionNumber, VersionTypeEnum versionType, String resourceCode) throws MetamacException {
         try {
             return VersionUtil.createNextVersion(olderVersionNumber, versionType);
         } catch (UnsupportedOperationException e) {
+            sendMaximumVersionReachedBackgroundNotification(olderVersionNumber, versionType, resourceCode);
+
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, olderVersionNumber).build();
         }
     }
@@ -39,33 +39,15 @@ public class IndicatorsVersionUtils {
         return VersionUtil.versionStringToLong(versionNumber) == VersionUtil.versionStringToLong(otherVersionNumber);
     }
 
-    public static void setVersionNumber(HasVersionNumber versionNumberEntity, String versionNumber, VersionTypeEnum versionTypeEnum, NoticesRestInternalService noticesRestInternalService,
-            String resourceCode) throws MetamacException {
-        try {
-            VersionResult versionResult = createNextVersion(versionNumber, versionTypeEnum);
-
-            versionNumberEntity.setVersionNumber(versionResult.getValue());
-
-        } catch (MetamacException e) {
-            sendMaximumVersionReachedBackgroundNotificationIfOccurred(versionNumber, versionTypeEnum, noticesRestInternalService, resourceCode, e);
-            throw e;
-        }
+    public static void setVersionNumber(HasVersionNumber versionNumberEntity, String versionNumber, VersionTypeEnum versionTypeEnum, String resourceCode) throws MetamacException {
+        versionNumberEntity.setVersionNumber(createNextVersion(versionNumber, versionTypeEnum, resourceCode).getValue());
     }
 
-    private static void sendMaximumVersionReachedBackgroundNotificationIfOccurred(String versionNumber, VersionTypeEnum versionTypeEnum, NoticesRestInternalService noticesRestInternalService,
-            String resourceCode, MetamacException e) {
-        if (checkResourceMaximumVersionReachedException(e)) {
-            noticesRestInternalService.createMaximumVersionReachedBackgroundNotification(Arrays.asList(versionTypeEnum.getName(), resourceCode, versionNumber));
-        }
+    private static void sendMaximumVersionReachedBackgroundNotification(String versionNumber, VersionTypeEnum versionTypeEnum, String resourceCode) {
+        getNoticesRestInternalService().createMaximumVersionReachedBackgroundNotification(Arrays.asList(versionTypeEnum.getName(), resourceCode, versionNumber));
     }
 
-    private static boolean checkResourceMaximumVersionReachedException(MetamacException metamacException) {
-        return CollectionUtils.exists(metamacException.getExceptionItems(), new Predicate() {
-
-            @Override
-            public boolean evaluate(Object object) {
-                return ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED.getCode().equals(((MetamacExceptionItem) object).getCode());
-            }
-        });
+    private static NoticesRestInternalService getNoticesRestInternalService() {
+        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
 }

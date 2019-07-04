@@ -314,15 +314,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
                 IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getIsPublished() ? indicatorsSystem.getDiffusionVersion() : null;
                 if (diffusionVersionInfo != null) {
-                    String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR).getValue();
+                    String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR, indicatorsSystem.getCode()).getValue();
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
 
                     // check version collision
                     if (productionVersionInfo != null && IndicatorsVersionUtils.equalsVersionNumber(newDiffusionVersion, productionVersionInfo.getVersionNumber())) {
                         IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
                         // new production version, new update date
-                        IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersion.getVersionNumber(), VersionTypeEnum.MINOR, getNoticesRestInternalService(),
-                                productionVersion.getIndicatorsSystem().getCode());
+                        IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersion.getVersionNumber(), VersionTypeEnum.MINOR, productionVersion.getIndicatorsSystem().getCode());
                         productionVersion.setLastUpdated(new DateTime());
                         productionVersion = getIndicatorsSystemVersionRepository().save(productionVersion);
 
@@ -332,8 +331,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                     // update diffusion version
                     IndicatorsSystemVersion diffusionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, diffusionVersionInfo.getVersionNumber());
-                    IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR, getNoticesRestInternalService(),
-                            diffusionVersion.getIndicatorsSystem().getCode());
+                    IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR, diffusionVersion.getIndicatorsSystem().getCode());
                     diffusionVersion.setLastUpdated(new DateTime());
                     diffusionVersion = getIndicatorsSystemVersionRepository().save(diffusionVersion);
 
@@ -449,12 +447,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
         String diffusionVersionNumber = indicator.getIsPublished() ? indicator.getDiffusionVersionNumber() : null;
         if (diffusionVersionNumber != null) {
-            String nextDiffusionVersionNumber = IndicatorsVersionUtils.createNextVersion(diffusionVersionNumber, VersionTypeEnum.MINOR).getValue();
+            String nextDiffusionVersionNumber = IndicatorsVersionUtils.createNextVersion(diffusionVersionNumber, VersionTypeEnum.MINOR, indicator.getCode()).getValue();
             // Check if new version number is the same as production version
             String productionVersionNumber = indicator.getProductionVersionNumber();
             if (productionVersionNumber != null && IndicatorsVersionUtils.equalsVersionNumber(productionVersionNumber, nextDiffusionVersionNumber)) {
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionNumber);
-                IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersionNumber, VersionTypeEnum.MINOR, getNoticesRestInternalService(), productionVersion.getIndicator().getCode());
+                IndicatorsVersionUtils.setVersionNumber(productionVersion, productionVersionNumber, VersionTypeEnum.MINOR, productionVersion.getIndicator().getCode());
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
                 indicator.setProductionIdIndicatorVersion(productionVersion.getId());
@@ -464,7 +462,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
             // update diffusion version
             IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionNumber);
-            IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionNumber, VersionTypeEnum.MINOR, getNoticesRestInternalService(), diffusionVersion.getIndicator().getCode());
+            IndicatorsVersionUtils.setVersionNumber(diffusionVersion, diffusionVersionNumber, VersionTypeEnum.MINOR, diffusionVersion.getIndicator().getCode());
             diffusionVersion.setUpdateDate(new DateTime());
             diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
             indicator.setDiffusionIdIndicatorVersion(diffusionVersion.getId());

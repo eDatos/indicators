@@ -835,7 +835,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
         // After populate, version has changed
-        String newVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR16_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR16_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
@@ -1060,8 +1060,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR25_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
-        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1108,7 +1108,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR26_UUID);
 
         // After populate, diffusion and production version have to change
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
         // old diffusion version does not longer exist
         try {
@@ -1148,7 +1148,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
 
-        String newSystemVersion = IndicatorsVersionUtils.createNextVersion(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR).getValue();
+        String newSystemVersion = IndicatorsVersionUtils.createNextVersion(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
         /* System's diffusion version no longer exists */
         try {

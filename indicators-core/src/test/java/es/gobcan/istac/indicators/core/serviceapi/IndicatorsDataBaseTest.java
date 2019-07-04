@@ -476,6 +476,10 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return sequences;
     }
 
+    protected String getMockCode() {
+        return "code" + (new Date()).getTime();
+    }
+
     /**
      * DatasourceTester with support for Oracle data types.
      */

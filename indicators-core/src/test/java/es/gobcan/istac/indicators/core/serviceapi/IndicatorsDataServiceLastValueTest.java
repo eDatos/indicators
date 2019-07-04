@@ -322,12 +322,12 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
         {
             /* mark for update */
-            String indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR2_VERSION, VersionTypeEnum.MINOR).getValue();
+            String indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR2_VERSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicator(ctx, INDICATOR2_UUID, indicator2VersionNumber);
             indicatorVersion.setNeedsUpdate(true);
             indicatorVersionRepository.save(indicatorVersion);
 
-            String indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR1_VERSION_DIFFUSION, VersionTypeEnum.MINOR).getValue();
+            String indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(INDICATOR1_VERSION_DIFFUSION, VersionTypeEnum.MINOR, getMockCode()).getValue();
             indicatorVersion = indicatorsService.retrieveIndicator(ctx, INDICATOR1_UUID, indicator1VersionNumber);
             indicatorVersion.setNeedsUpdate(true);
             indicatorVersionRepository.save(indicatorVersion);
@@ -469,7 +469,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_V2_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR1_UUID, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, geoCode,
                     measures, 5);
@@ -492,7 +492,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR1_UUID, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, geoCode,
                     measures, 5);
@@ -520,7 +520,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
             indicatorsDataService.populateIndicatorVersionData(ctx, indicatorUuid, indicatorVersionNumber);
             // populate published indicators changes version
-            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicatorVersionNumber = IndicatorsVersionUtils.createNextVersion(indicatorVersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, subjectCode, geoCode, measures,
                     5);
@@ -649,9 +649,9 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, indicator2VersionNumber);
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR5_UUID, indicator5VersionNumber); // most recent
 
-        indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR).getValue();
-        indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR).getValue();
-        indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR).getValue();
+        indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
         GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, GEO_CODE);
         {
@@ -724,9 +724,9 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, indicator2VersionNumber);
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR5_UUID, indicator5VersionNumber); // most recent
 
-            indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR).getValue();
-            indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR).getValue();
-            indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR).getValue();
+            indicator1VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator1VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
+            indicator2VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator2VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
+            indicator5VersionNumber = IndicatorsVersionUtils.createNextVersion(indicator5VersionNumber, VersionTypeEnum.MINOR, getMockCode()).getValue();
 
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, GEO_CODE);
 
