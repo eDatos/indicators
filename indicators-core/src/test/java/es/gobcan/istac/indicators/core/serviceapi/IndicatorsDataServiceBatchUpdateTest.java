@@ -138,7 +138,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
         String oldDiffusionVersion = INDICATOR1_VERSION;
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -163,7 +163,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
         String oldDiffusionVersion = INDICATOR2_VERSION;
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -210,8 +210,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion4 = INDICATOR4_VERSION;
         String oldDiffusionVersion5 = INDICATOR5_VERSION;
-        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion4, VersionTypeEnum.MINOR, getMockCode()).getValue();
-        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion5, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion4), VersionTypeEnum.MINOR);
+        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion5), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -244,9 +244,9 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion4 = INDICATOR4_VERSION;
         String oldDiffusionVersion5 = INDICATOR5_VERSION;
         String oldDiffusionVersion6 = INDICATOR6_VERSION;
-        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion4, VersionTypeEnum.MINOR, getMockCode()).getValue();
-        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion5, VersionTypeEnum.MINOR, getMockCode()).getValue();
-        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion6, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion4 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion4), VersionTypeEnum.MINOR);
+        String newDiffusionVersion5 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion5), VersionTypeEnum.MINOR);
+        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion6), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -275,7 +275,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         List<String> indicatorsToUpdate = Arrays.asList();
 
         String oldDiffusionVersion6 = INDICATOR6_VERSION;
-        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion6, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion6 = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion6), VersionTypeEnum.MINOR);
 
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
@@ -303,8 +303,9 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR8_VERSION;
         String oldProductionVersion = INDICATOR8_PROD_VERSION;
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR, getMockCode()).getValue();
-        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(oldProductionVersion, VersionTypeEnum.MINOR, getMockCode()).getValue();
+
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion), VersionTypeEnum.MINOR);
+        String newProductionVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldProductionVersion), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 
@@ -339,7 +340,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR9_VERSION;
         String productionVersion = INDICATOR9_PROD_VERSION;
-        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(oldDiffusionVersion, VersionTypeEnum.MINOR, getMockCode()).getValue();
+        String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(oldDiffusionVersion), VersionTypeEnum.MINOR);
 
         indicatorsDataService.updateIndicatorsDataFromGpe(getServiceContextAdministrador());
 

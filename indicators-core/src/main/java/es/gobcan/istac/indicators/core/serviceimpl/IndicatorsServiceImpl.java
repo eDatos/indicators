@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import static es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils.setVersionNumber;
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 import java.io.File;
@@ -604,7 +603,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
         indicatorNewVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
 
-        setVersionNumber(indicatorNewVersion, indicatorVersionDiffusion.getVersionNumber(), versionType, indicatorVersionDiffusion.getIndicator().getCode());
+        indicatorNewVersion.setVersionNumber(IndicatorsVersionUtils.createNextVersion(indicatorVersionDiffusion, versionType));
 
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);

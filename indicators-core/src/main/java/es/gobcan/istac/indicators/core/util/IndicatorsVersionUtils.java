@@ -6,7 +6,6 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.core.common.util.shared.VersionResult;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 
 import es.gobcan.istac.indicators.core.domain.HasVersionNumber;
@@ -25,22 +24,19 @@ public class IndicatorsVersionUtils {
         return VersionUtil.isInitialVersion(version);
     }
 
-    public static VersionResult createNextVersion(String olderVersionNumber, VersionTypeEnum versionType, String resourceCode) throws MetamacException {
+    public static String createNextVersion(HasVersionNumber versionNumberEntity, VersionTypeEnum versionType) throws MetamacException {
         try {
-            return VersionUtil.createNextVersion(olderVersionNumber, versionType);
+            return VersionUtil.createNextVersion(versionNumberEntity.getVersionNumber(), versionType).getValue();
         } catch (UnsupportedOperationException e) {
-            sendMaximumVersionReachedBackgroundNotification(olderVersionNumber, versionType, resourceCode);
+            sendMaximumVersionReachedBackgroundNotification(versionNumberEntity.getVersionNumber(), versionType, versionNumberEntity.getCode());
 
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, olderVersionNumber).build();
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, versionNumberEntity.getVersionNumber())
+                    .build();
         }
     }
 
     public static boolean equalsVersionNumber(String versionNumber, String otherVersionNumber) {
         return VersionUtil.versionStringToLong(versionNumber) == VersionUtil.versionStringToLong(otherVersionNumber);
-    }
-
-    public static void setVersionNumber(HasVersionNumber versionNumberEntity, String versionNumber, VersionTypeEnum versionTypeEnum, String resourceCode) throws MetamacException {
-        versionNumberEntity.setVersionNumber(createNextVersion(versionNumber, versionTypeEnum, resourceCode).getValue());
     }
 
     private static void sendMaximumVersionReachedBackgroundNotification(String versionNumber, VersionTypeEnum versionTypeEnum, String resourceCode) {

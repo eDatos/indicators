@@ -16,4 +16,9 @@ public class IndicatorVersion extends IndicatorVersionBase implements HasVersion
     public IndicatorVersion() {
     }
 
+    @Override
+    public String getCode() {
+        return getIndicator().getCode();
+    }
+
 }

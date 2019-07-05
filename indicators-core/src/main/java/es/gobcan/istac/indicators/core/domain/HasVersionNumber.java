@@ -4,4 +4,5 @@ public interface HasVersionNumber {
 
     String getVersionNumber();
     void setVersionNumber(String versionNumber);
+    String getCode();
 }

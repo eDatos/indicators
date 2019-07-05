@@ -46,6 +46,7 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.HasVersionNumber;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -476,8 +477,8 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return sequences;
     }
 
-    protected String getMockCode() {
-        return "code" + (new Date()).getTime();
+    protected HasVersionNumber getHasVersionNumberMock(String versionNumber) {
+        return new HasVersionNumberMock(versionNumber);
     }
 
     /**
@@ -498,4 +499,32 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             return connection;
         }
     }
+}
+
+class HasVersionNumberMock implements HasVersionNumber {
+
+    private String code;
+    private String versionNumber;
+
+    public HasVersionNumberMock(String versionNumber) {
+        super();
+        this.versionNumber = versionNumber;
+        this.code = "code" + (new Date()).getTime();
+    }
+
+    @Override
+    public String getVersionNumber() {
+        return versionNumber;
+    }
+
+    @Override
+    public void setVersionNumber(String versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
 }
