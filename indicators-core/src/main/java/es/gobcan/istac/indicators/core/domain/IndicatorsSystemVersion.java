@@ -14,4 +14,9 @@ public class IndicatorsSystemVersion extends IndicatorsSystemVersionBase impleme
 
     public IndicatorsSystemVersion() {
     }
+
+    @Override
+    public String getCode() {
+        return getIndicatorsSystem().getCode();
+    }
 }

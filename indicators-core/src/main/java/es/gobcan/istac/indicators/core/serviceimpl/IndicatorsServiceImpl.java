@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import static es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils.setVersionNumber;
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 import java.io.File;
@@ -29,7 +28,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +53,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
-import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
@@ -606,7 +603,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
         indicatorNewVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
 
-        setVersionNumber(indicatorNewVersion, indicatorVersionDiffusion.getVersionNumber(), versionType, getNoticesRestInternalService(), indicatorVersionDiffusion.getIndicator().getCode());
+        indicatorNewVersion.setVersionNumber(IndicatorsVersionUtils.createNextVersion(indicatorVersionDiffusion, versionType));
 
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
@@ -1404,9 +1401,4 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writer.write(cell.toString());
         }
     }
-
-    private NoticesRestInternalService getNoticesRestInternalService() {
-        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
-    }
-
 }

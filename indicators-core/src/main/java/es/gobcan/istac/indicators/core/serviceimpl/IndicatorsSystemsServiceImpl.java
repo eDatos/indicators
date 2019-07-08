@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import static es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils.setVersionNumber;
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 import java.sql.SQLException;
@@ -26,7 +25,6 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +52,6 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
@@ -456,8 +453,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
         indicatorsSystemNewVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
 
-        setVersionNumber(indicatorsSystemNewVersion, indicatorsSystemVersionDiffusion.getVersionNumber(), versionType, getNoticesRestInternalService(),
-                indicatorsSystemVersionDiffusion.getIndicatorsSystem().getCode());
+        indicatorsSystemNewVersion.setVersionNumber(IndicatorsVersionUtils.createNextVersion(indicatorsSystemVersionDiffusion, versionType));
 
         indicatorsSystemNewVersion.setIsLastVersion(Boolean.TRUE);
 
@@ -1594,9 +1590,5 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             target.addText(localisedString);
         }
         return target;
-    }
-
-    private NoticesRestInternalService getNoticesRestInternalService() {
-        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
 }
