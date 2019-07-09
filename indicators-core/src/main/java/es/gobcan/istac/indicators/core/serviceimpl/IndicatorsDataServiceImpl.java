@@ -28,6 +28,7 @@ import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
@@ -146,6 +147,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
+    @Autowired
+    private TranslateExceptions              translateExceptions;
+
     private final ObjectMapper               mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
@@ -218,7 +222,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersionNumber(), e);
-                exceptionItems.addAll(e.getExceptionItems());
+                exceptionItems.addAll(translateException(ctx, e).getExceptionItems());
             }
         }
         if (indicator.getProductionVersionNumber() != null) {
@@ -226,11 +230,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getProductionVersionNumber(), e);
-                exceptionItems.addAll(e.getExceptionItems());
+                exceptionItems.addAll(translateException(ctx, e).getExceptionItems());
             }
         }
 
         return exceptionItems;
+    }
+
+    private MetamacException translateException(ServiceContext ctx, MetamacException metamacException) {
+        return (MetamacException) translateExceptions.translateException(ctx, metamacException);
     }
 
     @Override
