@@ -52,6 +52,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -496,7 +497,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.getIndicator().setProductionProcStatus(indicatorInProduction.getProcStatus()); // Para permitir ordenamientos y busquedas
 
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
-            return new PublishIndicatorResult(indicatorInProduction, e);
+            return new PublishIndicatorResult(indicatorInProduction, TranslateExceptionUtils.translateMetamacException(ctx, e));
         }
 
         tryRefreshSubjectTitle(indicatorInProduction);

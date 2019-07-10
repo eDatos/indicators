@@ -86,6 +86,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
@@ -218,7 +219,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getDiffusionVersionNumber(), e);
-                exceptionItems.addAll(e.getExceptionItems());
+                exceptionItems.addAll(TranslateExceptionUtils.translateMetamacException(ctx, e).getExceptionItems());
             }
         }
         if (indicator.getProductionVersionNumber() != null) {
@@ -226,7 +227,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicator " + indicatorUuid + " " + indicator.getProductionVersionNumber(), e);
-                exceptionItems.addAll(e.getExceptionItems());
+                exceptionItems.addAll(TranslateExceptionUtils.translateMetamacException(ctx, e).getExceptionItems());
             }
         }
 
