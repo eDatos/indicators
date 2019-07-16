@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.core.util;
 
-import java.util.Arrays;
-
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -9,6 +7,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 
 import es.gobcan.istac.indicators.core.domain.HasVersionNumber;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 
@@ -28,8 +27,8 @@ public class IndicatorsVersionUtils {
         try {
             return VersionUtil.createNextVersion(versionNumberEntity.getVersionNumber(), versionType).getValue();
         } catch (UnsupportedOperationException e) {
-            sendMaximumVersionReachedBackgroundNotification(versionNumberEntity.getVersionNumber(), versionType, versionNumberEntity.getCode());
 
+            sendMaximumVersionReachedBackgroundNotification(versionNumberEntity, versionType);
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED).withMessageParameters(versionType, versionNumberEntity.getVersionNumber())
                     .build();
         }
@@ -39,8 +38,10 @@ public class IndicatorsVersionUtils {
         return VersionUtil.versionStringToLong(versionNumber) == VersionUtil.versionStringToLong(otherVersionNumber);
     }
 
-    private static void sendMaximumVersionReachedBackgroundNotification(String versionNumber, VersionTypeEnum versionTypeEnum, String resourceCode) {
-        getNoticesRestInternalService().createMaximumVersionReachedBackgroundNotification(Arrays.asList(versionTypeEnum.getName(), resourceCode, versionNumber));
+    private static void sendMaximumVersionReachedBackgroundNotification(HasVersionNumber hasVersionNumberEntity, VersionTypeEnum versionTypeEnum) {
+        if (hasVersionNumberEntity instanceof IndicatorVersion) {
+            getNoticesRestInternalService().createMaximumVersionReachedBackgroundNotification((IndicatorVersion) hasVersionNumberEntity, versionTypeEnum);
+        }
     }
 
     private static NoticesRestInternalService getNoticesRestInternalService() {
