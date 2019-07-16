@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.core.service;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 
 public interface NoticesRestInternalService {
@@ -14,5 +16,5 @@ public interface NoticesRestInternalService {
     void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
     void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
     public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage);
-    void createMaximumVersionReachedBackgroundNotification(List<String> messageParams);
+    void createMaximumVersionReachedBackgroundNotification(IndicatorVersion indicatorVersion, VersionTypeEnum versionTypeEnum);
 }
