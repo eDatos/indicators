@@ -181,7 +181,6 @@ Application Indicators {
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
     		> @IndicatorInstanceRepository
-    		> @IndicatorsSystemRepository
     		> @IndicatorsSystemVersionRepository
     		> @DataGpeRepository
     		> @GeographicalGranularityRepository

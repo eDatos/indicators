@@ -57,19 +57,18 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
-    public static final String INIT_VERSION                                             = "1.0";
-    public static final String INIT_VERSION_MINOR_INCREMENT                             = "1.1";
-    public static final String INIT_VERSION_SOME_MINOR_INCREMENTS                       = "1.5";
-    public static final String INIT_VERSION_HUGE_INCREMENT                              = "1.300";
-    public static final String INIT_VERSION_HUGE_INCREMENT_SOME_MINOR_INCREMENTS        = "1.322";
-    public static final String INIT_VERSION_ANOTHER_HUGE_INCREMENT                      = "1.500";
-    public static final String INIT_VERSION_ANOTHER_HUGE_INCREMENT_WITH_MINOR_INCREMENT = "1.501";
-    public static final String INIT_VERSION_MAXIMUM_MINOR_VERSION                       = "1.99999";
-    public static final String SECOND_VERSION                                           = "2.0";
-    public static final String NOT_INITIAL_VERSION                                      = "11.33";
-    public static final String NOT_INITIAL_VERSION_WITH_MINOR_INCREMENT                 = "11.34";
-    public static final String ANOTHER_NOT_INITIAL_VERSION                              = "12.0";
-    public static final String MAXIMUM_LIMIT_VERSION                                    = "99999.9";
+    public static final String INIT_VERSION                                      = "1.0";
+    public static final String INIT_VERSION_MINOR_INCREMENT                      = "1.1";
+    public static final String INIT_VERSION_SOME_MINOR_INCREMENTS                = "1.5";
+    public static final String INIT_VERSION_HUGE_INCREMENT                       = "1.300";
+    public static final String INIT_VERSION_HUGE_INCREMENT_SOME_MINOR_INCREMENTS = "1.322";
+    public static final String INIT_VERSION_ANOTHER_HUGE_INCREMENT               = "1.500";
+    public static final String INIT_VERSION_MAXIMUM_MINOR_VERSION                = "1.99999";
+    public static final String SECOND_VERSION                                    = "2.0";
+    public static final String NOT_INITIAL_VERSION                               = "11.33";
+    public static final String NOT_INITIAL_VERSION_WITH_MINOR_INCREMENT          = "11.34";
+    public static final String ANOTHER_NOT_INITIAL_VERSION                       = "12.0";
+    public static final String MAXIMUM_LIMIT_VERSION                             = "99999.9";
 
     @Before
     public void onBefore() throws Exception {

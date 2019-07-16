@@ -1059,7 +1059,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATORS_SYSTEM_6;
         String code = INDICATORS_SYSTEM_6_CODE;
-        String diffusionVersionBefore = IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT_WITH_MINOR_INCREMENT; // WAS 1.0, but it was changed to 1.1 after populating linked indicator 1
+        String diffusionVersionBefore = IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT;
         String productionVersionBefore = IndicatorsDataBaseTest.SECOND_VERSION; // will be published
 
         {
