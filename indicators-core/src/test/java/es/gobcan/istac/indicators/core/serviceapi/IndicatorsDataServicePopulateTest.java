@@ -1140,33 +1140,21 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     }
 
     /*
-     * Populate published indicator then all published systems will be updated
+     * Populate published indicator then all published systems will not be updated
      */
     @Test
-    public void testPopulateIndicatorDataOnlySystemDiffusionVersionUpdates() throws Exception {
+    public void testPopulateIndicatorDataSystemDiffusionVersionNotUpdated() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR16_DS_GPE_UUID))).thenReturn(INDICATOR16_GPE_JSON_DATA);
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
-
-        String newSystemVersion = IndicatorsVersionUtils.createNextVersion(getHasVersionNumberMock(INDICATORS_SYSTEM1_DIFFUSION_VERSION), VersionTypeEnum.MINOR);
-
-        /* System's diffusion version no longer exists */
-        try {
-            indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, INDICATORS_SYSTEM1_DIFFUSION_VERSION);
-            fail("Should have not found old version");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-        }
 
         { // production version remains the same
             IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, INDICATORS_SYSTEM1_PRODUCTION_VERSION);
             assertNotNull(systemVersion);
         }
 
-        { // new diffusion version has been created
-            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, newSystemVersion);
+        { // diffusion version remains the same
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, INDICATORS_SYSTEM1_DIFFUSION_VERSION);
             assertNotNull(systemVersion);
         }
     }

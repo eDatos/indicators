@@ -6,7 +6,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,9 +69,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionMeasureCoverage;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionTimeCoverage;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
@@ -250,9 +246,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // After diffusion version's data is populated all related systems must update their versions
             if (IndicatorsVersionUtils.equalsVersionNumber(indicatorVersion.getVersionNumber(), diffusionVersion) && indicator.getIsPublished()) {
                 indicator = changeDiffusionVersion(indicator);
-                // update system version
-                List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
-                changeVersionForModifiedIndicatorsSystems(modifiedSystems);
             }
             return indicator;
         } else {
@@ -307,48 +300,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Finished Indicators data update process");
 
         return failedPopulationIndicators;
-    }
-
-    private void changeVersionForModifiedIndicatorsSystems(Collection<String> modifiedSystems) {
-        for (String systemUuid : modifiedSystems) {
-            try {
-                IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
-                IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getIsPublished() ? indicatorsSystem.getDiffusionVersion() : null;
-                if (diffusionVersionInfo != null) {
-                    String newDiffusionVersion = IndicatorsVersionUtils.createNextVersion(indicatorsSystem.getDiffusionIndicatorsSystemVersion(), VersionTypeEnum.MINOR);
-                    IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
-
-                    // check version collision
-                    if (productionVersionInfo != null && IndicatorsVersionUtils.equalsVersionNumber(newDiffusionVersion, productionVersionInfo.getVersionNumber())) {
-                        IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
-                        // new production version, new update date
-                        productionVersion.setVersionNumber(IndicatorsVersionUtils.createNextVersion(indicatorsSystem.getProductionIndicatorsSystemVersion(), VersionTypeEnum.MINOR));
-                        productionVersion.setLastUpdated(new DateTime());
-                        productionVersion = getIndicatorsSystemVersionRepository().save(productionVersion);
-
-                        // change system relationship
-                        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
-                    }
-
-                    // update diffusion version
-                    IndicatorsSystemVersion diffusionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, diffusionVersionInfo.getVersionNumber());
-                    diffusionVersion.setVersionNumber(IndicatorsVersionUtils.createNextVersion(indicatorsSystem.getDiffusionIndicatorsSystemVersion(), VersionTypeEnum.MINOR));
-                    diffusionVersion.setLastUpdated(new DateTime());
-                    diffusionVersion = getIndicatorsSystemVersionRepository().save(diffusionVersion);
-
-                    // change system
-                    indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
-                    getIndicatorsSystemRepository().save(indicatorsSystem);
-                }
-            } catch (MetamacException e) {
-                LOG.warn("Error changing version for indicator system: " + systemUuid, e);
-            }
-        }
-        LOG.info("Indicators System \"version change\" proccess has finished");
-    }
-
-    private List<String> findAllIndicatorsSystemsDiffusionVersionWithIndicator(String indicatorUuid) {
-        return getIndicatorInstanceRepository().findIndicatorsSystemsPublishedWithIndicator(indicatorUuid);
     }
 
     private List<String> findAllIndicatorInstancesPublishedWithIndicator(String indicatorUuid) {
