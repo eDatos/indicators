@@ -18,10 +18,14 @@ public class IndicatorsConstants {
     public static final String TRANSLATION_TIME_VALUE_MONTHLY            = "TIME_VALUE.MONTHLY";
     public static final String TRANSLATION_TIME_VALUE_WEEKLY             = "TIME_VALUE.WEEKLY";
     public static final String TRANSLATION_TIME_VALUE_DAILY              = "TIME_VALUE.DAILY";
+    public static final String TRANSLATION_TIME_VALUE_HOURLY             = "TIME_VALUE.HOURLY";
     public static final String TRANSLATION_YEAR_IN_LABEL                 = "{yyyy}";
     public static final String TRANSLATION_MONTH_IN_LABEL                = "{MM}";
     public static final String TRANSLATION_WEEK_IN_LABEL                 = "{ww}";
     public static final String TRANSLATION_DAY_IN_LABEL                  = "{dd}";
+    public static final String TRANSLATION_HOUR_IN_LABEL                 = "{HH}";
+    public static final String TRANSLATION_MINUTES_IN_LABEL              = "{mm}";
+    public static final String TRANSLATION_SECONDS_IN_LABEL              = "{ss}";
     // Measure translations
     public static final String TRANSLATION_MEASURE_DIMENSION             = "MEASURE_DIMENSION";
     // Other translations

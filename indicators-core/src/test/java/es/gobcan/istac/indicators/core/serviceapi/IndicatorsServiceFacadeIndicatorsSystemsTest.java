@@ -4095,6 +4095,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(IstacTimeGranularityEnum.MONTHLY, TimeVariableUtils.guessTimeGranularity("2012M02"));
         assertEquals(IstacTimeGranularityEnum.DAILY, TimeVariableUtils.guessTimeGranularity("20120102"));
         assertEquals(IstacTimeGranularityEnum.WEEKLY, TimeVariableUtils.guessTimeGranularity("2012W51"));
+        assertEquals(IstacTimeGranularityEnum.HOURLY, TimeVariableUtils.guessTimeGranularity("2008-08-30T01:45:36"));
+        assertEquals(IstacTimeGranularityEnum.HOURLY, TimeVariableUtils.guessTimeGranularity("2008-08-30T01:45:36.123Z"));
+        assertEquals(IstacTimeGranularityEnum.HOURLY, TimeVariableUtils.guessTimeGranularity("2013-07-24T13:21:52.519+01:00"));
+
     }
 
     @Test
@@ -4152,6 +4156,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("20120930", TimeVariableUtils.calculatePreviousTimeValue("20121001"));
         assertEquals("20120505", TimeVariableUtils.calculatePreviousTimeValue("20120506"));
         assertEquals("20111231", TimeVariableUtils.calculatePreviousTimeValue("20120101"));
+        // Hourly
+        assertEquals("2013-07-24T12:21:52", TimeVariableUtils.calculatePreviousTimeValue("2013-07-24T13:21:52"));
+        assertEquals("2013-07-23T23:21:52", TimeVariableUtils.calculatePreviousTimeValue("2013-07-24T00:21:52"));
     }
 
     @Test

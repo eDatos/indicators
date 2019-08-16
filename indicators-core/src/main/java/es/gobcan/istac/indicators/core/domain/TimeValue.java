@@ -16,6 +16,9 @@ public class TimeValue {
     private String                   month;
     private String                   week;
     private String                   day;
+    private String                   hour;
+    private String                   minutes;
+    private String                   seconds;
     private InternationalString      title;
     private InternationalString      titleSummary;
 
@@ -73,6 +76,30 @@ public class TimeValue {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
+    }
+
+    public String getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(String minutes) {
+        this.minutes = minutes;
+    }
+
+    public String getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(String seconds) {
+        this.seconds = seconds;
     }
 
     public InternationalString getTitle() {
