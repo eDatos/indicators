@@ -64,6 +64,15 @@ public class MetamacTimeUtils {
                 timeValueFields.setDay(String.valueOf(parseTime.getStartDateTime().getDayOfYear()));
                 break;
             }
+            case HOURLY: {
+                timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
+                timeValueFields.setMonth(String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setDay(String.valueOf(parseTime.getStartDateTime().getDayOfMonth()));
+                timeValueFields.setHour(String.valueOf(parseTime.getStartDateTime().getHourOfDay()));
+                timeValueFields.setMinutes(String.valueOf(parseTime.getStartDateTime().getMinuteOfHour()));
+                timeValueFields.setSeconds(String.valueOf(parseTime.getStartDateTime().getSecondOfMinute()));
+                break;
+            }
             default:
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
         }
@@ -130,6 +139,10 @@ public class MetamacTimeUtils {
             case DAILY: {
                 DateTime previous = parseTime.getStartDateTime().minusDays(1);
                 return previous.toString("yyyyMMdd");
+            }
+            case HOURLY: {
+                DateTime previous = parseTime.getStartDateTime().minusHours(1);
+                return previous.toString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
             }
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);

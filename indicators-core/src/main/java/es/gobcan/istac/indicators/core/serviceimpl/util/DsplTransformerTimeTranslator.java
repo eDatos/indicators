@@ -240,11 +240,9 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                 return buildWeeklyTimeValue(date.getYear(), date.getWeekOfWeekyear());
             case DAILY:
                 return buildDailyTimeValue(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
-            default:
-                break;
+            default: // Hourly value is not supported by DSLP
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
-
-        return null;
     }
 
     private String buildYearlyTimeValue(int year) {

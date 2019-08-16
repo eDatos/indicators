@@ -1,10 +1,16 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -44,6 +50,32 @@ public class TimeVariableUtilsTest {
 
         assertEquals("2010", timeValues.get(0).getTimeValue());
         assertEquals("2010Q4", timeValues.get(1).getTimeValue());
+    }
+
+    @Test
+    public void testParseHourlyTimeValue() throws MetamacException {
+        String hourlyTimeValue = "2008-08-29T23:45:36";
+
+        TimeValue timeValue = TimeVariableUtils.parseTimeValue(hourlyTimeValue);
+
+        assertEquals("2008", timeValue.getYear());
+        assertEquals("8", timeValue.getMonth());
+        assertEquals("29", timeValue.getDay());
+        assertEquals("23", timeValue.getHour());
+        assertEquals("45", timeValue.getMinutes());
+        assertEquals("36", timeValue.getSeconds());
+    }
+
+    @Test
+    public void testHourlyTimeValueToLastPossibleDate() throws MetamacException, ParseException {
+        String hourlyTimeValue = "2008-08-29T23:45:36";
+
+        TimeValue timeValue = TimeVariableUtils.parseTimeValue(hourlyTimeValue);
+
+        Date expectedDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(hourlyTimeValue);
+        Date actualDate = TimeVariableUtils.timeValueToLastPossibleDate(timeValue);
+
+        assertTrue(DateUtils.truncatedEquals(expectedDate, actualDate, Calendar.SECOND));
     }
 
     private List<TimeValue> buildTimeValues(String... values) throws MetamacException {

@@ -26,7 +26,8 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 public class TimeVariableUtils {
 
     // @formatter:off
-    private static final List<IstacTimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(IstacTimeGranularityEnum.DAILY,
+    private static final List<IstacTimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(IstacTimeGranularityEnum.HOURLY,
+                                                                                        IstacTimeGranularityEnum.DAILY,
                                                                                         IstacTimeGranularityEnum.WEEKLY,
                                                                                         IstacTimeGranularityEnum.MONTHLY,
                                                                                         IstacTimeGranularityEnum.QUARTERLY,
@@ -116,6 +117,7 @@ public class TimeVariableUtils {
             case YEARLY: {
                 dt.setYear(Integer.parseInt(timeValue.getYear()));
                 dt.setDayOfYear(dt.dayOfYear().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case BIYEARLY: {
@@ -124,6 +126,7 @@ public class TimeVariableUtils {
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod * 6);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case FOUR_MONTHLY: {
@@ -132,6 +135,7 @@ public class TimeVariableUtils {
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod * 4);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case QUARTERLY: {
@@ -140,6 +144,7 @@ public class TimeVariableUtils {
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod * 3);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case MONTHLY: {
@@ -148,6 +153,7 @@ public class TimeVariableUtils {
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1));
                 dt.setMonthOfYear(subPeriod);
                 dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case WEEKLY: {
@@ -155,6 +161,7 @@ public class TimeVariableUtils {
                 int subPeriod = Integer.parseInt(timeValue.getWeek());
                 dt.setWeekOfWeekyear(subPeriod);
                 dt.setDayOfWeek(dt.dayOfWeek().getMaximumValue());
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
                 break;
             }
             case DAILY: {
@@ -163,10 +170,20 @@ public class TimeVariableUtils {
                 int day = Integer.parseInt(timeValue.getDay());
                 dt.setMonthOfYear(month);
                 dt.setDayOfMonth(day);
+                dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
+                break;
+            }
+            case HOURLY: {
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
+                dt.setMonthOfYear(Integer.parseInt(timeValue.getMonth()));
+                dt.setDayOfMonth(Integer.parseInt(timeValue.getDay()));
+                dt.setHourOfDay(Integer.parseInt(timeValue.getHour()));
+                dt.setMinuteOfHour(Integer.parseInt(timeValue.getMinutes()));
+                dt.setSecondOfMinute(Integer.parseInt(timeValue.getSeconds()));
+                dt.setMillisOfSecond(dt.millisOfSecond().getMaximumValue());
                 break;
             }
         }
-        dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
         return dt.toDate();
     }
 
@@ -338,24 +355,28 @@ public class TimeVariableUtils {
         InternationalString target = new InternationalString();
         for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
             String label = localisedStringTranslation.getLabel();
-            if (timeValue.getYear() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValue.getYear());
-            }
-            if (timeValue.getMonth() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValue.getMonth());
-            }
-            if (timeValue.getWeek() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValue.getWeek());
-            }
-            if (timeValue.getDay() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValue.getDay());
-            }
+
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValue.getYear());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValue.getMonth());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValue.getWeek());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValue.getDay());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_HOUR_IN_LABEL, timeValue.getHour());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_MINUTES_IN_LABEL, timeValue.getMinutes());
+            label = replacePlaceHolder(label, IndicatorsConstants.TRANSLATION_SECONDS_IN_LABEL, timeValue.getSeconds());
+
             LocalisedString localisedString = new LocalisedString();
             localisedString.setLabel(label);
             localisedString.setLocale(localisedStringTranslation.getLocale());
             target.addText(localisedString);
         }
         return target;
+    }
+
+    private static String replacePlaceHolder(String label, String placeHolder, String value) {
+        if (value != null) {
+            label = label.replace(placeHolder, value);
+        }
+        return label;
     }
 
     public static String getTimeValueTranslationCode(String timeCode) throws MetamacException {
@@ -390,6 +411,9 @@ public class TimeVariableUtils {
                 break;
             case DAILY:
                 translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
+                break;
+            case HOURLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_HOURLY;
                 break;
         }
         return translationCode;
