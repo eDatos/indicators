@@ -48,7 +48,7 @@ public class MetamacTimeUtils {
             }
             case MONTHLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, calculateTwoDigitsMonth(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, formatToTwoDigits(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case WEEKLY: {
@@ -66,11 +66,11 @@ public class MetamacTimeUtils {
             }
             case HOURLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setMonth(String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
-                timeValueFields.setDay(String.valueOf(parseTime.getStartDateTime().getDayOfMonth()));
-                timeValueFields.setHour(String.valueOf(parseTime.getStartDateTime().getHourOfDay()));
-                timeValueFields.setMinutes(String.valueOf(parseTime.getStartDateTime().getMinuteOfHour()));
-                timeValueFields.setSeconds(String.valueOf(parseTime.getStartDateTime().getSecondOfMinute()));
+                timeValueFields.setMonth(formatToTwoDigits(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setDay(formatToTwoDigits(parseTime.getStartDateTime().getDayOfMonth()));
+                timeValueFields.setHour(formatToTwoDigits(parseTime.getStartDateTime().getHourOfDay()));
+                timeValueFields.setMinutes(formatToTwoDigits(parseTime.getStartDateTime().getMinuteOfHour()));
+                timeValueFields.setSeconds(formatToTwoDigits(parseTime.getStartDateTime().getSecondOfMinute()));
                 break;
             }
             default:
@@ -96,8 +96,8 @@ public class MetamacTimeUtils {
         }
     }
 
-    private static String calculateTwoDigitsMonth(int monthOfYear) {
-        return String.format("%02d", monthOfYear);
+    private static String formatToTwoDigits(int value) {
+        return String.format("%02d", value);
     }
 
     /**
