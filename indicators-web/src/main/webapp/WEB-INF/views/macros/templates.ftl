@@ -23,6 +23,7 @@
 						  <li class="inactive"><a href="/istac/istac/" accesskey="2" title="El ISTAC (tecla de acceso: 2)">El ISTAC</a></li>
 						  <li class="inactive"><a href="/istac/webescolar/" accesskey="3" title="WEB Escolar (tecla de acceso: 3)">WEB Escolar</a></li>
 						  <li class="inactive"><a href="/istac/noticias/" accesskey="4" title="Noticias (tecla de acceso: 4)">Noticias</a></li>
+						  <li class="inactive"><a href="https://sede.gobcan.es/istac/datos-abiertos/" class="inactive" accesskey="5" title="Datos abiertos (tecla de acceso: 5)">Datos abiertos</a></li>
 					</ul>
 					[#include "/layout/buscador.ftl"]
 				</div>

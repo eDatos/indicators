@@ -5,6 +5,7 @@ html {
 body {
 	overflow: hidden;
 }
+
 #cabecera h1 a {
 	background: url("../images/logo_istac.jpg") no-repeat scroll
 		5px 5px transparent;
@@ -23,6 +24,10 @@ body {
 #migas .redes_sociales {
     float: right;
     margin-top: 7px;
+}
+
+#migas .redes_sociales a {
+	margin-left: 2px;
 }
 
 .left-cellOFF2 ul {
@@ -53,8 +58,7 @@ body {
 	display: inline-block;
 	font-size: 0.9em;
 	list-style-type: none;
-	padding-right: 2px;
-	margin-right: 1px;
+	padding: 0 5px 0 0;
 }
 
 #cabecera #cab_superior ul li a {
@@ -85,7 +89,7 @@ body {
 
 #cabecera #menu_contextual ul.menu li {
 	display: inline;
-	margin-right: 5px;
+	margin-right: 2px;
 	text-transform: uppercase;
 }
 
