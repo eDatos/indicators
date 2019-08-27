@@ -4,6 +4,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.notices.rest.internal.v1_0.service.NoticesV1_0;
@@ -15,14 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestApiLocator {
 
+    private static final int                           STATISTICAL_RESOURCES_INTERNAL_API_RECEIVE_TIMEOUT_VALUE = 300000;
+
     @Autowired
     private ConfigurationService                       configurationService;
 
-    private StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10  = null;
+    private StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10               = null;
 
-    private NoticesV1_0                                noticesV10                                  = null;
+    private NoticesV1_0                                noticesV10                                               = null;
 
-    private StatisticalResourcesV1_0                   statisticalResourcesRestInternalFacacadeV10 = null;
+    private StatisticalResourcesV1_0                   statisticalResourcesRestInternalFacacadeV10              = null;
 
     @PostConstruct
     public void initService() throws MetamacException {
@@ -34,6 +38,7 @@ public class RestApiLocator {
 
         String statisticalResourcesInternalApiUrlBase = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
         statisticalResourcesRestInternalFacacadeV10 = JAXRSClientFactory.create(statisticalResourcesInternalApiUrlBase, StatisticalResourcesV1_0.class, null, true); // true to do thread safe
+        setReceiveTimeout(statisticalResourcesRestInternalFacacadeV10, RestApiLocator.STATISTICAL_RESOURCES_INTERNAL_API_RECEIVE_TIMEOUT_VALUE);
     }
 
     public StatisticalOperationsRestInternalFacadeV10 getStatisticalOperationsRestFacadeV10() {
@@ -60,4 +65,10 @@ public class RestApiLocator {
         return noticesV10;
     }
 
+    private void setReceiveTimeout(Object client, long receiveTimeoutValue) {
+        HTTPConduit httpConduit = WebClient.getConfig(client).getHttpConduit();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        httpClientPolicy.setReceiveTimeout(receiveTimeoutValue);
+        httpConduit.setClient(httpClientPolicy);
+    }
 }
