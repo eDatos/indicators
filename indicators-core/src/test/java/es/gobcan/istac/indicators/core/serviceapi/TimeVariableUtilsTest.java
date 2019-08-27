@@ -54,16 +54,31 @@ public class TimeVariableUtilsTest {
 
     @Test
     public void testParseHourlyTimeValue() throws MetamacException {
-        String hourlyTimeValue = "2008-08-29T23:45:36";
+        {
+            String hourlyTimeValue = "2008-11-29T23:45:36";
 
-        TimeValue timeValue = TimeVariableUtils.parseTimeValue(hourlyTimeValue);
+            TimeValue timeValue = TimeVariableUtils.parseTimeValue(hourlyTimeValue);
 
-        assertEquals("2008", timeValue.getYear());
-        assertEquals("8", timeValue.getMonth());
-        assertEquals("29", timeValue.getDay());
-        assertEquals("23", timeValue.getHour());
-        assertEquals("45", timeValue.getMinutes());
-        assertEquals("36", timeValue.getSeconds());
+            assertEquals("2008", timeValue.getYear());
+            assertEquals("11", timeValue.getMonth());
+            assertEquals("29", timeValue.getDay());
+            assertEquals("23", timeValue.getHour());
+            assertEquals("45", timeValue.getMinutes());
+            assertEquals("36", timeValue.getSeconds());
+        }
+
+        {
+            String hourlyTimeValue = "2008-01-01T01:01:01";
+
+            TimeValue timeValue = TimeVariableUtils.parseTimeValue(hourlyTimeValue);
+
+            assertEquals("2008", timeValue.getYear());
+            assertEquals("01", timeValue.getMonth());
+            assertEquals("01", timeValue.getDay());
+            assertEquals("01", timeValue.getHour());
+            assertEquals("01", timeValue.getMinutes());
+            assertEquals("01", timeValue.getSeconds());
+        }
     }
 
     @Test
