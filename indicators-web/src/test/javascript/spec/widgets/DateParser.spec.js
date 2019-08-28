@@ -10,8 +10,8 @@ describe('Date Parser', function () {
 
     }
 
-    var date = function (year, month, day) {
-        return moment({year : year, month : month, day : day}).utc().valueOf();
+    var date = function (year, month, day, hour = 0, minute = 0, second = 0) {
+        return moment({year : year, month : month, day : day, hour : hour, minute : minute, second : second}).utc().valueOf();
     };
 
     it('should format yearly date', function () {
@@ -28,6 +28,12 @@ describe('Date Parser', function () {
         testParse("1999Q2", date(1999, 5, 1));
         testParse("1999Q3", date(1999, 8, 1));
         testParse("1999Q4", date(1999, 11, 1));
+    });
+    
+    it('should format Four monthly date', function () {
+        testParse("1999T1", date(1999, 3, 1));
+        testParse("1999T2", date(1999, 7, 1));
+        testParse("1999T3", date(1999, 11, 1));
     });
 
     it('should format Montly date', function () {
@@ -46,6 +52,14 @@ describe('Date Parser', function () {
     it('should format Daily date', function () {
         testParse("20130113", date(2013, 0, 13));
         testParse("20131209", date(2013, 11, 9));
+    });
+    
+    it('should format Hourly date', function () {
+        testParse("2013-07-24T13:21:52", date(2013, 6, 24, 13, 21, 52));
+        testParse("2013-01-01T00:00:00", date(2013, 0, 1, 0, 0, 0));
+        testParse("2013-01-31T23:59:59", date(2013, 0, 31, 23, 59, 59));
+        testParse("2013-12-31T23:59:59", date(2013, 11, 31, 23, 59, 59));
+        testParse("2019-08-28T11:30:59", date(2019, 7, 28, 11, 30, 59));
     });
 
 });
