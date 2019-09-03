@@ -42,11 +42,11 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
     }
 
     private enum IndicatorInstancesPropertyOrder {
-        update, id
+        UPDATE, ID
     }
 
     public enum IndicatorInstancesPropertyRestriction {
-        geographicalValue, id
+        GEOGRAPHICALVALUE, ID
     }
 
     private class IndicatorInstancesCriteriaCallback implements RestCriteria2SculptorCriteria.CriteriaCallback {
@@ -62,7 +62,7 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
             String value = propertyRestriction.getValue();
             switch (propertyNameCriteria) {
 
-                case id: {
+                case ID: {
                     if (propertyRestriction.getValue() != null) {
                         return new SculptorPropertyCriteria(IndicatorInstanceProperties.code(), propertyRestriction.getValue(), propertyRestriction.getOperationType());
                     } else if (propertyRestriction.getValueList() != null) {
@@ -71,7 +71,7 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
                     }
                 }
 
-                case geographicalValue: {
+                case GEOGRAPHICALVALUE: {
                     return new SculptorPropertyCriteria(IndicatorInstanceProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
                 }
 
@@ -84,11 +84,11 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
         public Property retrievePropertyOrder(MetamacRestOrder order) throws RestException {
             IndicatorInstancesPropertyOrder propertyNameCriteria = IndicatorInstancesPropertyOrder.valueOf(order.getPropertyName());
             switch (propertyNameCriteria) {
-                case update: {
+                case UPDATE: {
                     return new LeafProperty<IndicatorInstance>(IndicatorInstanceProperties.lastPopulateDate().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true,
                             IndicatorInstance.class);
                 }
-                case id: {
+                case ID: {
                     return IndicatorInstanceProperties.id();
                 }
             }
