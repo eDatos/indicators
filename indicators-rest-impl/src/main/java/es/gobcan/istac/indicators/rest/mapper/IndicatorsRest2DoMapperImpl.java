@@ -40,11 +40,13 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
     }
 
     private enum IndicatorsPropertyOrder {
-        update, id
+        UPDATE, ID
     }
 
+    // The words of a value of an enumerated should be separated by underscores. In this case, the values GEOGRAPHICALVALUE and SUBJECTCODE don't have the underscore for not changing the API and the
+    // documentation associated with them.
     public enum IndicatorsPropertyRestriction {
-        geographicalValue, subjectCode, id
+        GEOGRAPHICALVALUE, SUBJECTCODE, ID
     }
 
     private class IndicatorsCriteriaCallback implements RestCriteria2SculptorCriteria.CriteriaCallback {
@@ -59,10 +61,10 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             IndicatorsPropertyRestriction propertyNameCriteria = IndicatorsPropertyRestriction.valueOf(propertyRestriction.getPropertyName());
             String value = propertyRestriction.getValue();
             switch (propertyNameCriteria) {
-                case subjectCode: {
+                case SUBJECTCODE: {
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), value, propertyRestriction.getOperationType());
                 }
-                case id: {
+                case ID: {
                     if (propertyRestriction.getValue() != null) {
                         return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().code(), propertyRestriction.getValue(), propertyRestriction.getOperationType());
                     } else if (propertyRestriction.getValueList() != null) {
@@ -71,7 +73,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                     }
                 }
 
-                case geographicalValue: {
+                case GEOGRAPHICALVALUE: {
                     // We can use "lastValuesCache" because this cache have all the geographicalValues of the indicator with the lastData for each value.
                     // The lastValue for geocode01 and geocode02 can be different points of time.
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
@@ -85,11 +87,11 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
         public Property retrievePropertyOrder(MetamacRestOrder order) throws RestException {
             IndicatorsPropertyOrder propertyNameCriteria = IndicatorsPropertyOrder.valueOf(order.getPropertyName());
             switch (propertyNameCriteria) {
-                case update: {
+                case UPDATE: {
                     return new LeafProperty<IndicatorVersion>(IndicatorVersionProperties.lastPopulateDate().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true,
                             IndicatorVersion.class);
                 }
-                case id: {
+                case ID: {
                     return IndicatorVersionProperties.id();
                 }
             }
