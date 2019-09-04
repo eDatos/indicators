@@ -43,6 +43,8 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
         UPDATE, ID
     }
 
+    // The words of a value of an enumerated should be separated by underscores. In this case, the values GEOGRAPHICALVALUE and SUBJECTCODE don't have the underscore for not changing the API and the
+    // documentation associated with them.
     public enum IndicatorsPropertyRestriction {
         GEOGRAPHICALVALUE, SUBJECTCODE, ID
     }
