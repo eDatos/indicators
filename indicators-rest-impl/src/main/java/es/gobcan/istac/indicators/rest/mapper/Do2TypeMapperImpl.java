@@ -25,7 +25,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
-
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -402,7 +402,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         if (observationDto == null) {
                             observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
                         } else if (observationDto.getPrimaryMeasure() == null) {
-                            observationDto.setPrimaryMeasure(".");
+                            observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
                         }
 
                         // PRIMARY MEASURE
