@@ -12,6 +12,8 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class MetamacTimeUtils {
 
+    private static final String HYPHEN = "-";
+
     public static Boolean isTimeValue(String value) {
         return SdmxTimeUtils.isObservationalTimePeriod(value);
     }
@@ -48,7 +50,7 @@ public class MetamacTimeUtils {
             }
             case MONTHLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, formatToTwoDigits(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR, calculateMonthlyFromMonth(parseTime.getStartDateTime().getMonthOfYear()));
                 break;
             }
             case WEEKLY: {
@@ -96,6 +98,10 @@ public class MetamacTimeUtils {
         }
     }
 
+    private static String calculateMonthlyFromMonth(int value) {
+        return formatToTwoDigits(value);
+    }
+
     private static String formatToTwoDigits(int value) {
         return String.format("%02d", value);
     }
@@ -115,30 +121,32 @@ public class MetamacTimeUtils {
             }
             case BIYEARLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(6);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_SEMESTER_PERIOD_INDICATOR)
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_SEMESTER_PERIOD_INDICATOR)
                         .append(calculateBiyearlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case FOUR_MONTHLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(4);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_TRIMESTER_PERIOD_INDICATOR)
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_TRIMESTER_PERIOD_INDICATOR)
                         .append(calculateQuarterlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case QUARTERLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(3);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_QUARTER_PERIOD_INDICATOR)
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_QUARTER_PERIOD_INDICATOR)
                         .append(calculateQuarterlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case MONTHLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(1);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR).append(previous.getMonthOfYear()).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR)
+                        .append(calculateMonthlyFromMonth(previous.getMonthOfYear())).toString();
             }
             case WEEKLY: {
                 DateTime previous = parseTime.getStartDateTime().minusWeeks(1);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR).append(previous.getWeekOfWeekyear()).toString();
+                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR).append(previous.getWeekOfWeekyear())
+                        .toString();
             }
             case DAILY: {
                 DateTime previous = parseTime.getStartDateTime().minusDays(1);
-                return previous.toString("yyyyMMdd");
+                return previous.toString("yyyy-MM-dd");
             }
             case HOURLY: {
                 DateTime previous = parseTime.getStartDateTime().minusHours(1);

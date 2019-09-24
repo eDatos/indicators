@@ -68,4 +68,11 @@ public class IndicatorsConstants {
     public static final String API_VERSION_1_0                           = "v1.0";
     public static final String API_INDICATORS_INDICATORS                 = "indicators";
 
+    public static final String DOT_1_NOT_APPLICABLE                      = ".";
+    public static final String DOT_2_UNAVAILABLE                         = "..";
+    public static final String DOT_3_HIDDEN_BY_IMPRECISION               = "...";
+    public static final String DOT_4_HIDDEN_BY_SECRET                    = "....";
+    public static final String DOT_5_INCLUDED_ELSEWHERE                  = ".....";
+    public static final String DOT_6_UNAVAILABLE_BY_HOLIDAYS             = "......";
+
 }

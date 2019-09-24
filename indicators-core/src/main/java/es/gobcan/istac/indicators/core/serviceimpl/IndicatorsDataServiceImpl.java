@@ -121,8 +121,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public static final String                     OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
     public static final String                     DATASET_REPOSITORY_LOCALE = "es";
 
-    public static final String                     DOT_NOT_APPLICABLE        = ".";
-    public static final String                     DOT_UNAVAILABLE           = "..";
     public static final Double                     ZERO_RANGE                = 1E-6;
     public static final int                        MAX_MEASURE_LENGTH        = 50;
 
@@ -132,12 +130,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
         SPECIAL_STRING_MAPPING.put("", "");
         SPECIAL_STRING_MAPPING.put("-", "");
-        SPECIAL_STRING_MAPPING.put(".", "No procede");
-        SPECIAL_STRING_MAPPING.put("..", "Dato no disponible");
-        SPECIAL_STRING_MAPPING.put("...", "Dato oculto por impreciso o baja calidad");
-        SPECIAL_STRING_MAPPING.put("....", "Dato oculto por secreto estadístico");
-        SPECIAL_STRING_MAPPING.put(".....", "Dato incluido en otra categoría");
-        SPECIAL_STRING_MAPPING.put("......", "Dato no disponible por vacaciones o festivos");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_1_NOT_APPLICABLE, "No procede");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_2_UNAVAILABLE, "Dato no disponible");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_3_HIDDEN_BY_IMPRECISION, "Dato oculto por impreciso o baja calidad");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_4_HIDDEN_BY_SECRET, "Dato oculto por secreto estadístico");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_5_INCLUDED_ELSEWHERE, "Dato incluido en otra categoría");
+        SPECIAL_STRING_MAPPING.put(IndicatorsConstants.DOT_6_UNAVAILABLE_BY_HOLIDAYS, "Dato no disponible por vacaciones o festivos");
     }
 
     @Autowired
@@ -1719,7 +1717,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         if (previousTimeValue == null) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(IndicatorsConstants.DOT_1_NOT_APPLICABLE)));
             observation.setPrimaryMeasure(null);
             return observation;
         }
@@ -1741,7 +1739,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         /* Some observations were not found */
         if (currentObs == null || previousObs == null) {
             observation.setPrimaryMeasure(null);
-            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_UNAVAILABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(IndicatorsConstants.DOT_2_UNAVAILABLE)));
             return observation;
         }
 
@@ -1765,7 +1763,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (dataOperation.isPercentageMethod()) {
                 if (Math.abs(previousValue) < ZERO_RANGE) {
                     observation.setPrimaryMeasure(null);
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(IndicatorsConstants.DOT_1_NOT_APPLICABLE)));
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
