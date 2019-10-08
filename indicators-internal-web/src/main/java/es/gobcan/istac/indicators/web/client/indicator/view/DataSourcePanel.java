@@ -108,7 +108,7 @@ public class DataSourcePanel extends VLayout {
     public DataSourcePanel() {
         // MainFormLayout
 
-        mainFormLayout = new DataSourceMainFormLayout(ClientSecurityUtils.canEditDataSource());
+        mainFormLayout = new DataSourceMainFormLayout();
         mainFormLayout.setTitleLabelContents(getConstants().dataSource());
 
         // Edit: Add a custom handler to check indicator status before start editing
@@ -265,8 +265,8 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
-        dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
-                dataStructureDtoEdition.getSurveyTitle()));
+        dataSourceDto
+                .setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setSourceSurveyAcronym(generalEditionForm.getValueAsInternationalStringDto(DataSourceDS.SOURCE_SURVEY_ACRONYM));
             dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
@@ -379,13 +379,13 @@ public class DataSourcePanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
         if (!StringUtils.isBlank(dataStructureDto.getContVariable())) {
             // If there is a contVariable (measure variable), set variable values
-            ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
-                    dataStructureDto.getValueLabels()));
+            ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD))
+                    .setValueMap(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
 
             interperiodPuntualRateEditionForm
                     .setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
-            interperiodPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
-                    dataStructureDto.getValueLabels()));
+            interperiodPercentageRateEditionForm
+                    .setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
             annualPuntualRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
             annualPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
         } else {
@@ -520,6 +520,11 @@ public class DataSourcePanel extends VLayout {
         interperiodPercentageRateEditionForm.setIndicator(indicatorDto);
         annualPuntualRateEditionForm.setIndicator(indicatorDto);
         annualPercentageRateEditionForm.setIndicator(indicatorDto);
+        setCanEdit(indicatorDto);
+    }
+
+    private void setCanEdit(IndicatorDto indicatorDto) {
+        mainFormLayout.setCanEdit(ClientSecurityUtils.canEditDataSource(indicatorDto));
     }
 
     private void createViewForm() {
@@ -758,25 +763,21 @@ public class DataSourcePanel extends VLayout {
                     // If absolute method is set, value selected cannot be the same as one of the rate methods
                     String absoluteMethod = (String) value;
 
-                    String interperiodPuntualMethod = interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? interperiodPuntualRateEditionForm
-                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
-                            ? DataSourceDto.OBS_VALUE
-                            : null);
+                    String interperiodPuntualMethod = interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible()
+                            ? interperiodPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)
+                            : (interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible() ? DataSourceDto.OBS_VALUE : null);
 
-                    String interperiodPercentageMethod = interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? interperiodPercentageRateEditionForm
-                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
-                            ? DataSourceDto.OBS_VALUE
-                            : null);
+                    String interperiodPercentageMethod = interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible()
+                            ? interperiodPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)
+                            : (interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible() ? DataSourceDto.OBS_VALUE : null);
 
-                    String annualPuntualMethod = annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? annualPuntualRateEditionForm
-                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
-                            ? DataSourceDto.OBS_VALUE
-                            : null);
+                    String annualPuntualMethod = annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible()
+                            ? annualPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)
+                            : (annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible() ? DataSourceDto.OBS_VALUE : null);
 
-                    String annualPercentageMethod = annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? annualPercentageRateEditionForm
-                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
-                            ? DataSourceDto.OBS_VALUE
-                            : null);
+                    String annualPercentageMethod = annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible()
+                            ? annualPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)
+                            : (annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible() ? DataSourceDto.OBS_VALUE : null);
 
                     if (absoluteMethod.equals(interperiodPuntualMethod) || absoluteMethod.equals(interperiodPercentageMethod) || absoluteMethod.equals(annualPuntualMethod)
                             || absoluteMethod.equals(annualPercentageMethod)) {

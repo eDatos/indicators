@@ -245,42 +245,10 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             public void onSelectionChanged(SelectionEvent event) {
                 ListGridRecord[] selectedRecords = indicatorList.getListGrid().getSelectedRecords();
 
-                boolean someIndicatorsEnabledNotifyPopulationErrors = false;
-                boolean someIndicatorsDisabledNotifyPopulationErrors = false;
-                if (selectedRecords != null && selectedRecords.length > 0) {
-                    for (ListGridRecord record : selectedRecords) {
-                        boolean notifyPopulationErrors = record.getAttributeAsBoolean(IndicatorDS.NOTIFY_POPULATION_ERRORS);
-                        if (notifyPopulationErrors) {
-                            someIndicatorsEnabledNotifyPopulationErrors = true;
-                        } else {
-                            someIndicatorsDisabledNotifyPopulationErrors = true;
-                        }
-                    }
-                }
+                showDeleteButton(selectedRecords);
+                showEnableNotifyPopulationErrorButton(selectedRecords);
+                showDisableNotifyPopulationErrorButton(selectedRecords);
 
-                if (ClientSecurityUtils.canDeleteIndicator()) {
-                    if (selectedRecords.length > 0) {
-                        deleteIndicatorActor.show();
-                    } else {
-                        deleteIndicatorActor.hide();
-                    }
-                }
-
-                if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
-                    if (someIndicatorsDisabledNotifyPopulationErrors) {
-                        enableNotifyPopulationErrors.show();
-                    } else {
-                        enableNotifyPopulationErrors.hide();
-                    }
-                }
-
-                if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
-                    if (someIndicatorsEnabledNotifyPopulationErrors) {
-                        disableNotifyPopulationErrors.show();
-                    } else {
-                        disableNotifyPopulationErrors.hide();
-                    }
-                }
             }
         });
 
@@ -295,5 +263,72 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             }
         });
         indicatorList.setHeight100();
+    }
+
+    private void showDisableNotifyPopulationErrorButton(ListGridRecord[] selectedRecords) {
+        boolean canBeShownDisableNotifyPopulationErrorButton = Boolean.FALSE;
+
+        if (selectedRecords != null && selectedRecords.length > 0) {
+            for (ListGridRecord record : selectedRecords) {
+                if (record.getAttributeAsBoolean(IndicatorDS.NOTIFY_POPULATION_ERRORS) && ClientSecurityUtils.canDisableNotifyPopulationErrors(getDtoFromRecord(record))) {
+                    canBeShownDisableNotifyPopulationErrorButton = Boolean.TRUE;
+                } else {
+                    canBeShownDisableNotifyPopulationErrorButton = Boolean.FALSE;
+                    break;
+                }
+            }
+        }
+
+        if (canBeShownDisableNotifyPopulationErrorButton) {
+            disableNotifyPopulationErrors.show();
+        } else {
+            disableNotifyPopulationErrors.hide();
+        }
+    }
+
+    private void showEnableNotifyPopulationErrorButton(ListGridRecord[] selectedRecords) {
+        boolean canBeShownEnableNotifyPopulationError = Boolean.FALSE;
+
+        if (selectedRecords != null && selectedRecords.length > 0) {
+            for (ListGridRecord record : selectedRecords) {
+                if (!record.getAttributeAsBoolean(IndicatorDS.NOTIFY_POPULATION_ERRORS) && ClientSecurityUtils.canEnableNotifyPopulationErrors(getDtoFromRecord(record))) {
+                    canBeShownEnableNotifyPopulationError = Boolean.TRUE;
+                } else {
+                    canBeShownEnableNotifyPopulationError = Boolean.FALSE;
+                    break;
+                }
+            }
+        }
+
+        if (canBeShownEnableNotifyPopulationError) {
+            enableNotifyPopulationErrors.show();
+        } else {
+            enableNotifyPopulationErrors.hide();
+        }
+    }
+
+    private void showDeleteButton(ListGridRecord[] selectedRecords) {
+        boolean canBeDeleted = Boolean.FALSE;
+        if (selectedRecords != null && selectedRecords.length > 0) {
+            for (ListGridRecord record : selectedRecords) {
+                if (ClientSecurityUtils.canDeleteIndicator(getDtoFromRecord(record))) {
+                    canBeDeleted = Boolean.TRUE;
+                } else {
+                    canBeDeleted = Boolean.FALSE;
+                    break;
+                }
+            }
+        }
+
+        if (canBeDeleted) {
+            deleteIndicatorActor.show();
+        } else {
+            deleteIndicatorActor.hide();
+        }
+    }
+
+    private IndicatorSummaryDto getDtoFromRecord(ListGridRecord record) {
+        IndicatorRecord indicatorRecord = (IndicatorRecord) record;
+        return (IndicatorSummaryDto) indicatorRecord.getIndicatorDto();
     }
 }

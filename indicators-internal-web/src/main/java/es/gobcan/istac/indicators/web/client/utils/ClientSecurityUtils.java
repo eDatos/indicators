@@ -1,8 +1,11 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.util.shared.SharedSecurityUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
@@ -98,100 +101,69 @@ public class ClientSecurityUtils {
     // INDICATORS
 
     public static boolean canCreateIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canEditIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canEditIndicator(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canDeleteIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canDeleteIndicator(IndicatorSummaryDto indicatorSummaryDto) {
+        return isNotTaskInBackground(indicatorSummaryDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canSendIndicatorToProductionValidation() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canSendIndicatorToProductionValidation(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canSendIndicatorToDiffusionValidation() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canSendIndicatorToDiffusionValidation(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION);
     }
 
-    public static boolean canRejectIndicatorProductionValidation() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canRejectIndicatorProductionValidation(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION);
     }
 
-    public static boolean canRejectIndicatorDiffusionValidation() {
-        if (isRoleAllowed(RoleEnum.TECNICO_DIFUSION)) {
-            return true;
-        }
-        return false;
+    public static boolean canRejectIndicatorDiffusionValidation(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_DIFUSION);
     }
 
-    public static boolean canPublishIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION)) {
-            return true;
-        }
-        return false;
+    public static boolean canPublishIndicator(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
-    public static boolean canArchiveIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_DIFUSION)) {
-            return true;
-        }
-        return false;
+    public static boolean canArchiveIndicator(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_DIFUSION);
     }
 
-    public static boolean canVersioningIndicator() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canVersioningIndicator(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canPopulateIndicatorData() {
-        return SharedSecurityUtils.canPopulateIndicatorData(IndicatorsWeb.getCurrentUser());
+    public static boolean canPopulateIndicatorData(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && SharedSecurityUtils.canPopulateIndicatorData(IndicatorsWeb.getCurrentUser());
     }
 
     // DATA SOURCES
 
-    public static boolean canCreateDataSource() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canCreateDataSource(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canDeleteDataSource() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canDeleteDataSource(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canEditDataSource() {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+    public static boolean canEditDataSource(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
+    }
+
+    private static boolean isNotTaskInBackground(IndicatorDto indicatorDto) {
+        return !BooleanUtils.isTrue(indicatorDto.getIsTaskInBackground());
+    }
+
+    private static boolean isNotTaskInBackground(IndicatorSummaryDto indicatorSummaryDto) {
+        return !BooleanUtils.isTrue(indicatorSummaryDto.getIsTaskInBackground());
     }
 
     /**
@@ -296,12 +268,20 @@ public class ClientSecurityUtils {
         return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
-    public static boolean canEnableNotifyPopulationErrors() {
-        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    public static boolean canEnableNotifyPopulationErrors(IndicatorSummaryDto indicatorSummaryDto) {
+        return isNotTaskInBackground(indicatorSummaryDto) && isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
-    public static boolean canDisableNotifyPopulationErrors() {
-        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    public static boolean canEnableNotifyPopulationErrors(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDisableNotifyPopulationErrors(IndicatorSummaryDto indicatorSummaryDto) {
+        return isNotTaskInBackground(indicatorSummaryDto) && isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDisableNotifyPopulationErrors(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
 }

@@ -363,6 +363,12 @@ Application Indicators {
     		"Export Indicators System as a DSPL zip file"
 		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description, boolean mergeTimeGranularities) throws MetamacException;
     	}
+    	
+    	"Provides access to background data operations"
+    	Service TaskService {
+			"Check if exists any kind of job task in the @param resourceId"
+    		boolean existsTaskForResource(String resourceId) throws MetamacException;
+    	}
 			    
     	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
@@ -1527,7 +1533,10 @@ Application Indicators {
 			Long versionOptimisticLocking;
 			
 			"True if user decied to receive notifications when data population fail in this indicator"
-            Boolean notifyPopulationErrors not nullable;					    
+            Boolean notifyPopulationErrors not nullable;
+            
+            "True if a task related with the indicator is being executed in background"
+			Boolean isTaskInBackground;
 	    }
 	    
 	    "Dto for indicator. Summary information"
@@ -1542,6 +1551,9 @@ Application Indicators {
        		- @IndicatorVersionSummaryDto productionVersion;
        		"Diffusion version: published, archived"
        		- @IndicatorVersionSummaryDto diffusionVersion;
+       		
+       		"True if a task related with the indicator is being executed in background"
+			Boolean isTaskInBackground;
 	    }
 	    
 	    "Dto for version of indicator. Summary information"

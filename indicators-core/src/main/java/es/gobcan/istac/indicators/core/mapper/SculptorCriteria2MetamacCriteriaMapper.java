@@ -1,7 +1,9 @@
 package es.gobcan.istac.indicators.core.mapper;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -20,7 +22,7 @@ public interface SculptorCriteria2MetamacCriteriaMapper {
 
     MetamacCriteriaResult<IndicatorsSystemSummaryDto> pageResultToMetamacCriteriaResultIndicatorsSystemSummary(PagedResult<IndicatorsSystemVersion> source, Integer pageSize);
 
-    MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(PagedResult<IndicatorVersion> source, Integer pageSize);
+    MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(ServiceContext ctx, PagedResult<IndicatorVersion> source, Integer pageSize) throws MetamacException;
 
     MetamacCriteriaResult<GeographicalValueDto> pageResultToMetamacCriteriaResultGeographicalValue(PagedResult<GeographicalValue> source, Integer pageSize);
 
