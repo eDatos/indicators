@@ -209,6 +209,9 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         if (ClientSecurityUtils.canEnableNotifyPopulationErrors(indicator)) {
             enableNotifyPopulationErrors.show();
             disableNotifyPopulationErrors.hide();
+        } else {
+            enableNotifyPopulationErrors.hide();
+            disableNotifyPopulationErrors.hide();
         }
     }
 
@@ -216,6 +219,9 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         if (ClientSecurityUtils.canDisableNotifyPopulationErrors(indicator)) {
             disableNotifyPopulationErrors.show();
             enableNotifyPopulationErrors.hide();
+        } else {
+            enableNotifyPopulationErrors.hide();
+            disableNotifyPopulationErrors.hide();
         }
     }
 

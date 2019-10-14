@@ -230,11 +230,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        LOG.info("Planning a populate indicator data for indicator uuid {}", indicatorUuid);
+        // Validation
+        InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
+
+        // Retrieve
+        Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
 
         getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid);
+    }
 
-        LOG.info("Planned a populate indicator data for indicator uuid {}", indicatorUuid);
+    private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {
+        // TODO EDATOS-3047 just for testing!
+        if (getTaskService().existsTaskForResource(ctx, resourceId) || "d5bf49b6-b8bd-4b25-b443-6e7b05c8f1fb".equals(resourceId)) {
+            throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, resourceId);
+        }
     }
 
     @Override

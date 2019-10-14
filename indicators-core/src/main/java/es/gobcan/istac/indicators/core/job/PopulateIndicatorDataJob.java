@@ -17,19 +17,17 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskServiceFacade;
 
 public class PopulateIndicatorDataJob implements Job {
 
-    protected final Logger             logger                     = LoggerFactory.getLogger(getClass());
+    protected final Logger     logger            = LoggerFactory.getLogger(getClass());
 
-    public static final String         USER                       = "user";
-    public static final String         INDICATOR_UUID             = "indicatorUuid";
+    public static final String USER              = "user";
+    public static final String INDICATOR_UUID    = "indicatorUuid";
 
-    private TaskServiceFacade          taskServiceFacade          = null;
-    private NoticesRestInternalService noticesRestInternalService = null;
-    protected ServiceContext           serviceContext             = null;
+    private TaskServiceFacade  taskServiceFacade = null;
+    protected ServiceContext   serviceContext    = null;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

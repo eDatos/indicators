@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Indicator;
-import es.gobcan.istac.indicators.core.domain.IndicatorRepository;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
@@ -48,9 +47,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
-    @Autowired
-    private IndicatorRepository            indicatorRepository;
-
     public TaskServiceImpl() {
         // NOTHING TO DO HERE
     }
@@ -65,9 +61,14 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         InvocationValidator.checkPlanifyPopulationIndicatorData(indicatorUuid, null);
 
         try {
+            logger.info("Planning a populate indicator data for indicator uuid {}", indicatorUuid);
+
             JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid);
             SimpleTrigger trigger = createPopulateIndicatorDataTrigger(indicatorUuid);
             getScheduler().scheduleJob(jobDetail, trigger);
+
+            logger.info("Planned a populate indicator data for indicator uuid {}", indicatorUuid);
+
             return jobDetail.getKey().getName();
         } catch (Exception e) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)

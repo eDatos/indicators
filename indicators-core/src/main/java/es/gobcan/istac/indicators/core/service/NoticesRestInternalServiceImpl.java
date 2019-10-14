@@ -116,8 +116,10 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     @Override
     public void createPopulateIndicatorDataSuccessBackgroundNotification(String user, Indicator indicator) {
         try {
-            Locale locale = configurationService.retrieveLanguageDefaultLocale();
-            createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_SUCCESS, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_SUCCESS, user, indicator);
+            if (checkIfNotifyPopulationErrors(indicator)) {
+                Locale locale = configurationService.retrieveLanguageDefaultLocale();
+                createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_SUCCESS, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_SUCCESS, user, indicator);
+            }
         } catch (MetamacException e) {
             logger.error("Error creating createPopulateIndicatorDataSuccessBackgroundNotification:", e);
         }
@@ -126,11 +128,13 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     @Override
     public void createPopulateIndicatorDataErrorBackgroundNotification(String user, Indicator indicator, MetamacException metamacException) {
         try {
-            Locale locale = configurationService.retrieveLanguageDefaultLocale();
-            Throwable localisedException = translateExceptions.translateException(locale, metamacException);
+            if (checkIfNotifyPopulationErrors(indicator)) {
+                Locale locale = configurationService.retrieveLanguageDefaultLocale();
+                Throwable localisedException = translateExceptions.translateException(locale, metamacException);
 
-            createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_ERROR, user, indicator,
-                    localisedException.getMessage());
+                createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_ERROR, user, indicator,
+                        localisedException.getMessage());
+            }
         } catch (MetamacException e) {
             logger.error("Error creating createPopulateIndicatorDataErrorBackgroundNotification:", e);
         }
@@ -147,7 +151,11 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     private boolean checkIfNotifyPopulationErrors(IndicatorVersion failedIndicator) {
-        return failedIndicator.getIndicator().getNotifyPopulationErrors();
+        return checkIfNotifyPopulationErrors(failedIndicator.getIndicator());
+    }
+
+    private boolean checkIfNotifyPopulationErrors(Indicator indicator) {
+        return indicator.getNotifyPopulationErrors();
     }
 
     private void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {

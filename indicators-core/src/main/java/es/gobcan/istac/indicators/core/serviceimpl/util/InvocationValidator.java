@@ -2125,4 +2125,14 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkPlanifyPopulateIndicatorData(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
 }

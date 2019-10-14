@@ -671,6 +671,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
+
         // Set notifyPopulationErros
         indicator.setNotifyPopulationErrors(Boolean.FALSE);
 
@@ -685,6 +688,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
 
         // Set notifyPopulationErros
         indicator.setNotifyPopulationErrors(Boolean.TRUE);
