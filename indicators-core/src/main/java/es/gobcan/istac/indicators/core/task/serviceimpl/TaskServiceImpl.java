@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.taks.serviceimpl;
+package es.gobcan.istac.indicators.core.task.serviceimpl;
 
 import static org.quartz.DateBuilder.futureDate;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;

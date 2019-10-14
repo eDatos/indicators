@@ -1395,7 +1395,7 @@ Application Indicators {
 	}
 	
 	Module tasks {
-		basePackage=es.gobcan.istac.indicators.core.taks
+		basePackage=es.gobcan.istac.indicators.core.task
 		
 		"Provides access to background data operations"
     	Service TaskServiceFacade {

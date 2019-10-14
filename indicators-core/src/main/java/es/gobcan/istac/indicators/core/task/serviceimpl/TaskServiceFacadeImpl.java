@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.taks.serviceimpl;
+package es.gobcan.istac.indicators.core.task.serviceimpl;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.core.taks.serviceapi.TaskService;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 
 /**
  * Implementation of TaskServiceFacade.
