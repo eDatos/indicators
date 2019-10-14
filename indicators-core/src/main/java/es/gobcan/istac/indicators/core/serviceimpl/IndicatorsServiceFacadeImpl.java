@@ -22,7 +22,6 @@ import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.I
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -886,12 +885,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<MetamacExceptionItem> populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);
 
-        return getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
+        getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorUuid);
     }
 
     // -------------------------------------------------------------------------------------------

@@ -137,8 +137,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
 
-        // void onIndicatorDataPopulated(IndicatorDto indicatorDto);
-
         // Instance
         void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums);
 

@@ -133,5 +133,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType RESOURCE_MAXIMUM_VERSION_REACHED                         = create("exception.indicators.version.max_version_reached");
 
-    public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                    = create("exception.resources.task.scheduler.error");
+    // Tasks
+    public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                    = create("exception.indicators.task.scheduler.error");
+    public static final CommonServiceExceptionType TASKS_IN_PROGRESS                                        = create("exception.indicators.task.in_progress");
+    public static final CommonServiceExceptionType TASKS_ERROR                                              = create("exception.indicators.task.error");
 }

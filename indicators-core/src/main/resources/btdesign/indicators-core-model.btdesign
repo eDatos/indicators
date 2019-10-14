@@ -115,6 +115,7 @@ Application Indicators {
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
     		> @UnitMultiplierRepository
+    		> @TaskService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -193,6 +194,7 @@ Application Indicators {
         	> @IndicatorVersionMeasureCoverageRepository
         	> @IndicatorVersionGeoCoverageRepository
         	> @TranslationRepository
+        	> @TaskService
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -206,6 +208,8 @@ Application Indicators {
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Populates a given indicator data in background"
+	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
@@ -363,13 +367,7 @@ Application Indicators {
     		"Export Indicators System as a DSPL zip file"
 		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description, boolean mergeTimeGranularities) throws MetamacException;
     	}
-    	
-    	"Provides access to background data operations"
-    	Service TaskService {
-			"Check if exists any kind of job task in the @param resourceId"
-    		boolean existsTaskForResource(String resourceId) throws MetamacException;
-    	}
-			    
+    				    
     	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
@@ -545,8 +543,10 @@ Application Indicators {
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Populates a given indicator data"
-	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	// "Populates a given indicator data"
+	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	        "Populates a given indicator data in background"
+	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Update indicators data METAMAC"
@@ -1392,6 +1392,38 @@ Application Indicators {
             	Map<String,@Translation> findTranslationsByCodes(List<String> translationCodes);
 			}
 		} 
+	}
+	
+	Module tasks {
+		basePackage=es.gobcan.istac.indicators.core.taks
+		
+		"Provides access to background data operations"
+    	Service TaskServiceFacade {
+    		"Perform the population task"
+    		List<MetamacExceptionItem> executePopulationIndicatorDataTask(String indicatorUuid) throws MetamacException;
+    		"Send success notification for de populate indicator data job"
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid) throws MetamacException;
+    		"Send error notification for de populate indicator data job"
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;
+    	}
+    	
+    	"Provides access to background data operations"
+    	Service TaskService {
+    		> @IndicatorsDataService
+    		> @IndicatorsService  		
+    		
+			"Check if exists any kind of job task in the @param resourceId"
+    		boolean existsTaskForResource(String resourceId) throws MetamacException;
+    		"Plannify a scheduled task to populate indicator's data"
+    		String planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
+			"Perform the population task"
+			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String indicatorUuid) throws MetamacException;
+			"Send success notification for de populate indicator data job"
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid) throws MetamacException;
+    		"Send error notification for de populate indicator data job"
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;
+			
+    	}
 	}
 	
 	// ----------------------------------------------------------------

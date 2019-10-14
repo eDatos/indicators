@@ -2070,4 +2070,59 @@ public class InvocationValidator {
         }
     }
 
+    // TODO EDATOS-3047 check this code! it's duplicate! also check parameter name or first method!
+    public static void checkExistsTaskForResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkPlanifyPopulationIndicatorData(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkProcessPopulationIndicatorDataTask(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkCreatePopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(user, ServiceExceptionParameters.USER, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkCreatePopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(user, ServiceExceptionParameters.USER, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(metamacException, ServiceExceptionParameters.METAMAC_EXCEPTION, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
 }

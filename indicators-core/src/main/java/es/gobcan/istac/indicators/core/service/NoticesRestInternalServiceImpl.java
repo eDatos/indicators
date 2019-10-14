@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.lang.LocaleUtil;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
@@ -47,6 +48,9 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Autowired
     private IndicatorsConfigurationService   configurationService;
+
+    @Autowired
+    private TranslateExceptions              translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
@@ -109,6 +113,29 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         }
     }
 
+    @Override
+    public void createPopulateIndicatorDataSuccessBackgroundNotification(String user, Indicator indicator) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_SUCCESS, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_SUCCESS, user, indicator);
+        } catch (MetamacException e) {
+            logger.error("Error creating createPopulateIndicatorDataSuccessBackgroundNotification:", e);
+        }
+    }
+
+    @Override
+    public void createPopulateIndicatorDataErrorBackgroundNotification(String user, Indicator indicator, MetamacException metamacException) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            Throwable localisedException = translateExceptions.translateException(locale, metamacException);
+
+            createPopulateIndicatorDataBackgroundNotication(locale, ServiceNoticeAction.INDICATOR_POPULATION_DATA_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_DATA_ERROR, user, indicator,
+                    localisedException.getMessage());
+        } catch (MetamacException e) {
+            logger.error("Error creating createPopulateIndicatorDataErrorBackgroundNotification:", e);
+        }
+    }
+
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {
         List<IndicatorVersion> notifiableIndicators = new ArrayList<IndicatorVersion>();
         for (IndicatorVersion failedIndicatorVersion : failedPopulationIndicators) {
@@ -135,28 +162,58 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     }
 
+    private void createPopulateIndicatorDataBackgroundNotication(Locale locale, String actionCode, String messageCode, String user, Indicator indicator, Object... messageParams) {
+        ResourceInternal resourceInternal = indicatorToResourceInternal(indicator);
+
+        Message message = createMessage(locale, Arrays.asList(resourceInternal), messageCode, messageParams);
+
+        Notice notice = createPopulateIndicatorDataNotice(locale, actionCode, indicator.getCode(), message, user);
+
+        restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notice);
+    }
+
+    private Message createMessage(Locale locale, List<ResourceInternal> resources, String messageCode, Object... messageParams) {
+        String localisedMessage = (messageParams == null) ? LocaleUtil.getMessageForCode(messageCode, locale) : getMessageForCodeWithParams(messageCode, locale, messageParams);
+
+        // @formatter:off
+        return  MessageBuilder.message()
+                .withText(localisedMessage)
+                .withResources(resources)
+                .build();
+        // @formatter:off
+    }
+    
+    private Notice createPopulateIndicatorDataNotice(Locale locale, String actionCode, String actionParams, Message message, String user) {
+        String subject = getMessageForCodeWithParams(actionCode, locale, actionParams);
+    
+        // @formatter:off
+        return NoticeBuilder.notification()
+                .withMessages(message)
+                .withSendingApplication(MetamacApplicationsEnum.GESTOR_INDICADORES.getName())
+                .withReceivers(user)
+                .withSendingUser(user)
+                .withSubject(subject)
+                .build();
+        // @formatter:on
+    }
+
     private Notice createNotice(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) throws MetamacException {
         Locale locale = configurationService.retrieveLanguageDefaultLocale();
         String subject = LocaleUtil.getMessageForCode(actionCode, locale);
-        String localisedMessage = getMessageForCodeWithParams(messageCode, locale, messageParams);
         String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
 
         List<ResourceInternal> resources = indicatorVersionsToResourceInternal(failedIndicators);
 
-        // @formatter:off
-        Message message = MessageBuilder.message()
-            .withText(localisedMessage)
-            .withResources(resources)
-            .build();
+        Message message = createMessage(locale, resources, messageCode, messageParams);
 
-        Notice notification = NoticeBuilder.notification()
+        // @formatter:off
+        return NoticeBuilder.notification()
             .withMessages(message)
             .withSendingApplication(sendingApp)
             .withSubject(subject)
             .withRoles(MetamacRolesEnum.ADMINISTRADOR)
             .build();
         // @formatter:on
-        return notification;
     }
 
     private String getMessageForCodeWithParams(String actionCode, Locale locale, Object... messageParams) {
@@ -183,6 +240,20 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             resource.setKind(TypeExternalArtefactsEnum.INDICATOR.getValue());
             resource.setName(this.toInternationalString(indicatorVersion.getTitle()));
             resource.setManagementAppLink(this.toIndicatorManagementApplicationLink(indicatorVersion.getIndicator()));
+        }
+        return resource;
+    }
+
+    private ResourceInternal indicatorToResourceInternal(Indicator indicator) {
+        ResourceInternal resource = new ResourceInternal();
+        if (indicator != null) {
+            resource.setId(indicator.getCode());
+            resource.setUrn(indicator.getUuid());
+            resource.setSelfLink(toIndicatorSelfLink(indicator));
+            resource.setKind(TypeExternalArtefactsEnum.INDICATOR.getValue());
+            resource.setName(this.toInternationalString(
+                    indicator.getProductionIndicatorVersion() != null ? indicator.getProductionIndicatorVersion().getTitle() : indicator.getDiffusionIndicatorVersion().getTitle()));
+            resource.setManagementAppLink(this.toIndicatorManagementApplicationLink(indicator));
         }
         return resource;
     }

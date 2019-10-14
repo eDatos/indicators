@@ -229,6 +229,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        LOG.info("Planning a populate indicator data for indicator uuid {}", indicatorUuid);
+
+        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid);
+
+        LOG.info("Planned a populate indicator data for indicator uuid {}", indicatorUuid);
+    }
+
+    @Override
     public Indicator populateIndicatorVersionData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkPopulateIndicatorVersionData(indicatorUuid, indicatorVersionNumber, null);

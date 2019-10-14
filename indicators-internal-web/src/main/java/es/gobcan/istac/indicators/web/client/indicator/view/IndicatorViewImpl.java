@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -254,6 +255,12 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList) {
         dataSourcesPanel.setStatisticalOperations(operationsList);
 
+    }
+
+    @Override
+    public void showInformationMessage(String title, String message) {
+        InformationWindow informationWindow = new InformationWindow(title, message);
+        informationWindow.show();
     }
 
 }
