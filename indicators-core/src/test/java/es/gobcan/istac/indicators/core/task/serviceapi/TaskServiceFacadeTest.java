@@ -6,8 +6,6 @@ import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.gobcan.istac.indicators.core.taks.serviceapi.TaskServiceFacadeTestBase;
-
 /**
  * Spring based transactional test with DbUnit support.
  */
