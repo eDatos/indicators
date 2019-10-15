@@ -1421,9 +1421,30 @@ Application Indicators {
 			"Send success notification for de populate indicator data job"
     		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid) throws MetamacException;
     		"Send error notification for de populate indicator data job"
-    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;
-			
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;			
     	}
+    	
+    	// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+		"Provides information about the tasks in background"	
+	    Entity Task {
+	   	 	databaseTable = "TB_TASKS"
+	 		hint = "idSequence=TASKS"
+
+			String job length="4000" key;
+			-@TaskStatusTypeEnum status not nullable;
+			String extensionPoint length="4000" nullable;
+				   		      	
+	   		Repository TaskRepository {
+	   			save;
+	   			delete;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				findByKey;
+			}
+	    }
 	}
 	
 	// ----------------------------------------------------------------
@@ -2049,5 +2070,11 @@ Application Indicators {
             METAMAC,
             GPE
         }
+        
+        "Task Status Type Enumerated"
+    	enum TaskStatusTypeEnum {
+    		IN_PROGRESS,
+    		FAILED
+    	}
 	}
 }
