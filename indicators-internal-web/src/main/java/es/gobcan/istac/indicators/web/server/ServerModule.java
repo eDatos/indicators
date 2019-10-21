@@ -73,7 +73,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHa
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetValuesListsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.PlanifyPopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorDiffusionValidationActionHandler;
@@ -145,7 +145,6 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
-import es.gobcan.istac.indicators.web.shared.GetQueryAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
@@ -154,7 +153,7 @@ import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetValuesListsAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
@@ -270,7 +269,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
 
-        bindHandler(PopulateIndicatorDataAction.class, PopulateIndicatorDataActionHandler.class);
+        bindHandler(PlanifyPopulateIndicatorDataAction.class, PlanifyPopulateIndicatorDataActionHandler.class);
 
         // Indicators geographical and temporal variables and values
         bindHandler(GetGeographicalGranularitiesInIndicatorAction.class, GetGeographicalGranularitiesInIndicatorActionHandler.class);
@@ -296,7 +295,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
         bindHandler(GetNavigationBarUrlAction.class, GetNavigationBarUrlActionHandler.class);
         bindHandler(LoadConfigurationPropertiesAction.class, LoadConfigurationPropertiesActionHandler.class);
-        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);        
+        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);
         bindHandler(EnableNotifyPopulationErrorsAction.class, EnableNotifyPopulationErrorsActionHandler.class);
         bindHandler(DisableNotifyPopulationErrorsAction.class, DisableNotifyPopulationErrorsActionHandler.class);
 

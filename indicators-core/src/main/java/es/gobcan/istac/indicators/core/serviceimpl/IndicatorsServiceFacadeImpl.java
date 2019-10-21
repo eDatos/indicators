@@ -886,7 +886,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);
 

@@ -34,4 +34,10 @@ public class TaskServiceFacadeTest extends AbstractDbUnitJpaTests implements Tas
         // TODO EDATOS-3047 Auto-generated method stub
         fail("testCreatePopulateIndicatorDataErrorBackgroundNotification not implemented");
     }
+
+    @Override
+    public void testMarkAllInProgressTaskToFailed() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testMarkAllInProgressTaskToFailed not implemented");
+    }
 }

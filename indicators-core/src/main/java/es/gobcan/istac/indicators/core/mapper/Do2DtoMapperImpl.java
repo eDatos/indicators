@@ -230,7 +230,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setVersionOptimisticLocking(source.getVersion());
 
-        // TODO EDATOS-3047 pass right indicator identifier
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
 
         return target;
@@ -247,7 +246,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setProductionVersion(indicatorVersionDoToDtoSummary(indicator.getProductionIndicatorVersion()));
         target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicator.getDiffusionIndicatorVersion()));
 
-        // TODO EDATOS-3047 pass right indicator identifier
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
 
         return target;

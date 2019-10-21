@@ -89,8 +89,8 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
@@ -545,10 +545,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void populateData(String uuid) {
-        dispatcher.execute(new PopulateIndicatorDataAction(uuid), new WaitingAsyncCallbackHandlingError<PopulateIndicatorDataResult>(this) {
+        dispatcher.execute(new PlanifyPopulateIndicatorDataAction(uuid), new WaitingAsyncCallbackHandlingError<PlanifyPopulateIndicatorDataResult>(this) {
 
             @Override
-            public void onWaitSuccess(PopulateIndicatorDataResult result) {
+            public void onWaitSuccess(PlanifyPopulateIndicatorDataResult result) {
                 // Indicator must be reloaded to show 'task on background' message
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);

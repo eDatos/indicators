@@ -23,17 +23,23 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         // NOTHING TO DO HERE
     }
 
-    public List<MetamacExceptionItem> executePopulationIndicatorDataTask(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        return taskService.processPopulationIndicatorDataTask(ctx, indicatorUuid);
+    public List<MetamacExceptionItem> executePopulationIndicatorDataTask(ServiceContext ctx, String taskName, String indicatorUuid) throws MetamacException {
+        return taskService.processPopulationIndicatorDataTask(ctx, taskName, indicatorUuid);
     }
 
     @Override
-    public void createPopulateIndicatorDataSuccessBackgroundNotification(ServiceContext ctx, String user, String indicatorUuid) throws MetamacException {
+    public void createPopulateIndicatorDataSuccessBackgroundNotification(ServiceContext ctx, String user, String indicatorUuid) {
         taskService.createPopulateIndicatorDataSuccessBackgroundNotification(ctx, user, indicatorUuid);
     }
 
     @Override
-    public void createPopulateIndicatorDataErrorBackgroundNotification(ServiceContext ctx, String user, String indicatorUuid, MetamacException metamacException) throws MetamacException {
+    public void createPopulateIndicatorDataErrorBackgroundNotification(ServiceContext ctx, String user, String indicatorUuid, MetamacException metamacException) {
         taskService.createPopulateIndicatorDataErrorBackgroundNotification(ctx, user, indicatorUuid, metamacException);
+    }
+
+    @Override
+    // This method is only used on application startup
+    public void markAllInProgressTaskToFailed(ServiceContext ctx) {
+        taskService.markAllInProgressTaskToFailed(ctx);
     }
 }

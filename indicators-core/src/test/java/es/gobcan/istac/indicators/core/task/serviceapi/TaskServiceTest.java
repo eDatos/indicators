@@ -48,4 +48,34 @@ public class TaskServiceTest extends AbstractDbUnitJpaTests implements TaskServi
         // TODO EDATOS-3047 Auto-generated method stub
         fail("testCreatePopulateIndicatorDataErrorBackgroundNotification not implemented");
     }
+
+    @Override
+    public void testCreateTask() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testCreateTask not implemented");
+    }
+
+    @Override
+    public void testUpdateTask() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testUpdateTask not implemented");
+    }
+
+    @Override
+    public void testMarkTaskAsFinished() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testMarkTaskAsFinished not implemented");
+    }
+
+    @Override
+    public void testRetrieveTaskByJob() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testMarkTaskAsFinished not implemented");
+    }
+
+    @Override
+    public void testMarkAllInProgressTaskToFailed() throws Exception {
+        // TODO EDATOS-3047 Auto-generated method stub
+        fail("testMarkAllInProgressTaskToFailed not implemented");
+    }
 }

@@ -66,6 +66,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED      = create("exception.indicators.indicator.all_indicators_must_be_published");
     public static final CommonServiceExceptionType INDICATOR_NOT_POPULATED                                  = create("exception.indicators.indicator.not_populated");
     public static final CommonServiceExceptionType INDICATOR_FIND_DIMENSION_CODES_ERROR                     = create("exception.indicators.indicator.find_dimension_codes_error");
+    public static final CommonServiceExceptionType POPULATE_INDICATOR_JOB_ERROR                             = create("notice_message.indicators.exception.duplication_dataset_job.fails");
 
     // Exportation
     public static final CommonServiceExceptionType EXPORTATION_TSV_ERROR                                    = create("exception.indicators.exportation.tsv.error");
@@ -137,4 +138,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                    = create("exception.indicators.task.scheduler.error");
     public static final CommonServiceExceptionType TASKS_IN_PROGRESS                                        = create("exception.indicators.task.in_progress");
     public static final CommonServiceExceptionType TASKS_ERROR                                              = create("exception.indicators.task.error");
+    public static final CommonServiceExceptionType TASKS_ERROR_MAX_CURRENT_JOBS                             = create("exception.indicators.task.error.max_current_jobs");
+    public static final CommonServiceExceptionType TASKS_JOB_NOT_FOUND                                      = create("exception.indicators.task.error.not_found");
 }

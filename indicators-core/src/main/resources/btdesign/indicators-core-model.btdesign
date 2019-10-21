@@ -1400,28 +1400,43 @@ Application Indicators {
 		"Provides access to background data operations"
     	Service TaskServiceFacade {
     		"Perform the population task"
-    		List<MetamacExceptionItem> executePopulationIndicatorDataTask(String indicatorUuid) throws MetamacException;
+    		List<MetamacExceptionItem> executePopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
     		"Send success notification for de populate indicator data job"
-    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid) throws MetamacException;
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid);
     		"Send error notification for de populate indicator data job"
-    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
+    		
+    		markAllInProgressTaskToFailed();
     	}
     	
     	"Provides access to background data operations"
     	Service TaskService {
+    		> @TaskRepository
     		> @IndicatorsDataService
     		> @IndicatorsService  		
     		
 			"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
     		"Plannify a scheduled task to populate indicator's data"
-    		String planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
+    		planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
 			"Perform the population task"
-			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String indicatorUuid) throws MetamacException;
+			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
 			"Send success notification for de populate indicator data job"
-    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid) throws MetamacException;
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid);
     		"Send error notification for de populate indicator data job"
-    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException) throws MetamacException;			
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
+    		
+    		"Creates a task"
+			@Task createTask(@Task task) throws MetamacException;
+			"Updates a task"
+			@Task updateTask(@Task task) throws MetamacException;
+			"Retrieves a task by job key"
+			@Task retrieveTaskByJob(String jobKey) throws MetamacException;
+			"Mark task as finished"
+			markTaskAsFinished(String jobKey) throws MetamacException;	
+			"Mark task as failed on application startup"
+			markAllInProgressTaskToFailed();
+			
     	}
     	
     	// ----------------------------------------------------------------
@@ -1443,6 +1458,7 @@ Application Indicators {
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				findByKey;
+				deleteAndFlush(@Task task);
 			}
 	    }
 	}

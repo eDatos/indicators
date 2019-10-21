@@ -2070,7 +2070,6 @@ public class InvocationValidator {
         }
     }
 
-    // TODO EDATOS-3047 check this code! it's duplicate! also check parameter name or first method!
     public static void checkExistsTaskForResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<>();
@@ -2081,21 +2080,23 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkPlanifyPopulationIndicatorData(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkPlanifyPopulationIndicatorData(String indicatorUuid, String user, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<>();
         }
 
         IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(user, ServiceExceptionParameters.USER, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkProcessPopulationIndicatorDataTask(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkProcessPopulationIndicatorDataTask(String taskName, String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<>();
         }
 
+        IndicatorsValidationUtils.checkParameterRequired(taskName, ServiceExceptionParameters.TASK_NAME, exceptions);
         IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);

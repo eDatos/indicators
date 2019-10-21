@@ -12,33 +12,33 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataResult;
 
 @Component
-public class PopulateIndicatorDataActionHandler extends SecurityActionHandler<PopulateIndicatorDataAction, PopulateIndicatorDataResult> {
+public class PlanifyPopulateIndicatorDataActionHandler extends SecurityActionHandler<PlanifyPopulateIndicatorDataAction, PlanifyPopulateIndicatorDataResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    public PopulateIndicatorDataActionHandler() {
-        super(PopulateIndicatorDataAction.class);
+    public PlanifyPopulateIndicatorDataActionHandler() {
+        super(PlanifyPopulateIndicatorDataAction.class);
     }
 
     @Override
-    public PopulateIndicatorDataResult executeSecurityAction(PopulateIndicatorDataAction action) throws ActionException {
+    public PlanifyPopulateIndicatorDataResult executeSecurityAction(PlanifyPopulateIndicatorDataAction action) throws ActionException {
         try {
             indicatorsServiceFacade.planifyPopulateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), null);
 
-            return new PopulateIndicatorDataResult(indicatorDto);
+            return new PlanifyPopulateIndicatorDataResult(indicatorDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 
     @Override
-    public void undo(PopulateIndicatorDataAction action, PopulateIndicatorDataResult result, ExecutionContext context) throws ActionException {
+    public void undo(PlanifyPopulateIndicatorDataAction action, PlanifyPopulateIndicatorDataResult result, ExecutionContext context) throws ActionException {
 
     }
 

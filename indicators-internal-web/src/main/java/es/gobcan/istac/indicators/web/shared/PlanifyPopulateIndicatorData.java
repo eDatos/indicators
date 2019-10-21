@@ -7,7 +7,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 
 @GenDispatch(isSecure = false)
-public class PopulateIndicatorData {
+public class PlanifyPopulateIndicatorData {
 
     @In(1)
     String       indicatorUuid;
