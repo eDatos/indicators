@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -43,7 +42,6 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
@@ -91,8 +89,8 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
@@ -193,6 +191,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
+
+        void showInformationMessage(String title, String message);
     }
 
     @Inject
@@ -545,20 +545,16 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void populateData(String uuid) {
-        dispatcher.execute(new PopulateIndicatorDataAction(uuid), new WaitingAsyncCallbackHandlingError<PopulateIndicatorDataResult>(this) {
+        dispatcher.execute(new PlanifyPopulateIndicatorDataAction(uuid), new WaitingAsyncCallbackHandlingError<PlanifyPopulateIndicatorDataResult>(this) {
 
             @Override
-            public void onWaitSuccess(PopulateIndicatorDataResult result) {
-                if (result.getWarnings() != null) {
-                    ShowMessageEvent.fireWarningMessageWithError(IndicatorPresenter.this, IndicatorsWeb.getMessages().populationWithErrors(), result.getWarnings());
-                } else {
-                    fireSuccessMessage(getMessages().indicatorDataPopulated());
-                }
-
-                // Indicator and its data sources must be reloaded (after populating data, indicator version changes)
+            public void onWaitSuccess(PlanifyPopulateIndicatorDataResult result) {
+                // Indicator must be reloaded to show 'task on background' message
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber()); // Reload data sources
+
+                getView().showInformationMessage(getMessages().indicatorPopulateData(), getMessages().indicatorPopulateDataInProgress());
             }
         });
     }

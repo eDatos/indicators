@@ -79,7 +79,6 @@ public class DataSourcesPanel extends VLayout {
             }
 
         });
-        toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
         toolStrip.getDeleteHandlerRegistration().removeHandler();
         toolStrip.getDeleteButton().addClickHandler(new ClickHandler() {
@@ -216,7 +215,7 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void showToolStripDeleteButton() {
-        if (ClientSecurityUtils.canDeleteDataSource()) {
+        if (ClientSecurityUtils.canDeleteDataSource(indicatorDto)) {
             toolStrip.getDeleteButton().show();
         }
     }
@@ -226,6 +225,12 @@ public class DataSourcesPanel extends VLayout {
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
         datasourcePanel.setIndicator(indicatorDto);
+        setCanEdit(indicatorDto);
+    }
+
+    private void setCanEdit(IndicatorDto indicatorDto) {
+        toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource(indicatorDto) ? Visibility.VISIBLE : Visibility.HIDDEN);
+        toolStrip.markForRedraw();
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
@@ -247,11 +252,11 @@ public class DataSourcesPanel extends VLayout {
     public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
         datasourcePanel.setDataDefinition(dataDefinitionDto);
     }
-    
+
     public void setStatisticalOperations(List<ExternalItemDto> operationsList) {
         datasourcePanel.setStatisticalOperations(operationsList);
     }
-    
+
     public void setQueries(GetQueriesPaginatedListResult result) {
         List<ExternalItemDto> queriesList = result.getQueriesList();
         datasourcePanel.setQueries(queriesList, result.getFirstResultOut(), queriesList.size(), result.getTotalResults());

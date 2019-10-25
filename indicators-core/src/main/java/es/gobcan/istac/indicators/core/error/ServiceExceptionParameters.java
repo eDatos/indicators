@@ -217,5 +217,8 @@ public class ServiceExceptionParameters {
     public static final String MEASURE_VALUES                                                                = "parameter.indicators.measure_values";
     public static final String NUM_RESULTS                                                                   = "parameter.indicators.num_results";
     public static final String DSPL_DATASET_TITLE                                                            = "parameter.indicators.dataset_title";
+    public static final String USER                                                                          = "parameter.indicators.user";
+    public static final String METAMAC_EXCEPTION                                                             = "parameter.indicators.metamac_exception";
+    public static final String TASK_NAME                                                                     = "parameter.indicators.task_name";
 
 }

@@ -87,7 +87,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // PRODUCTION ENVIRONMENT
         // ........................
 
-        mainFormLayout = new IndicatorMainFormLayout(ClientSecurityUtils.canEditIndicator());
+        mainFormLayout = new IndicatorMainFormLayout();
         mainFormLayout.setTitleLabelContents(getConstants().indicatorProductionEnvironment());
 
         createViewForm();
@@ -475,6 +475,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicator = indicatorDto;
+        setCanEdit(indicatorDto);
 
         // DIFFUSION ENVIRONMENT
 
@@ -498,7 +499,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // PRODUCTION ENVIRONMENT
 
-        mainFormLayout.updatePublishSection(indicatorDto.getProcStatus());
+        mainFormLayout.setIndicator(indicatorDto);
         mainFormLayout.setViewMode();
         mainFormLayout.updateVisibilityNotifyPopulateErrors(indicatorDto.getNotifyPopulationErrors());
 
@@ -507,6 +508,10 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Clear errors
         identifiersEditionForm.clearErrors(true);
+    }
+
+    private void setCanEdit(IndicatorDto indicatorDto) {
+        mainFormLayout.setCanEdit(ClientSecurityUtils.canEditIndicator(indicatorDto));
     }
 
     public void setDiffusionIndicator(IndicatorDto indicatorDto) {

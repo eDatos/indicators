@@ -1,11 +1,16 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.widgets.InformationLabel;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -35,6 +40,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     private VLayout               panel;
     private TitleLabel            indicatorLabel;
+    private InformationLabel      informationLabel;
     private TabSet                tabset;
     private IndicatorGeneralPanel generalPanel;
     private DataSourcesPanel      dataSourcesPanel;
@@ -47,6 +53,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         indicatorLabel = new TitleLabel();
         indicatorLabel.setStyleName("sectionTitleLeftMargin");
 
+        informationLabel = new InformationLabel();
+        informationLabel.setVisible(false);
+
         Tab generalTab = new Tab(getConstants().indicDetailGeneral());
         generalTab.setPane(generalPanel);
 
@@ -54,11 +63,13 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         dataSourcesTab.setPane(dataSourcesPanel);
 
         tabset = new TabSet();
+        tabset.setStyleName("marginTop15");
         tabset.addTab(generalTab);
         tabset.addTab(dataSourcesTab);
 
         panel = new VLayout();
         panel.addMember(indicatorLabel);
+        panel.addMember(informationLabel);
         panel.addMember(tabset);
     }
 
@@ -95,6 +106,22 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
         generalPanel.setIndicator(indicator);
         dataSourcesPanel.setIndicator(indicator);
+        setInformationLabelContents(indicator);
+    }
+
+    private void setInformationLabelContents(IndicatorDto indicatorDto) {
+        if (BooleanUtils.isTrue(indicatorDto.getIsTaskInBackground())) {
+            String message = getMessages().indicatorInProcessInBackground();
+            informationLabel.setContents(message);
+            informationLabel.show();
+        } else {
+            clearInformationLabel();
+        }
+    }
+
+    private void clearInformationLabel() {
+        informationLabel.setContents(StringUtils.EMPTY);
+        informationLabel.hide();
     }
 
     @Override
@@ -127,7 +154,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     public void setHasDiffusionIndicatorDatasources(boolean hasDatasources) {
         generalPanel.setHasDiffusionIndicatorDatasources(hasDatasources);
     }
-    
+
     @Override
     public void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos) {
         dataSourcesPanel.setDataDefinitions(dataDefinitionDtos);
@@ -213,7 +240,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         generalPanel.setUnitMultipliers(unitMultiplierDtos);
         dataSourcesPanel.setUnitMultipliers(unitMultiplierDtos);
     }
-    
+
     @Override
     public void updateVisibilityNotifyPopulateErrors(Boolean notifyPopulationErrors) {
         generalPanel.updateVisibilityNotifyPopulateErrors(notifyPopulationErrors);
@@ -227,7 +254,13 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList) {
         dataSourcesPanel.setStatisticalOperations(operationsList);
-        
+
+    }
+
+    @Override
+    public void showInformationMessage(String title, String message) {
+        InformationWindow informationWindow = new InformationWindow(title, message);
+        informationWindow.show();
     }
 
 }

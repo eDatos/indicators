@@ -87,6 +87,7 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -226,6 +227,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         return exceptionItems;
+    }
+
+    @Override
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
+
+        // Retrieve
+        Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
+
+        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid);
+    }
+
+    private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {
+        IndicatorsServicesUtils.checkNotTasksInProgress(ctx, getTaskService(), resourceId);
     }
 
     @Override

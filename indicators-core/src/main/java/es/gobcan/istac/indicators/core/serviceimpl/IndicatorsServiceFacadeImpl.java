@@ -22,7 +22,6 @@ import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.I
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -516,7 +515,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicatorVersion);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersionCreated);
     }
 
     @Override
@@ -529,7 +528,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(ctx, uuid, versionNumber);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -542,7 +541,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorByCode(ctx, code, versionNumber);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -568,7 +567,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         indicatorVersion = getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -580,7 +579,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -592,7 +591,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorProductionValidation(ctx, uuid);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -604,7 +603,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToDiffusionValidation(ctx, uuid);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -616,7 +615,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorDiffusionValidation(ctx, uuid);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -628,7 +627,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(publishIndicatorResult.getIndicatorVersion());
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, publishIndicatorResult.getIndicatorVersion());
         PublishIndicatorResultDto publishIndicatorResultDto = new PublishIndicatorResultDto();
         publishIndicatorResultDto.setIndicator(indicatorDto);
         publishIndicatorResultDto.setPublicationFailedReason(publishIndicatorResult.getPublicationFailedReason());
@@ -644,7 +643,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersion = getIndicatorsService().archiveIndicator(ctx, uuid);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersion);
     }
 
     @Override
@@ -657,7 +656,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().versioningIndicator(ctx, uuid, versionType);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
+        return do2DtoMapper.indicatorDoToDto(ctx, indicatorVersionCreated);
     }
 
     @Override
@@ -674,7 +673,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result, sculptorCriteria.getPageSize());
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(ctx, result, sculptorCriteria.getPageSize());
     }
 
     @Override
@@ -886,12 +885,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<MetamacExceptionItem> populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);
 
-        return getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
+        getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorUuid);
     }
 
     // -------------------------------------------------------------------------------------------

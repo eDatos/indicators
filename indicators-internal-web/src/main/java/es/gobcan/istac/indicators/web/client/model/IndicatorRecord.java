@@ -7,7 +7,7 @@ import java.util.Date;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
-import com.smartgwt.client.data.Record;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
@@ -15,7 +15,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
-public class IndicatorRecord extends Record {
+public class IndicatorRecord extends ListGridRecord {
 
     public IndicatorRecord(IndicatorDto indicatorDto) {
         setUuid(indicatorDto.getUuid());
@@ -25,7 +25,7 @@ public class IndicatorRecord extends Record {
         setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
         setProductionIndicatorNeedsUpdate(indicatorDto.getNeedsUpdate());
         setProductionIndicatorVersionNumber(indicatorDto.getVersionNumber());
-        setIndicatorDto(indicatorDto);        
+        setIndicatorDto(indicatorDto);
     }
 
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
@@ -40,10 +40,10 @@ public class IndicatorRecord extends Record {
             setName(getLocalisedString(visibleProductionVersion.getTitle()));
             setSubject(getLocalisedString(visibleProductionVersion.getSubjectTitle()));
         }
-        
+
         setProductionIndicatorVersionSummary(visibleProductionVersion);
         setDiffusionIndicatorVersionSummary(visibleDiffusionVersion);
-        
+
         setIndicatorDto(indicatorSummaryDto);
     }
 
@@ -67,11 +67,11 @@ public class IndicatorRecord extends Record {
         }
     }
 
-    private void setDiffusionIndicatorVersionSummary(IndicatorVersionSummaryDto diffusionVersion) {  
+    private void setDiffusionIndicatorVersionSummary(IndicatorVersionSummaryDto diffusionVersion) {
         if (diffusionVersion != null) {
             setDiffusionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(diffusionVersion.getProcStatus()));
             setDiffusionIndicatorNeedsUpdate(diffusionVersion.getNeedsUpdate());
-            setDiffusionIndicatorVersionNumber(diffusionVersion.getVersionNumber());               
+            setDiffusionIndicatorVersionNumber(diffusionVersion.getVersionNumber());
             setDiffusionIndicatorProductionValidationDate(diffusionVersion.getProductionValidationDate());
             setDiffusionIndicatorProductionValidationUser(diffusionVersion.getProductionValidationUser());
             setDiffusionIndicatorDiffusionValidationDate(diffusionVersion.getDiffusionValidationDate());
@@ -102,18 +102,18 @@ public class IndicatorRecord extends Record {
     public void setSubject(String subject) {
         setAttribute(IndicatorDS.SUBJECT_TITLE, subject);
     }
-    
+
     private void setNotifyPopulationErrors(Boolean value) {
         String imageURL = new String();
         if (value != null && value) {
-            imageURL = GlobalResources.RESOURCE.success().getURL();            
+            imageURL = GlobalResources.RESOURCE.success().getURL();
         } else {
             imageURL = GlobalResources.RESOURCE.disable().getURL();
         }
         setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS, value);
         setAttribute(IndicatorDS.NOTIFY_POPULATION_ERRORS_IMAGE, imageURL);
     }
-    
+
     public String getUuid() {
         return getAttribute(IndicatorDS.UUID);
     }

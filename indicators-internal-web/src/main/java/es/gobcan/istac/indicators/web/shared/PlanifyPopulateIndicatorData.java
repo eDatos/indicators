@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.web.shared;
 
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
-
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
@@ -9,15 +7,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 
 @GenDispatch(isSecure = false)
-public class PopulateIndicatorData {
+public class PlanifyPopulateIndicatorData {
 
     @In(1)
-    String              indicatorUuid;
+    String       indicatorUuid;
 
     @Out(1)
-    IndicatorDto        indicatorDto;
-
-    @Out(3)
-    MetamacWebException warnings;
+    IndicatorDto indicatorDto;
 
 }

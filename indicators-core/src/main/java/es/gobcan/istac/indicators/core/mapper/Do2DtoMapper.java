@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.mapper;
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -56,8 +57,8 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source);
 
     // Indicators
-    IndicatorDto indicatorDoToDto(IndicatorVersion source);
-    IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source);
+    IndicatorDto indicatorDoToDto(ServiceContext ctx, IndicatorVersion source) throws MetamacException;
+    IndicatorSummaryDto indicatorDoToDtoSummary(ServiceContext ctx, IndicatorVersion source) throws MetamacException;
 
     // Data sources
     DataSourceDto dataSourceDoToDto(DataSource source) throws MetamacException;
@@ -98,7 +99,7 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
 
     // Unit multipliers
     UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
-    
+
     // External Item
     ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 }

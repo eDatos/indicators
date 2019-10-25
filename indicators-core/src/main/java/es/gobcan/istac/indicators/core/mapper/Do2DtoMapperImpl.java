@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
@@ -13,6 +14,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -63,10 +65,14 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 @Component
 public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMapper {
+
+    @Autowired
+    private TaskService taskService;
 
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
@@ -173,7 +179,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public IndicatorDto indicatorDoToDto(IndicatorVersion source) {
+    public IndicatorDto indicatorDoToDto(ServiceContext ctx, IndicatorVersion source) throws MetamacException {
 
         IndicatorDto target = new IndicatorDto();
 
@@ -223,11 +229,14 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         target.setVersionOptimisticLocking(source.getVersion());
+
+        target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
+
         return target;
     }
 
     @Override
-    public IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source) {
+    public IndicatorSummaryDto indicatorDoToDtoSummary(ServiceContext ctx, IndicatorVersion source) throws MetamacException {
 
         IndicatorSummaryDto target = new IndicatorSummaryDto();
         Indicator indicator = source.getIndicator();
@@ -236,6 +245,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setNotifyPopulationErrors(indicator.getNotifyPopulationErrors());
         target.setProductionVersion(indicatorVersionDoToDtoSummary(indicator.getProductionIndicatorVersion()));
         target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicator.getDiffusionIndicatorVersion()));
+
+        target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
 
         return target;
     }

@@ -7,24 +7,25 @@ import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLa
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
 public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
-    private PublishToolStripButton  productionValidation;
-    private PublishToolStripButton  diffusionValidation;
-    private PublishToolStripButton  rejectValidation;
-    private PublishToolStripButton  publish;
-    private PublishToolStripButton  archive;
-    private PublishToolStripButton  versioning;
-    private ToolStripButton         populateData;
-    private ToolStripButton         previewData;
-    private ToolStripButton         enableNotifyPopulationErrors;
-    private ToolStripButton         disableNotifyPopulationErrors;
+    private PublishToolStripButton productionValidation;
+    private PublishToolStripButton diffusionValidation;
+    private PublishToolStripButton rejectValidation;
+    private PublishToolStripButton publish;
+    private PublishToolStripButton archive;
+    private PublishToolStripButton versioning;
+    private ToolStripButton        populateData;
+    private ToolStripButton        previewData;
+    private ToolStripButton        enableNotifyPopulationErrors;
+    private ToolStripButton        disableNotifyPopulationErrors;
 
-    private IndicatorProcStatusEnum status;
+    private IndicatorDto           indicator;
 
     public IndicatorMainFormLayout() {
         super();
@@ -48,7 +49,6 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
 
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
-        populateData.setVisible(ClientSecurityUtils.canPopulateIndicatorData());
 
         previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.preview().getURL());
 
@@ -69,14 +69,17 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(disableNotifyPopulationErrors);
     }
 
-    public void updatePublishSection(IndicatorProcStatusEnum status) {
-        this.status = status;
+    public void setIndicator(IndicatorDto indicatorDto) {
+        this.indicator = indicatorDto;
+
+        populateData.setVisible(ClientSecurityUtils.canPopulateIndicatorData(indicatorDto));
     }
 
     private void updateVisibility() {
         // Hide all buttons
         hideAllPublishButtons();
         // Show buttons depending on the status
+        IndicatorProcStatusEnum status = indicator.getProcStatus();
         if (IndicatorProcStatusEnum.DRAFT.equals(status)) {
             showProductionValidationButton();
         } else if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
@@ -161,58 +164,64 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     }
 
     private void showProductionValidationButton() {
-        if (ClientSecurityUtils.canSendIndicatorToProductionValidation()) {
+        if (ClientSecurityUtils.canSendIndicatorToProductionValidation(indicator)) {
             productionValidation.show();
         }
     }
 
     private void showDiffusionValidationButton() {
-        if (ClientSecurityUtils.canSendIndicatorToDiffusionValidation()) {
+        if (ClientSecurityUtils.canSendIndicatorToDiffusionValidation(indicator)) {
             diffusionValidation.show();
         }
     }
 
     private void showRejectValidationButton() {
-        if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-            if (ClientSecurityUtils.canRejectIndicatorProductionValidation()) {
+        if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicator.getProcStatus())) {
+            if (ClientSecurityUtils.canRejectIndicatorProductionValidation(indicator)) {
                 rejectValidation.show();
             }
-        } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            if (ClientSecurityUtils.canRejectIndicatorDiffusionValidation()) {
+        } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicator.getProcStatus())) {
+            if (ClientSecurityUtils.canRejectIndicatorDiffusionValidation(indicator)) {
                 rejectValidation.show();
             }
         }
     }
 
     private void showPublishButton() {
-        if (ClientSecurityUtils.canPublishIndicator()) {
+        if (ClientSecurityUtils.canPublishIndicator(indicator)) {
             publish.show();
         }
     }
 
     private void showArchiveButton() {
-        if (ClientSecurityUtils.canArchiveIndicator()) {
+        if (ClientSecurityUtils.canArchiveIndicator(indicator)) {
             archive.show();
         }
     }
 
     private void showVersioningButton() {
-        if (ClientSecurityUtils.canVersioningIndicator()) {
+        if (ClientSecurityUtils.canVersioningIndicator(indicator)) {
             versioning.show();
         }
     }
 
     private void showEnableNotifyPopulationErrors() {
-        if (ClientSecurityUtils.canEnableNotifyPopulationErrors()) {
+        if (ClientSecurityUtils.canEnableNotifyPopulationErrors(indicator)) {
             enableNotifyPopulationErrors.show();
+            disableNotifyPopulationErrors.hide();
+        } else {
+            enableNotifyPopulationErrors.hide();
             disableNotifyPopulationErrors.hide();
         }
     }
 
     private void showDisableNotifyPopulationErrors() {
-        if (ClientSecurityUtils.canDisableNotifyPopulationErrors()) {
+        if (ClientSecurityUtils.canDisableNotifyPopulationErrors(indicator)) {
             disableNotifyPopulationErrors.show();
             enableNotifyPopulationErrors.hide();
+        } else {
+            enableNotifyPopulationErrors.hide();
+            disableNotifyPopulationErrors.hide();
         }
     }
 

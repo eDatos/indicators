@@ -115,6 +115,7 @@ Application Indicators {
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
     		> @UnitMultiplierRepository
+    		> @TaskService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -193,6 +194,7 @@ Application Indicators {
         	> @IndicatorVersionMeasureCoverageRepository
         	> @IndicatorVersionGeoCoverageRepository
         	> @TranslationRepository
+        	> @TaskService
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -206,6 +208,8 @@ Application Indicators {
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Populates a given indicator data in background"
+	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
@@ -363,7 +367,7 @@ Application Indicators {
     		"Export Indicators System as a DSPL zip file"
 		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description, boolean mergeTimeGranularities) throws MetamacException;
     	}
-			    
+    				    
     	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
@@ -539,8 +543,10 @@ Application Indicators {
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Populates a given indicator data"
-	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	// "Populates a given indicator data"
+	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
+	        "Populates a given indicator data in background"
+	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Update indicators data METAMAC"
@@ -1388,6 +1394,80 @@ Application Indicators {
 		} 
 	}
 	
+	Module tasks {
+		basePackage=es.gobcan.istac.indicators.core.task
+		
+		"Provides access to background data operations"
+    	Service TaskServiceFacade {
+    		"Perform the population task"
+    		List<MetamacExceptionItem> executePopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
+    		"Send success notification for de populate indicator data job"
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid);
+    		"Send error notification for de populate indicator data job"
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
+    		
+    		markAllInProgressTaskToFailed();
+    		
+    		"Schedule database dataset polling job"
+			scheduleIndicatorsUpdateJob();
+    	}
+    	
+    	"Provides access to background data operations"
+    	Service TaskService {
+    		> @TaskRepository
+    		> @IndicatorsDataService
+    		> @IndicatorsService  		
+    		
+			"Check if exists any kind of job task in the @param resourceId"
+    		boolean existsTaskForResource(String resourceId) throws MetamacException;
+    		"Plannify a scheduled task to populate indicator's data"
+    		planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
+			"Perform the population task"
+			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
+			"Send success notification for de populate indicator data job"
+    		createPopulateIndicatorDataSuccessBackgroundNotification(String user, String indicatorUuid);
+    		"Send error notification for de populate indicator data job"
+    		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
+    		
+    		"Creates a task"
+			@Task createTask(@Task task) throws MetamacException;
+			"Updates a task"
+			@Task updateTask(@Task task) throws MetamacException;
+			"Retrieves a task by job key"
+			@Task retrieveTaskByJob(String jobKey) throws MetamacException;
+			"Mark task as finished"
+			markTaskAsFinished(String jobKey) throws MetamacException;	
+			"Mark task as failed on application startup"
+			markAllInProgressTaskToFailed();
+			
+			scheduleIndicatorsUpdateJob();
+			
+    	}
+    	
+    	// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+		"Provides information about the tasks in background"	
+	    Entity Task {
+	   	 	databaseTable = "TB_TASKS"
+	 		hint = "idSequence=TASKS"
+
+			String job length="4000" key;
+			-@TaskStatusTypeEnum status not nullable;
+			String extensionPoint length="4000" nullable;
+				   		      	
+	   		Repository TaskRepository {
+	   			save;
+	   			delete;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				findByKey;
+				deleteAndFlush(@Task task);
+			}
+	    }
+	}
+	
 	// ----------------------------------------------------------------
 	// 							ENUMS
 	// ----------------------------------------------------------------
@@ -1527,7 +1607,10 @@ Application Indicators {
 			Long versionOptimisticLocking;
 			
 			"True if user decied to receive notifications when data population fail in this indicator"
-            Boolean notifyPopulationErrors not nullable;					    
+            Boolean notifyPopulationErrors not nullable;
+            
+            "True if a task related with the indicator is being executed in background"
+			Boolean isTaskInBackground;
 	    }
 	    
 	    "Dto for indicator. Summary information"
@@ -1542,6 +1625,9 @@ Application Indicators {
        		- @IndicatorVersionSummaryDto productionVersion;
        		"Diffusion version: published, archived"
        		- @IndicatorVersionSummaryDto diffusionVersion;
+       		
+       		"True if a task related with the indicator is being executed in background"
+			Boolean isTaskInBackground;
 	    }
 	    
 	    "Dto for version of indicator. Summary information"
@@ -2005,5 +2091,11 @@ Application Indicators {
             METAMAC,
             GPE
         }
+        
+        "Task Status Type Enumerated"
+    	enum TaskStatusTypeEnum {
+    		IN_PROGRESS,
+    		FAILED
+    	}
 	}
 }

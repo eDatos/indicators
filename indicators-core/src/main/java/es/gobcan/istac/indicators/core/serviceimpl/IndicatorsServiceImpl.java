@@ -55,6 +55,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
@@ -236,6 +237,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorVersionInProduction(indicatorVersion);
         checkIndicatorsLinkedInQuantity(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, ServiceExceptionParameters.INDICATOR);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorVersion.getIndicator().getUuid());
+
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
         return indicatorVersion;
@@ -390,6 +394,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validate to send to production
         checkIndicatorToSendToProductionValidation(ctx, uuid, indicatorInProduction);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInProduction.getIndicator().getUuid());
+
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorInProduction.setProductionValidationDate(new DateTime());
@@ -411,6 +418,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate to reject
         checkIndicatorToRejectProductionValidation(ctx, uuid, indicatorInProduction);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInProduction.getIndicator().getUuid());
 
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.VALIDATION_REJECTED);
@@ -436,6 +446,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validate to send to diffusion
         checkIndicatorToSendToDiffusionValidation(ctx, uuid, indicatorInProduction);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInProduction.getIndicator().getUuid());
+
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorInProduction.setDiffusionValidationDate(new DateTime());
@@ -457,6 +470,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate to reject
         checkIndicatorToRejectDiffusionValidation(ctx, uuid, indicatorInProduction);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInProduction.getIndicator().getUuid());
 
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.VALIDATION_REJECTED);
@@ -484,6 +500,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate to publish
         checkIndicatorToPublish(ctx, uuid, indicatorInProduction);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInProduction.getIndicator().getUuid());
 
         // Populate data
         try {
@@ -566,6 +585,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validate to archive
         checkIndicatorToArchive(ctx, uuid, indicatorInDiffusion);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorInDiffusion.getIndicator().getUuid());
+
         // Update proc status
         Indicator indicator = indicatorInDiffusion.getIndicator();
         indicator.setIsPublished(Boolean.FALSE);
@@ -598,6 +620,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid,
                     new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED});
         }
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
 
         // Initialize new version, copying values of version in diffusion
         IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorProcStatusInDiffusion(ctx, uuid, true);
@@ -647,6 +672,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
+
         // Set notifyPopulationErros
         indicator.setNotifyPopulationErrors(Boolean.FALSE);
 
@@ -661,6 +689,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, indicatorUuid);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicator.getUuid());
 
         // Set notifyPopulationErros
         indicator.setNotifyPopulationErrors(Boolean.TRUE);
@@ -685,8 +716,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkCreateDataSource(indicatorUuid, dataSource, null);
 
-        // Validate indicators system proc status and linked indicators
+        // Retrieve
         IndicatorVersion indicatorVersion = retrieveIndicatorProcStatusInProduction(ctx, indicatorUuid, true);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorVersion.getIndicator().getUuid());
+
+        // Validate indicators system proc status and linked indicators
         checkIndicatorsLinkedInDatasource(dataSource, indicatorVersion);
 
         // Create dataSource
@@ -725,6 +761,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
         checkIndicatorsLinkedInDatasource(dataSource, dataSource.getIndicatorVersion());
 
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, dataSource.getIndicatorVersion().getIndicator().getUuid());
+
         // Update
         DataSource updatedDataSource = getDataSourceRepository().save(dataSource);
 
@@ -740,10 +779,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkDeleteDataSource(uuid, null);
 
-        // Check indicator proc status
+        // Retrieve
         DataSource dataSource = retrieveDataSource(ctx, uuid);
         IndicatorVersion indicatorVersion = dataSource.getIndicatorVersion();
+
+        // Check indicator proc status
         checkIndicatorVersionInProduction(indicatorVersion);
+
+        // Check there are no tasks in progress for this indicator
+        checkNotTasksInProgress(ctx, indicatorVersion.getIndicator().getUuid());
 
         // Delete
         getDataSourceRepository().delete(dataSource);
@@ -993,6 +1037,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     // --------------------------------------------------------------------------------------------
     // OTHER PRIVATE METHODS
     // --------------------------------------------------------------------------------------------
+
+    private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {
+        IndicatorsServicesUtils.checkNotTasksInProgress(ctx, getTaskService(), resourceId);
+    }
 
     /**
      * Checks not exists another indicator with same code

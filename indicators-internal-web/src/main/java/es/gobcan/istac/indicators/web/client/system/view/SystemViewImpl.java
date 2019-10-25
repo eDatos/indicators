@@ -152,11 +152,6 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
         structurePanel.setGeographicalValue(geographicalValueDto);
     }
 
-    // @Override
-    // public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
-    // structurePanel.onIndicatorDataPopulated(indicatorDto);
-    // }
-
     @Override
     public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
         structurePanel.setTemporalGranularitiesForIndicator(timeGranularityEnums);

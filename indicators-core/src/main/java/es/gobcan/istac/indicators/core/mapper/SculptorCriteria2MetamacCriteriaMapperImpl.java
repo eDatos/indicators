@@ -3,8 +3,10 @@ package es.gobcan.istac.indicators.core.mapper;
 import java.util.ArrayList;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCriteria;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +43,14 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
     }
 
     @Override
-    public MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(PagedResult<IndicatorVersion> source, Integer pageSize) {
+    public MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(ServiceContext ctx, PagedResult<IndicatorVersion> source, Integer pageSize)
+            throws MetamacException {
         MetamacCriteriaResult<IndicatorSummaryDto> target = new MetamacCriteriaResult<IndicatorSummaryDto>();
         target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
         if (source.getValues() != null) {
             target.setResults(new ArrayList<IndicatorSummaryDto>());
             for (IndicatorVersion indicatorVersion : source.getValues()) {
-                target.getResults().add(do2DtoMapper.indicatorDoToDtoSummary(indicatorVersion));
+                target.getResults().add(do2DtoMapper.indicatorDoToDtoSummary(ctx, indicatorVersion));
             }
         }
         return target;
