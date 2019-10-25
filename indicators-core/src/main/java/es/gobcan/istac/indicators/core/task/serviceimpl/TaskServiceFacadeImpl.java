@@ -42,4 +42,9 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     public void markAllInProgressTaskToFailed(ServiceContext ctx) {
         taskService.markAllInProgressTaskToFailed(ctx);
     }
+
+    @Override
+    public void scheduleIndicatorsUpdateJob(ServiceContext ctx) {
+        taskService.scheduleIndicatorsUpdateJob(ctx);
+    }
 }

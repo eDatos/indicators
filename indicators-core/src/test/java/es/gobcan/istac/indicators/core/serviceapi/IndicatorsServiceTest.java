@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.validateMockitoUsage;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,9 +20,12 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,8 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.TaskMockUtils;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 
 /**
  * Test to IndicatorService. Testing: indicators, data sources...
@@ -49,7 +55,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-service-mockito.xml",
-        "classpath:spring/applicationContext-test.xml"})
+        "classpath:spring/include/indicators-task-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsServiceTest extends IndicatorsBaseTest {
@@ -62,6 +68,19 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
     protected UnitMultiplierRepository unitMultiplierRepository;
+
+    @Autowired
+    private TaskService                taskService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        mockAllTaskInProgressForResource(false);
+    }
+
+    @After
+    public void checkMockitoUsage() {
+        validateMockitoUsage();
+    }
 
     @Test
     public void testCreateIndicator() throws Exception {
@@ -123,6 +142,36 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateIndicatorTaskInProgress() throws Exception {
+        IndicatorVersion indicatorVersion = new IndicatorVersion();
+        indicatorVersion.setIndicator(new Indicator());
+        indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
+        indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
+        indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setQuantity(new Quantity());
+        indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
+        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
+
+        // Create
+        IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getLastUpdatedBy());
+
+        // Check after creation needsUpdate is false
+        assertFalse(indicatorVersionCreated.getNeedsUpdate());
+
+        indicatorVersionCreated.setNeedsUpdate(Boolean.TRUE);
+
+        mockTaskInProgressForResource(indicatorVersionCreated.getIndicator().getUuid(), true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, indicatorVersionCreated.getIndicator().getUuid()));
+
+        indicatorService.updateIndicatorVersion(getServiceContextAdministrador2(), indicatorVersionCreated);
+    }
+
+    @Test
     public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {
 
         String uuid = INDICATOR_1;
@@ -172,6 +221,17 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorVersion2.getIsLastVersion());
         }
+    }
+
+    @Test
+    public void testVersioningIndicatorTaskInProgress() throws Exception {
+        String uuid = INDICATOR_3;
+
+        mockTaskInProgressForResource(uuid, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, uuid));
+
+        // Versioning
+        indicatorService.versioningIndicator(getServiceContextAdministrador(), uuid, VersionTypeEnum.MAJOR);
     }
 
     @Test
@@ -250,6 +310,18 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testPublishIndicatorTaskInProgress() throws Exception {
+
+        String uuid = INDICATOR_5;
+
+        mockTaskInProgressForResource(uuid, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, uuid));
+
+        // Publish
+        indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
+    }
+
+    @Test
     public void testPublishIndicatorSubjectTitleChange() throws Exception {
 
         String uuid = INDICATOR_13;
@@ -279,6 +351,18 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
         assertEquals(indicatorCreated.getIndicator().getDiffusionProcStatus(), IndicatorProcStatusEnum.ARCHIVED);
+    }
+
+    @Test
+    public void testArchiveIndicatorTaskInProgress() throws Exception {
+
+        String uuid = INDICATOR_3;
+
+        mockTaskInProgressForResource(uuid, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, uuid));
+
+        // Archive
+        indicatorService.archiveIndicator(getServiceContextAdministrador(), uuid);
     }
 
     @Test
@@ -367,5 +451,13 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         String tempFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
         temp.delete();
         return tempFilePath;
+    }
+
+    private void mockTaskInProgressForResource(String uuid, boolean status) throws MetamacException {
+        TaskMockUtils.mockTaskInProgressForIndicator(taskService, uuid, status);
+    }
+
+    private void mockAllTaskInProgressForResource(boolean status) throws MetamacException {
+        TaskMockUtils.mockAllTaskInProgressForIndicator(taskService, status);
     }
 }

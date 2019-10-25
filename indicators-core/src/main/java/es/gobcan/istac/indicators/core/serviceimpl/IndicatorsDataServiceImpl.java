@@ -87,6 +87,7 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -243,10 +244,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {
-        // TODO EDATOS-3047 just for testing!
-        if (getTaskService().existsTaskForResource(ctx, resourceId) || "d5bf49b6-b8bd-4b25-b443-6e7b05c8f1fb".equals(resourceId)) {
-            throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, resourceId);
-        }
+        IndicatorsServicesUtils.checkNotTasksInProgress(ctx, getTaskService(), resourceId);
     }
 
     @Override

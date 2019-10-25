@@ -1,81 +1,64 @@
 package es.gobcan.istac.indicators.core.task.serviceapi;
 
-import static org.junit.Assert.fail;
-
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Spring based transactional test with DbUnit support.
- */
-public class TaskServiceTest extends AbstractDbUnitJpaTests implements TaskServiceTestBase {
+public class TaskServiceTest implements TaskServiceTestBase {
 
     @Autowired
     protected TaskService taskService;
 
-    @Test
     @Override
     public void testExistsTaskForResource() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testExistsTaskForResource not implemented");
+        // See tests in IndicatorsServiceTest
     }
 
-    @Test
     @Override
     public void testPlanifyPopulationIndicatorData() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testPlanifyPopulationIndicatorData not implemented");
+        // Quartz jobs are not tested
     }
 
-    @Test
     @Override
     public void testProcessPopulationIndicatorDataTask() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testProcessPopulationIndicatorDataTask not implemented");
+        // See tests in IndicatorsDataServicePopulateTest
     }
 
-    @Test
     @Override
     public void testCreatePopulateIndicatorDataSuccessBackgroundNotification() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testCreatePopulateIndicatorDataSuccessBackgroundNotification not implemented");
+        // Notifications are not tested
     }
 
-    @Test
     @Override
     public void testCreatePopulateIndicatorDataErrorBackgroundNotification() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testCreatePopulateIndicatorDataErrorBackgroundNotification not implemented");
+        // Notifications are not tested
     }
 
     @Override
     public void testCreateTask() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testCreateTask not implemented");
+        // No tests for task repository
     }
 
     @Override
     public void testUpdateTask() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testUpdateTask not implemented");
+        // No tests for task repository
     }
 
     @Override
     public void testMarkTaskAsFinished() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testMarkTaskAsFinished not implemented");
+        // No tests for task repository
     }
 
     @Override
     public void testRetrieveTaskByJob() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testMarkTaskAsFinished not implemented");
+        // No tests for task repository
     }
 
     @Override
     public void testMarkAllInProgressTaskToFailed() throws Exception {
-        // TODO EDATOS-3047 Auto-generated method stub
-        fail("testMarkAllInProgressTaskToFailed not implemented");
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testScheduleIndicatorsUpdateJob() throws Exception {
+        // Quartz jobs are not tested
     }
 }

@@ -2,20 +2,25 @@ package es.gobcan.istac.indicators.core.task.serviceimpl;
 
 import static org.quartz.DateBuilder.futureDate;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
 import org.quartz.SimpleTrigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
@@ -29,12 +34,15 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -46,17 +54,39 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
  * Implementation of TaskService.
  */
 @Service("taskService")
-public class TaskServiceImpl extends TaskServiceImplBase {
+public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
     public static final String             PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
 
     protected final Logger                 logger                   = LoggerFactory.getLogger(getClass());
+
+    private SchedulerFactory               schedulerFactory         = null;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
     public TaskServiceImpl() {
         // NOTHING TO DO HERE
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (schedulerFactory != null) {
+            return;
+        }
+
+        Properties quartzProperties = configurationService.getProperties();
+
+        try {
+            schedulerFactory = new StdSchedulerFactory(quartzProperties);
+            Scheduler sched = schedulerFactory.getScheduler();
+
+            // Start now
+            sched.start();
+        } catch (SchedulerException e) {
+            throw new IllegalStateException("An unexpected error has occurred during quartz initialization", e);
+        }
+
     }
 
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
@@ -175,6 +205,23 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
     }
 
+    @Override
+    public void scheduleIndicatorsUpdateJob(ServiceContext ctx) {
+        try {
+            JobDetail job = JobBuilder.newJob(IndicatorsUpdateJob.class).withIdentity("update_indicators_job", "cron_jobs").build();
+
+            String cronExpr = configurationService.retrieveQuartzExpressionUpdateIndicators();
+
+            CronTrigger trigger = newTrigger().withIdentity("triger_update_indicators", "cron_jobs").withSchedule(CronScheduleBuilder.cronSchedule(cronExpr)).build();
+
+            getScheduler().scheduleJob(job, trigger);
+
+            logger.info("Job has been planned using cron expression: {}", trigger.getCronExpression());
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred scheduling indicators update job", e);
+        }
+    }
+
     private void markTasksAsFailedOnApplicationStartup(ServiceContext ctx, Task task) {
         // If the recover process of one task fails, don't stop other recovery process
         try {
@@ -232,10 +279,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     private boolean existsPopulateDataTaskInResource(String resourceId) throws MetamacException {
         try {
-            // TODO EDATOS-3047 just for testing!
-            if ("9d4b1064-a5e8-4329-a45f-063c2b731f44".equals(resourceId) || "9d62e0d2-7e88-4eba-9401-32473eab8ff7".equals(resourceId)) {
-                return Boolean.TRUE;
-            }
             return getScheduler().checkExists(createJobKeyForPopulationIndicatorData(createTaskNameForPopulationIndicatorData(resourceId)));
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();

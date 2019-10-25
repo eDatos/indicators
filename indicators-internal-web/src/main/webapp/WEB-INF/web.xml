@@ -69,11 +69,6 @@
         <url-pattern>/IndicatorsWeb/remote_logging</url-pattern>
     </servlet-mapping>
 
-    <listener>
-        <listener-class>es.gobcan.istac.indicators.web.server.servlet.QuartzInitializerListener</listener-class>
-        <listener-class>es.gobcan.istac.indicators.web.server.servlet.RecoverTaskListener</listener-class>
-    </listener>
-
     <!-- SSO -->
     <listener>
         <listener-class>org.siemac.metamac.web.common.server.session.SingleSignOutHttpSessionListener</listener-class>
