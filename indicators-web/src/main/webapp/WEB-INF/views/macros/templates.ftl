@@ -59,7 +59,7 @@
 				<div class="dcha">
 					<a href="http://www.gobiernodecanarias.org/istac/Open-Definition.html" target="_blank"><img alt="Open Data" height="13px" src="${serverURL}/theme/images/opendata_80x15_black.png" >
 					</a> | <a href="http://www.gobiernodecanarias.org/istac/aviso_legal.html">[@apph.messageEscape 'app.footer.legal-advice' /]
-					</a> | <a href="http://www.gobiernodecanarias.org/principal/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
+					</a> | <a href="http://www.gobiernodecanarias.org/istac/politica-privacidad.html">Política de privacidad</a> | <a href="http://www.gobiernodecanarias.org/principal/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a>					
 				</div>
 			</div>
 		</div>
