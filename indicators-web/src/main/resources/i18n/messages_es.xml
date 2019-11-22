@@ -11,6 +11,7 @@
     <!-- Footer -->
     <entry key="app.footer.gobcan"><![CDATA[&copy; Gobierno de Canarias]]></entry>
     <entry key="app.footer.legal-advice">Aviso Legal</entry>
+    <entry key="app.footer.privacy-policy">Política de privacidad</entry>
     <entry key="app.footer.suggests">Sugerencias y Reclamaciones</entry>
     
     <!-- Menu -->
