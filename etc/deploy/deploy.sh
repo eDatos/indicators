@@ -38,7 +38,7 @@ ssh -o ProxyCommand="ssh -W %h:%p deploy@estadisticas.arte-consultores.com" depl
 
     # Restore Configuration
     sudo cp $HOME_PATH/environment_internal.xml $DEPLOY_TARGET_PATH_INTERNAL/indicators-internal/$ENVIRONMENT_RELATIVE_PATH_FILE
-    # Take care!, it's not necessary to restore the logback.xml file, it's externally configured in the applicationContext.xml file
+    # Take care!, it's not necessary to restore the logback.xml file, it's externally configured in METAMAC_COMMON_METADATA database (environment.indicators.data)
     # sudo cp $HOME_PATH/logback_internal.xml $DEPLOY_TARGET_PATH_INTERNAL/indicators-internal/$LOGBACK_RELATIVE_PATH_FILE
     
     if [ $RESTART -eq 1 ]; then
