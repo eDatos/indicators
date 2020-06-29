@@ -1,11 +1,11 @@
 (function ($) {
 
     var measuresLabels = {
-        'ABSOLUTE' : 'Dato',
-        'ANNUAL_PERCENTAGE_RATE' : 'Tasa variación anual',
-        'ANNUAL_PUNTUAL_RATE' : 'Variación anual',
-        'INTERPERIOD_PERCENTAGE_RATE' : 'Tasa variación interperiódica',
-        'INTERPERIOD_PUNTUAL_RATE' : 'Variación interperiódica'
+        'ABSOLUTE': 'Dato',
+        'ANNUAL_PERCENTAGE_RATE': 'Tasa variación anual',
+        'ANNUAL_PUNTUAL_RATE': 'Variación anual',
+        'INTERPERIOD_PERCENTAGE_RATE': 'Tasa variación interperiódica',
+        'INTERPERIOD_PUNTUAL_RATE': 'Variación interperiódica'
     };
 
     Istac.widget.LastData = function (options) {
@@ -16,11 +16,11 @@
         {},
         Istac.widget.Base.prototype,
         {
-            _limitMaxSparkLine : function (arr) {
+            _limitMaxSparkLine: function (arr) {
                 return _.last(arr, Istac.widget.configuration["indicators.widgets.sparkline.max"]);
             },
 
-            parseDataset : function (dataset) {
+            parseDataset: function (dataset) {
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
 
@@ -28,8 +28,8 @@
                 var anySparkline = _.chain(this.measures).map(function (measure) {
                     return self.options['sparkline_' + measure];
                 }).reduce(function (memo, current) {
-                        return memo || current;
-                    }, false).value();
+                    return memo || current;
+                }, false).value();
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
@@ -53,14 +53,14 @@
                     timeTitles = this._limitMaxSparkLine(timeTitles);
 
                     return {
-                        anySparkline : anySparkline,
-                        showSparkline : showSparkline,
-                        values : values.join(','),
-                        value : value,
-                        unit : unit,
-                        timeTitles : timeTitles.join(','),
-                        measure : measuresLabels[measure],
-                        hasValue : value !== null && value !== "-"
+                        anySparkline: anySparkline,
+                        showSparkline: showSparkline,
+                        values: values.join(','),
+                        value: value,
+                        unit: unit,
+                        timeTitles: timeTitles.join(','),
+                        measure: measuresLabels[measure],
+                        hasValue: value !== null && value !== "-"
                     };
                 }, this);
 
@@ -106,7 +106,7 @@
                 this.onAfterRender();
             },
 
-            addTooltips : function ($el) {
+            addTooltips: function ($el) {
                 $el.find('[data-tooltip]').each(function (i, row) {
                     var $row = $(row);
                     var tooltipId = 'row-' + i;
@@ -114,19 +114,19 @@
                 });
             },
 
-            addSparklines : function ($el) {
+            addSparklines: function ($el) {
                 if (this.options.showSparkline) {
                     var self = this;
                     var sparklineOptions = {
-                        type : this.options.sparklineType,
-                        width : this.options.sparklineWidth + "px",
-                        height : this.options.sparklineHeight + "px",
-                        lineColor : this.options.headerColor,
-                        fillColor : this.options.sparklineFillColor,
-                        lineWidth : 1.5,
-                        highlightLineColor : null,
-                        spotRadius : 0,
-                        tooltipFormatter : function (sparkline, options, fields) {
+                        type: this.options.sparklineType,
+                        width: this.options.sparklineWidth + "px",
+                        height: this.options.sparklineHeight + "px",
+                        lineColor: this.options.headerColor,
+                        fillColor: this.options.sparklineFillColor,
+                        lineWidth: 1.5,
+                        highlightLineColor: null,
+                        spotRadius: 0,
+                        tooltipFormatter: function (sparkline, options, fields) {
                             if (fields.y !== null) {
                                 var time = sparkline.$el.data('time');
                                 var timeTitle = time.split(",")[fields.x];
@@ -141,22 +141,22 @@
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
                 }
             },
-            
-            orderDatasetsBySelectionOrder : function(datasets) {
-            	var selectedOptions = this.options.groupType === 'system' ? this.options.instances : this.options.indicators;
-            	return _.sortBy(datasets, function(dataset) {
-            		return _.indexOf(selectedOptions, dataset.request.id);
-            	}, this);
+
+            orderDatasetsBySelectionOrder: function (datasets) {
+                var selectedOptions = this.options.groupType === 'system' ? this.options.instances : this.options.indicators;
+                return _.sortBy(datasets, function (dataset) {
+                    return _.indexOf(selectedOptions, dataset.request.id);
+                }, this);
             },
 
-            renderTable : function (datasets) {
+            renderTable: function (datasets) {
                 var context = {};
                 context.measures = _.map(this.measures, function (measure) {
                     return measuresLabels[measure];
                 });
-                
+
                 datasets = this.orderDatasetsBySelectionOrder(datasets);
-                
+
                 context.datasets = _.map(datasets, this.parseDataset, this);
 
                 _.each(context.datasets, function (dataset, i) {

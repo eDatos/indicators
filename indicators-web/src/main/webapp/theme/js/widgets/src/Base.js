@@ -10,55 +10,55 @@
 
     Istac.widget.Base.prototype = {
 
-        _defaultOptions : {
-            title : 'default title',
-            width : 300,
-            height : 400,
-            headerColor : '#0F5B95',
-            borderColor : '#EBEBEB',
-            textColor : '#000000',
-            indicatorSystem : "",
-            subjectCode : "",
-            indicators : [],
-            instances : [],
-            groupType : 'system', // or subject
-            measures : [
+        _defaultOptions: {
+            title: 'default title',
+            width: 300,
+            height: 400,
+            headerColor: '#0F5B95',
+            borderColor: '#EBEBEB',
+            textColor: '#000000',
+            indicatorSystem: "",
+            subjectCode: "",
+            indicators: [],
+            instances: [],
+            groupType: 'system', // or subject
+            measures: [
                 "ABSOLUTE",
                 "ANNUAL_PERCENTAGE_RATE",
                 "ANNUAL_PUNTUAL_RATE",
                 "INTERPERIOD_PERCENTAGE_RATE",
                 "INTERPERIOD_PUNTUAL_RATE"
             ],
-            showLabels : true,
-            showLegend : true,
-            sideView : false,
-            sparkline_ABSOLUTE : false,
-            sparkline_ANNUAL_PERCENTAGE_RATE : false,
-            sparkline_ANNUAL_PUNTUAL_RATE : false,
-            sparkline_INTERPERIOD_PERCENTAGE_RATE : false,
-            sparkline_INTERPERIOD_PUNTUAL_RATE : false,
-            sparklineType : 'line',
-            sparklineWidth : 30,
-            sparklineHeight : 20,
-            sparklineLineColor : "#0058B0",
-            sparklineFillColor : null,
-            uwa : false,
-            shadow : true,
-            borderRadius : true,
-            scale : "natural"
+            showLabels: true,
+            showLegend: true,
+            sideView: false,
+            sparkline_ABSOLUTE: false,
+            sparkline_ANNUAL_PERCENTAGE_RATE: false,
+            sparkline_ANNUAL_PUNTUAL_RATE: false,
+            sparkline_INTERPERIOD_PERCENTAGE_RATE: false,
+            sparkline_INTERPERIOD_PUNTUAL_RATE: false,
+            sparklineType: 'line',
+            sparklineWidth: 30,
+            sparklineHeight: 20,
+            sparklineLineColor: "#0058B0",
+            sparklineFillColor: null,
+            uwa: false,
+            shadow: true,
+            borderRadius: true,
+            scale: "natural"
         },
 
-        _containerTemplate : Handlebars.templates.container,
+        _containerTemplate: Handlebars.templates.container,
 
-        _uwaContainerTemplate : Handlebars.templates.uwaContainer,
+        _uwaContainerTemplate: Handlebars.templates.uwaContainer,
 
-        init : function (options) {
+        init: function (options) {
             this.options = _.extend({}, this._defaultOptions, options);
             this.el = $(options.el);
             this.type = options.type;
             this.measures = options.measures || this._defaultOptions.measures;
             this.geographicalValues = options.geographicalValues;
-            
+
             this.afterRenderCallback = !_.isUndefined(this.options.afterRenderCallback) ? _.debounce(this.options.afterRenderCallback, 300) : null;
 
             // urls
@@ -67,15 +67,15 @@
             this.visualizerUrl = options.visualizerUrl || "";
 
             // Request builder
-            this.datasetRequestBuilder = new DatasetRequestBuilder({apiUrl : this.apiUrl});
-            
+            this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
+
             // locale
             this.locale = options.locale || "es";
 
             this.datasets = [];
 
             //Create containers
-            var templateOptions = { widgetsTypeUrl : Istac.widget.configuration['indicators.widgets.typelist.url'] };
+            var templateOptions = { widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'] };
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));
@@ -95,7 +95,7 @@
 
             this.el.addClass("istac-widget");
             this.el.addClass(this.containerClass);
-            
+
             this.initializeLogo();
             this.initializeEmbed();
 
@@ -119,7 +119,7 @@
             this.reloadData();
         },
 
-        set : function (property, value) {
+        set: function (property, value) {
             this[property] = value;
             this.options[property] = value;
 
@@ -129,24 +129,24 @@
             }
         },
 
-        _getSetterMethodName : function (property) {
+        _getSetterMethodName: function (property) {
             var upper = property[0].toUpperCase() + property.substring(1);
             return 'set' + upper;
         },
 
-        setTextColor : function (textColor) {
+        setTextColor: function (textColor) {
             this.el.css('color', textColor);
         },
-        
-        _getTimeGranularities : function() {
-        	return $.ajax({ 
-        		url : this.apiUrl + '/timeGranularities',
-        		dataType : 'jsonp',
-        		jsonp : "_callback"
-        	});
+
+        _getTimeGranularities: function () {
+            return $.ajax({
+                url: this.apiUrl + '/timeGranularities',
+                dataType: 'jsonp',
+                jsonp: "_callback"
+            });
         },
 
-        _getContrast50 : function (hexcolor) {
+        _getContrast50: function (hexcolor) {
             if (hexcolor && hexcolor.length > 0) {
                 if (hexcolor[0] === '#') {
                     hexcolor = hexcolor.substring(1);
@@ -155,17 +155,17 @@
             }
         },
 
-        setBorderColor : function (borderColor) {
+        setBorderColor: function (borderColor) {
             this.bodyContainer.css('border-color', borderColor);
         },
 
-        _cssBorderRadius : function (el, radius) {
+        _cssBorderRadius: function (el, radius) {
             el.css('border-radius', radius);
             el.css('-webkit-border-radius', radius);
             el.css('-moz-border-radius', radius);
         },
 
-        setBorderRadius : function (enable) {
+        setBorderRadius: function (enable) {
             if (enable) {
                 this._cssBorderRadius(this.titleContainer, "4px 4px 0 0");
                 this._cssBorderRadius(this.bodyContainer, "0 0 12px 12px");
@@ -175,7 +175,7 @@
             }
         },
 
-        setShadow : function (enable) {
+        setShadow: function (enable) {
             if (enable) {
                 this.bodyContainer.css('box-shadow', 'rgba(0, 0, 0, 0.18) 0px 3px 5px -2px');
             } else {
@@ -183,7 +183,7 @@
             }
         },
 
-        setHeaderColor : function (color) {
+        setHeaderColor: function (color) {
             this.titleContainer.css('background-color', color);
             var contrastColor = this._getContrast50(color);
 
@@ -191,16 +191,16 @@
             this.titleContainer.find("a").css('color', contrastColor);
         },
 
-        setWidth : function (width) {
+        setWidth: function (width) {
             this.width = width;
             this.el.css('width', width);
         },
 
-        updateTitle : function () {
+        updateTitle: function () {
             this.setTitle(this.options.title);
         },
 
-        _getDefaultTitle : function () {
+        _getDefaultTitle: function () {
             var title;
             if (this.options.type === "lastData") {
                 title = "Últimos datos";
@@ -226,7 +226,7 @@
             return title;
         },
 
-        setTitle : function (title) {
+        setTitle: function (title) {
             if (_.isUndefined(title) || title.length === 0) {
                 title = this._getDefaultTitle();
             }
@@ -240,15 +240,15 @@
             this.title = title;
         },
 
-        setIndicatorSystem : function () {
+        setIndicatorSystem: function () {
             this._updateLinks();
         },
 
-        setGroupType : function () {
+        setGroupType: function () {
             this._updateLinks();
         },
 
-        _updateLinks : function () {
+        _updateLinks: function () {
             var systemId = this.options.indicatorSystem;
             var url;
             var hasSystemId = this.options.type === 'temporal' || (this.options.groupType === 'system');
@@ -273,7 +273,7 @@
             this.el.find('.istac-widget-body-allIndicators-text').toggle(hasSystemId);
         },
 
-        setStyle : function (style) {
+        setStyle: function (style) {
             var isGobcan = style === "gobcan";
             this.el.toggleClass("gobcan-style", isGobcan);
             this.set('gobcanStyleColor', this.gobcanStyleColor);
@@ -285,7 +285,7 @@
             }
         },
 
-        setGobcanStyleColor : function (color) {
+        setGobcanStyleColor: function (color) {
             if (this.options.style === "gobcan") {
                 this.el.toggleClass("blue", color === "blue");
                 this.el.toggleClass("lightBlue", color === "lightBlue");
@@ -297,7 +297,7 @@
             }
         },
 
-        includeLogo : function () {
+        includeLogo: function () {
             if (this.options.uwa) {
                 return true
             } else if (window.location.href.indexOf(this.url) > -1) {
@@ -310,11 +310,11 @@
             }
         },
 
-        initializeLogo : function () {            
+        initializeLogo: function () {
             this.creditsContainer.toggle(this.includeLogo());
         },
 
-        initializeEmbed : function () {
+        initializeEmbed: function () {
             this.hideEmbed();
             var self = this;
             this.embedContainer.find('.hideEmbed').click(function () {
@@ -327,7 +327,7 @@
             });
         },
 
-        openTag : function (tag, parameters) {
+        openTag: function (tag, parameters) {
             var result = '<' + tag;
 
             _.each(parameters, function (value, key) {
@@ -338,53 +338,53 @@
             return result;
         },
 
-        closeTag : function (tag) {
+        closeTag: function (tag) {
             return '</' + tag + '>';
         },
 
-        showEmbed : function () {
+        showEmbed: function () {
             var filteredOptions = _.omit(this.options, ["el", "uwa", "afterRenderCallback", "width", "widgetWith"]);
 
             var closeScript = this.closeTag('script');
-            
+
             var el = 'istac-widget';
-            var code = '<div id="' + el + '"></div>';            
+            var code = '<div id="' + el + '"></div>';
             filteredOptions.el = '#' + el;
-            
+
             filteredOptions.visualizerUrl = this._getVisualizerUrl();
             filteredOptions.width = this.options.widgetWith;
 
-            code += this.openTag('script', {src : this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
+            code += this.openTag('script', { src: this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
             code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
 
             this.embedContainer.find('textarea').val(code);
             this.embedContainer.show();
         },
-        
-        _getVisualizerUrl: function() {
+
+        _getVisualizerUrl: function () {
             if (typeof visualizerUrl !== "undefined") return visualizerUrl;
-            
+
             return this.options.visualizerUrl;
         },
 
-        hideEmbed : function () {
+        hideEmbed: function () {
             this.embedContainer.hide();
-        },        
+        },
 
-        reloadData : function () {
+        reloadData: function () {
             var self = this;
             var requestUrl = this.datasetRequestBuilder.request(this.options);
             if (requestUrl) {
                 var req = $.ajax({
-                    url : requestUrl,
-                    dataType : 'jsonp',
-                    jsonp : "_callback"
+                    url: requestUrl,
+                    dataType: 'jsonp',
+                    jsonp: "_callback"
                 });
-                
-                this._getTimeGranularities().success(function(response) {
-                	self.timeGranularities = response.items;
-                	
-                	req.success(function (response) {                	                
+
+                this._getTimeGranularities().success(function (response) {
+                    self.timeGranularities = response.items;
+
+                    req.success(function (response) {
                         var datasets = _.map(response.items, function (item) {
                             return Dataset.fromRequest(item, self.timeGranularities);
                         }, self);
@@ -392,17 +392,17 @@
                         self.render();
                     });
                 });
-                
+
             } else {
                 self.datasets = [];
                 self.render();
             }
         },
-        
-        onAfterRender : function() {
-        	if (this.afterRenderCallback) {        		
-        		this.afterRenderCallback(this);
-        	}
+
+        onAfterRender: function () {
+            if (this.afterRenderCallback) {
+                this.afterRenderCallback(this);
+            }
         }
 
 
