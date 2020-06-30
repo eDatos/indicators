@@ -11,7 +11,8 @@
         {{#each datasets}}
         <tr class="{{cssClass}}">
             <td class="istac-widget-last-data-indicator-column">
-                <div class="istac-widget-lastData-title"><a href="{{titleLink}}">{{title}}</a></div>
+                <div class="istac-widget-lastData-title"><a style="color: {{indicatorNameColor}}"
+                        href="{{titleLink}}">{{title}}</a></div>
                 <div class="istac-widget-unit">{{ temporalLabel }}</div>
             </td>
             {{#each observations}}
