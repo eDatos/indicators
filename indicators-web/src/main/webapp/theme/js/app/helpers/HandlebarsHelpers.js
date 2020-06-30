@@ -14,6 +14,11 @@
         return ret;
     };
 
+    // {{#ifEquals sampleString "This is a string"}}
+    Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
+        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    });
+
     Handlebars.registerHelper('options', function (context) {
         return new Handlebars.SafeString(toOptions(context));
     });
@@ -32,5 +37,5 @@
     Handlebars.registerHelper('serverURL', function (context) {
         return serverURL;
     });
-    
+
 }());

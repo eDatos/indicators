@@ -1,13 +1,25 @@
 <div class="istac-widget-lateral">
     {{#each datasets}}
-        <div class="istac-widget-lateral-dataset">
-            <div class="istac-widget-lateral-title"><a href="{{titleLink}}">{{title}}</a></div>
-            {{#each observations}}
-                {{#if hasValue}}
-                    <div class="istac-widget-lateral-subtitle">{{../../temporalLabel}} - {{ measure }} ({{unit}})</div>
-                    <div class="istac-widget-lateral-value">{{#if showSparkline }}<span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>{{/if}} <span>{{ value }}</span></div>
-                {{/if}}
-            {{/each}}
+    <div class="istac-widget-lateral-dataset">
+        <div class="istac-widget-lateral-title"><a href="{{titleLink}}">{{title}}</a></div>
+        {{#each observations}}
+        {{#if hasValue}}
+        <div class="istac-widget-lateral-subtitle">{{../../temporalLabel}} - {{ measure }} ({{unit}})</div>
+        <div class="istac-widget-lateral-value">
+            {{#if showSparkline }}
+            {{#ifEquals type "bar"}}
+            <span class="inlinesparkline-bar" data-type="bar" data-time="{{timeTitles}}"
+                data-unit="{{unit}}">{{ values }}</span>
+            {{/ifEquals}}
+            {{#ifEquals type "line"}}
+            <span class="inlinesparkline-line" data-type="line" data-time="{{timeTitles}}"
+                data-unit="{{unit}}">{{ values }}</span>
+            {{/ifEquals}}
+            {{/if}}
+            <span>{{ value }}</span>
         </div>
+        {{/if}}
+        {{/each}}
+    </div>
     {{/each}}
 </div>
