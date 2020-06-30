@@ -32,6 +32,7 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/jquery.sparkline.js',
         widgetsPath + '/libs/highcharts.js',
         widgetsPath + '/libs/moment.js',
+        widgetsPath + '/src/HandlebarsHelpers.js',
         widgetsPath + '/src/Templates.js',
         widgetsPath + '/src/Istac.js',
         widgetsPath + '/src/Helper.js',
@@ -97,6 +98,7 @@ module.exports = function (grunt) {
         jsPath + '/widgets/libs/moment.js',
 
 
+        jsPath + '/widgets/src/HandlebarsHelpers.js',
         jsPath + '/widgets/src/Templates.js',
         jsPath + '/widgets/src/Istac.js',
         jsPath + '/widgets/src/Helper.js',
