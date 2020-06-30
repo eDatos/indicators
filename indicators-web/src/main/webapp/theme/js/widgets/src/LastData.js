@@ -16,8 +16,10 @@
         {},
         Istac.widget.Base.prototype,
         {
-            _limitMaxSparkLine: function (arr) {
-                return _.last(arr, Istac.widget.configuration["indicators.widgets.sparkline.max"]);
+            _limitMaxSparkLine: function (arr, localMax) {
+                var globalMax = parseInt(Istac.widget.configuration["indicators.widgets.sparkline.max"]);
+                var max = localMax && localMax < globalMax ? localMax : globalMax;
+                return _.last(arr, max);
             },
 
             parseDataset: function (dataset) {
@@ -42,6 +44,7 @@
 
                     var showSparkline = this.options['sparkline_' + measure];
                     var sparklineType = this.options['sparklineType_' + measure];
+                    var max = parseInt(this.options['sparklineMax_' + measure]);
 
                     var timeValues = dataset.getTimeValues();
                     var timeValuesTitles = dataset.getTimeValuesTitles();
@@ -50,8 +53,8 @@
                         return timeValuesTitles[timeValue];
                     });
 
-                    values = this._limitMaxSparkLine(values);
-                    timeTitles = this._limitMaxSparkLine(timeTitles);
+                    values = this._limitMaxSparkLine(values, max);
+                    timeTitles = this._limitMaxSparkLine(timeTitles, max);
 
                     return {
                         anySparkline: anySparkline,
