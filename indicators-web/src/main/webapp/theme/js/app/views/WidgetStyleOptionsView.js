@@ -3,31 +3,31 @@
 
     App.views.WidgetStyleOptionsView = Backbone.View.extend({
 
-        template : App.loadTemplate('style-options'),
+        template: App.loadTemplate('style-options'),
 
-        initialize : function () {
+        initialize: function () {
             this.modelBinder = new Backbone.ModelBinder();
             this.model.on('change:style', this.render, this);
         },
 
-        _isLastDataOrRecent : function () {
+        _isLastDataOrRecent: function () {
             var type = this.model.get('type');
             return (type === "lastData") || (type === "recent");
         },
 
-        _isTemporal : function () {
+        _isTemporal: function () {
             var type = this.model.get('type');
             return type === "temporal";
         },
 
-        render : function () {
+        render: function () {
             var context = {
-                showSparkLines : this._isLastDataOrRecent(),
-                showAxisAndLegend : this._isTemporal(),
-                showSideView : this._isLastDataOrRecent(),
-                showCustomStyle : this.model.get('style') === 'custom',
-                showTextColor : !this._isTemporal(),
-                showScale : this._isTemporal()
+                showSparkLines: this._isLastDataOrRecent(),
+                showAxisAndLegend: this._isTemporal(),
+                showSideView: this._isLastDataOrRecent(),
+                showCustomStyle: this.model.get('style') === 'custom',
+                showTextColor: !this._isTemporal(),
+                showScale: this._isTemporal()
             };
             this.$el.html(this.template(context));
 
@@ -63,14 +63,14 @@
             return this;
         },
 
-        bindSlider : function () {
+        bindSlider: function () {
             var self = this;
             var $slider = this.$(".width-slider");
             $slider.slider({
-                min : 100,
-                max : 700,
-                value : self.model.get('width'),
-                slide : function (event, ui) {
+                min: 100,
+                max: 700,
+                value: self.model.get('width'),
+                slide: function (event, ui) {
                     self.model.set('width', ui.value);
                 }
             });
@@ -79,12 +79,12 @@
             });
         },
 
-        bindColorPicker : function (input, property) {
+        bindColorPicker: function (input, property) {
             var self = this;
             var defaultVal = this.model.get(property);
             var $colorPicker = input.ColorPicker({
-                color : defaultVal,
-                onChange : function (hsb, hex, rgb) {
+                color: defaultVal,
+                onChange: function (hsb, hex, rgb) {
                     var value = '#' + hex;
                     self.model.set(property, value);
                 }
@@ -95,17 +95,17 @@
             });
         },
 
-        bindColorPickers : function () {
+        bindColorPickers: function () {
             this.bindColorPicker(this.$("[name='headerColor']"), 'headerColor');
             this.bindColorPicker(this.$("[name='borderColor']"), 'borderColor');
             this.bindColorPicker(this.$("[name='textColor']"), 'textColor');
         },
 
-        events : {
-            "keyup input" : 'keyup'
+        events: {
+            "keyup input": 'keyup'
         },
 
-        keyup : function (e) {
+        keyup: function (e) {
             // Meake color pickr works with keyup events
             $(e.target).trigger('change');
         }
