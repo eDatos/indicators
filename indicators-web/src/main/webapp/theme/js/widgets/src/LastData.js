@@ -77,6 +77,7 @@
                     title: dataset.getTitle(this.locale),
                     titleLink: visualizerUrl,
                     temporalLabel: temporalLabel,
+                    indicatorNameColor: this.options.indicatorNameColor,
                     observations: observations,
                     description: dataset.getDescription(this.locale)
                 };

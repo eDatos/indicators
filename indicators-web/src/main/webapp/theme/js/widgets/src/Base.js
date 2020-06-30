@@ -17,6 +17,7 @@
             headerColor: '#0F5B95',
             borderColor: '#EBEBEB',
             textColor: '#000000',
+            indicatorNameColor: "#003366",
             indicatorSystem: "",
             subjectCode: "",
             indicators: [],
@@ -118,6 +119,7 @@
             this.set('textColor', options.textColor);
             this.set('borderColor', options.borderColor);
             this.set('headerColor', options.headerColor);
+            this.set('indicatorNameColor', options.indicatorNameColor);
             this.set('title', options.title);
             this.set('widgetWith', options.width);
             this.set('width', realWidth);

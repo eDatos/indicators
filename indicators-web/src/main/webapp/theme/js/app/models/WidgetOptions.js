@@ -50,7 +50,11 @@
             this.on("change:style", function () {
                 if (this.get('style') === 'gobcan') {
                     var width = this.get('sideView') ? 151 : 423;
-                    this.set({textColor : '#000000', width : width});
+                    this.set({
+                        textColor: this.defaults.textColor,
+                        indicatorNameColor: this.defaults.indicatorNameColor,
+                        width: width
+                    });
                     this.trigger("change:gobcanStyleColor");
                 }
             }, this);
