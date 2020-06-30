@@ -16,44 +16,44 @@
 
         {{#if showCustomStyle}}
 
-            {{#if showTextColor}}
-            <div>
-                <label>Color del texto:</label>
+        {{#if showTextColor}}
+        <div>
+            <label>Color del texto:</label>
             <input type="text" name="textColor" id="textColor" class="small" />
-            </div>
-            {{/if}}
+        </div>
+        {{/if}}
 
-            <div>
-                <label>Color de la cabecera:</label>
-                <input type="text" name="headerColor" id="headerColor" class="small">
-            </div>
+        <div>
+            <label>Color de la cabecera:</label>
+            <input type="text" name="headerColor" id="headerColor" class="small">
+        </div>
 
-            <div>
-                <label>Color del borde:</label>
-                <input type="text" name="borderColor" id="borderColor" class="small">
-            </div>
+        <div>
+            <label>Color del borde:</label>
+            <input type="text" name="borderColor" id="borderColor" class="small">
+        </div>
 
-            <div>
-                <label>Ancho del widget<small>(px)</small>:</label>
+        <div>
+            <label>Ancho del widget<small>(px)</small>:</label>
             <input type="text" name="width" id="widget-width" class="small" />
-            </div>
-            <div class="width-slider"></div>
+        </div>
+        <div class="width-slider"></div>
 
-            <div>
-                <label>
-                    Bordes redondeados
-                    <i class="old-browser-warning icon-help"></i>
-                </label>
-                <input type="checkbox" name="borderRadius">
-            </div>
+        <div>
+            <label>
+                Bordes redondeados
+                <i class="old-browser-warning icon-help"></i>
+            </label>
+            <input type="checkbox" name="borderRadius">
+        </div>
 
-            <div>
-                <label>
-                    Sombra
-                    <i class="old-browser-warning icon-help"></i>
-                </label>
-                <input type="checkbox" name="shadow">
-            </div>
+        <div>
+            <label>
+                Sombra
+                <i class="old-browser-warning icon-help"></i>
+            </label>
+            <input type="checkbox" name="shadow">
+        </div>
         {{else}}
         <div>
             <label>Colores:</label>
@@ -88,42 +88,72 @@
     <fieldset>
         <legend>Visualización</legend>
         {{#if showSideView}}
-            <div>
-                <label>Visualización lateral</label>
-                <input type="checkbox" name="sideView">
-            </div>
+        <div>
+            <label>Visualización lateral</label>
+            <input type="checkbox" name="sideView">
+        </div>
         {{/if}}
         {{#if showAxisAndLegend }}
-            <div>
-                <label>Mostrar etiquetas en el eje x</label>
-                <input type="checkbox" name="showLabels">
-            </div>
-            <div>
-                <label>Mostrar leyenda</label>
-                <input type="checkbox" name="showLegend">
-            </div>
+        <div>
+            <label>Mostrar etiquetas en el eje x</label>
+            <input type="checkbox" name="showLabels">
+        </div>
+        <div>
+            <label>Mostrar leyenda</label>
+            <input type="checkbox" name="showLegend">
+        </div>
         {{/if}}
     </fieldset>
 
     {{#if showSparkLines}}
-        <fieldset>
-            <legend>Sparklines</legend>
-            <label class="checkbox">
+    <fieldset class="sparkline">
+        <legend>Sparklines</legend>
+        <div>
+            <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ABSOLUTE">Dato
             </label>
-            <label class="checkbox">
+            <select name="sparklineType_ABSOLUTE" class="sparkline-type">
+                <option value="line" selected>Líneas</option>
+                <option value="bar">Barras</option>
+            </select class="sparkines">
+        </div>
+        <div>
+            <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ANNUAL_PUNTUAL_RATE">Variación anual
             </label>
-            <label class="checkbox">
+            <select name="sparklineType_ANNUAL_PUNTUAL_RATE" class="sparkline-type">
+                <option value="line" selected>Líneas</option>
+                <option value="bar">Barras</option>
+            </select class="sparkines">
+        </div>
+        <div>
+            <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_INTERPERIOD_PUNTUAL_RATE">Variación interperiódica
             </label>
-            <label class="checkbox">
+            <select name="sparklineType_INTERPERIOD_PUNTUAL_RATE" class="sparkline-type">
+                <option value="line" selected>Líneas</option>
+                <option value="bar">Barras</option>
+            </select class="sparkines">
+        </div>
+        <div>
+            <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ANNUAL_PERCENTAGE_RATE">Tasa variación anual
             </label>
-            <label class="checkbox">
+            <select name="sparklineType_ANNUAL_PERCENTAGE_RATE" class="sparkline-type">
+                <option value="line" selected>Líneas</option>
+                <option value="bar">Barras</option>
+            </select class="sparkines">
+        </div>
+        <div>
+            <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_INTERPERIOD_PERCENTAGE_RATE">Tasa variación interperiódica
             </label>
-        </fieldset>
+            <select name="sparklineType_INTERPERIOD_PERCENTAGE_RATE" class="sparkline-type">
+                <option value="line" selected>Líneas</option>
+                <option value="bar">Barras</option>
+            </select>
+        </div>
+    </fieldset>
     {{/if}}
 
 </div>

@@ -278,7 +278,8 @@
     margin-right: 3px;
 }
 
-.inlinesparkline canvas {
+.inlinesparkline-bar canvas,
+.inlinesparkline-line canvas {
     vertical-align: middle !important;
 }
 

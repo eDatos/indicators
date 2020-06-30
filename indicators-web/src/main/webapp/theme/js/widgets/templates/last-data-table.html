@@ -19,7 +19,14 @@
                 {{#if value}}
                 <div>
                     {{#if showSparkline }}
-                    <span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>
+                    {{#ifEquals type "bar"}}
+                    <span class="inlinesparkline-bar" data-type="bar" data-time="{{timeTitles}}"
+                        data-unit="{{unit}}">{{ values }}</span>
+                    {{/ifEquals}}
+                    {{#ifEquals type "line"}}
+                    <span class="inlinesparkline-line" data-type="line" data-time="{{timeTitles}}"
+                        data-unit="{{unit}}">{{ values }}</span>
+                    {{/ifEquals}}
                     {{else}}
                     {{#if anySparkline}}
                     <span class="inlinesparkline"></span>

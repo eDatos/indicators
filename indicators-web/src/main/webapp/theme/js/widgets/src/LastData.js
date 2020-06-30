@@ -41,6 +41,7 @@
                     var unit = dataset.getUnit(measure, this.locale);
 
                     var showSparkline = this.options['sparkline_' + measure];
+                    var sparklineType = this.options['sparklineType_' + measure];
 
                     var timeValues = dataset.getTimeValues();
                     var timeValuesTitles = dataset.getTimeValuesTitles();
@@ -55,6 +56,7 @@
                     return {
                         anySparkline: anySparkline,
                         showSparkline: showSparkline,
+                        type: sparklineType,
                         values: values.join(','),
                         value: value,
                         unit: unit,
@@ -116,9 +118,7 @@
 
             addSparklines: function ($el) {
                 if (this.options.showSparkline) {
-                    var self = this;
                     var sparklineOptions = {
-                        type: this.options.sparklineType,
                         width: this.options.sparklineWidth + "px",
                         height: this.options.sparklineHeight + "px",
                         lineColor: this.options.headerColor,
@@ -126,19 +126,32 @@
                         lineWidth: 1.5,
                         highlightLineColor: null,
                         spotRadius: 0,
+                        barWidth: this.options.sparklineBarWidth,
+                        barSpacing: this.options.sparklineBarSpacing,
                         tooltipFormatter: function (sparkline, options, fields) {
-                            if (fields.y !== null) {
-                                var time = sparkline.$el.data('time');
-                                var timeTitle = time.split(",")[fields.x];
-                                var unit = sparkline.$el.data('unit');
-                                var value = Istac.widget.helper.addThousandSeparator(fields.y);
-                                return "<strong>" + value + " " + unit + "</strong><br>" + timeTitle;
+                            var type = sparkline.$el.data('type');
+                            if (type == 'line') {
+                                return _buildFormatter(sparkline, fields.x, fields.y);
+                            }
+                            if (type == 'bar' && fields[0]) {
+                                return _buildFormatter(sparkline, fields[0].offset, fields[0].value);
                             }
                             return "";
                         }
                     };
 
+                    $el.find('.inlinesparkline-line').sparkline('html', _.extend({}, sparklineOptions, { type: 'line' }));
+                    $el.find('.inlinesparkline-bar').sparkline('html', _.extend({}, sparklineOptions, { type: 'bar' }));
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
+                }
+
+                function _buildFormatter(sparkline, x, y) {
+                    if (y == null) { return ''; }
+                    var time = sparkline.$el.data('time');
+                    var timeTitle = time.split(",")[x];
+                    var unit = sparkline.$el.data('unit');
+                    var value = Istac.widget.helper.addThousandSeparator(y);
+                    return "<strong>" + value + " " + unit + "</strong><br>" + timeTitle;
                 }
             },
 
