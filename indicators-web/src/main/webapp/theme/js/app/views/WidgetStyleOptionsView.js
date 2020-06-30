@@ -37,6 +37,12 @@
                 hide: 'mouseout'
             });
 
+            this.$('.sparkline-max-help').qtip({
+                content: 'Si no indica un valor, o es superior al máximo, se limitará el número de puntos del sparkline al máximo permitido.',
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
             this.$('.scale-natural-lib-help').qtip({
                 content: 'El escalamiento utiliza incrementos que las personas reconocen como naturales a la hora de contar. Además, en la representación conjunta de números positivos y negativos las líneas de escala coinciden en valor absoluto.',
                 show: 'mouseover',
