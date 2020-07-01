@@ -17,6 +17,7 @@
             type: 'lastData', // temporal, lastData, recent
             width: CENTRAL_WIDTH,
             headerColor: '#0F5B95',
+            titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
@@ -62,9 +63,15 @@
             this.on("change:gobcanStyleColor", function () {
                 var color = this.get('gobcanStyleColor');
                 if (color === "blue") {
-                    this.set({ headerColor: "#0F5B95" });
+                    this.set({
+                        headerColor: "#0F5B95",
+                        titleColor: "#FFFFFF"
+                    });
                 } else if (color === "green") {
-                    this.set('headerColor', "#457A0E");
+                    this.set({
+                        headerColor: "#457A0E",
+                        titleColor: "#FFFFFF"
+                    });
                 }
             });
 

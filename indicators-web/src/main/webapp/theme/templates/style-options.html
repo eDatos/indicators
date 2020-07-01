@@ -29,6 +29,11 @@
         </div>
 
         <div>
+            <label>Color del título:</label>
+            <input type="text" name="titleColor" id="titleColor" class="small" />
+        </div>
+
+        <div>
             <label>Color del borde:</label>
             <input type="text" name="borderColor" id="borderColor" class="small">
         </div>
@@ -117,80 +122,90 @@
             <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ABSOLUTE">Dato
             </label>
-            <select name="sparklineType_ABSOLUTE" class="sparkline-type">
-                <option value="line" selected>Líneas</option>
-                <option value="bar">Barras</option>
-            </select>
             <div>
+                <div class="sparkline-max">
                 <label>
                     Número de datos a representar
                     <i class="sparkline-max-help icon-help"></i>
                 </label>
                 <input type="text" class="small" name="sparklineMax_ABSOLUTE">
             </div>
+                <select name="sparklineType_ABSOLUTE" class="sparkline-type">
+                    <option value="line" selected>Líneas</option>
+                    <option value="bar">Barras</option>
+                </select>
+            </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ANNUAL_PUNTUAL_RATE">Variación anual
             </label>
-            <select name="sparklineType_ANNUAL_PUNTUAL_RATE" class="sparkline-type">
-                <option value="line" selected>Líneas</option>
-                <option value="bar">Barras</option>
-            </select>
             <div>
+                <div class="sparkline-max">
                 <label>
                     Número de datos a representar
                     <i class="sparkline-max-help icon-help"></i>
                 </label>
                 <input type="text" class="small" name="sparklineMax_ANNUAL_PUNTUAL_RATE">
             </div>
+                <select name="sparklineType_ANNUAL_PUNTUAL_RATE" class="sparkline-type">
+                    <option value="line" selected>Líneas</option>
+                    <option value="bar">Barras</option>
+                </select>
+            </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_INTERPERIOD_PUNTUAL_RATE">Variación interperiódica
             </label>
-            <select name="sparklineType_INTERPERIOD_PUNTUAL_RATE" class="sparkline-type">
-                <option value="line" selected>Líneas</option>
-                <option value="bar">Barras</option>
-            </select>
             <div>
+                <div class="sparkline-max">
                 <label>
                     Número de datos a representar
                     <i class="sparkline-max-help icon-help"></i>
                 </label>
                 <input type="text" class="small" name="sparklineMax_INTERPERIOD_PUNTUAL_RATE">
             </div>
+                <select name="sparklineType_INTERPERIOD_PUNTUAL_RATE" class="sparkline-type">
+                    <option value="line" selected>Líneas</option>
+                    <option value="bar">Barras</option>
+                </select>
+            </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_ANNUAL_PERCENTAGE_RATE">Tasa variación anual
             </label>
-            <select name="sparklineType_ANNUAL_PERCENTAGE_RATE" class="sparkline-type">
-                <option value="line" selected>Líneas</option>
-                <option value="bar">Barras</option>
-            </select>
             <div>
+                <div class="sparkline-max">
                 <label>
                     Número de datos a representar
                     <i class="sparkline-max-help icon-help"></i>
                 </label>
                 <input type="text" class="small" name="sparklineMax_ANNUAL_PERCENTAGE_RATE">
             </div>
+                <select name="sparklineType_ANNUAL_PERCENTAGE_RATE" class="sparkline-type">
+                    <option value="line" selected>Líneas</option>
+                    <option value="bar">Barras</option>
+                </select>
+            </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
                 <input type="checkbox" name="sparkline_INTERPERIOD_PERCENTAGE_RATE">Tasa variación interperiódica
             </label>
-            <select name="sparklineType_INTERPERIOD_PERCENTAGE_RATE" class="sparkline-type">
-                <option value="line" selected>Líneas</option>
-                <option value="bar">Barras</option>
-            </select>
             <div>
+                <div class="sparkline-max">
                 <label>
                     Número de datos a representar
                     <i class="sparkline-max-help icon-help"></i>
                 </label>
                 <input type="text" class="small" name="sparklineMax_INTERPERIOD_PERCENTAGE_RATE">
+            </div>
+                <select name="sparklineType_INTERPERIOD_PERCENTAGE_RATE" class="sparkline-type">
+                    <option value="line" selected>Líneas</option>
+                    <option value="bar">Barras</option>
+                </select>
             </div>
         </div>
     </fieldset>

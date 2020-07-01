@@ -126,6 +126,8 @@
                         width: this.options.sparklineWidth + "px",
                         height: this.options.sparklineHeight + "px",
                         lineColor: this.options.headerColor,
+                        barColor: this.options.headerColor,
+                        negBarColor: this.options.headerColor,
                         fillColor: this.options.sparklineFillColor,
                         lineWidth: 1.5,
                         highlightLineColor: null,
