@@ -103,6 +103,7 @@
 
         bindColorPickers: function () {
             this.bindColorPicker(this.$("[name='headerColor']"), 'headerColor');
+            this.bindColorPicker(this.$("[name='titleColor']"), 'titleColor');
             this.bindColorPicker(this.$("[name='borderColor']"), 'borderColor');
             this.bindColorPicker(this.$("[name='textColor']"), 'textColor');
             this.bindColorPicker(this.$("[name='indicatorNameColor']"), 'indicatorNameColor');

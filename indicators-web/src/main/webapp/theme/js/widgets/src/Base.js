@@ -15,6 +15,7 @@
             width: 300,
             height: 400,
             headerColor: '#0F5B95',
+            titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
@@ -119,6 +120,7 @@
             this.set('textColor', options.textColor);
             this.set('borderColor', options.borderColor);
             this.set('headerColor', options.headerColor);
+            this.set('titleColor', options.titleColor);
             this.set('indicatorNameColor', options.indicatorNameColor);
             this.set('title', options.title);
             this.set('widgetWith', options.width);
@@ -205,10 +207,11 @@
 
         setHeaderColor: function (color) {
             this.titleContainer.css('background-color', color);
-            var contrastColor = this._getContrast50(color);
+        },
 
-            this.titleContainer.css('color', contrastColor);
-            this.titleContainer.find("a").css('color', contrastColor);
+        setTitleColor: function (color) {
+            this.titleContainer.css('color', color);
+            this.titleContainer.find("a").css('color', color);
         },
 
         setWidth: function (width) {
@@ -280,13 +283,12 @@
 
             if (url) {
                 this.titleText.html('<a href="' + url + '" target="_blank"></a>');
-                this.setTitle(this.title);
-                this.setHeaderColor(this.headerColor);
             } else {
                 this.titleText.html('');
+            }
                 this.setTitle(this.title);
                 this.setHeaderColor(this.headerColor);
-            }
+            this.setTitleColor(this.titleColor);
 
 
             this.allIndicatorsContainer.find('a').attr('href', url);
@@ -311,8 +313,10 @@
                 this.el.toggleClass("lightBlue", color === "lightBlue");
                 if (color === "blue") {
                     this.set('headerColor', "#0F5B95");
+                    this.set('titleColor', '#FFFFFF');
                 } else if (color === "lightBlue") {
                     this.set('headerColor', "#C4D0DC");
+                    this.set('titleColor', '#333333');
                 }
             }
         },
