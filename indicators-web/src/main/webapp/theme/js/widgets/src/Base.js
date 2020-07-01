@@ -152,6 +152,12 @@
             this.el.css('color', textColor);
         },
 
+        setIndicatorNameColor: function (color) {
+            this.el.find('.istac-widget-embed a').css('color', color);
+
+            // The color on the indicator name itself is handled inside the html
+        },
+
         _getTimeGranularities: function () {
             return $.ajax({
                 url: this.apiUrl + '/timeGranularities',
