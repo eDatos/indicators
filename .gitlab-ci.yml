@@ -47,7 +47,7 @@ release:
         then
           mvn -Duser.timezone=Atlantic/Canary -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
         else
-          mvn -Duser.timezone=Atlantic/Canary -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -Duser.timezone=Atlantic/Canary -s /tmp/settings.xml ;
+          mvn -Duser.timezone=Atlantic/Canary -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
         fi
     artifacts:
       paths:
