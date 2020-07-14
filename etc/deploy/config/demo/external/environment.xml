@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>Metamac environment definition</comment>
+	<entry key="environment.metamac.configuration.db.username">METAMAC_COMMON_METADATA</entry>
+	<entry key="environment.metamac.configuration.db.password">cHAxrxhC+auNxs6n0QtGeceiZDtJ78Z8G8Y9rw9kubU=</entry>
+	<entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@localhost:1521:xe</entry>
+	<entry key="environment.metamac.configuration.db.driver_name">oracle.jdbc.OracleDriver</entry>
+  
+  
+</properties>
