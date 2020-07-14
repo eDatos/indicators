@@ -45,9 +45,9 @@ release:
       - git checkout -B "$CI_BUILD_REF_NAME"
       - if [[ -n "$RELEASE_VERSION" ]] ;
         then
-          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -Duser.timezone=Atlantic/Canary -s /tmp/settings.xml ;
         else
-          mvn -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+          mvn -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -Duser.timezone=Atlantic/Canary -s /tmp/settings.xml ;
         fi
     artifacts:
       paths:
