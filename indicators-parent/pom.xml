@@ -106,6 +106,9 @@
 		<joda-time-hibernate.version>1.2</joda-time-hibernate.version>
 		<usertype-jodatime.version>1.9.1</usertype-jodatime.version>
 		<urlrewritefilter.version>4.0.4</urlrewritefilter.version>
+		
+		<frontend-maven-plugin.version>1.10.0</frontend-maven-plugin.version>
+		<node.version>v4.6.0</node.version>
 
 		<!-- WEB INTERNAL -->
 		<gwt-maven-plugin.version>2.3.0-1</gwt-maven-plugin.version>

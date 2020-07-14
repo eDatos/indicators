@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+   <comment>Metamac environment definition</comment>
+
+   <!--  Configuration properties in files -->
+   <entry key="environment.indicators.data">/data/istac/indicators</entry>
+
+   <!--  Configuration properties in database (ORACLE)-->
+   <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@preistac.gobiernodecanarias.net:1576:PREISTAC</entry>
+   <entry key="environment.metamac.configuration.db.username">istac_commons_metadata</entry>
+   <entry key="environment.metamac.configuration.db.password">e9XA3Rf4LIo8GnGpIKGb1hYdTT9/YVge</entry>
+   <entry key="environment.metamac.configuration.db.driver_name">oracle.jdbc.OracleDriver</entry>
+
+</properties>
