@@ -23,6 +23,7 @@
 						  <li class="inactive"><a href="/istac/istac/" accesskey="2" title="El ISTAC (tecla de acceso: 2)">El ISTAC</a></li>
 						  <li class="inactive"><a href="/istac/noticias/" accesskey="4" title="Noticias (tecla de acceso: 4)">Noticias</a></li>
 						  <li class="inactive"><a href="/istac/datos-abiertos/" class="inactive" accesskey="5" title="Datos abiertos (tecla de acceso: 5)">Datos abiertos</a></li>
+						  <li class="inactive"><a href="http://www.gobiernodecanarias.org/istac/impacto-covid-19/" class="inactive" accesskey="5" title="COVID-19 (tecla de acceso: 5)">COVID-19</a></li>
 					</ul>
 					[#include "/layout/buscador.ftl"]
 				</div>
