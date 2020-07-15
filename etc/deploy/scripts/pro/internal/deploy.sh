@@ -32,15 +32,15 @@ ssh -o "StrictHostKeyChecking=no" deploy@mgdelicias.gobiernodecanarias.net <<EOF
     fi
 
     # Update Process
-    sudo rm -rf $DEPLOY_TARGET_PATH/indicators-internal-istac
+    sudo rm -rf $DEPLOY_TARGET_PATH/aplicaciones#indicators-internal-istac
     sudo mv $TRANSFER_PATH/indicators-internal.war $DEPLOY_TARGET_PATH/indicators-internal.war
-    sudo unzip $DEPLOY_TARGET_PATH/indicators-internal.war -d $DEPLOY_TARGET_PATH/indicators-internal-istac
+    sudo unzip $DEPLOY_TARGET_PATH/indicators-internal.war -d $DEPLOY_TARGET_PATH/aplicaciones#indicators-internal-istac
     sudo rm -rf $DEPLOY_TARGET_PATH/indicators-internal.war
 
     # Restore Configuration
-    sudo mv $ENV_CONF/environment.xml $DEPLOY_TARGET_PATH/indicators-internal-istac/$ENVIRONMENT_RELATIVE_PATH_FILE
+    sudo mv $ENV_CONF/environment.xml $DEPLOY_TARGET_PATH/aplicaciones#indicators-internal-istac/$ENVIRONMENT_RELATIVE_PATH_FILE
     # Take care!, it's not necessary to restore the logback.xml file, it's externally configured in METAMAC_COMMON_METADATA database (environment.indicators.data)
-    # sudo cp $ENV_CONF/logback.xml $DEPLOY_TARGET_PATH/indicators-internal-istac/$LOGBACK_RELATIVE_PATH_FILE
+    # sudo cp $ENV_CONF/logback.xml $DEPLOY_TARGET_PATH/aplicaciones#indicators-internal-istac/$LOGBACK_RELATIVE_PATH_FILE
     
     sudo chown -R guagua:guagua /servers/guagua
     
