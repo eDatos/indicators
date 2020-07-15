@@ -43,12 +43,13 @@ release:
       - git config --global user.email "sistemas@arte-consultores.com"
       - git config --global user.name "arte"
       - git checkout -B "$CI_BUILD_REF_NAME"
-      - if [[ -n "$RELEASE_VERSION" ]] ;
-        then
-          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
-        else
-          mvn -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
-        fi
+      - mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+#      - if [[ -n "$RELEASE_VERSION" ]] ;
+#        then
+#          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+#        else
+#          mvn -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+#        fi
     artifacts:
       paths:
       - target/*.war
