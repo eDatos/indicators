@@ -43,15 +43,19 @@ release:
       - git config --global user.email "sistemas@arte-consultores.com"
       - git config --global user.name "arte"
       - git checkout -B "$CI_BUILD_REF_NAME"
-      - if [[ -n "$RELEASE_VERSION" ]] ;
-        then
-          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
-        else
-          mvn -Dresume=false release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
-        fi
+      - mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false -Darguments="-Duser.timezone=Atlantic/Canary" release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml
+#      - mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false -Darguments=-DskipTests release:prepare release:perform -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml
+#      - if [[ -n "$RELEASE_VERSION" ]] ;
+#        then
+#          mvn -DreleaseVersion=$RELEASE_VERSION -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+#        else
+#          mvn -Dresume=false release:prepare release:perform -Dmaven.test.skip=true -Dusername=arte -Dpassword=$ARTEPASS -s /tmp/settings.xml ;
+#        fi
     artifacts:
       paths:
-      - target/*.war
+            - indicators-internal-web/target/*.war
+            - indicators-web/target/*.war
+            - indicators-external-api-web/target/*.war
     only:
       - master
     when: manual
@@ -121,7 +125,7 @@ pre deploy all:
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
-        - develop
+        - master
     tags: ["deploy-vpn"]
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
@@ -135,7 +139,7 @@ pre deploy internal:
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
-        - develop
+        - master
     tags: ["deploy-vpn"]
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
@@ -148,7 +152,7 @@ pre deploy external:
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
-        - develop
+        - master
     tags: ["deploy-vpn"]
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
@@ -161,7 +165,7 @@ stop all pre servers:
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
-      - develop
+      - master
     tags: ["deploy-vpn"]
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
@@ -173,7 +177,7 @@ start all pre servers:
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
-      - develop
+      - master
     tags: ["deploy-vpn"]
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
