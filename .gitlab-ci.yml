@@ -26,15 +26,17 @@ stages:
 build:
     stage: build
     tags: ["build"]
+    variables:
+        SKIP_TESTS: "false"
     script:
-        - 'mvn $MAVEN_CLI_OPTS deploy -s /tmp/settings.xml '
+        - 'mvn $MAVEN_CLI_OPTS deploy -Dmaven.test.skip=$SKIP_TESTS -s /tmp/settings.xml '
     artifacts:
         paths:
             - indicators-internal-web/target/*.war
             - indicators-web/target/*.war
             - indicators-external-api-web/target/*.war
     only:
-      - develop
+      - EDATOS-3183-gitlab_ci_skip_tests
 
 release:
     stage: release
