@@ -61,7 +61,7 @@ release:
             - indicators-web/target/*.war
             - indicators-external-api-web/target/*.war
     only:
-      - master
+      - EDATOS-3183-gitlab_ci_skip_tests
     when: manual
 
 # ######################################################################################
