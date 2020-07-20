@@ -3,6 +3,8 @@ variables:
   #  "false": Tests will running in both stages. (by default)
   #  "true": Tests are skipped in both stages.
   SKIP_TESTS: "false"
+  # Number of seconds in which the server log will be displayed in the gitlab ci console
+  LOG_TIMEOUT: "180"
   # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
   MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
@@ -65,213 +67,192 @@ release:
 # ######################################################################################
 # DEMO
 # ######################################################################################
-deploy all:
+.job_template: &demo_job_definition
     stage: demo
+    when: manual    
+
+deploy all:
+    <<: *demo_job_definition
     script:
         - bash ./etc/deploy/scripts/demo/internal/deploy.sh $RESTART
         - bash ./etc/deploy/scripts/demo/external/deploy.sh $RESTART
-    when: manual
     
 deploy internal:
-    stage: demo
+    <<: *demo_job_definition
     script:
         - bash ./etc/deploy/scripts/demo/internal/deploy.sh $RESTART
-    when: manual
     
 deploy external:
-    stage: demo
+    <<: *demo_job_definition
     script:
         - bash ./etc/deploy/scripts/demo/external/deploy.sh $RESTART
-    when: manual
 
 stop all servers:
-    stage: demo
+    <<: *demo_job_definition
     script:
         - bash ./etc/deploy/scripts/demo/internal/server.sh stop edatos-internal01
         - bash ./etc/deploy/scripts/demo/external/server.sh stop edatos-external01
-    when: manual
 
 start all servers:
-    stage: demo
+    <<: *demo_job_definition
     script:
         - bash ./etc/deploy/scripts/demo/internal/server.sh start edatos-internal01
         - bash ./etc/deploy/scripts/demo/external/server.sh start edatos-external01
-    when: manual
+
+log internal:
+    <<: *demo_job_definition
+    script:
+        - bash ./etc/deploy/scripts/demo/internal/tail_log.sh $LOG_TIMEOUT
+
+log external:
+    <<: *demo_job_definition
+    script:
+        - bash ./etc/deploy/scripts/demo/external/tail_log.sh $LOG_TIMEOUT
 
 # ######################################################################################
 # PRE
-# ######################################################################################       
-check pre internal server status:
+# ######################################################################################
+.job_template: &pre_job_definition
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pre
     only:
         - master
     tags: ["deploy-vpn"]
+    when: manual
+
+check pre internal server status:
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgcarta.gobiernodecanarias.net echo 'ok'
-    when: manual
     
 check pre external server status:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgcartera.gobiernodecanarias.net echo 'ok'
-    when: manual
     
 pre deploy all:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/deploy.sh $RESTART
         - bash ./etc/deploy/scripts/pre/external/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual
 
 pre deploy internal:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual
 
 pre deploy external:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/external/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual
 
 stop all pre servers:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-      - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/server.sh stop arveja01
         - bash ./etc/deploy/scripts/pre/external/server.sh stop frangollo01
-    when: manual
 
 start all pre servers:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pre
-    only:
-      - master
-    tags: ["deploy-vpn"]
+    <<: *pre_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/server.sh start arveja01
         - bash ./etc/deploy/scripts/pre/external/server.sh start frangollo01
-    when: manual
+
+pre log internal:
+    <<: *pre_job_definition
+    script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"    
+        - bash ./etc/deploy/scripts/pre/internal/tail_log.sh $LOG_TIMEOUT
+
+pre log external:
+    <<: *pre_job_definition
+    script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
+        - bash ./etc/deploy/scripts/pre/external/tail_log.sh $LOG_TIMEOUT
 
 # ######################################################################################
 # PRO
 # ######################################################################################
-check pro internal server status:
+.job_template: &pro_job_definition
     image: anaga:5000/vpn_globalprotect:1.1.0
     stage: pro
     only:
         - master
     tags: ["deploy-vpn"]
+    when: manual
+
+check pro internal server status:
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgdelicias.gobiernodecanarias.net echo 'ok'
-    when: manual
     
 check pro external server status:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
-        - ssh -o "StrictHostKeyChecking=no" deploy@mgcrinaco.gobiernodecanarias.net echo 'ok'
-    when: manual    
+        - ssh -o "StrictHostKeyChecking=no" deploy@mgcrinaco.gobiernodecanarias.net echo 'ok' 
     
 pro deploy all:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/deploy.sh $RESTART
         - bash ./etc/deploy/scripts/pro/external/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual    
     
 pro deploy internal:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual
     
 pro deploy external:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-        - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/external/deploy.sh $RESTART
     dependencies:
         - release
-    when: manual
 
 stop all pro servers:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-      - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/server.sh stop guagua01
         - bash ./etc/deploy/scripts/pro/external/server.sh stop bubango01
-    when: manual
 
 start all pro servers:
-    image: anaga:5000/vpn_globalprotect:1.1.0
-    stage: pro
-    only:
-      - master
-    tags: ["deploy-vpn"]
+    <<: *pro_job_definition
     script:
         - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/server.sh start guagua01
         - bash ./etc/deploy/scripts/pro/external/server.sh start bubango01
-    when: manual
+
+pro log internal:
+    <<: *pro_job_definition
+    script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
+        - bash ./etc/deploy/scripts/pro/internal/tail_log.sh $LOG_TIMEOUT
+
+pro log external:
+    <<: *pro_job_definition
+    script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
+        - bash ./etc/deploy/scripts/pro/external/tail_log.sh $LOG_TIMEOUT
