@@ -1651,13 +1651,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
-    private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String timeValue) throws MetamacException {
+    private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
+        String timeValue = MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(timeValue)));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
@@ -1719,11 +1720,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Get value has to take a look to method type and methd
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
      */
-    private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String timeValue) throws MetamacException {
+    private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String originalTimeValue) throws MetamacException {
         // Create base for observation
+        String timeValue = MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(originalTimeValue);
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(timeValue)));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
