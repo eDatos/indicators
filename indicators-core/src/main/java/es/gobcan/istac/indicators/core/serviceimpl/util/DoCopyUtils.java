@@ -8,6 +8,7 @@ import java.util.Set;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
@@ -27,8 +28,10 @@ public class DoCopyUtils {
 
     /**
      * Create a new IndicatorsSystemVersion copying values from a source
+     * 
+     * @throws MetamacException
      */
-    public static IndicatorsSystemVersion copy(IndicatorsSystemVersion source) {
+    public static IndicatorsSystemVersion copy(IndicatorsSystemVersion source) throws MetamacException {
         IndicatorsSystemVersion target = new IndicatorsSystemVersion();
         copyElementsLevels(source, target);
 
@@ -74,9 +77,9 @@ public class DoCopyUtils {
     }
 
     /**
-     *
+     * @throws MetamacException
      */
-    private static void copyElementsLevels(IndicatorsSystemVersion indicatorsSystemVersionSource, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
+    private static void copyElementsLevels(IndicatorsSystemVersion indicatorsSystemVersionSource, IndicatorsSystemVersion indicatorsSystemVersionTarget) throws MetamacException {
         List<ElementLevel> targets = new ArrayList<ElementLevel>();
         List<ElementLevel> sources = indicatorsSystemVersionSource.getChildrenFirstLevel();
         for (ElementLevel source : sources) {
@@ -92,8 +95,10 @@ public class DoCopyUtils {
 
     /**
      * Copy a ElementLevel
+     *
+     * @throws MetamacException
      */
-    private static ElementLevel copy(ElementLevel source, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
+    private static ElementLevel copy(ElementLevel source, IndicatorsSystemVersion indicatorsSystemVersionTarget) throws MetamacException {
         ElementLevel target = new ElementLevel();
         if (source.getDimension() != null) {
             Dimension dimensionTarget = copy(source.getDimension());
@@ -128,8 +133,10 @@ public class DoCopyUtils {
 
     /**
      * Copy an indicator instance
+     *
+     * @throws MetamacException
      */
-    public static IndicatorInstance copy(IndicatorInstance source) {
+    public static IndicatorInstance copy(IndicatorInstance source) throws MetamacException {
         IndicatorInstance target = new IndicatorInstance();
         // must remains with same code (but with different uuid)
         target.setCode(source.getCode());
@@ -244,7 +251,7 @@ public class DoCopyUtils {
         }
         return targets;
     }
-    
+
     /**
      * Copy a data external item
      */
