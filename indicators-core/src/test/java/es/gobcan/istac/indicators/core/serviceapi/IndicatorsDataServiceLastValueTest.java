@@ -137,11 +137,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "56");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "156");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
         {
             String GEO_CODE = "ES612";
@@ -156,11 +156,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "60");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "160");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
         {
             String GEO_CODE = "ES613";
@@ -175,11 +175,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "49");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "149");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
     }
 
@@ -208,11 +208,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "56");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "156");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
         {
             String GEO_CODE = "ES612";
@@ -227,11 +227,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "60");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "160");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
         {
             String GEO_CODE = "ES613";
@@ -246,11 +246,11 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "49");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(0), INDICATOR2_UUID, geoValue, "2011-M01", obs);
 
             obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "149");
-            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-M02", obs);
         }
     }
 
@@ -377,7 +377,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "3585");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
         }
         {
             String geoCode = "ES61";
@@ -390,7 +390,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "497");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
         }
         {
             String geoCode = "ES611";
@@ -403,7 +403,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "56");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
         }
         {
             String geoCode = "ES612";
@@ -416,7 +416,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "60");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
         }
         {
             String geoCode = "ES613";
@@ -429,7 +429,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "49");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
         }
 
     }
@@ -478,7 +478,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(1, latestValues.size());
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "3585");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
 
         }
         // DATA CHANGED New time values
@@ -501,7 +501,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(1, latestValues.size());
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "3685");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M02", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M02", obs);
         }
     }
 
@@ -529,7 +529,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(1, latestValues.size());
             Map<MeasureDimensionTypeEnum, String> obs = new HashMap<MeasureDimensionTypeEnum, String>();
             obs.put(MeasureDimensionTypeEnum.ABSOLUTE, "3585");
-            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011M01", obs);
+            checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-M01", obs);
 
         }
         // Archive

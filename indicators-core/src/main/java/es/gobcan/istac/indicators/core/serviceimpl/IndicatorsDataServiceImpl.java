@@ -1656,7 +1656,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(timeValue)));
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
@@ -1722,7 +1722,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Create base for observation
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(timeValue)));
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
