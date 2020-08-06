@@ -64,8 +64,8 @@ public class MetamacTimeUtils {
             }
             case DAILY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setMonth(String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
-                timeValueFields.setDay(String.valueOf(parseTime.getStartDateTime().getDayOfYear()));
+                timeValueFields.setMonth(formatToTwoDigits(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setDay(formatToTwoDigits(parseTime.getStartDateTime().getDayOfMonth()));
                 break;
             }
             case HOURLY: {
