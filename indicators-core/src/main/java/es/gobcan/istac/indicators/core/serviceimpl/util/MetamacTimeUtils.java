@@ -163,6 +163,10 @@ public class MetamacTimeUtils {
             return null;
         }
 
+        if (!GpeTimeUtils.isTimeValue(timeValue)) {
+            return timeValue;
+        }
+
         IstacTimeGranularityEnum timeGranularity = GpeTimeUtils.guessTimeGranularity(timeValue);
 
         switch (timeGranularity) {
