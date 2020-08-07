@@ -1654,7 +1654,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
@@ -1722,7 +1722,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      */
     private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String originalTimeValue) throws MetamacException {
         // Create base for observation
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
