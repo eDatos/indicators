@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import java.util.regex.Matcher;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -62,8 +64,8 @@ public class MetamacTimeUtils {
             }
             case DAILY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                timeValueFields.setMonth(String.valueOf(parseTime.getStartDateTime().getMonthOfYear()));
-                timeValueFields.setDay(String.valueOf(parseTime.getStartDateTime().getDayOfYear()));
+                timeValueFields.setMonth(formatToTwoDigits(parseTime.getStartDateTime().getMonthOfYear()));
+                timeValueFields.setDay(formatToTwoDigits(parseTime.getStartDateTime().getDayOfMonth()));
                 break;
             }
             case HOURLY: {
@@ -154,6 +156,67 @@ public class MetamacTimeUtils {
             }
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
+    }
+
+    public static String convertGPETimeValueToMetamacTimeValue(String timeValue) throws MetamacException {
+        if (timeValue == null) {
+            return null;
+        }
+
+        if (!GpeTimeUtils.isTimeValue(timeValue)) {
+            return timeValue;
+        }
+
+        IstacTimeGranularityEnum timeGranularity = GpeTimeUtils.guessTimeGranularity(timeValue);
+
+        switch (timeGranularity) {
+            case YEARLY: {
+                Matcher matcher = GpeTimeUtils.patternYearlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return String.valueOf(matcher.group(1));
+                }
+                break;
+            }
+            case BIYEARLY: {
+                Matcher matcher = GpeTimeUtils.patternBiyearlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_SEMESTER_PERIOD_INDICATOR).append(matcher.group(2)).toString();
+                }
+                break;
+            }
+            case QUARTERLY: {
+                Matcher matcher = GpeTimeUtils.patternQuaterlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_QUARTER_PERIOD_INDICATOR).append(matcher.group(2)).toString();
+                }
+                break;
+            }
+            case MONTHLY: {
+                Matcher matcher = GpeTimeUtils.patternMonthlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR).append(matcher.group(2)).toString();
+                }
+                break;
+            }
+            case WEEKLY: {
+                Matcher matcher = GpeTimeUtils.patternWeeklyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR).append(matcher.group(2)).toString();
+                }
+                break;
+            }
+            case DAILY: {
+                Matcher matcher = GpeTimeUtils.patternDailyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(matcher.group(2)).append(HYPHEN).append(matcher.group(3)).toString();
+                }
+                break;
+            }
+            default:
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
+        }
+
+        throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
     }
 
 }
