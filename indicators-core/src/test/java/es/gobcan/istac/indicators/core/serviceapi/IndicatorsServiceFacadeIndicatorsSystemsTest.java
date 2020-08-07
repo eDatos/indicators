@@ -3269,6 +3269,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorTimeValueIncorrect() throws Exception {
+
+        final String WRONG_TIME_VALUE = "2012a";
+
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
 
@@ -3280,7 +3283,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
-        indicatorInstanceDto.setTimeValues(Arrays.asList("2012a"));
+        indicatorInstanceDto.setTimeValues(Arrays.asList(WRONG_TIME_VALUE));
 
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
@@ -3289,7 +3292,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(WRONG_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
