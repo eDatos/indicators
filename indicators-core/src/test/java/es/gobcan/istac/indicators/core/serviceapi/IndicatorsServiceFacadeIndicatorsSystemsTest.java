@@ -3290,9 +3290,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Time value incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(WRONG_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
