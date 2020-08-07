@@ -4210,41 +4210,41 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testConvertGPETimeValueToSDMXTimeValue() throws Exception {
         // Yearly
-        assertEquals("2011", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2011"));
+        assertEquals("2011", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2011"));
         // Biyearly
-        assertEquals("2012-S2", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012H2"));
-        assertEquals("2012-S1", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012H1"));
+        assertEquals("2012-S2", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012H2"));
+        assertEquals("2012-S1", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012H1"));
         // Quaterly
-        assertEquals("2012-Q4", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012Q4"));
-        assertEquals("2012-Q3", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012Q3"));
-        assertEquals("2012-Q2", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012Q2"));
-        assertEquals("2012-Q1", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012Q1"));
+        assertEquals("2012-Q4", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012Q4"));
+        assertEquals("2012-Q3", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012Q3"));
+        assertEquals("2012-Q2", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012Q2"));
+        assertEquals("2012-Q1", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012Q1"));
         // Monthly
-        assertEquals("2012-M12", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M12"));
-        assertEquals("2012-M11", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M11"));
-        assertEquals("2012-M10", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M10"));
-        assertEquals("2012-M09", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M09"));
-        assertEquals("2012-M08", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M08"));
-        assertEquals("2012-M07", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M07"));
-        assertEquals("2012-M06", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M06"));
-        assertEquals("2012-M05", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M05"));
-        assertEquals("2012-M04", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M04"));
-        assertEquals("2012-M03", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M03"));
-        assertEquals("2012-M02", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M02"));
-        assertEquals("2012-M01", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012M01"));
+        assertEquals("2012-M12", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M12"));
+        assertEquals("2012-M11", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M11"));
+        assertEquals("2012-M10", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M10"));
+        assertEquals("2012-M09", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M09"));
+        assertEquals("2012-M08", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M08"));
+        assertEquals("2012-M07", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M07"));
+        assertEquals("2012-M06", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M06"));
+        assertEquals("2012-M05", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M05"));
+        assertEquals("2012-M04", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M04"));
+        assertEquals("2012-M03", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M03"));
+        assertEquals("2012-M02", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M02"));
+        assertEquals("2012-M01", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012M01"));
         // Weekly
-        assertEquals("2012-W52", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012W52"));
-        assertEquals("2012-W51", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012W51"));
-        assertEquals("2012-W02", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012W02"));
-        assertEquals("2012-W01", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("2012W01"));
+        assertEquals("2012-W52", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012W52"));
+        assertEquals("2012-W51", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012W51"));
+        assertEquals("2012-W02", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012W02"));
+        assertEquals("2012-W01", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("2012W01"));
         // Daily
-        assertEquals("2012-12-31", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20121231"));
-        assertEquals("2012-12-30", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20121230"));
-        assertEquals("2012-12-08", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20121208"));
-        assertEquals("2012-12-01", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20121201"));
-        assertEquals("2012-10-01", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20121001"));
-        assertEquals("2012-05-06", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20120506"));
-        assertEquals("2012-01-01", MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue("20120101"));
+        assertEquals("2012-12-31", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20121231"));
+        assertEquals("2012-12-30", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20121230"));
+        assertEquals("2012-12-08", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20121208"));
+        assertEquals("2012-12-01", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20121201"));
+        assertEquals("2012-10-01", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20121001"));
+        assertEquals("2012-05-06", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20120506"));
+        assertEquals("2012-01-01", MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue("20120101"));
     }
 
     @Test

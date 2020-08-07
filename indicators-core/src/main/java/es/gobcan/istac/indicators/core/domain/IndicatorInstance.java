@@ -27,7 +27,7 @@ public class IndicatorInstance extends IndicatorInstanceBase {
         if (timeValuesList != null && timeValuesList.size() > 0) {
             List<String> convertedTimeValuesList = new ArrayList<String>();
             for (String timeValueStr : timeValuesList) {
-                convertedTimeValuesList.add(MetamacTimeUtils.convertGPETimeValueToSDMXTimeValue(timeValueStr));
+                convertedTimeValuesList.add(MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(timeValueStr));
             }
             setTimeValues(StringUtils.join(convertedTimeValuesList, "#"));
         } else {

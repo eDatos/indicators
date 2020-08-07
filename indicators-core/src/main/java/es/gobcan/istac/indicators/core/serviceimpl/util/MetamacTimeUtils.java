@@ -158,7 +158,7 @@ public class MetamacTimeUtils {
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
-    public static String convertGPETimeValueToSDMXTimeValue(String timeValue) throws MetamacException {
+    public static String convertGPETimeValueToMetamacTimeValue(String timeValue) throws MetamacException {
         if (timeValue == null) {
             return null;
         }
