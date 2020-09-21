@@ -119,23 +119,22 @@ log external:
         - master
     tags: ["deploy-vpn"]
     when: manual
+    before_script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:tzz6HX+uCVdZMTV1KbUZVNIMwqUSdJLh5P4r0WtFULY= --csd-wrapper=/root/hipreport.sh && sleep 5"
 
 check pre internal server status:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgcarta.gobiernodecanarias.net echo 'ok'
     
 check pre external server status:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgcartera.gobiernodecanarias.net echo 'ok'
     
 pre deploy all:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/deploy.sh $RESTART
         - bash ./etc/deploy/scripts/pre/external/deploy.sh $RESTART
     dependencies:
@@ -144,7 +143,6 @@ pre deploy all:
 pre deploy internal:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/deploy.sh $RESTART
     dependencies:
         - release
@@ -152,7 +150,6 @@ pre deploy internal:
 pre deploy external:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/external/deploy.sh $RESTART
     dependencies:
         - release
@@ -160,27 +157,23 @@ pre deploy external:
 stop all pre servers:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/server.sh stop arveja01
         - bash ./etc/deploy/scripts/pre/external/server.sh stop frangollo01
 
 start all pre servers:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/internal/server.sh start arveja01
         - bash ./etc/deploy/scripts/pre/external/server.sh start frangollo01
 
 pre log internal:
     <<: *pre_job_definition
-    script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"    
+    script:    
         - bash ./etc/deploy/scripts/pre/internal/tail_log.sh $LOG_TIMEOUT
 
 pre log external:
     <<: *pre_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pre/external/tail_log.sh $LOG_TIMEOUT
 
 # ######################################################################################
@@ -193,23 +186,22 @@ pre log external:
         - master
     tags: ["deploy-vpn"]
     when: manual
+    before_script:
+        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:tzz6HX+uCVdZMTV1KbUZVNIMwqUSdJLh5P4r0WtFULY= --csd-wrapper=/root/hipreport.sh && sleep 5"
 
 check pro internal server status:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgdelicias.gobiernodecanarias.net echo 'ok'
     
 check pro external server status:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - ssh -o "StrictHostKeyChecking=no" deploy@mgcrinaco.gobiernodecanarias.net echo 'ok' 
     
 pro deploy all:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/deploy.sh $RESTART
         - bash ./etc/deploy/scripts/pro/external/deploy.sh $RESTART
     dependencies:
@@ -218,7 +210,6 @@ pro deploy all:
 pro deploy internal:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/deploy.sh $RESTART
     dependencies:
         - release
@@ -226,7 +217,6 @@ pro deploy internal:
 pro deploy external:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/external/deploy.sh $RESTART
     dependencies:
         - release
@@ -234,25 +224,21 @@ pro deploy external:
 stop all pro servers:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/server.sh stop guagua01
         - bash ./etc/deploy/scripts/pro/external/server.sh stop bubango01
 
 start all pro servers:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/server.sh start guagua01
         - bash ./etc/deploy/scripts/pro/external/server.sh start bubango01
 
 pro log internal:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/internal/tail_log.sh $LOG_TIMEOUT
 
 pro log external:
     <<: *pro_job_definition
     script:
-        - bash -c "echo '$PASSWORD' | openconnect -b --protocol=gp -c /mnt/$CERT evpn.gobiernodecanarias.org --user=$USER_VPN --key-password=$KEY_PW -i tun1 --no-proxy --disable-ipv6 --no-dtls --servercert pin-sha256:Gs7T01dtMJ4z22fqpNFHG5N8/FDLp5YWZgu6+7G8WAM= --csd-wrapper=/root/hipreport.sh && sleep 5"
         - bash ./etc/deploy/scripts/pro/external/tail_log.sh $LOG_TIMEOUT
