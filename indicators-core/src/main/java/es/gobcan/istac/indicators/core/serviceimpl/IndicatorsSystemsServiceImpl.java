@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
@@ -869,10 +870,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
-                String specificException = ((SQLException) e.getCause().getCause()).getMessage();
-                if (specificException.contains("GEOGR_VALUES_ORDER")) {
+                String specificException = ((SQLException) e.getCause().getCause()).getMessage(); 
+                if (StringUtils.containsIgnoreCase(specificException,"GEOGR_VALUES_ORDER")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
-                } else if (specificException.contains("GEOGR_VALUES_CODE")) {
+                } else if (StringUtils.containsIgnoreCase(specificException,"GEOGR_VALUES_CODE")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
                 } else {
                     throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
