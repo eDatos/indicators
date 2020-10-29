@@ -331,7 +331,7 @@
         <profile>
 			<id>postgresql</id>
 	        <activation>
-	            <activeByDefault>true</activeByDefault>
+	            <activeByDefault>false</activeByDefault>
 	        </activation> 
 			<build>
 				<plugins>
@@ -492,7 +492,7 @@
                         </configuration>
                     </execution>
                     <execution>
-						<id>default-test</id>
+						<id>postgresql</id>
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
