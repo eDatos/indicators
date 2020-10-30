@@ -5,7 +5,22 @@
   <bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider" />
 
   <!-- import additional spring configuration files -->  
-  <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>
+  
+  <import resource="classpath:/spring/include/statistic-dataset-repository-applicationContext-common.xml" />
+  <bean id="entityManagerFactoryDatasetRepository" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="DatasetRepositoryEntityManagerFactory" />
+    <property name="persistenceXmlLocation" value="classpath:META-INF/persistence-statistic-dataset-repository.xml" />
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">${indicators.dsrepo.db.dialect}</prop>
+      </props>
+    </property>
+    <property name="jpaDialect">
+	  <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+	</property>
+    <property name="dataSource" ref="dataSourceDatasetRepository" />
+  </bean>
+
   <import resource="classpath:/spring/include/indicators-entity-manager-factory.xml"/>  
   <import resource="classpath:/spring/include/indicators-pub-sub.xml"/>  
   <import resource="classpath:/spring/include/indicators-interceptor.xml"/>  

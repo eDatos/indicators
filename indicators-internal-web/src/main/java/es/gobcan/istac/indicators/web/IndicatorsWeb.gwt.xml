@@ -28,6 +28,7 @@
     <inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
     <inherits name="org.siemac.metamac.CoreCommonApi" />
     <inherits name="org.siemac.metamac.SsoClient" />
+    <inherits name="org.siemac.EDatosCoreUtils" />
 
     <!-- GIN for dependency injection -->
     <inherits name="com.google.gwt.inject.Inject" />

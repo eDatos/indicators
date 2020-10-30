@@ -252,6 +252,7 @@
 					<compileSourcesArtifacts>
 						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
 						<artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
+						<artifact>org.siemac.metamac:edatos-core-utils:jar:client</artifact>
 						<artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
 						<artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
 					</compileSourcesArtifacts>

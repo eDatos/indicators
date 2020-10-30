@@ -239,8 +239,8 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
             String granularityCode = (String) fields[4];
             String granularityLocale = (String) fields[5];
             String granularityLabel = (String) fields[6];
-            BigDecimal latitude = (BigDecimal) fields[7];
-            BigDecimal longitude = (BigDecimal) fields[8];
+            BigDecimal latitude = toBigDecimal(fields[7]);
+            BigDecimal longitude = toBigDecimal(fields[8]);
 
             GeographicalValueVO geoVal = geoValues.get(geoCode);
             GeographicalGranularityVO granularity = null;
@@ -279,5 +279,14 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
             }
         }
         return values;
+    }
+    
+    private BigDecimal toBigDecimal(Object value) {
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        } else if (value instanceof Double) {
+            return new BigDecimal((Double)value);
+        }
+        return null;
     }
 }

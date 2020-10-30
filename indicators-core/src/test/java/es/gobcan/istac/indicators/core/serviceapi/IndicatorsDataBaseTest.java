@@ -106,7 +106,14 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
 
         // Drop views
-        List<String> viewNames = getDatasourceDSRepository().query("SELECT VIEW_NAME FROM USER_VIEWS", new DatabaseObjectNameRowMapper());
+        String queryToSelectViews = null;
+        if (DataBaseProvider.ORACLE.equals(getDatabaseProvider())) {
+            queryToSelectViews = "SELECT VIEW_NAME FROM USER_VIEWS";
+        } else if (DataBaseProvider.POSTGRESQL.equals(getDatabaseProvider())) {
+            queryToSelectViews = "SELECT table_name FROM INFORMATION_SCHEMA.views WHERE table_schema = ANY (current_schemas(false))";
+        }
+        List<String> viewNames = getDatasourceDSRepository().query(queryToSelectViews, new DatabaseObjectNameRowMapper());
+
         for (String objectName : viewNames) {
             try {
                 getDatasourceDSRepository().update("DROP VIEW " + objectName);

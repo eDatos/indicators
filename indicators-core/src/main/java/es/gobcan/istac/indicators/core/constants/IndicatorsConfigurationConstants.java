@@ -10,11 +10,13 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DB_INDICATORS_USERNAME                       = "indicators.core.db.username";
     public static final String DB_INDICATORS_PASSWORD                       = "indicators.core.db.password";
     public static final String DB_INDICATORS_DRIVER_NAME                    = "indicators.core.db.driver_name";
+    public static final String DB_INDICATORS_DIALECT                        = "indicators.core.db.dialect";
 
     public static final String DB_REPO_URL                                  = "indicators.dsrepo.db.url";
     public static final String DB_REPO_USERNAME                             = "indicators.dsrepo.db.username";
     public static final String DB_REPO_PASSWORD                             = "indicators.dsrepo.db.password";
     public static final String DB_REPO_DRIVER_NAME                          = "indicators.dsrepo.db.driver_name";
+    public static final String DB_REPO_DIALECT                              = "indicators.dsrepo.db.dialect";
 
     public static final String DB_SUBJECTS_TABLE                            = "indicators.subjects.db.table";
     public static final String DB_SUBJECTS_COLUMN_CODE                      = "indicators.subjects.db.column_code";
