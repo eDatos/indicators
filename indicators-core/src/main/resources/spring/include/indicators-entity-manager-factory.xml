@@ -14,6 +14,7 @@
 			<props>
 				<!-- These properties override persistence.xml -->
 				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.dialect">${indicators.core.db.dialect}</prop>
 			</props>
 		</property>
 	</bean>
