@@ -48,6 +48,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
     @Override
     public String retrieveDataStructureJson(ServiceContext ctx, String uuid) throws MetamacException {
         try {
+            LOG.info("Retriving dataStructure from URL: " + getJaxiUrl() + "?accion=jsonMtd&uuidConsulta=" + uuid);
             Map<String, String> params = new HashMap<String, String>();
             params.put(JAXI_PARAM_UUID_CONSULTA, uuid);
             params.put(JAXI_PARAM_TYPE, JAXI_PARAM_TYPE_VALUE_STRUCTURE);
@@ -60,7 +61,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
     @Override
     public String retrieveDataJson(ServiceContext ctx, String uuid) throws MetamacException {
         try {
-            LOG.info("Retriving data form URL: " + getJaxiUrl() + "?accion=jsonMtd&uuidConsulta=" + uuid);
+            LOG.info("Retriving data from URL: " + getJaxiUrl() + "?accion=jsonMtd&uuidConsulta=" + uuid);
             Map<String, String> params = new HashMap<String, String>();
             params.put(JAXI_PARAM_UUID_CONSULTA, uuid);
             params.put(JAXI_PARAM_TYPE, JAXI_PARAM_TYPE_VALUE_DATA);
