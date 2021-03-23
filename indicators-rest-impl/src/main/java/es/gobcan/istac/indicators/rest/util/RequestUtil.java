@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -70,21 +71,26 @@ public final class RequestUtil {
     }
 
     protected static Pattern getPatternCode() {
-        return Pattern.compile("(" + ExpandedSDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + ExpandedSDMXCommonRegExpV2_1.IDTYPE + ")" + "\\|?");
+        return Pattern.compile("^(" + ExpandedSDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + ExpandedSDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
     }
 
     protected static Pattern getPatternDimension() {
-        return Pattern.compile("(\\w+)\\[(" + getPatternCode() + "+)\\]");
+        return Pattern.compile("(\\w+)\\[(.*+)\\]");
     }
 
     public static List<String> parseCodes(Pattern patternCode, String codes) {
         List<String> codeDimensions = new ArrayList<>();
 
-        Matcher matcherCode = patternCode.matcher(codes);
-        while (matcherCode.find()) {
-            codeDimensions.add(matcherCode.group(1));
-        }
+        if (!StringUtils.isBlank(codes)) {
+            List<String> splittedCodes = Arrays.asList(StringUtils.split(codes, "|"));
 
+            for (String splittedCode : splittedCodes) {
+                Matcher matcherCode = patternCode.matcher(splittedCode);
+                while (matcherCode.find()) {
+                    codeDimensions.add(matcherCode.group(1));
+                }
+            }
+        }
         return codeDimensions;
     }
 }
