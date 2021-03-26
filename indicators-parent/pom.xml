@@ -136,7 +136,7 @@
 		<arte-maven-enforcer.version>1.0.0</arte-maven-enforcer.version>
 
 		<!-- EDATOS DATASET REPOSITORY -->
-		<edatos-dataset-repository.version>1.0.4-SNAPSHOT</edatos-dataset-repository.version>
+		<edatos-dataset-repository.version>1.1.0</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>3.1.1</kafka-avro-serializer.version>
