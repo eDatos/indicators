@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 
 public final class RequestUtil {
 
@@ -29,10 +30,6 @@ public final class RequestUtil {
 
         // dimExpression =
         // MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
-        // Pattern patternDimension = Pattern.compile("(\\w+)\\[((\\w\\|?)+)\\]");
-        // Pattern patternCode = Pattern.compile("(\\w+)\\|?");
-        // Pattern patternCode = Pattern.compile("(" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + "\\|?)");
-        // Pattern patternDimension = Pattern.compile("(\\w+)\\[" + "((" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + "\\|?" + ")+)" + "\\]");
         Pattern patternDimension = getPatternDimension();
         Pattern patternCode = getPatternCode();
 
@@ -71,14 +68,14 @@ public final class RequestUtil {
     }
 
     protected static Pattern getPatternCode() {
-        return Pattern.compile("^(" + ExpandedSDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + ExpandedSDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
+        return Pattern.compile("^(" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
     }
 
     protected static Pattern getPatternDimension() {
-        return Pattern.compile("(\\w+)\\[(.*+)\\]");
+        return Pattern.compile("(\\w+)\\[((" + "[^\\]]" + ")+)\\]");
     }
 
-    public static List<String> parseCodes(Pattern patternCode, String codes) {
+    protected static List<String> parseCodes(Pattern patternCode, String codes) {
         List<String> codeDimensions = new ArrayList<>();
 
         if (!StringUtils.isBlank(codes)) {
