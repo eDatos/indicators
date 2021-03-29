@@ -261,6 +261,33 @@ public class RequestUtilTest {
             assertCodes(parsedParamExpression.get("TIME_RANGE_DATE"), "2013-07-24/P1M", "2013-07-25/P1M", "2013-07-26/P1M", "2013-07-27/P1M");
         }
 
+        {
+            // @formatter:off
+            Map<String, List<String>> parsedParamExpression = RequestUtil.parseParamExpression(
+                    "MULTIPLE_TIME_VALUES[2013-07-24/P1M|2013-07-25/P1M]:"
+                    + "MULTIPLE_TIME_VALUES[2013-08-30|2013-09-01]:"
+                    + "MULTIPLE_TIME_VALUES[2004-05:00|2004-06:00|2004-07:00]:"
+                    + "MULTIPLE_TIME_VALUES[2002-T1|2002-T2|2002-T3]");
+            // @formatter:off
+            
+            assertParamExpression(parsedParamExpression, "MULTIPLE_TIME_VALUES");
+            assertCodes(parsedParamExpression.get("MULTIPLE_TIME_VALUES"), "2013-07-24/P1M", "2013-07-25/P1M", "2013-08-30", "2013-09-01", "2004-05:00", "2004-06:00", "2004-07:00", "2002-T1", "2002-T2", "2002-T3");
+        }
+        
+        {
+            // @formatter:off
+            Map<String, List<String>> parsedParamExpression = RequestUtil.parseParamExpression(
+                    "MULTIPLE_TIME_VALUES_B[2020-A1|2021-A1|2022-A1]:"
+                    + "MULTIPLE_TIME_VALUES_A[005|006]:"
+                    + "MULTIPLE_TIME_VALUES_A[2006-D010|2006-D011|2006-D012|2006-D365]:"
+                    + "MULTIPLE_TIME_VALUES_B[000|001|002]");
+            // @formatter:off
+            
+            assertParamExpression(parsedParamExpression, "MULTIPLE_TIME_VALUES_A", "MULTIPLE_TIME_VALUES_B");
+            assertCodes(parsedParamExpression.get("MULTIPLE_TIME_VALUES_A"), "2006-D010", "2006-D011", "2006-D012", "2006-D365", "005", "006");
+            assertCodes(parsedParamExpression.get("MULTIPLE_TIME_VALUES_B"), "000", "001", "002", "2020-A1", "2021-A1", "2022-A1");
+        }
+
     }
 
     private void assertParamExpression(Map<String, List<String>> parsedParamExpression, String... expectedParamExpressions) {
