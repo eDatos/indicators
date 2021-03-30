@@ -30,6 +30,7 @@ public final class RequestUtil {
 
         // dimExpression =
         // MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
+        // EDATOS-3193 The possible values ​​of the dimensions are determined by the elements defined in the IndicatorDataDimensionTypeEnum enum
         Pattern patternDimension = getPatternDimension();
         Pattern patternCode = getPatternCode();
 
