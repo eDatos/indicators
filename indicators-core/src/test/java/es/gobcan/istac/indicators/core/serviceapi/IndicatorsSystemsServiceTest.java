@@ -228,12 +228,12 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
             assertEquals(6, indicatorsInstances.getValues().size());
 
-            assertEquals(INDICATORS_SYSTEM_1_IINSTANCE_1, indicatorsInstances.getValues().get(0).getUuid());
-            assertEquals(INDICATORS_SYSTEM_10_IINSTANCE_2, indicatorsInstances.getValues().get(1).getUuid());
-            assertEquals(INDICATORS_SYSTEM_10_IINSTANCE_3, indicatorsInstances.getValues().get(2).getUuid());
-            assertEquals(INDICATORS_SYSTEM_3_IINSTANCE_1A, indicatorsInstances.getValues().get(3).getUuid());
-            assertEquals(INDICATORS_SYSTEM_3_IINSTANCE_2, indicatorsInstances.getValues().get(4).getUuid());
-            assertEquals(INDICATORS_SYSTEM_6_IINSTANCE_2, indicatorsInstances.getValues().get(5).getUuid());
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_1_IINSTANCE_1));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_10_IINSTANCE_2));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_10_IINSTANCE_3));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_3_IINSTANCE_1A));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_3_IINSTANCE_2));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_6_IINSTANCE_2));
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
@@ -245,8 +245,8 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
             assertEquals(2, indicatorsInstances.getValues().size());
 
-            assertEquals(INDICATORS_SYSTEM_10_IINSTANCE_1, indicatorsInstances.getValues().get(0).getUuid());
-            assertEquals(INDICATORS_SYSTEM_6_IINSTANCE_1, indicatorsInstances.getValues().get(1).getUuid());
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_10_IINSTANCE_1));
+            assertTrue(contains(indicatorsInstances.getValues(), INDICATORS_SYSTEM_6_IINSTANCE_1));
         }
     }
 
@@ -369,5 +369,14 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsSystemsTest.xml";
+    }
+
+    private boolean contains(List<IndicatorInstance> instances, String uuid) {
+        for (IndicatorInstance instance : instances) {
+            if (uuid.equals(instance.getUuid())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

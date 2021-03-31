@@ -1360,7 +1360,7 @@ Application Indicators {
 			!optimisticLocking
 			
 			Long id not nullable key;			
-			DateTimestamp lastSuccessfulGpeQueryDate;
+			DateTimestamp lastSuccessfulGpeQueryDate databaseColumn="LAST_SUCCESSFUL_GPE_QUERY56";
 			
 			Repository ConfigurationRepository {
 				findAll;

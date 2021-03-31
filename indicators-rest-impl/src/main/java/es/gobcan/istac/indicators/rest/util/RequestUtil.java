@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 
 public final class RequestUtil {
 
@@ -28,8 +30,9 @@ public final class RequestUtil {
 
         // dimExpression =
         // MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
-        Pattern patternDimension = Pattern.compile("(\\w+)\\[((\\w\\|?)+)\\]");
-        Pattern patternCode = Pattern.compile("(\\w+)\\|?");
+        // EDATOS-3193 The possible values ​​of the dimensions are determined by the elements defined in the IndicatorDataDimensionTypeEnum enum
+        Pattern patternDimension = getPatternDimension();
+        Pattern patternCode = getPatternCode();
 
         Matcher matcherDimension = patternDimension.matcher(paramExpression);
 
@@ -37,16 +40,15 @@ public final class RequestUtil {
         while (matcherDimension.find()) {
             String dimIdentifier = matcherDimension.group(1);
             String codes = matcherDimension.group(2);
-            Matcher matcherCode = patternCode.matcher(codes);
-            while (matcherCode.find()) {
-                List<String> codeDimensions = selectedDimension.get(dimIdentifier);
-                if (codeDimensions == null) {
-                    codeDimensions = new ArrayList<String>();
-                    selectedDimension.put(dimIdentifier, codeDimensions);
-                }
-                String codeIdentifier = matcherCode.group(1);
-                codeDimensions.add(codeIdentifier);
+
+            List<String> codeDimensions = selectedDimension.get(dimIdentifier);
+
+            if (codeDimensions == null) {
+                codeDimensions = new ArrayList<>();
+                selectedDimension.put(dimIdentifier, codeDimensions);
             }
+
+            codeDimensions.addAll(parseCodes(patternCode, codes));
         }
         return selectedDimension;
     }
@@ -64,5 +66,29 @@ public final class RequestUtil {
             }
         }
         return result;
+    }
+
+    protected static Pattern getPatternCode() {
+        return Pattern.compile("^(" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
+    }
+
+    protected static Pattern getPatternDimension() {
+        return Pattern.compile("(\\w+)\\[((" + "[^\\]]" + ")+)\\]");
+    }
+
+    protected static List<String> parseCodes(Pattern patternCode, String codes) {
+        List<String> codeDimensions = new ArrayList<>();
+
+        if (!StringUtils.isBlank(codes)) {
+            List<String> splittedCodes = Arrays.asList(StringUtils.split(codes, "|"));
+
+            for (String splittedCode : splittedCodes) {
+                Matcher matcherCode = patternCode.matcher(splittedCode);
+                while (matcherCode.find()) {
+                    codeDimensions.add(matcherCode.group(1));
+                }
+            }
+        }
+        return codeDimensions;
     }
 }

@@ -11,7 +11,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Assert;
@@ -31,6 +33,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     @Value("${indicators.db.provider}")
     private String                        databaseProvider;
 
+    @Value("${datasource.default_schema}")
+    private String                        defaultSchema;
+
+    
     private HashMap<String, List<String>> tablePrimaryKeys                                 = null;
 
     // -------------------------------------------------------------------------------
@@ -369,9 +375,24 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
             tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
             tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE_FK", "INDICATOR_INSTANCE_FK"));
         }
+        // It is necessary to specify the table name and the column name in upper and lower case for compatibility with the different database providers.
+        Map<String, List<String>> primaryKeysInLowerCase = new HashMap<>();
+        for (Entry<String, List<String>> primaryKey : tablePrimaryKeys.entrySet()) {
+            List<String> values = new ArrayList<>(primaryKey.getValue());
+            toLowerCase(values);
+            primaryKeysInLowerCase.put(primaryKey.getKey().toLowerCase(), values);
+        }
+        tablePrimaryKeys.putAll(primaryKeysInLowerCase);
         return tablePrimaryKeys;
     }
 
+    private void toLowerCase(List<String> strings) {
+        ListIterator<String> iterator = strings.listIterator();
+        while (iterator.hasNext()) {
+            iterator.set(iterator.next().toLowerCase());
+        }
+    }
+    
     protected List<String> getIndicatorsInstancesUUIDs(List<IndicatorInstance> indicatorsInstances) {
         if (indicatorsInstances == null) {
             return null;
@@ -419,5 +440,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     @Override
     protected DataBaseProvider getDatabaseProvider() {
         return DataBaseProvider.valueOf(databaseProvider);
+    }
+
+    @Override
+    protected String getDefaultSchema() {
+        return defaultSchema;
     }
 }
