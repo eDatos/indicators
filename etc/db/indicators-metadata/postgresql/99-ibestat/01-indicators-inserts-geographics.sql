@@ -14,6 +14,7 @@
 -- 5. Se elimina la granularidad GEO_OTROS
 -- 6. Se complentan los FILL_ME de orden incluyendo el código del parent.
 --        - Se remplaza FILL_ME por "ES"
+-- 7. Este script ha sido generado en base al script localizado en la ruta etc/helpers/01-generate-inserts-geographics.sql dentro de este mismo proyecto.
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Granularidad geografica: REGIONS

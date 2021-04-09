@@ -10,6 +10,7 @@
 -- 2. Únicamente se cargan los temas de nivel 2
 -- 3. Se excluye el valor 100 - Infraestructura estadística / Infraestructura estadística
 -- 4. La descripción de los registros a insertar se construye de la forma [NOMBRE_DEL_TEMA_EN_CATALÁN] / [NOMBRE_DEL_TEMA_EN_ESPAÑOL]
+-- 5. Este script ha sido generado en base al script localizado en la ruta etc/helpers/04-generate-inserts-subjects.sql dentro de este mismo proyecto.
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Tema: 090

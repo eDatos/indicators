@@ -8,6 +8,7 @@
 -- 1. Es necesario tener instalado la extensión uuid-ossp para la generación de los uuids de los elementos insertados 
 -- -- Para ello es necesario ejecutar la siguiente sentencia como administrador de la bbdd CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. Los valores relativos a los trillones y los cuatrillones no se han cargado dado que actualmente la BBDD no soporta el tipo de dato a cargar
+-- 3. Este script ha sido generado en base al script localizado en la ruta etc/helpers/03-generate-inserts-units-multipliers.sql dentro de este mismo proyecto.
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Multiplicador: 0

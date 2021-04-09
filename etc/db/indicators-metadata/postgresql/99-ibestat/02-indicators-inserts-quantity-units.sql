@@ -9,7 +9,8 @@
 -- -- Para ello es necesario ejecutar la siguiente sentencia como administrador de la bbdd CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. Se eliminan de la clasificación los códigos especiales. 
 -- 3. Se añaden los símbolos de la unidad. 
--- 4. Se añade la posición del símbolo. 
+-- 4. Se añade la posición del símbolo.
+-- 5. Este script ha sido generado en base al script localizado en la ruta etc/helpers/02-generate-inserts-quantity-units.sql dentro de este mismo proyecto.
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Unidad: VEHICULOS_1000
