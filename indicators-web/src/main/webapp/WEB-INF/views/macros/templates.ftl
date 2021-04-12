@@ -36,11 +36,7 @@
             [/#if]
             var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
         </script>       
-        
-        <!-- FIXME Migas -->
-        [#if migas?has_content]
-            ${migas}
-        [/#if]
+
         
         <!-- begin: #bloq_interior -->  
         <div id="bloq_interior">    
