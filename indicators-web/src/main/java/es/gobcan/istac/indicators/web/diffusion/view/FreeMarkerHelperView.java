@@ -47,12 +47,22 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
         addStatisticalVisualizerUtils(model);
 
+        fillOptionalPortalDefaultStyleCssUrl(model);
         fillOptionalPortalDefaultStyleHeaderUrl(model);
         fillOptionalPortalDefaultStyleFooterUrl(model);
 
         super.doRender(model, request, response);
     }
 
+    private void fillOptionalPortalDefaultStyleCssUrl(Map<String, Object> model) {
+        try {
+            model.put("portalDefaultStyleCssUrl", getConfigurationService().retrievePortalDefaultStyleCssUrl());
+        } catch (MetamacException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getHumanReadableMessage());
+            }
+        }
+    }
 
     private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
         try {

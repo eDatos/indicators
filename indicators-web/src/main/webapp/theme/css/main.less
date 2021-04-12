@@ -420,6 +420,7 @@ strong {
     display: inline-block;
     background: none;
     padding: 0;
+    float: none;
 }
 
 #widget-creator .nav-tabs > li, .nav-pills > li {
@@ -673,10 +674,6 @@ html[xmlns] .clearfix {
         }
     }
 
-    .radio input {
-        margin: 0 0 10px 0;
-    }
-
     .control-group {
         margin-bottom: 20px;
     }
@@ -872,4 +869,13 @@ a.rounded_button span {
         }
     }
 
+}
+
+
+.edatos-indicators {
+    @import "app/input";   
+    @import "app/legend";   
+    @import "app/radio"; 
+    @import "app/label";
+    @import "app/textarea";
 }

@@ -4,12 +4,38 @@
 <html>
 	<head>
         [#include "/layout/html-header.ftl"]
+        
+        <link rel="stylesheet" href="${serverURL}/theme/css/reset.css" type="text/css" media="screen, projection" />
+        [#if portalDefaultStyleCssUrl?has_content]
+            <link href="${portalDefaultStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
+        [#else]
+            <!-- portalStyleCssUrl is empty -->
+        [/#if]
 	</head>
 	<body>
 	    
 	    <!-- begin: #cabecera -->
-        ${portalDefaultStyleHeader!} 
-        <!-- end: #cabecera -->
+        ${portalDefaultStyleHeader!}
+        <!-- end: #cabecera -->        
+    
+        <link rel="stylesheet" href="${serverURL}/theme/css/libs/jquery-ui/jquery-ui-1.8.18.custom.css" type="text/css" media="screen, projection" />    
+        <link rel="stylesheet" href="${serverURL}/theme/js/libs/select2/select2.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="${serverURL}/theme/js/libs/colorpicker/css/colorpicker.min.css" type="text/css" media="screen, projection" />        
+        <link rel="stylesheet" href="${serverURL}/theme/css/main.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="${serverURL}/theme/js/widgets/widgets.css" type="text/css" media="screen, projection" />
+        
+        <script src="${serverURL}/theme/js/vendor.min.js"></script>
+        
+        <!-- Global variables -->
+        <script type="text/javascript">
+            var serverURL = "${serverURL}";
+            var currentLocale = "[@apph.locale /]";
+            var defaultLocale = "es";
+            [#if indicatorsExternalApiUrlBase??]
+                var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';
+            [/#if]
+            var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
+        </script>       
         
         <!-- FIXME Migas -->
         [#if migas?has_content]
@@ -35,7 +61,7 @@
             })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
             
             ga('create', '${analyticsGoogleTrackingId}', 'auto');
-            ga('send', 'pageview');
+            ga('send', 'pageview');            
         </script>        
 	</body>
 </html>
