@@ -3,7 +3,7 @@
 
 [@template.base migas=breadcrumb page_title="ISTAC | Widgets indicadores" extra_keywords=", widget, open data, datos abiertos" page_description=description]
 
-<div id="widget-creator">
+<div id="widget-creator" class="edatos-indicators">
 
     <div id="widget-preview-content" class="widget"></div>
 

@@ -420,6 +420,7 @@ strong {
     display: inline-block;
     background: none;
     padding: 0;
+    float: none;
 }
 
 #widget-creator .nav-tabs > li, .nav-pills > li {
@@ -673,10 +674,6 @@ html[xmlns] .clearfix {
         }
     }
 
-    .radio input {
-        margin: 0 0 10px 0;
-    }
-
     .control-group {
         margin-bottom: 20px;
     }
@@ -783,7 +780,7 @@ a.rounded_button, span.rounded_button-dis {
     margin-right: 2px;
     display: block; /*opera*/
     display: inline-block; /*ie*/
-    display: -moz-inline-box; /*ff*/
+    display: -moz-inline-box; /*ff*/    
 }
 
 a.rounded_button {
@@ -801,6 +798,7 @@ a.rounded_button span, span.rounded_button-dis span {
     padding: 4px 16px 4px 11px;
     line-height: 12px;
     color: black;
+    box-sizing: content-box;
 }
 
 a.rounded_button span {
@@ -872,4 +870,14 @@ a.rounded_button span {
         }
     }
 
+}
+
+
+.edatos-indicators {
+    @import "app/input";   
+    @import "app/legend";   
+    @import "app/radio"; 
+    @import "app/label";
+    @import "app/textarea";
+    @import "app/checkbox";
 }

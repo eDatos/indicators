@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.view;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
@@ -33,9 +36,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         String indicatorsExternalApiUrlBase = getIndicatorsExternalApiUrlBaseWithoutProtocol();
         model.put("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
 
-        String idxManagerSearchFormUrl = getIdxManagerSearchFormUrl();
-        model.put("idxManagerSearchFormUrl", idxManagerSearchFormUrl);
-
         String visualizerExternalUrlBase = getVisualizerExternalUrlBase();
         model.put("visualizerExternalUrlBase", visualizerExternalUrlBase);
 
@@ -47,9 +47,42 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
         addStatisticalVisualizerUtils(model);
 
+        fillOptionalPortalDefaultStyleCssUrl(model);
+        fillOptionalPortalDefaultStyleHeaderUrl(model);
+        fillOptionalPortalDefaultStyleFooterUrl(model);
+
         super.doRender(model, request, response);
     }
 
+    private void fillOptionalPortalDefaultStyleCssUrl(Map<String, Object> model) {
+        try {
+            model.put("portalDefaultStyleCssUrl", getConfigurationService().retrievePortalDefaultStyleCssUrl());
+        } catch (MetamacException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getHumanReadableMessage());
+            }
+        }
+    }
+
+    private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+        try {
+            model.put("portalDefaultStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleFooterUrl()));
+        } catch (MetamacException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getHumanReadableMessage());
+            }
+        }
+    }
+
+    private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+        try {
+            model.put("portalDefaultStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleHeaderUrl()));
+        } catch (MetamacException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getHumanReadableMessage());
+            }
+        }
+    }
     private void addStatisticalVisualizerUtils(Map<String, Object> model) throws TemplateModelException {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
         TemplateHashModel staticModels = wrapper.getStaticModels();
@@ -65,10 +98,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private String getIndicatorsExternalApiUrlBaseWithoutProtocol() throws MetamacException {
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(getConfigurationService().retrieveIndicatorsExternalApiUrlBase());
         return removeUrlProtocol(indicatorsExternalApiUrlBase);
-    }
-
-    private String getIdxManagerSearchFormUrl() throws MetamacException {
-        return getConfigurationService().retrieveIdxManagerSearchFormUrl();
     }
 
     private String getVisualizerExternalUrlBase() throws MetamacException {

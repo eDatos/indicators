@@ -32,7 +32,7 @@
 
     <script type="text/javascript">
         widget.onLoad = function () {
-            widget.addBody("<div id='istac-widget' class='istac-widget-uwa'></div>");
+            widget.addBody("<div id='istac-widget' class='istac-widget-uwa edatos-indicators'></div>");
             var permalinksUrlBase = "${permalinksUrlBase}";
             var req = $.ajax({
                     url : permalinksUrlBase + "/v1.0/permalinks/${permalinkId?js_string}.json",
