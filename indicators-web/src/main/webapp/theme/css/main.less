@@ -780,7 +780,7 @@ a.rounded_button, span.rounded_button-dis {
     margin-right: 2px;
     display: block; /*opera*/
     display: inline-block; /*ie*/
-    display: -moz-inline-box; /*ff*/
+    display: -moz-inline-box; /*ff*/    
 }
 
 a.rounded_button {
@@ -798,6 +798,7 @@ a.rounded_button span, span.rounded_button-dis span {
     padding: 4px 16px 4px 11px;
     line-height: 12px;
     color: black;
+    box-sizing: content-box;
 }
 
 a.rounded_button span {
@@ -878,4 +879,5 @@ a.rounded_button span {
     @import "app/radio"; 
     @import "app/label";
     @import "app/textarea";
+    @import "app/checkbox";
 }
