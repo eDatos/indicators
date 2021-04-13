@@ -85,7 +85,7 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     TimeValueDto timeValueDoToTimeValueDto(TimeValue source);
 
     // Subject
-    SubjectDto subjectDoToDto(Subject source);
+    SubjectDto subjectDoToDto(Subject source) throws MetamacException;
     SubjectDto subjectDoToDto(SubjectIndicatorResult source);
 
     // DataDefinition
