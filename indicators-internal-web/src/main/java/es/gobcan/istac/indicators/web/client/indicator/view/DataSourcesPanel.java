@@ -294,4 +294,8 @@ public class DataSourcesPanel extends VLayout {
     public void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
         datasourcePanel.setRateIndicators(indicatorDtos, rateDerivationTypeEnum, indicatorCalculationTypeEnum);
     }
+
+    public void setEditionLanguages(List<String> languages) {
+        datasourcePanel.setEditionLanguages(languages);
+    }
 }

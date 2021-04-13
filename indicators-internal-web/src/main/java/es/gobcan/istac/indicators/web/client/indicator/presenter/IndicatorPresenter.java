@@ -68,6 +68,8 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
@@ -193,6 +195,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
 
         void showInformationMessage(String title, String message);
+
+        void setEditionLanguages(List<String> languages);
     }
 
     @Inject
@@ -213,6 +217,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         super.prepareFromRequest(request);
         indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
         indicatorDto = null;
+        retrieveEditionLanguages();
     }
 
     @Override
@@ -733,6 +738,17 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitSuccess(DisableNotifyPopulationErrorsResult result) {
                 fireSuccessMessage(getMessages().indicatorDisabledNotifyPopulationErrors());
                 getView().updateVisibilityNotifyPopulateErrors(false);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveEditionLanguages() {
+        dispatcher.execute(new GetEditionLanguagesAction(), new WaitingAsyncCallbackHandlingError<GetEditionLanguagesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetEditionLanguagesResult result) {
+                getView().setEditionLanguages(result.getLanguages());
             }
         });
     }

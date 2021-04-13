@@ -69,4 +69,5 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void enableNotifyPopulationErrors(String indicatorUuid);
     void disableNotifyPopulationErrors(String indicatorUuid);
+    void retrieveEditionLanguages();
 }

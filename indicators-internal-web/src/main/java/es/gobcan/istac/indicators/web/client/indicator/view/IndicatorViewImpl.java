@@ -263,4 +263,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         informationWindow.show();
     }
 
+    @Override
+    public void setEditionLanguages(List<String> languages) {
+        dataSourcesPanel.setEditionLanguages(languages);
+    }
+
 }

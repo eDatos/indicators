@@ -104,6 +104,7 @@ public class DataSourcePanel extends VLayout {
     private IndicatorUiHandler               uiHandlers;
 
     private SearchSingleQueryPaginatedWindow searchQueryMetamacWindow;
+    private List<String>                     editionLanguages;
 
     public DataSourcePanel() {
         // MainFormLayout
@@ -265,8 +266,7 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
-        dataSourceDto
-                .setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
+        dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(editionLanguages.get(0), new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setSourceSurveyAcronym(generalEditionForm.getValueAsInternationalStringDto(DataSourceDS.SOURCE_SURVEY_ACRONYM));
             dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
@@ -340,7 +340,7 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
-        this.dataStructureDtoEdition = dataStructureDto;
+        dataStructureDtoEdition = dataStructureDto;
 
         // Source survey code
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
@@ -1162,6 +1162,10 @@ public class DataSourcePanel extends VLayout {
             }
         }
         return false;
+    }
+
+    public void setEditionLanguages(List<String> languages) {
+        editionLanguages = languages;
     }
 
 }
