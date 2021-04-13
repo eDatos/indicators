@@ -21,7 +21,7 @@ import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
@@ -71,6 +71,9 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
     @Autowired
     private RateDerivationRepository      rateDerivationRepository;
+
+    @Autowired
+    private IndicatorsConfigurationService configurationService;
 
     @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
@@ -251,7 +254,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
             InternationalStringDto subjectTitleIntDto = new InternationalStringDto();
             LocalisedStringDto localised = new LocalisedStringDto();
-            localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            localised.setLocale(configurationService.retrieveLanguageDefault());
             localised.setLabel(subject.getTitle());
             subjectTitleIntDto.addText(localised);
 
