@@ -68,6 +68,8 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
@@ -193,6 +195,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
 
         void showInformationMessage(String title, String message);
+
+        void setEditionLanguages(List<String> languages);
     }
 
     @Inject
@@ -213,6 +217,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         super.prepareFromRequest(request);
         indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
         indicatorDto = null;
+        retrieveEditionLanguages();
     }
 
     @Override
@@ -229,7 +234,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveIndicatorByCode() {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
@@ -242,7 +247,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDiffusionIndicator(String code, String versionNumber) {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
@@ -364,7 +369,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
                 fireSuccessMessage(getMessages().indicatorPublished());
-                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
+                indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -377,7 +382,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(ArchiveIndicatorResult result) {
                 fireSuccessMessage(getMessages().indicatorArchived());
-                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
+                indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -665,7 +670,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
                 @Override
                 public void onWaitSuccess(GetUnitMultipliersResult result) {
-                    IndicatorPresenter.this.unitMultiplierDtos = result.getUnitMultiplierDtos();
+                    unitMultiplierDtos = result.getUnitMultiplierDtos();
                     setUnitMultipliers();
                 }
             });
@@ -696,7 +701,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void setUnitMultipliers() {
-        getView().setUnitMultipliers(this.unitMultiplierDtos);
+        getView().setUnitMultipliers(unitMultiplierDtos);
     }
 
     @Override
@@ -733,6 +738,17 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitSuccess(DisableNotifyPopulationErrorsResult result) {
                 fireSuccessMessage(getMessages().indicatorDisabledNotifyPopulationErrors());
                 getView().updateVisibilityNotifyPopulateErrors(false);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveEditionLanguages() {
+        dispatcher.execute(new GetEditionLanguagesAction(), new WaitingAsyncCallbackHandlingError<GetEditionLanguagesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetEditionLanguagesResult result) {
+                getView().setEditionLanguages(result.getLanguages());
             }
         });
     }
