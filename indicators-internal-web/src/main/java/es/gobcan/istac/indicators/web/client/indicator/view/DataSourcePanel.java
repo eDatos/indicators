@@ -10,7 +10,6 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
@@ -345,8 +344,7 @@ public class DataSourcePanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
 
         // Source survey title
-        InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
-                dataStructureDto.getSurveyTitle());
+        InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(editionLanguages.get(0), new InternationalStringDto(), dataStructureDto.getSurveyTitle());
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, internationalStringDto);
 
         // Publishers
