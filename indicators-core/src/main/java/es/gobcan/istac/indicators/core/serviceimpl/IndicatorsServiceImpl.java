@@ -21,7 +21,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -72,9 +71,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Autowired
     private IndicatorsConfigurationService indicatorsConfigurationService;
-
-    @Autowired
-    private ConfigurationService           configurationService;
 
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
