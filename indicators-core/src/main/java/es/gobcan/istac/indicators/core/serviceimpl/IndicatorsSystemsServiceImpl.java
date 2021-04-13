@@ -1090,7 +1090,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<MeasureValue> retrieveMeasuresValues(ServiceContext ctx, List<String> measureCodes) {
+    public List<MeasureValue> retrieveMeasuresValues(ServiceContext ctx, List<String> measureCodes) throws MetamacException {
         List<String> translationCodes = new ArrayList<String>();
         for (String measureCode : measureCodes) {
             String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureCode).toString();
