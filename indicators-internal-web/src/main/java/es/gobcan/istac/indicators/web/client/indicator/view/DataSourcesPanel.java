@@ -61,8 +61,7 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())
-                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())) {
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(indicatorDto.getProcStatus()) || IndicatorProcStatusEnum.ARCHIVED.equals(indicatorDto.getProcStatus())) {
                     // Create a new version of the indicator
                     final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
                     window.show();
@@ -85,8 +84,7 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())
-                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())) {
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(indicatorDto.getProcStatus()) || IndicatorProcStatusEnum.ARCHIVED.equals(indicatorDto.getProcStatus())) {
                     // Create a new version of the indicator
                     final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
                     window.show();

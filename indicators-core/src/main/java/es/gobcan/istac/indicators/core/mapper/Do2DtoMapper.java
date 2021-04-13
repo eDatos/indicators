@@ -101,5 +101,6 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
 
     // External Item
+    @Override
     ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 }

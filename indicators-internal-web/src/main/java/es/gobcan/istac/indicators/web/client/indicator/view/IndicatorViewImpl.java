@@ -47,7 +47,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     @Inject
     public IndicatorViewImpl(IndicatorGeneralPanel genPanel, DataSourcesPanel dataSourcesPanel) {
-        this.generalPanel = genPanel;
+        generalPanel = genPanel;
         this.dataSourcesPanel = dataSourcesPanel;
 
         indicatorLabel = new TitleLabel();

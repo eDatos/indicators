@@ -234,7 +234,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveIndicatorByCode() {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
@@ -247,7 +247,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDiffusionIndicator(String code, String versionNumber) {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
@@ -369,7 +369,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
                 fireSuccessMessage(getMessages().indicatorPublished());
-                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
+                indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -382,7 +382,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(ArchiveIndicatorResult result) {
                 fireSuccessMessage(getMessages().indicatorArchived());
-                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
+                indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -670,7 +670,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
                 @Override
                 public void onWaitSuccess(GetUnitMultipliersResult result) {
-                    IndicatorPresenter.this.unitMultiplierDtos = result.getUnitMultiplierDtos();
+                    unitMultiplierDtos = result.getUnitMultiplierDtos();
                     setUnitMultipliers();
                 }
             });
@@ -701,7 +701,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void setUnitMultipliers() {
-        getView().setUnitMultipliers(this.unitMultiplierDtos);
+        getView().setUnitMultipliers(unitMultiplierDtos);
     }
 
     @Override
