@@ -7,11 +7,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.LastValue;
+import es.gobcan.istac.indicators.core.factory.InternationalStringFactory;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 public class ServiceUtils {
@@ -37,20 +38,8 @@ public class ServiceUtils {
         return Arrays.asList(org.apache.commons.lang.StringUtils.split(source, SEPARATOR_LIST_DTO_TO_STRING_DO));
     }
 
-    public static InternationalString generateInternationalStringInDefaultLocales(String label) {
-        InternationalString target = new InternationalString();
-
-        LocalisedString localisedStringEs = new LocalisedString();
-        localisedStringEs.setLabel(label);
-        localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
-        target.addText(localisedStringEs);
-
-        LocalisedString localisedStringEn = new LocalisedString();
-        localisedStringEn.setLabel(label);
-        localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
-        target.addText(localisedStringEn);
-
-        return target;
+    public static InternationalString generateInternationalStringInDefaultLocales(String label) throws MetamacException {
+        return getInternationalStringFactoryBean().getInternationalStringInDefaultLocales(label);
     }
 
     public static void sortGeographicalValuesList(List<GeographicalValue> geographicalValues) {
@@ -82,5 +71,9 @@ public class ServiceUtils {
                 return o1.getLastDataUpdated().compareTo(o2.getLastDataUpdated()) * (-1);
             }
         });
+    }
+
+    private static InternationalStringFactory getInternationalStringFactoryBean() {
+        return (InternationalStringFactory) ApplicationContextProvider.getApplicationContext().getBean(InternationalStringFactory.BEAN_ID);
     }
 }

@@ -33,11 +33,12 @@ import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 public class IndicatorVersionTimeCoverageRepositoryImpl extends IndicatorVersionTimeCoverageRepositoryBase {
 
     public IndicatorVersionTimeCoverageRepositoryImpl() {
+
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TimeGranularity> retrieveGranularityCoverage(IndicatorVersion indicatorVersion) {
+    public List<TimeGranularity> retrieveGranularityCoverage(IndicatorVersion indicatorVersion) throws MetamacException {
         String queryHql = "select distinct coverage.timeGranularity, coverage.granularityTranslation ";
         queryHql += "from IndicatorVersionTimeCoverage coverage left outer join coverage.granularityTranslation ";
         queryHql += "where coverage.indicatorVersion = :indicatorVersion ";
