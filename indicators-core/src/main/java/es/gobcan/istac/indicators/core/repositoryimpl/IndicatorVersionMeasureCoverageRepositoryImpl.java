@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -15,7 +18,6 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
 
 /**
  * Repository implementation for IndicatorVersionMeasureCoverage
@@ -27,7 +29,7 @@ public class IndicatorVersionMeasureCoverageRepositoryImpl extends IndicatorVers
     }
 
     @Override
-    public List<MeasureValue> retrieveCoverage(IndicatorVersion indicatorVersion) {
+    public List<MeasureValue> retrieveCoverage(IndicatorVersion indicatorVersion) throws MetamacException {
         String queryHql = "from IndicatorVersionMeasureCoverage measureCoverage ";
         queryHql += "where measureCoverage.indicatorVersion = :indicatorVersion ";
 
