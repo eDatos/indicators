@@ -41,7 +41,7 @@ public class WidgetsController extends BaseController {
         String description = getTypeDescription(type);
 
         // View
-        ModelAndView modelAndView = new ModelAndView("widgets/creator");
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_CREATOR);
 
         modelAndView.addObject("breadcrumbList", breadcrumbList);
         modelAndView.addObject("description", description);
@@ -100,7 +100,7 @@ public class WidgetsController extends BaseController {
 
     @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)
     public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException, MetamacException {
-        ModelAndView modelAndView = new ModelAndView("widgets/uwa");
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_UWA);
         modelAndView.addObject("permalinkId", permalinkId);
 
         return modelAndView;
@@ -109,7 +109,7 @@ public class WidgetsController extends BaseController {
     @RequestMapping(value = "/widgets/example", method = RequestMethod.GET)
     public ModelAndView example(ServletRequest request) throws UnsupportedEncodingException {
         String options = new String(request.getParameter("options").getBytes(), "UTF-8");
-        ModelAndView modelAndView = new ModelAndView("widgets/example");
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_EXAMPLE);
         modelAndView.addObject("options", options);
 
         return modelAndView;

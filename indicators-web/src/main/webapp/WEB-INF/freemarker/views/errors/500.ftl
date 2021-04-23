@@ -1,5 +1,5 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
+[#include "/includes.ftl"]
 [@template.base]
 	
 <div class="error">

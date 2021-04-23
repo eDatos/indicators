@@ -1,5 +1,5 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
+[#include "/includes.ftl"]
 
 [@template.base page_title="ISTAC | Widgets indicadores" extra_keywords=", widget, open data, datos abiertos" page_description=description]
 

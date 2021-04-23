@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-        [#include "/layout/html-header.ftl"]
+        [#include "/layout/header.ftl"]
         
         <link rel="stylesheet" href="${serverURL}/theme/css/reset.css" type="text/css" media="screen, projection" />
         [#if portalDefaultStyleCssUrl?has_content]
