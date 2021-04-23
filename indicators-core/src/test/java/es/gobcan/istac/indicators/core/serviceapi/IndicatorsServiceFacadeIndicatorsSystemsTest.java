@@ -4350,19 +4350,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testFindGeographicalValues() throws Exception {
 
-        // IMPORTANT: Database have 9 geographicalValues but only two have the title correctly filled.
-        // The findGeographicalValues service only retrieve values with title in the default language.
-        // The real problem is in dbUnit file because title is required for this entities.
-        // We don't want to change dbunit so, we assume that at most two results are returned:
-        // - VALUE 1, with granularity 1
-        // - VALUE 2, with granularity 4
-
         // All
         {
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), null);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
