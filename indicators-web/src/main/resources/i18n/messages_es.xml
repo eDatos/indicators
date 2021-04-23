@@ -4,10 +4,7 @@
 
     <!-- General -->
     <entry key="app.title">ISTAC: Estadísticas de la Comunidad Autónoma de Canarias</entry>
-
-	<!-- Header -->
-	<entry key="app.header.whereis">Está en:</entry>
-    
+	 
     <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemas de indicadores</entry>
     <entry key="menu.indicators">Indicadores</entry>

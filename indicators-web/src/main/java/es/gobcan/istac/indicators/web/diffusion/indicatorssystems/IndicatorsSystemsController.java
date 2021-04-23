@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,28 +11,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.view.BreadcrumbList;
 import es.gobcan.istac.indicators.web.rest.clients.RestApiLocatorExternal;
 
 @Controller
 public class IndicatorsSystemsController extends BaseController {
 
     @Autowired
-    private IndicatorsConfigurationService configurationService;
-
-    @Autowired
     private RestApiLocatorExternal restApiLocatorExternal;
 
-    // Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
-    public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {        
+    public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList("Sistemas de indicadores"));
+
         return modelAndView;
     }
 
@@ -45,6 +41,8 @@ public class IndicatorsSystemsController extends BaseController {
 
         IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList("Sistemas de indicadores", code));
+
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 
         modelAndView.addObject("indicatorsSystemCode", code);
@@ -52,13 +50,6 @@ public class IndicatorsSystemsController extends BaseController {
         modelAndView.addObject("numberOfFixedDigitsInNumeration", numberOfFixedDigitsInNumeration);
 
         return modelAndView;
-    }
-    
-    private String removeLastSlashInUrl(String url) {
-        if (url.endsWith("/")) {
-            return StringUtils.removeEnd(url, "/");
-        }
-        return url;
     }
 
     private int numberOfFixedDigitsInNumeration(IndicatorsSystemType indicator) {

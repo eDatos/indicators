@@ -1,6 +1,6 @@
 [#ftl]
 [#include "/inc/includes.ftl"]
-[@template.base migas='<li><strong>Sistema de indicadores</strong></li>']
+[@template.base]
 
     [#global idx = 1]
     [#global depth = 1]

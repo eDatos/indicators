@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.view.BreadcrumbList;
 
 @Controller
 public class WidgetsController extends BaseController {
@@ -36,23 +37,30 @@ public class WidgetsController extends BaseController {
 
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
     public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type) throws Exception {
-        String breadCrumb = getBreadCrumb(type);
+        BreadcrumbList breadcrumbList = getBreadCrumbList(type);
         String description = getTypeDescription(type);
 
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
-         
-        modelAndView.addObject("breadcrumb", breadCrumb);
+
+        modelAndView.addObject("breadcrumbList", breadcrumbList);
         modelAndView.addObject("description", description);
 
         return modelAndView;
     }
 
-    private String getBreadCrumb(String type) throws Exception {
+    private BreadcrumbList getBreadCrumbList(String type) throws Exception {
         String widgetTypeListUrl = configurationService.retrieveWidgetsTypeListUrl();
         String queryToolsUrl = configurationService.retrieveWidgetsQueryToolsUrl();
         String opendataUrl = configurationService.retrieveWidgetsOpendataUrl();
-        return "<li><a href='" + opendataUrl + "'>Datos abiertos</a></li><li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
+
+        BreadcrumbList breadCrumbList = new BreadcrumbList();
+        breadCrumbList.addBreadcrumb("Datos abiertos", opendataUrl);
+        breadCrumbList.addBreadcrumb("Herramientas de consulta", queryToolsUrl);
+        breadCrumbList.addBreadcrumb("Widgets", widgetTypeListUrl);
+        breadCrumbList.addBreadcrumb(getTypeLabel(type), "");
+
+        return breadCrumbList;
     }
 
     public String getTypeLabel(String type) {
@@ -64,12 +72,12 @@ public class WidgetsController extends BaseController {
             return "Últimos datos";
         }
     }
-    
+
     public String getTypeDescription(String type) {
         if (type.equals("temporal")) {
             return "Visualiza un gráfico con la serie de datos de un indicador a seleccionar para los territorios que sean elegidos";
         } else if (type.equals("recent")) {
-            return "Visualiza una tabla con los últimos indicadores actualizados de un territorio específico";            
+            return "Visualiza una tabla con los últimos indicadores actualizados de un territorio específico";
         } else {
             return "Visualiza una tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico";
         }

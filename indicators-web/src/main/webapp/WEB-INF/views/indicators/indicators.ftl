@@ -1,6 +1,6 @@
 [#ftl]
 [#include "/inc/includes.ftl"]
-[@template.base migas='<li><strong>Indicadores</strong></li>']
+[@template.base]
 
 <div id="indicators"></div>
 

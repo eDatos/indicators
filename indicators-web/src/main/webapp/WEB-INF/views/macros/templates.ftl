@@ -1,5 +1,5 @@
 [#ftl]
-[#macro base migas='' page_title='' extra_keywords='' page_description='']
+[#macro base page_title='' extra_keywords='' page_description='']
 <!DOCTYPE html>
 <html>
 	<head>
@@ -37,7 +37,6 @@
             var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
         </script>       
 
-        
         <!-- begin: #bloq_interior -->  
         <div id="bloq_interior">    
             <div class="contenido">
