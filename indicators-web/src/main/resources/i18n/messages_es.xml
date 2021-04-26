@@ -4,6 +4,8 @@
 
     <!-- General -->
     <entry key="app.title">ISTAC: Estadísticas de la Comunidad Autónoma de Canarias</entry>
+    <entry key="app.close">Cerrar</entry>
+    <entry key="app.loading">Cargando...</entry>
 	 
     <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemas de indicadores</entry>
@@ -28,6 +30,11 @@
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicadores</entry>
     <entry key="entity.indicators">Indicador</entry>
+    <entry key="entity.indicators.modal.detail.title">Información de descarga</entry>
+    <entry key="entity.indicators.modal.detail.download">Descarga:</entry>
+    <entry key="entity.indicators.modal.detail.data">Datos</entry>
+    <entry key="entity.indicators.modal.detail.metadata">Metadatos</entry>  
+    <entry key="entity.indicators.modal.detail.query">Consultar datos</entry>
     
     <!-- Widgets -->
     <entry key="page.open-data.title">Datos abiertos</entry>
@@ -41,10 +48,15 @@
     <entry key="entity.widgets.type.recent.description">Visualiza una tabla con los últimos indicadores actualizados de un territorio específico</entry>
     <entry key="entity.widgets.type.lastData.description">Visualiza una tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico</entry>
     
+    <entry key="entity.widgets.tab.data">Datos</entry>
+    <entry key="entity.widgets.tab.styles">Estilos</entry>
+    <entry key="entity.widgets.tab.export">Exportar</entry>    
+    
     <!-- Errors -->
     <entry key="page.error.general">Se ha producido un error al realizar la acción solicitada</entry>
     <entry key="page.error.page-not-found">Página no encontrada</entry>
     <entry key="page.error.info">Para obtener más información, póngase en contacto con el administrador del sistema</entry>
     <entry key="page.error.sorry">Disculpe las molestias</entry>
+    <entry key="page.error.no-results">No hay resultado para la búsqueda</entry>
   
 </properties>
