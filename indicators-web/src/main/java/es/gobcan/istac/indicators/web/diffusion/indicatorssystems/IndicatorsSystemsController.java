@@ -1,8 +1,12 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
 import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,24 +28,27 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private RestApiLocatorExternal restApiLocatorExternal;
 
+    @Autowired
+    private MessageSource          messageSource;
+
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
-    public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
+    public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder, HttpServletRequest request) throws Exception {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList("Sistemas de indicadores"));
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", request.getLocale())));
 
         return modelAndView;
     }
 
     @RequestMapping(value = "/indicatorsSystems/{code}", method = RequestMethod.GET)
-    public ModelAndView indicatorsSystem(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
+    public ModelAndView indicatorsSystem(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model, HttpServletRequest request) throws Exception {
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
 
         IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList("Sistemas de indicadores", code));
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", request.getLocale()), code));
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 
@@ -73,6 +80,10 @@ public class IndicatorsSystemsController extends BaseController {
             }
         }
         return total;
+    }
+
+    private String translate(String code, Locale locale) {
+        return messageSource.getMessage(code, null, locale);
     }
 
 }

@@ -17,7 +17,6 @@
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
     <entry key="page.indicators-system.error.not-found">El sistema de indicadores no existe</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
-    
 
 	<!-- Indicator instance -->
 	<entry key="entity.indicator-instance.geographical-granularities">Granularidades geográficas</entry>
@@ -29,6 +28,18 @@
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicadores</entry>
     <entry key="entity.indicators">Indicador</entry>
+    
+    <!-- Widgets -->
+    <entry key="page.open-data.title">Datos abiertos</entry>
+    <entry key="page.query-tools.title">Herramientas de consulta</entry>
+    <entry key="page.widgets.title">Widgets</entry>
+    <entry key="entity.widgets.type.temporal.label">Gráfico de evolución</entry>
+    <entry key="entity.widgets.type.recent.label">Últimos indicadores actualizados</entry>
+    <entry key="entity.widgets.type.lastData.label">Últimos datos</entry>
+    
+    <entry key="entity.widgets.type.temporal.description">Visualiza un gráfico con la serie de datos de un indicador a seleccionar para los territorios que sean elegidos</entry>
+    <entry key="entity.widgets.type.recent.description">Visualiza una tabla con los últimos indicadores actualizados de un territorio específico</entry>
+    <entry key="entity.widgets.type.lastData.description">Visualiza una tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico</entry>
     
     <!-- Errors -->
     <entry key="page.error.general">Se ha producido un error al realizar la acción solicitada</entry>
