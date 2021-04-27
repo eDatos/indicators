@@ -76,7 +76,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
         try {
-            model.put("portalDefaultStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleHeaderUrl()));
+            // Model filled on the controller. For example es.gobcan.istac.indicators.web.widgets.WidgetsController
+            BreadcrumbList breadcrumbList = (BreadcrumbList) model.get("breadcrumbList");
+            String urlQueryParams = "";
+            if (breadcrumbList != null) {
+                urlQueryParams = breadcrumbList.getPortalUrlQueryParams();
+            }
+            model.put("portalDefaultStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleHeaderUrl() + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());

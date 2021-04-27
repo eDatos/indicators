@@ -4,15 +4,8 @@
 
     <!-- General -->
     <entry key="app.title">ISTAC: Estadísticas de la Comunidad Autónoma de Canarias</entry>
-
-	<!-- Header -->
-	<entry key="app.header.whereis">Está en:</entry>
-	
-    <!-- Footer -->
-    <entry key="app.footer.gobcan"><![CDATA[&copy; Gobierno de Canarias]]></entry>
-    <entry key="app.footer.legal-advice">Aviso Legal</entry>
-    <entry key="app.footer.privacy-policy">Política de privacidad</entry>
-    <entry key="app.footer.suggests">Sugerencias y Reclamaciones</entry>
+	<entry key="app.close">Close</entry>
+    <entry key="app.loading">Loading...</entry>
     
     <!-- Menu -->
     <entry key="menu.indicators-systems">Indicators systems</entry>
@@ -37,11 +30,33 @@
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicators</entry>
     <entry key="entity.indicators">Indicator</entry>
+    <entry key="entity.indicators.modal.detail.title">Download info</entry>
+    <entry key="entity.indicators.modal.detail.download">Download:</entry>
+    <entry key="entity.indicators.modal.detail.data">Data</entry>
+    <entry key="entity.indicators.modal.detail.metadata">Metadata</entry>  
+    <entry key="entity.indicators.modal.detail.query">Query data</entry>
     
+    <!-- Widgets -->
+    <entry key="page.open-data.title">Open Data</entry>
+    <entry key="page.query-tools.title">Query Tools</entry>
+    <entry key="page.widgets.title">Widgets</entry>
+    <entry key="entity.widgets.type.temporal.label">Temporal</entry>
+    <entry key="entity.widgets.type.recent.label">Recent data</entry>
+    <entry key="entity.widgets.type.lastData.label">Last data</entry>   
+    
+    <entry key="entity.widgets.type.temporal.description">Show a indicator's chart with the selected data series for the choosen territories</entry>
+    <entry key="entity.widgets.type.recent.description">Show a table with the most recent updated indicators for the choosen territory</entry>    
+    <entry key="entity.widgets.type.lastData.description">Show a table with the last data for the chosen indicators and territories</entry>
+    
+    <entry key="entity.widgets.tab.data">Data</entry>
+    <entry key="entity.widgets.tab.styles">Styles</entry>
+    <entry key="entity.widgets.tab.export">Export</entry>    
+                                                                           
     <!-- Errors -->
     <entry key="page.error.general">Se ha producido un error al realizar la acción solicitada</entry>
     <entry key="page.error.page-not-found">Página no encontrada</entry>
     <entry key="page.error.info">Para obtener más información, póngase en contacto con el administrador del sistema</entry>
     <entry key="page.error.sorry">Disculpe las molestias</entry>
+    <entry key="page.error.no-results">No results for query</entry>
   
 </properties>

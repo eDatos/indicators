@@ -1,14 +1,18 @@
 package es.gobcan.istac.indicators.web.widgets;
 
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +24,16 @@ import org.springframework.web.servlet.ModelAndView;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.view.BreadcrumbList;
 
 @Controller
 public class WidgetsController extends BaseController {
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
+
+    @Autowired
+    private MessageSource                  messageSource;
 
     private String removeLastSlashInUrl(String url) {
         if (url.endsWith("/")) {
@@ -35,44 +43,40 @@ public class WidgetsController extends BaseController {
     }
 
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
-    public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type) throws Exception {
-        String breadCrumb = getBreadCrumb(type);
-        String description = getTypeDescription(type);
+    public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type, HttpServletRequest request) throws Exception {
+        BreadcrumbList breadcrumbList = getBreadCrumbList(type, request.getLocale());
+        String description = getTranslatedTypeDescription(type, request.getLocale());
 
         // View
-        ModelAndView modelAndView = new ModelAndView("widgets/creator");
-         
-        modelAndView.addObject("breadcrumb", breadCrumb);
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_CREATOR);
+
+        modelAndView.addObject("breadcrumbList", breadcrumbList);
         modelAndView.addObject("description", description);
 
         return modelAndView;
     }
 
-    private String getBreadCrumb(String type) throws Exception {
+    private BreadcrumbList getBreadCrumbList(String type, Locale locale) throws Exception {
         String widgetTypeListUrl = configurationService.retrieveWidgetsTypeListUrl();
         String queryToolsUrl = configurationService.retrieveWidgetsQueryToolsUrl();
         String opendataUrl = configurationService.retrieveWidgetsOpendataUrl();
-        return "<li><a href='" + opendataUrl + "'>Datos abiertos</a></li><li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
+
+        BreadcrumbList breadCrumbList = new BreadcrumbList();
+
+        breadCrumbList.addBreadcrumb(translate("page.open-data.title", locale), opendataUrl);
+        breadCrumbList.addBreadcrumb(translate("page.query-tools.title", locale), queryToolsUrl);
+        breadCrumbList.addBreadcrumb(translate("page.widgets.title", locale), widgetTypeListUrl);
+        breadCrumbList.addBreadcrumb(getTranslatedWidgetTypeLabel(type, locale), "");
+
+        return breadCrumbList;
     }
 
-    public String getTypeLabel(String type) {
-        if (type.equals("temporal")) {
-            return "Gráfico de evolución";
-        } else if (type.equals("recent")) {
-            return "Últimos indicadores actualizados";
-        } else {
-            return "Últimos datos";
-        }
+    public String getTranslatedWidgetTypeLabel(String type, Locale locale) {
+        return translate(MessageFormat.format("entity.widgets.type.{0}.label", type), locale);
     }
-    
-    public String getTypeDescription(String type) {
-        if (type.equals("temporal")) {
-            return "Visualiza un gráfico con la serie de datos de un indicador a seleccionar para los territorios que sean elegidos";
-        } else if (type.equals("recent")) {
-            return "Visualiza una tabla con los últimos indicadores actualizados de un territorio específico";            
-        } else {
-            return "Visualiza una tabla con los últimos datos de una lista de indicadores seleccionados de un territorio específico";
-        }
+
+    public String getTranslatedTypeDescription(String type, Locale locale) {
+        return translate(MessageFormat.format("entity.widgets.type.{0}.description", type), locale);
     }
 
     @RequestMapping(value = "/widgets/external/configuration", method = RequestMethod.GET)
@@ -92,7 +96,7 @@ public class WidgetsController extends BaseController {
 
     @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)
     public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException, MetamacException {
-        ModelAndView modelAndView = new ModelAndView("widgets/uwa");
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_UWA);
         modelAndView.addObject("permalinkId", permalinkId);
 
         return modelAndView;
@@ -101,10 +105,13 @@ public class WidgetsController extends BaseController {
     @RequestMapping(value = "/widgets/example", method = RequestMethod.GET)
     public ModelAndView example(ServletRequest request) throws UnsupportedEncodingException {
         String options = new String(request.getParameter("options").getBytes(), "UTF-8");
-        ModelAndView modelAndView = new ModelAndView("widgets/example");
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_EXAMPLE);
         modelAndView.addObject("options", options);
 
         return modelAndView;
     }
 
+    private String translate(String code, Locale locale) {
+        return messageSource.getMessage(code, null, locale);
+    }
 }

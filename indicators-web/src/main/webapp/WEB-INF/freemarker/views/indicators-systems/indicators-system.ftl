@@ -1,6 +1,6 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
-[@template.base migas='<li><strong>Sistema de indicadores</strong></li>']
+[#include "/includes.ftl"]
+[@template.base]
 
     [#global idx = 1]
     [#global depth = 1]
@@ -57,7 +57,7 @@
         <div class="h2content" style="min-height: 15px; margin-top: 3px;">
             [@localizeTitle indicator.title/]
             <a href="${indicatorsExternalApiUrlBase}/v1.0/indicatorsSystems/${indicator.code}" target="_blank"
-               class="metadata" title="Metadatos en JSON">
+               class="metadata" title="[@apph.messageEscape 'entity.indicators.modal.detail.metadata'/]">
                 <i class="icon-metadata"></i>
             </a>
         </div>
@@ -93,10 +93,10 @@
 
         var $tooltip = $icon.qtip({
             content : {
-                text : '<img class="throbber" src="${serverURL}/theme/images/loading.gif" alt="Cargando..." />',
+                text : '<img class="throbber" src="${serverURL}/theme/images/loading.gif" alt="[@apph.messageEscape 'app.loading'/]" />',
                 title : {
-                    text : 'Información de descarga',
-                    button : 'Cerrar'
+                    text : '[@apph.messageEscape 'entity.indicators.modal.detail.title'/]',
+                    button : '[@apph.messageEscape 'app.close'/]'
                 }
             },
             position : {
@@ -167,16 +167,16 @@
         </tr>
         <% } %>
         <tr>
-            <td><strong>Descarga: </strong></td>
+            <td><strong>[@apph.messageEscape 'entity.indicators.modal.detail.download'/]</strong></td>
             <td>
-                <a href="<%= selfLink.replace("https:","").replace("http:","") %>" target="_blank" title="Metadatos" class="popup-metadata">
+                <a href="<%= selfLink.replace("https:","").replace("http:","") %>" target="_blank" title="[@apph.messageEscape 'entity.indicators.modal.detail.metadata'/]" class="popup-metadata">
                     <i class="icon-metadata"></i>
-                    Metadatos
+                    [@apph.messageEscape 'entity.indicators.modal.detail.metadata'/]
                 </a>
                 |
-                <a href="<%= selfLink.replace("https:","").replace("http:","") %>/data" target="_blank" title="Datos" class="popup-data">
+                <a href="<%= selfLink.replace("https:","").replace("http:","") %>/data" target="_blank" title="[@apph.messageEscape 'entity.indicators.modal.detail.data'/]" class="popup-data">
                     <i class="icon-table"></i>
-                    Datos
+                    [@apph.messageEscape 'entity.indicators.modal.detail.data'/]
                 </a>
             </td>
         </tr>
@@ -184,7 +184,7 @@
             <td colspan="2">
                 <strong>
                     <a href="${statisticalVisualizerUtil.buildIndicatorInstanceUrl(visualizerApplicationExternalUrlBase, id, systemCode)}">
-                        Consultar datos
+                        [@apph.messageEscape 'entity.indicators.modal.detail.query'/]
                     </a>
                 </strong>
             </td>

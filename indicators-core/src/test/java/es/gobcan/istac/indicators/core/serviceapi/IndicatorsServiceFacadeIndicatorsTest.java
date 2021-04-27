@@ -2969,8 +2969,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
         {
             // Retrieve by title ENGLISH
-            // IMPORTANT: Find in english do not retrieve results because this method find internationalStrings in the main language of the app.
-            // In this test, the configurationService define ES as the main language.
+            // IMPORTANT: Find in english DOES retrieve results because we search on all languages. This was changed to accomodate clients where multiple
+            // languages where used equally on daily operations.
 
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
@@ -2978,7 +2978,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-            assertEquals(0, result.getResults().size());
+            assertEquals(1, result.getResults().size());
         }
         {
             // Retrieve by title and code

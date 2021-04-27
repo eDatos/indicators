@@ -1,6 +1,6 @@
 [#ftl]
-[#include "/inc/includes.ftl"]
-[@template.base migas='<li><strong>Indicadores</strong></li>']
+[#include "/includes.ftl"]
+[@template.base]
 
 <div id="indicators"></div>
 
@@ -11,7 +11,7 @@
 </script>
 
 <script type="text/html" id="noResultsTmpl">
-	<div>No hay resultado para la búsqueda "<strong><%= query %></strong>"</div>
+	<div>[@apph.messageEscape 'page.error.no-results'/] "<strong><%= query %></strong>"</div>
 </script>
 
 <script>

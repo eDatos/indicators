@@ -11,13 +11,14 @@ public interface WebConstants {
     // Indicators
     public String VIEW_NAME_INDICATORS_LIST                                         = "indicators/indicators";
 
-    // Other
+    // Widgets
+    public String VIEW_WIDGETS_EXAMPLE                                              = "widgets/example";
+    public String VIEW_WIDGETS_UWA                                                  = "widgets/uwa";
+    public String VIEW_WIDGETS_CREATOR                                              = "widgets/creator";
+
+    // Errors
     public String VIEW_NAME_ERROR_500                                               = "errors/500";
     public String VIEW_NAME_ERROR_404                                               = "errors/404";
-
-    // Locales
-    public String LOCALE_ES                                                         = "es";
-    public String LOCALE_EN                                                         = "en";
 
     // Configuration
     public String DATA_URL_PROPERTY                                                 = "environment.indicators.data";
@@ -27,4 +28,5 @@ public interface WebConstants {
     public String WIDGETS_QUERY_TOOLS_URL_PROPERTY                                  = "indicators.querytools.url";
     public String WIDGETS_SPARKLINE_MAX                                             = "indicators.widgets.sparkline.max";
     public String ANALYTICS_GOOGLE_TRACKING_ID                                      = "metamac.analytics.google.tracking_id";
+
 }

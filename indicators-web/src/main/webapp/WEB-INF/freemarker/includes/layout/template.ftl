@@ -1,9 +1,9 @@
 [#ftl]
-[#macro base migas='' page_title='' extra_keywords='' page_description='']
+[#macro base page_title='' extra_keywords='' page_description='']
 <!DOCTYPE html>
 <html>
 	<head>
-        [#include "/layout/html-header.ftl"]
+        [#include "/layout/header.ftl"]
         
         <link rel="stylesheet" href="${serverURL}/theme/css/reset.css" type="text/css" media="screen, projection" />
         [#if portalDefaultStyleCssUrl?has_content]
@@ -37,7 +37,6 @@
             var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
         </script>       
 
-        
         <!-- begin: #bloq_interior -->  
         <div id="bloq_interior">    
             <div class="contenido">
