@@ -30,20 +30,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String indicatorsExternalWebUrlBase = getIndicatorsExternalWebUrlBaseWithoutProtocol();
-        model.put("serverURL", indicatorsExternalWebUrlBase);
 
-        String indicatorsExternalApiUrlBase = getIndicatorsExternalApiUrlBaseWithoutProtocol();
-        model.put("indicatorsExternalApiUrlBase", indicatorsExternalApiUrlBase);
-
-        String visualizerExternalUrlBase = getVisualizerExternalUrlBase();
-        model.put("visualizerExternalUrlBase", visualizerExternalUrlBase);
-
+        model.put("serverURL", getIndicatorsExternalWebUrlBaseWithoutProtocol());
+        model.put("indicatorsExternalApiUrlBase", getIndicatorsExternalApiUrlBaseWithoutProtocol());
+        model.put("visualizerExternalUrlBase", getVisualizerExternalUrlBase());
         model.put("visualizerApplicationExternalUrlBase", getVisualizerApplicationExternalUrlBase());
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
-
-        String permalinksUrlBase = getPermalinksUrlBase();
-        model.put("permalinksUrlBase", permalinksUrlBase);
+        model.put("permalinksUrlBase", getPermalinksUrlBase());
 
         addStatisticalVisualizerUtils(model);
 
