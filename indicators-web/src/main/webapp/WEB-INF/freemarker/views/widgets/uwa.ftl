@@ -7,8 +7,8 @@
       xmlns:widget="http://www.netvibes.com/ns/">
 <head>
 
-    <meta name="author" content="ISTAC"/>
-    <meta name="description" content="ISTAC"/>
+    <meta name="author" content="${organisation}"/>
+    <meta name="description" content="${organisation}"/>
 
     <meta name="apiVersion" content="1.0"/>
     <meta name="autoRefresh" content="20"/>
@@ -20,7 +20,7 @@
     <script type="text/javascript"
             src="//uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
 
-    <title>Istac widget</title>
+    <title>${organisation} | [@apph.messageEscape 'page.widgets.title' /]</title>
     <link rel="icon" type="image/png" href="http://www.gobiernodecanarias.org/istac/galerias/imagenes/favicon.ico"/>
 
     <!-- Add your UWA preferences as needed -->

@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Istac widget example</title>
+    <title>${organisation} | [@apph.messageEscape 'page.widgets.example.title' /]</title>
 </head>
 
 <body>

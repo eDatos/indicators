@@ -89,7 +89,10 @@
             this.datasets = [];
 
             //Create containers
-            var templateOptions = { widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'] };
+            var templateOptions = { 
+                    widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
+                    organisation: Istac.widget.configuration['metamac.organisation']
+            };
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));

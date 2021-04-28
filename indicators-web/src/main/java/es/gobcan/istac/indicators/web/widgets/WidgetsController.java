@@ -88,6 +88,7 @@ public class WidgetsController extends BaseController {
         properties.put(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL, configurationService.retrieveWidgetsTypeListUrl());
         properties.put(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
         properties.put(IndicatorsConfigurationConstants.ANALYTICS_GOOGLE_TRACKING_ID, configurationService.retrieveAnalyticsGoogleTrackingId());
+        properties.put(IndicatorsConfigurationConstants.METAMAC_ORGANISATION, configurationService.retrieveOrganisation());
         return properties;
     }
 

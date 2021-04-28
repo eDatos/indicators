@@ -1,10 +1,6 @@
 [#ftl]
     
-    [#if page_title?has_content]
-        <title>${page_title}</title>
-    [#else]
-        <title>[@spring.message "app.title" /]</title>
-    [/#if]
+    <title>${organisation} | [@apph.messageEscape page_title /]</title>
     
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=IE8">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />		
