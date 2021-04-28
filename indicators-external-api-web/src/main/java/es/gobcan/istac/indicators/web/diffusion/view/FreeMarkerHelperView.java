@@ -25,13 +25,14 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private static IndicatorsConfigurationService configurationService;
 
-    protected Logger                              logger                  = LoggerFactory.getLogger(getClass());
+    protected Logger                              logger = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String indicatorsExternalApiUrlBase = getConfigurationService().retrieveIndicatorsExternalApiUrlBase();
         model.put("indicatorsExternalApiUrlBase", WebUtils.normalizeUrl(indicatorsExternalApiUrlBase));
         model.put("indicatorsExternalApiUrlBaseSwagger", SwaggerUtils.normalizeUrlForSwagger(indicatorsExternalApiUrlBase));
+        model.put("organisation", getConfigurationService().retrieveOrganisation());
         fillOptionalApiStyleHeaderUrl(model);
         fillOptionalApiStyleFooterUrl(model);
         fillOptionalApiStyleCssUrl(model);
