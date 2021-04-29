@@ -3,7 +3,7 @@
 <properties>
 
     <!-- General -->
-    <entry key="app.title">ISTAC: Estadísticas de la Comunidad Autónoma de Canarias</entry>
+    <entry key="app.title">Indicators systems, indicators and indicator instances</entry>
 	<entry key="app.close">Close</entry>
     <entry key="app.loading">Loading...</entry>
     
@@ -50,7 +50,9 @@
     
     <entry key="entity.widgets.tab.data">Data</entry>
     <entry key="entity.widgets.tab.styles">Styles</entry>
-    <entry key="entity.widgets.tab.export">Export</entry>    
+    <entry key="entity.widgets.tab.export">Export</entry>
+    
+    <entry key="page.widgets.example.title">Widget Example</entry>    
                                                                            
     <!-- Errors -->
     <entry key="page.error.general">Se ha producido un error al realizar la acción solicitada</entry>

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 import es.gobcan.istac.indicators.web.diffusion.view.BreadcrumbList;
@@ -83,10 +84,11 @@ public class WidgetsController extends BaseController {
     @ResponseBody
     public Map<String, String> properties() throws Exception {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(WebConstants.VISUALIZER_APPLICATION_EXTERNAL_URL_PROPERTY, getVisualizerApplicationExternalUrlVisualizer());
-        properties.put(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY, configurationService.retrieveWidgetsTypeListUrl());
-        properties.put(WebConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
-        properties.put(WebConstants.ANALYTICS_GOOGLE_TRACKING_ID, configurationService.retrieveAnalyticsGoogleTrackingId());
+        properties.put(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER, getVisualizerApplicationExternalUrlVisualizer());
+        properties.put(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL, configurationService.retrieveWidgetsTypeListUrl());
+        properties.put(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
+        properties.put(IndicatorsConfigurationConstants.ANALYTICS_GOOGLE_TRACKING_ID, configurationService.retrieveAnalyticsGoogleTrackingId());
+        properties.put(IndicatorsConfigurationConstants.METAMAC_ORGANISATION, configurationService.retrieveOrganisation());
         return properties;
     }
 
