@@ -1,13 +1,13 @@
 (function ($) {
 
     Highcharts.setOptions({
-        lang : {
-            months : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        lang: {
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            weekdays : ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
-            shortMonths : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            thousandsSep : '.',
-            decimalPoint : ','
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
+            shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            thousandsSep: '.',
+            decimalPoint: ','
         }
     });
 
@@ -17,7 +17,7 @@
 
     Istac.widget.Temporal.prototype = _.extend({}, Istac.widget.Base.prototype, {
 
-        parse : function (dataset) {
+        parse: function (dataset) {
             var locale = this.locale;
 
             var measureValue = this.measures[0];
@@ -44,6 +44,7 @@
 
                     var date = Istac.widget.DateParser.parse(timeValue);
 
+                    value = value === undefined ? null : value;  // The highcharts library needs explicit null to draw a gap
                     data.push([date, value]);
                     values.push(value);
 
@@ -54,9 +55,9 @@
                 }
 
                 series.push({
-                    name : geoValueTitle,
-                    data : data,
-                    tooltip : tooltip
+                    name: geoValueTitle,
+                    data: data,
+                    tooltip: tooltip
                 })
             }
 
@@ -81,107 +82,107 @@
             var minValue = _.chain(values).filter(isNumber).min().value();
 
             var chartData = {
-                labels : labels,
-                values : values,
-                legend : legend,
-                maxValue : maxValue,
-                minValue : minValue,
-                series : series
+                labels: labels,
+                values: values,
+                legend: legend,
+                maxValue: maxValue,
+                minValue: minValue,
+                series: series
             };
             return chartData;
         },
 
-        _getIndicatorInstanceCode : function () {
+        _getIndicatorInstanceCode: function () {
             var instances = this.options.instances;
             if (instances && instances.length > 0) {
                 return instances[0];
             }
         },
 
-        render : function () {
+        render: function () {
             this.el.addClass('istac-widget-temporal');
             if (this.datasets && this.datasets.length > 0) {
                 var chartData = this.parse(this.datasets[0]);
                 this.renderChart(chartData);
             }
             this.updateTitle();
-            
+
             this.onAfterRender();
         },
 
-        chartColors : function (chartData) {
+        chartColors: function (chartData) {
             var nSeries = _.keys(chartData.values).length;
             var colors = Istac.widget.helper.colorPaletteGenerator(nSeries);
 
             var chartColors = {};
             _.each(colors, function (color, i) {
-                chartColors["serie" + i] = { color : color};
+                chartColors["serie" + i] = { color: color };
             });
 
             return chartColors;
         },
 
-        renderChart : function (chartData) {
+        renderChart: function (chartData) {
             var $chartContainer = $('<div id="chart"></div>');
             $chartContainer.css('width', this.width - 20);
             $chartContainer.css('height', 250);
             this.contentContainer.html($chartContainer);
 
             var highchartsOptions = {
-                chart : {
-                    type : 'line'
+                chart: {
+                    type: 'line'
                 },
-                colors : Istac.widget.helper.colorPaletteGenerator(chartData.series.length),
-                title : {
-                    text : ''
+                colors: Istac.widget.helper.colorPaletteGenerator(chartData.series.length),
+                title: {
+                    text: ''
                 },
-                xAxis : {
-                    type : 'datetime'
+                xAxis: {
+                    type: 'datetime'
                 },
-                yAxis : {
-                    title : {
-                        text : ''
+                yAxis: {
+                    title: {
+                        text: ''
                     }
                 },
-                tooltip : {
-                    formatter : function () {
+                tooltip: {
+                    formatter: function () {
                         var index = _.indexOf(this.series.xData, this.x);
                         return chartData.series[this.series.index].tooltip[index];
                     }
                 },
-                legend : {
-                    enabled : false,
+                legend: {
+                    enabled: false,
                     itemStyle: {
-                    	   fontSize: '10px'
+                        fontSize: '10px'
                     }
                 },
-                credits : {
-                    enabled : false
+                credits: {
+                    enabled: false
                 },
-                exporting : {
-                    enabled : false
+                exporting: {
+                    enabled: false
                 },
-                plotOptions : {
-                    line : {
-                        animation : false,
-                        marker : {
-                            enabled : false
+                plotOptions: {
+                    line: {
+                        animation: false,
+                        marker: {
+                            enabled: false
                         }
                     }
                 },
-                series : chartData.series
+                series: chartData.series
             };
 
             if (!this.showLabels) {
                 _.extend(highchartsOptions.xAxis, {
-                    lineWidth : 0,
-                    minorGridLineWidth : 0,
-                    lineColor : 'transparent',
-                    labels : {
-                        enabled : false
+                    lineWidth: 0,
+                    minorGridLineWidth: 0,
+                    lineColor: 'transparent',
+                    labels: {
+                        enabled: false
                     },
-                    minorTickLength : 0,
-                    tickLength : 0
+                    minorTickLength: 0,
+                    tickLength: 0
                 });
             }
 
@@ -210,7 +211,7 @@
                         highchartsOptions.yAxis.max = max;
                     }
                 } else if (this.options.scale == "natural") {
-                    var scale = Istac.widget.NaturalScale.scale({ymin : chartData.minValue, ymax : chartData.maxValue });
+                    var scale = Istac.widget.NaturalScale.scale({ ymin: chartData.minValue, ymax: chartData.maxValue });
                     highchartsOptions.yAxis.tickPositioner = function () {
                         var step = (scale.ytop - scale.ydown) / scale.ranges;
                         return _.range(scale.ydown, scale.ytop + step, step);

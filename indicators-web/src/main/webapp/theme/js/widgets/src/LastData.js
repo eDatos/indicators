@@ -35,7 +35,7 @@
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
-                    values = _.map(values, function (value) { // The library needs explicit null to draw a gap
+                    values = _.map(values, function (value) { // The sparkline library needs "null" as string to draw a gap
                         return value === undefined ? "null" : value;
                     });
 
