@@ -178,10 +178,6 @@ public class MetamacWebCriteriaUtils {
                 appendConditionToQuery(queryBuilder, schemeCondition);
             }
 
-            // // Only published
-            // String dsdCodeCondition = fieldComparison(QueryCriteriaPropertyRestriction.PROC_STATUS, ComparisonOperator.EQ, ProcStatusType.PUBLISHED);
-            // appendConditionToQuery(queryBuilder, dsdCodeCondition);
-
         }
 
         return queryBuilder.toString();

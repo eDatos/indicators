@@ -97,7 +97,6 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
         externalItemDto.setUrn(resource.getUrn());
         externalItemDto.setType(type);
         externalItemDto.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
-        // externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
         return externalItemDto;
     }
 
