@@ -44,6 +44,7 @@
 
                     var date = Istac.widget.DateParser.parse(timeValue);
 
+                    value = value === undefined ? null : value;  // The highcharts library needs explicit null to draw a gap
                     data.push([date, value]);
                     values.push(value);
 
