@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.service;
 
-import static org.siemac.metamac.core.common.constants.shared.UrnConstants.COLON;
+import static org.siemac.edatos.core.common.constants.shared.UrnConstants.COLON;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,17 +10,17 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component(StatisticalResoucesRestInternalService.BEAN_ID)
-public class StatisticalResoucesRestInternalServiceImpl implements StatisticalResoucesRestInternalService {
+@Component(StatisticalResoucesRestExternalService.BEAN_ID)
+public class StatisticalResoucesRestExternalServiceImpl implements StatisticalResoucesRestExternalService {
 
-    private static Logger        logger = LoggerFactory.getLogger(StatisticalResoucesRestInternalService.class);
+    private static Logger        logger = LoggerFactory.getLogger(StatisticalResoucesRestExternalService.class);
 
     @Autowired
     private RestApiLocator       restApiLocator;
@@ -31,7 +31,7 @@ public class StatisticalResoucesRestInternalServiceImpl implements StatisticalRe
     @Override
     public Queries findQueries(String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
-            return restApiLocator.getStatisticalResourcesRestInternalFacacadeV10().findQueries(query, orderBy, limit, offset, lang);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findQueries(query, orderBy, limit, offset, lang);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);
@@ -69,7 +69,7 @@ public class StatisticalResoucesRestInternalServiceImpl implements StatisticalRe
                     break;
             }
 
-            return restApiLocator.getStatisticalResourcesRestInternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);

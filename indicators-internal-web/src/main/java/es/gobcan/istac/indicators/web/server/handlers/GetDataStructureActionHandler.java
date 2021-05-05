@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.rest.StatisticalResoucesRestInternalFacade;
+import es.gobcan.istac.indicators.web.server.rest.StatisticalResoucesRestExternalFacade;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 
@@ -25,7 +25,7 @@ public class GetDataStructureActionHandler extends SecurityActionHandler<GetData
     private IndicatorsServiceFacade indicatorsServiceFacade;
     
     @Autowired
-    private StatisticalResoucesRestInternalFacade statisticalResoucesRestExternalFacade;
+    private StatisticalResoucesRestExternalFacade statisticalResoucesRestExternalFacade;
 
     public GetDataStructureActionHandler() {
         super(GetDataStructureAction.class);

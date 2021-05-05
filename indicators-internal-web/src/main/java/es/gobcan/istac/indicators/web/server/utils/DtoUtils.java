@@ -8,8 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ProcStatus;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
@@ -146,7 +145,7 @@ public class DtoUtils {
         // PX Uri
         dataStructureDto.setQueryUrn(query.getUrn());
 
-        ResourceInternal statisticalOperation = query.getMetadata().getStatisticalOperation();
+        Resource statisticalOperation = query.getMetadata().getStatisticalOperation();
 
         // Survey Code
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
@@ -155,7 +154,7 @@ public class DtoUtils {
         dataStructureDto.setSurveyTitle(QueryMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Maintainer
-        ResourceInternal maintainer = query.getMetadata().getMaintainer();
+        Resource maintainer = query.getMetadata().getMaintainer();
         String extractValueForDefaultLanguage = QueryMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
