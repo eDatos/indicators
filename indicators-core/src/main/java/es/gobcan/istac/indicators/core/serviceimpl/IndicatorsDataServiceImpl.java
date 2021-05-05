@@ -1662,7 +1662,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtils.isBlank(value)) {
             value = "..";
         }
 
