@@ -4440,9 +4440,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
-            assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
+            assertEquals("FR", geographicalValues.get(0).getCode());
+            assertEquals("FR", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(1).getUuid());
+            assertEquals("ES", geographicalValues.get(1).getCode());
+            assertEquals("ES", geographicalValues.get(1).getOrder());
         }
         // By granularity order by "order" asc
         {
@@ -4467,6 +4470,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
+            assertEquals("FR", geographicalValues.get(1).getCode());
+            assertEquals("FR", geographicalValues.get(1).getOrder());
         }
     }
 
