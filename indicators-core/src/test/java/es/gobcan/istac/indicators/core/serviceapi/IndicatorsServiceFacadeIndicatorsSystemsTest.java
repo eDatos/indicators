@@ -4376,7 +4376,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
@@ -4394,7 +4394,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
@@ -4413,8 +4413,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
@@ -4436,8 +4436,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
@@ -4460,8 +4460,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
