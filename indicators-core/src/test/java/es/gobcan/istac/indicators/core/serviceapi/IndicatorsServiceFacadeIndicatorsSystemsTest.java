@@ -4398,8 +4398,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(0).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
+            assertEquals("FR", geographicalValues.get(0).getCode());
         }
 
         // By granularity, with order default
