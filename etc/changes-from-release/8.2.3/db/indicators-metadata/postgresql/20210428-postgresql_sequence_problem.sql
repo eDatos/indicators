@@ -1,3 +1,7 @@
+-- --------------------------------------------------------------------------------------------------
+-- EDATOS-3359 - Incidencia con versionado de dataset e importación de datos en Postgresql
+-- --------------------------------------------------------------------------------------------------
+
 CREATE OR REPLACE FUNCTION RANDOM_STRING(numeric)
 RETURNS text
 AS $$ 
