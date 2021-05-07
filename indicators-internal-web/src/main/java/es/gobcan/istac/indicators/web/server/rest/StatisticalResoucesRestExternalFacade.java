@@ -7,7 +7,7 @@ import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 
-public interface StatisticalResoucesRestInternalFacade {
+public interface StatisticalResoucesRestExternalFacade {
 
     
     /**

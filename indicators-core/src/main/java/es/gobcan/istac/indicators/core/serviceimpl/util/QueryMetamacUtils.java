@@ -15,23 +15,23 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attributes;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ComponentType;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttribute;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttributes;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionType;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionValues;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimensions;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryMetadata;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.ComponentType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttribute;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttributes;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -49,10 +49,10 @@ public class QueryMetamacUtils {
         }
 
         es.gobcan.istac.indicators.core.domain.Data target = new es.gobcan.istac.indicators.core.domain.Data();
-        
+
         // Metamac
         target.setQueryEnvironmentEnum(QueryEnvironmentEnum.METAMAC);
-        
+
         // UUid
         target.setUuid(query.getUrn());
 
@@ -61,10 +61,10 @@ public class QueryMetamacUtils {
 
         // PX Uri
         target.setPxUri(query.getUrn());
-        
+
         // Stub
         target.setStub(extractStub(query.getMetadata()));
-        
+
         // Heading
         target.setHeading(extractHeading(query.getMetadata()));
 
@@ -73,10 +73,10 @@ public class QueryMetamacUtils {
 
         // Value Codes
         target.setValueCodes(extractCodesCoverages(query.getMetadata()));
-        
+
         // Temporal Variables
         target.setTemporalVariable(extractTemporalVariable(query.getMetadata()));
-        
+
         // Temporal Value
         target.setTemporalValue(extractTemporalValue(query));
 
@@ -86,12 +86,12 @@ public class QueryMetamacUtils {
 
         // Cont Variable
         target.setContVariable(extractContVariable(query.getMetadata()));
-        
+
         // Notes: We do not need it for calculations.
-        
+
         // Source: We do not need it for calculations.
 
-        ResourceInternal statisticalOperation = query.getMetadata().getStatisticalOperation();
+        Resource statisticalOperation = query.getMetadata().getStatisticalOperation();
 
         // Survey Code
         target.setSurveyCode(statisticalOperation.getId());
@@ -100,17 +100,17 @@ public class QueryMetamacUtils {
         target.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Publishers
-        ResourceInternal maintainer = query.getMetadata().getMaintainer();
+        Resource maintainer = query.getMetadata().getMaintainer();
         String extractValueForDefaultLanguage = extractValueForDefaultLanguage(maintainer.getName());
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             target.setPublishers(Collections.emptyList());
         } else {
             target.setPublishers(Arrays.asList(extractValueForDefaultLanguage));
         }
-        
+
         // Data
         target.processData(extractData(query));
-        
+
         // VariablesInOrder
         target.setVariablesInOrder(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
@@ -119,28 +119,28 @@ public class QueryMetamacUtils {
 
     private static List<String> extractHeading(QueryMetadata metadata) {
         List<String> result = new LinkedList<String>();
-        
-        for (String dimensionId: metadata.getRelatedDsd().getHeading().getDimensionIds()) {
+
+        for (String dimensionId : metadata.getRelatedDsd().getHeading().getDimensionIds()) {
             result.add(dimensionId);
         }
-                
+
         return result;
     }
-    
+
     private static List<String> extractStub(QueryMetadata metadata) {
         List<String> result = new LinkedList<String>();
-        
-        for (String dimensionId: metadata.getRelatedDsd().getStub().getDimensionIds()) {
+
+        for (String dimensionId : metadata.getRelatedDsd().getStub().getDimensionIds()) {
             result.add(dimensionId);
         }
-                
+
         return result;
     }
 
     public static String extractTemporalVariable(QueryMetadata metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.TIME_DIMENSION);
     }
-    
+
     public static String extractTemporalValue(Query query) {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.TEMPORAL);
     }
@@ -227,7 +227,7 @@ public class QueryMetamacUtils {
 
         return null;
     }
-    
+
     public static Map<String, List<String>> extractCodesCoverages(QueryMetadata metadata) {
         return extractCoverages(metadata, false);
 
@@ -253,19 +253,17 @@ public class QueryMetamacUtils {
 
             if (dimensionValues instanceof NonEnumeratedDimensionValues) {
                 List<NonEnumeratedDimensionValue> values = ((NonEnumeratedDimensionValues) dimensionValues).getValues();
-                for (NonEnumeratedDimensionValue nonEnumeratedDimensionValue: values) {
+                for (NonEnumeratedDimensionValue nonEnumeratedDimensionValue : values) {
                     String extractValue;
                     if (trylabels) {
                         extractValue = extractValueForDefaultLanguage(nonEnumeratedDimensionValue.getName());
                         valuesResult.add(extractValue);
-                    }
-                    else {
+                    } else {
                         extractValue = nonEnumeratedDimensionValue.getId();
                     }
                     valuesResult.add(extractValue);
                 }
-            }
-            else {
+            } else {
                 List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
                 for (EnumeratedDimensionValue enumeratedDimensionValue : values) {
                     String extractValue;
@@ -283,31 +281,29 @@ public class QueryMetamacUtils {
 
         return result;
     }
-    
 
     private static List<DataContent> extractData(Query query) throws MetamacException {
         List<DataContent> result = new LinkedList<DataContent>();
-        
+
         Data data = query.getData();
-        
+
         if (data.getDimensions() == null) {
             return result;
         }
-        
+
         int numDimensions = data.getDimensions().getDimensions().size();
         QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query);
-        
+
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
-        
+
         int observationIndex = 0;
         while (stack.size() > 0) {
             DataOrderingStackElement elem = stack.pop();
-            
+
             int dimensionPosition = elem.getDimensionPosition();
             List<String> dimCodes = elem.getDimCodes();
 
-            
             if (dimCodes.size() == numDimensions) {
                 // We have all dimensions here
                 DataContent dataContent = new DataContent();
@@ -326,7 +322,7 @@ public class QueryMetamacUtils {
                 }
             }
         }
-        
+
         return result;
     }
 

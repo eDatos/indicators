@@ -7,29 +7,29 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DimensionRepresentation;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentation;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 public class QueryMetamacDatasetAccess {
-    
-    public static String DATA_SEPARATOR           = " | ";
+
+    public static String              DATA_SEPARATOR = " | ";
 
     // Data
-    private String[]                                      observations;
-    private List<String>                                  dimensionsOrderedForData;
-    private Map<String, List<String>>                     dimensionValuesOrderedForDataByDimensionId;
-    
+    private String[]                  observations;
+    private List<String>              dimensionsOrderedForData;
+    private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
+
     public QueryMetamacDatasetAccess(Query query) throws MetamacException {
 
         initializeObservations(query);
         initializeDimensionsForData(query);
     }
-    
+
     public List<String> getDimensionsOrderedForData() {
         return dimensionsOrderedForData;
     }
-    
+
     public List<String> getDimensionValuesOrderedForData(String dimensionId) {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
     }
@@ -44,7 +44,7 @@ public class QueryMetamacDatasetAccess {
     private void initializeObservations(Query query) {
         this.observations = dataToDataArray(query.getData().getObservations());
     }
-    
+
     /**
      * Init dimensions and dimensions values. Builds a map with dimensions values to get order provided in DATA, because observations are retrieved in API with this order
      */
@@ -63,8 +63,7 @@ public class QueryMetamacDatasetAccess {
             }
         }
     }
-    
-    
+
     public static String[] dataToDataArray(String data) {
         return StringUtils.splitByWholeSeparatorPreserveAllTokens(data, DATA_SEPARATOR);
     }

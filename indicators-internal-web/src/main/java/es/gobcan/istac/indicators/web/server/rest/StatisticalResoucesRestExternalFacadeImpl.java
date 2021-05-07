@@ -11,9 +11,9 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
@@ -23,24 +23,24 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
-import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
 @Component
-public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalResoucesRestInternalFacade {
+public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalResoucesRestExternalFacade {
 
     @Autowired
-    private RestApiLocator       restApiLocator;
+    private RestApiLocator                         restApiLocator;
 
     @Autowired
-    private RestExceptionUtils   restExceptionUtils;
-    
-    @Autowired
-    private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
+    private RestExceptionUtils                     restExceptionUtils;
 
     @Autowired
-    private ConfigurationService configurationService;
-    
+    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
+
+    @Autowired
+    private ConfigurationService                   configurationService;
+
     @Override
     public ExternalItemsResult findQueries(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
         try {
@@ -48,8 +48,8 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
             String orderBy = null;
-            
-            Queries findQueriesResult = statisticalResoucesRestInternalService.findQueries(query, orderBy, limit, offset, null);
+
+            Queries findQueriesResult = statisticalResoucesRestExternalService.findQueries(query, orderBy, limit, offset, null);
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findQueriesResult.getQueries(), TypeExternalArtefactsEnum.QUERY);
 
@@ -59,12 +59,12 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
             throw manageSrmInternalRestException(serviceContext, e);
         }
     }
-    
+
     @Override
     public DataStructureDto retrieveDataDefinitionFromQuery(ServiceContext serviceContext, String queryUrn) throws MetamacWebException {
         try {
             String languageDefault = configurationService.retrieveLanguageDefault();
-            Query query = statisticalResoucesRestInternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
+            Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
 
             DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query);
             return dataStructureDto;
@@ -72,7 +72,7 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
             throw manageSrmInternalRestException(serviceContext, e);
         }
     }
-    
+
     //
     // EXCEPTION HANDLERS
     //
@@ -80,16 +80,16 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
     private MetamacWebException manageSrmInternalRestException(ServiceContext ctx, Exception e) throws MetamacWebException {
         return restExceptionUtils.manageMetamacRestException(ctx, e, CommonServiceExceptionParameters.API_STATISTICAL_OPERATIONS_INTERNAL, restApiLocator.getStatisticalOperationsRestFacadeV10());
     }
-    
-    private List<ExternalItemDto> buildExternalItemDtosFromResources(List<ResourceInternal> resources, TypeExternalArtefactsEnum type) {
+
+    private List<ExternalItemDto> buildExternalItemDtosFromResources(List<Resource> resources, TypeExternalArtefactsEnum type) {
         List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
-        for (ResourceInternal resource : resources) {
+        for (Resource resource : resources) {
             results.add(buildExternalItemDtoFromResource(resource, type));
         }
         return results;
     }
-    
-    private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
+
+    private ExternalItemDto buildExternalItemDtoFromResource(Resource resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());
         externalItemDto.setCodeNested(resource.getNestedId());
@@ -97,7 +97,6 @@ public class StatisticalResoucesRestInternalFacadeImpl implements StatisticalRes
         externalItemDto.setUrn(resource.getUrn());
         externalItemDto.setType(type);
         externalItemDto.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
-        externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
         return externalItemDto;
     }
 

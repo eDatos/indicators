@@ -274,7 +274,7 @@
 		</dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
-            <artifactId>metamac-statistical-resources-rest-internal-api</artifactId>
+            <artifactId>metamac-statistical-resources-rest-external-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
