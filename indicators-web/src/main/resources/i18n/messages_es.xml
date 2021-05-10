@@ -4,6 +4,9 @@
 
     <!-- General -->
     <entry key="app.title">Sistemas de indicadores, indicadores e instancias de indicadores</entry>
+    <entry key="app.description">Sistemas de indicadores, indicadores e instancias de indicadores</entry>
+    <entry key="app.keywords">sistema de indicadores, indicador, instancia de indicador</entry>
+    <entry key="app.locale">es</entry> <!-- A falta de un modo mejor de obtener el locale, no solicitado ni por defecto, sino el usado  -->    
     <entry key="app.close">Cerrar</entry>
     <entry key="app.loading">Cargando...</entry>
 	 
@@ -40,6 +43,7 @@
     <entry key="page.open-data.title">Datos abiertos</entry>
     <entry key="page.query-tools.title">Herramientas de consulta</entry>
     <entry key="page.widgets.title">Widgets</entry>
+    <entry key="page.widgets.keywords">, widget, datos abiertos</entry> 
     <entry key="entity.widgets.type.temporal.label">Gráfico de evolución</entry>
     <entry key="entity.widgets.type.recent.label">Últimos indicadores actualizados</entry>
     <entry key="entity.widgets.type.lastData.label">Últimos datos</entry>

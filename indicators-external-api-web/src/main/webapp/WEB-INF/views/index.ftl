@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="shortcut icon" href="//www.gobiernodecanarias.org/gc/img/favicon.ico"/>
 		
 		[#if apiStyleCssUrl?has_content]
             <link href="${apiStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
