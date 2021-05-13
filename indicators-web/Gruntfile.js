@@ -11,6 +11,7 @@ module.exports = function (grunt) {
     var lessPath = 'src/main/webapp/theme/css';
     var jsPath = 'src/main/webapp/theme/js';
     var widgetsPath = 'src/main/webapp/theme/js/widgets';
+    var commonPath = 'src/main/webapp/theme/js/common';
 
     var vendorSrc = [
         jsPath + '/libs/indicators-utils.js',
@@ -34,6 +35,12 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/moment.js',
         widgetsPath + '/src/HandlebarsHelpers.js',
         widgetsPath + '/src/Templates.js',
+
+        commonPath + '/Common.js',
+        commonPath + '/translations/es.js',
+        commonPath + '/Helper.js',
+        commonPath + '/I18n.js',
+
         widgetsPath + '/src/Istac.js',
         widgetsPath + '/src/Helper.js',
         widgetsPath + '/src/Dataset.js',
@@ -59,7 +66,13 @@ module.exports = function (grunt) {
         jsPath + '/app/App.js',
         jsPath + '/app/Templates.js',
 
-        // helpers
+
+        commonPath + '/Common.js',// i18n
+        commonPath + '/translations/es.js',
+        commonPath + '/Helper.js',
+        commonPath + '/I18n.js',
+
+        // helpers        
         jsPath + '/app/helpers/I18n.js',
         jsPath + '/app/helpers/HandlebarsHelpers.js',
 
