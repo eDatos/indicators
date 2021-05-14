@@ -353,6 +353,7 @@
                 self.showEmbed();
                 return false;
             });
+            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE'));
         },
 
         openTag: function (tag, parameters) {
