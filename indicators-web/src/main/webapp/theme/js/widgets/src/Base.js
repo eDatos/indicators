@@ -89,9 +89,9 @@
             this.datasets = [];
 
             //Create containers
-            var templateOptions = { 
-                    widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
-                    organisation: Istac.widget.configuration['metamac.organisation']
+            var templateOptions = {
+                widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
+                organisation: Istac.widget.configuration['metamac.organisation']
             };
 
             if (this.options.uwa) {
@@ -289,8 +289,8 @@
             } else {
                 this.titleText.html('');
             }
-                this.setTitle(this.title);
-                this.setHeaderColor(this.headerColor);
+            this.setTitle(this.title);
+            this.setHeaderColor(this.headerColor);
             this.setTitleColor(this.titleColor);
 
 

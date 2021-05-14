@@ -6,17 +6,17 @@
 
     Istac.widget.Factory = function (options, initCallback, afterRenderCallback) {
         options = options || {};
-        
+
         options.afterRenderCallback = afterRenderCallback;
 
         if (options.hasOwnProperty('url')) {
             var url = options.url + "/widgets/external/configuration";
 
             var configRequest = $.ajax({
-                method : "GET",
-                dataType : "jsonp",
-                jsonp : '_callback',
-                url : url
+                method: "GET",
+                dataType: "jsonp",
+                jsonp: '_callback',
+                url: url
             });
 
             configRequest.success(function (configuration) {
@@ -38,16 +38,16 @@
                 } else {
                     showError("Tipo de widget no soportado");
                 }
-                
+
                 if (initCallback) {
-                	initCallback(widget);
+                    initCallback(widget);
                 }
                 Istac.widget.analytics.trackPageView(options);
             });
         } else {
             showError("Error, no se ha especificado la url del servicio web");
         }
-        
+
     };
 
     //Global export
