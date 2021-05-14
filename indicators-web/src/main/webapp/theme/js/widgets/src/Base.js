@@ -91,7 +91,8 @@
             //Create containers
             var templateOptions = {
                 widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
-                organisation: Istac.widget.configuration['metamac.organisation']
+                organisation: Istac.widget.configuration['metamac.organisation'],
+                baseUrl: this.url
             };
 
             if (this.options.uwa) {
