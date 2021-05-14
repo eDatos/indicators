@@ -38,6 +38,7 @@ module.exports = function (grunt) {
 
         commonPath + '/Common.js',
         commonPath + '/translations/es.js',
+        commonPath + '/translations/en.js',
         commonPath + '/Helper.js',
         commonPath + '/I18n.js',
 
@@ -69,6 +70,7 @@ module.exports = function (grunt) {
 
         commonPath + '/Common.js',// i18n
         commonPath + '/translations/es.js',
+        commonPath + '/translations/en.js',
         commonPath + '/Helper.js',
         commonPath + '/I18n.js',
 
