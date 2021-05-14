@@ -6,6 +6,8 @@
 		[#if apiStyleCssUrl?has_content]
             <link href="${apiStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
         [/#if]
+        
+        <link rel="icon" href="${faviconUrl}"/>
 	</head>
 	<body>
 	
