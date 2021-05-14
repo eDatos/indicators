@@ -58,7 +58,7 @@
                 multiple: this.options.multiple,
                 width: this.options.width,
                 formatNoMatches: function () {
-                    return "No hay resultados";
+                    return EDatos.common.I18n.translate("SELECT2.NO_MATCHES");
                 },
                 placeholder: ""
             };
@@ -90,7 +90,7 @@
             this.emptySelection();
             this._updateSelectWithDefaults({
                 data: [],
-                placeholder: "Cargando..."
+                placeholder: EDatos.common.I18n.translate("SELECT2.LOADING")
             });
             this.$input.select2("disable");
         },

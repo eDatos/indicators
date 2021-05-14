@@ -67,7 +67,7 @@
 
             var captchaOptions = {
                 captchaEl: ".widget-netvibes-captcha",
-                buttonText: "Añadir a Netvibes"
+                buttonText: EDatos.common.I18n.translate("EMBED.ADD_TO_NETVIBES")
             };
 
             var self = this;

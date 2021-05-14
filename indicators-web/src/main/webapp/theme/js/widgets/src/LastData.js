@@ -1,11 +1,11 @@
 (function ($) {
 
     var measuresLabels = {
-        'ABSOLUTE': 'Dato',
-        'ANNUAL_PERCENTAGE_RATE': 'Tasa variación anual',
-        'ANNUAL_PUNTUAL_RATE': 'Variación anual',
-        'INTERPERIOD_PERCENTAGE_RATE': 'Tasa variación interperiódica',
-        'INTERPERIOD_PUNTUAL_RATE': 'Variación interperiódica'
+        'ABSOLUTE': EDatos.common.I18n.translate('MEASURE.ABSOLUTE'),
+        'ANNUAL_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PERCENTAGE_RATE'),
+        'ANNUAL_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PUNTUAL_RATE'),
+        'INTERPERIOD_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PERCENTAGE_RATE'),
+        'INTERPERIOD_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PUNTUAL_RATE'),
     };
 
     Istac.widget.LastData = function (options) {

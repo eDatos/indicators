@@ -1,14 +1,7 @@
 (function ($) {
 
     Highcharts.setOptions({
-        lang: {
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
-            shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            thousandsSep: '.',
-            decimalPoint: ','
-        }
+        lang: EDatos.common.I18n.translate('HIGHCHARTS')
     });
 
     Istac.widget.Temporal = function (options) {

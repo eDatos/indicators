@@ -230,14 +230,14 @@
         _getDefaultTitle: function () {
             var title;
             if (this.options.type === "lastData") {
-                title = "Últimos datos";
+                title = EDatos.common.I18n.translate("LAST_DATA.TITLE");
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
-                title = "Últimos indicadores actualizados";
+                title = EDatos.common.I18n.translate("RECENT.TITLE");
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
@@ -247,7 +247,7 @@
                 if (this.datasets && this.datasets.length > 0) {
                     title = this.datasets[0].getTitle();
                 } else {
-                    title = "Serie temporal";
+                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE");
                 }
             }
             return title;

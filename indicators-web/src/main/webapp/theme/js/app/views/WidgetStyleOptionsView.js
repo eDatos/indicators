@@ -32,31 +32,31 @@
             this.$el.html(this.template(context));
 
             this.$('.old-browser-warning').qtip({
-                content: 'Este estilo no se visualiza correctamente en algunos navegadores',
+                content: EDatos.common.I18n.translate('OPTIONS.OLD_BROWSER_WARNING'),
                 show: 'mouseover',
                 hide: 'mouseout'
             });
 
             this.$('.sparkline-max-help').qtip({
-                content: 'Si no indica un valor, o es superior al máximo, se limitará el número de puntos del sparkline al máximo permitido.',
+                content: EDatos.common.I18n.translate('OPTIONS.STYLE.SPARKLINES.MAX.DESCRIPTION'),
                 show: 'mouseover',
                 hide: 'mouseout'
             });
 
             this.$('.scale-natural-lib-help').qtip({
-                content: 'El escalamiento utiliza incrementos que las personas reconocen como naturales a la hora de contar. Además, en la representación conjunta de números positivos y negativos las líneas de escala coinciden en valor absoluto.',
+                content: EDatos.common.I18n.translate('OPTIONS.STYLE.SCALE.NATURAL_LIB.DESCRIPTION'),
                 show: 'mouseover',
                 hide: 'mouseout'
             });
 
             this.$('.scale-natural-help').qtip({
-                content: 'El escalamiento utiliza incrementos que las personas reconocen como naturales a la hora de contar. La visualización se ajusta al valor mínimo y máximo de la serie.',
+                content: EDatos.common.I18n.translate('OPTIONS.STYLE.SCALE.NATURAL.DESCRIPTION'),
                 show: 'mouseover',
                 hide: 'mouseout'
             });
 
             this.$('.scale-minmax-help').qtip({
-                content: 'El escalamiento utiliza incrementos mejor ajustados a la serie de datos, pero sin respetar los que las personas reconocen como naturales a la hora de contar. La visualización se ajusta al valor mínimo y máximo de la serie.',
+                content: EDatos.common.I18n.translate('OPTIONS.STYLE.SCALE.MINMAX.DESCRIPTION'),
                 show: 'mouseover',
                 hide: 'mouseout'
             });
