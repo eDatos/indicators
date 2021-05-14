@@ -334,7 +334,7 @@
                 // lo va a incrustar
                 return true;
             } else {
-                return !Istac.widget.helper.isIstacPage(window.location);
+                return Istac.widget.helper.isOutsideOrganisationPages(Istac.widget.configuration['metamac.organisation']);
             }
         },
 

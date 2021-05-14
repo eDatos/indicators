@@ -40,13 +40,9 @@
         return x1 + x2;
     };
 
-    Istac.widget.helper.getHostname = function (url) {
-        var location = createLocationObject(url);
-        return location.hostname;
-    };
-
-    Istac.widget.helper.isIstacPage = function (location) {
-        return location.pathname.indexOf('/istac') === 0;
+    Istac.widget.helper.isOutsideOrganisationPages = function (organisation) {
+        // This is an oversimplification, but workable for most cases
+        return window.location.href.toLowerCase().indexOf(organisation.toLowerCase()) == -1;
     };
 
     function createLocationObject(url) {
