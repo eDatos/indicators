@@ -10,7 +10,7 @@
             'CLOSE': 'Close',
         },
         'OPTIONS': {
-            'OLD_BROWSER_WARNING': 'This style won´t show correctly on some browsers',
+            'OLD_BROWSER_WARNING': 'This style will not display correctly on some browsers',
             'DATA': {
                 'MEASURES': 'Measures',
                 'SYSTEM': 'System',
@@ -44,15 +44,15 @@
                     'TITLE': 'Scale',
                     'NATURAL_LIB': {
                         'TITLE': 'Natural, balanced',
-                        'DESCRIPTION': 'Scale uses increments that people recognize as naturals when it comes to counting. Besides, when positive and negative numbers are represented, scale lines coincide on absolute values.'
+                        'DESCRIPTION': 'Scaling uses increments that people recognize as natural when counting. In addition, when positive and negative numbers are represented, scale lines coincide in absolute values.'
                     },
                     'NATURAL': {
                         'TITLE': 'Natural, not balanced',
-                        'DESCRIPTION': 'Scale uses increments that people recognize as naturals when it comes to counting. Visualization is adjusted to max and min serie values.'
+                        'DESCRIPTION': 'Scaling uses increments that people recognize as natural when counting. Visualization is set to the max and min serie values.'
                     },
                     'MINMAX': {
                         'TITLE': 'Not natural, not balanced',
-                        'DESCRIPTION': 'Scale uses increments better suited to the data serie values without honoring the ones used that people recognize as naturals when it comes to counting. Visualization is adjusted to max and min serie values.'
+                        'DESCRIPTION': 'Scaling uses increments better adjusted to the data serie values, respecting those that people recognize as natural when counting. Visualization is set to the max and min serie values.'
                     }
                 },
                 'VIEW': {
@@ -65,7 +65,7 @@
                     'TITLE': 'Sparklines',
                     'MAX': {
                         'TITLE': 'Number of data points to show',
-                        'DESCRIPTION': 'If no value provided, or if its above the maximum, it will be limited to the maximum allowed.',
+                        'DESCRIPTION': 'If no value is provided, or if its above the maximum, it will be set to the maximum allowed.',
                     },
                     'TYPE': {
                         'LINE': 'Lines',
@@ -91,15 +91,15 @@
         },
         'LAST_DATA': {
             'TITLE': 'Last data',
-            'DESCRIPTION': 'Table with last available data'
+            'DESCRIPTION': 'Table showing the latest available data'
         },
         'TEMPORAL': {
             'TITLE': 'Temporal serie',
-            'DESCRIPTION': 'Chart that shows an indicator temporal evolution for different geographical values'
+            'DESCRIPTION': 'Chart showing the time evolution of an indicator for different geographical values'
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Unsupported widget type',
-            'URL_NOT_PROVIDED': 'Error, no service web url provided'
+            'URL_NOT_PROVIDED': 'Error, web service url not provided'
         },
         'SELECT2': {
             'NO_MATCHES': 'No matches',
