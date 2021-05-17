@@ -21,7 +21,7 @@
             src="//uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
 
     <title>${organisation} | [@apph.messageEscape 'page.widgets.title' /]</title>
-    <link rel="icon" type="image/png" href="http://www.gobiernodecanarias.org/istac/galerias/imagenes/favicon.ico"/>
+    <link rel="icon" href="${faviconUrl}"/>
 
     <!-- Add your UWA preferences as needed -->
     <widget:preferences>

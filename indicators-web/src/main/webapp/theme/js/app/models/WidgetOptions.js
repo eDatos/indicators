@@ -43,7 +43,7 @@
 
         validate: function (attrs) {
             if (!_.contains(validTypes, attrs.type)) {
-                return "Tipo de widget inválido";
+                return EDatos.common.I18n.translate("ERROR.INVALID_WIDGET_TYPE");
             }
         },
 

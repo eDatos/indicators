@@ -4,14 +4,10 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=IE8">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />		
-    <meta http-equiv="Content-language" content="es" />	    
+    <meta http-equiv="Content-language" content="[@apph.messageEscape 'app.locale' /]" />
     
-    <meta name="keywords" content="gobierno canarias, instituto canario de estadística, istac, indicadores, indicators ${extra_keywords}" />
-    [#if description?has_content]
-    	<meta name="description" content="${description}" />
-    [#else]
-    	<meta name="description" content=" Instituto Canario de Estadística " />
-    [/#if]
+    <meta name="keywords" content="${organisation}, [@apph.messageEscape 'app.keywords' /] [@apph.messageEscape extra_keywords /]" />
+    <meta name="description" content="${organisation} | [@apph.messageEscape page_description /]" />
     
     <meta name="robots" content="all" />
     <meta http-equiv="pragma" content="no-cache" />

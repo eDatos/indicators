@@ -3,9 +3,9 @@
 
     App.views.Select2View = Backbone.View.extend({
 
-        initialize : function (options) {
+        initialize: function (options) {
             _.defaults(options, {
-                sort : true
+                sort: true
             });
 
             // Prepare events
@@ -29,7 +29,7 @@
             this.render();
         },
 
-        _getData : function () {
+        _getData: function () {
             var data = this.collection.toJSON();
             _.each(data, function (value) {
                 value.id = value[this.options.idAttribute];
@@ -46,56 +46,56 @@
             }
         },
 
-        _format : function (item) {
+        _format: function (item) {
             var result = item[this.options.textAttribute];
             return result;
         },
 
-        _defaultValues : function () {
+        _defaultValues: function () {
             var values = {
-                formatSelection : this._format,
-                formatResult : this._format,
-                multiple : this.options.multiple,
-                width : this.options.width,
-                formatNoMatches : function () {
-                    return "No hay resultados";
+                formatSelection: this._format,
+                formatResult: this._format,
+                multiple: this.options.multiple,
+                width: this.options.width,
+                formatNoMatches: function () {
+                    return EDatos.common.I18n.translate("SELECT2.NO_MATCHES");
                 },
-                placeholder : ""
+                placeholder: ""
             };
             return values;
         },
 
-        _updateSelectWithDefaults : function (values) {
+        _updateSelectWithDefaults: function (values) {
             var extendedValues = _.extend({}, this._defaultValues(), values);
             this.$input.select2(extendedValues);
         },
 
-        render : function () {
+        render: function () {
             this._updateSelectWithDefaults({
-                data : {
-                    results : this._getData(),
-                    text : this.options.textAttribute,
-                    id : "code"
+                data: {
+                    results: this._getData(),
+                    text: this.options.textAttribute,
+                    id: "code"
                 }
             });
             this.$input.select2("enable");
         },
 
-        emptySelection : function () {
+        emptySelection: function () {
             this.$input.val('');
             this.$input.trigger("change");
         },
 
-        loading : function () {
+        loading: function () {
             this.emptySelection();
             this._updateSelectWithDefaults({
-                data : [],
-                placeholder : "Cargando..."
+                data: [],
+                placeholder: EDatos.common.I18n.translate("SELECT2.LOADING")
             });
             this.$input.select2("disable");
         },
 
-        collectionReset : function () {
+        collectionReset: function () {
             //this.$input.select2("enable");
             this.emptySelection();
             this.render();

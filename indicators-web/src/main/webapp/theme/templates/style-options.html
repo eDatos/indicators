@@ -1,57 +1,57 @@
 <div>
     <div>
-        <label>Título:</label>
+        <label>{{ translate "OPTIONS.STYLE.TITLE_FIELD" }}:</label>
         <input type="text" name="title" />
     </div>
 
     <fieldset>
-        <legend>Estilo</legend>
+        <legend>{{ translate "OPTIONS.STYLE.TITLE" }}</legend>
 
         <label class="radio">
-            <input type="radio" name="style" value="custom"> Personalizado
+            <input type="radio" name="style" value="custom"> {{ translate "OPTIONS.STYLE.CUSTOM" }}
         </label>
         <label class="radio">
-            <input type="radio" name="style" value="gobcan"> Gobierno de Canarias
+            <input type="radio" name="style" value="gobcan"> {{ translate "OPTIONS.STYLE.PREDETERMINED" }}
         </label>
 
         {{#if showCustomStyle}}
 
         {{#if showTextColor}}
         <div>
-            <label>Color del texto:</label>
+            <label>{{ translate "OPTIONS.STYLE.TEXT_COLOR" }}:</label>
             <input type="text" name="textColor" id="textColor" class="small" />
         </div>
         {{/if}}
 
         <div>
-            <label>Color de la cabecera:</label>
+            <label>{{ translate "OPTIONS.STYLE.HEADER_COLOR" }}:</label>
             <input type="text" name="headerColor" id="headerColor" class="small">
         </div>
 
         <div>
-            <label>Color del título:</label>
+            <label>{{ translate "OPTIONS.STYLE.TITLE_COLOR" }}:</label>
             <input type="text" name="titleColor" id="titleColor" class="small" />
         </div>
 
         <div>
-            <label>Color del borde:</label>
+            <label>{{ translate "OPTIONS.STYLE.BORDER_COLOR" }}:</label>
             <input type="text" name="borderColor" id="borderColor" class="small">
         </div>
 
         <div>
-            <label>Color del nombre del indicador:</label>
+            <label>{{ translate "OPTIONS.STYLE.INDICATOR_NAME_COLOR" }}:</label>
             <input type="text" name="indicatorNameColor" id="indicatorNameColor" class="small">
         </div>
 
         <div>
-            <label>Ancho del widget<small>(px)</small>:</label>
+            <label>{{ translate "OPTIONS.STYLE.WIDGET_WIDTH" }}<small>(px)</small>:</label>
             <input type="text" name="width" id="widget-width" class="small" />
         </div>
         <div class="width-slider"></div>
 
         <div>
             <label>
-                Bordes redondeados
+                {{ translate "OPTIONS.STYLE.BORDER_RADIUS" }}
                 <i class="old-browser-warning icon-help"></i>
             </label>
             <input type="checkbox" name="borderRadius">
@@ -59,19 +59,20 @@
 
         <div>
             <label>
-                Sombra
+                {{ translate "OPTIONS.STYLE.SHADOW" }}
                 <i class="old-browser-warning icon-help"></i>
             </label>
             <input type="checkbox" name="shadow">
         </div>
         {{else}}
         <div>
-            <label>Colores:</label>
+            <label>{{ translate "OPTIONS.STYLE.COLORS.TITLE" }}:</label>
             <label class="radio">
-                <input type="radio" name="gobcanStyleColor" value="blue"> Azul
+                <input type="radio" name="gobcanStyleColor" value="blue"> {{ translate "OPTIONS.STYLE.COLORS.BLUE" }}
             </label>
             <label class="radio">
-                <input type="radio" name="gobcanStyleColor" value="lightBlue"> Azul claro
+                <input type="radio" name="gobcanStyleColor" value="lightBlue"> {{ translate
+                "OPTIONS.STYLE.COLORS.LIGHT_BLUE" }}
             </label>
         </div>
         {{/if}}
@@ -79,37 +80,38 @@
 
     {{#if showScale}}
     <fieldset>
-        <legend>Escalamiento</legend>
+        <legend>{{ translate "OPTIONS.STYLE.SCALE.TITLE" }}</legend>
         <label class="radio">
-            <input type="radio" name="scale" value="natural-lib"> Natural equilibrado
+            <input type="radio" name="scale" value="natural-lib"> {{ translate "OPTIONS.STYLE.SCALE.NATURAL_LIB.TITLE"
+            }}
             <i class="scale-natural-lib-help icon-help"></i>
         </label>
         <label class="radio">
-            <input type="radio" name="scale" value="natural"> Natural no equilibrado
+            <input type="radio" name="scale" value="natural"> {{ translate "OPTIONS.STYLE.SCALE.NATURAL.TITLE" }}
             <i class="scale-natural-help icon-help"></i>
         </label>
         <label class="radio">
-            <input type="radio" name="scale" value="minmax"> No natural, no equilibrado
+            <input type="radio" name="scale" value="minmax"> {{ translate "OPTIONS.STYLE.SCALE.MINMAX.TITLE" }}
             <i class="scale-minmax-help icon-help"></i>
         </label>
     </fieldset>
     {{/if}}
 
     <fieldset>
-        <legend>Visualización</legend>
+        <legend>{{ translate "OPTIONS.STYLE.VIEW.TITLE" }}</legend>
         {{#if showSideView}}
         <div>
-            <label>Visualización lateral</label>
+            <label>{{ translate "OPTIONS.STYLE.VIEW.TITLE" }}</label>
             <input type="checkbox" name="sideView">
         </div>
         {{/if}}
         {{#if showAxisAndLegend }}
         <div>
-            <label>Mostrar etiquetas en el eje x</label>
+            <label>{{ translate "OPTIONS.STYLE.VIEW.SHOW_LABELS" }}</label>
             <input type="checkbox" name="showLabels">
         </div>
         <div>
-            <label>Mostrar leyenda</label>
+            <label>{{ translate "OPTIONS.STYLE.VIEW.SHOW_LEGEND" }}</label>
             <input type="checkbox" name="showLegend">
         </div>
         {{/if}}
@@ -117,94 +119,98 @@
 
     {{#if showSparkLines}}
     <fieldset class="sparkline">
-        <legend>Sparklines</legend>
+        <legend>{{ translate "OPTIONS.STYLE.SPARKLINES.TITLE" }}</legend>
         <div>
             <label class="checkbox sparkline-visibility">
-                <input type="checkbox" name="sparkline_ABSOLUTE">Dato
+                <input type="checkbox" name="sparkline_ABSOLUTE">{{ translate "MEASURE.ABSOLUTE" }}
             </label>
             <div>
                 <div class="sparkline-max">
-                <label>
-                    Número de datos a representar
-                    <i class="sparkline-max-help icon-help"></i>
-                </label>
-                <input type="text" class="small" name="sparklineMax_ABSOLUTE">
-            </div>
+                    <label>
+                        {{ translate "OPTIONS.STYLE.SPARKLINES.MAX.TITLE" }}
+                        <i class="sparkline-max-help icon-help"></i>
+                    </label>
+                    <input type="text" class="small" name="sparklineMax_ABSOLUTE">
+                </div>
                 <select name="sparklineType_ABSOLUTE" class="sparkline-type">
-                    <option value="line" selected>Líneas</option>
-                    <option value="bar">Barras</option>
+                    <option value="line" selected>{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.LINE" }}</option>
+                    <option value="bar">{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.BAR" }}</option>
                 </select>
             </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
-                <input type="checkbox" name="sparkline_ANNUAL_PUNTUAL_RATE">Variación anual
+                <input type="checkbox" name="sparkline_ANNUAL_PUNTUAL_RATE">{{ translate
+                "MEASURE.ANNUAL_PUNTUAL_RATE" }}
             </label>
             <div>
                 <div class="sparkline-max">
-                <label>
-                    Número de datos a representar
-                    <i class="sparkline-max-help icon-help"></i>
-                </label>
-                <input type="text" class="small" name="sparklineMax_ANNUAL_PUNTUAL_RATE">
-            </div>
+                    <label>
+                        {{ translate "OPTIONS.STYLE.SPARKLINES.MAX" }}
+                        <i class="sparkline-max-help icon-help"></i>
+                    </label>
+                    <input type="text" class="small" name="sparklineMax_ANNUAL_PUNTUAL_RATE">
+                </div>
                 <select name="sparklineType_ANNUAL_PUNTUAL_RATE" class="sparkline-type">
-                    <option value="line" selected>Líneas</option>
-                    <option value="bar">Barras</option>
+                    <option value="line" selected>{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.LINE" }}</option>
+                    <option value="bar">{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.BAR" }}</option>
                 </select>
             </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
-                <input type="checkbox" name="sparkline_INTERPERIOD_PUNTUAL_RATE">Variación interperiódica
+                <input type="checkbox" name="sparkline_INTERPERIOD_PUNTUAL_RATE">{{ translate
+                "MEASURE.INTERPERIOD_PUNTUAL_RATE" }}
             </label>
             <div>
                 <div class="sparkline-max">
-                <label>
-                    Número de datos a representar
-                    <i class="sparkline-max-help icon-help"></i>
-                </label>
-                <input type="text" class="small" name="sparklineMax_INTERPERIOD_PUNTUAL_RATE">
-            </div>
+                    <label>
+                        {{ translate "OPTIONS.STYLE.SPARKLINES.MAX" }}
+                        <i class="sparkline-max-help icon-help"></i>
+                    </label>
+                    <input type="text" class="small" name="sparklineMax_INTERPERIOD_PUNTUAL_RATE">
+                </div>
                 <select name="sparklineType_INTERPERIOD_PUNTUAL_RATE" class="sparkline-type">
-                    <option value="line" selected>Líneas</option>
-                    <option value="bar">Barras</option>
+                    <option value="line" selected>{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.LINE" }}</option>
+                    <option value="bar">{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.BAR" }}</option>
                 </select>
             </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
-                <input type="checkbox" name="sparkline_ANNUAL_PERCENTAGE_RATE">Tasa variación anual
+                <input type="checkbox" name="sparkline_ANNUAL_PERCENTAGE_RATE">{{ translate
+                "MEASURE.ANNUAL_PERCENTAGE_RATE" }}
             </label>
             <div>
                 <div class="sparkline-max">
-                <label>
-                    Número de datos a representar
-                    <i class="sparkline-max-help icon-help"></i>
-                </label>
-                <input type="text" class="small" name="sparklineMax_ANNUAL_PERCENTAGE_RATE">
-            </div>
+                    <label>
+                        {{ translate "OPTIONS.STYLE.SPARKLINES.MAX" }}
+                        <i class="sparkline-max-help icon-help"></i>
+                    </label>
+                    <input type="text" class="small" name="sparklineMax_ANNUAL_PERCENTAGE_RATE">
+                </div>
                 <select name="sparklineType_ANNUAL_PERCENTAGE_RATE" class="sparkline-type">
-                    <option value="line" selected>Líneas</option>
-                    <option value="bar">Barras</option>
+                    <option value="line" selected>{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.LINE" }}</option>
+                    <option value="bar">{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.BAR" }}</option>
                 </select>
             </div>
         </div>
         <div>
             <label class="checkbox sparkline-visibility">
-                <input type="checkbox" name="sparkline_INTERPERIOD_PERCENTAGE_RATE">Tasa variación interperiódica
+                <input type="checkbox" name="sparkline_INTERPERIOD_PERCENTAGE_RATE">{{ translate
+                "MEASURE.INTERPERIOD_PERCENTAGE_RATE" }}
             </label>
             <div>
                 <div class="sparkline-max">
-                <label>
-                    Número de datos a representar
-                    <i class="sparkline-max-help icon-help"></i>
-                </label>
-                <input type="text" class="small" name="sparklineMax_INTERPERIOD_PERCENTAGE_RATE">
-            </div>
+                    <label>
+                        {{ translate "OPTIONS.STYLE.SPARKLINES.MAX" }}
+                        <i class="sparkline-max-help icon-help"></i>
+                    </label>
+                    <input type="text" class="small" name="sparklineMax_INTERPERIOD_PERCENTAGE_RATE">
+                </div>
                 <select name="sparklineType_INTERPERIOD_PERCENTAGE_RATE" class="sparkline-type">
-                    <option value="line" selected>Líneas</option>
-                    <option value="bar">Barras</option>
+                    <option value="line" selected>{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.LINE" }}</option>
+                    <option value="bar">{{ translate "OPTIONS.STYLE.SPARKLINES.TYPE.BAR" }}</option>
                 </select>
             </div>
         </div>

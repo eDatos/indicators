@@ -1,22 +1,22 @@
 (function ($) {
 
-    var showError = function (msg) {
-        $(options.el).text(msg);
+    var showError = function (key) {
+        $(options.el).text(EDatos.common.I18n.translate(key));
     };
 
     Istac.widget.Factory = function (options, initCallback, afterRenderCallback) {
         options = options || {};
-        
+
         options.afterRenderCallback = afterRenderCallback;
 
         if (options.hasOwnProperty('url')) {
             var url = options.url + "/widgets/external/configuration";
 
             var configRequest = $.ajax({
-                method : "GET",
-                dataType : "jsonp",
-                jsonp : '_callback',
-                url : url
+                method: "GET",
+                dataType: "jsonp",
+                jsonp: '_callback',
+                url: url
             });
 
             configRequest.success(function (configuration) {
@@ -36,18 +36,18 @@
                 if (widget) {
                     widget.render();
                 } else {
-                    showError("Tipo de widget no soportado");
+                    showError("ERROR.INVALID_WIDGET_TYPE");
                 }
-                
+
                 if (initCallback) {
-                	initCallback(widget);
+                    initCallback(widget);
                 }
                 Istac.widget.analytics.trackPageView(options);
             });
         } else {
-            showError("Error, no se ha especificado la url del servicio web");
+            showError("ERROR.URL_NOT_PROVIDED");
         }
-        
+
     };
 
     //Global export

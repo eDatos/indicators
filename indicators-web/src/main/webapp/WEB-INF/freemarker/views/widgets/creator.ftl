@@ -1,7 +1,7 @@
 [#ftl]
 [#include "/includes.ftl"]
 
-[@template.base page_title='page.widgets.title' extra_keywords=", widget, open data, datos abiertos" page_description=description]
+[@template.base page_title='page.widgets.title' extra_keywords="page.widgets.keywords" page_description=description]
 
 <div id="widget-creator" class="edatos-indicators">
 

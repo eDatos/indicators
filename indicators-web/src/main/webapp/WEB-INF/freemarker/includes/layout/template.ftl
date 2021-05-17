@@ -1,5 +1,5 @@
 [#ftl]
-[#macro base page_title='app.title' extra_keywords='' page_description='']
+[#macro base page_title='app.title' extra_keywords='' page_description='app.description']
 <!DOCTYPE html>
 <html>
 	<head>

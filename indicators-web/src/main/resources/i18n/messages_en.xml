@@ -4,6 +4,9 @@
 
     <!-- General -->
     <entry key="app.title">Indicators systems, indicators and indicator instances</entry>
+    <entry key="app.description">Indicators systems, indicators and indicator instances</entry>
+    <entry key="app.keywords">indicator system, indicator, indicator instance</entry>
+    <entry key="app.locale">en</entry> <!-- A falta de un modo mejor de obtener el locale, no solicitado ni por defecto, sino el usado  -->
 	<entry key="app.close">Close</entry>
     <entry key="app.loading">Loading...</entry>
     
@@ -40,6 +43,7 @@
     <entry key="page.open-data.title">Open Data</entry>
     <entry key="page.query-tools.title">Query Tools</entry>
     <entry key="page.widgets.title">Widgets</entry>
+    <entry key="page.widgets.keywords">, widget, open data</entry>
     <entry key="entity.widgets.type.temporal.label">Temporal</entry>
     <entry key="entity.widgets.type.recent.label">Recent data</entry>
     <entry key="entity.widgets.type.lastData.label">Last data</entry>   
