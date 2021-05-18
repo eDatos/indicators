@@ -139,9 +139,9 @@
 		<edatos-dataset-repository.version>1.1.1-SNAPSHOT</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
-        <kafka-avro-serializer.version>3.1.1</kafka-avro-serializer.version>
-        <kafka-clients.version>0.10.1.0-cp2</kafka-clients.version>
-        <avro.version>1.8.1</avro.version>
+        <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>
+        <kafka-clients.version>6.1.1-ccs</kafka-clients.version>
+        <avro.version>1.9.1</avro.version>
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>6.0.2-SNAPSHOT</metamac-core-common.version>
