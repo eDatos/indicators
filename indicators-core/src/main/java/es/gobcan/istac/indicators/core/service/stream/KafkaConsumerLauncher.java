@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ import net.sf.ehcache.CacheManager;
 @Component
 public class KafkaConsumerLauncher implements ApplicationListener<ContextRefreshedEvent> {
 
-    protected static Log                   LOGGER                  = LogFactory.getLog(KafkaConsumerLauncher.class);
+    protected static final Log             LOGGER                  = LogFactory.getLog(KafkaConsumerLauncher.class);
 
     private Map<String, Future<?>>         futuresMap;
     private static final String            CONSUMER_QUERY_1_NAME   = "indicators_consumer_query_1";
@@ -65,8 +64,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 futuresMap = new HashMap<>();
                 futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
                 startKeepAliveKafkaThread(ac);
-            } catch (MetamacException | IllegalArgumentException | IOException e) {
-                LOGGER.error(e);
+            } catch (Exception e) {
+                LOGGER.error(e, e.getCause());
             }
             // @formatter:on
         }
