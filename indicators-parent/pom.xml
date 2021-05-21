@@ -136,7 +136,7 @@
 		<arte-maven-enforcer.version>1.0.0</arte-maven-enforcer.version>
 
 		<!-- EDATOS DATASET REPOSITORY -->
-		<edatos-dataset-repository.version>1.1.1-SNAPSHOT</edatos-dataset-repository.version>
+		<edatos-dataset-repository.version>1.1.1</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>3.1.1</kafka-avro-serializer.version>
@@ -144,8 +144,8 @@
         <avro.version>1.8.1</avro.version>
 
 		<!-- METAMAC -->
-		<metamac-core-common.version>6.0.2-SNAPSHOT</metamac-core-common.version>
-		<metamac-web-common.version>4.1.1-SNAPSHOT</metamac-web-common.version>
+		<metamac-core-common.version>6.0.2</metamac-core-common.version>
+		<metamac-web-common.version>4.2.0</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>3.8.0</metamac-statistical-resources-rest-external-api.version>
