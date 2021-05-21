@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ISTAC | Indicators</title>
+  <title>${organisation} | Indicators</title>
   <link href="${indicatorsExternalApiUrlBase}/apidocs/css/typography.css" media='screen' rel='stylesheet' type='text/css'/>
   <link href="${indicatorsExternalApiUrlBase}/apidocs/css/reset.css" media='screen' rel='stylesheet' type='text/css'/>
   <link href="${indicatorsExternalApiUrlBase}/apidocs/css/screen.css" media='screen' rel='stylesheet' type='text/css'/>
   <link href="${indicatorsExternalApiUrlBase}/apidocs/css/reset.css" media='print' rel='stylesheet' type='text/css'/>
   <link href="${indicatorsExternalApiUrlBase}/apidocs/css/print.css" media='print' rel='stylesheet' type='text/css'/>
-  <link rel="shortcut icon" href="//www.gobiernodecanarias.org/gc/img/favicon.ico"/>
+
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery-1.8.0.min.js" type='text/javascript'></script>
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery.slideto.min.js" type='text/javascript'></script>
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/jquery.wiggle.min.js" type='text/javascript'></script>

@@ -1320,7 +1320,7 @@ Application Indicators {
 				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
 				@IndicatorVersionMeasureCoverage save(@IndicatorVersionMeasureCoverage entity);
 				List<@IndicatorVersionMeasureCoverage> findByQuery;
-				List<MeasureValue> retrieveCoverage(@IndicatorVersion indicatorVersion);
+				List<MeasureValue> retrieveCoverage(@IndicatorVersion indicatorVersion) throws MetamacException;
 			}
         }
         
@@ -1347,7 +1347,7 @@ Application Indicators {
 				List<TimeValue> retrieveCoverage(@IndicatorVersion indicatorVersion) throws MetamacException;
 				List<TimeValue> retrieveCoverageByGranularity(@IndicatorVersion indicatorVersion, String timeGranularityCode) throws MetamacException;
 				List<TimeValue> retrieveCoverageFilteredByInstanceTimeValues(@IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException;
-				List<TimeGranularity> retrieveGranularityCoverage(@IndicatorVersion indicatorVersion);
+				List<TimeGranularity> retrieveGranularityCoverage(@IndicatorVersion indicatorVersion) throws MetamacException;
 				List<TimeGranularity> retrieveGranularityCoverageFilteredByInstanceTimeValues(@IndicatorVersion indicatorVersion, List<String> instanceTimeValues) throws MetamacException;
 			}
         }

@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetEditionLanguagesActionHandlers;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesPaginatedListActionHandler;
@@ -122,6 +123,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListAction;
@@ -298,6 +300,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);
         bindHandler(EnableNotifyPopulationErrorsAction.class, EnableNotifyPopulationErrorsActionHandler.class);
         bindHandler(DisableNotifyPopulationErrorsAction.class, DisableNotifyPopulationErrorsActionHandler.class);
+        bindHandler(GetEditionLanguagesAction.class, GetEditionLanguagesActionHandlers.class);
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);

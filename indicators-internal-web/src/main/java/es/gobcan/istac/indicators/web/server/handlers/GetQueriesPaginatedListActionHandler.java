@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.web.server.rest.StatisticalResoucesRestInternalFacade;
+import es.gobcan.istac.indicators.web.server.rest.StatisticalResoucesRestExternalFacade;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 
@@ -16,7 +16,7 @@ import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 public class GetQueriesPaginatedListActionHandler extends SecurityActionHandler<GetQueriesPaginatedListAction, GetQueriesPaginatedListResult> {
 
     @Autowired
-    StatisticalResoucesRestInternalFacade statisticalResoucesRestExternalFacade;
+    StatisticalResoucesRestExternalFacade statisticalResoucesRestExternalFacade;
     
     public GetQueriesPaginatedListActionHandler() {
         super(GetQueriesPaginatedListAction.class);

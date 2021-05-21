@@ -563,7 +563,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             InternationalString title = new InternationalString();
             LocalisedString localised = new LocalisedString();
             localised.setLabel(subject.getTitle());
-            localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            localised.setLocale(indicatorsConfigurationService.retrieveLanguageDefault());
             title.addText(localised);
             indicatorVersion.setSubjectTitle(title);
             LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());

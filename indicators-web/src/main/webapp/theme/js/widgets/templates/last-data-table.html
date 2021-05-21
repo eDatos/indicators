@@ -1,7 +1,8 @@
 <table>
     <thead>
         <tr>
-            <th class="istac-widget-last-data-indicator-column istac-widget-lastData-title">Indicador</th>
+            <th class="istac-widget-last-data-indicator-column istac-widget-lastData-title">{{ translate
+                "INDICATOR.TITLE" }}</th>
             {{#each measures}}
             <th>{{this}}</th>
             {{/each}}
@@ -21,8 +22,8 @@
                 <div>
                     {{#if showSparkline }}
                     {{#ifEquals type "bar"}}
-                    <span class="inlinesparkline-bar" data-type="bar" data-time="{{timeTitles}}"
-                        data-unit="{{unit}}">{{ values }}</span>
+                    <span class="inlinesparkline-bar" data-type="bar" data-time="{{timeTitles}}" data-unit="{{unit}}">{{
+                        values }}</span>
                     {{/ifEquals}}
                     {{#ifEquals type "line"}}
                     <span class="inlinesparkline-line" data-type="line" data-time="{{timeTitles}}"

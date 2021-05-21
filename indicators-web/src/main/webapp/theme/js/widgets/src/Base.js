@@ -89,7 +89,11 @@
             this.datasets = [];
 
             //Create containers
-            var templateOptions = { widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'] };
+            var templateOptions = {
+                widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
+                organisation: Istac.widget.configuration['metamac.organisation'],
+                baseUrl: this.url
+            };
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));
@@ -226,14 +230,14 @@
         _getDefaultTitle: function () {
             var title;
             if (this.options.type === "lastData") {
-                title = "Últimos datos";
+                title = EDatos.common.I18n.translate("LAST_DATA.TITLE");
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
-                title = "Últimos indicadores actualizados";
+                title = EDatos.common.I18n.translate("RECENT.TITLE");
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
@@ -243,7 +247,7 @@
                 if (this.datasets && this.datasets.length > 0) {
                     title = this.datasets[0].getTitle();
                 } else {
-                    title = "Serie temporal";
+                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE");
                 }
             }
             return title;
@@ -286,8 +290,8 @@
             } else {
                 this.titleText.html('');
             }
-                this.setTitle(this.title);
-                this.setHeaderColor(this.headerColor);
+            this.setTitle(this.title);
+            this.setHeaderColor(this.headerColor);
             this.setTitleColor(this.titleColor);
 
 
@@ -330,7 +334,7 @@
                 // lo va a incrustar
                 return true;
             } else {
-                return !Istac.widget.helper.isIstacPage(window.location);
+                return Istac.widget.helper.isOutsideOrganisationPages(Istac.widget.configuration['metamac.organisation']);
             }
         },
 
@@ -349,6 +353,7 @@
                 self.showEmbed();
                 return false;
             });
+            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE'));
         },
 
         openTag: function (tag, parameters) {

@@ -10,14 +10,14 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.notices.rest.internal.v1_0.service.NoticesV1_0;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
-import org.siemac.metamac.statistical_resources.rest.internal.v1_0.service.StatisticalResourcesV1_0;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RestApiLocator {
 
-    private static final int                           STATISTICAL_RESOURCES_INTERNAL_API_RECEIVE_TIMEOUT_VALUE = 300000;
+    private static final int                           STATISTICAL_RESOURCES_EXTERNAL_API_RECEIVE_TIMEOUT_VALUE = 300000;
 
     @Autowired
     private ConfigurationService                       configurationService;
@@ -26,7 +26,7 @@ public class RestApiLocator {
 
     private NoticesV1_0                                noticesV10                                               = null;
 
-    private StatisticalResourcesV1_0                   statisticalResourcesRestInternalFacacadeV10              = null;
+    private StatisticalResourcesV1_0                   statisticalResourcesRestExternalFacacadeV10              = null;
 
     @PostConstruct
     public void initService() throws MetamacException {
@@ -36,9 +36,9 @@ public class RestApiLocator {
         String noticesApiUrlBase = configurationService.retrieveNoticesInternalApiUrlBase();
         noticesV10 = JAXRSClientFactory.create(noticesApiUrlBase, NoticesV1_0.class, null, true); // true to do thread safe
 
-        String statisticalResourcesInternalApiUrlBase = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
-        statisticalResourcesRestInternalFacacadeV10 = JAXRSClientFactory.create(statisticalResourcesInternalApiUrlBase, StatisticalResourcesV1_0.class, null, true); // true to do thread safe
-        setReceiveTimeout(statisticalResourcesRestInternalFacacadeV10, RestApiLocator.STATISTICAL_RESOURCES_INTERNAL_API_RECEIVE_TIMEOUT_VALUE);
+        String statisticalResourcesExternalApiUrlBase = configurationService.retrieveStatisticalResourcesExternalApiUrlBase();
+        statisticalResourcesRestExternalFacacadeV10 = JAXRSClientFactory.create(statisticalResourcesExternalApiUrlBase, StatisticalResourcesV1_0.class, null, true); // true to do thread safe
+        setReceiveTimeout(statisticalResourcesRestExternalFacacadeV10, RestApiLocator.STATISTICAL_RESOURCES_EXTERNAL_API_RECEIVE_TIMEOUT_VALUE);
     }
 
     public StatisticalOperationsRestInternalFacadeV10 getStatisticalOperationsRestFacadeV10() {
@@ -49,12 +49,12 @@ public class RestApiLocator {
         return statisticalOperationsRestInternalFacadeV10;
     }
 
-    public StatisticalResourcesV1_0 getStatisticalResourcesRestInternalFacacadeV10() {
+    public StatisticalResourcesV1_0 getStatisticalResourcesRestExternalFacacadeV10() {
         // reset thread context
-        WebClient.client(statisticalResourcesRestInternalFacacadeV10).reset();
-        WebClient.client(statisticalResourcesRestInternalFacacadeV10).accept("application/xml");
+        WebClient.client(statisticalResourcesRestExternalFacacadeV10).reset();
+        WebClient.client(statisticalResourcesRestExternalFacacadeV10).accept("application/xml");
 
-        return statisticalResourcesRestInternalFacacadeV10;
+        return statisticalResourcesRestExternalFacacadeV10;
     }
 
     public NoticesV1_0 getNoticesRestInternalFacadeV10() {

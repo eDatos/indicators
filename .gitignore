@@ -148,3 +148,5 @@ Desktop.ini
 indicators-core/src/main/resources/generator/sculptor-generator.properties
 indicators-web/src/main/webapp/theme/js/app.min.js
 indicators-web/src/main/webapp/theme/js/vendor.min.js
+indicators-web/.vscode
+indicators-web/node

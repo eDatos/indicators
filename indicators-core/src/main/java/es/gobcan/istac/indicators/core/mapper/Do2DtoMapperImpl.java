@@ -17,7 +17,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -73,6 +73,9 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private IndicatorsConfigurationService configurationService;
 
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
@@ -316,7 +319,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public SubjectDto subjectDoToDto(Subject source) {
+    public SubjectDto subjectDoToDto(Subject source) throws MetamacException {
 
         SubjectDto target = new SubjectDto();
         target.setCode(source.getId());
@@ -324,8 +327,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         InternationalStringDto title = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel(source.getTitle());
-        // title only in spanish
-        localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+        // subjects are not localised. We show them only on the default language
+        localisedStringDto.setLocale(configurationService.retrieveLanguageDefault());
         title.addText(localisedStringDto);
         target.setTitle(title);
 

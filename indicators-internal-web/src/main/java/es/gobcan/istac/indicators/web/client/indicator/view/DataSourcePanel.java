@@ -10,7 +10,6 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
@@ -104,6 +103,7 @@ public class DataSourcePanel extends VLayout {
     private IndicatorUiHandler               uiHandlers;
 
     private SearchSingleQueryPaginatedWindow searchQueryMetamacWindow;
+    private List<String>                     editionLanguages;
 
     public DataSourcePanel() {
         // MainFormLayout
@@ -116,8 +116,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcePanel.this.indicatorDto.getProcStatus())
-                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcePanel.this.indicatorDto.getProcStatus())) {
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(indicatorDto.getProcStatus()) || IndicatorProcStatusEnum.ARCHIVED.equals(indicatorDto.getProcStatus())) {
                     // Create a new version of the indicator
                     final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
                     window.show();
@@ -143,12 +142,12 @@ public class DataSourcePanel extends VLayout {
                 if (generalEditionForm.isVisible()) {
                     if (generalEditionForm.validate(false) && dataEditionForm.validate(false) && interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
                             && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
-                        DataSourcePanel.this.uiHandlers.saveDataSource(DataSourcePanel.this.indicatorDto.getUuid(), getDataSourceDto());
+                        uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                     }
                 } else {
                     if (interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false) && interperiodPercentageRateEditionForm.validate(false)
                             && annualPercentageRateEditionForm.validate(false)) {
-                        DataSourcePanel.this.uiHandlers.saveDataSource(DataSourcePanel.this.indicatorDto.getUuid(), getDataSourceDto());
+                        uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                     }
                 }
             }
@@ -265,8 +264,7 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
-        dataSourceDto
-                .setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
+        dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(editionLanguages.get(0), new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setSourceSurveyAcronym(generalEditionForm.getValueAsInternationalStringDto(DataSourceDS.SOURCE_SURVEY_ACRONYM));
             dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
@@ -340,14 +338,13 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
-        this.dataStructureDtoEdition = dataStructureDto;
+        dataStructureDtoEdition = dataStructureDto;
 
         // Source survey code
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
 
         // Source survey title
-        InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(ApplicationEditionLanguages.SPANISH, new InternationalStringDto(),
-                dataStructureDto.getSurveyTitle());
+        InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(editionLanguages.get(0), new InternationalStringDto(), dataStructureDto.getSurveyTitle());
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, internationalStringDto);
 
         // Publishers
@@ -493,7 +490,7 @@ public class DataSourcePanel extends VLayout {
 
         // Load data structure (common)
         if (dataSourceDto.getQueryUuid() != null && !dataSourceDto.getQueryUuid().isEmpty()) {
-            this.uiHandlers.retrieveDataStructure(dataSourceDto.getQueryUuid());
+            uiHandlers.retrieveDataStructure(dataSourceDto.getQueryUuid());
         }
 
         setDataSourceViewMode(dataSourceDto);
@@ -672,7 +669,7 @@ public class DataSourcePanel extends VLayout {
                 geographicalValueMulti.setGeoValue(new String());
                 // Set values with selected granularity
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    DataSourcePanel.this.uiHandlers.retrieveGeographicalValuesByGranularity(event.getValue().toString());
+                    uiHandlers.retrieveGeographicalValuesByGranularity(event.getValue().toString());
                 }
             }
         });
@@ -830,23 +827,23 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
-                DataSourcePanel.this.dataDefinitionsSearchWindow = new DataDefinitionsSearchWindow(getConstants().dataSourceQuerySelection());
-                DataSourcePanel.this.dataDefinitionsSearchWindow.setDataDefinitionsOperationCodes(DataSourcePanel.this.dataDefinitionsOperationCodes);
-                DataSourcePanel.this.dataDefinitionsSearchWindow.getSearchButton().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                dataDefinitionsSearchWindow = new DataDefinitionsSearchWindow(getConstants().dataSourceQuerySelection());
+                dataDefinitionsSearchWindow.setDataDefinitionsOperationCodes(dataDefinitionsOperationCodes);
+                dataDefinitionsSearchWindow.getSearchButton().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (DataSourcePanel.this.dataDefinitionsSearchWindow.validateForm()) {
-                            DataSourcePanel.this.uiHandlers.retrieveDataDefinitionsByOperationCode(DataSourcePanel.this.dataDefinitionsSearchWindow.getSelectedOperationCode());
+                        if (dataDefinitionsSearchWindow.validateForm()) {
+                            uiHandlers.retrieveDataDefinitionsByOperationCode(dataDefinitionsSearchWindow.getSelectedOperationCode());
                         }
                     }
                 });
-                DataSourcePanel.this.dataDefinitionsSearchWindow.getAcceptButton().addClickHandler(new ClickHandler() {
+                dataDefinitionsSearchWindow.getAcceptButton().addClickHandler(new ClickHandler() {
 
                     @Override
                     public void onClick(ClickEvent event) {
-                        DataDefinitionDto dataDefinitionDto = DataSourcePanel.this.dataDefinitionsSearchWindow.getSelectedDataDefinitionDto();
-                        DataSourcePanel.this.dataDefinitionsSearchWindow.destroy();
+                        DataDefinitionDto dataDefinitionDto = dataDefinitionsSearchWindow.getSelectedDataDefinitionDto();
+                        dataDefinitionsSearchWindow.destroy();
                         generalEditionForm.setValue(DataSourceDS.QUERY_UUID, dataDefinitionDto != null ? dataDefinitionDto.getUuid() : new String());
                         generalEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto != null ? dataDefinitionDto.getName() : new String());
                         generalEditionForm.getItem(DataSourceDS.QUERY_TEXT).validate();
@@ -856,7 +853,7 @@ public class DataSourcePanel extends VLayout {
                             clearQueryDependentFields();
 
                             // Retrieve data structure
-                            DataSourcePanel.this.uiHandlers.retrieveDataStructureEdition(dataDefinitionDto.getUuid());
+                            uiHandlers.retrieveDataStructureEdition(dataDefinitionDto.getUuid());
                         } else {
                             // Clear query dependent field values
                             clearQueryDependentFields();
@@ -933,7 +930,7 @@ public class DataSourcePanel extends VLayout {
      * In edition mode, shows query form in edition mode
      */
     private void setEditionQueryMode() {
-        this.queryEditionViewMode = false;
+        queryEditionViewMode = false;
 
         generalEditionForm.show();
         generalStaticEditionForm.hide();
@@ -950,7 +947,7 @@ public class DataSourcePanel extends VLayout {
      * In edition mode, shows query form in view mode
      */
     private void setViewQueryMode() {
-        this.queryEditionViewMode = true;
+        queryEditionViewMode = true;
 
         generalEditionForm.hide();
         generalStaticEditionForm.show();
@@ -1097,7 +1094,7 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
-        this.dataDefinitionsOperationCodes = operationCodes;
+        dataDefinitionsOperationCodes = operationCodes;
     }
 
     public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
@@ -1162,6 +1159,10 @@ public class DataSourcePanel extends VLayout {
             }
         }
         return false;
+    }
+
+    public void setEditionLanguages(List<String> languages) {
+        editionLanguages = languages;
     }
 
 }

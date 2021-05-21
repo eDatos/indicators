@@ -47,7 +47,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     @Inject
     public IndicatorViewImpl(IndicatorGeneralPanel genPanel, DataSourcesPanel dataSourcesPanel) {
-        this.generalPanel = genPanel;
+        generalPanel = genPanel;
         this.dataSourcesPanel = dataSourcesPanel;
 
         indicatorLabel = new TitleLabel();
@@ -261,6 +261,11 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     public void showInformationMessage(String title, String message) {
         InformationWindow informationWindow = new InformationWindow(title, message);
         informationWindow.show();
+    }
+
+    @Override
+    public void setEditionLanguages(List<String> languages) {
+        dataSourcesPanel.setEditionLanguages(languages);
     }
 
 }

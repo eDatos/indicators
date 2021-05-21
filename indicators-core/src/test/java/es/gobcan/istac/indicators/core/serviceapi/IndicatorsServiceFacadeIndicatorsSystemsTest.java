@@ -4350,26 +4350,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testFindGeographicalValues() throws Exception {
 
-        // IMPORTANT: Database have 9 geographicalValues but only two have the title correctly filled.
-        // The findGeographicalValues service only retrieve values with title in the default language.
-        // The real problem is in dbUnit file because title is required for this entities.
-        // We don't want to change dbunit so, we assume that at most two results are returned:
-        // - VALUE 1, with granularity 1
-        // - VALUE 2, with granularity 4
-
         // All
         {
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), null);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(2, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(9, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(1).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
+            assertEquals("FR", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(7).getUuid());
+            assertEquals("EN-LN", geographicalValues.get(7).getCode());
         }
 
         // All, only 1 results
@@ -4381,7 +4376,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
@@ -4399,12 +4394,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(0).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
+            assertEquals("FR", geographicalValues.get(0).getCode());
         }
 
         // By granularity, with order default
@@ -4418,8 +4413,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
@@ -4441,13 +4436,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
-            assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
+            assertEquals("FR", geographicalValues.get(0).getCode());
+            assertEquals("FR", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(1).getUuid());
+            assertEquals("ES", geographicalValues.get(1).getCode());
+            assertEquals("ES", geographicalValues.get(1).getOrder());
         }
         // By granularity order by "order" asc
         {
@@ -4465,13 +4463,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(1, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
+            assertEquals("FR", geographicalValues.get(1).getCode());
+            assertEquals("FR", geographicalValues.get(1).getOrder());
         }
     }
 

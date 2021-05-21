@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-
-    <!-- General -->
-    <entry key="app.title">ISTAC: Estadísticas de la Comunidad Autónoma de Canarias</entry>
-
-	<!-- Header -->
-	<entry key="app.header.whereis">Está en:</entry>
-	
-    <!-- Footer -->
-    <entry key="app.footer.gobcan"><![CDATA[&copy; Gobierno de Canarias]]></entry>
-    <entry key="app.footer.legal-advice">Aviso Legal</entry>
-    <entry key="app.footer.suggests">Sugerencias y Reclamaciones</entry>
     
-    <!-- Errors -->
-    <entry key="page.error.general">Se ha producido un error al realizar la acción solicitada</entry>
-    <entry key="page.error.page-not-found">Página no encontrada</entry>
-    <entry key="page.error.info">Para obtener más información, póngase en contacto con el administrador del sistema</entry>
-    <entry key="page.error.sorry">Disculpe las molestias</entry>
+    <!-- TODO no existe internacionalización para las páginas de la API. Se han limpiado los mensajes porque ninguno se usaba. 
+    Si se necesita un ejemplo véase  /indicators-web/src/main/resources/i18n/messages_en.xml -->
+
   
 </properties>

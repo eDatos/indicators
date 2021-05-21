@@ -19,6 +19,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -26,6 +27,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +65,9 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
  */
 @Service("indicatorsSystemService")
 public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
+
+    @Autowired
+    ConfigurationService configurationService;
 
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
@@ -870,10 +875,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
-                String specificException = ((SQLException) e.getCause().getCause()).getMessage(); 
-                if (StringUtils.containsIgnoreCase(specificException,"GEOGR_VALUES_ORDER")) {
+                String specificException = ((SQLException) e.getCause().getCause()).getMessage();
+                if (StringUtils.containsIgnoreCase(specificException, "GEOGR_VALUES_ORDER")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
-                } else if (StringUtils.containsIgnoreCase(specificException,"GEOGR_VALUES_CODE")) {
+                } else if (StringUtils.containsIgnoreCase(specificException, "GEOGR_VALUES_CODE")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
                 } else {
                     throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
@@ -1060,18 +1065,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return measureValueDo;
     }
 
-    private void fillMeasureValueTitlesWithTranslation(MeasureValue measureValueDo, Translation translation) {
+    private void fillMeasureValueTitlesWithTranslation(MeasureValue measureValueDo, Translation translation) throws MetamacException {
         if (translation == null || translation.getTitle() == null) {
             InternationalString title = new InternationalString();
             String measureValueCode = measureValueDo.getMeasureValue().getName();
-            LocalisedString localisedStringEs = new LocalisedString();
-            localisedStringEs.setLabel(measureValueCode);
-            localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
-            title.addText(localisedStringEs);
-            LocalisedString localisedStringEn = new LocalisedString();
-            localisedStringEn.setLabel(measureValueCode);
-            localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
-            title.addText(localisedStringEn);
+
+            for (String language : configurationService.retrieveLanguages()) {
+                LocalisedString localisedString = new LocalisedString();
+                localisedString.setLabel(measureValueCode);
+                localisedString.setLocale(language);
+                title.addText(localisedString);
+            } ;
+
             measureValueDo.setTitle(title);
             measureValueDo.setTitleSummary(measureValueDo.getTitle());
         } else {
@@ -1085,7 +1090,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<MeasureValue> retrieveMeasuresValues(ServiceContext ctx, List<String> measureCodes) {
+    public List<MeasureValue> retrieveMeasuresValues(ServiceContext ctx, List<String> measureCodes) throws MetamacException {
         List<String> translationCodes = new ArrayList<String>();
         for (String measureCode : measureCodes) {
             String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureCode).toString();

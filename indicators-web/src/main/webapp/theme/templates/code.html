@@ -1,16 +1,18 @@
 <div class="widget-export">
-    <p>Selecciona, copia y pega este código en tu página</p>
+    <p>{{ translate "EMBED.HELP" }}</p>
 
     <textarea id="code-container" readonly="readonly">
 <div id="istac-widget"></div>
 <script src="{{script}}"></script>
 <script>
-    new IstacWidget({{{code}}});
+    new IstacWidget({{{ code }}});
 </script>
     </textarea>
 
     <p class="widget-import-netvibes">
-        <a target="_blank" href="{{serverURL}}/widgets/example?{{parameters}}">Ejemplo de uso</a> | <a class="widget-import-netvibes-link" href="#"><img src="{{serverURL}}/theme/images/netvibes.png" class="netvibes-icon"> Añadir a Netvibes</a>
+        <a target="_blank" href="{{serverURL}}/widgets/example?{{parameters}}">{{ translate "EMBED.EXAMPLE" }}</a> | <a
+            class="widget-import-netvibes-link" href="#"><img src="{{serverURL}}/theme/images/netvibes.png"
+                class="netvibes-icon"> {{ translate "EMBED.ADD_TO_NETVIBES" }}</a>
     </p>
 
     <div class="widget-netvibes-captcha">

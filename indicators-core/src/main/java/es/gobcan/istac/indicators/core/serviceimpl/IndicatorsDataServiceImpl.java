@@ -29,7 +29,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
-import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
@@ -112,7 +112,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private IndicatorsConfigurationService         configurationService;
 
     @Autowired
-    private StatisticalResoucesRestInternalService statisticalResoucesRestInternalService;
+    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
 
     private static final Logger                    LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
@@ -1531,8 +1531,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     // Recalculate
                     if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                         // Metamac
-                        Query query = statisticalResoucesRestInternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
-                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestInternalService.QueryFetchEnum.ALL);
+                        Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
                     } else {
                         // GPE-JAXI
@@ -1662,7 +1662,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
-        if (StringUtils.isEmpty(value)) {
+        if (StringUtils.isBlank(value)) {
             value = "..";
         }
 

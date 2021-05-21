@@ -1,5 +1,5 @@
 window.Istac = {
-    widget : {
+    widget: {
 
     }
 };

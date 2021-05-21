@@ -27,6 +27,7 @@ public class ApplicationStartup extends ApplicationStartupListener {
 
         // Other
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
+        checkRequiredProperty(IndicatorsConfigurationConstants.METAMAC_ORGANISATION);
 
     }
 

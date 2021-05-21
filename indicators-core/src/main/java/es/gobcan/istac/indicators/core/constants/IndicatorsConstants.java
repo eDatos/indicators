@@ -30,6 +30,7 @@ public class IndicatorsConstants {
     public static final String TRANSLATION_MEASURE_DIMENSION             = "MEASURE_DIMENSION";
     // Other translations
     public static final String TRANSLATION_UNIT_MULTIPLIER               = "UNIT_MULTIPLIER";
+    public static final String TRANSLATION_METADATA_ATTRIBUTE            = "METADATA_ATTRIBUTE";
 
     // Importation and exportation
     public static final String TSV_SEPARATOR                             = "\t";

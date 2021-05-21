@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GRANULARITY_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_INSTANCE_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,9 +22,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalGranularityVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GRANULARITY_UUID;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_INSTANCE_UUID;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_VERSION;
 
 /**
  * Repository implementation for IndicatorVersionGeoCoverage
@@ -250,9 +251,12 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
                 geoVal.setCode(geoCode);
                 geoVal.setOrder(geoOrder);
                 geoVal.setTitle(new InternationalString());
-                geoVal.setLatitude(latitude.doubleValue());
-                geoVal.setLongitude(longitude.doubleValue());
-
+                if (latitude != null) {
+                    geoVal.setLatitude(latitude.doubleValue());
+                }
+                if (longitude != null) {
+                    geoVal.setLongitude(longitude.doubleValue());
+                }
                 granularity = new GeographicalGranularityVO();
                 granularity.setCode(granularityCode);
                 granularity.setTitle(new InternationalString());
@@ -280,12 +284,12 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         }
         return values;
     }
-    
+
     private BigDecimal toBigDecimal(Object value) {
         if (value instanceof BigDecimal) {
             return (BigDecimal) value;
         } else if (value instanceof Double) {
-            return new BigDecimal((Double)value);
+            return new BigDecimal((Double) value);
         }
         return null;
     }

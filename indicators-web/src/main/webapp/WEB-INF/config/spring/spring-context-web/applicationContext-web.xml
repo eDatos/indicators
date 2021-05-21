@@ -34,7 +34,8 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="templateLoaderPaths">
             <list>
-                <value>/WEB-INF/views</value>
+                <value>/WEB-INF/freemarker/includes</value>
+                <value>/WEB-INF/freemarker/views</value>
                 <value>/theme/js</value>
             </list>
         </property>

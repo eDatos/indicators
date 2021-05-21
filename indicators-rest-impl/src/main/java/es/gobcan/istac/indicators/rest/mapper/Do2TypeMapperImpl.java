@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +39,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.TranslationRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -85,8 +84,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     @Autowired
     UriLinks                                                                                                                           uriLinks;
 
-    private static final String                                                                                                        PROP_ATTRIBUTE_OBS_CONF_LABEL_EN      = "Observation confidenciality";
-    private static final String                                                                                                        PROP_ATTRIBUTE_OBS_CONF_LABEL_ES      = "Confidencialidad de la observación";
+    @Autowired
+    private TranslationRepository                                                                                                      translationRepository;
 
     private static ThreadLocal<Map<String, Map<String, Object>>>                                                                       requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
@@ -560,10 +559,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
-
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF);
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
-
         target.setAttribute(metadataAttributes);
     }
 
@@ -594,7 +591,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF);
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
         target.setAttribute(metadataAttributes);
 
@@ -608,20 +605,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
     }
 
-    private MetadataAttributeType createMetadataAttributeType(String code, String spanishLabel, String englishLabel) {
-        LocalisedString localisedStringES = new LocalisedString();
-        localisedStringES.setLocale("es");
-        localisedStringES.setLabel(spanishLabel);
-        LocalisedString localisedStringEN = new LocalisedString();
-        localisedStringEN.setLocale("en");
-        localisedStringEN.setLabel(englishLabel);
-        InternationalString internationalString = new InternationalString();
-        internationalString.getTexts().add(localisedStringES);
-        internationalString.getTexts().add(localisedStringEN);
-
+    private MetadataAttributeType createMetadataAttributeType(String code) {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
-        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(internationalString));
+        String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
+        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }

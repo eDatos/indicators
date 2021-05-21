@@ -7,7 +7,6 @@ import javax.persistence.PersistenceException;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
@@ -18,7 +17,6 @@ import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.InternationalStringProperties.InternationalStringProperty;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -33,14 +31,11 @@ import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
-import es.gobcan.istac.indicators.core.domain.GeographicalValueProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.QuantityUnitProperties;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
@@ -667,7 +662,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-        addEditionLanguageCondition(sculptorCriteria, IndicatorVersionProperties.title());
 
         // Find
         PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
@@ -932,7 +926,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
         }
         SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
-        addEditionLanguageCondition(sculptorCriteria, GeographicalValueProperties.title(), GeographicalValueProperties.granularity().title());
 
         PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
@@ -1088,7 +1081,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getQuantityUnitCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
-        addEditionLanguageCondition(sculptorCriteria, QuantityUnitProperties.title());
 
         // Find
         PagedResult<QuantityUnit> result = getIndicatorsService().findQuantityUnits(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
@@ -1257,21 +1249,5 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      */
     private void checkAccessIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, RoleEnum... roles) throws MetamacException {
         checkAccessIndicatorsSystemByCode(ctx, indicatorsSystem.getCode(), roles);
-    }
-
-    /**
-     * Adds a condition to the {@link SculptorCriteria} to filter the results by the edition language. The filtering allows the query to be faster and allows the resources to be sorted by a specific
-     * locale of an {@link InternationalString}.
-     *
-     * @param sculptorCriteria
-     * @param properties
-     * @throws MetamacException
-     */
-    @SuppressWarnings("rawtypes")
-    private void addEditionLanguageCondition(SculptorCriteria sculptorCriteria, InternationalStringProperty... properties) throws MetamacException {
-        String defaultLanguage = configurationService.retrieveLanguageDefault();
-        for (InternationalStringProperty property : properties) {
-            sculptorCriteria.getConditions().add(ConditionalCriteria.equal(property.texts().locale(), defaultLanguage));
-        }
     }
 }
