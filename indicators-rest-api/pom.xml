@@ -4,14 +4,14 @@
     <parent>
         <groupId>es.gobcan.istac.indicators</groupId>
         <artifactId>indicators-parent</artifactId>
-        <version>8.2.4-SNAPSHOT</version>
+        <version>8.3.0</version>
         <relativePath>../indicators-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>indicators-rest-api</artifactId>
     <name>INDICATORS :: REST :: API</name>
     <packaging>jar</packaging>
-    <version>8.2.4-SNAPSHOT</version>    
+    <version>8.3.0</version>    
 
     <dependencies>
 
