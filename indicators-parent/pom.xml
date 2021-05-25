@@ -7,7 +7,7 @@
 	<name>INDICATORS :: PARENT</name>
 	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
-	<version>8.2.4-SNAPSHOT</version>
+	<version>8.3.1-SNAPSHOT</version>
 
     <organization>
         <name>Arte Consultores, S.L.</name>
@@ -136,7 +136,7 @@
 		<arte-maven-enforcer.version>1.0.0</arte-maven-enforcer.version>
 
 		<!-- EDATOS DATASET REPOSITORY -->
-		<edatos-dataset-repository.version>1.1.1-SNAPSHOT</edatos-dataset-repository.version>
+		<edatos-dataset-repository.version>1.1.1</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>

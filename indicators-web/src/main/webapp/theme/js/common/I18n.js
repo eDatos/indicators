@@ -1,8 +1,8 @@
 (function () {
 
     // This variable are loaded from index.ftl. On widget mode, they default to 'es'
-    var currentLocale = typeof currentLocale !== 'undefined' ? currentLocale : 'es';
-    var defaultLocale = typeof defaultLocale !== 'undefined' ? defaultLocale : 'es';
+    var currentLocale = typeof window.currentLocale !== 'undefined' ? window.currentLocale : 'es';
+    var defaultLocale = typeof window.defaultLocale !== 'undefined' ? window.defaultLocale : 'es';
 
     EDatos.common.I18n = {
         translate: function (key) {
