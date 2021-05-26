@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.apache.kafka.clients.admin.CreateTopicsOptions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.errors.TopicExistsException;
-import org.apache.kafka.common.protocol.ApiKeys;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -31,11 +29,6 @@ public class KafkaInitializeTopics {
     private static final short               NUM_OF_REPLICATION = (short) 1;
     private static final int                 TIMEOUT            = 1000;
 
-    // TODO EDATOS-3324 MIGUEL: verificar si esto ya no es necesario
-    private static final short               APIKEY             = ApiKeys.CREATE_TOPICS.id;
-    private static final short               VERSION            = 0;
-    private static final short               CORRELATIONID      = -1;
-
     private static final String              RETENTION_MS       = "retention.ms";
 
     private static final Map<String, String> TOPIC_DEFAULT_SETTINGS;
@@ -45,7 +38,11 @@ public class KafkaInitializeTopics {
         TOPIC_DEFAULT_SETTINGS.put(RETENTION_MS, "-1");
     };
 
-    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService) throws IOException, IllegalArgumentException, MetamacException {
+    private KafkaInitializeTopics() {
+
+    }
+
+    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService) throws MetamacException {
         Properties kafkaProperties = getKafkaProperties(configurationService);
 
         List<NewTopic> topics = getTopics(configurationService);
