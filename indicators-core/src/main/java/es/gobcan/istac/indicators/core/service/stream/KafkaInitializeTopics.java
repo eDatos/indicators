@@ -1,112 +1,94 @@
 package es.gobcan.istac.indicators.core.service.stream;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.kafka.common.protocol.ApiKeys;
-import org.apache.kafka.common.protocol.Errors;
-import org.apache.kafka.common.requests.CreateTopicsRequest;
-import org.apache.kafka.common.requests.CreateTopicsResponse;
-import org.apache.kafka.common.requests.RequestHeader;
-import org.apache.kafka.common.requests.ResponseHeader;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.CreateTopicsOptions;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.errors.TopicExistsException;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 public class KafkaInitializeTopics {
 
-    protected static Log                              LOGGER                              = LogFactory.getLog(KafkaInitializeTopics.class);
+    protected static final Log               LOGGER             = LogFactory.getLog(KafkaInitializeTopics.class);
 
     // Create Topics Request
-    private static final int                  NUM_OF_PARTITIONS  = 1;
-    private static final short                NUM_OF_REPLICATION = (short) 1;
-    private static final int                  TIMEOUT            = 1000;
-    private static final short                APIKEY             = ApiKeys.CREATE_TOPICS.id;
-    private static final short                VERSION            = 0;
-    private static final short                CORRELATIONID      = -1;
+    private static final int                 NUM_OF_PARTITIONS  = 1;
+    private static final short               NUM_OF_REPLICATION = (short) 1;
+    private static final int                 TIMEOUT            = 1000;
 
-    private static final String               RETENTION_MS       = "retention.ms";
+    private static final String              RETENTION_MS       = "retention.ms";
 
+    private static final Map<String, String> TOPIC_DEFAULT_SETTINGS;
 
-    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService)
-            throws IOException, IllegalArgumentException, MetamacException {
-        Map<String, String> configs = new HashMap<>();
-        configs.put(RETENTION_MS, "-1");
+    static {
+        TOPIC_DEFAULT_SETTINGS = new HashMap<>();
+        TOPIC_DEFAULT_SETTINGS.put(RETENTION_MS, "-1");
+    };
 
-        CreateTopicsRequest.TopicDetails topicDetails = new CreateTopicsRequest.TopicDetails(NUM_OF_PARTITIONS, NUM_OF_REPLICATION, configs);
-        Map<String, CreateTopicsRequest.TopicDetails> topicConfig = new HashMap<String, CreateTopicsRequest.TopicDetails>();
-        topicConfig.put(configurationService.retrieveKafkaTopicQueryPublication(), topicDetails);
-        topicConfig.put(configurationService.retrieveKafkaTopicDatasetsPublication(), topicDetails);
-        topicConfig.put(configurationService.retrieveKafkaTopicCollectionPublication(), topicDetails);
+    private KafkaInitializeTopics() {
 
-        CreateTopicsRequest request = new CreateTopicsRequest(topicConfig, TIMEOUT);
-
-        CreateTopicsResponse response = createTopic(request, configurationService.retrieveKafkaBootStrapServers());
-
-        checkErrors(response.errors());
     }
 
-    private static CreateTopicsResponse createTopic(CreateTopicsRequest request, String client) throws IllegalArgumentException, IOException {
-        String[] comp = client.split(":");
-        if (comp.length != 2) {
-            throw new IllegalArgumentException("Wrong client directive");
-        }
-        String address = comp[0];
-        int port = Integer.parseInt(comp[1]);
+    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService) throws MetamacException {
+        Properties kafkaProperties = getKafkaProperties(configurationService);
 
-        RequestHeader header = new RequestHeader(APIKEY, VERSION, client, CORRELATIONID);
-        ByteBuffer buffer = ByteBuffer.allocate(header.sizeOf() + request.sizeOf());
-        header.writeTo(buffer);
-        request.writeTo(buffer);
+        List<NewTopic> topics = getTopics(configurationService);
 
-        byte byteBuf[] = buffer.array();
+        CreateTopicsOptions topicsOptions = getTopicsOptions();
 
-        byte[] resp = requestAndReceive(byteBuf, address, port);
-        ByteBuffer respBuffer = ByteBuffer.wrap(resp);
-        ResponseHeader.parse(respBuffer);
-
-        return CreateTopicsResponse.parse(respBuffer);
+        createTopics(kafkaProperties, topics, topicsOptions);
     }
 
-    private static byte[] requestAndReceive(byte[] buffer, String address, int port) throws IOException {
-        try (Socket socket = new Socket(address, port); DataOutputStream dos = new DataOutputStream(socket.getOutputStream()); DataInputStream dis = new DataInputStream(socket.getInputStream())) {
-            dos.writeInt(buffer.length);
-            dos.write(buffer);
-            dos.flush();
+    private static Properties getKafkaProperties(IndicatorsConfigurationService configurationService) throws MetamacException {
+        Properties properties = new Properties();
 
-            byte resp[] = new byte[dis.readInt()];
-            dis.readFully(resp);
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
+        properties.put(ProducerConfig.ACKS_CONFIG, "all");
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
 
-            return resp;
-        }
+        return properties;
     }
-    
-    private static void checkErrors(Map<String, Errors> errors) {
-        Iterator<Entry<String, Errors>> entryMapIterator = errors.entrySet().iterator();
 
-        StringBuilder result = new StringBuilder();
-        while (entryMapIterator.hasNext()) {
-            Map.Entry<String, Errors> entry = entryMapIterator.next();
+    private static List<NewTopic> getTopics(IndicatorsConfigurationService configurationService) throws MetamacException {
+        List<NewTopic> topics = new ArrayList<>();
 
-            Errors value = entry.getValue();
+        topics.add(createTopic(configurationService.retrieveKafkaTopicQueryPublication()));
+        topics.add(createTopic(configurationService.retrieveKafkaTopicDatasetsPublication()));
+        topics.add(createTopic(configurationService.retrieveKafkaTopicCollectionPublication()));
 
-            if (!(value.equals(Errors.NONE) || value.equals(Errors.TOPIC_ALREADY_EXISTS))) {
-                result.append(entry.getKey() + " " + value.message()).append("\n");
+        return topics;
+    }
+
+    private static NewTopic createTopic(String topic) {
+        return new NewTopic(topic, NUM_OF_PARTITIONS, NUM_OF_REPLICATION).configs(TOPIC_DEFAULT_SETTINGS);
+    }
+
+    private static CreateTopicsOptions getTopicsOptions() {
+        return new CreateTopicsOptions().timeoutMs(TIMEOUT);
+    }
+
+    private static void createTopics(Properties kafkaProperties, List<NewTopic> topics, CreateTopicsOptions topicsOptions) {
+        try (AdminClient adminClient = AdminClient.create(kafkaProperties)) {
+            adminClient.createTopics(topics, topicsOptions).all().get();
+        } catch (InterruptedException | ExecutionException e) {
+            // Ignore if TopicExistsException, which may be valid if topic exists
+            if (!(e.getCause() instanceof TopicExistsException)) {
+                throw new RuntimeException("Imposible to create/check Topic in kafka", e);
             }
         }
-
-        if (result.length() > 0) {
-            throw new RuntimeException("Imposible to create/check Topic in kafka: " + result.toString());
-        }
     }
-
 }
