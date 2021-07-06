@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the    -->
 <!-- browser's rendering engine into               -->
@@ -8,7 +9,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="gwt:property" content="locale=es">
+    <meta name="gwt:property" content="locale=<%=request.getLocale()%>">
 
 
 
