@@ -83,6 +83,8 @@ public class KafkaInitializeTopics {
             // Ignore if TopicExistsException, which may be valid if topic exists
             if (!(e.getCause() instanceof TopicExistsException)) {
                 throw new RuntimeException("Imposible to create/check Topic in kafka", e);
+            } else {
+                LOGGER.info("Kafka topics already exist, it's not necessary to create them. The application deploy continues in the right way...");
             }
         }
     }
