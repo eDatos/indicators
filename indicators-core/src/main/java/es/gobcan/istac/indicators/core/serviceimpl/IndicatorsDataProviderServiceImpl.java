@@ -1,5 +1,10 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +59,23 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
             params.put(JAXI_PARAM_TYPE, JAXI_PARAM_TYPE_VALUE_STRUCTURE);
             return requestForJson(getJaxiUrl(), uuid);
         } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+        }
+    }
+
+    @Override
+    public String retrieveDataStructureJsonStat(ServiceContext ctx, String uuid) throws MetamacException {
+        LOG.info("Retriving JSON-stat from URL: " + uuid);
+        try (InputStream inputStream = new URL(uuid).openStream(); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+
+            StringBuilder sb = new StringBuilder();
+            int cp;
+            while ((cp = bufferedReader.read()) != -1) {
+                sb.append((char) cp);
+            }
+            return sb.toString();
+
+        } catch (Exception e) { // TODO EDATOS-3388 JSONSTAT EXCEPTION?
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
     }

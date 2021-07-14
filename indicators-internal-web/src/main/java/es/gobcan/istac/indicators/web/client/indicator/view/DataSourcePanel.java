@@ -56,6 +56,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.JsonStatSearchWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -91,6 +92,8 @@ public class DataSourcePanel extends VLayout {
     private RateDerivationForm               annualPercentageRateEditionForm;
 
     private DataDefinitionsSearchWindow      dataDefinitionsSearchWindow;
+
+    private JsonStatSearchWindow             jsonStatSearchWindow;
     private List<String>                     dataDefinitionsOperationCodes;
     private DataSourceMainFormLayout         mainFormLayout;
 
@@ -258,6 +261,8 @@ public class DataSourcePanel extends VLayout {
         if (generalEditionForm.isVisible()) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setQueryUuid(dataStructureDtoEdition.getQueryUrn());
+            } else if (QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
+                // dataSourceDto.setQueryUuid(dataStructureDtoEdition.getQueryUrn()); TODO EDATOS-3288: aquí digo que tendras que hacer algo no?
             } else {
                 dataSourceDto.setQueryUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
             }
@@ -295,6 +300,15 @@ public class DataSourcePanel extends VLayout {
                 dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
                         ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
                         : null);
+
+            } else if (QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
+                // TODO EDATOS-3288: aquí digo que tendras que hacer algo no?
+                // dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_JSON_STAT).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_JSON_STAT) :
+                // null);
+                //
+                // dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT).isVisible()
+                // ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
+                // : null);
 
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
@@ -356,8 +370,10 @@ public class DataSourcePanel extends VLayout {
         // Temporal value
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE, dataStructureDto.getTemporalValue());
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE_METAMAC, dataStructureDto.getTemporalValue());
+        // generalEditionForm.setValue(DataSourceDS.TIME_VALUE_JSON_STAT, dataStructureDto.getTemporalValue());
 
         // Spatial Value (metamac)
+        // TODO EDATOS-3388 y aquí que toca?
         if (dataStructureDto.getGeographicalValueDto() != null) {
             generalEditionForm.setValue(DataSourceDS.GEO_VALUE_TEXT_METAMAC, InternationalStringUtils.getLocalisedString(dataStructureDto.getGeographicalValueDto().getTitle()));
             generalEditionForm.setValue(DataSourceDS.GEO_VALUE_UUID_METAMAC, dataStructureDto.getGeographicalValueDto().getUuid());
@@ -588,6 +604,16 @@ public class DataSourcePanel extends VLayout {
 
         });
 
+        // Query from JSON STAT
+        SearchViewTextItem queryJsonStatItem = getQueryJsonStatItem();
+        queryJsonStatItem.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT);
+            }
+        });
+
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
         ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
@@ -625,6 +651,17 @@ public class DataSourcePanel extends VLayout {
                 return isEnvironmentSelected(form, QueryEnvironmentEnum.METAMAC) && dataStructureHasTimeValue();
             }
         });
+
+        // TODO EDATOS-3388: y aqui que?
+        // RequiredTextItem timeValueJsonStat = new RequiredTextItem(DataSourceDS.TIME_VALUE_JSON_STAT, getConstants().dataSourceTimeValue());
+        // timeValueJsonStat.setShowIfCondition(new FormItemIfFunction() {
+        //
+        // @Override
+        // public boolean execute(FormItem item, Object value, DynamicForm form) {
+        // return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT) && dataStructureHasTimeValue();
+        // }
+        // });
+        // timeValueJsonStat.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
         SelectItem geographicalVariable = new SelectItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
         geographicalVariable.setRequired(true);
@@ -683,6 +720,16 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
+        // TODO EDATOS-3388: y aqui que?
+        // ViewTextItem geographicalValueJsonStat = new ViewTextItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT, getConstants().dataSourceGeographicalValue());
+        // geographicalValueJsonStat.setShowIfCondition(new FormItemIfFunction() {
+        //
+        // @Override
+        // public boolean execute(FormItem item, Object value, DynamicForm form) {
+        // return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT) && dataStructureHasGeoValue();
+        // }
+        // });
+
         HiddenItem geographicalValueUUIDMetamac = new HiddenItem(DataSourceDS.GEO_VALUE_UUID_METAMAC);
 
         ViewTextItem measureVariable = new ViewTextItem(DataSourceDS.MEASURE_VARIABLE, getConstants().dataSourceMeasureVariable());
@@ -708,8 +755,12 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue,
-                timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable, variables);
+        // generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable,
+        // timeValue, timeValueMetamac, timeValueJsonStat, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueJsonStat, geographicalValueUUIDMetamac,
+        // measureVariable, variables);
+
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable,
+                timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable, variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -914,6 +965,35 @@ public class DataSourcePanel extends VLayout {
         return item;
     }
 
+    private SearchViewTextItem getQueryJsonStatItem() {
+        SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
+        query.setRequired(true);
+
+        query.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                jsonStatSearchWindow = new JsonStatSearchWindow(getConstants().dataSourceQuerySelection());
+
+                jsonStatSearchWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (jsonStatSearchWindow.validateForm()) {
+                            uiHandlers
+                                    .retrieveDataStructure("https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/68904221-f893-456c-8046-261150ba9a2e/IBESTAT_I208004_n100_2020_11_25.json");
+                            // TODO EDATOS-3388 Aqui tendrás que hacer algo mi hermano
+                            jsonStatSearchWindow.destroy();
+                        }
+
+                    }
+                });
+            }
+        });
+
+        return query;
+    }
+
     public void retrieveStatisticalOperationsForQuerySelection() {
         uiHandlers.retrieveStatisticalOperationsForQuerySelection();
     }
@@ -1045,10 +1125,12 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC)).clearValue();
+        // ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_JSON_STAT)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).setValueMap();
         ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC)).clearValue();
+        // ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT)).clearValue();
         ((HiddenItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_UUID_METAMAC)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();

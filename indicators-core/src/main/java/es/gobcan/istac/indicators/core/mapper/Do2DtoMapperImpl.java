@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDataStructure;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -72,7 +73,7 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMapper {
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                    taskService;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -459,6 +460,12 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
             target.setContVariable(source.getContVariable());
         }
         return target;
+    }
+
+    @Override
+    public DataStructureDto dataStructureDoToDto(JsonStatDataStructure jsonStatDataStructure) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

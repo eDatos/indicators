@@ -222,7 +222,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getQueryEnvironmentEnumValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
-            valueMap.put(environment.toString(), environment.getName());
+            valueMap.put(environment.toString(), environment.getValue());
         }
         return valueMap;
     }

@@ -1289,6 +1289,17 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveJsonStatDataStructure(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        // TODO EDATOS-3388 check if uuid is an url?
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkPopulateIndicatorData(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();

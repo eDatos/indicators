@@ -74,6 +74,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDataStructure;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
@@ -196,6 +197,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Call jaxi for query structure
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
             return jsonToDataStructure(json);
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+        }
+    }
+
+    @Override
+    public JsonStatDataStructure retrieveJsonStatDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveJsonStatDataStructure(uuid, null);
+        try {
+            String json = getIndicatorsDataProviderService().retrieveDataStructureJsonStat(ctx, uuid);
+            return jsonToJsonStatDataStructure(json);
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
@@ -1963,6 +1976,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         DataStructure target = new DataStructure();
         target = mapper.readValue(json, DataStructure.class);
         return target;
+    }
+
+    private JsonStatDataStructure jsonToJsonStatDataStructure(String json) throws IOException {
+        return mapper.readValue(json, JsonStatDataStructure.class);
     }
 
     /*

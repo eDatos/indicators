@@ -24,4 +24,11 @@ public class IndicatorsDataProviderServiceTest implements IndicatorsDataProvider
     public void testRetrieveDataJson() throws Exception {
         // IDEA: research about mocking HttpRequest
     }
+
+    @Override
+    public void testRetrieveDataStructureJsonStat() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
 }

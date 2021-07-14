@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDataStructure;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
@@ -860,6 +861,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         return do2DtoMapper.dataStructureDoToDto(dataStruc);
+    }
+
+    @Override
+    public DataStructureDto retrieveJsonStatDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Service call
+        JsonStatDataStructure jsonStatDataStructure = getIndicatorsDataService().retrieveJsonStatDataStructure(ctx, uuid);
+
+        // Transform
+        return do2DtoMapper.dataStructureDoToDto(jsonStatDataStructure);
     }
 
     @Override
