@@ -41,6 +41,15 @@ public class TimeVariableUtilsTest {
     }
 
     @Test
+    public void testCompareTimeValuesWeek() throws MetamacException {
+        List<TimeValue> timeValues = buildTimeValues("2011W01", "2011W15", "2011W05");
+
+        TimeVariableUtils.sortTimeValuesMostRecentFirstLastValue(timeValues);
+
+        compareTimeValues(timeValues, "2011W15", "2011W05", "2011W01");
+    }
+
+    @Test
     public void testCompareTimeValuesRegular() throws MetamacException {
         List<TimeValue> timeValues = new ArrayList<TimeValue>();
 

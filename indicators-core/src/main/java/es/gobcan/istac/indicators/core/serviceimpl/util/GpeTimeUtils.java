@@ -152,6 +152,7 @@ public class GpeTimeUtils {
     /**
      * Retrieves previous time value in same granularity
      */
+    @Deprecated
     public static String calculatePreviousTimeValue(String value) throws MetamacException {
         if (value == null) {
             return null;
