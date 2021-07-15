@@ -64,7 +64,7 @@ public class TimeVariableUtils {
     }
 
     /*
-     * This function is deprecated, because we previously have normalized to MetamacTimeValues.
+     * This function is deprecated, because in the places we have used it, we previously have normalized to MetamacTimeValues.
      * Use MetamacTimeUtils.calculatePreviousTimeValue instead
      */
     @Deprecated

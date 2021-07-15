@@ -167,7 +167,7 @@ public class MetamacTimeUtils {
     }
 
     /*
-     * Normalize those metamac time values that can be written on on different ways, like 2000-A1 and 2000-M12
+     * Normalize those metamac time values that can be written on on different ways, like 2000-A1 (equivalent to 2000) and 2000-M12 (equivalent to 2000-12)
      */
     public static String convertAmbiguousTimeValueToMetamacTimeValue(String value) throws MetamacException {
         IstacTimeGranularityEnum timeGranularity = org.siemac.metamac.core.common.time.IstacTimeUtils.guessTimeGranularity(value);
