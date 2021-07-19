@@ -63,6 +63,11 @@ public class TimeVariableUtils {
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
+    /*
+     * This function is deprecated, because in the places we have used it, we previously have normalized to MetamacTimeValues.
+     * Use MetamacTimeUtils.calculatePreviousTimeValue instead
+     */
+    @Deprecated
     public static String calculatePreviousTimeValue(String value) throws MetamacException {
         if (GpeTimeUtils.isTimeValue(value)) {
             return GpeTimeUtils.calculatePreviousTimeValue(value);
