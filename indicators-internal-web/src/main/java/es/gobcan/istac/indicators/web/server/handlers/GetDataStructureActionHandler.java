@@ -39,7 +39,7 @@ public class GetDataStructureActionHandler extends SecurityActionHandler<GetData
             if (StringUtils.startsWithIgnoreCase(action.getUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                 dataStructureDto = statisticalResoucesRestExternalFacade.retrieveDataDefinitionFromQuery(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             } else if (CommonWebUtils.isValidUrl(action.getUuid())) {
-                dataStructureDto = indicatorsServiceFacade.retrieveJsonStatDataStructure(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
+                dataStructureDto = indicatorsServiceFacade.retrieveJsonStatData(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             } else {
                 dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             }

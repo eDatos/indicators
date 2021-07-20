@@ -74,7 +74,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
-import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDataStructure;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
@@ -203,13 +203,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public JsonStatDataStructure retrieveJsonStatDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
+    public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
-        InvocationValidator.checkRetrieveJsonStatDataStructure(uuid, null);
+        InvocationValidator.checkRetrieveJsonStatData(uuid, null);
         try {
-            String json = getIndicatorsDataProviderService().retrieveDataStructureJsonStat(ctx, uuid);
+            String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             return jsonToJsonStatDataStructure(json);
         } catch (Exception e) {
+            LOG.error("Unexpected error occurred retriving JSON-stat file: " + uuid, e);
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
     }
@@ -1978,8 +1979,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return target;
     }
 
-    private JsonStatDataStructure jsonToJsonStatDataStructure(String json) throws IOException {
-        return mapper.readValue(json, JsonStatDataStructure.class);
+    private JsonStatData jsonToJsonStatDataStructure(String json) throws IOException {
+        return mapper.readValue(json, JsonStatData.class);
     }
 
     /*

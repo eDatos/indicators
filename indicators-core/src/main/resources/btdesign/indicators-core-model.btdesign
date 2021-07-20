@@ -206,8 +206,8 @@ Application Indicators {
 	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Retrieves the Data's structure info from JSON-stat"
-	    	JsonStatDataStructure retrieveJsonStatDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves data info from JSON-stat from URL"
+	    	JsonStatData retrieveJsonStatData(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator data in background"
@@ -350,7 +350,7 @@ Application Indicators {
 	     	"Retrieves Data content"
     		String retrieveDataJson(String uuid) throws MetamacException;
     		"Retrieves JSON-stat"
-		    String retrieveDataStructureJsonStat(String uuid) throws MetamacException;
+		    String retrieveJsonStat(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -547,8 +547,8 @@ Application Indicators {
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Retrieves the Data's structure info from JSON-stat"
-	    	@DataStructureDto retrieveJsonStatDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves the data from JSON-stat"
+	    	@DataStructureDto retrieveJsonStatData(String uuid) throws MetamacException;
 	    	// "Populates a given indicator data"
 	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	        "Populates a given indicator data in background"

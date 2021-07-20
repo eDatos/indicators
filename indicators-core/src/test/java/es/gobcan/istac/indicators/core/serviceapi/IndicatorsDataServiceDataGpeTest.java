@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -22,9 +23,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -48,6 +49,15 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     private static final String              CONSULTA4_OPERATION_CODE = "E10352D";
     private static final String              CONSULTA5_UUID           = "5-5-5-5-5";
     private static final String              CONSULTA5_OPERATION_CODE = "E10352E";
+
+    private static final String              URL_JSON_STAT_1          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/68904221-f893-456c-8046-261150ba9a2e/I208004_n100.json";
+    private static final String              CONTENT_JSON_STAT_1      = readFile("json-stat/I208004_n100.json");
+    private static final String              URL_JSON_STAT_2          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/c2618af7-7b42-4510-b759-0f4ae59f41e6/E30138_16003.json";
+    private static final String              CONTENT_JSON_STAT_2      = readFile("json-stat/E30138_16003.json");
+    private static final String              URL_JSON_STAT_3          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/c0058c2d-6a0e-4261-9629-db2595d32434/E30467_00018.json";
+    private static final String              CONTENT_JSON_STAT_3      = readFile("json-stat/E30467_00018.json");
+    private static final String              URL_JSON_STAT_4          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/I216019_0012.json";
+    private static final String              CONTENT_JSON_STAT_4      = readFile("json-stat/I216019_0012.json");
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -179,8 +189,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
         String[] codes = new String[]{"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09", "ES", "ES61", "ES611", "ES612", "ES613", "ES614", "ES615", "ES616", "ES617", "ES618", "ES24",
                 "ES241", "ES242", "ES243", "ES12", "ES53", "ES70", "ES701", "ES702", "ES13", "ES41", "ES411", "ES412", "ES413", "ES414", "ES415", "ES416", "ES417", "ES418", "ES419", "ES42", "ES421",
-                "ES422", "ES423", "ES424", "ES425", "ES51", "ES511", "ES512", "ES513", "ES514", "ES52", "ES521", "ES522", "ES523", "ES43", "ES431", "ES432", "ES11", "ES111", "ES112", "ES113",
-                "ES114", "ES30", "ES62", "ES22", "ES21", "ES211", "ES212", "ES213", "ES23", "ES63", "ES64", "T", "NumSoc"};
+                "ES422", "ES423", "ES424", "ES425", "ES51", "ES511", "ES512", "ES513", "ES514", "ES52", "ES521", "ES522", "ES523", "ES43", "ES431", "ES432", "ES11", "ES111", "ES112", "ES113", "ES114",
+                "ES30", "ES62", "ES22", "ES21", "ES211", "ES212", "ES213", "ES23", "ES63", "ES64", "T", "NumSoc"};
         checkElementsInCollection(codes, dataStruc.getValueCodes().values());
 
         String temporalVar = "Periodos";
@@ -188,7 +198,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
         assertTrue(dataStruc.getSpatialVariables().isEmpty());
 
-        String[] notes = new String[]{"(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."};
+        String[] notes = new String[]{
+                "(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."};
         checkElementsInCollection(notes, dataStruc.getNotes());
 
         String source = "Instituto Canario de Estadística (ISTAC) a partir de datos del Instituto Nacional de Estadística (INE).";
@@ -230,6 +241,167 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(CONSULTA4_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+
+    @Test
+    public void testRetrieveJsonStatData() throws Exception {
+        {
+            // I208004_n100.json"
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_1))).thenReturn(CONTENT_JSON_STAT_1);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_1);
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT) a partir de datos de EGATUR. España (CC BY 3.0)", jsonStatData.getSource());
+            assertEquals("Gasto de los turistas extranjeros por periodo y Comunidad Autónoma de destino principal.", jsonStatData.getLabel());
+            assertEquals(4, jsonStatData.getDimension().size());
+
+            assertEquals(6240, jsonStatData.getValue().size());
+            assertTrue(jsonStatData.getValue().contains("."));
+            assertTrue(jsonStatData.getStatus() != null && !jsonStatData.getStatus().isEmpty());
+            assertEquals(48, jsonStatData.getStatus().size());
+
+            assertTrue(jsonStatData.getDimension().containsKey("Periodo"));
+            assertTrue(jsonStatData.getDimension().containsKey("Comunidad Autónoma de destino"));
+            assertTrue(jsonStatData.getDimension().containsKey("Datos"));
+            assertTrue(jsonStatData.getDimension().containsKey("Gastos"));
+
+            assertEquals("Periodo", jsonStatData.getDimension("Periodo").getLabel());
+            assertEquals(Integer.valueOf(64), jsonStatData.getDimension("Periodo").getCategory().getIndex("2016M01"));
+            assertEquals("2016M01", jsonStatData.getDimension("Periodo").getCategory().getLabel("2016M01"));
+            assertNull(jsonStatData.getDimension("Periodo").getCategory().getUnit());
+
+            assertEquals("Comunidad Autónoma de destino", jsonStatData.getDimension("Comunidad Autónoma de destino").getLabel());
+            assertEquals(Integer.valueOf(7), jsonStatData.getDimension("Comunidad Autónoma de destino").getCategory().getIndex("RR"));
+            assertEquals("Resto CCAA", jsonStatData.getDimension("Comunidad Autónoma de destino").getCategory().getLabel("RR"));
+            assertNull(jsonStatData.getDimension("Comunidad Autónoma de destino").getCategory().getUnit());
+
+            assertEquals("Datos", jsonStatData.getDimension("Datos").getLabel());
+            assertEquals(Integer.valueOf(3), jsonStatData.getDimension("Datos").getCategory().getIndex("Tvar_a"));
+            assertEquals("Tasa de variación del acumulado", jsonStatData.getDimension("Datos").getCategory().getLabel("Tvar_a"));
+            assertNotNull(jsonStatData.getDimension("Datos").getCategory().getUnit());
+            assertEquals(4, jsonStatData.getDimension("Datos").getCategory().getUnit().size());
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("abs"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("Tvar"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("Abs_a"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("Tvar_a"));
+
+            assertEquals("Porcentaje", jsonStatData.getDimension("Datos").getCategory().getUnit("Tvar_a").getBase());
+            assertEquals(Integer.valueOf(2), jsonStatData.getDimension("Datos").getCategory().getUnit("Tvar_a").getDecimals());
+
+        }
+
+        {
+            // E30138_16003.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_2))).thenReturn(CONTENT_JSON_STAT_2);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_2);
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT) a partir de datos del Instituto Nacional de Estadística (INE). España (CC BY 3.0)", jsonStatData.getSource());
+            assertEquals("Índice de precios y tasas de variación por periodo, Illes Balears/nacional y rúbricas.", jsonStatData.getLabel());
+            assertEquals(4, jsonStatData.getDimension().size());
+
+            assertEquals(106704, jsonStatData.getValue().size());
+            assertTrue(jsonStatData.getStatus() != null && jsonStatData.getStatus().isEmpty());
+
+            assertTrue(jsonStatData.getDimension().containsKey("Periodo"));
+            assertTrue(jsonStatData.getDimension().containsKey("Rúbricas"));
+            assertTrue(jsonStatData.getDimension().containsKey("Datos"));
+            assertTrue(jsonStatData.getDimension().containsKey("Illes Balears/nacional"));
+
+            assertEquals("Periodo", jsonStatData.getDimension("Periodo").getLabel());
+            assertEquals(Integer.valueOf(233), jsonStatData.getDimension("Periodo").getCategory().getIndex("2002M01"));
+            assertEquals("2002M01", jsonStatData.getDimension("Periodo").getCategory().getLabel("2002M01"));
+            assertNull(jsonStatData.getDimension("Periodo").getCategory().getUnit());
+
+            assertEquals("Rúbricas", jsonStatData.getDimension("Rúbricas").getLabel());
+            assertEquals(Integer.valueOf(56), jsonStatData.getDimension("Rúbricas").getCategory().getIndex("57"));
+            assertEquals("Otros bienes y servicios", jsonStatData.getDimension("Rúbricas").getCategory().getLabel("57"));
+            assertNull(jsonStatData.getDimension("Rúbricas").getCategory().getUnit());
+
+            assertEquals("Datos", jsonStatData.getDimension("Datos").getLabel());
+            assertEquals(Integer.valueOf(1), jsonStatData.getDimension("Datos").getCategory().getIndex("varMens"));
+            assertEquals("Variación mensual", jsonStatData.getDimension("Datos").getCategory().getLabel("varMens"));
+            assertNotNull(jsonStatData.getDimension("Datos").getCategory().getUnit());
+            assertEquals(4, jsonStatData.getDimension("Datos").getCategory().getUnit().size());
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("indice"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("varMens"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("varAny"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("varActual"));
+
+            assertEquals("Porcentaje", jsonStatData.getDimension("Datos").getCategory().getUnit("varActual").getBase());
+            assertEquals(Integer.valueOf(1), jsonStatData.getDimension("Datos").getCategory().getUnit("varActual").getDecimals());
+        }
+
+        {
+            // E30467_00018.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_3))).thenReturn(CONTENT_JSON_STAT_3);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_3);
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT) a partir de datos del Instituto Nacional de Estadística (INE). España (CC BY 3.0)", jsonStatData.getSource());
+            assertEquals("Menores condenados por sexo, nacionalidad y año.", jsonStatData.getLabel());
+            assertEquals(4, jsonStatData.getDimension().size());
+
+            assertEquals(63, jsonStatData.getValue().size());
+            assertTrue(jsonStatData.getStatus() != null && jsonStatData.getStatus().isEmpty());
+
+            assertTrue(jsonStatData.getDimension().containsKey("Sexo"));
+            assertTrue(jsonStatData.getDimension().containsKey("Nacionalidad"));
+            assertTrue(jsonStatData.getDimension().containsKey("Año"));
+            assertTrue(jsonStatData.getDimension().containsKey("Datos"));
+
+            assertEquals("Sexo", jsonStatData.getDimension("Sexo").getLabel());
+            assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Sexo").getCategory().getIndex("TT"));
+            assertEquals("Ambos sexos", jsonStatData.getDimension("Sexo").getCategory().getLabel("TT"));
+            assertNull(jsonStatData.getDimension("Sexo").getCategory().getUnit());
+
+            assertEquals("Nacionalidad", jsonStatData.getDimension("Nacionalidad").getLabel());
+            assertEquals(Integer.valueOf(2), jsonStatData.getDimension("Nacionalidad").getCategory().getIndex("2"));
+            assertEquals("Extranjera", jsonStatData.getDimension("Nacionalidad").getCategory().getLabel("2"));
+            assertNull(jsonStatData.getDimension("Nacionalidad").getCategory().getUnit());
+
+            assertEquals("Datos", jsonStatData.getDimension("Datos").getLabel());
+            assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getIndex("aux"));
+            assertEquals("Número de personas", jsonStatData.getDimension("Datos").getCategory().getLabel("aux"));
+            assertNotNull(jsonStatData.getDimension("Datos").getCategory().getUnit());
+            assertEquals(1, jsonStatData.getDimension("Datos").getCategory().getUnit().size());
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("aux"));
+
+            assertEquals("Número de personas", jsonStatData.getDimension("Datos").getCategory().getUnit("aux").getBase());
+            assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getUnit("aux").getDecimals());
+        }
+
+        {
+            // I216019_0012.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_4))).thenReturn(CONTENT_JSON_STAT_4);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_4);
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT) a partir de datos de la Seguridad Social. España (CC BY 3.0)", jsonStatData.getSource());
+            assertEquals("Demografía de las empresas inscritas en la Seguridad Social por periodo e isla de localización de la empresa.", jsonStatData.getLabel());
+            assertEquals(3, jsonStatData.getDimension().size());
+
+            assertEquals(784, jsonStatData.getValue().size());
+            assertTrue(jsonStatData.getStatus() != null && jsonStatData.getStatus().isEmpty());
+
+            assertTrue(jsonStatData.getDimension().containsKey("Periodo"));
+            assertTrue(jsonStatData.getDimension().containsKey("Isla de localización de la empresa"));
+            assertTrue(jsonStatData.getDimension().containsKey("Datos"));
+
+            assertEquals("Periodo", jsonStatData.getDimension("Periodo").getLabel());
+            assertEquals(Integer.valueOf(48), jsonStatData.getDimension("Periodo").getCategory().getIndex("2009Q2"));
+            assertEquals("2009T2", jsonStatData.getDimension("Periodo").getCategory().getLabel("2009Q2"));
+            assertNull(jsonStatData.getDimension("Periodo").getCategory().getUnit());
+
+            assertEquals("Isla de localización de la empresa", jsonStatData.getDimension("Isla de localización de la empresa").getLabel());
+            assertEquals(Integer.valueOf(7), jsonStatData.getDimension("Isla de localización de la empresa").getCategory().getIndex("9"));
+            assertEquals("OTRAS CC.AA.", jsonStatData.getDimension("Isla de localización de la empresa").getCategory().getLabel("9"));
+            assertNull(jsonStatData.getDimension("Isla de localización de la empresa").getCategory().getUnit());
+
+            assertEquals("Datos", jsonStatData.getDimension("Datos").getLabel());
+            assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getIndex("nif_a"));
+            assertEquals("Alta de empresas", jsonStatData.getDimension("Datos").getCategory().getLabel("nif_a"));
+            assertNotNull(jsonStatData.getDimension("Datos").getCategory().getUnit());
+            assertEquals(2, jsonStatData.getDimension("Datos").getCategory().getUnit().size());
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("nif_a"));
+            assertTrue(jsonStatData.getDimension("Datos").getCategory().getUnit().containsKey("nif_b"));
+
+            assertEquals("Número de empresas", jsonStatData.getDimension("Datos").getCategory().getUnit("nif_b").getBase());
+            assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getUnit("nif_b").getDecimals());
+        }
+
     }
 
     private List<String> getDataDefinitionsUuids(Collection<DataDefinition> dataDefinitions) {

@@ -23,7 +23,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
-import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDataStructure;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -94,7 +94,7 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
 
     // DataStructure
     DataStructureDto dataStructureDoToDto(DataStructure source);
-    DataStructureDto dataStructureDoToDto(JsonStatDataStructure jsonStatDataStructure);
+    DataStructureDto dataStructureDoToDto(JsonStatData jsonStatDataStructure);
 
     // Data
     DataDto dataDoToDto(Data source);

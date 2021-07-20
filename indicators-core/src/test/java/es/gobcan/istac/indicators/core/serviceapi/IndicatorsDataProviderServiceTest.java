@@ -26,8 +26,8 @@ public class IndicatorsDataProviderServiceTest implements IndicatorsDataProvider
     }
 
     @Override
-    public void testRetrieveDataStructureJsonStat() throws Exception {
-        // TODO Auto-generated method stub
+    public void testRetrieveJsonStat() throws Exception {
+        // TODO EDATOS-3388 check this!
 
     }
 
