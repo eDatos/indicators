@@ -517,7 +517,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
                 IstacTimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
-        String[] expectedMonthValues = new String[]{"2011-M01", "2010-M12", "2010-M11", "2010-M10", "2010-M09"};
+        String[] expectedMonthValues = new String[]{"2011-01", "2010-12", "2010-11", "2010-10", "2010-09"};
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
@@ -568,7 +568,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<TimeValue> monthTimeValues = indicatorsCoverageService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
                 IstacTimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
-        String[] expectedMonthValues = new String[]{"2011-M01", "2010-M12", "2010-M11", "2010-M10", "2010-M09"};
+        String[] expectedMonthValues = new String[]{"2011-01", "2010-12", "2010-11", "2010-10", "2010-09"};
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
@@ -591,7 +591,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<TimeValue> timeValues = indicatorsCoverageService.retrieveTimeValuesInIndicatorVersion(getServiceContextAdministrador(), indicatorVersion);
 
         List<String> timeCodes = getTimeValuesCodes(timeValues);
-        String[] expectedValues = new String[]{"2011-M01", "2010", "2010-M12", "2010-M11", "2010-M10", "2010-M09"};
+        String[] expectedValues = new String[]{"2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"};
         checkElementsInCollection(expectedValues, timeCodes);
     }
 
@@ -618,7 +618,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<TimeValue> timeValues = indicatorsCoverageService.retrieveTimeValuesInIndicatorVersion(getServiceContextAdministrador(), indicatorVersion);
         List<String> timeCodes = getTimeValuesCodes(timeValues);
-        String[] expectedValues = new String[]{"2011-M01", "2010", "2010-M12", "2010-M11", "2010-M10", "2010-M09"};
+        String[] expectedValues = new String[]{"2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"};
         checkElementsInCollection(expectedValues, timeCodes);
     }
 
@@ -629,7 +629,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<TimeValue> timeValues = indicatorsCoverageService.retrieveTimeValuesInIndicatorInstanceWithPublishedIndicator(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> timeCodes = getTimeValuesCodes(timeValues);
-        String[] expectedCodes = new String[]{"2011-M01", "2010-M12", "2010-M11", "2010-M10", "2010-M09"};
+        String[] expectedCodes = new String[]{"2011-01", "2010-12", "2010-11", "2010-10", "2010-09"};
         checkElementsOrder(expectedCodes, timeCodes);
     }
 
