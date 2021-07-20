@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.rest.util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,16 +18,11 @@ public final class ConditionUtil {
 
     public static IndicatorsDataTimeDimensionFilterVO normalizeAndFilterTimeDimension(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        List<String> selectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
+        List<String> selectedValues = MetamacTimeUtils.normalizeToMetamacTimeValues(selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name()));
         List<String> selectedGranularityCodes = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
 
-        List<String> normalizedSelectedValues = new ArrayList<String>();
-        for (String selectedValue : selectedValues) {
-            normalizedSelectedValues.add(MetamacTimeUtils.normalizeToMetamacTimeValue(selectedValue));
-        }
-
         IndicatorsDataTimeDimensionFilterVO filter = new IndicatorsDataTimeDimensionFilterVO();
-        filter.setCodes(normalizedSelectedValues);
+        filter.setCodes(selectedValues);
         filter.setGranularityCodes(selectedGranularityCodes);
 
         return filter;

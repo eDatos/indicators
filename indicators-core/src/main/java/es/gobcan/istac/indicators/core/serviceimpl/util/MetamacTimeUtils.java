@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import org.joda.time.DateTime;
@@ -164,6 +166,14 @@ public class MetamacTimeUtils {
         String normalizedTimeValue = convertGPETimeValueToMetamacTimeValue(timeValue);
         normalizedTimeValue = convertAmbiguousTimeValueToMetamacTimeValue(normalizedTimeValue);
         return normalizedTimeValue;
+    }
+
+    public static ArrayList<String> normalizeToMetamacTimeValues(List<String> timeValues) throws MetamacException {
+        ArrayList<String> normalizedTimeValues = new ArrayList<String>();
+        for (String timeValue : timeValues) {
+            normalizedTimeValues.add(normalizeToMetamacTimeValue(timeValue));
+        }
+        return normalizedTimeValues;
     }
 
     /*
