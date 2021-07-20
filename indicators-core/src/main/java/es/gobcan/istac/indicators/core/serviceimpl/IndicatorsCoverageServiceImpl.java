@@ -391,7 +391,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
         if (indInstance.isFilteredByTimeValues()) {
-            return getIndicatorVersionTimeCoverageRepository().retrieveGranularityCoverageFilteredByInstanceTimeValues(indicatorVersion, indInstance.getTimeValuesAsList());
+            List<String> timeValues = MetamacTimeUtils.normalizeToMetamacTimeValues(indInstance.getTimeValuesAsList());
+            return getIndicatorVersionTimeCoverageRepository().retrieveGranularityCoverageFilteredByInstanceTimeValues(indicatorVersion, timeValues);
         } else if (indInstance.isFilteredByTimeGranularity()) {
             TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, indInstance.getTimeGranularity());
             return Arrays.asList(timeGranularity);
