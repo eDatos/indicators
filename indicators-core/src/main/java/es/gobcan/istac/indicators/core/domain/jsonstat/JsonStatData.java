@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.domain.jsonstat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,8 +164,19 @@ public class JsonStatData {
      * Parents: Root, Relation ID array element
      * Children: dimension ID
      */
-    @JsonProperty
+
     private Map<String, JsonStatDimension> dimension;
+
+    @JsonProperty("dimension")
+    public void processDimension(Map<String, JsonStatDimension> dimensions) {
+        dimension = dimensions;
+
+        for (String key : dimensions.keySet()) {
+            addVariable(dimensions.get(key).getLabel());
+            addValueLabels(key, new ArrayList<>(dimensions.get(key).getCategory().getIndex().keySet()));
+            addValueCodes(key, new ArrayList<>(dimensions.get(key).getCategory().getLabel().values()));
+        }
+    }
 
     /*
      * Attribute: dimension ID
@@ -264,7 +276,7 @@ public class JsonStatData {
      * Children: None
      */
     @JsonProperty
-    private String                         href;
+    private String                    href;
 
     /*
      * Attribute: link
@@ -301,6 +313,10 @@ public class JsonStatData {
      * Children: Open
      */
     // TODO EDATOS-3388
+
+    List<String>                      variables;
+    private Map<String, List<String>> valueLabels;
+    private Map<String, List<String>> valueCodes;
 
     public String getVersion() {
         return version;
@@ -416,6 +432,51 @@ public class JsonStatData {
 
     public void setExtension(JsonStatExtension extension) {
         this.extension = extension;
+    }
+
+    public List<String> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<String> variables) {
+        this.variables = variables;
+    }
+
+    private void addVariable(String variable) {
+        if (variables == null) {
+            variables = new ArrayList();
+        }
+        variables.add(variable);
+    }
+
+    public Map<String, List<String>> getValueLabels() {
+        return valueLabels;
+    }
+
+    public void setValueLabels(Map<String, List<String>> valueLabels) {
+        this.valueLabels = valueLabels;
+    }
+
+    private void addValueLabels(String var, List<String> labels) {
+        if (valueLabels == null) {
+            valueLabels = new HashMap<String, List<String>>();
+        }
+        valueLabels.put(var, labels);
+    }
+
+    public Map<String, List<String>> getValueCodes() {
+        return valueCodes;
+    }
+
+    public void setValueCodes(Map<String, List<String>> valueCodes) {
+        this.valueCodes = valueCodes;
+    }
+
+    private void addValueCodes(String var, List<String> labels) {
+        if (valueCodes == null) {
+            valueCodes = new HashMap<String, List<String>>();
+        }
+        valueCodes.put(var, labels);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.mapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -465,7 +466,47 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     @Override
     public DataStructureDto dataStructureDoToDto(JsonStatData jsonStatDataStructure) {
         DataStructureDto target = new DataStructureDto();
-        // TODO EDATOS-3388 Matching attributes
+
+        // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
+        // GPE: uuid -> JSON-stat: ???
+        // target.setUuid(uuid);
+
+        // GPE: title -> JSON-stat: label
+        target.setTitle(jsonStatDataStructure.getLabel());
+
+        // GPE: uriPx -> JSON-stat: ???
+        // target.setQueryUrn(queryUrn);
+
+        // GPE: surveyCode -> JSON-stat: extension - datasetid
+        target.setSurveyCode(jsonStatDataStructure.getExtension().getDatasetId());
+
+        // GPE: surveyTitle -> JSON-stat: extension - survey
+        target.setSurveyTitle(jsonStatDataStructure.getExtension().getSurvey());
+
+        // GPE: publishers -> JSON-stat: source (Ojo multiples publishers)
+        target.setPublishers(Arrays.asList(jsonStatDataStructure.getSource()));
+
+        // GPE: temporals -> JSON-stat: role - time (Ojo multiples temporals y time)
+        target.setTemporalVariable(jsonStatDataStructure.getRole().get("time").get(0));
+
+        // Nulos al igual que en GPE?
+        // target.setTemporalValue(temporalValue);
+        // target.setGeographicalValueDto(geographicalValueDto);
+
+        // GPE: spatials -> JSON-stat: ?
+        // target.setSpatialVariables(spatialVariables);
+
+        // GPE: categories - variable -> JSON-stat: dimension - label
+        target.setVariables(jsonStatDataStructure.getVariables());
+
+        // GPE: categories - codes -> JSON-stat: dimension - category - index
+        target.setValueCodes(jsonStatDataStructure.getValueCodes());
+
+        // GPE: categories - labels -> JSON-stat: dimension - category - label
+        target.setValueLabels(jsonStatDataStructure.getValueLabels());
+
+        // GPE: contVariable -> JSON-stat: role - metric (Ojo multiples metric)
+        target.setContVariable(jsonStatDataStructure.getRole().get("metric").get(0));
 
         return target;
     }

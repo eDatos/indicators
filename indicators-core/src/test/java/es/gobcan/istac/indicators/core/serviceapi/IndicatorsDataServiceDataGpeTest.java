@@ -286,6 +286,15 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals("Porcentaje", jsonStatData.getDimension("Datos").getCategory().getUnit("Tvar_a").getBase());
             assertEquals(Integer.valueOf(2), jsonStatData.getDimension("Datos").getCategory().getUnit("Tvar_a").getDecimals());
 
+            assertEquals("I208004_n100", jsonStatData.getExtension().getDatasetId());
+            assertEquals("es", jsonStatData.getExtension().getLang());
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT)#Teléfono: +34 971 784 575#Correo electrónico: info@ibestat.caib.es#http://www.ibestat.cat",
+                    jsonStatData.getExtension().getContact());
+            assertEquals("Gasto de los turistas con destino principal las Illes Balears (EGATUR)", jsonStatData.getExtension().getSurvey());
+            assertEquals("", jsonStatData.getExtension().getBasePeriod());
+            assertEquals(2, jsonStatData.getExtension().getMetadata().size());
+            assertEquals("Gasto de los turistas extranjeros por periodo y Comunidad Autónoma de destino principal.", jsonStatData.getExtension().getMetadata().get(0).getTitle());
+            assertEquals("http://www.ibestat.com/ibestat/service/ibestat/pxcontent/68904221-f893-456c-8046-261150ba9a2e/I208004_n100.px", jsonStatData.getExtension().getMetadata().get(0).getHref());
         }
 
         {
@@ -326,6 +335,16 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
             assertEquals("Porcentaje", jsonStatData.getDimension("Datos").getCategory().getUnit("varActual").getBase());
             assertEquals(Integer.valueOf(1), jsonStatData.getDimension("Datos").getCategory().getUnit("varActual").getDecimals());
+
+            assertEquals("E30138_16003", jsonStatData.getExtension().getDatasetId());
+            assertEquals("es", jsonStatData.getExtension().getLang());
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT)#Teléfono: +34 971 784 575#Correo electrónico: info@ibestat.caib.es#http://www.ibestat.cat",
+                    jsonStatData.getExtension().getContact());
+            assertEquals("Índice de precios de consumo (IPC)", jsonStatData.getExtension().getSurvey());
+            assertEquals("2016", jsonStatData.getExtension().getBasePeriod());
+            assertEquals(2, jsonStatData.getExtension().getMetadata().size());
+            assertEquals("Índice de precios y tasas de variación por periodo, Illes Balears/nacional y rúbricas.", jsonStatData.getExtension().getMetadata().get(0).getTitle());
+            assertEquals("http://www.ibestat.com/ibestat/service/ibestat/pxcontent/c2618af7-7b42-4510-b759-0f4ae59f41e6/E30138_16003.px", jsonStatData.getExtension().getMetadata().get(0).getHref());
         }
 
         {
@@ -363,6 +382,16 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
             assertEquals("Número de personas", jsonStatData.getDimension("Datos").getCategory().getUnit("aux").getBase());
             assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getUnit("aux").getDecimals());
+
+            assertEquals("E30467_00001", jsonStatData.getExtension().getDatasetId());
+            assertEquals("es", jsonStatData.getExtension().getLang());
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT)#Teléfono: +34 971 784 575#Correo electrónico: info@ibestat.caib.es#http://www.ibestat.cat",
+                    jsonStatData.getExtension().getContact());
+            assertEquals("Estadística de menores", jsonStatData.getExtension().getSurvey());
+            assertEquals("", jsonStatData.getExtension().getBasePeriod());
+            assertEquals(2, jsonStatData.getExtension().getMetadata().size());
+            assertEquals("Menores condenados por sexo, nacionalidad y año.", jsonStatData.getExtension().getMetadata().get(0).getTitle());
+            assertEquals("http://www.ibestat.com/ibestat/service/ibestat/pxcontent/c0058c2d-6a0e-4261-9629-db2595d32434/E30467_00001.px", jsonStatData.getExtension().getMetadata().get(0).getHref());
         }
 
         {
@@ -400,6 +429,16 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
             assertEquals("Número de empresas", jsonStatData.getDimension("Datos").getCategory().getUnit("nif_b").getBase());
             assertEquals(Integer.valueOf(0), jsonStatData.getDimension("Datos").getCategory().getUnit("nif_b").getDecimals());
+
+            assertEquals("I216019_0012", jsonStatData.getExtension().getDatasetId());
+            assertEquals("es", jsonStatData.getExtension().getLang());
+            assertEquals("Institut d'Estadística de les Illes Balears (IBESTAT)#Teléfono: +34 971 784 575#Correo electrónico: info@ibestat.caib.es#http://www.ibestat.cat",
+                    jsonStatData.getExtension().getContact());
+            assertEquals("Demografía de las empresas inscritas en la Seguridad Social", jsonStatData.getExtension().getSurvey());
+            assertEquals("", jsonStatData.getExtension().getBasePeriod());
+            assertEquals(2, jsonStatData.getExtension().getMetadata().size());
+            assertEquals("Demografía de las empresas inscritas en la Seguridad Social por periodo e isla de localización de la empresa.", jsonStatData.getExtension().getMetadata().get(0).getTitle());
+            assertEquals("http://www.ibestat.com/ibestat/service/ibestat/pxcontent/898714f0-bfa5-4dc8-b711-e6155b78bcee/I216019_0012.px", jsonStatData.getExtension().getMetadata().get(0).getHref());
         }
 
     }
