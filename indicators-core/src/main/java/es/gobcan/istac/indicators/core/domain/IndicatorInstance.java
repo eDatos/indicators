@@ -25,11 +25,7 @@ public class IndicatorInstance extends IndicatorInstanceBase {
 
     public void setTimeValuesAsList(List<String> timeValuesList) throws MetamacException {
         if (timeValuesList != null && timeValuesList.size() > 0) {
-            List<String> convertedTimeValuesList = new ArrayList<String>();
-            for (String timeValueStr : timeValuesList) {
-                convertedTimeValuesList.add(MetamacTimeUtils.normalizeToMetamacTimeValue(timeValueStr));
-            }
-            setTimeValues(StringUtils.join(convertedTimeValuesList, "#"));
+            setTimeValues(StringUtils.join(MetamacTimeUtils.normalizeToMetamacTimeValues(timeValuesList), "#"));
         } else {
             setTimeValues(null);
         }
