@@ -2,17 +2,19 @@ package es.gobcan.istac.indicators.core.domain.jsonstat;
 
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class JsonStatCategory {
 
-    @JsonProperty("index")
+    @JsonProperty
     private Map<String, Integer>      index;
 
-    @JsonProperty("label")
+    @JsonProperty
     private Map<String, String>       label;
 
-    @JsonProperty("unit")
+    @JsonProperty
     private Map<String, JsonStatUnit> unit;
 
     public Map<String, Integer> getIndex() {
@@ -49,5 +51,10 @@ public class JsonStatCategory {
 
     public JsonStatUnit getUnit(String key) {
         return unit.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
     }
 }

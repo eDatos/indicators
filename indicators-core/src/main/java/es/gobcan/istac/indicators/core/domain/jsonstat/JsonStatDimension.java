@@ -1,13 +1,15 @@
 package es.gobcan.istac.indicators.core.domain.jsonstat;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class JsonStatDimension {
 
-    @JsonProperty("label")
+    @JsonProperty
     private String           label;
 
-    @JsonProperty("category")
+    @JsonProperty
     private JsonStatCategory category;
 
     public String getLabel() {
@@ -26,4 +28,8 @@ public class JsonStatDimension {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    }
 }

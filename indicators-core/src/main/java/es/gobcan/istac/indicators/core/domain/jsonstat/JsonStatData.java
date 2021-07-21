@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonStatData {
 
     /*
@@ -18,7 +18,7 @@ public class JsonStatData {
      * Children: None
      */
     @JsonProperty
-    private String                    version;
+    private String            version;
 
     /*
      * Attribute: class
@@ -28,7 +28,76 @@ public class JsonStatData {
      * Children: None
      */
     @JsonProperty("class")
-    private String                    clazz;
+    private String            clazz;
+
+    /*
+     * Attribute: category
+     * Required
+     * Data type: Object
+     * Parents: Root, dimension ID and relation ID array element
+     * Children: index, label, child, coordinates and unit
+     */
+    @JsonProperty
+    private String            label;
+
+    /*
+     * Attribute: source
+     * Optional
+     * Data type: String
+     * Parents: Root, dimension ID and relation ID array element
+     * Children: None
+     */
+    @JsonProperty
+    private String            source;
+
+    /*
+     * Attribute: updated
+     * Optional
+     * Data type: String
+     * Parents: Root, dimension ID and relation ID array element
+     * Children: None
+     */
+    @JsonProperty
+    private String            updated;
+
+    @JsonProperty
+    private JsonStatExtension extension;
+
+    /*
+     * Attribute: note
+     * Optional
+     * Data type: Array / Object
+     * Parents: None, dimension ID, category and relation ID
+     * Children: None
+     */
+    @JsonProperty
+    private List<String>      note;
+
+    /*
+     * Attribute: value
+     * Required
+     * Data type: Array / Object
+     * Parents: Root, Relation ID array element
+     * Children: None
+     */
+    private List<String>      value = new ArrayList();
+
+    @JsonProperty("value")
+    public void processValue(List<Object> values) {
+        for (Object object : values) {
+            value.add(object.toString());
+        }
+    }
+
+    /*
+     * Attribute: status
+     * Optional
+     * Data type: Array / Object / String
+     * Parents: Root, Relation ID array element
+     * Children: None
+     */
+    @JsonProperty
+    private Map<String, String>            status;
 
     /*
      * Attribute: id
@@ -38,7 +107,7 @@ public class JsonStatData {
      * Children: None
      */
     @JsonProperty
-    private List<String>              id;
+    private List<String>                   id;
 
     /*
      * Attribute: size
@@ -48,7 +117,7 @@ public class JsonStatData {
      * Children: None
      */
     @JsonProperty
-    private List<String>              size;
+    private List<String>                   size;
 
     /*
      * Attribute: role
@@ -57,8 +126,8 @@ public class JsonStatData {
      * Parents: Root whet class "dataset", Relation ID array element
      * Children: time, geo and metric
      */
-    @JsonProperty("role")
-    private Map<String, List<String>> role;
+    @JsonProperty
+    private Map<String, List<String>>      role;
 
     /*
      * Attribute: role - time
@@ -88,39 +157,13 @@ public class JsonStatData {
     // TODO EDATOS-3388
 
     /*
-     * Attribute: value
-     * Required
-     * Data type: Array / Object
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
-    private List<String>              value = new ArrayList();
-
-    @JsonProperty("value")
-    public void processValue(List<Object> values) {
-        for (Object object : values) {
-            value.add(object.toString());
-        }
-    }
-
-    /*
-     * Attribute: status
-     * Optional
-     * Data type: Array / Object / String
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
-    @JsonProperty("status")
-    private Map<String, String>            status;
-
-    /*
      * Attribute: dimension
      * Required
      * Data type: Object
      * Parents: Root, Relation ID array element
      * Children: dimension ID
      */
-    @JsonProperty("dimension")
+    @JsonProperty
     private Map<String, JsonStatDimension> dimension;
 
     /*
@@ -131,16 +174,6 @@ public class JsonStatData {
      * Children: category, label and class
      */
     // TODO EDATOS-3388
-
-    /*
-     * Attribute: category
-     * Required
-     * Data type: Object
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: index, label, child, coordinates and unit
-     */
-    @JsonProperty("label")
-    private String                         label;
 
     /*
      * Attribute: index
@@ -215,26 +248,6 @@ public class JsonStatData {
     // TODO EDATOS-3388
 
     /*
-     * Attribute: updated
-     * Optional
-     * Data type: String
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: None
-     */
-    @JsonProperty
-    private String                         updated;
-
-    /*
-     * Attribute: source
-     * Optional
-     * Data type: String
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: None
-     */
-    @JsonProperty
-    private String                         source;
-
-    /*
      * Attribute: extension
      * Optional
      * Data type: Object
@@ -279,16 +292,6 @@ public class JsonStatData {
      * Children: None
      */
     // TODO EDATOS-3388
-
-    /*
-     * Attribute: note
-     * Optional
-     * Data type: Array / Object
-     * Parents: None, dimension ID, category and relation ID
-     * Children: None
-     */
-    @JsonProperty("note")
-    private List<String>                   note;
 
     /*
      * Attribute: error
@@ -405,6 +408,19 @@ public class JsonStatData {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public JsonStatExtension getExtension() {
+        return extension;
+    }
+
+    public void setExtension(JsonStatExtension extension) {
+        this.extension = extension;
+    }
+
+    @Override
+    public String toString() {
+        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
     }
 
 }

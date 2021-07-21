@@ -208,7 +208,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
-            return jsonToJsonStatDataStructure(json);
+            JsonStatData jsonStatData = jsonToJsonStatDataStructure(json);
+            LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
+            return jsonStatData;
         } catch (Exception e) {
             LOG.error("Unexpected error occurred retriving JSON-stat file: " + uuid, e);
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);

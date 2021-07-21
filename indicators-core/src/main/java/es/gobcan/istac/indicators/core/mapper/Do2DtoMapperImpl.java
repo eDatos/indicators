@@ -39,9 +39,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
-import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatCategory;
 import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
-import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatDimension;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -466,74 +464,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
     @Override
     public DataStructureDto dataStructureDoToDto(JsonStatData jsonStatDataStructure) {
-        // TODO EDATOS-3388 Clean this!
+        DataStructureDto target = new DataStructureDto();
+        // TODO EDATOS-3388 Matching attributes
 
-        System.out.println("Version: " + jsonStatDataStructure.getVersion());
-        System.out.println("Class: " + jsonStatDataStructure.getClazz());
-        System.out.println("Label: " + jsonStatDataStructure.getLabel());
-
-        for (String id : jsonStatDataStructure.getId()) {
-            System.out.println("Id: " + id);
-        }
-
-        for (String size : jsonStatDataStructure.getSize()) {
-            System.out.println("Size: " + size);
-        }
-
-        for (String value : jsonStatDataStructure.getValue()) {
-            System.out.println("Value: " + value);
-        }
-
-        for (String key : jsonStatDataStructure.getStatus().keySet()) {
-            System.out.println("Key: " + key + " Value: " + jsonStatDataStructure.getStatus().get(key));
-        }
-
-        for (String key : jsonStatDataStructure.getRole().keySet()) {
-            for (String value : jsonStatDataStructure.getRole().get(key)) {
-                System.out.println("Key: " + key + " Value: " + value);
-            }
-        }
-
-        if (jsonStatDataStructure.getNote() != null) {
-            for (String value : jsonStatDataStructure.getNote()) {
-                System.out.println("Note: " + value);
-            }
-        }
-
-        for (String key : jsonStatDataStructure.getDimension().keySet()) {
-            System.out.println("Key: " + key);
-            JsonStatDimension jsonStatDimension = jsonStatDataStructure.getDimension().get(key);
-            System.out.println("Label: " + jsonStatDimension.getLabel());
-            JsonStatCategory jsonStatCategory = jsonStatDimension.getCategory();
-
-            if (jsonStatCategory.getIndex() != null) {
-                for (String keyIndex : jsonStatCategory.getIndex().keySet()) {
-                    System.out.println("Key Index: " + keyIndex + " Index " + jsonStatCategory.getIndex().get(keyIndex));
-                }
-            }
-
-            if (jsonStatCategory.getLabel() != null) {
-                for (String keyLabel : jsonStatCategory.getLabel().keySet()) {
-                    System.out.println("Key label: " + keyLabel + " Label: " + jsonStatCategory.getLabel().get(keyLabel));
-                }
-            }
-
-            if (jsonStatCategory.getUnit() != null) {
-                for (String keyUnit : jsonStatCategory.getUnit().keySet()) {
-                    System.out.println("Key Unit: " + keyUnit + " Base: " + jsonStatCategory.getUnit().get(keyUnit).getBase() + " Decimals: " + jsonStatCategory.getUnit().get(keyUnit).getDecimals());
-                }
-            }
-        }
-
-        for (String key : jsonStatDataStructure.getRole().keySet()) {
-
-        }
-
-        System.out.println("Updated: " + jsonStatDataStructure.getUpdated());
-        System.out.println("Source: " + jsonStatDataStructure.getSource());
-        System.out.println("Href: " + jsonStatDataStructure.getHref());
-
-        return null;
+        return target;
     }
 
     @Override

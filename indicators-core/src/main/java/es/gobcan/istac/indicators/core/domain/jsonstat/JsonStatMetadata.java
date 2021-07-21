@@ -4,28 +4,27 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class JsonStatUnit {
+public class JsonStatMetadata {
 
     @JsonProperty
-    private String  base;
-
+    private String title;
     @JsonProperty
-    private Integer decimals;
+    private String href;
 
-    public String getBase() {
-        return base;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBase(String base) {
-        this.base = base;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Integer getDecimals() {
-        return decimals;
+    public String getHref() {
+        return href;
     }
 
-    public void setDecimals(Integer decimals) {
-        this.decimals = decimals;
+    public void setHref(String href) {
+        this.href = href;
     }
 
     @Override

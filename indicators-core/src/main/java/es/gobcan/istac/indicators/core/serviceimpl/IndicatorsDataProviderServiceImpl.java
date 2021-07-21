@@ -65,15 +65,17 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
 
     @Override
     public String retrieveJsonStat(ServiceContext ctx, String uuid) throws MetamacException {
-        LOG.info("Retriving JSON-stat from URL: " + uuid);
         try (InputStream inputStream = new URL(uuid).openStream(); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+            LOG.info("Retriving JSON-stat from URL: {}", uuid);
 
             StringBuilder sb = new StringBuilder();
             int cp;
             while ((cp = bufferedReader.read()) != -1) {
                 sb.append((char) cp);
             }
-            LOG.info("Retrieved JSON-stat from URL: " + uuid);
+
+            LOG.info("Retrieved JSON-stat from URL: {}", uuid);
+
             return sb.toString();
         } catch (Exception e) { // TODO EDATOS-3388 JSONSTAT EXCEPTION?
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
