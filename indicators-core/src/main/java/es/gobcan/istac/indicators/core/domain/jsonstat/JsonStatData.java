@@ -479,6 +479,22 @@ public class JsonStatData {
         valueCodes.put(var, labels);
     }
 
+    public String getTemporalVariable() {
+        return role.get("time").get(0);
+    }
+
+    public String getContVariable() {
+        return role.get("metric").get(0);
+    }
+
+    public String getSurveyCode() {
+        return extension.getDatasetId();
+    }
+
+    public String getSurveyTitle() {
+        return extension.getDatasetId();
+    }
+
     @Override
     public String toString() {
         return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();

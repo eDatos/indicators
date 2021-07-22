@@ -464,7 +464,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(JsonStatData jsonStatDataStructure) {
+    public DataStructureDto dataStructureDoToDto(JsonStatData jsonStatData) {
         DataStructureDto target = new DataStructureDto();
 
         // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
@@ -472,22 +472,22 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         // target.setUuid(uuid);
 
         // GPE: title -> JSON-stat: label
-        target.setTitle(jsonStatDataStructure.getLabel());
+        target.setTitle(jsonStatData.getLabel());
 
         // GPE: uriPx -> JSON-stat: ???
         // target.setQueryUrn(queryUrn);
 
         // GPE: surveyCode -> JSON-stat: extension - datasetid
-        target.setSurveyCode(jsonStatDataStructure.getExtension().getDatasetId());
+        target.setSurveyCode(jsonStatData.getSurveyCode());
 
         // GPE: surveyTitle -> JSON-stat: extension - survey
-        target.setSurveyTitle(jsonStatDataStructure.getExtension().getSurvey());
+        target.setSurveyTitle(jsonStatData.getExtension().getSurvey());
 
         // GPE: publishers -> JSON-stat: source (Ojo multiples publishers)
-        target.setPublishers(Arrays.asList(jsonStatDataStructure.getSource()));
+        target.setPublishers(Arrays.asList(jsonStatData.getSource()));
 
         // GPE: temporals -> JSON-stat: role - time (Ojo multiples temporals y time)
-        target.setTemporalVariable(jsonStatDataStructure.getRole().get("time").get(0));
+        target.setTemporalVariable(jsonStatData.getTemporalVariable());
 
         // Nulos al igual que en GPE?
         // target.setTemporalValue(temporalValue);
@@ -497,16 +497,16 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         // target.setSpatialVariables(spatialVariables);
 
         // GPE: categories - variable -> JSON-stat: dimension - label
-        target.setVariables(jsonStatDataStructure.getVariables());
+        target.setVariables(jsonStatData.getVariables());
 
         // GPE: categories - codes -> JSON-stat: dimension - category - index
-        target.setValueCodes(jsonStatDataStructure.getValueCodes());
+        target.setValueCodes(jsonStatData.getValueCodes());
 
         // GPE: categories - labels -> JSON-stat: dimension - category - label
-        target.setValueLabels(jsonStatDataStructure.getValueLabels());
+        target.setValueLabels(jsonStatData.getValueLabels());
 
         // GPE: contVariable -> JSON-stat: role - metric (Ojo multiples metric)
-        target.setContVariable(jsonStatDataStructure.getRole().get("metric").get(0));
+        target.setContVariable(jsonStatData.getContVariable());
 
         return target;
     }

@@ -48,4 +48,8 @@ public class JsonStatSearchWindow extends CustomWindow {
         return form.validate();
     }
 
+    public String getJsonStatUrl() {
+        return form.getValueAsString(DataSourceDS.QUERY_JSON_STAT);
+    }
+
 }

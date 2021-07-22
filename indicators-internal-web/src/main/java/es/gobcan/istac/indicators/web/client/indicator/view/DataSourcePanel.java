@@ -605,6 +605,8 @@ public class DataSourcePanel extends VLayout {
         });
 
         // Query from JSON STAT
+        RequiredTextItem jsonStatRequiredTextItem = new RequiredTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
+        jsonStatRequiredTextItem.setShowIfCondition(CommonUtils.getFalseIfFunction());
         SearchViewTextItem queryJsonStatItem = getQueryJsonStatItem();
         queryJsonStatItem.setShowIfCondition(new FormItemIfFunction() {
 
@@ -759,8 +761,9 @@ public class DataSourcePanel extends VLayout {
         // timeValue, timeValueMetamac, timeValueJsonStat, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueJsonStat, geographicalValueUUIDMetamac,
         // measureVariable, variables);
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable,
-                timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable, variables);
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
+                publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
+                variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -967,7 +970,7 @@ public class DataSourcePanel extends VLayout {
 
     private SearchViewTextItem getQueryJsonStatItem() {
         SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
-        query.setRequired(true);
+        query.setRequired(false);
 
         query.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
@@ -980,8 +983,7 @@ public class DataSourcePanel extends VLayout {
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (jsonStatSearchWindow.validateForm()) {
-                            uiHandlers
-                                    .retrieveDataStructure("https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/68904221-f893-456c-8046-261150ba9a2e/IBESTAT_I208004_n100_2020_11_25.json");
+                            uiHandlers.retrieveDataStructure(jsonStatSearchWindow.getJsonStatUrl());
                             // TODO EDATOS-3388 Aqui tendrás que hacer algo mi hermano
                             jsonStatSearchWindow.destroy();
                         }

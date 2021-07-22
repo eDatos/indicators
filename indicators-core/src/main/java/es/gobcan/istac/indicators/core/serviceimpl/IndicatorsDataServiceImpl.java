@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static org.siemac.edatos.core.common.constants.shared.RegularExpressionConstants.REG_EXP_URL;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -90,6 +92,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -208,7 +211,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
-            JsonStatData jsonStatData = jsonToJsonStatDataStructure(json);
+            JsonStatData jsonStatData = jsonToJsonStatData(json);
             LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
             return jsonStatData;
         } catch (Exception e) {
@@ -1550,6 +1553,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
+                    } else if (dataSource.getQueryUuid().matches(REG_EXP_URL)) { // TODO EDATOS-3388 check this expression!
+                        String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
+                        JsonStatData jsonStatData = jsonToJsonStatData(json);
+                        // TODO EDATOS-3388 convertir el JsonStatData a Data?
+                        data = JsonStatUtils.jsonStatDataToData(jsonStatData);
+
                     } else {
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
@@ -1981,7 +1990,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return target;
     }
 
-    private JsonStatData jsonToJsonStatDataStructure(String json) throws IOException {
+    private JsonStatData jsonToJsonStatData(String json) throws IOException {
         return mapper.readValue(json, JsonStatData.class);
     }
 
