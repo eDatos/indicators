@@ -18,7 +18,7 @@
 </div>
 
 <script src="${serverURL}/theme/js/app.min.js"></script>
-<script src="http://localhost:8084/api/captcha/authentication.js"></script> <!-- FIXME: set the src with a metadata property -->
+<script src="${captchaExternalApiUrlBase}/authentication.js"></script>
 
 <script>
     var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";

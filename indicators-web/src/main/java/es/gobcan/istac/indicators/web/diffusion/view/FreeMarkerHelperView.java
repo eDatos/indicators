@@ -38,6 +38,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
+        model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
 
@@ -116,6 +117,10 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private String getPermalinksUrlBaseWithProtocol() throws MetamacException {
         return removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
+    }
+
+    private String getCaptchaExternalApiUrlBase() throws MetamacException {
+        return removeLastSlashInUrl(configurationService.retrieveCaptchaExternalApiUrlBase());
     }
 
     private String removeUrlProtocol(String url) {
