@@ -94,7 +94,7 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
 
     // DataStructure
     DataStructureDto dataStructureDoToDto(DataStructure source);
-    DataStructureDto dataStructureDoToDto(JsonStatData jsonStatDataStructure);
+    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure);
 
     // Data
     DataDto dataDoToDto(Data source);

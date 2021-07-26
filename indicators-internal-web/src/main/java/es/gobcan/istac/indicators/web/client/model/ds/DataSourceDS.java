@@ -13,7 +13,6 @@ public class DataSourceDS extends DataSource {
     public static String PX                                = "ds-px";
     public static String QUERY_METAMAC                     = "ds-query-metamac";
     public static String QUERY_ENVIRONMENT                 = "ds-query-environment";
-    public static String QUERY_JSON_STAT                   = "ds-query-json-stat";
 
     public static String ABSOLUTE_METHOD                   = "ds-abs-met";
     public static String ABSOLUTE_METHOD_VIEW              = "ds-abs-met-view";

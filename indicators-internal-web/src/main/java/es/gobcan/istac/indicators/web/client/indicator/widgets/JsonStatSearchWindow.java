@@ -25,7 +25,7 @@ public class JsonStatSearchWindow extends CustomWindow {
         setHeight(150);
         setWidth(780);
 
-        RequiredTextItem jsonStatItem = new RequiredTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
+        RequiredTextItem jsonStatItem = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuerySelection());
         jsonStatItem.setValidators(CommonWebUtils.getUrlValidator());
         jsonStatItem.setWidth(690);
 
@@ -49,7 +49,7 @@ public class JsonStatSearchWindow extends CustomWindow {
     }
 
     public String getJsonStatUrl() {
-        return form.getValueAsString(DataSourceDS.QUERY_JSON_STAT);
+        return form.getValueAsString(DataSourceDS.QUERY_UUID);
     }
 
 }

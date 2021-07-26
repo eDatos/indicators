@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
@@ -34,7 +35,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
                 if (!StringUtils.isEmpty(valueAsString)) {
-                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
                     if (QueryEnvironmentEnum.GPE.equals(queryEnvironmentEnum)) {
                         return true;
                     }
@@ -50,7 +51,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
                 if (!StringUtils.isEmpty(valueAsString)) {
-                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
                     if (QueryEnvironmentEnum.METAMAC.equals(queryEnvironmentEnum)) {
                         return true;
                     }
@@ -59,14 +60,14 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             }
         });
 
-        ViewTextItem queryJsonStat = new ViewTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuery());
+        ViewTextItem queryJsonStat = new ViewTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuery());
         queryJsonStat.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
                 if (!StringUtils.isEmpty(valueAsString)) {
-                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
                     if (QueryEnvironmentEnum.JSON_STAT.equals(queryEnvironmentEnum)) {
                         return true;
                     }
@@ -138,7 +139,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
     }
 
     public void setValue(DataSourceDto dataSourceDto) {
-        setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().toString() : StringUtils.EMPTY);
+        setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().getValue() : StringUtils.EMPTY);
 
         setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
         if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment())) {
@@ -146,7 +147,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         }
 
         if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
-            setValue(DataSourceDS.QUERY_JSON_STAT, dataSourceDto.getQueryUuid());
+            setValue(DataSourceDS.QUERY_UUID, dataSourceDto.getQueryUuid());
         }
 
         setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());

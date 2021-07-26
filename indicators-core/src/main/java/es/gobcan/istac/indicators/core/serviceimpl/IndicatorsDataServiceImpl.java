@@ -1557,7 +1557,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
                         // TODO EDATOS-3388 convertir el JsonStatData a Data?
-                        data = JsonStatUtils.jsonStatDataToData(jsonStatData);
+                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
 
                     } else {
                         // GPE-JAXI

@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.core.mapper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -66,6 +65,7 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
@@ -464,37 +464,34 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(JsonStatData jsonStatData) {
+    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
         DataStructureDto target = new DataStructureDto();
 
         // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
-        // GPE: uuid -> JSON-stat: ???
-        // target.setUuid(uuid);
+        // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
+        target.setUuid(uuid);
 
         // GPE: title -> JSON-stat: label
         target.setTitle(jsonStatData.getLabel());
 
-        // GPE: uriPx -> JSON-stat: ???
-        // target.setQueryUrn(queryUrn);
+        // GPE: uriPx -> JSON-stat: extension -> metadata (Ojo multiples elementos)
+        // CAMBIAR! (uuid/datasetid)
+        target.setQueryUrn(jsonStatData.getUriPx());
 
         // GPE: surveyCode -> JSON-stat: extension - datasetid
-        target.setSurveyCode(jsonStatData.getSurveyCode());
+        target.setSurveyCode(JsonStatUtils.getOperationCode(jsonStatData.getSurveyCode()));
 
         // GPE: surveyTitle -> JSON-stat: extension - survey
-        target.setSurveyTitle(jsonStatData.getExtension().getSurvey());
+        target.setSurveyTitle(jsonStatData.getSurveyTitle());
 
-        // GPE: publishers -> JSON-stat: source (Ojo multiples publishers)
-        target.setPublishers(Arrays.asList(jsonStatData.getSource()));
+        // GPE: publishers -> JSON-stat: source
+        target.setPublishers(JsonStatUtils.toList(jsonStatData.getSource()));
 
-        // GPE: temporals -> JSON-stat: role - time (Ojo multiples temporals y time)
+        // GPE: temporals -> JSON-stat: role - time (primer elemento)
         target.setTemporalVariable(jsonStatData.getTemporalVariable());
 
-        // Nulos al igual que en GPE?
-        // target.setTemporalValue(temporalValue);
-        // target.setGeographicalValueDto(geographicalValueDto);
-
-        // GPE: spatials -> JSON-stat: ?
-        // target.setSpatialVariables(spatialVariables);
+        // GPE: spatials -> JSON-stat: role - geo (primer elemento)
+        target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
 
         // GPE: categories - variable -> JSON-stat: dimension - label
         target.setVariables(jsonStatData.getVariables());
@@ -505,7 +502,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         // GPE: categories - labels -> JSON-stat: dimension - category - label
         target.setValueLabels(jsonStatData.getValueLabels());
 
-        // GPE: contVariable -> JSON-stat: role - metric (Ojo multiples metric)
+        // GPE: contVariable -> JSON-stat: role - metric (primer elemento)
         target.setContVariable(jsonStatData.getContVariable());
 
         return target;

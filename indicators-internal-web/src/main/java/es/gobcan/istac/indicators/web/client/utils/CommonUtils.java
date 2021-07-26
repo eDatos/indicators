@@ -227,6 +227,15 @@ public class CommonUtils {
         return valueMap;
     }
 
+    public static QueryEnvironmentEnum getQueryEnvironmentEnumValue(String valueAsString) {
+        for (QueryEnvironmentEnum value : QueryEnvironmentEnum.values()) {
+            if (value.getValue().equalsIgnoreCase(valueAsString)) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     public static LinkedHashMap<String, String> getRateDerivationRoundingValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());

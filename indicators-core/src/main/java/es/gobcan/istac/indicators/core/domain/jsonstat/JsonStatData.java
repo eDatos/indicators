@@ -480,11 +480,22 @@ public class JsonStatData {
     }
 
     public String getTemporalVariable() {
-        return role.get("time").get(0);
+        return getRole("time");
     }
 
     public String getContVariable() {
-        return role.get("metric").get(0);
+        return getRole("metric");
+    }
+
+    public String getSpatialVariable() {
+        return getRole("geo");
+    }
+
+    private String getRole(String requestedRole) {
+        if (role.containsKey(requestedRole)) {
+            return role.get(requestedRole).get(0);
+        }
+        return null;
     }
 
     public String getSurveyCode() {
@@ -492,12 +503,15 @@ public class JsonStatData {
     }
 
     public String getSurveyTitle() {
-        return extension.getDatasetId();
+        return extension.getSurvey();
+    }
+
+    public String getUriPx() {
+        return extension.getMetadata().get(0).getHref();
     }
 
     @Override
     public String toString() {
         return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
     }
-
 }

@@ -261,8 +261,6 @@ public class DataSourcePanel extends VLayout {
         if (generalEditionForm.isVisible()) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setQueryUuid(dataStructureDtoEdition.getQueryUrn());
-            } else if (QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
-                // dataSourceDto.setQueryUuid(dataStructureDtoEdition.getQueryUrn()); TODO EDATOS-3288: aquí digo que tendras que hacer algo no?
             } else {
                 dataSourceDto.setQueryUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
             }
@@ -604,8 +602,9 @@ public class DataSourcePanel extends VLayout {
 
         });
 
+        // TODO EDATOS-3388 Usar los mismos campos que se utiliza para GPE o usar nuevos campos? Parece más viable usar los nuevos campos..
         // Query from JSON STAT
-        RequiredTextItem jsonStatRequiredTextItem = new RequiredTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
+        RequiredTextItem jsonStatRequiredTextItem = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuerySelection());
         jsonStatRequiredTextItem.setShowIfCondition(CommonUtils.getFalseIfFunction());
         SearchViewTextItem queryJsonStatItem = getQueryJsonStatItem();
         queryJsonStatItem.setShowIfCondition(new FormItemIfFunction() {
@@ -640,7 +639,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) && dataStructureHasTimeValue();
+                return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasTimeValue();
             }
         });
         timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
@@ -653,17 +652,6 @@ public class DataSourcePanel extends VLayout {
                 return isEnvironmentSelected(form, QueryEnvironmentEnum.METAMAC) && dataStructureHasTimeValue();
             }
         });
-
-        // TODO EDATOS-3388: y aqui que?
-        // RequiredTextItem timeValueJsonStat = new RequiredTextItem(DataSourceDS.TIME_VALUE_JSON_STAT, getConstants().dataSourceTimeValue());
-        // timeValueJsonStat.setShowIfCondition(new FormItemIfFunction() {
-        //
-        // @Override
-        // public boolean execute(FormItem item, Object value, DynamicForm form) {
-        // return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT) && dataStructureHasTimeValue();
-        // }
-        // });
-        // timeValueJsonStat.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
         SelectItem geographicalVariable = new SelectItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
         geographicalVariable.setRequired(true);
@@ -696,7 +684,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) && dataStructureHasGeoValue();
+                return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasGeoValue();
             }
         });
         geographicalValueMulti.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
@@ -722,16 +710,6 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        // TODO EDATOS-3388: y aqui que?
-        // ViewTextItem geographicalValueJsonStat = new ViewTextItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT, getConstants().dataSourceGeographicalValue());
-        // geographicalValueJsonStat.setShowIfCondition(new FormItemIfFunction() {
-        //
-        // @Override
-        // public boolean execute(FormItem item, Object value, DynamicForm form) {
-        // return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT) && dataStructureHasGeoValue();
-        // }
-        // });
-
         HiddenItem geographicalValueUUIDMetamac = new HiddenItem(DataSourceDS.GEO_VALUE_UUID_METAMAC);
 
         ViewTextItem measureVariable = new ViewTextItem(DataSourceDS.MEASURE_VARIABLE, getConstants().dataSourceMeasureVariable());
@@ -756,10 +734,6 @@ public class DataSourcePanel extends VLayout {
                 return false;
             }
         });
-
-        // generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable,
-        // timeValue, timeValueMetamac, timeValueJsonStat, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueJsonStat, geographicalValueUUIDMetamac,
-        // measureVariable, variables);
 
         generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
                 publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
@@ -969,8 +943,8 @@ public class DataSourcePanel extends VLayout {
     }
 
     private SearchViewTextItem getQueryJsonStatItem() {
-        SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_JSON_STAT, getConstants().dataSourceQuerySelection());
-        query.setRequired(false);
+        SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuerySelection());
+        query.setRequired(true);
 
         query.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
 
@@ -983,9 +957,13 @@ public class DataSourcePanel extends VLayout {
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (jsonStatSearchWindow.validateForm()) {
-                            uiHandlers.retrieveDataStructure(jsonStatSearchWindow.getJsonStatUrl());
-                            // TODO EDATOS-3388 Aqui tendrás que hacer algo mi hermano
+                            String jsonStatUrl = jsonStatSearchWindow.getJsonStatUrl();
+                            uiHandlers.retrieveDataStructure(jsonStatUrl);
                             jsonStatSearchWindow.destroy();
+                            generalEditionForm.setValue(DataSourceDS.QUERY_UUID, jsonStatUrl);
+                            generalEditionForm.setValue(DataSourceDS.QUERY_TEXT, jsonStatUrl);
+                            generalEditionForm.getItem(DataSourceDS.QUERY_TEXT).validate();
+                            // TODO EDATOS-3388 Aqui tendrás que hacer algo mi hermano
                         }
 
                     }
