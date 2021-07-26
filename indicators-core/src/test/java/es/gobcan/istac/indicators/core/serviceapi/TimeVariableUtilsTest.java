@@ -32,6 +32,11 @@ public class TimeVariableUtilsTest {
     }
 
     @Test
+    public void testISOWeeksAreProperlyCalculated() throws MetamacException {
+        assertEquals("01", TimeVariableUtils.parseTimeValue("2055-W01").getWeek());
+    }
+
+    @Test
     public void testCompareTimeValuesLastValueWeekMonth() throws MetamacException {
         List<TimeValue> timeValues = buildTimeValues("2006", "2007", "2011M01", "2011W04");
 

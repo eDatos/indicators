@@ -71,6 +71,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR3_DS_UUID                       = "Indicator-3-v1-DataSource-1";
     private static final String              INDICATOR3_DS_GPE_UUID                   = "Indicator-3-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR3_GPE_JSON_DATA                 = readFile("json/data_temporals.json");
+    private static final String              INDICATOR3_GPE_JSON_DATA_AMBIGUOUS       = readFile("json/data_temporals_ambiguous.json");
     private static final String              INDICATOR3_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Has no geographic and temporal variables */
@@ -96,6 +97,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR7_DS_GPE_UUID                   = "Indicator-7-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR7_GPE_JSON_DATA_29FEB           = readFile("json/data_temporals_calculate_29feb.json");
     private static final String              INDICATOR7_GPE_JSON_DATA                 = readFile("json/data_temporals_calculate.json");
+    private static final String              INDICATOR7_GPE_JSON_DATA_AMBIGUOUS       = readFile("json/data_temporals_calculate_ambiguous.json");
     private static final String              INDICATOR7_VERSION                       = IndicatorsDataBaseTest.INIT_VERSION;
 
     /* Calculates all rates from two different data sources */
@@ -439,6 +441,25 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     }
 
     /*
+     * Populate data with time variables that represent the same time period (2000 and 2000-A1)
+     * This is NOT an error. The last value will prevail and on the dataset we´ll only have one entry
+     */
+    @Test
+    public void testPopulateIndicatorDataSpatialValueTemporalVariableWithAmbiguousYear() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA_AMBIGUOUS);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+
+        checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
+        List<String> data = Arrays.asList("34413");
+        checkDataObservations(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, data);
+    }
+
+    /*
      * Populate data with both, time and geographical, variables fixed
      */
     @Test
@@ -605,6 +626,39 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         List<String> interperiodPercentageRate = Arrays.asList(null, "-1.43", "23.13", null, null, "1.40", null);
         List<String> annualPuntualRate = Arrays.asList("4000", null, "555", "111", null, null, null);
         List<String> interperiodPuntualRate = Arrays.asList(null, "-36", "471", null, null, "27", null);
+
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(annualPercentageRate);
+        data.addAll(interperiodPercentageRate);
+        data.addAll(annualPuntualRate);
+        data.addAll(interperiodPuntualRate);
+
+        checkDataDimensions(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION);
+        checkDataObservations(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION, data);
+    }
+
+    /*
+     * Populate Data with All rates calculated using only one data source with absolute values
+     * Temporal values are being normalized, that's why it's able to calculate the interperiodic properly
+     */
+    @Test
+    public void testPopulateIndicatorDataCalculateAmbiguous() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA_AMBIGUOUS);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
+        /* ABSOLUTE */
+        List<String> absolute = Arrays.asList("34413", "2471", "2507", "2036", "30413", "1952", "1925");
+        List<String> annualPercentageRate = Arrays.asList("13.152", "26.588", "30.233", null, null, null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("13.15", "-1.43", "23.13", null, null, "1.40", null);
+        List<String> annualPuntualRate = Arrays.asList("4000", "519", "582", null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("4000", "-36", "471", null, null, "27", null);
 
         List<String> data = new ArrayList<String>();
         data.addAll(absolute);
