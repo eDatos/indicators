@@ -1,9 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Stack;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
@@ -11,6 +14,8 @@ import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 
 public class JsonStatUtils {
+
+    private static final Logger LOG                 = LoggerFactory.getLogger(JsonStatUtils.class);
 
     private static final String OPERATION_SEPARATOR = "_";
 
@@ -26,7 +31,7 @@ public class JsonStatUtils {
 
         // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
 
-        // QueryEnvironmentEnum
+        // JSON-stat
         target.setQueryEnvironmentEnum(QueryEnvironmentEnum.JSON_STAT);
 
         // Uuid
@@ -38,11 +43,11 @@ public class JsonStatUtils {
         // PX Uri
         // target.setPxUri(pxUri);
 
-        // Stub
-        // target.setStub(stub);
+        // Stub: Not necessary in JSON-stat
+        // target.setStub(extractStub(jsonStatData));
 
-        // Heading
-        // target.setHeading(heading);
+        // Heading: Not necessary in JSON-stat
+        // target.setHeading(extractHeading(jsonStatData));
 
         // Value Labels
         target.setValueLabels(jsonStatData.getValueLabels());
@@ -56,12 +61,18 @@ public class JsonStatUtils {
         // Temporal Value
         // target.setTemporalValue(temporalValue);
 
-        // Spatial Variables
+        // Spatial Variables spatialVariables
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
+        // Spatial Variables geographicalValueDto: Not necessary in JSON-sta
         // target.setGeographicalValueDto(geographicalValueDto);
 
         // Cont Variable
         target.setContVariable(jsonStatData.getContVariable());
+
+        // Notes: We do not need it for calculations.
+
+        // Source: We do not need it for calculations.
 
         // Survey Code
         target.setSurveyCode(JsonStatUtils.getOperationCode(jsonStatData.getSurveyCode()));
@@ -73,22 +84,60 @@ public class JsonStatUtils {
         target.setPublishers(JsonStatUtils.toList(jsonStatData.getSource()));
 
         // Data
-        // target.processData(dataList);
+        target.processData(jsonStatDataValuesToDataContent(jsonStatData));
 
         // VariablesInOrder
-        // target.setVariablesInOrder(variablesInOrder);
+        target.setVariablesInOrder(extractVariablesFromDimensions(jsonStatData));
 
         return target;
     }
 
-    public static Map<String, DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData) {
-        Map<String, DataContent> data = new HashMap<>();
+    private static List<String> extractVariablesFromDimensions(JsonStatData jsonStatData) {
+        List<String> result = new ArrayList<>();
+        for (String dimensionId : jsonStatData.getId()) {
+            result.add(jsonStatData.getDimension(dimensionId).getLabel());
+        }
 
-        // for (String dimensionKey : jsonStatData.getDimension().keySet()) {
-        // jsonStatData.getDimension(dimensionKey).getCategory()
-        // }
+        return result;
+    }
 
-        return data;
+    public static List<DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData) {
+        List<DataContent> result = new LinkedList<DataContent>();
+
+        int numDimensions = jsonStatData.getId().size();
+
+        Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
+        stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
+
+        JsonStatDatasetAccess jsonStatDatasetAccess = new JsonStatDatasetAccess(jsonStatData);
+
+        int observationIndex = 0;
+        while (stack.size() > 0) {
+            DataOrderingStackElement elem = stack.pop();
+
+            int dimensionPosition = elem.getDimensionPosition();
+            List<String> dimCodes = elem.getDimCodes();
+
+            if (dimCodes.size() == numDimensions) {
+                DataContent dataContent = new DataContent();
+                dataContent.setDimCodes(dimCodes);
+                dataContent.setValue(jsonStatDatasetAccess.getObservations()[observationIndex++]);
+                result.add(dataContent);
+            } else {
+                String dimensionId = jsonStatDatasetAccess.getDimensionsOrderedForData().get(dimensionPosition + 1);
+                List<String> dimensionValues = jsonStatDatasetAccess.getDimensionValuesOrderedForData(dimensionId);
+                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
+                    LinkedList<String> nextDimCodes = new LinkedList<String>();
+                    nextDimCodes.addAll(dimCodes);
+                    nextDimCodes.add(dimensionValues.get(i));
+                    DataOrderingStackElement temp = new DataOrderingStackElement(dimensionId, dimensionPosition + 1, dimensionValues.get(i), nextDimCodes);
+                    stack.push(temp);
+                }
+            }
+
+        }
+
+        return result;
     }
 
     public static String getOperationCode(String surveyCode) {
