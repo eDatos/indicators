@@ -169,6 +169,9 @@ public class MetamacTimeUtils {
     }
 
     public static ArrayList<String> normalizeToMetamacTimeValues(List<String> timeValues) throws MetamacException {
+        if (timeValues == null) {
+            return null;
+        }
         ArrayList<String> normalizedTimeValues = new ArrayList<String>();
         for (String timeValue : timeValues) {
             normalizedTimeValues.add(normalizeToMetamacTimeValue(timeValue));
