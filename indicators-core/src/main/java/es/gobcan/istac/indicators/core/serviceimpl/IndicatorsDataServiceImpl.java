@@ -215,8 +215,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
             return jsonStatData;
         } catch (Exception e) {
-            LOG.error("Unexpected error occurred retriving JSON-stat file: " + uuid, e);
-            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            LOG.error("Unexpected error occurred retrieving JSON-stat file {} : ", uuid, e);
+            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
         }
     }
 

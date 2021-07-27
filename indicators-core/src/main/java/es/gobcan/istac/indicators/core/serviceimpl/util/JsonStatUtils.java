@@ -58,13 +58,13 @@ public class JsonStatUtils {
         // Temporal Variables
         target.setTemporalVariable(jsonStatData.getTemporalVariable());
 
-        // Temporal Value
+        // Temporal Value: Not necessary in JSON-stat
         // target.setTemporalValue(temporalValue);
 
         // Spatial Variables spatialVariables
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
 
-        // Spatial Variables geographicalValueDto: Not necessary in JSON-sta
+        // Spatial Variables geographicalValueDto: Not necessary in JSON-stat
         // target.setGeographicalValueDto(geographicalValueDto);
 
         // Cont Variable
