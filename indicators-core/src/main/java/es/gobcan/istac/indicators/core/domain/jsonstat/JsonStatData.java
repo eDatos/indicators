@@ -9,78 +9,34 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/************************************************************************************************************************
+ * Esta clase, y las situadas en el mismo paquete, se utilizan para el mapeo de ficheros JSON-stat en objetos Java.
+ * Se basan en una interpretación de la documentación sobre el formato JSON-stat existente en la web
+ * https://json-stat.org/format/ y se centran en el correcto parseo de los ficheros JSON-stat proporcionados por IBESTAT
+ ************************************************************************************************************************/
 public class JsonStatData {
 
-    /*
-     * Attribute: version
-     * Required
-     * Data type: String
-     * Parents: Root
-     * Children: None
-     */
     @JsonProperty
     private String            version;
 
-    /*
-     * Attribute: class
-     * Optional
-     * Data type: String
-     * Parents: Root
-     * Children: None
-     */
     @JsonProperty("class")
     private String            clazz;
 
-    /*
-     * Attribute: category
-     * Required
-     * Data type: Object
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: index, label, child, coordinates and unit
-     */
     @JsonProperty
     private String            label;
 
-    /*
-     * Attribute: source
-     * Optional
-     * Data type: String
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private String            source;
 
-    /*
-     * Attribute: updated
-     * Optional
-     * Data type: String
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private String            updated;
 
     @JsonProperty
     private JsonStatExtension extension;
 
-    /*
-     * Attribute: note
-     * Optional
-     * Data type: Array / Object
-     * Parents: None, dimension ID, category and relation ID
-     * Children: None
-     */
     @JsonProperty
     private List<String>      note;
 
-    /*
-     * Attribute: value
-     * Required
-     * Data type: Array / Object
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
     private List<String>      value = new ArrayList();
 
     @JsonProperty("value")
@@ -90,80 +46,17 @@ public class JsonStatData {
         }
     }
 
-    /*
-     * Attribute: status
-     * Optional
-     * Data type: Array / Object / String
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private Map<String, String>            status;
 
-    /*
-     * Attribute: id
-     * Required
-     * Data type: Array
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private List<String>                   id;
 
-    /*
-     * Attribute: size
-     * Required
-     * Data type: Array
-     * Parents: Root, Relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private List<String>                   size;
 
-    /*
-     * Attribute: role
-     * Optional
-     * Data type: Array
-     * Parents: Root whet class "dataset", Relation ID array element
-     * Children: time, geo and metric
-     */
     @JsonProperty
     private Map<String, List<String>>      role;
-
-    /*
-     * Attribute: role - time
-     * Optional
-     * Data type: Array
-     * Parents: Role
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: role - geo
-     * Optional
-     * Data type: Array
-     * Parents: Role
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: role - metric
-     * Optional
-     * Data type: Array
-     * Parents: Role
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: dimension
-     * Required
-     * Data type: Object
-     * Parents: Root, Relation ID array element
-     * Children: dimension ID
-     */
 
     private Map<String, JsonStatDimension> dimension;
 
@@ -178,141 +71,8 @@ public class JsonStatData {
         }
     }
 
-    /*
-     * Attribute: dimension ID
-     * Required
-     * Data type: Object
-     * Parents: dimension
-     * Children: category, label and class
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: index
-     * Optional
-     * Data type: Object / Array
-     * Parents: category
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: label
-     * Optional
-     * Data type: String / Array
-     * Parents: Root, dimension ID, category, unit category ID and relation ID array element
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: child
-     * Optional
-     * Data type: Object
-     * Parents: category
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: coordinates
-     * Optional
-     * Data type: Object
-     * Parents: category
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: unit
-     * Optional
-     * Data type: Object
-     * Parents: category
-     * Children: category ID
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: decimals
-     * Optional
-     * Data type: Number
-     * Parents: Unit category ID
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: symbol
-     * Optional
-     * Data type: String
-     * Parents: Unit category ID
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: position
-     * Optional
-     * Data type: String
-     * Parents: Unit category ID
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: extension
-     * Optional
-     * Data type: Object
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: Open?
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: href
-     * Optional
-     * Data type: String
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: None
-     */
     @JsonProperty
     private String                    href;
-
-    /*
-     * Attribute: link
-     * Optional
-     * Data type: Object
-     * Parents: Root, dimension ID and relation ID array element
-     * Children: relation ID
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: relation ID
-     * Optional
-     * Data type: Array
-     * Parents: link
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: type
-     * Optional
-     * Data type: String
-     * Parents: Relation ID array element
-     * Children: None
-     */
-    // TODO EDATOS-3388
-
-    /*
-     * Attribute: error
-     * Optional
-     * Data type: Array
-     * Parents: Root
-     * Children: Open
-     */
-    // TODO EDATOS-3388
 
     List<String>                      variables;
     private Map<String, List<String>> valueLabels;
