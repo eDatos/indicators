@@ -141,7 +141,7 @@
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>
         <kafka-clients.version>6.1.1-ccs</kafka-clients.version>
-        <avro.version>1.9.1</avro.version>
+        <avro.version>1.9.2</avro.version>
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>6.0.3</metamac-core-common.version>
