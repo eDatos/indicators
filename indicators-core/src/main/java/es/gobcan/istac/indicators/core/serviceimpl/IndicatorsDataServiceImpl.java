@@ -1556,9 +1556,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     } else if (dataSource.getQueryUuid().matches(REG_EXP_URL)) { // TODO EDATOS-3388 check this expression!
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
-                        // TODO EDATOS-3388 convertir el JsonStatData a Data?
                         data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
-
                     } else {
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());

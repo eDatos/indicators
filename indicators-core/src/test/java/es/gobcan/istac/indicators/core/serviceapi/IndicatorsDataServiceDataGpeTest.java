@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +25,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -58,6 +62,12 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     private static final String              CONTENT_JSON_STAT_3      = readFile("json-stat/E30467_00018.json");
     private static final String              URL_JSON_STAT_4          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/I216019_0012.json";
     private static final String              CONTENT_JSON_STAT_4      = readFile("json-stat/I216019_0012.json");
+    private static final String              URL_JSON_STAT_5          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/E30467_00012.json";
+    private static final String              CONTENT_JSON_STAT_5      = readFile("json-stat/E30467_00012.json");
+    private static final String              URL_JSON_STAT_6          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/I216019_0005.json";
+    private static final String              CONTENT_JSON_STAT_6      = readFile("json-stat/I216019_0005.json");
+    private static final String              URL_JSON_STAT_7          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/E30162_02030.json";
+    private static final String              CONTENT_JSON_STAT_7      = readFile("json-stat/E30162_02030.json");
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -441,6 +451,223 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals("http://www.ibestat.com/ibestat/service/ibestat/pxcontent/898714f0-bfa5-4dc8-b711-e6155b78bcee/I216019_0012.px", jsonStatData.getExtension().getMetadata().get(0).getHref());
         }
 
+    }
+
+    @Test
+    public void testJsonStatDataValuesToDataContent() throws Exception {
+        {
+            // E30467_00012.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_5))).thenReturn(CONTENT_JSON_STAT_5);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_5);
+
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+
+            assertEquals(jsonStatData.getValue().size(), dataContent.size());
+
+            {
+                String expectedValue = "1021";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("TT")); // Ambos sexos
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2019")); // Año
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("TT")); // TOTAL
+            }
+
+            {
+                String expectedValue = "40";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("6")); // Mujer
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2016")); // Año
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("13")); // Realización de tareas socio-educativas
+            }
+
+            {
+                String expectedValue = "99";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("6")); // Mujer
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2017")); // Año
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("8")); // Libertad vigilada
+            }
+
+            {
+                String expectedValue = "129";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("1")); // Hombre
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2018")); // Año
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("6")); // Internamiento semiabierto
+            }
+
+            {
+                String expectedValue = "22";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("1")); // Hombre
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2018")); // Año
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2")); // Amonestación
+            }
+        }
+
+        {
+            // I216019_0005.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_6))).thenReturn(CONTENT_JSON_STAT_6);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_6);
+
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+
+            assertEquals(jsonStatData.getValue().size(), dataContent.size());
+
+            {
+                String expectedValue = "20732";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("TT")); // TOTAL
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2021Q2")); // 2021T2
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("trab_1")); // Mantienen el número de trabajadores
+            }
+
+            {
+                String expectedValue = "9328";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("TT")); // (A) AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2019Q4")); // 2019T4
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("trab_2")); // Reducen trabajadores
+            }
+
+            {
+                String expectedValue = "1202";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("G47")); // (47) Comercio al por menor, excepto de vehículos de motor y motocicletas
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2009Q2")); // 2009T2
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("trab_3")); // Incrementan trabajadores
+            }
+
+            {
+                String expectedValue = "2014";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("G")); // G) COMERCIO AL POR MAYOR Y AL POR MENOR; REPARACIÓN DE VEHÍCULOS DE MOTOR Y MOTOCICLETAS
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2012Q2")); // 2012T2
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("trab_3")); // Incrementan trabajadores
+            }
+        }
+
+        {
+            // E30162_02030.json
+            when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_7))).thenReturn(CONTENT_JSON_STAT_7);
+            JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_7);
+
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+
+            assertEquals(jsonStatData.getValue().size(), dataContent.size());
+
+            {
+                String expectedValue = "....";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1001, selectedDataContent.size());
+            }
+
+            {
+                String expectedValue = "10.9"; // Watch out! The value in the file is 10.90
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("gopa")); // Grau d'ocupació per parcel·les
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2021M05")); // 2021M05
+            }
+
+            {
+                String expectedValue = "14865";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("paro")); // Parcel·les ocupades
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2017M09")); // 2017M09
+            }
+
+            {
+                String expectedValue = "1095";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("npla")); // Nombre de places
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("2001M05")); // 2001M05
+            }
+
+            {
+                String expectedValue = "7.71";
+
+                List<DataContent> selectedDataContent = searchDataContentByValue(dataContent, expectedValue);
+
+                assertEquals(1, selectedDataContent.size());
+                assertEquals(expectedValue, selectedDataContent.get(0).getValue());
+                assertEquals(jsonStatData.getId().size(), selectedDataContent.get(0).getDimCodes().size());
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("gopa")); // Grau d'ocupació per parcel·les
+                assertTrue(selectedDataContent.get(0).getDimCodes().contains("1999M06")); // 2001M05
+            }
+
+        }
+    }
+
+    private List<DataContent> searchDataContentByValue(List<DataContent> dataContent, String expectedValue) {
+        return (List<DataContent>) CollectionUtils.select(dataContent, new Predicate() {
+
+            @Override
+            public boolean evaluate(Object object) {
+                return expectedValue.equals(((DataContent) object).getValue());
+            }
+        });
     }
 
     private List<String> getDataDefinitionsUuids(Collection<DataDefinition> dataDefinitions) {
