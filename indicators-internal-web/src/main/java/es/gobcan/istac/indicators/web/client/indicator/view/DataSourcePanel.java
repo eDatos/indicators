@@ -299,15 +299,6 @@ public class DataSourcePanel extends VLayout {
                         ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
                         : null);
 
-            } else if (QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
-                // TODO EDATOS-3288: aquí digo que tendras que hacer algo no?
-                // dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_JSON_STAT).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_JSON_STAT) :
-                // null);
-                //
-                // dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT).isVisible()
-                // ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
-                // : null);
-
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
 
@@ -371,7 +362,6 @@ public class DataSourcePanel extends VLayout {
         // generalEditionForm.setValue(DataSourceDS.TIME_VALUE_JSON_STAT, dataStructureDto.getTemporalValue());
 
         // Spatial Value (metamac)
-        // TODO EDATOS-3388 y aquí que toca?
         if (dataStructureDto.getGeographicalValueDto() != null) {
             generalEditionForm.setValue(DataSourceDS.GEO_VALUE_TEXT_METAMAC, InternationalStringUtils.getLocalisedString(dataStructureDto.getGeographicalValueDto().getTitle()));
             generalEditionForm.setValue(DataSourceDS.GEO_VALUE_UUID_METAMAC, dataStructureDto.getGeographicalValueDto().getUuid());
@@ -602,7 +592,6 @@ public class DataSourcePanel extends VLayout {
 
         });
 
-        // TODO EDATOS-3388 Usar los mismos campos que se utiliza para GPE o usar nuevos campos? Parece más viable usar los nuevos campos..
         // Query from JSON STAT
         RequiredTextItem jsonStatRequiredTextItem = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuerySelection());
         jsonStatRequiredTextItem.setShowIfCondition(CommonUtils.getFalseIfFunction());
@@ -963,7 +952,6 @@ public class DataSourcePanel extends VLayout {
                             generalEditionForm.setValue(DataSourceDS.QUERY_UUID, jsonStatUrl);
                             generalEditionForm.setValue(DataSourceDS.QUERY_TEXT, jsonStatUrl);
                             generalEditionForm.getItem(DataSourceDS.QUERY_TEXT).validate();
-                            // TODO EDATOS-3388 Aqui tendrás que hacer algo mi hermano
                         }
 
                     }

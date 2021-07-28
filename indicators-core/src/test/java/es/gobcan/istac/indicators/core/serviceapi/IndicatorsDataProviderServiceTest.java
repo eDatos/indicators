@@ -27,8 +27,7 @@ public class IndicatorsDataProviderServiceTest implements IndicatorsDataProvider
 
     @Override
     public void testRetrieveJsonStat() throws Exception {
-        // TODO EDATOS-3388 check this!
-
+        // No test
     }
 
 }

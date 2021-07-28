@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import static org.siemac.edatos.core.common.constants.shared.RegularExpressionConstants.REG_EXP_URL;
-
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -209,6 +207,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
+
+        // JsonStatUtils.checkUuidIsUrl(uuid); // TODO EDATOS-3388 call validation?
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             JsonStatData jsonStatData = jsonToJsonStatData(json);
@@ -1553,7 +1553,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
-                    } else if (dataSource.getQueryUuid().matches(REG_EXP_URL)) { // TODO EDATOS-3388 check this expression!
+                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) { // TODO EDATOS-3388 check this expression!
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
                         data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);

@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import static org.siemac.edatos.core.common.constants.shared.RegularExpressionConstants.REG_EXP_URL;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -156,6 +158,10 @@ public class JsonStatUtils {
         }
 
         return returnedList;
+    }
+
+    public static boolean checkUuidIsUrl(String uuid) {
+        return uuid != null && uuid.matches(REG_EXP_URL);
     }
 
 }
