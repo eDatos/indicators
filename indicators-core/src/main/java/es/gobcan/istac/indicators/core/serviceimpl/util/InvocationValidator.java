@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.validateUrl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1295,7 +1297,8 @@ public class InvocationValidator {
         }
 
         IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
-        // TODO EDATOS-3388 check if uuid is an url?
+
+        validateUrl(uuid, ServiceExceptionParameters.UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

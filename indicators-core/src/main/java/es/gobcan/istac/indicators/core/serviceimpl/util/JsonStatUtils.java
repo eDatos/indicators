@@ -43,7 +43,7 @@ public class JsonStatUtils {
         target.setTitle(jsonStatData.getLabel());
 
         // PX Uri
-        // target.setPxUri(pxUri);
+        target.setPxUri(jsonStatData.getUriPx());
 
         // Stub: Not necessary in JSON-stat
         // target.setStub(extractStub(jsonStatData));

@@ -208,7 +208,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Validation
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
 
-        // JsonStatUtils.checkUuidIsUrl(uuid); // TODO EDATOS-3388 call validation?
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             JsonStatData jsonStatData = jsonToJsonStatData(json);

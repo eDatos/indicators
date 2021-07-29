@@ -467,15 +467,13 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
         DataStructureDto target = new DataStructureDto();
 
-        // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
         // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
         target.setUuid(uuid);
 
         // GPE: title -> JSON-stat: label
         target.setTitle(jsonStatData.getLabel());
 
-        // GPE: uriPx -> JSON-stat: extension -> metadata (Ojo multiples elementos)
-        // CAMBIAR! (uuid/datasetid)
+        // GPE: uriPx -> JSON-stat: extension - metadata - href (primer elemento)
         target.setQueryUrn(jsonStatData.getUriPx());
 
         // GPE: surveyCode -> JSON-stat: extension - datasetid

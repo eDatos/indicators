@@ -66,8 +66,8 @@ public class JsonStatData {
 
         for (String key : dimensions.keySet()) {
             addVariable(dimensions.get(key).getLabel());
-            addValueLabels(key, new ArrayList<>(dimensions.get(key).getCategory().getIndex().keySet()));
-            addValueCodes(key, new ArrayList<>(dimensions.get(key).getCategory().getLabel().values()));
+            addValueLabels(key, new ArrayList<>(dimensions.get(key).getCategory().getLabel().values()));
+            addValueCodes(key, new ArrayList<>(dimensions.get(key).getCategory().getIndex().keySet()));
         }
     }
 
