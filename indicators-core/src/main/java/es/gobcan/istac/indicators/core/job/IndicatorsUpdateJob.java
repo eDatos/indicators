@@ -51,7 +51,7 @@ public class IndicatorsUpdateJob implements Job {
 
         List<IndicatorVersion> failedPopulationIndicators = new ArrayList<>();
 
-        // updateIndicatorsDataFromGpe(serviceContext, failedPopulationIndicators);
+        updateIndicatorsDataFromGpe(serviceContext, failedPopulationIndicators);
         updateIndicatorsDataFromJsonStat(serviceContext, failedPopulationIndicators);
 
         createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
