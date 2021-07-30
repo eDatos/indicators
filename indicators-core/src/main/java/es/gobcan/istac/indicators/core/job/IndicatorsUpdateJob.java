@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.job;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -48,15 +49,35 @@ public class IndicatorsUpdateJob implements Job {
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
 
-        try {
-            LOG.info("Updating indicators Data...");
-            List<IndicatorVersion> failedPopulationIndicators = getIndicatorsServiceFacade().updateIndicatorsDataFromGpe(serviceContext);
+        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<>();
 
-            if (failedPopulationIndicators.size() > 0) {
-                getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
-            }
+        // updateIndicatorsDataFromGpe(serviceContext, failedPopulationIndicators);
+        updateIndicatorsDataFromJsonStat(serviceContext, failedPopulationIndicators);
+
+        createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+    }
+
+    private void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
+        if (!failedPopulationIndicators.isEmpty()) {
+            getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+        }
+    }
+
+    private void updateIndicatorsDataFromGpe(ServiceContext serviceContext, List<IndicatorVersion> failedPopulationIndicators) {
+        try {
+            LOG.info("Updating indicators Data from GPE...");
+            failedPopulationIndicators.addAll(getIndicatorsServiceFacade().updateIndicatorsDataFromGpe(serviceContext));
         } catch (MetamacException e) {
-            LOG.error("Error updating indicators Data", e);
+            LOG.error("Updating indicators Data from GPE", e);
+        }
+    }
+
+    private void updateIndicatorsDataFromJsonStat(ServiceContext serviceContext, List<IndicatorVersion> failedPopulationIndicators) {
+        try {
+            LOG.info("Updating indicators Data from JSON-stat...");
+            failedPopulationIndicators.addAll(getIndicatorsServiceFacade().updateIndicatorsDataFromJsonStat(serviceContext));
+        } catch (MetamacException e) {
+            LOG.error("Updating indicators Data from JSON-stat", e);
         }
     }
 

@@ -220,6 +220,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Updates data for all published JSON-stat indicators"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
             List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
@@ -555,6 +557,8 @@ Application Indicators {
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators data JSON-stat"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
