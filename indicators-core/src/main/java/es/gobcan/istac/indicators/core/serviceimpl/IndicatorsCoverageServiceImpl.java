@@ -21,6 +21,7 @@ import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
@@ -153,7 +154,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     }
 
     @Override
-    public List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(ServiceContext ctx, String subjectCode, String granularityUuid) throws MetamacException {
+    public List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(ServiceContext ctx, String subjectCode, String granularityUuid)
+            throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(subjectCode, granularityUuid, null);
 
@@ -389,7 +391,8 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
 
         if (indInstance.isFilteredByTimeValues()) {
-            return getIndicatorVersionTimeCoverageRepository().retrieveGranularityCoverageFilteredByInstanceTimeValues(indicatorVersion, indInstance.getTimeValuesAsList());
+            List<String> timeValues = MetamacTimeUtils.normalizeToMetamacTimeValues(indInstance.getTimeValuesAsList());
+            return getIndicatorVersionTimeCoverageRepository().retrieveGranularityCoverageFilteredByInstanceTimeValues(indicatorVersion, timeValues);
         } else if (indInstance.isFilteredByTimeGranularity()) {
             TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, indInstance.getTimeGranularity());
             return Arrays.asList(timeGranularity);
@@ -510,7 +513,9 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
     private List<TimeValue> calculateTimeCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
         if (indInstance.isFilteredByTimeValues()) {
-            List<TimeValue> timeValues = getIndicatorVersionTimeCoverageRepository().retrieveCoverageFilteredByInstanceTimeValues(indicatorVersion, indInstance.getTimeValuesAsList());
+            // Here is the place to convert, because they could be stored as "2000-M2" but on the dataset are already
+            List<String> timeValuesAsList = MetamacTimeUtils.normalizeToMetamacTimeValues(indInstance.getTimeValuesAsList());
+            List<TimeValue> timeValues = getIndicatorVersionTimeCoverageRepository().retrieveCoverageFilteredByInstanceTimeValues(indicatorVersion, timeValuesAsList);
             TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
             return timeValues;
         } else if (indInstance.isFilteredByTimeGranularity()) {

@@ -402,12 +402,12 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static Map<String, List<String>> getTestDimensionsForIndicator(String indicatorUuid) {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         if (INDICATORS_GROUP1.contains(indicatorUuid)) {
-            dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-M01", "2010", "2010-M12", "2010-M11", "2010-M10", "2010-M09"));
+            dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         } else if (INDICATORS_GROUP2.contains(indicatorUuid)) {
-            dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-M12", "2010-M11", "2010-M10", "2009", "2009-M12", "2009-M11", "2009-M10"));
+            dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                     MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));

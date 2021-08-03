@@ -1732,7 +1732,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
@@ -1795,12 +1795,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /*
-     * Get value has to take a look to method type and methd
+     * Get value has to take a look to method type and method
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
      */
     private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String originalTimeValue) throws MetamacException {
         // Create base for observation
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
@@ -1811,7 +1811,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (dataOperation.isAnnualMethod()) {
             previousTimeValue = TimeVariableUtils.calculatePreviousYearTimeValue(timeValue);
         } else if (dataOperation.isInterPeriodMethod()) {
-            previousTimeValue = TimeVariableUtils.calculatePreviousTimeValue(timeValue);
+            previousTimeValue = MetamacTimeUtils.calculatePreviousTimeValue(timeValue);
         } else {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
         }
