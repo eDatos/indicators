@@ -8,9 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 8.4.0 a X.Y.Z
-
+## 8.4.0 a x.y.z
 * A partir de esta versión indicadores se integra con el captcha de edatos-external-users. Para aprovechar estas funcionalidades asegúrese de que dicho proyecto esta instalado.
+* Se han realizado cambios en el modo de cargar los indicadores relativos a las dimensiones temporales. Se han de recargar los indicadores para que no haya problemas, especialmente en las instancias de indicador.
+* Para ello:
+    * Configuramos el needsUpdate de todos los indicadores: 
+        `update TB_INDICATORS_VERSIONS set NEEDS_UPDATE=1 WHERE IS_LAST_VERSION = 1;` 
+    * Buscamos una consulta del statistical-resources y pulsamos "Reenviar mensaje de publicación"
 
 ## 8.3.0 a 8.4.0
 * Se han realizado cambios que implican que, previo al despliegue de esta versión en cualquier entorno, se debe realizar la migración de Kafka a la versión 6.1.1.
