@@ -31,8 +31,6 @@ public class JsonStatUtils {
 
         Data target = new Data();
 
-        // TODO EDATOS-3380 Aclarar con Rita/Javi? si estos mapeos son correctos y ver que pasa con los que faltan
-
         // JSON-stat
         target.setQueryEnvironmentEnum(QueryEnvironmentEnum.JSON_STAT);
 

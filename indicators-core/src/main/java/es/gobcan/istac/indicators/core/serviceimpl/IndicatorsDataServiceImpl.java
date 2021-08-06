@@ -1608,7 +1608,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
-                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) { // TODO EDATOS-3388 check this expression!
+                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
                         data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
