@@ -18,12 +18,13 @@
 </div>
 
 <script src="${serverURL}/theme/js/app.min.js"></script>
-<script src="${visualizerExternalUrlBase}/js/authentication.js"></script>
+<script src="${captchaExternalApiUrlBase}/authentication.js"></script>
 
 <script>
     var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";
     var visualizerUrl = "${visualizerExternalUrlBase}";
     var permalinksUrlBase = "${permalinksUrlBase}"
+    var permalinksUrlBaseWithProtocol = "${permalinksUrlBaseWithProtocol}"
 
     var options = {};
     [#if RequestParameters.type??]

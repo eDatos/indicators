@@ -141,10 +141,10 @@
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>
         <kafka-clients.version>6.1.1-ccs</kafka-clients.version>
-        <avro.version>1.9.1</avro.version>
+        <avro.version>1.9.2</avro.version>
 
 		<!-- METAMAC -->
-		<metamac-core-common.version>6.0.3</metamac-core-common.version>
+		<metamac-core-common.version>6.0.4-SNAPSHOT</metamac-core-common.version>
 		<metamac-web-common.version>4.2.1</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>

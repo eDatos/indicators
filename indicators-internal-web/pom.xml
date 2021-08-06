@@ -247,7 +247,7 @@
 					<extraJvmArgs>-Xms512M -Xmx1024M</extraJvmArgs>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<noServer>true</noServer>
-					<runTarget>http://localhost:8090/indicators-internal/IndicatorsWeb.html</runTarget>
+					<runTarget>http://localhost:8090/indicators-internal/IndicatorsWeb.jsp</runTarget>
 					<debugPort>9997</debugPort>
 					<compileSourcesArtifacts>
 						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
