@@ -316,7 +316,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         indicatorsVersionsFailed.addAll(updateIndicatorsData(ctx));
 
-        return updateIndicatorsData(ctx);
+        return indicatorsVersionsFailed;
     }
 
     @Override
@@ -1439,8 +1439,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
             }
-            markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
         }
+
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
 
         return indicatorsVersionsFailed;
     }
