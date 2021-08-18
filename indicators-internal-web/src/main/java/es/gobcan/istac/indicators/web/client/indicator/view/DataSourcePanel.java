@@ -12,7 +12,6 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -359,7 +358,6 @@ public class DataSourcePanel extends VLayout {
         // Temporal value
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE, dataStructureDto.getTemporalValue());
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE_METAMAC, dataStructureDto.getTemporalValue());
-        // generalEditionForm.setValue(DataSourceDS.TIME_VALUE_JSON_STAT, dataStructureDto.getTemporalValue());
 
         // Spatial Value (metamac)
         if (dataStructureDto.getGeographicalValueDto() != null) {
@@ -631,7 +629,11 @@ public class DataSourcePanel extends VLayout {
                 return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasTimeValue();
             }
         });
-        timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
+
+        // TODO EDATOS-3417: Se deshabilita la validación mientras hasta que se aborde la tarea indicada dado que el validor no funciona correctamente
+        // cuando se utiliza desde la web. El valor de este campo también se valida desde el lado del servidor:
+        // https://git.arte-consultores.com/istac/indicators/-/blob/develop/indicators-core/src/main/java/es/gobcan/istac/indicators/core/serviceimpl/util/InvocationValidator.java#L2025
+        // timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
         ViewTextItem timeValueMetamac = new ViewTextItem(DataSourceDS.TIME_VALUE_METAMAC, getConstants().dataSourceTimeValue());
         timeValueMetamac.setShowIfCondition(new FormItemIfFunction() {
@@ -1093,12 +1095,10 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC)).clearValue();
-        // ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_JSON_STAT)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).setValueMap();
         ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC)).clearValue();
-        // ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_JSON_STAT)).clearValue();
         ((HiddenItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_UUID_METAMAC)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
