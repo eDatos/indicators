@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
@@ -863,11 +864,32 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public DataStructureDto retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Service call
+        JsonStatData jsonStatDataStructure = getIndicatorsDataService().retrieveJsonStatData(ctx, uuid);
+
+        // Transform
+        return do2DtoMapper.dataStructureDoToDto(uuid, jsonStatDataStructure);
+    }
+
+    @Override
     public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         return getIndicatorsDataService().updateIndicatorsDataFromGpe(ctx);
+    }
+
+    @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromJsonStat(ServiceContext ctx) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        return getIndicatorsDataService().updateIndicatorsDataFromJsonStat(ctx);
     }
 
     @Override
@@ -1250,4 +1272,5 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private void checkAccessIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, RoleEnum... roles) throws MetamacException {
         checkAccessIndicatorsSystemByCode(ctx, indicatorsSystem.getCode(), roles);
     }
+
 }

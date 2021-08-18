@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
@@ -26,15 +27,15 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         super(groupTitle);
 
         ViewTextItem dataSourceQueryEnvironment = new ViewTextItem(DataSourceDS.QUERY_ENVIRONMENT, getConstants().dataSourceQueryEnvironment());
-        
+
         ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuery());
         query.setShowIfCondition(new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
                 if (!StringUtils.isEmpty(valueAsString)) {
-                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
                     if (QueryEnvironmentEnum.GPE.equals(queryEnvironmentEnum)) {
                         return true;
                     }
@@ -42,15 +43,15 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
                 return false;
             }
         });
-        
+
         ExternalItemLinkItem queryMetamac = new ExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuery());
         queryMetamac.setShowIfCondition(new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
                 if (!StringUtils.isEmpty(valueAsString)) {
-                    QueryEnvironmentEnum queryEnvironmentEnum = QueryEnvironmentEnum.valueOf(valueAsString);
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
                     if (QueryEnvironmentEnum.METAMAC.equals(queryEnvironmentEnum)) {
                         return true;
                     }
@@ -58,9 +59,23 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
                 return false;
             }
         });
-        
-        
-        
+
+        ViewTextItem queryJsonStat = new ViewTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuery());
+        queryJsonStat.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
+                    if (QueryEnvironmentEnum.JSON_STAT.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
         ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
@@ -118,18 +133,23 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
         ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        setFields(dataSourceQueryEnvironment, query, queryMetamac, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
+        setFields(dataSourceQueryEnvironment, query, queryMetamac, queryJsonStat, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable,
+                geographicalValue, measureVariable, variables);
 
     }
 
     public void setValue(DataSourceDto dataSourceDto) {
-        setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().toString() : StringUtils.EMPTY);
-        
+        setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().getValue() : StringUtils.EMPTY);
+
         setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
         if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment())) {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getQueryUuid());
         }
-        
+
+        if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
+            setValue(DataSourceDS.QUERY_UUID, dataSourceDto.getQueryUuid());
+        }
+
         setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
         setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());

@@ -1,0 +1,320 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "Medidas adoptadas por tipo, sexo y año.",
+  "source": "Institut d\u0027Estadística de les Illes Balears (IBESTAT) a partir de datos del Instituto Nacional de Estadística (INE). España (CC BY 3.0)",
+  "updated": "2021-06-28",
+  "extension": {
+    "datasetid": "E30467_00012",
+    "lang": "es",
+    "contact": "Institut d\u0027Estadística de les Illes Balears (IBESTAT)#Teléfono: +34 971 784 575#Correo electrónico: info@ibestat.caib.es#http://www.ibestat.cat",
+    "survey": "Registro Central de Sentencias de Responsabilidad Penal de los Menores",
+    "baseperiod": "",
+    "metadata": [
+      {
+        "title": "Medidas adoptadas por tipo, sexo y año.",
+        "href": "http://www.ibestat.com/ibestat/service/ibestat/pxcontent/f8ab3aea-7a45-468f-8ff9-fc0ec29a9e8c/E30467_00012.px"
+      },
+      {
+        "title": "Medidas adoptadas por tipo, sexo y año.",
+        "href": "http://www.ibestat.com/ibestat/estadistiques/55322655-b6eb-439e-b5ce-d4a8cc8a1a8c/f8ab3aea-7a45-468f-8ff9-fc0ec29a9e8c/es/E30467_00012.px"
+      }
+    ]
+  },
+  "note": [
+    "[Medidas]: Edad a la comisión de la primera infracción penal"
+  ],
+  "value": [
+    1021,
+    834,
+    187,
+    1326,
+    1048,
+    278,
+    972,
+    759,
+    213,
+    955,
+    706,
+    249,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    19,
+    12,
+    7,
+    33,
+    22,
+    11,
+    25,
+    11,
+    14,
+    4,
+    2,
+    2,
+    10,
+    5,
+    5,
+    10,
+    9,
+    1,
+    9,
+    6,
+    3,
+    6,
+    3,
+    3,
+    5,
+    4,
+    1,
+    4,
+    3,
+    1,
+    1,
+    1,
+    0,
+    8,
+    8,
+    0,
+    15,
+    15,
+    0,
+    17,
+    17,
+    0,
+    9,
+    9,
+    0,
+    7,
+    7,
+    0,
+    100,
+    88,
+    12,
+    147,
+    129,
+    18,
+    113,
+    103,
+    10,
+    74,
+    60,
+    14,
+    19,
+    14,
+    5,
+    51,
+    38,
+    13,
+    28,
+    20,
+    8,
+    46,
+    30,
+    16,
+    519,
+    426,
+    93,
+    647,
+    514,
+    133,
+    450,
+    351,
+    99,
+    464,
+    337,
+    127,
+    107,
+    84,
+    23,
+    90,
+    80,
+    10,
+    66,
+    51,
+    15,
+    78,
+    57,
+    21,
+    101,
+    85,
+    16,
+    144,
+    107,
+    37,
+    117,
+    88,
+    29,
+    121,
+    103,
+    18,
+    10,
+    9,
+    1,
+    17,
+    13,
+    4,
+    4,
+    3,
+    1,
+    12,
+    9,
+    3,
+    2,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    108,
+    85,
+    23,
+    157,
+    111,
+    46,
+    144,
+    111,
+    33,
+    128,
+    88,
+    40,
+    6,
+    5,
+    1,
+    9,
+    5,
+    4,
+    6,
+    5,
+    1,
+    7,
+    2,
+    5
+  ],
+  "status": {},
+  "id": [
+    "Medidas",
+    "Año",
+    "Sexo",
+    "Datos"
+  ],
+  "size": [
+    15,
+    4,
+    3,
+    1
+  ],
+  "role": {
+    "metric": [
+      "Datos"
+    ],
+    "time": [
+      "Año"
+    ]
+  },
+  "dimension": {
+    "Medidas": {
+      "label": "Medidas",
+      "category": {
+        "index": {
+          "TT": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 6,
+          "7": 7,
+          "8": 8,
+          "9": 9,
+          "10": 10,
+          "11": 11,
+          "12": 12,
+          "13": 13,
+          "14": 14
+        },
+        "label": {
+          "TT": "TOTAL",
+          "1": "Asistencia a un centro de día",
+          "2": "Amonestación",
+          "3": "Convivencia con otra persona, familia o grupo educativo",
+          "4": "Internamiento abierto",
+          "5": "Internamiento cerrado",
+          "6": "Internamiento semiabierto",
+          "7": "Internamiento terapéutico en régimen cerrado, semiabierto o abierto",
+          "8": "Libertad vigilada",
+          "9": "Prohibición de aproximarse o comunicarse con la víctima",
+          "10": "Prestación en beneficio comunidad",
+          "11": "Permanencia de fin de semana",
+          "12": "Privación permiso de conducir",
+          "13": "Realización de tareas socio-educativas",
+          "14": "Tratamiento ambulatorio"
+        }
+      }
+    },
+    "Año": {
+      "label": "Año",
+      "category": {
+        "index": {
+          "2019": 0,
+          "2018": 1,
+          "2017": 2,
+          "2016": 3
+        },
+        "label": {
+          "2019": "2019",
+          "2018": "2018",
+          "2017": "2017",
+          "2016": "2016"
+        }
+      }
+    },
+    "Sexo": {
+      "label": "Sexo",
+      "category": {
+        "index": {
+          "TT": 0,
+          "1": 1,
+          "6": 2
+        },
+        "label": {
+          "TT": "Ambos sexos",
+          "1": "Hombre",
+          "6": "Mujer"
+        }
+      }
+    },
+    "Datos": {
+      "label": "Datos",
+      "category": {
+        "index": {
+          "aux": 0
+        },
+        "label": {
+          "aux": "Medidas"
+        },
+        "unit": {
+          "aux": {
+            "base": "Medidas",
+            "decimals": 0
+          }
+        }
+      }
+    }
+  }
+}

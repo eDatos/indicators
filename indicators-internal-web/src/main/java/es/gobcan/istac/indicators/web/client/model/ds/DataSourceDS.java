@@ -9,7 +9,7 @@ public class DataSourceDS extends DataSource {
 
     public static String UUID                              = "ds-uuid";
     public static String QUERY_UUID                        = "ds-query-uuid";
-    public static String QUERY_TEXT                        = "ds-query-text";        // Not mapped in DTO
+    public static String QUERY_TEXT                        = "ds-query-text";            // Not mapped in DTO
     public static String PX                                = "ds-px";
     public static String QUERY_METAMAC                     = "ds-query-metamac";
     public static String QUERY_ENVIRONMENT                 = "ds-query-environment";
@@ -32,11 +32,11 @@ public class DataSourceDS extends DataSource {
     public static String PUBLISHERS                        = "ds-pub";
 
     public static String RATE_DERIVATION_METHOD_VIEW       = "rate-method";
-    public static String RATE_DERIVATION_METHOD_CALCULATED = "rate-method-cal";      // Not mapped in DTO
-    public static String RATE_DERIVATION_METHOD_LOAD       = "rate-method-load";     // Not mapped in DTO
-    public static String RATE_DERIVATION_METHOD_LOAD_VIEW  = "rate-method-load-view"; // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_CALCULATED = "rate-method-cal";          // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_LOAD       = "rate-method-load";         // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_LOAD_VIEW  = "rate-method-load-view";    // Not mapped in DTO
 
-    public static String RATE_DERIVATION_METHOD_TYPE_VIEW  = "rate-method-type-view"; // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_TYPE_VIEW  = "rate-method-type-view";    // Not mapped in DTO
     public static String RATE_DERIVATION_METHOD_TYPE       = "rate-method-type";
 
     public static String RATE_DERIVATION_ROUNDING          = "rate-rounding";
