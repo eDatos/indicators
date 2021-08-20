@@ -26,9 +26,10 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         setCellStyle("variableCanvasCell");
         setCellHeight(30);
         setTextBoxStyle("variableCanvasCell");
+        setWidth(650);
 
         form = new CustomDynamicForm();
-        form.setWidth("*");
+        form.setColWidths("20%", "80%");
 
         VLayout vLayout = new VLayout();
         vLayout.addMember(form);
