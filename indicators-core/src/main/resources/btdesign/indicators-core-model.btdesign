@@ -206,6 +206,8 @@ Application Indicators {
 	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves data info from JSON-stat from URL"
+	    	JsonStatData retrieveJsonStatData(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator data in background"
@@ -218,6 +220,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Updates data for all published JSON-stat indicators"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
             List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
@@ -347,6 +351,8 @@ Application Indicators {
 		    String retrieveDataStructureJson(String uuid) throws MetamacException;
 	     	"Retrieves Data content"
     		String retrieveDataJson(String uuid) throws MetamacException;
+    		"Retrieves JSON-stat"
+		    String retrieveJsonStat(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -543,12 +549,16 @@ Application Indicators {
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves the data from JSON-stat"
+	    	@DataStructureDto retrieveJsonStatData(String uuid) throws MetamacException;
 	    	// "Populates a given indicator data"
 	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	        "Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators data JSON-stat"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
@@ -2088,8 +2098,10 @@ Application Indicators {
     	
     	"Query Source"
         enum QueryEnvironmentEnum {
-            METAMAC,
-            GPE
+        	String value
+            METAMAC("eDatos"),
+            GPE("GPE"),
+            JSON_STAT("JSON-stat")
         }
         
         "Task Status Type Enumerated"
