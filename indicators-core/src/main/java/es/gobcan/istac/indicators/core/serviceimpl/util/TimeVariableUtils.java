@@ -393,6 +393,7 @@ public class TimeVariableUtils {
         return new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
     }
 
+    // Changes here needs to propagate to TB_TRANSLATIONS table
     public static String getTimeValueTranslationCode(TimeValue timeValueDo) throws MetamacException {
         String translationCode = null;
         switch (timeValueDo.getGranularity()) {

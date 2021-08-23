@@ -22,6 +22,8 @@ public class MetamacTimeUtils {
         return SdmxTimeUtils.isObservationalTimePeriod(value);
     }
 
+    // Changes on setSubperiod propagates to TB_TRANSLATIONS.
+    // @see es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils.getTimeValueTranslationCode(TimeValue)
     public static TimeValue parseTimeValue(String timeValue) throws MetamacException {
 
         TimeValue timeValueFields = new TimeValue();
