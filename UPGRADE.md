@@ -9,6 +9,7 @@
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
 ## 8.4.0 a x.y.z
+* Se han realizado cambios a la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/8.4.0/db](etc/changes-from-release/8.4.0/db)
 * Para el correcto funcionamiento del soporte de JSON-stat como fuente de datos es necesario añadir al almacén de certificados de la java del tomcat donde se despliega la aplicación el certificado del dominio del cual se obtendrán los ficheros JSON-stat
 * A partir de esta versión indicadores se integra con el captcha de edatos-external-users. Para aprovechar estas funcionalidades asegúrese de que dicho proyecto esta instalado.
 * Se han realizado cambios en el modo de cargar los indicadores relativos a las dimensiones temporales. Se han de recargar los indicadores para que no haya problemas, especialmente en las instancias de indicador.
