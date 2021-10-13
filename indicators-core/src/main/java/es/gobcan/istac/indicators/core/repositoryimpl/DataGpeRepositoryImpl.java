@@ -1,5 +1,10 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID_OPERACION;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.LAST_UPDATE_DATE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.NOW;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUIDS;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,10 +19,6 @@ import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.ID_OPERACION;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.LAST_UPDATE_DATE;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.NOW;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUIDS;
 
 /**
  * Repository implementation for DataGpe
@@ -52,27 +53,6 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         Query query = getEntityManager().createQuery(queryHql);
         query.setParameter(NOW, now);
         return query.getResultList();
-    }
-
-    @Override
-    public List<DataDefinition> findCurrentDataDefinitions() {
-        Date now = Calendar.getInstance().getTime();
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(NOW, now);
-
-        // @formatter:off
-        String query = "from DataDefinition df " +
-                       "where df.availableEndDate is null " +
-                       "and df.availableStartDate = (" +
-                                                      " select max(df2.availableStartDate) " +
-                                                      " from DataDefinition df2 " +
-                                                      // It's not a NOT visible query
-                                                      " where df2.availableStartDate <= :now " +
-                                                      // It's not archived
-                                                      " and df2.availableEndDate is NULL " +
-                                                      " and df.uuid = df2.uuid)";
-        // @formatter:on
-        return findByQuery(query, parameters);
     }
 
     @Override

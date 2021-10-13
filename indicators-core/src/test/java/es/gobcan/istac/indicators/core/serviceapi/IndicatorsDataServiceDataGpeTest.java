@@ -91,14 +91,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     }
 
     @Test
-    public void testRetrieveDataDefinitions() throws Exception {
-        List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
-
-        String[] expected = {CONSULTA1_UUID, CONSULTA4_UUID, CONSULTA5_UUID};
-        checkElementsInCollection(expected, getDataDefinitionsUuids(dataDefs));
-    }
-
-    @Test
     public void testFindDataDefinitionsByOperationCode() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitionsByOperationCode(getServiceContextAdministrador(), CONSULTA1_OPERATION_CODE);
         assertEquals(1, dataDefs.size());

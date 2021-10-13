@@ -198,8 +198,6 @@ Application Indicators {
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-			"Retrieves all Data containing basic info only"
-	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinition> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 			"Retrieves Data containing basic info only"
@@ -541,8 +539,6 @@ Application Indicators {
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-	    	"Retrieves all Data containing basic info only"
-	    	List<@DataDefinitionDto> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinitionDto> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 	    	"Retrieves all Data basic info only"
@@ -1217,7 +1213,6 @@ Application Indicators {
        			protected List<@DataDefinition> findByQuery;
             	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	List<String> findCurrentDataDefinitionsOperationsCodes;
-            	List<@DataDefinition> findCurrentDataDefinitions;
             	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
             	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);

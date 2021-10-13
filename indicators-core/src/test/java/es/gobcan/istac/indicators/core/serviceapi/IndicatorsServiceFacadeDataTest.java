@@ -55,16 +55,8 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
     @Before
     public void setUpMocks() throws MetamacException {
         // init mocks
-        when(indicatorsDataService.retrieveDataDefinitions(any(ServiceContext.class))).thenReturn(Arrays.asList(new DataDefinition[]{dataDefinition1}));
         when(indicatorsDataService.retrieveDataDefinition(any(ServiceContext.class), eq(dataDefinition1.getUuid()))).thenReturn(dataDefinition1);
         when(indicatorsDataService.retrieveDataStructure(any(ServiceContext.class), eq(dataStructure1.getUuid()))).thenReturn(dataStructure1);
-    }
-
-    @Test
-    public void testRetrieveDataDefinitions() throws Exception {
-        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.retrieveDataDefinitions(getServiceContextAdministrador());
-        assertNotNull(dtos);
-        compareDoDto(dataDefinition1, dtos.get(0));
     }
 
     @Test

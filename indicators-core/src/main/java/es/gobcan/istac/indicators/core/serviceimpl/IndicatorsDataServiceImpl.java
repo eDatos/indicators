@@ -166,15 +166,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<DataDefinition> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
-        // Validation
-        InvocationValidator.checkRetrieveDataDefinitions(null);
-
-        // Find db
-        return getDataGpeRepository().findCurrentDataDefinitions();
-    }
-
-    @Override
     public DataDefinition retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveDataDefinition(uuid, null);
