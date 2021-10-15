@@ -78,34 +78,6 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         return findByQuery(query, parameters);
     }
 
-    @Override
-    public DataDefinition findCurrentDataDefinition(String uuid) {
-        Date now = Calendar.getInstance().getTime();
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(NOW, now);
-        parameters.put("uuid", uuid);
-
-        // @formatter:off
-        String query = "from DataDefinition df " +
-                       "where df.uuid = :uuid " +
-                       "and df.availableEndDate is null " +
-                       "and df.availableStartDate = (" +
-                                                      " select max(df2.availableStartDate) " +
-                                                      " from DataDefinition df2 " +
-                                                      // It's not a NOT visible query
-                                                      " where df2.availableStartDate <= :now " +
-                                                      // It's not archived
-                                                      " and df2.availableEndDate is NULL " +
-                                                      " and df.uuid = df2.uuid)";
-        // @formatter:on
-        List<DataDefinition> result = findByQuery(query, parameters);
-        if (result != null && result.size() > 0) {
-            return result.get(0);
-        } else {
-            return null;
-        }
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public List<String> findDataDefinitionsWithDataUpdatedAfter(Date date) {

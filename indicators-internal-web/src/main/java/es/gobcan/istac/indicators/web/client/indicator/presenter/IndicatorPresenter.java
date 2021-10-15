@@ -60,8 +60,6 @@ import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeA
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeResult;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
-import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
-import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesResult;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
@@ -167,8 +165,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setDataDefinitionsOperationCodes(List<String> operationCodes);
 
         void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
-
-        void setDataDefinition(DataDefinitionDto dataDefinitionDto);
 
         void setDataStructure(DataStructureDto dataStructureDto);
 
@@ -459,17 +455,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
                 getView().setDataStructureForEdition(result.getDataStructureDto());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveDataDefinition(final String uuid) {
-        dispatcher.execute(new GetDataDefinitionAction(uuid), new WaitingAsyncCallbackHandlingError<GetDataDefinitionResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetDataDefinitionResult result) {
-                getView().setDataDefinition(result.getDataDefinitionDto());
             }
         });
     }

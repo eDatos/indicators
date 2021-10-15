@@ -817,23 +817,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Service call
-        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx, uuid);
-
-        // Transform
-        DataDefinitionDto dto = null;
-        if (dataDef != null) {
-            dto = do2DtoMapper.dataDefinitionDoToDto(dataDef);
-        }
-        return dto;
-    }
-
-    @Override
     public DataStructureDto retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security

@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
@@ -55,21 +54,7 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
     @Before
     public void setUpMocks() throws MetamacException {
         // init mocks
-        when(indicatorsDataService.retrieveDataDefinition(any(ServiceContext.class), eq(dataDefinition1.getUuid()))).thenReturn(dataDefinition1);
         when(indicatorsDataService.retrieveDataStructure(any(ServiceContext.class), eq(dataStructure1.getUuid()))).thenReturn(dataStructure1);
-    }
-
-    @Test
-    public void testRetrieveDataDefinition() throws Exception {
-        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContextAdministrador(), dataDefinition1.getUuid());
-        assertNotNull(dto);
-        compareDoDto(dataDefinition1, dto);
-    }
-
-    @Test
-    public void testFindDataDefinitionNotFound() throws Exception {
-        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContextAdministrador(), "NOT_EXIST");
-        assertNull(dto);
     }
 
     @Test

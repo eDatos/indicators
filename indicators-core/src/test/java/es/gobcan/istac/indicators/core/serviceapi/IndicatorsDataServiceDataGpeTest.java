@@ -103,64 +103,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         assertEquals(0, dataDefs.size());
     }
 
-    @Test
-    public void testRetrieveDataDefinitionUuidNull() throws Exception {
-        try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), null);
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveDataDefinition() throws Exception {
-        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA1_UUID);
-        assertEquals(CONSULTA1_UUID, dataDef.getUuid());
-        assertEquals(CONSULTA1_OPERATION_CODE, dataDef.getIdOperacion());
-    }
-
-    @Test
-    public void testRetrieveDataDefinitionNotExist() throws Exception {
-        try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), "NOT_EXIST");
-            fail("Should throws an exception");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testRetrieveDataDefinitionArchived() throws Exception {
-        try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA2_UUID);
-            fail("Should throws an exception");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    /*
-     * Some query exist but the date shows is no longer available
-     */
-    @Test
-    public void testRetrieveDataDefinitionPublishedUnavailable() throws Exception {
-        try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA3_UUID);
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
     /*
      * Checking conversion from json to Data object
      * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testRetrieveDataStructure()

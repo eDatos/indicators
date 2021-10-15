@@ -501,6 +501,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         dataSourceDto.setQueryEnvironment(QueryEnvironmentEnum.GPE);
         dataSourceDto.setQueryUuid("queryGpe1");
         dataSourceDto.setQueryUrn("px1");
+        dataSourceDto.setQueryText("queryText1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
