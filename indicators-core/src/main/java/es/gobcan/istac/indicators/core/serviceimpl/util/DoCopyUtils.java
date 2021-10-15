@@ -174,6 +174,7 @@ public class DoCopyUtils {
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
+        target.setQueryText(source.getQueryText());
         target.setStatResource(copy(source.getStatResource()));
         target.setTimeValue(source.getTimeValue());
         target.setTimeVariable(source.getTimeVariable());

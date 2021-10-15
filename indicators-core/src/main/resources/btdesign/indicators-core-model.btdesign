@@ -198,12 +198,8 @@ Application Indicators {
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-			"Retrieves all Data containing basic info only"
-	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinition> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
-			"Retrieves Data containing basic info only"
-	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieves data info from JSON-stat from URL"
@@ -541,12 +537,8 @@ Application Indicators {
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-	    	"Retrieves all Data containing basic info only"
-	    	List<@DataDefinitionDto> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinitionDto> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
-	    	"Retrieves all Data basic info only"
-	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieves the data from JSON-stat"
@@ -994,6 +986,8 @@ Application Indicators {
 			String queryUuid not nullable databaseColumn="QUERY_UUID";
 			"Px"
 			String queryUrn not nullable databaseColumn="QUERY_URN";
+			"Text"
+			String queryText nullable databaseColumn="QUERY_TEXT";
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -1217,9 +1211,7 @@ Application Indicators {
        			protected List<@DataDefinition> findByQuery;
             	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	List<String> findCurrentDataDefinitionsOperationsCodes;
-            	List<@DataDefinition> findCurrentDataDefinitions;
             	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
-            	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
             	List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, DateTimestamp date);
 			}
@@ -1702,6 +1694,8 @@ Application Indicators {
 			String queryUuid;
 			"QueryUrn"
 			String queryUrn;
+			"QueryText"
+			String queryText;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"

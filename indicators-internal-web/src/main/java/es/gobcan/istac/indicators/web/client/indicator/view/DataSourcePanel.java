@@ -265,6 +265,10 @@ public class DataSourcePanel extends VLayout {
             }
         }
 
+        if (generalEditionForm.isVisible() && (QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment()))) {
+            dataSourceDto.setQueryText(generalEditionForm.getValueAsString(DataSourceDS.QUERY_TEXT));
+        }
+
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
         dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(editionLanguages.get(0), new InternationalStringDto(), dataStructureDtoEdition.getSurveyTitle()));
         if (generalEditionForm.isVisible()) {
@@ -455,11 +459,6 @@ public class DataSourcePanel extends VLayout {
         interperiodPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
         annualPuntualRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
         annualPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
-    }
-
-    public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
-        generalForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
-        generalStaticEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
     }
 
     private void setSelectedRelatedQueryInEditionForm(ExternalItemDto relatedDsdDto) {

@@ -1247,26 +1247,6 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveDataDefinitions(List<MetamacExceptionItem> exceptions) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        // nothing
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    public static void checkRetrieveDataDefinition(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
     public static void checkFindDataDefinitionsByOperationCode(String operationCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -2000,6 +1980,11 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryEnvironment(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ENVIRONMENT, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryUrn(), ServiceExceptionParameters.DATA_SOURCE_PX_URI, exceptions);
+
+        if (QueryEnvironmentEnum.GPE.equals(dataSource.getQueryEnvironment())) {
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getQueryText(), ServiceExceptionParameters.DATA_SOURCE_QUERY_TEXT, exceptions);
+        }
+
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyTitle(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(dataSource.getPublishers(), ServiceExceptionParameters.DATA_SOURCE_PUBLISHERS, exceptions);

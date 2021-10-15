@@ -801,23 +801,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<DataDefinitionDto> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Service call
-        List<DataDefinition> dataDefs = getIndicatorsDataService().retrieveDataDefinitions(ctx);
-
-        // Transform
-        List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();
-        for (DataDefinition basic : dataDefs) {
-            dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
-        }
-        return dtos;
-    }
-
-    @Override
     public List<DataDefinitionDto> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -831,23 +814,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
         }
         return dtos;
-    }
-
-    @Override
-    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Service call
-        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx, uuid);
-
-        // Transform
-        DataDefinitionDto dto = null;
-        if (dataDef != null) {
-            dto = do2DtoMapper.dataDefinitionDoToDto(dataDef);
-        }
-        return dto;
     }
 
     @Override
