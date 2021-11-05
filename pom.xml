@@ -28,6 +28,7 @@
 		<module>indicators-web</module>
 		<module>indicators-internal-web</module>
 		<module>indicators-external-api-web</module>
+		<module>indicators-kafka</module>
 	</modules>
 
 	<build>
