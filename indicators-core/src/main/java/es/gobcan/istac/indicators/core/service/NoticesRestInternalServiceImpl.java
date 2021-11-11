@@ -140,6 +140,16 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         }
     }
 
+    @Override
+    public void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion) {
+        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, Collections.singletonList(indicatorVersion), indicatorVersion.getCode());
+    }
+
+    @Override
+    public void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion) {
+        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, new ArrayList<>(), indicatorsSystemVersion.getCode());
+    }
+
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {
         List<IndicatorVersion> notifiableIndicators = new ArrayList<IndicatorVersion>();
         for (IndicatorVersion failedIndicatorVersion : failedPopulationIndicators) {

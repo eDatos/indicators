@@ -10,4 +10,5 @@ public class ServiceNoticeMessage {
     public static final String MAX_VERSION_REACHED_ERROR                       = "notice_message.indicators.message.max_version_reached.error";
     public static final String INDICATOR_POPULATION_DATA_SUCCESS               = "notice_message.indicators.message.population_data.success";
     public static final String INDICATOR_POPULATION_DATA_ERROR                 = "notice_message.indicators.message.population_data.error";
+    public static final String STREAM_MESSAGE_SEND_ERROR                       = "notice_message.indicators.message.sent_via_kafka.error";
 }

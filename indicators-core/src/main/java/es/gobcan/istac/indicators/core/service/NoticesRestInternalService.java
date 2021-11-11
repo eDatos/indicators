@@ -21,4 +21,6 @@ public interface NoticesRestInternalService {
     void createMaximumVersionReachedBackgroundNotification(IndicatorVersion indicatorVersion, VersionTypeEnum versionTypeEnum);
     void createPopulateIndicatorDataSuccessBackgroundNotification(String user, Indicator indicator);
     void createPopulateIndicatorDataErrorBackgroundNotification(String user, Indicator indicator, MetamacException metamacException);
+    void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion);
+    void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion);
 }
