@@ -1,12 +1,12 @@
 package es.gobcan.istac.indicators.core.service;
 
-import java.util.List;
-
+import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import es.gobcan.istac.indicators.core.domain.Indicator;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import java.util.List;
 
 public interface NoticesRestInternalService {
 
