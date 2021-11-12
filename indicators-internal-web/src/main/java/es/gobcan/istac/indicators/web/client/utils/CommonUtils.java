@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
