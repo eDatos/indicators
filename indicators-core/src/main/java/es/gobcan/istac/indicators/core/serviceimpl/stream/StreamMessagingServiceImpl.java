@@ -6,7 +6,7 @@ import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
 import es.gobcan.istac.indicators.core.service.stream.ProducerBase;
-import es.gobcan.istac.indicators.core.service.stream.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -74,13 +74,7 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
             for (E message : messages) {
                 try {
                     LOGGER.debug("Sending message with code '{}'", streamMessagingCallback.getUniqueIdentifier(message));
-                    SendStreamMessageResult result = getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<SendStreamMessageResult>() {
-
-                        @Override
-                        protected SendStreamMessageResult doInMetamacTransaction(TransactionStatus status) {
-                            return sendMessage(message, streamMessagingCallback);
-                        }
-                    });
+                    SendStreamMessageResult result = sendMessage(message, streamMessagingCallback);
                     if (result.isOk()) {
                         sentMessages++;
                     } else {

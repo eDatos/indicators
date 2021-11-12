@@ -631,6 +631,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
+        getIndicatorsService().resendAllPendingAndFailedMessages(ctx);
+    }
+
+    @Override
     public IndicatorDto archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -72,6 +74,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     @Autowired
     private IndicatorsConfigurationService indicatorsConfigurationService;
 
+    @Autowired
+    private StreamMessagingService         streamMessagingService;
+
+    @Autowired
+    private List<StreamMessagingService.StreamMessagingCallback<?,?,?>> streamMessagingCallbacks;
+
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     @Override
@@ -97,6 +105,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorVersion.setIsLastVersion(Boolean.TRUE);
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setVersionNumber(IndicatorsVersionUtils.INITIAL_VERSION);
+        indicatorVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
         indicatorVersion.setIndicator(indicator);
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
@@ -570,6 +579,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } catch (Exception e) {
             LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
                     + indicatorVersion.getVersionNumber(), e);
+        }
+    }
+
+    @Override
+    public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
+        for(StreamMessagingService.StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
+            streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
         }
     }
 

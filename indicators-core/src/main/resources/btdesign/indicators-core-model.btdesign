@@ -134,7 +134,8 @@ Application Indicators {
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
-	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;
+            void resendAllPendingAndFailedMessages() throws MetamacException;
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Mark indicator for not notify population errors"
@@ -492,7 +493,9 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicator"
 	    	@IndicatorDto rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
-	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;
+	    	"Resend all pending and failed messages"
+            void resendAllPendingAndFailedMessages() throws MetamacException;
 	    	"Archives indicator"
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"

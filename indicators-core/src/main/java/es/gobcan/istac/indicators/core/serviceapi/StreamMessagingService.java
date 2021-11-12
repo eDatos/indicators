@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.service.stream;
+package es.gobcan.istac.indicators.core.serviceapi;
 
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
