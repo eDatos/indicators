@@ -73,15 +73,15 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
             int sentMessages = 0;
             for (E message : messages) {
                 try {
-                    LOGGER.debug("Sending message with code '{}'", streamMessagingCallback.getUniqueIdentifier(message));
+                    LOGGER.debug("Sending message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message));
                     SendStreamMessageResult result = sendMessage(message, streamMessagingCallback);
                     if (result.isOk()) {
                         sentMessages++;
                     } else {
-                        LOGGER.warn("An error occurred while trying to send through Kafka the message with code '{}'", streamMessagingCallback.getUniqueIdentifier(message), result.getMainException());
+                        LOGGER.warn("An error occurred while trying to send through Kafka the message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message), result.getMainException());
                     }
                 } catch (Exception e) {
-                    LOGGER.warn("An error occurred while trying to send through Kafka the message with code '{}'", streamMessagingCallback.getUniqueIdentifier(message), e);
+                    LOGGER.warn("An error occurred while trying to send through Kafka the message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message), e);
                 }
             }
             if (sentMessages == messages.size()) {

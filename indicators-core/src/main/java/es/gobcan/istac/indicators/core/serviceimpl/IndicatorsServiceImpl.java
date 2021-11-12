@@ -13,6 +13,7 @@ import java.util.List;
 
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -76,6 +77,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Autowired
     private StreamMessagingService         streamMessagingService;
+
+    @Autowired
+    private StreamMessagingService.StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
 
     @Autowired
     private List<StreamMessagingService.StreamMessagingCallback<?,?,?>> streamMessagingCallbacks;
@@ -583,6 +587,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public SendStreamMessageResult sendIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+        return streamMessagingService.sendMessage(indicatorVersion, streamMessagingCallback);
+    }
+
+    @Override
     public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
         for(StreamMessagingService.StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
             streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
@@ -649,6 +658,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
+
+        indicatorNewVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
 
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);

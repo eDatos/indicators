@@ -43,6 +43,13 @@ public class ClientSecurityUtils {
         return false;
     }
 
+    public static boolean canResendIndicatorsSystemStreamMessage(String operationCode) {
+        if (isRoleAllowed(RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION)) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean canArchiveIndicatorsSystem(String operationCode) {
         if (isRoleAllowed(RoleEnum.TECNICO_DIFUSION) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_DIFUSION)) {
             return true;
@@ -129,6 +136,10 @@ public class ClientSecurityUtils {
     }
 
     public static boolean canPublishIndicator(IndicatorDto indicatorDto) {
+        return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
+    }
+
+    public static boolean canResendIndicatorStreamMessage(IndicatorDto indicatorDto) {
         return isNotTaskInBackground(indicatorDto) && isRoleAllowed(RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
     }
 

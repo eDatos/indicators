@@ -64,6 +64,7 @@ public class KafkaInitializeTopics {
         topics.add(createTopic(configurationService.retrieveKafkaTopicQueryPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicDatasetsPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicCollectionPublication()));
+        topics.add(createTopic("INDICATOR_PUBLICATIONS")); // TODO EDATOS-3485: get it from configurationService
 
         return topics;
     }

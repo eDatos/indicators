@@ -23,6 +23,8 @@ public class IndicatorDS extends DataSource {
     public static String NEEDS_UPDATE_DIFF                     = "ind-needs-update-diff";
     public static String PROC_STATUS_DIFF                      = "ind-status-diff";
 
+    public static String PUBLICATION_STREAM_STATUS             = "ind-publication-stream-status";
+
     // CONTENT CLASSIFIERS
     public static String SUBJECT                               = "ind-sub";
     public static String SUBJECT_CODE                          = "ind-sub-code";

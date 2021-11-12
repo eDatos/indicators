@@ -237,6 +237,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
 
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
+
         return target;
     }
 

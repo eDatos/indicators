@@ -6,6 +6,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
@@ -267,6 +268,13 @@ public class IndicatorGeneralPanel extends VLayout {
                 uiHandlers.disableNotifyPopulationErrors(indicator.getUuid());
             }
         });
+
+        mainFormLayout.getReSendStreamMessage().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.reSendStreamMessageIndicator(indicator);
+            }
+        });
     }
 
     private void previewData(final IndicatorDto indicatorDto, boolean hasDataSources, final EnvironmentTypeEnum environmentType) {
@@ -318,7 +326,10 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         needsUpdate.setWidth(20);
-        identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+        ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorDS.PUBLICATION_STREAM_STATUS, getConstants().indicatorStreamMsgStatus());
+        publicationStreamStatus.setWidth(20);
+
+        identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate, publicationStreamStatus);
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -540,6 +551,8 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         identifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
         identifiersForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
+        identifiersForm.getItem(IndicatorDS.PUBLICATION_STREAM_STATUS)
+                .setIcons(StreamMessageStatusEnum.PENDING.equals(indicatorDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorDto.getStreamMessageStatus()));
 
         // Content Classifiers
         contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());

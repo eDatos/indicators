@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -622,12 +624,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
 
+        getIndicatorsService().sendIndicator(ctx, publishIndicatorResult.getIndicatorVersion());
+
         // Transform to Dto
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, publishIndicatorResult.getIndicatorVersion());
         PublishIndicatorResultDto publishIndicatorResultDto = new PublishIndicatorResultDto();
         publishIndicatorResultDto.setIndicator(indicatorDto);
         publishIndicatorResultDto.setPublicationFailedReason(publishIndicatorResult.getPublicationFailedReason());
         return publishIndicatorResultDto;
+    }
+
+    @Override
+    public SendStreamMessageResult resendIndicator(ServiceContext ctx, String code) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
+
+        // indicator version
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorPublishedByCode(ctx, code);
+
+        // Send and return indicator version
+        return getIndicatorsService().sendIndicator(ctx, indicatorVersion);
     }
 
     @Override

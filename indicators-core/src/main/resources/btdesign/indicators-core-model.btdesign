@@ -135,6 +135,7 @@ Application Indicators {
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult sendIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
             void resendAllPendingAndFailedMessages() throws MetamacException;
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
@@ -494,6 +495,8 @@ Application Indicators {
 	    	@IndicatorDto rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
 	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;
+	    	"Resend an indicator version"
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult resendIndicator(String code) throws MetamacException;
 	    	"Resend all pending and failed messages"
             void resendAllPendingAndFailedMessages() throws MetamacException;
 	    	"Archives indicator"
@@ -894,6 +897,9 @@ Application Indicators {
 			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
 			"Data sources"
 			- Bag<@DataSource> dataSources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorVersion;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
@@ -1573,6 +1579,9 @@ Application Indicators {
        		- @InternationalStringDto notes;
        		"Quantity"
        		- @QuantityDto quantity;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
        		
        		"Number of version in production"
        		String productionVersion;
