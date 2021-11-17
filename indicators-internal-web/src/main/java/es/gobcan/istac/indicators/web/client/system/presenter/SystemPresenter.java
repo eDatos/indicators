@@ -438,7 +438,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
             @Override
             public void onWaitSuccess(ReSendIndicatorsSystemStreamMessageResult result) {
-                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb()); // TODO EDATOS-3485: check if the conditional should go first
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
 
                 if (result.getNotificationException() != null) {
                     ShowMessageEvent.fireWarningMessageWithError(SystemPresenter.this, getMessages().indicatorResendStreamMessageError(), result.getNotificationException());
