@@ -137,8 +137,7 @@ Application Indicators {
 	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;
 	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult sendIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
-            void resendAllPendingAndFailedMessages() throws MetamacException;
-	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
+	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Mark indicator for not notify population errors"
             disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;

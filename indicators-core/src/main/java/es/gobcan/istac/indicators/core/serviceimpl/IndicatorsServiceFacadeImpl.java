@@ -6,12 +6,12 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
@@ -89,7 +89,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private ConfigurationService                   configurationService;
+    private StreamMessagingService                 streamMessagingService;
+
+    @Autowired
+    private List<StreamMessagingCallback<?,?,?>>   streamMessagingCallbacks;
 
     public IndicatorsServiceFacadeImpl() {
     }
@@ -665,7 +668,9 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
-        getIndicatorsService().resendAllPendingAndFailedMessages(ctx);
+        for(StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
+            streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
+        }
     }
 
     @Override

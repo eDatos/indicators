@@ -84,9 +84,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     @Qualifier("indicatorStreamMessagingCallback")
     private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
 
-    @Autowired
-    private List<StreamMessagingCallback<?,?,?>> streamMessagingCallbacks;
-
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     @Override
@@ -592,13 +589,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     @Override
     public SendStreamMessageResult sendIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         return streamMessagingService.sendMessage(indicatorVersion, streamMessagingCallback);
-    }
-
-    @Override
-    public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
-        for(StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
-            streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
-        }
     }
 
     @Override
