@@ -112,6 +112,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
+
         return target;
     }
 

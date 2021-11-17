@@ -37,6 +37,9 @@ public interface SystemUiHandler extends UiHandlers {
     void sendToDiffusionValidation(IndicatorsSystemDtoWeb indicatorsSystemDto);
     void rejectValidation(IndicatorsSystemDtoWeb indicatorsSystemDto);
     void publish(IndicatorsSystemDtoWeb indicatorsSystemDto);
+
+    void reSendStreamMessageIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto);
+
     void archive(IndicatorsSystemDtoWeb indicatorsSystemDto);
 
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);

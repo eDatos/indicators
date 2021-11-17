@@ -13,6 +13,7 @@ import java.util.List;
 
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +35,7 @@ import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -79,10 +81,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private StreamMessagingService         streamMessagingService;
 
     @Autowired
-    private StreamMessagingService.StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
+    @Qualifier("indicatorStreamMessagingCallback")
+    private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
 
     @Autowired
-    private List<StreamMessagingService.StreamMessagingCallback<?,?,?>> streamMessagingCallbacks;
+    private List<StreamMessagingCallback<?,?,?>> streamMessagingCallbacks;
 
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
@@ -593,7 +596,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
-        for(StreamMessagingService.StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
+        for(StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
             streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
         }
     }

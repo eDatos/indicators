@@ -213,8 +213,24 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Publish
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().publishIndicatorsSystem(ctx, uuid);
 
+        // Send via Kafka
+        getIndicatorsSystemsService().sendIndicatorsSystem(ctx, indicatorsSystemVersion);
+
         // Transform to Dto
         return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+    }
+
+    @Override
+    public SendStreamMessageResult resendIndicatorsSystem(ServiceContext ctx, String code) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
+        checkAccessIndicatorsSystemByCode(ctx, code, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
+
+        // Version of this indicators system
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublishedByCode(ctx, code);
+
+        // Send and return the version of an indicators system
+        return getIndicatorsSystemsService().sendIndicatorsSystem(ctx, indicatorsSystemVersion);
     }
 
     @Override

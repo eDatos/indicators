@@ -43,7 +43,8 @@ Application Indicators {
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
-	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
+	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult sendIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
@@ -398,7 +399,9 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicators system"
 	    	@IndicatorsSystemDto rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
-	    	@IndicatorsSystemDto publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
+	    	@IndicatorsSystemDto publishIndicatorsSystem(String uuid) throws MetamacException;
+	    	"Resend a version of an indicator system"
+            es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult resendIndicatorsSystem(String code) throws MetamacException;
 	    	"Archives indicators system"
 	    	@IndicatorsSystemDto archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
@@ -657,6 +660,9 @@ Application Indicators {
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
 			String archiveUser nullable;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 
 			// Relations
 			"Indicator system"
@@ -1519,7 +1525,10 @@ Application Indicators {
 			"Date when the indicators system was archived"
 			JAVADATE archiveDate;
 			"User who archived"
-			String archiveUser;			
+			String archiveUser;
+
+            "Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 	    }
 	    
 		"Dto for indicators system"

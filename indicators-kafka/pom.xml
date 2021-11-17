@@ -102,6 +102,7 @@
                                 <import>${project.basedir}/src/main/resources/avro-schemas/international-string.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/related-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/indicator-version.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/indicators-system-version.avsc</import>
                             </imports>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>
                             <outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>

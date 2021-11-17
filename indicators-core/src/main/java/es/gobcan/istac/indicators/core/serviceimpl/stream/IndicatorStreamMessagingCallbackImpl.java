@@ -4,11 +4,10 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.mapper.IndicatorVersionDo2AvroMapper;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -21,7 +20,7 @@ import java.util.List;
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 @Component("indicatorStreamMessagingCallback")
-class IndicatorStreamMessagingCallbackImpl implements StreamMessagingService.StreamMessagingCallback<IndicatorVersion, IndicatorVersionAvro, IndicatorVersionDo2AvroMapper> {
+class IndicatorStreamMessagingCallbackImpl implements StreamMessagingCallback<IndicatorVersion, IndicatorVersionAvro, IndicatorVersionDo2AvroMapper> {
 
     @Autowired
     private IndicatorVersionDo2AvroMapper indicatorVersionDo2AvroMapper;

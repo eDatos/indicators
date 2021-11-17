@@ -86,6 +86,8 @@ import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorsSystemStreamMessageAction;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorsSystemStreamMessageResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
@@ -428,6 +430,23 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         } else {
             ShowMessageEvent.fireErrorMessage(SystemPresenter.this, getMessages().errorPublishingSystemOperationNotPublished());
         }
+    }
+
+    @Override
+    public void reSendStreamMessageIndicatorsSystem(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new ReSendIndicatorsSystemStreamMessageAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<ReSendIndicatorsSystemStreamMessageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ReSendIndicatorsSystemStreamMessageResult result) {
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb()); // TODO EDATOS-3485: check if the conditional should go first
+
+                if (result.getNotificationException() != null) {
+                    ShowMessageEvent.fireWarningMessageWithError(SystemPresenter.this, getMessages().indicatorResendStreamMessageError(), result.getNotificationException());
+                } else {
+                    ShowMessageEvent.fireSuccessMessage(SystemPresenter.this, getMessages().indicatorResendStreamMessagePublished());
+                }
+            }
+        });
     }
 
     @Override
