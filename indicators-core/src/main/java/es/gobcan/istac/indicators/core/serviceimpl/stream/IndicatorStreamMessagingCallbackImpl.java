@@ -75,6 +75,6 @@ class IndicatorStreamMessagingCallbackImpl implements StreamMessagingCallback<In
 
     @Override
     public String getTopic() throws MetamacException {
-        return "INDICATOR_PUBLICATIONS"; // TODO EDATOS-3485: get it from configurationService
+        return configurationService.retrieveKafkaTopicIndicatorsPublication();
     }
 }
