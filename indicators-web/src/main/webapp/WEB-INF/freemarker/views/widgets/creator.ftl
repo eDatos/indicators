@@ -18,7 +18,9 @@
 </div>
 
 <script src="${serverURL}/theme/js/app.min.js"></script>
+[#if captchaExternalApiUrlBase??]
 <script src="${captchaExternalApiUrlBase}/authentication.js"></script>
+[/#if]
 
 <script>
     var apiUrl = "${indicatorsExternalApiUrlBase}" + "/v1.0";
