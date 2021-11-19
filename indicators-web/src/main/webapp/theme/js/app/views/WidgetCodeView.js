@@ -72,25 +72,32 @@
             };
 
             var self = this;
-            var request = showCaptchaWithButton(
-                function(url) {
-                    return new Promise(function(resolve, reject) {
-                        $.ajax({...ajaxParameters, url: url}).fail(function(jqXHR) {
-                            reject(jqXHR)
-                        }).done(function(val) {
-                            resolve(val)
-                        });
-                    });
-                },
-                permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
-                captchaOptions
-            );
-            request.then(function (response) {
-                // INDISTAC-945 - Using https for avoiding netvibes problems with http. 
+            var requestCallback = function (response) {
+                // INDISTAC-945 - Using https for avoiding netvibes problems with http.
                 // Widget can´t be embeded on http because it generates mixed content errors on the https netvibes dashboard
                 var url = self._getHttpsUrl() + "/widgets/uwa/" + response.id;
                 window.open(url, '_new');
-            });
+            };
+            if(typeof showCaptchaWithButton !== 'undefined') {
+                var request = showCaptchaWithButton(
+                    function(url) {
+                        return new Promise(function(resolve, reject) {
+                            $.ajax({...ajaxParameters, url: url}).fail(function(jqXHR) {
+                                reject(jqXHR)
+                            }).done(function(val) {
+                                resolve(val)
+                            });
+                        });
+                    },
+                    permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
+                    captchaOptions
+                );
+                request.then(requestCallback);
+            } else {
+                $.ajax({...ajaxParameters, url: permalinksUrlBase + "/v1.0/permalinks"}).fail(function(jqXHR) {
+                    reject(jqXHR)
+                }).done(requestCallback);
+            }
 
         }
 
