@@ -8,21 +8,19 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 8.4.1 a x.y.z
+## 8.4.0 a x.y.z
 * Debido a que la funcionalidad del captcha se ha movido a external-users, dicha funcionalidad estará deshabilitada si edatos-external-users no está instalado. El modo de indicarlo es que la siguiente propiedad no esté inicializada:
 
 ```
     metamac.portal.rest.external.authentication.captcha.url
 ```
-
-## 8.4.0 a 8.4.1
 * Se han realizado cambios a la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/8.4.0/db](etc/changes-from-release/8.4.0/db)
 * Para el correcto funcionamiento del soporte de JSON-stat como fuente de datos es necesario añadir al almacén de certificados de la java del tomcat donde se despliega la aplicación el certificado del dominio del cual se obtendrán los ficheros JSON-stat
 * A partir de esta versión indicadores se integra con el captcha de edatos-external-users. Para aprovechar estas funcionalidades asegúrese de que dicho proyecto esta instalado.
 * Se han realizado cambios en el modo de cargar los indicadores relativos a las dimensiones temporales. Se han de recargar los indicadores para que no haya problemas, especialmente en las instancias de indicador.
 * Para ello:
     * Configuramos el needsUpdate de todos los indicadores: 
-        `update TB_INDICATORS_VERSIONS set NEEDS_UPDATE=1 WHERE IS_LAST_VERSION = 1;` 
+        `update TB_INDICATORS_VERSIONS set NEEDS_UPDATE='1' WHERE IS_LAST_VERSION = '1';` 
     * Buscamos una consulta del statistical-resources y pulsamos "Reenviar mensaje de publicación"
 
 ## 8.3.0 a 8.4.0
