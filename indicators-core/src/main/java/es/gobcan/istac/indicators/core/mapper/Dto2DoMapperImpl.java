@@ -64,13 +64,13 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
-    private IndicatorsSystemsService      indicatorsSystemsService;
+    private IndicatorsSystemsService       indicatorsSystemsService;
 
     @Autowired
-    private IndicatorsService             indicatorsService;
+    private IndicatorsService              indicatorsService;
 
     @Autowired
-    private RateDerivationRepository      rateDerivationRepository;
+    private RateDerivationRepository       rateDerivationRepository;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -297,6 +297,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
+        target.setQueryText(source.getQueryText());
 
         target.setStatResource(externalItemDtoToDo(source.getStatResource(), target.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT));
 

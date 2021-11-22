@@ -12,7 +12,6 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -56,6 +55,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.JsonStatSearchWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -91,6 +91,8 @@ public class DataSourcePanel extends VLayout {
     private RateDerivationForm               annualPercentageRateEditionForm;
 
     private DataDefinitionsSearchWindow      dataDefinitionsSearchWindow;
+
+    private JsonStatSearchWindow             jsonStatSearchWindow;
     private List<String>                     dataDefinitionsOperationCodes;
     private DataSourceMainFormLayout         mainFormLayout;
 
@@ -261,6 +263,10 @@ public class DataSourcePanel extends VLayout {
             } else {
                 dataSourceDto.setQueryUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
             }
+        }
+
+        if (generalEditionForm.isVisible() && (QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment()))) {
+            dataSourceDto.setQueryText(generalEditionForm.getValueAsString(DataSourceDS.QUERY_TEXT));
         }
 
         dataSourceDto.setSourceSurveyCode(dataStructureDtoEdition.getSurveyCode());
@@ -455,11 +461,6 @@ public class DataSourcePanel extends VLayout {
         annualPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
 
-    public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
-        generalForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
-        generalStaticEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
-    }
-
     private void setSelectedRelatedQueryInEditionForm(ExternalItemDto relatedDsdDto) {
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, relatedDsdDto);
     }
@@ -588,6 +589,18 @@ public class DataSourcePanel extends VLayout {
 
         });
 
+        // Query from JSON STAT
+        RequiredTextItem jsonStatRequiredTextItem = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuerySelection());
+        jsonStatRequiredTextItem.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        SearchViewTextItem queryJsonStatItem = getQueryJsonStatItem();
+        queryJsonStatItem.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT);
+            }
+        });
+
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
         ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
@@ -612,10 +625,14 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) && dataStructureHasTimeValue();
+                return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasTimeValue();
             }
         });
-        timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
+
+        // TODO EDATOS-3417: Se deshabilita la validación mientras hasta que se aborde la tarea indicada dado que el validor no funciona correctamente
+        // cuando se utiliza desde la web. El valor de este campo también se valida desde el lado del servidor:
+        // https://git.arte-consultores.com/istac/indicators/-/blob/develop/indicators-core/src/main/java/es/gobcan/istac/indicators/core/serviceimpl/util/InvocationValidator.java#L2025
+        // timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
         ViewTextItem timeValueMetamac = new ViewTextItem(DataSourceDS.TIME_VALUE_METAMAC, getConstants().dataSourceTimeValue());
         timeValueMetamac.setShowIfCondition(new FormItemIfFunction() {
@@ -657,7 +674,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) && dataStructureHasGeoValue();
+                return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasGeoValue();
             }
         });
         geographicalValueMulti.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
@@ -708,8 +725,9 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue,
-                timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable, variables);
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
+                publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
+                variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -912,6 +930,37 @@ public class DataSourcePanel extends VLayout {
         };
 
         return item;
+    }
+
+    private SearchViewTextItem getQueryJsonStatItem() {
+        SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuerySelection());
+        query.setRequired(true);
+
+        query.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                jsonStatSearchWindow = new JsonStatSearchWindow(getConstants().dataSourceQuerySelection());
+
+                jsonStatSearchWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (jsonStatSearchWindow.validateForm()) {
+                            String jsonStatUrl = jsonStatSearchWindow.getJsonStatUrl();
+                            uiHandlers.retrieveDataStructure(jsonStatUrl);
+                            jsonStatSearchWindow.destroy();
+                            generalEditionForm.setValue(DataSourceDS.QUERY_UUID, jsonStatUrl);
+                            generalEditionForm.setValue(DataSourceDS.QUERY_TEXT, jsonStatUrl);
+                            generalEditionForm.getItem(DataSourceDS.QUERY_TEXT).validate();
+                        }
+
+                    }
+                });
+            }
+        });
+
+        return query;
     }
 
     public void retrieveStatisticalOperationsForQuerySelection() {

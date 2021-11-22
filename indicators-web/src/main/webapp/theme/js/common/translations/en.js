@@ -112,6 +112,9 @@
             // A priori no cambiamos esto para ser coherentes con ale existencia de addThousandSeparator
             'thousandsSep': '.',
             'decimalPoint': ','
+        },
+        'CAPTCHA': {
+            'LABEL': "Write the value of the image shown above"
         }
     };
 }());

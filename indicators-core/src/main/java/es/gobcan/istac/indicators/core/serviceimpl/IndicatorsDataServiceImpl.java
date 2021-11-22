@@ -20,9 +20,13 @@ import java.util.UUID;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -68,16 +72,19 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionGeoCoverage;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionMeasureCoverage;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionTimeCoverage;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
@@ -89,6 +96,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -158,28 +166,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<DataDefinition> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
-        // Validation
-        InvocationValidator.checkRetrieveDataDefinitions(null);
-
-        // Find db
-        return getDataGpeRepository().findCurrentDataDefinitions();
-    }
-
-    @Override
-    public DataDefinition retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
-        // Validation
-        InvocationValidator.checkRetrieveDataDefinition(uuid, null);
-
-        // Find db
-        DataDefinition dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
-        if (dataDefinition == null) {
-            throw new MetamacException(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR, uuid);
-        }
-        return dataDefinition;
-    }
-
-    @Override
     public List<DataDefinition> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
         // Validation
         InvocationValidator.checkFindDataDefinitionsByOperationCode(operationCode, null);
@@ -198,6 +184,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return jsonToDataStructure(json);
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+        }
+    }
+
+    @Override
+    public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveJsonStatData(uuid, null);
+
+        try {
+            String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
+            JsonStatData jsonStatData = jsonToJsonStatData(json);
+            LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
+            return jsonStatData;
+        } catch (Exception e) {
+            LOG.error("Unexpected error occurred retrieving JSON-stat file {} : ", uuid, e);
+            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
         }
     }
 
@@ -282,6 +284,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ctx, lastQueryDate);
         return updateIndicatorsData(ctx);
+    }
+
+    @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromJsonStat(ServiceContext ctx) throws MetamacException {
+        LOG.info("Starting Indicators data update process (JSON-stat DATA)");
+
+        List<IndicatorVersion> indicatorsVersionsFailed = markIndicatorsVersionWhichNeedsUpdateDueToJsonStatUpdate(ctx);
+
+        indicatorsVersionsFailed.addAll(updateIndicatorsData(ctx));
+
+        return indicatorsVersionsFailed;
     }
 
     @Override
@@ -1379,6 +1392,46 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
     }
 
+    private List<IndicatorVersion> markIndicatorsVersionWhichNeedsUpdateDueToJsonStatUpdate(ServiceContext ctx) throws MetamacException {
+
+        List<String> dataDefinitionsUuids = new ArrayList<>();
+        List<IndicatorVersion> indicatorsVersions = getJsonStatIndicatorsVersions();
+        List<IndicatorVersion> indicatorsVersionsFailed = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+        for (IndicatorVersion indicatorVersion : indicatorsVersions) {
+            for (DataSource dataSource : indicatorVersion.getDataSources()) {
+                if (QueryEnvironmentEnum.JSON_STAT.equals(dataSource.getQueryEnvironment())) {
+                    try {
+                        JsonStatData jsonStatData = retrieveJsonStatData(ctx, dataSource.getQueryUuid());
+                        DateTime jsonStatDataUpdated = formatter.parseDateTime(jsonStatData.getUpdated());
+                        LOG.debug("JSON-Stat Update: {}, JSON-Stat Update parsed: {}, Indicator Update: {}",
+                                Arrays.asList(jsonStatData.getUpdated(), jsonStatDataUpdated, indicatorVersion.getLastUpdated()).toArray());
+                        if (indicatorVersion.getLastUpdated().isBefore(jsonStatDataUpdated) && !dataDefinitionsUuids.contains(dataSource.getQueryUuid())) {
+                            dataDefinitionsUuids.add(dataSource.getQueryUuid());
+                            LOG.debug("Indicator {} will be marked for data update", indicatorVersion.getCode());
+                        }
+                    } catch (MetamacException e) {
+                        LOG.error("An unexpected error has occurred retrieving the JSON-stat file of the indicator {} :", indicatorVersion.getCode(), e);
+                        indicatorsVersionsFailed.add(indicatorVersion);
+                    }
+                }
+            }
+        }
+
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+
+        return indicatorsVersionsFailed;
+    }
+
+    private List<IndicatorVersion> getJsonStatIndicatorsVersions() {
+
+        List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT));
+
+        return getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
+    }
+
     private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, QueryVersionAvro queryVersionAvro) throws MetamacException {
         List<String> dataDefinitionsUuids = new ArrayList<>(1);
 
@@ -1534,6 +1587,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query);
+                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
+                        String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
+                        JsonStatData jsonStatData = jsonToJsonStatData(json);
+                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
                     } else {
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
@@ -1654,7 +1711,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
@@ -1717,12 +1774,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /*
-     * Get value has to take a look to method type and methd
+     * Get value has to take a look to method type and method
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
      */
     private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String originalTimeValue) throws MetamacException {
         // Create base for observation
-        String timeValue = MetamacTimeUtils.convertGPETimeValueToMetamacTimeValue(originalTimeValue);
+        String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
@@ -1733,7 +1790,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (dataOperation.isAnnualMethod()) {
             previousTimeValue = TimeVariableUtils.calculatePreviousYearTimeValue(timeValue);
         } else if (dataOperation.isInterPeriodMethod()) {
-            previousTimeValue = TimeVariableUtils.calculatePreviousTimeValue(timeValue);
+            previousTimeValue = MetamacTimeUtils.calculatePreviousTimeValue(timeValue);
         } else {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
         }
@@ -1965,6 +2022,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return target;
     }
 
+    private JsonStatData jsonToJsonStatData(String json) throws IOException {
+        return mapper.readValue(json, JsonStatData.class);
+    }
+
     /*
      * Private methods that get data from jaxi
      */
@@ -1987,4 +2048,5 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private NoticesRestInternalService getNoticesRestInternalService() {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
+
 }

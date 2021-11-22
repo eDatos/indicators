@@ -198,14 +198,12 @@ Application Indicators {
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-			"Retrieves all Data containing basic info only"
-	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinition> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
-			"Retrieves Data containing basic info only"
-	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves data info from JSON-stat from URL"
+	    	JsonStatData retrieveJsonStatData(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator data in background"
@@ -218,6 +216,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Updates data for all published JSON-stat indicators"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
             List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
@@ -347,6 +347,8 @@ Application Indicators {
 		    String retrieveDataStructureJson(String uuid) throws MetamacException;
 	     	"Retrieves Data content"
     		String retrieveDataJson(String uuid) throws MetamacException;
+    		"Retrieves JSON-stat"
+		    String retrieveJsonStat(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -535,20 +537,20 @@ Application Indicators {
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-	    	"Retrieves all Data containing basic info only"
-	    	List<@DataDefinitionDto> retrieveDataDefinitions() throws MetamacException;
 	    	"Find data By operation code"
 	    	List<@DataDefinitionDto> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
-	    	"Retrieves all Data basic info only"
-	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieves the data from JSON-stat"
+	    	@DataStructureDto retrieveJsonStatData(String uuid) throws MetamacException;
 	    	// "Populates a given indicator data"
 	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	        "Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators data JSON-stat"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
@@ -984,6 +986,8 @@ Application Indicators {
 			String queryUuid not nullable databaseColumn="QUERY_UUID";
 			"Px"
 			String queryUrn not nullable databaseColumn="QUERY_URN";
+			"Text"
+			String queryText nullable databaseColumn="QUERY_TEXT";
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -1207,9 +1211,7 @@ Application Indicators {
        			protected List<@DataDefinition> findByQuery;
             	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	List<String> findCurrentDataDefinitionsOperationsCodes;
-            	List<@DataDefinition> findCurrentDataDefinitions;
             	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
-            	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
             	List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, DateTimestamp date);
 			}
@@ -1692,6 +1694,8 @@ Application Indicators {
 			String queryUuid;
 			"QueryUrn"
 			String queryUrn;
+			"QueryText"
+			String queryText;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"
@@ -2088,8 +2092,10 @@ Application Indicators {
     	
     	"Query Source"
         enum QueryEnvironmentEnum {
-            METAMAC,
-            GPE
+        	String value
+            METAMAC("eDatos"),
+            GPE("GPE"),
+            JSON_STAT("JSON-stat")
         }
         
         "Task Status Type Enumerated"

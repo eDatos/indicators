@@ -63,6 +63,11 @@ public class TimeVariableUtils {
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
+    /*
+     * This function is deprecated, because in the places we have used it, we previously have normalized to MetamacTimeValues.
+     * Use MetamacTimeUtils.calculatePreviousTimeValue instead
+     */
+    @Deprecated
     public static String calculatePreviousTimeValue(String value) throws MetamacException {
         if (GpeTimeUtils.isTimeValue(value)) {
             return GpeTimeUtils.calculatePreviousTimeValue(value);
@@ -388,6 +393,7 @@ public class TimeVariableUtils {
         return new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
     }
 
+    // Changes here needs to propagate to TB_TRANSLATIONS table
     public static String getTimeValueTranslationCode(TimeValue timeValueDo) throws MetamacException {
         String translationCode = null;
         switch (timeValueDo.getGranularity()) {

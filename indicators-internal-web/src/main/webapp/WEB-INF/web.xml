@@ -127,7 +127,7 @@
 		
     <!-- Default page to serve -->
     <welcome-file-list>
-        <welcome-file>IndicatorsWeb.html</welcome-file>
+        <welcome-file>IndicatorsWeb.jsp</welcome-file>
     </welcome-file-list>
 
 

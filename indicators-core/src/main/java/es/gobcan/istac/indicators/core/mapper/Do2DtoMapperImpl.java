@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -64,6 +65,7 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
@@ -72,7 +74,7 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMapper {
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                    taskService;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -261,6 +263,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryEnvironment(source.getQueryEnvironment());
         target.setQueryUrn(source.getQueryUrn());
+        target.setQueryText(source.getQueryText());
         target.setStatResource(externalItemDoToDto(source.getStatResource()));
 
         target.setTimeVariable(source.getTimeVariable());
@@ -458,6 +461,49 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         if (!StringUtils.isEmpty(source.getContVariable())) {
             target.setContVariable(source.getContVariable());
         }
+        return target;
+    }
+
+    @Override
+    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
+        DataStructureDto target = new DataStructureDto();
+
+        // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
+        target.setUuid(uuid);
+
+        // GPE: title -> JSON-stat: label
+        target.setTitle(jsonStatData.getLabel());
+
+        // GPE: uriPx -> JSON-stat: extension - metadata - href (primer elemento)
+        target.setQueryUrn(jsonStatData.getUriPx());
+
+        // GPE: surveyCode -> JSON-stat: extension - datasetid
+        target.setSurveyCode(JsonStatUtils.getOperationCode(jsonStatData.getSurveyCode()));
+
+        // GPE: surveyTitle -> JSON-stat: extension - survey
+        target.setSurveyTitle(jsonStatData.getSurveyTitle());
+
+        // GPE: publishers -> JSON-stat: source
+        target.setPublishers(JsonStatUtils.toList(jsonStatData.getSource()));
+
+        // GPE: temporals -> JSON-stat: role - time (primer elemento)
+        target.setTemporalVariable(jsonStatData.getTemporalVariable());
+
+        // GPE: spatials -> JSON-stat: role - geo (primer elemento)
+        target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
+        // GPE: categories - variable -> JSON-stat: dimension - label
+        target.setVariables(jsonStatData.getVariables());
+
+        // GPE: categories - codes -> JSON-stat: dimension - category - index
+        target.setValueCodes(jsonStatData.getValueCodes());
+
+        // GPE: categories - labels -> JSON-stat: dimension - category - label
+        target.setValueLabels(jsonStatData.getValueLabels());
+
+        // GPE: contVariable -> JSON-stat: role - metric (primer elemento)
+        target.setContVariable(jsonStatData.getContVariable());
+
         return target;
     }
 

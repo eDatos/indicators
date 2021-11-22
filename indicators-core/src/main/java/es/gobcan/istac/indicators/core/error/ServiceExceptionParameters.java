@@ -93,6 +93,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_DATA_QUERY_ARTEFACT                                               = "parameter.indicators.data_source.query_arefact";
     public static final String DATA_SOURCE_DATA_GPE_UUID                                                     = "parameter.indicators.data_source.data_gpe_uuid";
     public static final String DATA_SOURCE_PX_URI                                                            = "parameter.indicators.data_source.px_uri";
+    public static final String DATA_SOURCE_QUERY_TEXT                                                        = "parameter.indicators.data_source.query_text";
     public static final String DATA_SOURCE_SOURCE_SURVEY_CODE                                                = "parameter.indicators.data_source.source_survey_code";
     public static final String DATA_SOURCE_SOURCE_SURVEY_TITLE                                               = "parameter.indicators.data_source.source_survey_title";
     public static final String DATA_SOURCE_SOURCE_SURVEY_ACRONYM                                             = "parameter.indicators.data_source.source_survey_acronym";

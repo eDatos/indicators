@@ -247,10 +247,6 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setDataDefinitions(dataDefinitionsDtos);
     }
 
-    public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
-        datasourcePanel.setDataDefinition(dataDefinitionDto);
-    }
-
     public void setStatisticalOperations(List<ExternalItemDto> operationsList) {
         datasourcePanel.setStatisticalOperations(operationsList);
     }

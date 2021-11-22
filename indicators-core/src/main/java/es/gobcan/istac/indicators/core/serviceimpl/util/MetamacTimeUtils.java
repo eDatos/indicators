@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import org.joda.time.DateTime;
@@ -20,6 +22,8 @@ public class MetamacTimeUtils {
         return SdmxTimeUtils.isObservationalTimePeriod(value);
     }
 
+    // Changes on setSubperiod propagates to TB_TRANSLATIONS.
+    // @see es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils.getTimeValueTranslationCode(TimeValue)
     public static TimeValue parseTimeValue(String timeValue) throws MetamacException {
 
         TimeValue timeValueFields = new TimeValue();
@@ -57,7 +61,7 @@ public class MetamacTimeUtils {
             }
             case WEEKLY: {
                 timeValueFields.setYear(String.valueOf(parseTime.getStartDateTime().getYear()));
-                String week = String.valueOf(parseTime.getStartDateTime().getWeekOfWeekyear());
+                String week = formatToTwoDigits(parseTime.getStartDateTime().getWeekOfWeekyear());
                 timeValueFields.setWeek(week);
                 timeValueFields.setSubperiod(SDMXCommonRegExpV2_1.REPORTING_WEEK_PERIOD_INDICATOR, week);
                 break;
@@ -138,8 +142,7 @@ public class MetamacTimeUtils {
             }
             case MONTHLY: {
                 DateTime previous = parseTime.getStartDateTime().minusMonths(1);
-                return (new StringBuilder()).append(String.valueOf(previous.getYear())).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR)
-                        .append(calculateMonthlyFromMonth(previous.getMonthOfYear())).toString();
+                return buildGregorianYearMonth(previous);
             }
             case WEEKLY: {
                 DateTime previous = parseTime.getStartDateTime().minusWeeks(1);
@@ -158,10 +161,46 @@ public class MetamacTimeUtils {
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
-    public static String convertGPETimeValueToMetamacTimeValue(String timeValue) throws MetamacException {
+    public static String normalizeToMetamacTimeValue(String timeValue) throws MetamacException {
         if (timeValue == null) {
             return null;
         }
+        String normalizedTimeValue = convertGPETimeValueToMetamacTimeValue(timeValue);
+        normalizedTimeValue = convertAmbiguousTimeValueToMetamacTimeValue(normalizedTimeValue);
+        return normalizedTimeValue;
+    }
+
+    public static ArrayList<String> normalizeToMetamacTimeValues(List<String> timeValues) throws MetamacException {
+        if (timeValues == null) {
+            return null;
+        }
+        ArrayList<String> normalizedTimeValues = new ArrayList<String>();
+        for (String timeValue : timeValues) {
+            normalizedTimeValues.add(normalizeToMetamacTimeValue(timeValue));
+        }
+        return normalizedTimeValues;
+    }
+
+    /*
+     * Normalize those metamac time values that can be written on on different ways, like 2000-A1 (equivalent to 2000) and 2000-M12 (equivalent to 2000-12)
+     */
+    public static String convertAmbiguousTimeValueToMetamacTimeValue(String value) throws MetamacException {
+        IstacTimeGranularityEnum timeGranularity = org.siemac.metamac.core.common.time.IstacTimeUtils.guessTimeGranularity(value);
+        DateTime parseDateTime = SdmxTimeUtils.parseTime(value).getStartDateTime();
+        switch (timeGranularity) {
+            case YEARLY: {
+                return String.valueOf(parseDateTime.getYear());
+            }
+
+            case MONTHLY: {
+                return buildGregorianYearMonth(parseDateTime);
+            }
+            default:
+                return value;
+        }
+    }
+
+    public static String convertGPETimeValueToMetamacTimeValue(String timeValue) throws MetamacException {
 
         if (!GpeTimeUtils.isTimeValue(timeValue)) {
             return timeValue;
@@ -194,7 +233,7 @@ public class MetamacTimeUtils {
             case MONTHLY: {
                 Matcher matcher = GpeTimeUtils.patternMonthlyValue.matcher(timeValue);
                 if (matcher.matches()) {
-                    return (new StringBuilder()).append(matcher.group(1)).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR).append(matcher.group(2)).toString();
+                    return buildReportingMonth(matcher.group(1), matcher.group(2));
                 }
                 break;
             }
@@ -217,6 +256,24 @@ public class MetamacTimeUtils {
         }
 
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
+    }
+
+    /*
+     * @see org.siemac.edatos.core.common.constants.shared.SDMXCommonRegExpV2_1.REPORTING_MONTH_TYPE
+     */
+    private static String buildReportingMonth(String year, String month) {
+        return (new StringBuilder()).append(year).append(HYPHEN).append(SDMXCommonRegExpV2_1.REPORTING_MONTH_PERIOD_INDICATOR).append(month).toString();
+    }
+
+    private static String buildReportingMonth(int year, int month) {
+        return buildReportingMonth(String.valueOf(year), calculateMonthlyFromMonth(month));
+    }
+
+    /*
+     * @see org.siemac.edatos.core.common.constants.shared.SDMXCommonRegExpV2_1.GREGORIAN_TIME_PERIOD_TYPE
+     */
+    private static String buildGregorianYearMonth(DateTime time) {
+        return time.toString("YYYY-MM");
     }
 
 }

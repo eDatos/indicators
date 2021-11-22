@@ -37,6 +37,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("visualizerApplicationExternalUrlBase", getVisualizerApplicationExternalUrlBase());
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
+        model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
+        try {
+            model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
+        } catch (MetamacException metamacException) {
+            // Ignore property if it doesn't exist
+            logger.info("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
+        }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
 
@@ -111,6 +118,14 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private String getPermalinksUrlBase() throws MetamacException {
         return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase()));
+    }
+
+    private String getPermalinksUrlBaseWithProtocol() throws MetamacException {
+        return removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
+    }
+
+    private String getCaptchaExternalApiUrlBase() throws MetamacException {
+        return removeLastSlashInUrl(configurationService.retrieveCaptchaExternalApiUrlBase());
     }
 
     private String removeUrlProtocol(String url) {

@@ -151,7 +151,10 @@ public class GpeTimeUtils {
 
     /**
      * Retrieves previous time value in same granularity
+     * 
+     * @deprecated You don´t need to calculatePreviousTimeValue for GpeTimes. Instead, you normally would normalize the times to MetamacTimes and then calculate the previous value
      */
+    @Deprecated
     public static String calculatePreviousTimeValue(String value) throws MetamacException {
         if (value == null) {
             return null;

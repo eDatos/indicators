@@ -171,11 +171,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setDataDefinition(DataDefinitionDto datDefinitionDto) {
-        dataSourcesPanel.setDataDefinition(datDefinitionDto);
-    }
-
-    @Override
     public void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos) {
         dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
     }

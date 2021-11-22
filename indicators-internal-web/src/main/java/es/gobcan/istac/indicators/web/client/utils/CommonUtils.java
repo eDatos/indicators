@@ -222,9 +222,18 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getQueryEnvironmentEnumValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
-            valueMap.put(environment.toString(), environment.getName());
+            valueMap.put(environment.toString(), environment.getValue());
         }
         return valueMap;
+    }
+
+    public static QueryEnvironmentEnum getQueryEnvironmentEnumValue(String valueAsString) {
+        for (QueryEnvironmentEnum value : QueryEnvironmentEnum.values()) {
+            if (value.getValue().equalsIgnoreCase(valueAsString)) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException();
     }
 
     public static LinkedHashMap<String, String> getRateDerivationRoundingValueMap() {
