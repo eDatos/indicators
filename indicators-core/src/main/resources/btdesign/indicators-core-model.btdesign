@@ -398,7 +398,7 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicators system"
 	    	@IndicatorsSystemDto rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
-	    	@IndicatorsSystemDto publishIndicatorsSystem(String uuid) throws MetamacException;
+	    	@PublishIndicatorsSystemResultDto publishIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Resend a version of an indicator system"
             es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult resendIndicatorsSystem(String code) throws MetamacException;
 	    	"Archives indicators system"
@@ -2002,9 +2002,21 @@ Application Indicators {
     	DataTransferObject PublishIndicatorResultDto {
 	   		"Indicator"
 	   		- @IndicatorDto indicator;
+	   		"If the notification of the publication fails, reason of error"
+	   		MetamacException notificationFailedReason;
 	   		"If publication fails, reason of error"
-	   		MetamacException publicationFailedReason;
+            MetamacException publicationFailedReason;
     	}
+
+    	"Dto for publish indicators system result"
+        DataTransferObject PublishIndicatorsSystemResultDto {
+            "Indicators system"
+            - @IndicatorsSystemDto indicatorsSystem;
+            "If the notification of the publication fails, reason of error"
+            MetamacException notificationFailedReason;
+            "If publication fails, reason of error"
+            MetamacException publicationFailedReason;
+        }
     	
 		"Dto for units multipliers"
     	DataTransferObject UnitMultiplierDto extends @AuditDto {

@@ -308,9 +308,14 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
-                fireSuccessMessage(getMessages().indicatorPublished());
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
+
+                if (result.getNotificationException() != null) {
+                    fireWarningMessageWithError(getMessages().indicatorPublishedWithNotificationError(), result.getNotificationException());
+                } else {
+                    fireSuccessMessage(getMessages().indicatorPublished());
+                }
             }
         });
     }

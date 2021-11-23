@@ -22,6 +22,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,11 +57,13 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
+import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -207,7 +210,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorsSystemDto publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
+    public PublishIndicatorsSystemResultDto publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security (role and access to this indicators system)
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
@@ -217,10 +220,17 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().publishIndicatorsSystem(ctx, uuid);
 
         // Send via Kafka
-        getIndicatorsSystemsService().sendIndicatorsSystem(ctx, indicatorsSystemVersion);
+        SendStreamMessageResult streamMessageResult = getIndicatorsSystemsService().sendIndicatorsSystem(ctx, indicatorsSystemVersion);
 
         // Transform to Dto
-        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, uuid));
+
+        // Create result object
+        PublishIndicatorsSystemResultDto publishIndicatorsSystemResultDto = new PublishIndicatorsSystemResultDto();
+        publishIndicatorsSystemResultDto.setIndicatorsSystem(indicatorsSystemDto);
+        publishIndicatorsSystemResultDto.setNotificationFailedReason(streamMessageResultToMetamacException(ctx, streamMessageResult));
+
+        return publishIndicatorsSystemResultDto;
     }
 
     @Override
@@ -637,19 +647,24 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public PublishIndicatorResultDto publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+        PublishIndicatorResultDto publishIndicatorResultDto = new PublishIndicatorResultDto();
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
 
         PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
 
-        getIndicatorsService().sendIndicator(ctx, publishIndicatorResult.getIndicatorVersion());
-
-        // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, publishIndicatorResult.getIndicatorVersion());
-        PublishIndicatorResultDto publishIndicatorResultDto = new PublishIndicatorResultDto();
+        IndicatorDto indicatorDto;
+        if(publishIndicatorResult.getPublicationFailedReason() == null) {
+            SendStreamMessageResult streamMessageResult = getIndicatorsService().sendIndicator(ctx, publishIndicatorResult.getIndicatorVersion());
+            indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, getIndicatorsService().retrieveIndicatorPublished(ctx, uuid));
+            publishIndicatorResultDto.setNotificationFailedReason(streamMessageResultToMetamacException(ctx, streamMessageResult));
+        } else {
+            indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, publishIndicatorResult.getIndicatorVersion());
+            publishIndicatorResultDto.setPublicationFailedReason(publishIndicatorResult.getPublicationFailedReason());
+        }
         publishIndicatorResultDto.setIndicator(indicatorDto);
-        publishIndicatorResultDto.setPublicationFailedReason(publishIndicatorResult.getPublicationFailedReason());
+
         return publishIndicatorResultDto;
     }
 
@@ -1280,6 +1295,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      */
     private void checkAccessIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, RoleEnum... roles) throws MetamacException {
         checkAccessIndicatorsSystemByCode(ctx, indicatorsSystem.getCode(), roles);
+    }
+
+    /**
+     * Mapper from SendStreamMessageResult to MetamacException
+     */
+    private MetamacException streamMessageResultToMetamacException(ServiceContext ctx, SendStreamMessageResult streamMessageResult) {
+        if(streamMessageResult == null || streamMessageResult.getMainException() == null) {
+            return null;
+        }
+        MetamacException notificationException = streamMessageResult.getMainException();
+        List<MetamacExceptionItem> secondaryExceptionItems = new ArrayList<>();
+        for (MetamacException secondaryExceptions : streamMessageResult.getSecondaryExceptions()) {
+            secondaryExceptionItems.addAll(secondaryExceptions.getExceptionItems());
+        }
+        notificationException.getExceptionItems().addAll(secondaryExceptionItems);
+        return TranslateExceptionUtils.translateMetamacException(ctx, notificationException);
     }
 
 }
