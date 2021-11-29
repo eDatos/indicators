@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 8.4.0 a x.y.z
+## 8.4.0 a 8.5.0
 * Debido a que la funcionalidad del captcha se ha movido a external-users, dicha funcionalidad estará deshabilitada si edatos-external-users no está instalado. El modo de indicarlo es que la siguiente propiedad no esté inicializada:
 
 ```
