@@ -38,7 +38,12 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
-        model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
+        try {
+            model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
+        } catch (MetamacException metamacException) {
+            // Ignore property if it doesn't exist
+            logger.info("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
+        }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
 
