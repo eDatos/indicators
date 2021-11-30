@@ -75,6 +75,7 @@ import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContent
 import es.gobcan.istac.indicators.web.server.handlers.PlanifyPopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.ReSendIndicatorStreamMessageActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemDiffusionValidationActionHandler;
@@ -154,6 +155,8 @@ import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorStreamMessageAction;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorsSystemStreamMessageAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
@@ -213,6 +216,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
         bindHandler(DeleteIndicatorsSystemsAction.class, DeleteIndicatorsSystemsActionHandler.class);
         bindHandler(ExportSystemInDsplAction.class, ExportSystemInDsplActionHandler.class);
+        bindHandler(ReSendIndicatorsSystemStreamMessageAction.class, ReSendIndicatorsSystemStreamMessageActionHandler.class);
 
         // Indicators System Structure
         bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
@@ -244,6 +248,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
         bindHandler(FindIndicatorsAction.class, FindIndicatorsActionHandler.class);
         bindHandler(ExportIndicatorsAction.class, ExportIndicatorsActionHandler.class);
+        bindHandler(ReSendIndicatorStreamMessageAction.class, ReSendIndicatorStreamMessageActionHandler.class);
 
         // Indicators life cycle
         bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);

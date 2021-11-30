@@ -294,7 +294,15 @@
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
         </dependency>
-    </dependencies>
+
+		<!-- INDICATORS -->
+		<dependency>
+			<groupId>es.gobcan.istac.indicators</groupId>
+			<artifactId>indicators-kafka</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<profiles>
         <profile>

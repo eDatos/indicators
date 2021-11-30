@@ -4,6 +4,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -86,6 +87,8 @@ import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorsSystemStreamMessageAction;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorsSystemStreamMessageResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
@@ -419,15 +422,44 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<PublishIndicatorsSystemResult>(this) {
 
                 @Override
+                public void onWaitFailure(Throwable caught) {
+                    super.onWaitFailure(caught);
+                    logger.log(Level.SEVERE, "Error publishing indicators system with uuid  = " + indicatorsSystemDto.getUuid());
+                    retrieveIndSystem(indicatorsSystemDto.getCode());
+                }
+
+                @Override
                 public void onWaitSuccess(PublishIndicatorsSystemResult result) {
-                    fireSuccessMessage(getMessages().systemPublished());
                     indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
+
+                    if (result.getNotificationException() != null) {
+                        fireWarningMessageWithError(getMessages().systemPublishedWithNotificationError(), result.getNotificationException());
+                    } else {
+                        fireSuccessMessage(getMessages().systemPublished());
+                    }
                 }
             });
         } else {
             ShowMessageEvent.fireErrorMessage(SystemPresenter.this, getMessages().errorPublishingSystemOperationNotPublished());
         }
+    }
+
+    @Override
+    public void reSendStreamMessageIndicatorsSystem(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new ReSendIndicatorsSystemStreamMessageAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<ReSendIndicatorsSystemStreamMessageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ReSendIndicatorsSystemStreamMessageResult result) {
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
+
+                if (result.getNotificationException() != null) {
+                    ShowMessageEvent.fireWarningMessageWithError(SystemPresenter.this, getMessages().indicatorResendStreamMessageError(), result.getNotificationException());
+                } else {
+                    ShowMessageEvent.fireSuccessMessage(SystemPresenter.this, getMessages().indicatorResendStreamMessagePublished());
+                }
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 @GenDispatch(isSecure = false)
 public class PublishIndicatorsSystem {
@@ -15,4 +16,6 @@ public class PublishIndicatorsSystem {
     @Out(1)
     IndicatorsSystemDtoWeb indicatorsSystemDto;
 
+    @Out(2)
+    MetamacWebException    notificationException;
 }
