@@ -6,6 +6,9 @@
   <!-- Specify the paths for translatable code -->
   <source path='core/dto'>
    	<exclude name="**/PublishIndicatorResultDto.*" />
+    <exclude name="**/PublishIndicatorsSystemResultDto.*" />
+    <exclude name="**/AvroMessage.*" />
+    <exclude name="**/MessageBase.*" />
   </source>
   <source path='core/enume/domain'/>
   <source path='core/util/shared'/>
