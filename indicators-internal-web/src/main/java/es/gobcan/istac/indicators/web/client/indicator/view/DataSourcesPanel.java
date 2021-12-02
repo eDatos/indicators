@@ -174,9 +174,6 @@ public class DataSourcesPanel extends VLayout {
             records[index++] = RecordUtils.getDataSourceRecord(ds);
         }
         dataSourcesListGrid.setData(records);
-
-        // Load data definitions operation codes
-        uiHandlers.retrieveDataDefinitionsOperationsCodes();
     }
 
     private void selectDataSource(DataSourceDto dataSourceDto) {
