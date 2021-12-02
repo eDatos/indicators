@@ -33,24 +33,23 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     @Override
     public List<String> findCurrentDataDefinitionsOperationsCodes() {
         Date now = Calendar.getInstance().getTime();
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(NOW, now);
 
         // @formatter:off
-        String queryHql = "select distinct df.idOperacion "+
-                           "from DataDefinition df "+
-                           "where df.availableEndDate is null "+
-                           "and df.availableStartDate = ("+
-                                                      " select max(df2.availableStartDate) " +
-                                                      " from DataDefinition df2 " +
-                                                      // It's not a NOT visible query
-                                                      " where df2.availableStartDate <= :now " +
-                                                      // It's not archived
-                                                      " and df2.availableEndDate is NULL " +
-                                                      " and df.uuid = df2.uuid) " +
-                          "order by df.idOperacion";
+        String queryString = "select distinct df.ID_OPERACION "+
+                             "from TV_CONSULTA df "+
+                             "join ( " +
+                                    "select tvc.UUID_CONSULTA, max(tvc.FECHA_DISPONIBLE_INICIO) max_fecha_disponible_inicio " +
+                                    "from TV_CONSULTA tvc " +
+                                    "where tvc.FECHA_DISPONIBLE_INICIO <= :now " + 
+                                    "and tvc.FECHA_DISPONIBLE_FIN is NULL " +
+                                    "group by tvc.UUID_CONSULTA " +
+                             ") df2 " + 
+                             "on df.UUID_CONSULTA = df2.UUID_CONSULTA and df.FECHA_DISPONIBLE_INICIO = df2.max_fecha_disponible_inicio " +
+                             "where df.FECHA_DISPONIBLE_FIN is null " +
+                             "order by df.ID_OPERACION ";
         // @formatter:on
-        Query query = getEntityManager().createQuery(queryHql);
+
+        Query query = getEntityManager().createNativeQuery(queryString);
         query.setParameter(NOW, now);
         return query.getResultList();
     }
