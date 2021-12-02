@@ -93,7 +93,6 @@ public class DataSourcePanel extends VLayout {
     private DataDefinitionsSearchWindow      dataDefinitionsSearchWindow;
 
     private JsonStatSearchWindow             jsonStatSearchWindow;
-    private List<String>                     dataDefinitionsOperationCodes;
     private DataSourceMainFormLayout         mainFormLayout;
 
     // When we are editing the form, but query dependent fields are in view mode
@@ -846,7 +845,9 @@ public class DataSourcePanel extends VLayout {
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
                 dataDefinitionsSearchWindow = new DataDefinitionsSearchWindow(getConstants().dataSourceQuerySelection());
-                dataDefinitionsSearchWindow.setDataDefinitionsOperationCodes(dataDefinitionsOperationCodes);
+
+                uiHandlers.retrieveDataDefinitionsOperationsCodes();
+
                 dataDefinitionsSearchWindow.getSearchButton().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
@@ -1143,7 +1144,9 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
-        dataDefinitionsOperationCodes = operationCodes;
+        if (dataDefinitionsSearchWindow != null) {
+            dataDefinitionsSearchWindow.setDataDefinitionsOperationCodes(operationCodes);
+        }
     }
 
     public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
