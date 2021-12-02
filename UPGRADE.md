@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 8.5.0 a x.y.z
+## 8.5.1 a x.y.z
 Es necesario ejecutar los scripts SQL contenidos en la carpeta
 
 ```
