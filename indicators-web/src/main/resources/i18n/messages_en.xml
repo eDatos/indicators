@@ -14,10 +14,6 @@
     <entry key="menu.indicators-systems">Indicators systems</entry>
     <entry key="menu.indicators">Indicators</entry>
     
-    <!-- Languages -->
-    <entry key="languages.spanish">Español</entry>
-    <entry key="languages.english">English</entry>
-    
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Indicators systems</entry>
     <entry key="page.indicators-system.error.not-found">Indicators system not found</entry>

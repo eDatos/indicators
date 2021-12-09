@@ -6,17 +6,13 @@
     <entry key="app.title">Sistemes d'indicadors, indicadors i instàncies d'indicadors</entry>
     <entry key="app.description">Sistemes d'indicadors, indicadors i instàncies d'indicadors</entry>
     <entry key="app.keywords">sistemes d'indicadors, indicador i instàncies d'indicador</entry>
-    <entry key="app.locale">es</entry> <!-- Mancant una manera millor d'obtenir el locale, no sol·licitat ni per defecte, sinó l'usat  -->    
+    <entry key="app.locale">ca</entry> <!-- Mancant una manera millor d'obtenir el locale, no sol·licitat ni per defecte, sinó l'usat  -->    
     <entry key="app.close">Tancar</entry>
     <entry key="app.loading">Carregant...</entry>
      
     <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemes d'indicadors</entry>
-    <entry key="menu.indicators">Indicadors</entry>
-    
-    <!-- Languages -->
-    <entry key="languages.spanish">Español</entry>
-    <entry key="languages.english">English</entry>
+    <entry key="menu.indicators">Indicadors</entry>   
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Sistemes de indicadors</entry>
