@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.serviceimpl.stream;
+package es.gobcan.istac.indicators.core.serviceimpl;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.*;

@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.serviceimpl.stream;
+package es.gobcan.istac.indicators.core.serviceimpl;
 
 import es.gobcan.istac.indicators.core.dto.stream.AvroMessage;
 import es.gobcan.istac.indicators.core.dto.stream.MessageBase;
