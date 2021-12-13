@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.serviceimpl.stream;
+package es.gobcan.istac.indicators.core.serviceimpl;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.stream.ProducerBase;
