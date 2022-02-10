@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants.SYSTEMS_LISTGRID_MAX_RESULTS;
 
+import com.smartgwt.client.types.ListGridFieldType;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.utils.VersionFieldSortNormalizer;
@@ -33,14 +34,23 @@ public class SystemListGrid extends CustomListGrid {
         version.setSortNormalizer(new VersionFieldSortNormalizer());
 
         ListGridField status = new ListGridField(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
+        ListGridField streamStatus = new ListGridField(IndicatorsSystemsDS.STREAM_STATUS, getConstants().systemStreamMsgStatusColumn());
+        streamStatus.setWidth(140);
+        streamStatus.setType(ListGridFieldType.IMAGE);
+        streamStatus.setAlign(Alignment.CENTER);
 
         ListGridField diffusionVersion = new ListGridField(IndicatorsSystemsDS.VERSION_DIFF, getConstants().systemDetailVersion());
         diffusionVersion.setSortNormalizer(new VersionFieldSortNormalizer());
 
         ListGridField diffusionStatus = new ListGridField(IndicatorsSystemsDS.PROC_STATUS_DIFF, getConstants().systemDetailProcStatus());
-        setFields(uuid, code, title, version, status, diffusionVersion, diffusionStatus);
+        ListGridField diffusionStreamStatus = new ListGridField(IndicatorsSystemsDS.STREAM_STATUS_DIFF, getConstants().systemStreamMsgStatusColumn());
+        diffusionStreamStatus.setWidth(140);
+        diffusionStreamStatus.setType(ListGridFieldType.IMAGE);
+        diffusionStreamStatus.setAlign(Alignment.CENTER);
+
+        setFields(uuid, code, title, version, status, streamStatus, diffusionVersion, diffusionStatus, diffusionStreamStatus);
         setHeaderSpans(new HeaderSpan(getConstants().system(), new String[]{IndicatorsSystemsDS.CODE, IndicatorsSystemsDS.TITLE}),
-                new HeaderSpan(getConstants().systemProductionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION, IndicatorsSystemsDS.PROC_STATUS}),
-                new HeaderSpan(getConstants().systemDiffusionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION_DIFF, IndicatorsSystemsDS.PROC_STATUS_DIFF}));
+                new HeaderSpan(getConstants().systemProductionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION, IndicatorsSystemsDS.PROC_STATUS, IndicatorsSystemsDS.STREAM_STATUS}),
+                new HeaderSpan(getConstants().systemDiffusionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION_DIFF, IndicatorsSystemsDS.PROC_STATUS_DIFF, IndicatorsSystemsDS.STREAM_STATUS_DIFF}));
     }
 }

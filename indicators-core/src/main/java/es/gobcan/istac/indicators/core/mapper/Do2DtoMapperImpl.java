@@ -538,6 +538,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorsSystemVersionSummaryDto target = new IndicatorsSystemVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
         return target;
     }
 
@@ -562,6 +563,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorVersionSummaryDto target = new IndicatorVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));

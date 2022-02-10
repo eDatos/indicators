@@ -16,9 +16,11 @@ public class IndicatorsSystemsDS extends DataSource {
 
     public static String VERSION                               = "indsys-version";
     public static String PROC_STATUS                           = "indsys-status";
+    public static String STREAM_STATUS                         = "indsys-stream-status";
 
     public static String VERSION_DIFF                          = "indsys-version-diff";
     public static String PROC_STATUS_DIFF                      = "indsys-status-diff";
+    public static String STREAM_STATUS_DIFF                    = "indsys-stream-status-diff";
 
     public static String PUBLICATION_STREAM_STATUS             = "indsys-publication-stream-status";
 
