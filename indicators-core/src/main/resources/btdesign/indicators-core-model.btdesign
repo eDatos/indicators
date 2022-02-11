@@ -1557,6 +1557,8 @@ Application Indicators {
 			String versionNumber;
 			"Processing status"
 			- @IndicatorsSystemProcStatusEnum procStatus;
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 	    }
 	    
 	    "Dto for indicator"
@@ -1658,6 +1660,8 @@ Application Indicators {
 			String versionNumber;
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus;
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
        		"Title"
        		- @InternationalStringDto title;
        		"Subject code"

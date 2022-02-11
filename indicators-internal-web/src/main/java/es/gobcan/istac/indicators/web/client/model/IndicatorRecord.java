@@ -4,6 +4,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -24,6 +25,7 @@ public class IndicatorRecord extends ListGridRecord {
         setNotifyPopulationErrors(indicatorDto.getNotifyPopulationErrors());
         setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(indicatorDto));
         setProductionIndicatorNeedsUpdate(indicatorDto.getNeedsUpdate());
+        setProductionIndicatorStreamStatus(indicatorDto.getStreamMessageStatus());
         setProductionIndicatorVersionNumber(indicatorDto.getVersionNumber());
         setIndicatorDto(indicatorDto);
     }
@@ -51,6 +53,7 @@ public class IndicatorRecord extends ListGridRecord {
         if (productionVersion != null) {
             setProductionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(productionVersion.getProcStatus()));
             setProductionIndicatorNeedsUpdate(productionVersion.getNeedsUpdate());
+            setProductionIndicatorStreamStatus(productionVersion.getStreamMessageStatus());
             setProductionIndicatorVersionNumber(productionVersion.getVersionNumber());
             setProductionIndicatorProductionValidationDate(productionVersion.getProductionValidationDate());
             setProductionIndicatorProductionValidationUser(productionVersion.getProductionValidationUser());
@@ -71,6 +74,7 @@ public class IndicatorRecord extends ListGridRecord {
         if (diffusionVersion != null) {
             setDiffusionIndicatorProcStatus(CommonUtils.getIndicatorProcStatusName(diffusionVersion.getProcStatus()));
             setDiffusionIndicatorNeedsUpdate(diffusionVersion.getNeedsUpdate());
+            setDiffusionIndicatorStreamStatus(diffusionVersion.getStreamMessageStatus());
             setDiffusionIndicatorVersionNumber(diffusionVersion.getVersionNumber());
             setDiffusionIndicatorProductionValidationDate(diffusionVersion.getProductionValidationDate());
             setDiffusionIndicatorProductionValidationUser(diffusionVersion.getProductionValidationUser());
@@ -148,6 +152,14 @@ public class IndicatorRecord extends ListGridRecord {
             imageURL = GlobalResources.RESOURCE.success().getURL();
         }
         setAttribute(IndicatorDS.NEEDS_UPDATE_DIFF, imageURL);
+    }
+
+    public void setProductionIndicatorStreamStatus(StreamMessageStatusEnum value) {
+        setAttribute(IndicatorDS.STREAM_STATUS, streamMessageStatusToImageUrl(value));
+    }
+
+    public void setDiffusionIndicatorStreamStatus(StreamMessageStatusEnum value) {
+        setAttribute(IndicatorDS.STREAM_STATUS_DIFF, streamMessageStatusToImageUrl(value));
     }
 
     public void setProductionIndicatorVersionNumber(String value) {
@@ -262,4 +274,15 @@ public class IndicatorRecord extends ListGridRecord {
         setAttribute(IndicatorDS.CREATION_USER_DIFF, value);
     }
 
+    private String streamMessageStatusToImageUrl(StreamMessageStatusEnum value) {
+        String imageURL = "";
+        if (StreamMessageStatusEnum.SENT == value) {
+            imageURL = GlobalResources.RESOURCE.success().getURL();
+        } else if (StreamMessageStatusEnum.PENDING == value) {
+            imageURL = GlobalResources.RESOURCE.warn().getURL();
+        } else if (StreamMessageStatusEnum.FAILED == value) {
+            imageURL = GlobalResources.RESOURCE.errorSmart().getURL();
+        }
+        return imageURL;
+    }
 }

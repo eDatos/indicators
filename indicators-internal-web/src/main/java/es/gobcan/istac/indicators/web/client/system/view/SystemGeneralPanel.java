@@ -206,7 +206,7 @@ public class SystemGeneralPanel extends VLayout {
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
-        ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().indicatorStreamMsgStatus());
+        ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().systemStreamMsgStatus());
         publicationStreamStatus.setWidth(20);
 
         identifiersForm.setFields(codeField, versionField, title, acronym, procStatus, publicationStreamStatus);
