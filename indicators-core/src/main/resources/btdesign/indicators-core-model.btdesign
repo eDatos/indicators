@@ -43,7 +43,8 @@ Application Indicators {
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
-	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
+	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult sendIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
@@ -134,8 +135,9 @@ Application Indicators {
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
-	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;	    		    	
-	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
+	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult sendIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
+	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Mark indicator for not notify population errors"
             disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
@@ -396,7 +398,9 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicators system"
 	    	@IndicatorsSystemDto rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
-	    	@IndicatorsSystemDto publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
+	    	@PublishIndicatorsSystemResultDto publishIndicatorsSystem(String uuid) throws MetamacException;
+	    	"Resend a version of an indicator system"
+            es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult resendIndicatorsSystem(String code) throws MetamacException;
 	    	"Archives indicators system"
 	    	@IndicatorsSystemDto archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
@@ -492,7 +496,11 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicator"
 	    	@IndicatorDto rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
-	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;
+	    	"Resend an indicator version"
+	    	es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult resendIndicator(String code) throws MetamacException;
+	    	"Resend all pending and failed messages"
+            void resendAllPendingAndFailedMessages() throws MetamacException;
 	    	"Archives indicator"
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
@@ -651,6 +659,9 @@ Application Indicators {
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
 			String archiveUser nullable;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 
 			// Relations
 			"Indicator system"
@@ -891,6 +902,9 @@ Application Indicators {
 			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
 			"Data sources"
 			- Bag<@DataSource> dataSources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorVersion;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
@@ -1510,7 +1524,10 @@ Application Indicators {
 			"Date when the indicators system was archived"
 			JAVADATE archiveDate;
 			"User who archived"
-			String archiveUser;			
+			String archiveUser;
+
+            "Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 	    }
 	    
 		"Dto for indicators system"
@@ -1540,6 +1557,8 @@ Application Indicators {
 			String versionNumber;
 			"Processing status"
 			- @IndicatorsSystemProcStatusEnum procStatus;
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
 	    }
 	    
 	    "Dto for indicator"
@@ -1570,6 +1589,9 @@ Application Indicators {
        		- @InternationalStringDto notes;
        		"Quantity"
        		- @QuantityDto quantity;
+
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
        		
        		"Number of version in production"
        		String productionVersion;
@@ -1638,6 +1660,8 @@ Application Indicators {
 			String versionNumber;
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus;
+			"Stream message status"
+            - @StreamMessageStatusEnum streamMessageStatus;
        		"Title"
        		- @InternationalStringDto title;
        		"Subject code"
@@ -1982,9 +2006,21 @@ Application Indicators {
     	DataTransferObject PublishIndicatorResultDto {
 	   		"Indicator"
 	   		- @IndicatorDto indicator;
+	   		"If the notification of the publication fails, reason of error"
+	   		MetamacException notificationFailedReason;
 	   		"If publication fails, reason of error"
-	   		MetamacException publicationFailedReason;
+            MetamacException publicationFailedReason;
     	}
+
+    	"Dto for publish indicators system result"
+        DataTransferObject PublishIndicatorsSystemResultDto {
+            "Indicators system"
+            - @IndicatorsSystemDto indicatorsSystem;
+            "If the notification of the publication fails, reason of error"
+            MetamacException notificationFailedReason;
+            "If publication fails, reason of error"
+            MetamacException publicationFailedReason;
+        }
     	
 		"Dto for units multipliers"
     	DataTransferObject UnitMultiplierDto extends @AuditDto {
@@ -2103,5 +2139,14 @@ Application Indicators {
     		IN_PROGRESS,
     		FAILED
     	}
+
+    	"Used for represent the status of the message sent to the stream server.
+        The PENDING state is temporary. It's set just before sending the message and replaced by SENT or FAILED in the same transaction.
+        FAILED state is set in any case distinct to SENT."
+        enum StreamMessageStatusEnum {
+           PENDING,
+           SENT,
+           FAILED
+       }
 	}
 }

@@ -269,6 +269,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
             target.setNeedsUpdate(Boolean.TRUE);
         }
 
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
+
         // Related entities
         target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
 

@@ -1,0 +1,75 @@
+[
+  {
+    "namespace": "org.siemac.metamac.indicators.core.stream.message",
+    "type": "enum",
+    "name": "RelatedResourceTypeEnumAvro",
+    "symbols": [
+      "AGENCY",
+      "AGENCY_SCHEME",
+      "CATEGORY",
+      "CATEGORY_SCHEME",
+      "CODELIST",
+      "CODE",
+      "CONCEPT_SCHEME",
+      "CONCEPT",
+      "CONTENT_CONSTRAINTS",
+      "CONFIGURATION",
+      "DATA_CONSUMER",
+      "DATA_CONSUMER_SCHEME",
+      "DATA_PROVIDER",
+      "DATA_PROVIDER_SCHEME",
+      "DATASTRUCTURE",
+      "DIMENSION",
+      "INDICATOR",
+      "ORGANISATION",
+      "ORGANISATION_SCHEME",
+      "ORGANISATION_UNIT",
+      "ORGANISATION_UNIT_SCHEME",
+      "STATISTICAL_OPERATION",
+      "STATISTICAL_OPERATION_INSTANCE",
+      "DATASET",
+      "COLLECTION",
+      "QUERY",
+      "MULTIDATASET"
+    ]
+  },
+  {
+    "type": "record",
+    "name": "RelatedResourceAvro",
+    "namespace": "org.siemac.metamac.indicators.core.stream.message",
+    "fields": [
+      {
+        "name": "urnProvider",
+        "type": ["null", "string"]
+      },
+      {
+        "name": "type",
+        "type": ["null", "RelatedResourceTypeEnumAvro"]
+      },
+      {
+        "name": "code",
+        "type": "string"
+      },
+      {
+        "name": "codeNested",
+        "type": ["null", "string"]
+      },
+      {
+        "name": "urn",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": ["null", "InternationalStringAvro"]
+      },
+      {
+        "name": "uuid",
+        "type": ["null", "string"]
+      },
+      {
+        "name": "version",
+        "type": ["null", "long"]
+      }
+    ]
+  }
+]

@@ -5,14 +5,17 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 @GenDispatch(isSecure = false)
 public class PublishIndicator {
 
     @In(1)
-    String       uuid;
+    String              uuid;
 
     @Out(1)
-    IndicatorDto indicatorDto;
+    IndicatorDto        indicatorDto;
 
+    @Out(2)
+    MetamacWebException notificationException;
 }

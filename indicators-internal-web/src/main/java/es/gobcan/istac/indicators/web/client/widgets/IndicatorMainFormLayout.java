@@ -18,6 +18,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private PublishToolStripButton diffusionValidation;
     private PublishToolStripButton rejectValidation;
     private PublishToolStripButton publish;
+    private PublishToolStripButton reSendStreamMessage;
     private PublishToolStripButton archive;
     private PublishToolStripButton versioning;
     private ToolStripButton        populateData;
@@ -44,6 +45,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         productionValidation = new PublishToolStripButton(getConstants().indicatorSendToProductionValidation(), IndicatorsResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new PublishToolStripButton(getConstants().indicatorSendToDiffusionValidation(), IndicatorsResources.RESOURCE.validateDifussion().getURL());
         publish = new PublishToolStripButton(getConstants().indicatorPublish(), IndicatorsResources.RESOURCE.publish().getURL());
+        reSendStreamMessage = new PublishToolStripButton(getConstants().indicatorReSendStreamMessage(), IndicatorsResources.RESOURCE.reload().getURL());
         archive = new PublishToolStripButton(getConstants().indicatorArchive(), IndicatorsResources.RESOURCE.archive().getURL());
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
         versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
@@ -60,6 +62,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
+        toolStrip.addButton(reSendStreamMessage);
         toolStrip.addButton(archive);
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(versioning);
@@ -95,6 +98,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         } else if (IndicatorProcStatusEnum.PUBLISHED.equals(status)) {
             showArchiveButton();
             showVersioningButton();
+            showReSendStreamMessageButton();
         } else if (IndicatorProcStatusEnum.ARCHIVED.equals(status)) {
             showVersioningButton();
         }
@@ -130,6 +134,10 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         return publish;
     }
 
+    public HasClickHandlers getReSendStreamMessage() {
+        return reSendStreamMessage;
+    }
+
     public HasClickHandlers getArchive() {
         return archive;
     }
@@ -159,6 +167,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         diffusionValidation.hide();
         rejectValidation.hide();
         publish.hide();
+        reSendStreamMessage.hide();
         archive.hide();
         versioning.hide();
     }
@@ -190,6 +199,12 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private void showPublishButton() {
         if (ClientSecurityUtils.canPublishIndicator(indicator)) {
             publish.show();
+        }
+    }
+
+    private void showReSendStreamMessageButton() {
+        if (ClientSecurityUtils.canResendIndicatorStreamMessage(indicator)) {
+            reSendStreamMessage.show();
         }
     }
 

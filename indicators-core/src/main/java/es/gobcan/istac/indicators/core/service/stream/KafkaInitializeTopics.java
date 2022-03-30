@@ -64,6 +64,8 @@ public class KafkaInitializeTopics {
         topics.add(createTopic(configurationService.retrieveKafkaTopicQueryPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicDatasetsPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicCollectionPublication()));
+        topics.add(createTopic(configurationService.retrieveKafkaTopicIndicatorsPublication()));
+        topics.add(createTopic(configurationService.retrieveKafkaTopicIndicatorSystemsPublication()));
 
         return topics;
     }

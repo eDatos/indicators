@@ -1,0 +1,14 @@
+{
+  "type": "enum",
+  "name": "ProcStatusEnumAvro",
+  "namespace": "org.siemac.metamac.indicators.core.stream.message",
+  "symbols": [
+    "DRAFT",
+    "PRODUCTION_VALIDATION",
+    "DIFFUSION_VALIDATION",
+    "VALIDATION_REJECTED",
+    "PUBLICATION_FAILED",
+    "PUBLISHED",
+    "ARCHIVED"
+  ]
+}

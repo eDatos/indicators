@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -139,6 +140,13 @@ public class SystemGeneralPanel extends VLayout {
             }
         });
 
+        mainFormLayout.getReSendStreamMessage().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.reSendStreamMessageIndicatorsSystem(indicatorsSystemDto);
+            }
+        });
+
         createViewForm();
         this.addMember(mainFormLayout);
 
@@ -198,7 +206,10 @@ public class SystemGeneralPanel extends VLayout {
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
-        identifiersForm.setFields(codeField, versionField, title, acronym, procStatus);
+        ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().systemStreamMsgStatus());
+        publicationStreamStatus.setWidth(20);
+
+        identifiersForm.setFields(codeField, versionField, title, acronym, procStatus, publicationStreamStatus);
 
         // Production Descriptors
         productionForm = new GroupDynamicForm(getConstants().systemDetailProductionDescriptors());
@@ -275,6 +286,8 @@ public class SystemGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
         identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatusName(indicatorSystemDto));
+        identifiersForm.getItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS)
+                .setIcons(StreamMessageStatusEnum.PENDING.equals(indicatorSystemDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorSystemDto.getStreamMessageStatus()));
 
         // Production Descriptors
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());

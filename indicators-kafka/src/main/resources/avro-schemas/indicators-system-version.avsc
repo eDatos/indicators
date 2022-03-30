@@ -1,0 +1,39 @@
+{
+  "type": "record",
+  "name": "IndicatorsSystemVersionAvro",
+  "namespace": "org.siemac.metamac.indicators.core.stream.message",
+  "fields": [
+    {
+      "name": "code",
+      "type": "string"
+    },
+    {
+      "name": "isPublished",
+      "type": "boolean"
+    },
+    {
+      "name": "versionNumber",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "version",
+      "type": "long"
+    },
+    {
+      "name": "publicationDate",
+      "type": ["null", "DatetimeAvro"]
+    },
+    {
+      "name": "publicationUser",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "archiveDate",
+      "type": ["null", "DatetimeAvro"]
+    }
+  ]
+}
