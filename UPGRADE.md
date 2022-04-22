@@ -8,12 +8,12 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 8.5.1 a x.y.z
+## 8.5.3 a x.y.z
 Es necesario ejecutar los scripts SQL contenidos en la carpeta
 
 ```
-etc/changes-from-release/8.5.0/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indic_systems_versions.sql
-etc/changes-from-release/8.5.0/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indicators_versions.sql
+etc/changes-from-release/8.5.3/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indic_systems_versions.sql
+etc/changes-from-release/8.5.3/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indicators_versions.sql
 ```
 donde $BD se corresponde con el sistema de gestión de base de datos que esté utilizando.
 
