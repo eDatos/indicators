@@ -376,7 +376,7 @@
 
             var closeScript = this.closeTag('script');
 
-            var el = 'istac-widget';
+            var el = 'indicators-widget';
             var code = '<div id="' + el + '"></div>';
             filteredOptions.el = '#' + el;
 

@@ -24,7 +24,7 @@
         _getCode: function () {
             var url = this._getUrl();
             var code = _.extend(this.model.toJSON(), {
-                el: "#istac-widget",
+                el: "#indicators-widget",
                 url: url,
                 visualizerUrl: visualizerUrl,
                 apiUrl: apiUrl
