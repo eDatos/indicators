@@ -30,8 +30,6 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
 
-    @Value("${indicators.db.provider}")
-    private String                        databaseProvider;
 
     @Value("${datasource.default_schema}")
     private String                        defaultSchema;
@@ -435,11 +433,6 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         for (int i = 0; i < expected.length; i++) {
             assertEquals("Element " + expected[i] + " not in collection", collection.get(i), expected[i]);
         }
-    }
-
-    @Override
-    protected DataBaseProvider getDatabaseProvider() {
-        return DataBaseProvider.valueOf(databaseProvider);
     }
 
     @Override
