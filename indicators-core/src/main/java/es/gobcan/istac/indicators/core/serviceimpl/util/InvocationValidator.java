@@ -1882,9 +1882,6 @@ public class InvocationValidator {
         if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
         }
-        if (indicatorVersion.getIndicator().getViewCode() != null && !ValidationUtils.matchOracleObjectIdentifier(indicatorVersion.getIndicator().getViewCode())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_VIEW_CODE));
-        }
 
         // Quantity: do not validate required attributes of quantity, only when send to production validation
         checkQuantity(indicatorVersion.getQuantity(), ServiceExceptionParameters.INDICATOR, false, exceptions);

@@ -24,7 +24,6 @@ import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -107,11 +106,8 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
         // Drop views
         String queryToSelectViews = null;
-        if (DataBaseProvider.ORACLE.equals(getDatabaseProvider())) {
-            queryToSelectViews = "SELECT VIEW_NAME FROM USER_VIEWS";
-        } else if (DataBaseProvider.POSTGRESQL.equals(getDatabaseProvider())) {
-            queryToSelectViews = "SELECT table_name FROM INFORMATION_SCHEMA.views WHERE table_schema = ANY (current_schemas(false))";
-        }
+        queryToSelectViews = "SELECT table_name FROM INFORMATION_SCHEMA.views WHERE table_schema = ANY (current_schemas(false))";
+
         List<String> viewNames = getDatasourceDSRepository().query(queryToSelectViews, new DatabaseObjectNameRowMapper());
 
         for (String objectName : viewNames) {
@@ -355,7 +351,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     public JdbcTemplate getDatasourceDSRepository() {
         return this.jdbcTemplate;
     }
-
+ 
     @Override
     public void specificSetUpDatabaseTester() throws Exception {
         setUpDatabaseTester(getClass(), jdbcTemplate.getDataSource(), getDataSetDSRepoFile());
@@ -363,15 +359,16 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
     private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String datasetFileName) throws Exception {
         // Setup database tester
+      
         if (databaseTester == null) {
             Connection connection = dataSource.getConnection();
             try {
-                databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
+                databaseTester = new DataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
             } finally {
                 connection.close();
             }
         }
-
+        
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
@@ -400,7 +397,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             dbUnitConnection.close();
         }
     }
-
+    
     private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
         // Remove tables content
         List<String> tableNamesToDelete = getDSRepoTablesToDelete(dbUnitConnection);
@@ -487,26 +484,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return new HasVersionNumberMock(versionNumber);
     }
 
-    /**
-     * DatasourceTester with support for Oracle data types.
-     */
-
-    private class OracleDataSourceDatabaseTester extends DataSourceDatabaseTester {
-
-        public OracleDataSourceDatabaseTester(DataSource dataSource, String schema) {
-            super(dataSource, schema);
-        }
-
-        @Override
-        public IDatabaseConnection getConnection() throws Exception {
-            IDatabaseConnection connection = super.getConnection();
-
-            connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new OracleDataTypeFactory());
-            return connection;
-        }
-    }
 }
-
 class HasVersionNumberMock implements HasVersionNumber {
 
     private String code;

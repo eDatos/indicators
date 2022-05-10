@@ -105,7 +105,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     @SuppressWarnings("unchecked")
     public List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, final Date date) {
         final Date now = Calendar.getInstance().getTime();
-        return new ListBlockIterator<String, String>(dataDefinitionsUuids, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, String>() {
+        return new ListBlockIterator<String, String>(dataDefinitionsUuids, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, String>() {
 
             @Override
             public List<String> apply(List<String> subcodes) {
