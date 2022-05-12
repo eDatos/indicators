@@ -6,7 +6,7 @@
   <entry key="environment.metamac.data">./DATA_NOT_USED</entry>
     
    <entry key="environment.metamac.configuration.db.driver_name">org.postgresql.Driver</entry>
-   <entry key="environment.metamac.configuration.db.url">jdbc:postgresql://192.168.10.30:5432/ARTE</entry>
+   <entry key="environment.metamac.configuration.db.url">jdbc:postgresql://artejenkins.arte.internal:5432/ARTE</entry>
    <entry key="environment.metamac.configuration.db.username">istac_indicators_ci</entry>
    <entry key="environment.metamac.configuration.db.password">kIF+QxIP8QMw12c3wpkT0MiNBkIvPDCl+7A4VqIl4Lo=</entry>
 </properties>
