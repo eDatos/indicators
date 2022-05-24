@@ -391,11 +391,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
+    
     @Override
     public void manageDatabaseViewForLastVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
             createOrReplaceLastVersionDatabaseView(indicatorVersion);
-            assignIndicatorDataOracleRolePermissionsToView(indicatorVersion.getIndicator().getViewCode());
+            assignIndicatorDataRolePermissionsToView(indicatorVersion.getIndicator().getViewCode());
         }
     }
 
@@ -408,7 +409,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) throws MetamacException {
+    private void assignIndicatorDataRolePermissionsToView(String viewCode) throws MetamacException {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
         } catch (Exception e) {
