@@ -19,7 +19,7 @@ public class ServiceUtils {
 
     private static final String SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
 
-    public static final int     ORACLE_IN_MAX                   = 1000;
+    public static final int     SIZE_IN_MAX                   = 1000;
 
     private ServiceUtils() {
     }

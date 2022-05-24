@@ -164,7 +164,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
 
     @Override
     public List<IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException {
-        return new ListBlockIterator<String, IndicatorVersion>(dataGpeUuids, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, IndicatorVersion>() {
+        return new ListBlockIterator<String, IndicatorVersion>(dataGpeUuids, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, IndicatorVersion>() {
 
             @SuppressWarnings("unchecked")
             @Override
