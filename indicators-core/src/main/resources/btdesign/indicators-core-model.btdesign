@@ -798,6 +798,7 @@ Application Indicators {
 
 			"Code. Non modifiable"
 			String code not nullable;
+			"Code for dataset view"
 			String viewCode not nullable length="30";
 			
             "Id into database of IndicatorVersion in production environment"
