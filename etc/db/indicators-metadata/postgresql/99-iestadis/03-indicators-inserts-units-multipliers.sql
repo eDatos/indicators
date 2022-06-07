@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- IBESTATNORMA-15 - Carga inicial indicadores
+-- EDATOS-3637 - IESTADIS. Cargar las tablas de valores en eIndicadores
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Fichero elaborado a partir de la clasificación SDMX:CL_UNIT_MULT(1.0)
 -- Enlace. https://pre-ibestat.edatos.io/structural-resources-internal/#structuralResources/codelists/codelist;id=SDMX%3ACL_UNIT_MULT(1.0)
@@ -9,6 +9,8 @@
 -- -- Para ello es necesario ejecutar la siguiente sentencia como administrador de la bbdd CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 2. Los valores relativos a los trillones y los cuatrillones no se han cargado dado que actualmente la BBDD no soporta el tipo de dato a cargar
 -- 3. Este script ha sido generado en base al script localizado en la ruta etc/helpers/03-generate-inserts-units-multipliers.sql dentro de este mismo proyecto.
+-- 4. Se decide realizar la misma carga de datos para los multiplicadores de unid en IESTADIS que la realizada en IBESTAT cuyo script está localizado 
+--    en 99-ibestat/03-indicators-inserts-units-multipliers.sql
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Multiplicador: 0
