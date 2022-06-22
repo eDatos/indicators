@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -28,6 +32,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +72,14 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
 
     @Autowired
-    ConfigurationService configurationService;
+    ConfigurationService                                           configurationService;
+
+    @Autowired
+    private StreamMessagingService                                 streamMessagingService;
+
+    @Autowired
+    @Qualifier("indicatorsSystemStreamMessagingCallback")
+    private StreamMessagingCallback<IndicatorsSystemVersion, ?, ?> streamMessagingCallback;
 
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
@@ -92,6 +104,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemVersion.setIsLastVersion(Boolean.TRUE);
         indicatorsSystemVersion.setVersionNumber(IndicatorsVersionUtils.INITIAL_VERSION);
         indicatorsSystemVersion.setIndicatorsSystem(indicatorsSystem);
+        indicatorsSystemVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
         indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
 
         // Update indicator with draft version
@@ -415,6 +428,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public SendStreamMessageResult sendIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        return streamMessagingService.sendMessage(indicatorsSystemVersion, streamMessagingCallback);
+    }
+
+    @Override
     public IndicatorsSystemVersion archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -469,6 +487,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Create draft version
         indicatorsSystemNewVersion.setIndicatorsSystem(indicatorsSystem);
+        indicatorsSystemNewVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
         indicatorsSystemNewVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemNewVersion);
 
         // Update indicator with draft version

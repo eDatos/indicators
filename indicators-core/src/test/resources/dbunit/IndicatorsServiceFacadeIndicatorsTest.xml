@@ -18,7 +18,8 @@
 		DIFFUSION_ID="1"
 		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="1"
-				
+
+				
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -75,6 +76,8 @@
 				LAST_UPDATED_TZ="Europe/London"
 				LAST_POPULATE_DATE="2011-01-22 01:02:04"
 				LAST_POPULATE_DATE_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 			
 				<TB_QUANTITIES
@@ -249,6 +252,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 			
 				<TB_QUANTITIES
@@ -711,7 +716,8 @@
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -764,6 +770,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 
 				<TB_QUANTITIES
@@ -799,7 +807,8 @@
 		DIFFUSION_ID="1"
 		DIFFUSION_VERSION_NUMBER="11.33"
 		IS_PUBLISHED="1"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -852,6 +861,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -1067,7 +1078,8 @@
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -1120,6 +1132,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -1257,7 +1271,8 @@
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -1310,6 +1325,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>	
 			
 				<TB_QUANTITIES
@@ -1551,7 +1568,8 @@
 		DIFFUSION_ID="1"
 		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="1"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -1604,6 +1622,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 			
 				<TB_QUANTITIES
@@ -1668,6 +1688,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 			
 				<TB_QUANTITIES
@@ -1806,7 +1828,8 @@
 		DIFFUSION_ID="1"
 		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -1859,6 +1882,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 			
 				<TB_QUANTITIES
@@ -1923,6 +1948,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -2060,7 +2087,8 @@
 		DIFFUSION_ID="1"
 		DIFFUSION_VERSION_NUMBER="1.0"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -2113,6 +2141,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>	
 			
 				<TB_QUANTITIES
@@ -2149,7 +2179,8 @@
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
 		IS_PUBLISHED="0"
-		
+
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -2202,6 +2233,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 				<TB_QUANTITIES
 				  	ID="911"
@@ -2337,7 +2370,8 @@
 		PRODUCTION_VERSION_NUMBER="1.0"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
-		IS_PUBLISHED="0"		
+		IS_PUBLISHED="0"
+		
 		VERSION="1"
 		CREATED_BY="user1"
 		CREATED_DATE="2011-01-01 01:02:03"
@@ -2390,6 +2424,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>										
 			  			
 				<TB_QUANTITIES
@@ -2478,6 +2514,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -2595,6 +2633,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -2740,6 +2780,8 @@
                 LAST_UPDATED_BY="user2"
                 LAST_UPDATED="2011-01-22 01:02:04"
                 LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
             />  
             
                 <TB_QUANTITIES
@@ -2860,6 +2902,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -3128,6 +3172,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>			
 			
 				<TB_QUANTITIES
@@ -3378,6 +3424,8 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
 			/>
 					
 					<TB_ELEMENTS_LEVELS
@@ -3462,6 +3510,8 @@
                 LAST_UPDATED_BY="user2"
                 LAST_UPDATED="2011-01-22 01:02:04"
                 LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
             />
                     
                     <TB_ELEMENTS_LEVELS
@@ -3545,6 +3595,8 @@
                 LAST_UPDATED_BY="user2"
                 LAST_UPDATED="2011-01-22 01:02:04"
                 LAST_UPDATED_TZ="Europe/London"
+
+				STREAM_MESSAGE_STATUS="PENDING"
             />
                     
                     <TB_ELEMENTS_LEVELS

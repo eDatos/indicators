@@ -1,0 +1,71 @@
+{
+  "type": "record",
+  "name": "IndicatorVersionAvro",
+  "namespace": "org.siemac.metamac.indicators.core.stream.message",
+  "fields": [
+    {
+      "name": "code",
+      "type": "string"
+    },
+    {
+      "name": "diffusionVersionNumber",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "diffusionProcStatus",
+      "type": ["null", "ProcStatusEnumAvro"]
+    },
+    {
+      "name": "isPublished",
+      "type": "boolean"
+    },
+    {
+      "name": "version",
+      "type": "long"
+    },
+    {
+      "name": "title",
+      "type": "InternationalStringAvro"
+    },
+    {
+      "name": "acronym",
+      "type": ["null", "InternationalStringAvro"]
+    },
+    {
+      "name": "subjectCode",
+      "type": "string"
+    },
+    {
+      "name": "subjectTitle",
+      "type": "InternationalStringAvro"
+    },
+    {
+      "name": "conceptDescription",
+      "type": ["null", "InternationalStringAvro"]
+    },
+    {
+      "name": "comments",
+      "type": ["null", "InternationalStringAvro"]
+    },
+    {
+      "name": "notes",
+      "type": ["null", "InternationalStringAvro"]
+    },
+    {
+      "name": "publicationDate",
+      "type": ["null", "DatetimeAvro"]
+    },
+    {
+      "name": "publicationUser",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "archiveDate",
+      "type": ["null", "DatetimeAvro"]
+    },
+    {
+      "name": "lastPopulateDate",
+      "type": ["null", "DatetimeAvro"]
+    }
+  ]
+}

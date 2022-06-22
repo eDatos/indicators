@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -31,6 +35,7 @@ import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +77,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     @Autowired
     private IndicatorsConfigurationService indicatorsConfigurationService;
 
+    @Autowired
+    private StreamMessagingService         streamMessagingService;
+
+    @Autowired
+    @Qualifier("indicatorStreamMessagingCallback")
+    private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
+
     private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     @Override
@@ -97,6 +109,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorVersion.setIsLastVersion(Boolean.TRUE);
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setVersionNumber(IndicatorsVersionUtils.INITIAL_VERSION);
+        indicatorVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
         indicatorVersion.setIndicator(indicator);
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
@@ -574,6 +587,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public SendStreamMessageResult sendIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+        return streamMessagingService.sendMessage(indicatorVersion, streamMessagingCallback);
+    }
+
+    @Override
     public IndicatorVersion archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -633,6 +651,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
         indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
+
+        indicatorNewVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
 
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);

@@ -36,7 +36,7 @@ public class TranslationRepositoryImpl extends TranslationRepositoryBase {
 
     @Override
     public Map<String, Translation> findTranslationsByCodes(List<String> translationCodes) {
-        List<Translation> translations = new ListBlockIterator<String, Translation>(translationCodes, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, Translation>() {
+        List<Translation> translations = new ListBlockIterator<String, Translation>(translationCodes, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, Translation>() {
 
             @Override
             public List<Translation> apply(List<String> subcodes) {

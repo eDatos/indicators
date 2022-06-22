@@ -142,4 +142,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_ERROR                                              = create("exception.indicators.task.error");
     public static final CommonServiceExceptionType TASKS_ERROR_MAX_CURRENT_JOBS                             = create("exception.indicators.task.error.max_current_jobs");
     public static final CommonServiceExceptionType TASKS_JOB_NOT_FOUND                                      = create("exception.indicators.task.error.not_found");
+
+    // Kafka
+    public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGE_TO_STREAM_MESSAGING_SERVER = create("exception.indicators.stream_message.send_message.error");
+    public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS              = create("exception.indicators.stream_message.missing_settings.error");
 }

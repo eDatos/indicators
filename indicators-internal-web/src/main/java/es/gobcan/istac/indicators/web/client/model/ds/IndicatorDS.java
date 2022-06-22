@@ -17,11 +17,15 @@ public class IndicatorDS extends DataSource {
 
     public static String VERSION_NUMBER                        = "ind-version";
     public static String NEEDS_UPDATE                          = "ind-needs-update";
+    public static String STREAM_STATUS                         = "ind-stream-status";
     public static String PROC_STATUS                           = "ind-status";
 
     public static String VERSION_NUMBER_DIFF                   = "ind-version-diff";
     public static String NEEDS_UPDATE_DIFF                     = "ind-needs-update-diff";
+    public static String STREAM_STATUS_DIFF                    = "ind-stream-status-diff";
     public static String PROC_STATUS_DIFF                      = "ind-status-diff";
+
+    public static String PUBLICATION_STREAM_STATUS             = "ind-publication-stream-status";
 
     // CONTENT CLASSIFIERS
     public static String SUBJECT                               = "ind-sub";

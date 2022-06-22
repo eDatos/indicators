@@ -112,6 +112,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
+
         return target;
     }
 
@@ -236,6 +238,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setVersionOptimisticLocking(source.getVersion());
 
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getIndicator().getUuid()));
+
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
 
         return target;
     }
@@ -534,6 +538,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorsSystemVersionSummaryDto target = new IndicatorsSystemVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
         return target;
     }
 
@@ -558,6 +563,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorVersionSummaryDto target = new IndicatorVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
+        target.setStreamMessageStatus(source.getStreamMessageStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));

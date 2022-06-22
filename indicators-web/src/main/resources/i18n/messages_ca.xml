@@ -3,46 +3,62 @@
 <properties>
 
     <!-- General -->
-    <entry key="app.title">ISTAC: Estadístiques de la Comunitat Autònoma de Canàries</entry>
-
-	<!-- Header -->
-	<entry key="app.header.whereis">Es troba a:</entry>
-	
-    <!-- Footer -->
-    <entry key="app.footer.gobcan"><![CDATA[&copy; Gobierno de Canarias]]></entry>
-    <entry key="app.footer.legal-advice">Avís Legal</entry>
-    <entry key="app.footer.privacy-policy">Política de privacitat</entry>
-    <entry key="app.footer.suggests">Suggeriments i Reclamacions</entry>
-    
+    <entry key="app.title">Sistemes d'indicadors, indicadors i instàncies d'indicadors</entry>
+    <entry key="app.description">Sistemes d'indicadors, indicadors i instàncies d'indicadors</entry>
+    <entry key="app.keywords">sistemes d'indicadors, indicador i instàncies d'indicador</entry>
+    <entry key="app.locale">ca</entry> <!-- Mancant una manera millor d'obtenir el locale, no sol·licitat ni per defecte, sinó l'usat  -->    
+    <entry key="app.close">Tancar</entry>
+    <entry key="app.loading">Carregant...</entry>
+     
     <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemes d'indicadors</entry>
-    <entry key="menu.indicators">Indicadors</entry>
-    
-    <!-- Languages -->
-    <entry key="languages.spanish">Espanyol</entry>
-    <entry key="languages.english">Anglès</entry>
+    <entry key="menu.indicators">Indicadors</entry>   
     
     <!-- Indicators systems -->
-    <entry key="page.indicators-system-list.title">Sistemes d'indicadors</entry>
+    <entry key="page.indicators-system-list.title">Sistemes de indicadors</entry>
     <entry key="page.indicators-system.error.not-found">El sistema d'indicadors no existeix</entry>
     <entry key="entity.indicators-system">Sistema d'indicadors</entry>
-    
 
-	<!-- Indicator instance -->
-	<entry key="entity.indicator-instance.geographical-granularities">Granularitats geogràfiques</entry>
-	<entry key="entity.indicator-instance.geographical-values">Valors geogràfics</entry>
-	<entry key="entity.indicator-instance.time-granularities">Granularitats temporals</entry>
-	<entry key="entity.indicator-instance.time-values">Valors temporals</entry>	    
-	<entry key="entity.indicator-instance.self-link">Més informació</entry>
-	
+    <!-- Indicator instance -->
+    <entry key="entity.indicator-instance.geographical-granularities">Granularitats geogràfiques</entry>
+    <entry key="entity.indicator-instance.geographical-values">Valors geogràfics</entry>
+    <entry key="entity.indicator-instance.time-granularities">Granularitats temporals</entry>
+    <entry key="entity.indicator-instance.time-values">Valors temporals</entry>     
+    <entry key="entity.indicator-instance.self-link">Més informació</entry>
+    
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicadors</entry>
     <entry key="entity.indicators">Indicador</entry>
+    <entry key="entity.indicators.modal.detail.title">Informació de descàrrega</entry>
+    <entry key="entity.indicators.modal.detail.download">Descàrrega:</entry>
+    <entry key="entity.indicators.modal.detail.data">Dades</entry>
+    <entry key="entity.indicators.modal.detail.metadata">Metadades</entry>  
+    <entry key="entity.indicators.modal.detail.query">Consultar dades</entry>
+    
+    <!-- Widgets -->
+    <entry key="page.open-data.title">Dades obertes</entry>
+    <entry key="page.query-tools.title">Eines de consulta</entry>
+    <entry key="page.widgets.title">Widgets</entry>
+    <entry key="page.widgets.keywords">, widget, dades obertes</entry> 
+    <entry key="entity.widgets.type.temporal.label">Gràfic d'evolució</entry>
+    <entry key="entity.widgets.type.recent.label">Darrers indicadors actualitzats</entry>
+    <entry key="entity.widgets.type.lastData.label">Darrers dades</entry>
+    
+    <entry key="entity.widgets.type.temporal.description">Visualitza un gràfic amb la sèrie de dades d'un indicador a seleccionar per als territoris que siguin triats</entry>
+    <entry key="entity.widgets.type.recent.description">Visualitza una taula amb els últims indicadors actualitzats d'un territori específic</entry>
+    <entry key="entity.widgets.type.lastData.description">Visualitza una taula amb les últimes dades d'una llista d'indicadors seleccionats d'un territori específic</entry>
+    
+    <entry key="entity.widgets.tab.data">Dades</entry>
+    <entry key="entity.widgets.tab.styles">Estils</entry>
+    <entry key="entity.widgets.tab.export">Exportar</entry>    
+    
+    <entry key="page.widgets.example.title">Exemple de Widget</entry>
     
     <!-- Errors -->
     <entry key="page.error.general">S'ha produït un error en realitzar l'acció sol·licitada</entry>
     <entry key="page.error.page-not-found">Pàgina no trobada</entry>
-    <entry key="page.error.info">Per obtenir més informació, posau-vos en contacte amb l'administrador del sistema</entry>
-    <entry key="page.error.sorry">Disculpau les molèsties</entry>
+    <entry key="page.error.info">Per a obtenir més informació, posi's en contacte amb l'administrador del sistema</entry>
+    <entry key="page.error.sorry">Disculpi les molèsties</entry>
+    <entry key="page.error.no-results">No hi ha resultat per a la cerca</entry>
   
 </properties>

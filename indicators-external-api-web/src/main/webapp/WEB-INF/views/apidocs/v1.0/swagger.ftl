@@ -1250,7 +1250,7 @@
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
             "in": "query",
             "name": "granularity",
             "type": "string"
@@ -1382,7 +1382,7 @@
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
             "in": "query",
             "name": "granularity",
             "type": "string"
@@ -1458,7 +1458,7 @@
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularirty=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
             "in": "query",
             "name": "granularity",
             "type": "string"

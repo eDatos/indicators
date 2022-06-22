@@ -39,7 +39,7 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid) {
-        return new ListBlockIterator<String, String>(indicatorsUuid, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, String>() {
+        return new ListBlockIterator<String, String>(indicatorsUuid, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, String>() {
 
             @Override
             public List<String> apply(List<String> sublist) {

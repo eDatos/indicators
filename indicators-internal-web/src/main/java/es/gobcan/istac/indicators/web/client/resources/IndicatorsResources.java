@@ -93,4 +93,8 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/disable_mail.png")
     ImageResource disableNotification();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/reload.png")
+    ImageResource reload();
 }

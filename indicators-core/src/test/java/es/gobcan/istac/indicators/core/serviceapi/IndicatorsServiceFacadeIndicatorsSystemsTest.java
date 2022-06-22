@@ -55,6 +55,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -931,7 +932,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Publish
-        IndicatorsSystemDto indicatorsSystemDto1Updated = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
+        PublishIndicatorsSystemResultDto publishIndicatorsSystemResultDto = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
+        IndicatorsSystemDto indicatorsSystemDto1Updated = publishIndicatorsSystemResultDto.getIndicatorsSystem();
+        assertNull(publishIndicatorsSystemResultDto.getPublicationFailedReason());
 
         // Validation
         {
@@ -1002,7 +1005,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Publish
-        IndicatorsSystemDto indicatorsSystemDto1Updated = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
+        PublishIndicatorsSystemResultDto publishIndicatorsSystemResultDto = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
+        IndicatorsSystemDto indicatorsSystemDto1Updated = publishIndicatorsSystemResultDto.getIndicatorsSystem();
+        assertNull(publishIndicatorsSystemResultDto.getPublicationFailedReason());
 
         // Validation
         {

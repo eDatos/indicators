@@ -13,7 +13,7 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
-				<value>classpath:/spring-test-${TEST_DATABASE_PROVIDER}.properties</value>
+				<value>classpath:/spring-test-POSTGRESQL.properties</value>
 				<value>classpath:/spring-test-local.properties</value>
 			</list>
 		</property>

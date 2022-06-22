@@ -8,6 +8,16 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 8.5.3 a x.y.z
+* A partir de esta versión de la aplicación se elimina el soporte para bases de datos Oracle o Sql Server, siendo PostgreSQL la única base de datos con soporte.
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta
+
+```
+etc/changes-from-release/8.5.3/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indic_systems_versions.sql
+etc/changes-from-release/8.5.3/db/indicators/$BD/20211105_add-column-stream-message-status-to-tb_indicators_versions.sql
+```
+donde $BD se corresponde con el sistema de gestión de base de datos que esté utilizando.
+
 ## 8.4.0 a 8.5.0
 * Debido a que la funcionalidad del captcha se ha movido a external-users, dicha funcionalidad estará deshabilitada si edatos-external-users no está instalado. El modo de indicarlo es que la siguiente propiedad no esté inicializada:
 

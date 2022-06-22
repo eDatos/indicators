@@ -3,11 +3,13 @@ package es.gobcan.istac.indicators.core.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -138,6 +140,16 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         } catch (MetamacException e) {
             logger.error("Error creating createPopulateIndicatorDataErrorBackgroundNotification:", e);
         }
+    }
+
+    @Override
+    public void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion) {
+        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, Collections.singletonList(indicatorVersion), indicatorVersion.getCode());
+    }
+
+    @Override
+    public void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion) {
+        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, new ArrayList<>(), indicatorsSystemVersion.getCode());
     }
 
     private List<IndicatorVersion> getIndicatorsWithNotifyPopulationErrors(List<IndicatorVersion> failedPopulationIndicators) {

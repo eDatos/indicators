@@ -49,7 +49,7 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
 
     @Override
     public List<GeographicalValue> findGeographicalValuesByCodes(List<String> codes) {
-        return new ListBlockIterator<String, GeographicalValue>(codes, ServiceUtils.ORACLE_IN_MAX).iterate(new ListBlockIteratorFn<String, GeographicalValue>() {
+        return new ListBlockIterator<String, GeographicalValue>(codes, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, GeographicalValue>() {
 
             @Override
             public List<GeographicalValue> apply(List<String> subcodes) {

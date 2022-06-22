@@ -61,6 +61,7 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setCreatedBy(indicatorsSystemDto.getCreatedBy());
             indicatorsSystemDtoWeb.setLastUpdated(indicatorsSystemDto.getLastUpdated());
             indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
+            indicatorsSystemDtoWeb.setStreamMessageStatus(indicatorsSystemDto.getStreamMessageStatus());
         }
         if (operation != null) {
             indicatorsSystemDtoWeb.setCode(operation.getId());

@@ -94,10 +94,6 @@
 			<artifactId>ehcache-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>oracle</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
@@ -177,10 +173,6 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-oracle</artifactId>
 		</dependency>
 
 		<!-- MISCELLANEOUS -->
@@ -294,44 +286,21 @@
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
         </dependency>
-    </dependencies>
+
+		<!-- INDICATORS -->
+		<dependency>
+			<groupId>es.gobcan.istac.indicators</groupId>
+			<artifactId>indicators-kafka</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<profiles>
         <profile>
-            <id>oracle</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-antrun-plugin</artifactId>
-		                <version>1.6</version>
-		                <executions>
-		                	<execution>
-                                <id>clean-sculptor-conf</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <delete file="src/main/resources/generator/sculptor-generator.properties" />
-                                        <delete file="src/main/resources/templates/db/CustomDDL.xpt" />
-                                        <copy file="src/main/resources/generator/sculptor-generator.oracle.properties" tofile="src/main/resources/generator/sculptor-generator.properties" verbose="true" />
-                                    </target>
-                                </configuration>
-                            </execution>
-		                </executions>
-		            </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
 			<id>postgresql</id>
 	        <activation>
-	            <activeByDefault>false</activeByDefault>
+	            <activeByDefault>true</activeByDefault>
 	        </activation> 
 			<build>
 				<plugins>
@@ -479,20 +448,8 @@
                     <argLine>-Xms512m -Xmx1256m -XX:PermSize=64m</argLine>
                 </configuration>
                 <executions>
-                    <!-- Oracle -->
-                    <!-- The execution is called default-test because this is the name of the default execution of this plugin -->
                     <execution>
-                        <id>default-test</id>
-                        <configuration>
-                            <skipTests>${maven.surefire.execution.oracle.skip}</skipTests>
-                            <systemPropertyVariables>
-                                <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER>
-                            </systemPropertyVariables>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-						<id>postgresql</id>
+						<id>default-test</id>
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
