@@ -53,8 +53,8 @@ public class NoticesRestInternalServiceTest {
 
         IndicatorVersion failedIndicator = getMockedIndicatorVersion();
 
-        logger.info("indicator - test - testCreateNotice viewcode", failedIndicator.getIndicator().getViewCode());
-        logger.info("indicator - test - testCreateNotice tablename", failedIndicator.getDataRepositoryTableName());
+        logger.info("indicator - test - testCreateNotice viewcode: " + failedIndicator.getIndicator().getViewCode());
+        logger.info("indicator - test - testCreateNotice tablename: " + failedIndicator.getDataRepositoryTableName());
         
         Notice noticeCreateReplaceDataset = (Notice) createNotice.invoke(getNoticesRestInternalService(), ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR,
                 ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),

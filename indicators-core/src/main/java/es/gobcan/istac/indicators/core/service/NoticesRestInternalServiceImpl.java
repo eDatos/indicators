@@ -218,7 +218,8 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         // @formatter:on
     }
 
-    private Notice createNotice(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) throws MetamacException {
+    @Override
+    public Notice createNotice(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) throws MetamacException {
         logger.info("indicator - test - createNotice");
         Locale locale = configurationService.retrieveLanguageDefaultLocale();
         logger.info("indicator - test - createNotice locale: " + locale.toString());
