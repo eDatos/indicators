@@ -10,8 +10,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.notices.v1_0.domain.Notice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -37,6 +39,9 @@ import org.slf4j.LoggerFactory;
 // public class IndicatorsServiceTest extends IndicatorsBaseTest {
 public class NoticesRestInternalServiceTest {
 
+    @Autowired
+    protected NoticesRestInternalService noticesRestInternalService;
+    
     protected final Logger     logger            = LoggerFactory.getLogger(getClass());
     
     private static final String MY_DATA_REPOSITORY_TABLE_NAME = "MYDATAREPOSITORYTABLENAME";
@@ -46,15 +51,41 @@ public class NoticesRestInternalServiceTest {
     private static final String MY_OLD_DATASET_ID             = "MYOLDDATASETID";
 
     @Test
-    public void testCreateNotice() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    public void testCreateNotice() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, MetamacException {
         logger.info("indicator - test - testCreateNotice");
-        Method createNotice = NoticesRestInternalServiceImpl.class.getDeclaredMethod("createNotice", String.class, String.class, List.class, Object[].class);
-        createNotice.setAccessible(true);
+        //Method createNotice = NoticesRestInternalServiceImpl.class.getDeclaredMethod("createNotice", String.class, String.class, List.class, Object[].class);
+        //createNotice.setAccessible(true);
 
         IndicatorVersion failedIndicator = getMockedIndicatorVersion();
 
         logger.info("indicator - test - testCreateNotice viewcode: " + failedIndicator.getIndicator().getViewCode());
         logger.info("indicator - test - testCreateNotice tablename: " + failedIndicator.getDataRepositoryTableName());
+    
+        Notice noticeCreateReplaceDataset = (Notice) noticesRestInternalService.createNotice(ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR,
+                ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
+                new Object[]{failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName()});
+
+        assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
+        assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
+
+        Notice noticeAssignRolePermissionsDataset = (Notice) noticesRestInternalService.createNotice(ServiceNoticeAction.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR,
+                ServiceNoticeMessage.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, new ArrayList<IndicatorVersion>(), new Object[]{MY_DATA_VIEWS_ROLE, MY_VIEW_CODE});
+        
+        assertNotNull(noticeAssignRolePermissionsDataset.getMessages().getMessages().get(0).getText());
+
+        Notice noticeUpdateIndicatorsData = (Notice) noticesRestInternalService.createNotice(ServiceNoticeAction.INDICATOR_POPULATION_ERROR,
+                ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, Arrays.asList(failedIndicator), new Object[]{});
+        
+              assertNotNull(noticeUpdateIndicatorsData.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
+        assertNotNull(noticeUpdateIndicatorsData.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
+
+        Notice noticeDeleteDataset = (Notice) noticesRestInternalService.createNotice(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR,
+                ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), new Object[]{MY_OLD_DATASET_ID});
+
+        assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
+        assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
+        
+        /*
         
         Notice noticeCreateReplaceDataset = (Notice) createNotice.invoke(getNoticesRestInternalService(), ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR,
                 ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
@@ -65,6 +96,7 @@ public class NoticesRestInternalServiceTest {
         assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
         assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
 
+    
         Notice noticeAssignRolePermissionsDataset = (Notice) createNotice.invoke(getNoticesRestInternalService(), ServiceNoticeAction.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR,
                 ServiceNoticeMessage.INDICATOR_ASSIGN_ROLE_PERMISSIONS_DATASET_ERROR, new ArrayList<IndicatorVersion>(), new Object[]{MY_DATA_VIEWS_ROLE, MY_VIEW_CODE});
 
@@ -81,6 +113,8 @@ public class NoticesRestInternalServiceTest {
 
         assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
         assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
+        
+        */
 
     }
 
