@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -218,14 +219,19 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     private Notice createNotice(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) throws MetamacException {
+        logger.info("indicator - test - createNotice");
         Locale locale = configurationService.retrieveLanguageDefaultLocale();
+        logger.info("indicator - test - createNotice locale: " + locale.toString());
         String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+        logger.info("indicator - test - createNotice subject: " + subject);
         String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
 
+        logger.info("indicator - test - createNotice params: " + (messageParams != null && messageParams.length > 0 ? messageParams[0].toString() : "sin parámetros"));
+        
         List<ResourceInternal> resources = indicatorVersionsToResourceInternal(failedIndicators);
-
+        logger.info("indicator - test - createNotice resources: " + resources.toString());
         Message message = createMessage(locale, resources, messageCode, messageParams);
-
+        logger.info("indicator - test - createNotice messages: " + message.getText() + " sendingapp:" + sendingApp);
         // @formatter:off
         return NoticeBuilder.notification()
             .withMessages(message)

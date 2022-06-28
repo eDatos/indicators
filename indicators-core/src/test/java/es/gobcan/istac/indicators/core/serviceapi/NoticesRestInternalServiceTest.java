@@ -25,6 +25,10 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalServiceImpl;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @RunWith(SpringJUnit4ClassRunner.class)
 // "classpath:spring/include/indicators-service-mockito.xml"
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
@@ -33,6 +37,8 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 // public class IndicatorsServiceTest extends IndicatorsBaseTest {
 public class NoticesRestInternalServiceTest {
 
+    protected final Logger     logger            = LoggerFactory.getLogger(getClass());
+    
     private static final String MY_DATA_REPOSITORY_TABLE_NAME = "MYDATAREPOSITORYTABLENAME";
     private static final String MY_CODE                       = "MYCODE";
     private static final String MY_VIEW_CODE                  = "MYVIEWCODE";
@@ -41,15 +47,21 @@ public class NoticesRestInternalServiceTest {
 
     @Test
     public void testCreateNotice() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        logger.info("indicator - test - testCreateNotice");
         Method createNotice = NoticesRestInternalServiceImpl.class.getDeclaredMethod("createNotice", String.class, String.class, List.class, Object[].class);
         createNotice.setAccessible(true);
 
         IndicatorVersion failedIndicator = getMockedIndicatorVersion();
 
+        logger.info("indicator - test - testCreateNotice viewcode", failedIndicator.getIndicator().getViewCode());
+        logger.info("indicator - test - testCreateNotice tablename", failedIndicator.getDataRepositoryTableName());
+        
         Notice noticeCreateReplaceDataset = (Notice) createNotice.invoke(getNoticesRestInternalService(), ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR,
                 ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
                 new Object[]{failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName()});
 
+        logger.info("indicator - test - testCreateNotice - createnotice");
+        
         assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
         assertNotNull(noticeCreateReplaceDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
 
