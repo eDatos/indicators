@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.notices.v1_0.domain.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
