@@ -36,8 +36,19 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         fillOptionalApiStyleHeaderUrl(model);
         fillOptionalApiStyleFooterUrl(model);
         fillOptionalApiStyleCssUrl(model);
+        fillOptionalFaviconUrl(model);
 
         super.doRender(model, request, response);
+    }
+
+    private void fillOptionalFaviconUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+        try {
+            model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
+        } catch (MetamacException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getHumanReadableMessage());
+            }
+        }
     }
 
     private void fillOptionalApiStyleCssUrl(Map<String, Object> model) {
