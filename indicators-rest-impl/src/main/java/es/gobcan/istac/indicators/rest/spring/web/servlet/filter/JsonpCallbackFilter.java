@@ -48,11 +48,11 @@ public class JsonpCallbackFilter implements Filter {
             byte[] endCallbackFunction = new String(");").getBytes();
             wrapper.setContentLength(startCallbackFunction.length + wrapper.getData().length + endCallbackFunction.length);
 
+            wrapper.setContentType("text/javascript;charset=UTF-8");
+
             out.write(startCallbackFunction);
             out.write(wrapper.getData());
             out.write(endCallbackFunction);
-
-            wrapper.setContentType("text/javascript;charset=UTF-8");
 
             out.close();
         } else {
