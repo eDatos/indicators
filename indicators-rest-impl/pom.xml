@@ -75,5 +75,14 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
+		
+		<!-- Tests -->
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 </project>
