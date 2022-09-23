@@ -677,14 +677,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             boolean codeFilterEnabled = !filter.getCodes().isEmpty();
             boolean granularityFilterEnabled = !filter.getGranularityCodes().isEmpty();
 
-            for (TimeValue timeValue : coverage) {
+            for (int i = coverage.size() - 1; i >= 0; i--) {
+                TimeValue timeValue = coverage.get(i);
+
                 if (granularityFilterEnabled && !filter.getGranularityCodes().contains(timeValue.getGranularity().name())) {
                     continue;
                 }
                 if (codeFilterEnabled && !filter.getCodes().contains(timeValue.getTimeValue())) {
                     continue;
                 }
-                filteredCodes.add(timeValue.getTimeValue());
+
+                filteredCodes.add(0, timeValue.getTimeValue());
             }
             return filteredCodes;
         }
