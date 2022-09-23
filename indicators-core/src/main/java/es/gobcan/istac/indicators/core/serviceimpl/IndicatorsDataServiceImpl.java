@@ -94,6 +94,7 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
@@ -663,35 +664,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private List<String> retrieveTimeValuesInstanceFiltered(ServiceContext ctx, IndicatorInstance indInstance, IndicatorVersion indicatorVersion, IndicatorsDataTimeDimensionFilterVO filter)
             throws MetamacException {
         List<TimeValue> coverage = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorInstanceWithIndicatorVersion(ctx, indInstance, indicatorVersion);
-        return filterTimeCodes(filter, coverage);
+        return DimensionFilterUtils.filterTimeCodes(filter, coverage);
     }
 
     private List<String> retrieveTimeValuesFiltered(ServiceContext ctx, IndicatorVersion indicatorVersion, IndicatorsDataTimeDimensionFilterVO filter) throws MetamacException {
         List<TimeValue> coverage = getIndicatorsCoverageService().retrieveTimeValuesInIndicatorVersion(ctx, indicatorVersion);
-        return filterTimeCodes(filter, coverage);
-    }
-
-    protected List<String> filterTimeCodes(IndicatorsDataTimeDimensionFilterVO filter, List<TimeValue> coverage) {
-        if (filter != null) {
-            List<String> filteredCodes = new ArrayList<String>();
-            boolean codeFilterEnabled = !filter.getCodes().isEmpty();
-            boolean granularityFilterEnabled = !filter.getGranularityCodes().isEmpty();
-
-            for (int i = coverage.size() - 1; i >= 0; i--) {
-                TimeValue timeValue = coverage.get(i);
-
-                if (granularityFilterEnabled && !filter.getGranularityCodes().contains(timeValue.getGranularity().name())) {
-                    continue;
-                }
-                if (codeFilterEnabled && !filter.getCodes().contains(timeValue.getTimeValue())) {
-                    continue;
-                }
-
-                filteredCodes.add(0, timeValue.getTimeValue());
-            }
-            return filteredCodes;
-        }
-        return getCodesInTimeValues(coverage);
+        return DimensionFilterUtils.filterTimeCodes(filter, coverage);
     }
 
     private List<String> retrieveMeasureValuesInstanceFiltered(ServiceContext ctx, IndicatorVersion indicatorVersion, IndicatorsDataMeasureDimensionFilterVO filter) throws MetamacException {
@@ -1243,14 +1221,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             geoCodes.add(geoValue.getCode());
         }
         return geoCodes;
-    }
-
-    private List<String> getCodesInTimeValues(List<TimeValue> timeValues) {
-        List<String> codes = new ArrayList<String>();
-        for (TimeValue timeValue : timeValues) {
-            codes.add(timeValue.getTimeValue());
-        }
-        return codes;
     }
 
     private List<String> getCodesInMeasureValues(List<MeasureValue> values) {
