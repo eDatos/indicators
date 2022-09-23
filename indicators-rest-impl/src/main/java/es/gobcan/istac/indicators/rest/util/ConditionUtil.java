@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.edatos.dataset.repository.repository.impl.util.Pair;
@@ -108,6 +109,14 @@ public final class ConditionUtil {
         filter.setCodes(selectedValues);
 
         return filter;
+    }
+
+    protected static Pattern getPatternCode() {
+        return Pattern.compile("^(" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
+    }
+
+    protected static Pattern getPatternDimension() {
+        return Pattern.compile("(\\w+)\\[((" + "[^\\]]" + ")+)\\]");
     }
 
 }

@@ -13,7 +13,7 @@ public class RequestUtilTest {
 
     @Test
     public void testParseCodes() {
-        Pattern patternCode = RequestUtil.getPatternCode();
+        Pattern patternCode = ConditionUtil.getPatternCode();
 
         assertCodes(RequestUtil.parseCodes(patternCode, null));
 
