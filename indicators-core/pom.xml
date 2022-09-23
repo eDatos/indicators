@@ -277,12 +277,6 @@
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-avro-serializer</artifactId>
-            <exclusions>
-            	<exclusion>
-            		<groupId>jakarta.ws.rs</groupId>
-            		<artifactId>jakarta.ws.rs-api</artifactId>
-            	</exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

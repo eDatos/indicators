@@ -138,8 +138,8 @@
 		<edatos-dataset-repository.version>2.0.0</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
-        <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>
-        <kafka-clients.version>6.1.1-ccs</kafka-clients.version>
+        <kafka-avro-serializer.version>6.1.5</kafka-avro-serializer.version>
+        <kafka-clients.version>6.1.5-ccs</kafka-clients.version>
         <avro.version>1.9.2</avro.version>
 
 		<!-- METAMAC -->
