@@ -54,7 +54,7 @@ public final class ConditionUtil {
                 TimeValue oldConditionAfter = filter.getConditionAfter();
                 TimeValue newConditionAfter = parseTimeValue(startRange);
                 // If we receive several ~after, we only keep the older or lowest
-                if (oldConditionAfter == null || TimeVariableUtils.firstValueStrictlyLowerThanSecondValueByHighestGranularityFirst(newConditionAfter, oldConditionAfter)) {
+                if (oldConditionAfter == null || TimeVariableUtils.firstValueEqualOrLowerThanSecondValueByHighestGranularityFirst(newConditionAfter, oldConditionAfter)) {
                     filter.setConditionAfter(newConditionAfter);
                 }
                 continue;

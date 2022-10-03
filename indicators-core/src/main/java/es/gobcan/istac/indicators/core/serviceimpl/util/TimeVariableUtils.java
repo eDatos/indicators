@@ -285,8 +285,18 @@ public class TimeVariableUtils {
      * @param timeValue1
      * @param timeValue2
      */
-    public static boolean firstValueStrictlyLowerThanSecondValueByHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
-        return compareToHighestGranularityFirst(timeValue1, timeValue2) > 0;
+    public static boolean firstValueEqualOrLowerThanSecondValueByHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
+        return compareToHighestGranularityFirst(timeValue1, timeValue2) >= 0;
+    }
+
+    /**
+     * Sintactic sugar
+     *
+     * @param timeValue1
+     * @param timeValue2
+     */
+    public static boolean firstValueEqualOrGreaterThanSecondValueByHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
+        return compareToHighestGranularityFirst(timeValue1, timeValue2) <= 0;
     }
 
     /**
