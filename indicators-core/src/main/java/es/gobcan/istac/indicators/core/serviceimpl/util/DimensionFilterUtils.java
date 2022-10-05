@@ -21,7 +21,7 @@ public class DimensionFilterUtils {
             boolean noFilterEnabled = !(codeFilterEnabled || rangeFilterEnabled || lastFilterEnabled || afterFilterEnabled);
 
             int lastAdded = 0;
-            for (int i = coverage.size() - 1; i >= 0; i--) {
+            for (int i = 0; i < coverage.size(); i++) {
                 TimeValue timeValue = coverage.get(i);
 
                 // Granularity has a greater "weight". We wont´t return anything outside the granularity
@@ -31,7 +31,7 @@ public class DimensionFilterUtils {
 
                 // If no other filters are enabled, we simply add the value
                 if (noFilterEnabled) {
-                    filteredCodes.add(0, timeValue.getTimeValue());
+                    filteredCodes.add(timeValue.getTimeValue());
                     continue;
                 }
 
@@ -39,9 +39,10 @@ public class DimensionFilterUtils {
                 // This approach would be simpler if we do 2 or 3 loops, but it would reduce the performance
 
                 // We process "last" first, so it´s simpler to keep track on "the last n" elements
+                // Remember that coverage is ordered from greater to lower value, so this is the correct order and place to handle it
                 if (lastFilterEnabled) {
                     if (lastAdded < filter.getConditionLast()) {
-                        filteredCodes.add(0, timeValue.getTimeValue());
+                        filteredCodes.add(timeValue.getTimeValue());
                         lastAdded++;
                         continue;
                     }
@@ -50,7 +51,7 @@ public class DimensionFilterUtils {
                 // We add everything else
                 if (codeFilterEnabled) {
                     if (filter.getCodes().contains(timeValue.getTimeValue())) {
-                        filteredCodes.add(0, timeValue.getTimeValue());
+                        filteredCodes.add(timeValue.getTimeValue());
                         continue;
                     }
                 }
@@ -61,14 +62,14 @@ public class DimensionFilterUtils {
                     boolean valueIsInsideLowerLimit = first == null || TimeVariableUtils.firstValueEqualOrLowerThanSecondValueByHighestGranularityFirst(first, timeValue);
                     boolean valueIsInsideUpperLimit = last == null || TimeVariableUtils.firstValueEqualOrGreaterThanSecondValueByHighestGranularityFirst(last, timeValue);
                     if (valueIsInsideLowerLimit && valueIsInsideUpperLimit) {
-                        filteredCodes.add(0, timeValue.getTimeValue());
+                        filteredCodes.add(timeValue.getTimeValue());
                         continue;
                     }
                 }
 
                 if (afterFilterEnabled) {
                     if (TimeVariableUtils.firstValueEqualOrLowerThanSecondValueByHighestGranularityFirst(filter.getConditionAfter(), timeValue)) {
-                        filteredCodes.add(0, timeValue.getTimeValue());
+                        filteredCodes.add(timeValue.getTimeValue());
                         continue;
                     }
                 }
