@@ -46,9 +46,11 @@ public final class ConditionUtil {
             throws MetamacException {
         List<String> selectedValues = new ArrayList<String>();
         IndicatorsDataTimeDimensionFilterVO filter = new IndicatorsDataTimeDimensionFilterVO();
-        for (String selectedRepresentation : selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name())) {
+        final List<String> temporalRepresentations = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
+        if (temporalRepresentations != null) {
+            for (String temporalRepresentation : temporalRepresentations) {
             // es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils.parseTimeValue(String)
-            Matcher matcherAfter = patternAfter.matcher(selectedRepresentation);
+                Matcher matcherAfter = patternAfter.matcher(temporalRepresentation);
             if (matcherAfter.matches()) {
                 String startRange = matcherAfter.group(1);
                 TimeValue oldConditionAfter = filter.getConditionAfter();
@@ -60,7 +62,7 @@ public final class ConditionUtil {
                 continue;
             }
 
-            Matcher matcherLast = patternLast.matcher(selectedRepresentation);
+                Matcher matcherLast = patternLast.matcher(temporalRepresentation);
             if (matcherLast.matches()) {
                 // If we receive several ~last, we only keep the largest
                 Integer lastN = Integer.valueOf(matcherLast.group(1));
@@ -71,7 +73,7 @@ public final class ConditionUtil {
                 continue;
             }
 
-            Matcher matcherRange = patternRange.matcher(selectedRepresentation);
+                Matcher matcherRange = patternRange.matcher(temporalRepresentation);
             if (matcherRange.matches()) {
                 // We only keep the last ~range
                 String startRange = matcherRange.group(1);
@@ -80,7 +82,8 @@ public final class ConditionUtil {
                 continue;
             }
 
-            selectedValues.add(MetamacTimeUtils.normalizeToMetamacTimeValue(selectedRepresentation));
+                selectedValues.add(MetamacTimeUtils.normalizeToMetamacTimeValue(temporalRepresentation));
+            }
         }
         List<String> selectedGranularityCodes = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
 

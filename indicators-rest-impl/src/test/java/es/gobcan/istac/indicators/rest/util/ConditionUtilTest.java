@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.junit.Test;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -16,6 +17,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 
 public class ConditionUtilTest {
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testNormalizeAndFilterTimeDimension() throws MetamacException {
         // @formatter:off
@@ -37,5 +39,9 @@ public class ConditionUtilTest {
         assertEquals(parseTimeValue("2004").getTimeValue(), timeDimensionFilter.getConditionAfter().getTimeValue());
         assertEquals(parseTimeValue("2003").getTimeValue(), timeDimensionFilter.getConditionRange().getFirst().getTimeValue());
         assertEquals(parseTimeValue("2011").getTimeValue(), timeDimensionFilter.getConditionRange().getSecond().getTimeValue());
+
+        {
+            ConditionUtil.normalizeAndFilterTimeDimension(MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP);
+        }
     }
 }
