@@ -44,6 +44,7 @@
 		<!-- PLUGINS -->
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<fornax-oaw-m2.version>3.3.0</fornax-oaw-m2.version>
+        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
 
 		<!-- SPRING -->
 		<spring.version>3.1.1.RELEASE</spring.version>
@@ -137,8 +138,8 @@
 		<edatos-dataset-repository.version>2.0.0</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
-        <kafka-avro-serializer.version>6.1.1</kafka-avro-serializer.version>
-        <kafka-clients.version>6.1.1-ccs</kafka-clients.version>
+        <kafka-avro-serializer.version>6.1.5</kafka-avro-serializer.version>
+        <kafka-clients.version>6.1.5-ccs</kafka-clients.version>
         <avro.version>1.9.2</avro.version>
 
 		<!-- METAMAC -->
@@ -332,7 +333,6 @@
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
 				<version>${postgresql.version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -937,7 +937,13 @@
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
 				</plugin>
-
+				
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
+                </plugin>
+                
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>

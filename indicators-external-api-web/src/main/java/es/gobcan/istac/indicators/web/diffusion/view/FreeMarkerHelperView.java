@@ -33,6 +33,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("indicatorsExternalApiUrlBase", WebUtils.normalizeUrl(indicatorsExternalApiUrlBase));
         model.put("indicatorsExternalApiUrlBaseSwagger", SwaggerUtils.normalizeUrlForSwagger(indicatorsExternalApiUrlBase));
         model.put("organisation", getConfigurationService().retrieveOrganisation());
+        model.put("faviconUrl", WebUtils.getFavicon());
         fillOptionalApiStyleHeaderUrl(model);
         fillOptionalApiStyleFooterUrl(model);
         fillOptionalApiStyleCssUrl(model);
