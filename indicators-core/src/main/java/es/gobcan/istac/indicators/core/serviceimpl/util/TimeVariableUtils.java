@@ -258,7 +258,7 @@ public class TimeVariableUtils {
     /**
      * Compare two time values. if date values are the same
      *
-     * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
+     * @return 0 if are equals; a value greater than 0 if this timeValue1 is less than timeValue2; a value less than 0 if this timeValue1 is less than timeValue2
      */
     private static int compareToHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
         Date date1 = timeValueToLastPossibleDate(timeValue1);
@@ -277,6 +277,26 @@ public class TimeVariableUtils {
                 return 0;
             }
         }
+    }
+
+    /**
+     * Sintactic sugar
+     *
+     * @param timeValue1
+     * @param timeValue2
+     */
+    public static boolean firstValueEqualOrLowerThanSecondValueByHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
+        return compareToHighestGranularityFirst(timeValue1, timeValue2) >= 0;
+    }
+
+    /**
+     * Sintactic sugar
+     *
+     * @param timeValue1
+     * @param timeValue2
+     */
+    public static boolean firstValueEqualOrGreaterThanSecondValueByHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
+        return compareToHighestGranularityFirst(timeValue1, timeValue2) <= 0;
     }
 
     /**

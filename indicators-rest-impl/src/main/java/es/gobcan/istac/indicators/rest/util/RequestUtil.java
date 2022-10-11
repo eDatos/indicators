@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.core.common.constants.shared.SDMXCommonRegExpV2_1;
 
 public final class RequestUtil {
 
@@ -31,8 +30,8 @@ public final class RequestUtil {
         // dimExpression =
         // MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
         // EDATOS-3193 The possible values ​​of the dimensions are determined by the elements defined in the IndicatorDataDimensionTypeEnum enum
-        Pattern patternDimension = getPatternDimension();
-        Pattern patternCode = getPatternCode();
+        Pattern patternDimension = ConditionUtil.getPatternDimension();
+        Pattern patternCode = ConditionUtil.getPatternCode();
 
         Matcher matcherDimension = patternDimension.matcher(paramExpression);
 
@@ -66,14 +65,6 @@ public final class RequestUtil {
             }
         }
         return result;
-    }
-
-    protected static Pattern getPatternCode() {
-        return Pattern.compile("^(" + SDMXCommonRegExpV2_1.OBSERVATIONAL_TIME_PERIOD + "|" + SDMXCommonRegExpV2_1.IDTYPE + ")" + "$");
-    }
-
-    protected static Pattern getPatternDimension() {
-        return Pattern.compile("(\\w+)\\[((" + "[^\\]]" + ")+)\\]");
     }
 
     protected static List<String> parseCodes(Pattern patternCode, String codes) {
