@@ -81,8 +81,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
         try {
-            String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
-            String urlQueryParams = getLocaleQueryParam(internationalizationUrlParamId, locale);
+            String urlQueryParams = getLocaleQueryParam(model, locale);
             model.put("portalDefaultStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
@@ -93,8 +92,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
         try {
-            String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
-            String localeQueryParam = getLocaleQueryParam(internationalizationUrlParamId, locale);
+            String localeQueryParam = getLocaleQueryParam(model, locale);
 
             // Model filled on the controller. For example es.gobcan.istac.indicators.web.widgets.WidgetsController
             BreadcrumbList breadcrumbList = (BreadcrumbList) model.get("breadcrumbList");
@@ -113,7 +111,8 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private String getLocaleQueryParam(String internationalizationUrlParamId, String locale) {
+    private String getLocaleQueryParam(Map<String, Object> model, String locale) {
+        String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s", internationalizationUrlParamId, locale) : "";
     }
 
