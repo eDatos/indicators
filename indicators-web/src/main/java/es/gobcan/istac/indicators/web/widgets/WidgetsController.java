@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
@@ -46,10 +45,8 @@ public class WidgetsController extends BaseController {
 
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
     public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type, HttpServletRequest request) throws Exception {
-        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
-
-        BreadcrumbList breadcrumbList = getBreadCrumbList(type, currentLocale);
-        String description = getTranslatedTypeDescription(type, currentLocale);
+        BreadcrumbList breadcrumbList = getBreadCrumbList(type, request.getLocale());
+        String description = getTranslatedTypeDescription(type, request.getLocale());
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_CREATOR);
