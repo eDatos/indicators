@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
@@ -28,7 +29,7 @@ public class IndicatorsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_LIST);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("entity.indicators", request.getLocale())));
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("entity.indicators", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
 
         return modelAndView;
     }
