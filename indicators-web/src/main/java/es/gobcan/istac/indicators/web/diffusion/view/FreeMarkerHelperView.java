@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -39,6 +40,12 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
         try {
+            model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
+        } catch (MetamacException ignore) {
+            logger.info("The optional property 'internationalizationUrlParamId' could not be initialized.");
+        }
+
+        try {
             model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
         } catch (MetamacException metamacException) {
             // Ignore property if it doesn't exist
@@ -49,11 +56,17 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
         addStatisticalVisualizerUtils(model);
 
+        String locale = getCurrentLocale(request);
+
         fillOptionalPortalDefaultStyleCssUrl(model);
-        fillOptionalPortalDefaultStyleHeaderUrl(model);
-        fillOptionalPortalDefaultStyleFooterUrl(model);
+        fillOptionalPortalDefaultStyleHeaderUrl(model, locale);
+        fillOptionalPortalDefaultStyleFooterUrl(model, locale);
 
         super.doRender(model, request, response);
+    }
+
+    private String getCurrentLocale(HttpServletRequest request) {
+        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
     }
 
     private void fillOptionalPortalDefaultStyleCssUrl(Map<String, Object> model) {
@@ -66,9 +79,10 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
         try {
-            model.put("portalDefaultStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleFooterUrl()));
+            String urlQueryParams = getLocaleQueryParam(model, locale);
+            model.put("portalDefaultStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -76,13 +90,18 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
         try {
+            String localeQueryParam = getLocaleQueryParam(model, locale);
+
             // Model filled on the controller. For example es.gobcan.istac.indicators.web.widgets.WidgetsController
             BreadcrumbList breadcrumbList = (BreadcrumbList) model.get("breadcrumbList");
             String urlQueryParams = "";
             if (breadcrumbList != null) {
                 urlQueryParams = breadcrumbList.getPortalUrlQueryParams();
+            }
+            if (StringUtils.isNotEmpty(localeQueryParam)) {
+                urlQueryParams += (StringUtils.isNotEmpty(urlQueryParams) ? '&' : '?') + localeQueryParam;
             }
             model.put("portalDefaultStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleHeaderUrl() + urlQueryParams));
         } catch (MetamacException e) {
@@ -91,6 +110,12 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             }
         }
     }
+
+    private String getLocaleQueryParam(Map<String, Object> model, String locale) {
+        String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
+        return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s", internationalizationUrlParamId, locale) : "";
+    }
+
     private void addStatisticalVisualizerUtils(Map<String, Object> model) throws TemplateModelException {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
         TemplateHashModel staticModels = wrapper.getStaticModels();
