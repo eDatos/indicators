@@ -525,7 +525,15 @@
 							</excludes>
 						</configuration>
 					</execution>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
 				</executions>
+				<configuration>
+                    <skip>false</skip>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.fornax.toolsupport</groupId>
@@ -572,6 +580,18 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 </project>
