@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,6 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.ConditionUtil;
-import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
