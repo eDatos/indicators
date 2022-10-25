@@ -1244,7 +1244,7 @@
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
+            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",
             "in": "query",
             "name": "representation",
             "type": "string"
