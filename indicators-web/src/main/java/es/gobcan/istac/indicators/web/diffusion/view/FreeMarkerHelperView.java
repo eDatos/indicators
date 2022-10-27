@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.diffusion.view;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,11 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
+        try {
+            model.put("internationalizationLanguages", getConfigurationService().retrieveInternationalizationLanguages());
+        } catch (MetamacException e) {
+            model.put("internationalizationLanguages", new ArrayList<>());
+        }
         try {
             model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
         } catch (MetamacException ignore) {

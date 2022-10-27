@@ -98,8 +98,22 @@
 .istac-widget-title {
     line-height: 1.3em;
     font-weight: bold;
-    padding: 0 7px;
+    padding: 3px 7px;
     font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.istac-widget-title #widget-language-selector {
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    border: none;
+    color: white;
+}
+
+.istac-widget-title #widget-language-selector option {
+    color: black;
 }
 
 .istac-widget-title-text {

@@ -32,8 +32,10 @@
     [#if RequestParameters.type??]
     options.type = '${RequestParameters.type?js_string}';
     [/#if]
-
-
+    options.languages = [];
+    [#list internationalizationLanguages as language]
+    options.languages.push('${language}');
+    [/#list]
 
     $(function () {
         var widgetView = new App.views.WidgetView(options);

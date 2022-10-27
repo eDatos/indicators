@@ -71,6 +71,16 @@
                         'LINE': 'Línies',
                         'BAR': 'Barres'
                     }
+                },
+                'LANGUAGE': {
+                    'TITLE' : 'Idioma',
+                    'DROPDOWN': {
+                        'TITLE': 'Afegir selector d\'idioma'
+                    },
+                    'PREFERENCE': {
+                        'TITLE': 'Idioma a utilitzar',
+                        'NAVIGATOR': 'Idioma del navegador'
+                    }
                 }
             },
         },

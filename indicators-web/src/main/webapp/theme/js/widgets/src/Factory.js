@@ -1,7 +1,7 @@
 (function ($) {
 
-    var showError = function (key) {
-        $(options.el).text(EDatos.common.I18n.translate(key));
+    var showError = function (key, locale) {
+        $(options.el).text(EDatos.common.I18n.translate(key, locale));
     };
 
     Istac.widget.Factory = function (options, initCallback, afterRenderCallback) {
@@ -19,7 +19,7 @@
                 url: url
             });
 
-            configRequest.success(function (configuration) {
+            configRequest.success(function onSuccess(configuration) {
                 Istac.widget.configuration = configuration;
 
                 if (!options.uwa) {
@@ -35,8 +35,12 @@
 
                 if (widget) {
                     widget.render();
+                    widget.el.find('#widget-language-selector').on("change", function (event) { // FIXME esto deja de funcionar si se ejecuta render en otra ocasión
+                        options.locale = event.target.value;
+                        onSuccess(configuration);
+                    });
                 } else {
-                    showError("ERROR.INVALID_WIDGET_TYPE");
+                    showError("ERROR.INVALID_WIDGET_TYPE", options.locale);
                 }
 
                 if (initCallback) {
@@ -45,7 +49,7 @@
                 Istac.widget.analytics.trackPageView(options);
             });
         } else {
-            showError("ERROR.URL_NOT_PROVIDED");
+            showError("ERROR.URL_NOT_PROVIDED", options.locale);
         }
 
     };
