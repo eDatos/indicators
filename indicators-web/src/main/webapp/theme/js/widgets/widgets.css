@@ -198,6 +198,10 @@
     font: 11px Arial, Helvetica, sans-serif;
 }
 
+.jqstooltip {
+    box-sizing: content-box;
+}
+
 .istac-widget p.istact-widget-unit {
     margin-bottom: 0;
     margin-top: 0;
