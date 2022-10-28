@@ -86,7 +86,7 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = options.locale === "navigator" ? navigator.language : (options.locale || "es");
+            this.locale = options.locale === "navigator" ? navigator.language : (options.locale || options.languages[0] || "es");
 
             this.datasets = [];
 
