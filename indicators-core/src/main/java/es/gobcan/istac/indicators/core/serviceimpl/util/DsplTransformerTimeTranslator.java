@@ -187,7 +187,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
      * @throws MetamacException
      */
     private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
-        BiMap<String, String> mapping = new HashBiMap<String, String>();
+        BiMap<String, String> mapping = HashBiMap.create();
         for (String timeCode : timeCodes) {
             String transformed = transformTimeValueToGranularity(timeCode, timeGranularity);
             String previousTransformed = mapping.inverse().get(transformed);
