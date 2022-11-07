@@ -2,8 +2,7 @@
     <span class="istac-widget-title-text">
         <a href="#" target="_blank"></a>
     </span>
-    {{#if showLanguageDropdown}}
-    <select id="widget-language-selector" name="language">
+    <select id="widget-language-selector" name="language" hidden>
         {{#each languages}}
         {{#if this.selected}}
         <option value="{{ this.lang }}" selected>{{ this.lang }}</option>
@@ -12,7 +11,6 @@
         {{/if}}
         {{/each}}
     </select>
-    {{/if}}
 </div>
 <div class="istac-widget-body">
     <div class="istac-widget-content">

@@ -105,8 +105,7 @@
                         more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
                     }
                 },
-                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } }),
-                showLanguageDropdown: this.options.showLanguageDropdown
+                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } })
             };
 
             if (this.options.uwa) {
@@ -150,6 +149,7 @@
             this.set('shadow', options.shadow);
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
+            this.set('showLanguageDropdown', options.showLanguageDropdown);
             this.reloadData();
         },
 
@@ -160,6 +160,14 @@
             var setter = this[this._getSetterMethodName(property)];
             if (_.isFunction(setter)) {
                 setter.call(this, value);
+            }
+        },
+
+        setShowLanguageDropdown: function (showLanguageDropdown) {
+            if (showLanguageDropdown) {
+                this.el.find('#widget-language-selector').show();
+            } else {
+                this.el.find('#widget-language-selector').hide();
             }
         },
 
@@ -446,6 +454,12 @@
             if (this.afterRenderCallback) {
                 this.afterRenderCallback(this);
             }
+            var self = this;
+            this.el.find('#widget-language-selector').on("change", function (event) {
+                self.options.locale = event.target.value;
+                self.init(self.options);
+                self.render();
+            })
         }
 
 

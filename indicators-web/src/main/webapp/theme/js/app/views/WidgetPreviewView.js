@@ -58,8 +58,6 @@
 
                 showLanguageDropdown : function (showLanguageDropdown) {
                     this.widget.set("showLanguageDropdown", showLanguageDropdown);
-                    this.widget.init(this.widget.options);
-                    this.widget.render();
                 },
 
                 _default : function (key, value) {

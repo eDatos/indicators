@@ -35,10 +35,6 @@
 
                 if (widget) {
                     widget.render();
-                    widget.el.find('#widget-language-selector').on("change", function (event) { // FIXME esto deja de funcionar si se ejecuta render en otra ocasión
-                        options.locale = event.target.value;
-                        onSuccess(configuration);
-                    });
                 } else {
                     showError("ERROR.INVALID_WIDGET_TYPE", options.locale);
                 }
