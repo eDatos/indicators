@@ -72,6 +72,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         try {
             return getConfigurationService().retrieveInternationalizationLanguages();
         } catch (MetamacException e) {
+            logger.info("The optional property 'internationalizationLanguages' could not be initialized.");
             return new ArrayList<>();
         }
     }
