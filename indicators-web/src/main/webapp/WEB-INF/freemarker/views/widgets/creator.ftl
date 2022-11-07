@@ -36,6 +36,7 @@
     [#list internationalizationLanguages as language]
     options.languages.push('${language}');
     [/#list]
+    options.locale = "navigator";
 
     $(function () {
         var widgetView = new App.views.WidgetView(options);
