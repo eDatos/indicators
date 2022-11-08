@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -14,9 +16,6 @@ import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
@@ -180,22 +179,23 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     /**
      * This piece of code transform all time values to the same granularity, in case of two different values are translated to the same
      * value we'll keep the value with lower original granularity.
-     * 
+     *
      * @param timeCodes
      * @param timeGranularity
      * @return
      * @throws MetamacException
      */
+    @SuppressWarnings("unchecked")
     private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
-        BiMap<String, String> mapping = HashBiMap.create();
+        BidiMap mapping = new DualHashBidiMap();
         for (String timeCode : timeCodes) {
             String transformed = transformTimeValueToGranularity(timeCode, timeGranularity);
-            String previousTransformed = mapping.inverse().get(transformed);
+            String previousTransformed = (String) mapping.inverseBidiMap().get(transformed);
             if (previousTransformed != null) {
                 TimeValue currentValue = TimeVariableUtils.parseTimeValue(timeCode);
                 TimeValue previousValue = TimeVariableUtils.parseTimeValue(previousTransformed);
                 if (TimeVariableUtils.getTimeValueOrderByGranularity(currentValue) < TimeVariableUtils.getTimeValueOrderByGranularity(previousValue)) {
-                    mapping.forcePut(timeCode, transformed);
+                    mapping.put(timeCode, transformed);
                 }
             } else {
                 mapping.put(timeCode, transformed);
