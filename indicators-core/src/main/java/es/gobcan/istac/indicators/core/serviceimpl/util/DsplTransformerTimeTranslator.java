@@ -186,7 +186,11 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
      * @throws MetamacException
      */
     @SuppressWarnings("unchecked")
-    private Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+    public Map<String, String> transformTimeValuesOnlyIfValid(List<String> timeCodes, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+        /*
+         * This method is public only for testing. Yeah, that's bad design, but the alternative is refactor this and 10 methods more to move them to
+         * it's own utils class and that is overkill.
+         */
         BidiMap mapping = new DualHashBidiMap();
         for (String timeCode : timeCodes) {
             String transformed = transformTimeValueToGranularity(timeCode, timeGranularity);
