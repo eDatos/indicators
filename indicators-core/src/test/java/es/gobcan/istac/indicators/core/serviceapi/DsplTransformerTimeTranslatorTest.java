@@ -5,8 +5,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
@@ -15,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -127,6 +131,16 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+
+    @Test
+    public void testTransformTimeValuesOnlyIfValid() throws MetamacException {
+        Map<String, String> expectedResult = new HashMap<>();
+        expectedResult.put("2000-01-01", "2000M01");
+        expectedResult.put("2001-M03", "2001M03");
+        expectedResult.put("2002-M12", "2002M12");
+
+        assertEquals(expectedResult, dsplTransformer.transformTimeValuesOnlyIfValid(Arrays.asList("2000-01-01", "2001-M03", "2002-M12", "2002"), IstacTimeGranularityEnum.MONTHLY));
     }
 
     @Test
