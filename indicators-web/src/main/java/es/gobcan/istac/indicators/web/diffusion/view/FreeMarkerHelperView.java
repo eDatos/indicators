@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.diffusion.view;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
+        model.put("internationalizationLanguages", getinternationalizationLanguages());
         try {
             model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
         } catch (MetamacException ignore) {
@@ -63,6 +66,15 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         fillOptionalPortalDefaultStyleFooterUrl(model, locale);
 
         super.doRender(model, request, response);
+    }
+
+    private List<String> getinternationalizationLanguages() {
+        try {
+            return getConfigurationService().retrieveInternationalizationLanguages();
+        } catch (MetamacException e) {
+            logger.info("The optional property 'internationalizationLanguages' could not be initialized.");
+            return new ArrayList<>();
+        }
     }
 
     private String getCurrentLocale(HttpServletRequest request) {

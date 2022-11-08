@@ -50,6 +50,16 @@
                     self.widget.set('textColor', textColor);
                 },
 
+                locale : function (locale) {
+                    this.widget.set("locale", locale);
+                    this.widget.init(this.widget.options);
+                    this.widget.render();
+                },
+
+                showLanguageDropdown : function (showLanguageDropdown) {
+                    this.widget.set("showLanguageDropdown", showLanguageDropdown);
+                },
+
                 _default : function (key, value) {
                     this.widget.set(key, value);
                     this.widget.render();

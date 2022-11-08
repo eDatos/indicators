@@ -59,7 +59,9 @@
             uwa: false,
             shadow: true,
             borderRadius: true,
-            scale: "natural"
+            scale: "natural",
+            locale: "navigator",
+            showLanguageDropdown: false
         },
 
         _containerTemplate: Handlebars.templates.container,
@@ -84,15 +86,26 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = options.locale || "es";
+            this.locale = options.locale === "navigator" ? navigator.language : (options.locale || options.languages[0] || "es");
 
             this.datasets = [];
 
             //Create containers
+            var self = this;
             var templateOptions = {
                 widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
                 organisation: Istac.widget.configuration['metamac.organisation'],
-                baseUrl: this.url
+                baseUrl: this.url,
+                translations: {
+                    common: {
+                        close: EDatos.common.I18n.translate("COMMON.CLOSE", this.locale)
+                    },
+                    embed: {
+                        credits: EDatos.common.I18n.translate("EMBED.CREDITS", this.locale),
+                        more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
+                    }
+                },
+                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } })
             };
 
             if (this.options.uwa) {
@@ -136,6 +149,7 @@
             this.set('shadow', options.shadow);
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
+            this.set('showLanguageDropdown', options.showLanguageDropdown);
             this.reloadData();
         },
 
@@ -146,6 +160,14 @@
             var setter = this[this._getSetterMethodName(property)];
             if (_.isFunction(setter)) {
                 setter.call(this, value);
+            }
+        },
+
+        setShowLanguageDropdown: function (showLanguageDropdown) {
+            if (showLanguageDropdown) {
+                this.el.find('#widget-language-selector').show();
+            } else {
+                this.el.find('#widget-language-selector').hide();
             }
         },
 
@@ -230,14 +252,14 @@
         _getDefaultTitle: function () {
             var title;
             if (this.options.type === "lastData") {
-                title = EDatos.common.I18n.translate("LAST_DATA.TITLE");
+                title = EDatos.common.I18n.translate("LAST_DATA.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
-                title = EDatos.common.I18n.translate("RECENT.TITLE");
+                title = EDatos.common.I18n.translate("RECENT.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
@@ -247,7 +269,7 @@
                 if (this.datasets && this.datasets.length > 0) {
                     title = this.datasets[0].getTitle();
                 } else {
-                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE");
+                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE", this.locale);
                 }
             }
             return title;
@@ -353,7 +375,7 @@
                 self.showEmbed();
                 return false;
             });
-            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE'));
+            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE', this.locale));
         },
 
         openTag: function (tag, parameters) {
@@ -432,6 +454,12 @@
             if (this.afterRenderCallback) {
                 this.afterRenderCallback(this);
             }
+            var self = this;
+            this.el.find('#widget-language-selector').on("change", function (event) {
+                self.options.locale = event.target.value;
+                self.init(self.options);
+                self.render();
+            })
         }
 
 

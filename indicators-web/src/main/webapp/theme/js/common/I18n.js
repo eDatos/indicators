@@ -5,14 +5,14 @@
     var defaultLocale = typeof window.defaultLocale !== 'undefined' ? window.defaultLocale : 'es';
 
     EDatos.common.I18n = {
-        translate: function (key) {
+        translate: function (key, locale) {
             if (key === null) {
                 console.warn("Tried to translate null key");
                 return '';
             }
 
             // Current locale            
-            var label = EDatos.common.helper.get(EDatos.common.translations[currentLocale], key);
+            var label = EDatos.common.helper.get(EDatos.common.translations[locale || currentLocale], key);
             if (label) {
                 return label;
             }

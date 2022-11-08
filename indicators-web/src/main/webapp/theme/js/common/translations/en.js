@@ -71,6 +71,16 @@
                         'LINE': 'Lines',
                         'BAR': 'Bars'
                     }
+                },
+                'LANGUAGE': {
+                    'TITLE' : 'Language',
+                    'DROPDOWN': {
+                        'TITLE': 'Add language selector'
+                    },
+                    'PREFERENCE': {
+                        'TITLE': 'Language to use',
+                        'NAVIGATOR': 'Browser language'
+                    }
                 }
             },
         },

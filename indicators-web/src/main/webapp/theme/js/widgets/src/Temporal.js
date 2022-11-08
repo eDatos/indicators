@@ -1,9 +1,5 @@
 (function ($) {
 
-    Highcharts.setOptions({
-        lang: EDatos.common.I18n.translate('HIGHCHARTS')
-    });
-
     Istac.widget.Temporal = function (options) {
         this.init(options);
     };
@@ -211,6 +207,10 @@
                     };
                 }
             }
+
+            Highcharts.setOptions({
+                lang: EDatos.common.I18n.translate('HIGHCHARTS', this.locale)
+            });
 
             $chartContainer.highcharts(highchartsOptions);
         }
