@@ -104,7 +104,7 @@
     justify-content: space-between;
 }
 
-.istac-widget-title #widget-language-selector {
+.istac-widget-title select[name="language"] {
     background-color: transparent;
     font-family: inherit;
     font-size: inherit;
@@ -113,7 +113,12 @@
     width: auto;
 }
 
-.istac-widget-title #widget-language-selector option {
+#widget-preview-content .istac-widget-title select[name="language"] {
+    font-size: inherit;
+    width: auto;
+}
+
+.istac-widget-title select[name="language"] option {
     color: black;
 }
 
