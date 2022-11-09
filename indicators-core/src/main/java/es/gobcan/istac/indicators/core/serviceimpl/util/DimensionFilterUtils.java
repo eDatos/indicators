@@ -8,7 +8,8 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 
 public class DimensionFilterUtils {
 
-    public static List<String> filterTimeCodes(IndicatorsDataTimeDimensionFilterVO filter, List<TimeValue> coverage) {
+    public static List<String> filterTimeCodes(IndicatorsDataTimeDimensionFilterVO filter, List<TimeValue> sortedCoverage) {
+        // The coverage is already sorted before entering here on TimeVariableUtils.sortTimeValuesMostRecentFirst
         if (filter != null) {
             List<String> filteredCodes = new ArrayList<String>();
             boolean granularityFilterEnabled = !filter.getGranularityCodes().isEmpty();
@@ -21,8 +22,7 @@ public class DimensionFilterUtils {
             boolean noFilterEnabled = !(codeFilterEnabled || rangeFilterEnabled || lastFilterEnabled || afterFilterEnabled);
 
             int lastAdded = 0;
-            for (int i = 0; i < coverage.size(); i++) {
-                TimeValue timeValue = coverage.get(i);
+            for (TimeValue timeValue : sortedCoverage) {
 
                 // Granularity has a greater "weight". We wont´t return anything outside the granularity
                 if (granularityFilterEnabled && !filter.getGranularityCodes().contains(timeValue.getGranularity().name())) {
@@ -35,11 +35,11 @@ public class DimensionFilterUtils {
                     continue;
                 }
 
-                // But if we have any kind of filter, we need to check "additively" by each filter.
-                // This approach would be simpler if we do 2 or 3 loops, but it would reduce the performance
+                // But if we have any other kind of filter, we need to check "additively" for each filter.
+                // The code for this approach would be simpler if we do 2 or 3 loops, but it would reduce the performance
 
-                // We process "last" first, so it´s simpler to keep track on "the last n" elements
-                // Remember that coverage is ordered from greater to lower value, so this is the correct order and place to handle it
+                // We process "last" first, because it´s simpler to keep track on "the last n" elements
+                // Remember that coverage is ordered from most recent (or greater) to olders (or lower) value, so this is the correct order and place to handle it
                 if (lastFilterEnabled) {
                     if (lastAdded < filter.getConditionLast()) {
                         filteredCodes.add(timeValue.getTimeValue());
@@ -76,7 +76,7 @@ public class DimensionFilterUtils {
             }
             return filteredCodes;
         }
-        return DimensionFilterUtils.getCodesInTimeValues(coverage);
+        return DimensionFilterUtils.getCodesInTimeValues(sortedCoverage);
 
     }
 
