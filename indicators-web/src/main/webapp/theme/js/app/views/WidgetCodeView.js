@@ -23,11 +23,13 @@
 
         _getCode: function () {
             var url = this._getUrl();
+            var id = crypto.randomUUID();
             var code = _.extend(this.model.toJSON(), {
-                el: "#indicators-widget",
+                el: "#indicators-widget-" + id,
                 url: url,
                 visualizerUrl: visualizerUrl,
-                apiUrl: apiUrl
+                apiUrl: apiUrl,
+                id: id
             });
             return code;
         },
@@ -40,7 +42,8 @@
             var templateContext = {
                 script: url + '/theme/js/widgets/widget.min.all.js',
                 code: JSON.stringify(code, null, 8),
-                parameters: parameters
+                parameters: parameters,
+                indicatorWidgetId: code.el.substring(1)
             };
 
             this.$el.html(this.template(templateContext));

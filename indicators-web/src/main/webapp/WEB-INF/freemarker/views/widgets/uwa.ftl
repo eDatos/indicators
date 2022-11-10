@@ -32,7 +32,6 @@
 
     <script type="text/javascript">
         widget.onLoad = function () {
-            widget.addBody("<div id='indicators-widget' class='istac-widget-uwa edatos-indicators'></div>");
             var permalinksUrlBase = "${permalinksUrlBase}";
             var req = $.ajax({
                     url : permalinksUrlBase + "/v1.0/permalinks/${permalinkId?js_string}.json",
@@ -40,6 +39,7 @@
                     jsonp : "_callback"
                 });
                 req.success(function (options) {
+                    widget.addBody("<div id='" + options.el.substring(1) + "' class='istac-widget-uwa edatos-indicators'></div>");
 	                IstacWidget(options, null, function (istacWidget) {
 	                    widget.setTitle(istacWidget.title);
 	                });
