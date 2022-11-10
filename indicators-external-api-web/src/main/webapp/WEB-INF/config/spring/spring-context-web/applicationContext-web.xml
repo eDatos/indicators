@@ -60,10 +60,10 @@
         <!-- one of the properties available; the maximum file size in bytes -->
 <!--         <property name="maxUploadSize" value="100000"/> -->
 <!--     </bean> -->
-    
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-	</bean>
-	
+
+    <bean id="localeResolver" class="es.gobcan.istac.indicators.web.EdatosLocaleResolver">
+    </bean>
+
 	<!--
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">

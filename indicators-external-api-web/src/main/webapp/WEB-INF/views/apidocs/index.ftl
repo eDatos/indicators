@@ -42,12 +42,15 @@
           url = baseUrl + "/docs";
       }
 
+      var locale = document.getElementById("language-selector");
+      var localeValue = locale.value;
+
       // Pre load translate...
       if(window.SwaggerTranslator) {
         window.SwaggerTranslator.translate();
       }
       window.swaggerUi = new SwaggerUi({
-        url: url,
+        url: url+'?chosenLocale='+localeValue,
         dom_id: "swagger-ui-container",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){

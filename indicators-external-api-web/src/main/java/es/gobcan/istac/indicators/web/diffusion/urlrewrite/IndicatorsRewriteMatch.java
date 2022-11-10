@@ -47,8 +47,8 @@ class IndicatorsRewriteMatch extends RewriteMatch {
             }
         }
         Matcher swaggerResourcesMatcher = swaggerResourcesPattern.matcher(requestURI);
-        if (swaggerResourcesMatcher.matches() && apiUrlmatcher.groupCount() > 1) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(swaggerResourcesMatcher.group(2));
+        if (swaggerResourcesMatcher.matches() && swaggerResourcesMatcher.groupCount() > 0) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(swaggerResourcesMatcher.group(1));
             requestDispatcher.forward(request, response);
             return true;
         }

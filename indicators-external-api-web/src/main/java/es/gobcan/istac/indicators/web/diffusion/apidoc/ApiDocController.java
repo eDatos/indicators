@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.util.UriTemplate;
@@ -54,11 +55,12 @@ public class ApiDocController {
         return new ModelAndView("apidocs/index", new HashMap<String, String>());
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/docs", produces = "application/json")
-    public ModelAndView indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = "/api/indicators/v1.0/docs", produces = "application/json", params = "chosenLocale")
+    public ModelAndView indicatorApi(HttpServletRequest request, HttpServletResponse response,
+                                     @RequestParam(value = "chosenLocale", defaultValue = "es") String chosenLocale) throws Exception {
         response.setContentType("application/json");
 
-        return new ModelAndView("apidocs/v1.0/swagger", new HashMap<String, String>());
+        return new ModelAndView("apidocs/v1.0/" + chosenLocale +"/swagger", new HashMap<String, String>());
     }
 
 }

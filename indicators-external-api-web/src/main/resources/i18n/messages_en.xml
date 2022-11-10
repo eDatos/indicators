@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    
-    <!-- TODO no existe internacionalización para las páginas de la API. Se han limpiado los mensajes porque ninguno se usaba. 
-    Si se necesita un ejemplo véase  /indicators-web/src/main/resources/i18n/messages_es.xml -->
-  
+    <entry key="api.doc.title">Indicators API</entry>
+    <entry key="api.doc.versiones">Versions</entry>
+    <entry key="api.doc.latest">is the key word reservada con la que se puede acceder a la última versión de la API</entry>
+    <entry key="api.doc.version.1_0">API version 1.0</entry>
 </properties>
