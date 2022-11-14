@@ -105,7 +105,8 @@
                         more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
                     }
                 },
-                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } })
+                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } }),
+                languageSelectorId: this.getLanguageSelectorId()
             };
 
             if (this.options.uwa) {
@@ -149,8 +150,12 @@
             this.set('shadow', options.shadow);
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
-            this.set('showLanguageDropdown', options.showLanguageDropdown);
+            this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.reloadData();
+        },
+
+        getLanguageSelectorId: function () {
+            return this.options.id ? 'widget-language-selector-' + this.options.id : 'widget-language-selector';
         },
 
         set: function (property, value) {
@@ -164,11 +169,7 @@
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
-            if (showLanguageDropdown) {
-                this.el.find('#widget-language-selector').show();
-            } else {
-                this.el.find('#widget-language-selector').hide();
-            }
+            this.el.find("#" + this.getLanguageSelectorId()).toggle(showLanguageDropdown);
         },
 
         _getSetterMethodName: function (property) {
@@ -398,7 +399,7 @@
 
             var closeScript = this.closeTag('script');
 
-            var el = 'indicators-widget';
+            var el = this.options.el.substring(1);
             var code = '<div id="' + el + '"></div>';
             filteredOptions.el = '#' + el;
 
@@ -455,7 +456,7 @@
                 this.afterRenderCallback(this);
             }
             var self = this;
-            this.el.find('#widget-language-selector').on("change", function (event) {
+            this.el.find('#' + this.getLanguageSelectorId()).on("change", function (event) {
                 self.options.locale = event.target.value;
                 self.init(self.options);
                 self.render();

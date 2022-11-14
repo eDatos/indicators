@@ -60,7 +60,7 @@
                     }
                 }[EDatos.common.I18n.getWidgetLocaleFromOptions(options)]);
                 widget.onLoad = function () {
-                    widget.addBody("<div id='indicators-widget' class='istac-widget-uwa edatos-indicators'></div>");
+                    widget.addBody("<div id='" + options.el.substring(1) + "' class='istac-widget-uwa edatos-indicators'></div>");
                     IstacWidget(options, null, function (istacWidget) {
                         widget.setTitle(istacWidget.title);
                     });
