@@ -25,6 +25,10 @@
 
             console.warn('No translation found for "' + key + '"');
             return key;
+        },
+
+        getWidgetLocaleFromOptions: function (options) {
+            return options.locale === "navigator" ? navigator.language : (options.locale || options.languages[0] || "es");
         }
     }
 
