@@ -86,7 +86,7 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = options.locale === "navigator" ? navigator.language : (options.locale || options.languages[0] || "es");
+            this.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
 
             this.datasets = [];
 
