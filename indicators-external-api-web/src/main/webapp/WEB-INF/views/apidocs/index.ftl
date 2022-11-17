@@ -23,7 +23,8 @@
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/swagger-oauth.js" type='text/javascript'></script>
   
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/translator.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/es.js" type='text/javascript'></script>
+  <script id="apidocs-lang"></script>
+  <!-- <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/es.js" type='text/javascript'></script> -->
       
     <script type="text/javascript">
     $(function () {
@@ -44,6 +45,8 @@
 
       var locale = document.getElementById("language-selector");
       var localeValue = locale.value;
+      var apiDocsLang = localeValue == 'ca' ? 'es_ca' : localeValue;
+      document.getElementById("apidocs-lang").src ='${indicatorsExternalApiUrlBase}/apidocs/lang/'+apiDocsLang +'.js';
 
       // Pre load translate...
       if(window.SwaggerTranslator) {
