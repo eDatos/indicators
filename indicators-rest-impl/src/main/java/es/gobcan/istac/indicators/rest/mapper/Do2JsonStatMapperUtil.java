@@ -22,11 +22,18 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.i18n.Translations;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.JsonStatCategoryType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
 import es.gobcan.istac.indicators.rest.types.JsonStatUnitType;
+
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PUNTUAL_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PUNTUAL_RATE;
 
 @Component
 public class Do2JsonStatMapperUtil {
@@ -125,14 +132,33 @@ public class Do2JsonStatMapperUtil {
             return null;
         }
         JsonStatCategoryType category = new JsonStatCategoryType();
-        for (MeasureValue measureValue : measureValues) {
+        for (int i = 0; i < measureValues.size(); i++) {
+            MeasureValue measureValue = measureValues.get(i);
             Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
-            String categoryCode = quantity.getUuid(); // TODO EDATOS-3663: needs a better code, i think
-            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(quantity.getUnit().getTitle()));
-            category.getIndex().put(categoryCode, 0L);
+            String categoryCode = measureValue.getMeasureValue().name();
+            String categoryLabel = toJsonStatCategoryCode(measureValue.getMeasureValue());
+            category.getLabel().put(categoryCode, categoryLabel);
+            category.getIndex().put(categoryCode, (long) i);
             category.getUnit().put(categoryCode, toJsonStatUnit(quantity));
         }
         return category;
+    }
+
+    private String toJsonStatCategoryCode(MeasureDimensionTypeEnum measureValue) {
+        switch (measureValue) {
+            case ABSOLUTE:
+                return translations.get(MEASURE_ABSOLUTE);
+            case ANNUAL_PUNTUAL_RATE:
+                return translations.get(MEASURE_ANNUAL_PUNTUAL_RATE);
+            case ANNUAL_PERCENTAGE_RATE:
+                return translations.get(MEASURE_ANNUAL_PERCENTAGE_RATE);
+            case INTERPERIOD_PUNTUAL_RATE:
+                return translations.get(MEASURE_INTERPERIOD_PUNTUAL_RATE);
+            case INTERPERIOD_PERCENTAGE_RATE:
+                return translations.get(MEASURE_INTERPERIOD_PERCENTAGE_RATE);
+            default:
+                return null;
+        }
     }
 
     private JsonStatUnitType toJsonStatUnit(Quantity quantity) {

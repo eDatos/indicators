@@ -12,6 +12,12 @@ public class Translations {
     public static final String DIMENSIONS_MEASURE_NAME = "indicators.rest.dimensions.name.measure";
     public static final String DIMENSIONS_TIME_NAME = "indicators.rest.dimensions.name.time";
 
+    public static final String MEASURE_ABSOLUTE = "indicators.rest.measure.absolute";
+    public static final String MEASURE_ANNUAL_PUNTUAL_RATE = "indicators.rest.measure.annual_rate";
+    public static final String MEASURE_ANNUAL_PERCENTAGE_RATE = "indicators.rest.measure.annual_percentage_rate";
+    public static final String MEASURE_INTERPERIOD_PUNTUAL_RATE = "indicators.rest.measure.interperiod_rate";
+    public static final String MEASURE_INTERPERIOD_PERCENTAGE_RATE = "indicators.rest.measure.interperiod_percentage_rate";
+
     @Autowired
     private MessageSource messageSource;
 
