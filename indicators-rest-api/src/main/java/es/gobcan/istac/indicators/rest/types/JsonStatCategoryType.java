@@ -12,6 +12,8 @@ public class JsonStatCategoryType {
 
     private Map<String, Long> index = new HashMap<>();
     private Map<String, String> label = new HashMap<>();
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     private Map<String, JsonStatUnitType> unit = new HashMap<>();
 
     public Map<String, Long> getIndex() {
