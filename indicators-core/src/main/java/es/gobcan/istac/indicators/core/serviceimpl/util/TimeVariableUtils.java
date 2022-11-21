@@ -201,6 +201,7 @@ public class TimeVariableUtils {
         return timeValues.get(0);
     }
 
+    // TODO if we approach EDATOS-3879, we won´t need this
     public static void sortTimeValuesMostRecentFirst(List<TimeValue> values) {
         Collections.sort(values, new Comparator<TimeValue>() {
 

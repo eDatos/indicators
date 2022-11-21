@@ -383,15 +383,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             for (int i = 0; i < geographicalCodes.size(); i++) {
                 String geographicalCode = geographicalCodes.get(i);
-                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
 
                 for (int j = 0; j < timeValues.size(); j++) {
                     String timeValueCode = timeValues.get(j);
-                    dataRepresentationTypeTime.getIndex().put(timeValueCode, j);
 
                     for (int k = 0; k < measureValues.size(); k++) {
                         String measureValueCode = measureValues.get(k);
-                        dataRepresentationTypeMeasure.getIndex().put(measureValueCode, k);
 
                         // Observation ID: Be careful!!! don't change order of ids
                         String geographicalValueCode = geographicalCode;
@@ -416,6 +413,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
+
+            for (int i = 0; i < geographicalCodes.size(); i++) {
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
+            }
+            for (int j = 0; j < timeValues.size(); j++) {
+                dataRepresentationTypeTime.getIndex().put(timeValues.get(j), j);
+            }
+            for (int k = 0; k < measureValues.size(); k++) {
+                dataRepresentationTypeMeasure.getIndex().put(measureValues.get(k), k);
+            }
+
             DataType dataType = new DataType();
             dataType.setFormat(format);
             dataType.setDimension(dimension);

@@ -10,9 +10,15 @@
 
 <body>
     <script src="${serverURL}/theme/js/widgets/widget.min.all.js"></script>
-    <div id="indicators-widget" class="edatos-indicators"></div>
     <script>
         var options =  JSON.parse('${options}');
+
+        var body = document.getElementsByTagName('body')[0];
+        var indicatorsWidgetDiv = document.createElement('div');
+        indicatorsWidgetDiv.id = options.el.substring(1);
+        indicatorsWidgetDiv.class = 'edatos-indicators';
+        body.appendChild(indicatorsWidgetDiv);
+
         var istacWidget = new IstacWidget(options);
     </script>
 </body>

@@ -2,23 +2,32 @@
     <span class="istac-widget-title-text">
         <a href="#" target="_blank"></a>
     </span>
+    <select id="{{ languageSelectorId }}" name="language" hidden>
+        {{#each languages}}
+        {{#if this.selected}}
+        <option value="{{ this.lang }}" selected>{{ this.lang }}</option>
+        {{else}}
+        <option value="{{ this.lang }}">{{ this.lang }}</option>
+        {{/if}}
+        {{/each}}
+    </select>
 </div>
 <div class="istac-widget-body">
     <div class="istac-widget-content">
     </div>
     <div class="istac-widget-body-embed">
         <textarea rows="10"></textarea>
-        <a href="#" class="hideEmbed">{{ translate "COMMON.CLOSE" }}</a>
+        <a href="#" class="hideEmbed">{{ translations.common.close }}</a>
     </div>
     <div class="istac-widget-body-allIndicators">
         <p class="istac-widget-embed"><a href="#" title="Incrustar widget">&lt;/&gt;</a></p>
         <span class="istac-widget-body-allIndicators-text">
-            <img src="{{baseUrl}}/theme/images/flecha-larga.gif"><a target="_blank" href="#">{{ translate "EMBED.MORE"
+            <img src="{{baseUrl}}/theme/images/flecha-larga.gif"><a target="_blank" href="#">{{ translations.embed.more
                 }}</a>
         </span>
     </div>
     <div class="istac-widget-footer">
-        <p class="istac-widget-credits"><a target="_blank" href="{{widgetsTypeUrl}}">{{ translate "EMBED.CREDITS" }}
-                {{organisation}}</a></p>
+        <p class="istac-widget-credits"><a target="_blank" href="{{widgetsTypeUrl}}">{{ translations.embed.credits }}
+            {{organisation}}</a></p>
     </div>
 </div>

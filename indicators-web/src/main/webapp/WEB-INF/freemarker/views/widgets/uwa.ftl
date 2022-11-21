@@ -17,9 +17,6 @@
 
     <link rel="stylesheet" type="text/css"
           href="//uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
-    <script type="text/javascript"
-            src="//uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
-
     <title>${organisation} | [@apph.messageEscape 'page.widgets.title' /]</title>
     <link rel="icon" href="${faviconUrl}"/>
 
@@ -31,20 +28,45 @@
     <script type="text/javascript" src="${serverURL}/theme/js/widgets/widget.min.all.js"></script>
 
     <script type="text/javascript">
-        widget.onLoad = function () {
-            widget.addBody("<div id='indicators-widget' class='istac-widget-uwa edatos-indicators'></div>");
-            var permalinksUrlBase = "${permalinksUrlBase}";
-            var req = $.ajax({
-                    url : permalinksUrlBase + "/v1.0/permalinks/${permalinkId?js_string}.json",
-                    dataType : 'jsonp',
-                    jsonp : "_callback"
-                });
-                req.success(function (options) {
-	                IstacWidget(options, null, function (istacWidget) {
-	                    widget.setTitle(istacWidget.title);
-	                });
-                });
-        };
+        var permalinksUrlBase = "${permalinksUrlBase}";
+        var req = $.ajax({
+            url : permalinksUrlBase + "/v1.0/permalinks/${permalinkId?js_string}.json",
+            dataType : 'jsonp',
+            jsonp : "_callback"
+        });
+        req.success(function (options) {
+            var body = document.getElementsByTagName('body')[0];
+            var netvibesScript = document.createElement('script');
+            netvibesScript.type = "text/javascript";
+            netvibesScript.src = "//uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js";
+            netvibesScript.async = false;
+            body.appendChild(netvibesScript);
+            netvibesScript.onload = function () {
+                UWA.i18n({
+                    'es': {
+                        'Subscribe to this app': 'Suscríbete a esta aplicación',
+                        'Settings': 'Ajustes',
+                        'Refresh' : 'Actualizar'
+                    },
+                    'en': {
+                        'Subscribe to this app': 'Subscribe to this app',
+                        'Settings': 'Settings',
+                        'Refresh' : 'Refresh'
+                    },
+                    'ca': {
+                        'Subscribe to this app': 'Subscriu-te a aquesta aplicació',
+                        'Settings': 'Configuració',
+                        'Refresh' : 'Actualitzar'
+                    }
+                }[EDatos.common.I18n.getWidgetLocaleFromOptions(options)]);
+                widget.onLoad = function () {
+                    widget.addBody("<div id='" + options.el.substring(1) + "' class='istac-widget-uwa edatos-indicators'></div>");
+                    IstacWidget(options, null, function (istacWidget) {
+                        widget.setTitle(istacWidget.title);
+                    });
+                };
+            }
+        });
     </script>
 
     <script type="text/javascript">               

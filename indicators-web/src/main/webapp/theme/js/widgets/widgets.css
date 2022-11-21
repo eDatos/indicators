@@ -98,8 +98,28 @@
 .istac-widget-title {
     line-height: 1.3em;
     font-weight: bold;
-    padding: 0 7px;
+    padding: 3px 7px;
     font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.istac-widget-title select[name="language"] {
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    border: none;
+    color: white;
+    width: auto;
+}
+
+#widget-preview-content .istac-widget-title select[name="language"] {
+    font-size: inherit;
+    width: auto;
+}
+
+.istac-widget-title select[name="language"] option {
+    color: black;
 }
 
 .istac-widget-title-text {
@@ -180,7 +200,7 @@
 
 .istac-widget .istac-widget-embed {
     float: left;
-    margin: 0; 
+    margin: 0;
 }
 
 .istac-widget-credits a {
@@ -196,6 +216,10 @@
     color: #333;
     display: none;
     font: 11px Arial, Helvetica, sans-serif;
+}
+
+.jqstooltip {
+    box-sizing: content-box;
 }
 
 .istac-widget p.istact-widget-unit {
