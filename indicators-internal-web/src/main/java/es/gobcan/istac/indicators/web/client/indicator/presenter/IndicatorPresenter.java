@@ -132,7 +132,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
-        void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
+        void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
         void showInformationMessage(String title, String message);
 
@@ -425,18 +425,18 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
         });
     }
-
+    
     @Override
-    public void retrieveStatisticalOperationsForQuerySelection() {
-        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+    public void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, QueryWebCriteria webCriteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForQuerySelection(result.getOperationsList());
+                getView().setStatisticalOperationsForQuerySelection(result.getOperationsList(), result.getFirstResultOut(), result.getTotalResults());
             }
         });
     }
-
+    
     @Override
     public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
         dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {

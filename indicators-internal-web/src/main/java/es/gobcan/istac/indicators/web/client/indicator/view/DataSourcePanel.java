@@ -23,7 +23,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -64,7 +63,7 @@ import es.gobcan.istac.indicators.web.client.widgets.DataDefinitionsSearchWindow
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
-import es.gobcan.istac.indicators.web.client.widgets.SearchSingleQueryPaginatedWindow;
+import es.gobcan.istac.indicators.web.client.widgets.StatOperationsSearchExternalItemLinkItem;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
@@ -103,7 +102,7 @@ public class DataSourcePanel extends VLayout {
     private IndicatorDto                     indicatorDto;
     private IndicatorUiHandler               uiHandlers;
 
-    private SearchSingleQueryPaginatedWindow searchQueryMetamacWindow;
+    private StatOperationsSearchExternalItemLinkItem          searchQueryMetamacWindow;
     private List<String>                     editionLanguages;
 
     public DataSourcePanel() {
@@ -460,10 +459,6 @@ public class DataSourcePanel extends VLayout {
         annualPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
 
-    private void setSelectedRelatedQueryInEditionForm(ExternalItemDto relatedDsdDto) {
-        generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, relatedDsdDto);
-    }
-
     public void setDataSource(DataSourceDto dataSourceDto) {
         this.dataSourceDto = dataSourceDto;
         if (dataSourceDto.getUuid() != null) {
@@ -578,14 +573,13 @@ public class DataSourcePanel extends VLayout {
         });
 
         // Query from METAMAC
-        SearchExternalItemLinkItem queryMetamacItem = getQueryMetamacItem();
-        queryMetamacItem.setShowIfCondition(new FormItemIfFunction() {
+        searchQueryMetamacWindow = getQueryMetamacItem();
+        searchQueryMetamacWindow.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 return isEnvironmentSelected(form, QueryEnvironmentEnum.METAMAC);
             }
-
         });
 
         // Query from JSON STAT
@@ -724,7 +718,7 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, queryMetamacItem, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, searchQueryMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
                 publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
                 variables);
 
@@ -896,41 +890,30 @@ public class DataSourcePanel extends VLayout {
         return query;
     }
 
-    private SearchExternalItemLinkItem getQueryMetamacItem() {
-        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuerySelection()) {
-
+    private StatOperationsSearchExternalItemLinkItem getQueryMetamacItem() {
+        return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuerySelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
+    
             @Override
-            public void onSearch() {
-
-                searchQueryMetamacWindow = new SearchSingleQueryPaginatedWindow(getConstants().resourceSelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS,
-                        new SearchPaginatedAction<QueryWebCriteria>() {
-
-                            @Override
-                            public void retrieveResultSet(int firstResult, int maxResults, QueryWebCriteria criteria) {
-                                retrieveResourcesForRelatedQuery(firstResult, maxResults, criteria);
-                            }
-                        });
-
-                // Load resources (to populate the selection window)
-                retrieveStatisticalOperationsForQuerySelection();
-
-                searchQueryMetamacWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        ExternalItemDto selectedResource = searchQueryMetamacWindow.getSelectedResource();
-                        retrieveQueryForRelatedQuery(selectedResource.getUrn());
-
-                        searchQueryMetamacWindow.markForDestroy();
-                        // Set selected resource in form
-                        setSelectedRelatedQueryInEditionForm(selectedResource);
-                        generalForm.validate(false);
-                    }
-                });
+            protected void retrieveResultSetQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+                uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
+            }
+    
+            @Override
+            protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, QueryWebCriteria criteria) {
+                uiHandlers.retrieveStatisticalOperationsForQuerySelection(firstResult, maxResults, criteria);
+            }
+            
+            @Override
+            protected void retrieveQueryForRelatedQuery(ExternalItemDto selectedResource) {
+                uiHandlers.retrieveDataStructureEdition(selectedResource.getUrn());
+                setSelectedRelatedQueryInEditionForm(selectedResource);
+                generalForm.validate(false);
             }
         };
-
-        return item;
+    }
+    
+    private void setSelectedRelatedQueryInEditionForm(ExternalItemDto selectedResource) {
+        generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, selectedResource);
     }
 
     private SearchViewTextItem getQueryJsonStatItem() {
@@ -962,18 +945,6 @@ public class DataSourcePanel extends VLayout {
         });
 
         return query;
-    }
-
-    public void retrieveStatisticalOperationsForQuerySelection() {
-        uiHandlers.retrieveStatisticalOperationsForQuerySelection();
-    }
-
-    public void retrieveResourcesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
-        uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
-    }
-
-    public void retrieveQueryForRelatedQuery(String queryUrn) {
-        uiHandlers.retrieveDataStructureEdition(queryUrn);
     }
 
     /**
@@ -1080,7 +1051,7 @@ public class DataSourcePanel extends VLayout {
     void clearAllQueryValues() {
         ((RequiredTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_UUID)).clearValue();
         ((SearchViewTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_TEXT)).clearValue();
-        ((SearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.QUERY_METAMAC)).clearValue();
+        ((StatOperationsSearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.QUERY_METAMAC)).clearValue();
         clearQueryDependentFields();
     }
 
@@ -1149,24 +1120,19 @@ public class DataSourcePanel extends VLayout {
         }
     }
 
-    public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
+    public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations, int firstResult, int totalResults) {
         if (searchQueryMetamacWindow != null) {
-            searchQueryMetamacWindow.setStatisticalOperations(statisticalOperations);
-            // searchQueryMetamacWindow.setSelectedStatisticalOperation(statisticalOperation);
-            searchQueryMetamacWindow.setFixedQueryCode(null);
-            searchQueryMetamacWindow.setOnlyLastVersion(true);
+            searchQueryMetamacWindow.setFilterResources(statisticalOperations, firstResult, statisticalOperations.size(), totalResults);
         }
     }
 
     public void setQueries(List<ExternalItemDto> queriesDtos, int firstResult, int elementsInPage, int totalResults) {
         if (searchQueryMetamacWindow != null) {
-            searchQueryMetamacWindow.setResources(queriesDtos);
-            searchQueryMetamacWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
+            searchQueryMetamacWindow.setResources(queriesDtos, firstResult, elementsInPage, totalResults);
         }
     }
-
+    
     // UTILS
-
     private boolean dataStructureHasGeoVariable() {
         if (dataStructureDtoEdition != null) {
             return dataStructureDtoEdition.getSpatialVariables() != null && !dataStructureDtoEdition.getSpatialVariables().isEmpty();
