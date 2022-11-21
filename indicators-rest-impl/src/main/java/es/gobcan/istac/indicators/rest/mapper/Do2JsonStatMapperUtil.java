@@ -1,0 +1,191 @@
+package es.gobcan.istac.indicators.rest.mapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.rest.i18n.Translations;
+import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.JsonStatCategoryType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
+import es.gobcan.istac.indicators.rest.types.JsonStatUnitType;
+
+@Component
+public class Do2JsonStatMapperUtil {
+    public static final String JSON_STAT_VERSION = "2.0";
+    public static final String JSON_STAT_CLASS = "dataset";
+
+    @Autowired
+    private IndicatorsApiService indicatorsApiService;
+
+    @Autowired
+    private Translations translations;
+
+    public List<String> createJsonStatId() {
+        List<String> format = new ArrayList<>();
+        format.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        format.add(IndicatorDataDimensionTypeEnum.TIME.name());
+        format.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
+        return format;
+    }
+
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorVersion source) throws MetamacException {
+        Map<String, JsonStatDimensionType> jsonStatDimensionsMap = new HashMap<>();
+
+        // Geographical
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        JsonStatDimensionType geographicalDimension = createGeographicalDimension(geographicalValues);
+        jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalDimension);
+
+        // Time
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
+        JsonStatDimensionType timeDimension = createTimeDimension(timeValues);
+        jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.TIME.name(), timeDimension);
+
+        // Measure
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
+        JsonStatDimensionType measureDimension = createMeasureDimension(measureValues, source);
+        jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureDimension);
+
+        return jsonStatDimensionsMap;
+    }
+
+    private JsonStatDimensionType createGeographicalDimension(List<GeographicalValueVO> geographicalValues) {
+        JsonStatDimensionType geographicalDimension = new JsonStatDimensionType();
+        String dimensionLabel = translations.get(Translations.DIMENSIONS_GEOGRAPHIC_NAME);
+        geographicalDimension.setLabel(dimensionLabel);
+        geographicalDimension.setCategory(createGeographicalCategory(geographicalValues));
+        return geographicalDimension;
+    }
+
+    private JsonStatCategoryType createGeographicalCategory(List<GeographicalValueVO> geographicalValues) {
+        if (CollectionUtils.isEmpty(geographicalValues)) {
+            return null;
+        }
+        JsonStatCategoryType category = new JsonStatCategoryType();
+        for (int i = 0; i < geographicalValues.size(); i++) {
+            GeographicalValueVO geographicalValue = geographicalValues.get(i);
+            String categoryCode = geographicalValue.getCode();
+            category.getIndex().put(categoryCode, i + 1L); // TODO EDATOS-3663: who cares about self-generated indices, right?????
+            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
+        }
+        return category;
+    }
+
+    private JsonStatDimensionType createTimeDimension(List<TimeValue> timeValues) {
+        JsonStatDimensionType timeDimension = new JsonStatDimensionType();
+        String dimensionLabel = translations.get(Translations.DIMENSIONS_TIME_NAME);
+        timeDimension.setLabel(dimensionLabel);
+        timeDimension.setCategory(createTimeCategory(timeValues));
+        return timeDimension;
+    }
+
+    private JsonStatCategoryType createTimeCategory(List<TimeValue> timeValues) {
+        if (CollectionUtils.isEmpty(timeValues)) {
+            return null;
+        }
+        JsonStatCategoryType category = new JsonStatCategoryType();
+        for (int i = 0; i < timeValues.size(); i++) {
+            TimeValue timeValue = timeValues.get(i);
+            String categoryCode = timeValue.getTimeValue();
+            category.getIndex().put(categoryCode, i + 1L); // TODO EDATOS-3663: who cares about self-generated indices, right?????
+            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
+        }
+        return category;
+    }
+
+    private JsonStatDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+        JsonStatDimensionType measureDimension = new JsonStatDimensionType();
+        String dimensionLabel = translations.get(Translations.DIMENSIONS_MEASURE_NAME);
+        measureDimension.setLabel(dimensionLabel);
+        measureDimension.setCategory(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion));
+        return measureDimension;
+    }
+
+    private JsonStatCategoryType measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+        if (CollectionUtils.isEmpty(measureValues)) {
+            return null;
+        }
+        JsonStatCategoryType category = new JsonStatCategoryType();
+        for (MeasureValue measureValue : measureValues) {
+            Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
+            String categoryCode = quantity.getUuid(); // TODO EDATOS-3663: needs a better code, i think
+            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(quantity.getUnit().getTitle()));
+            category.getIndex().put(categoryCode, 0L);
+            category.getUnit().put(categoryCode, toJsonStatUnit(quantity));
+        }
+        return category;
+    }
+
+    private JsonStatUnitType toJsonStatUnit(Quantity quantity) {
+        JsonStatUnitType unit = new JsonStatUnitType();
+        unit.setDecimals(quantity.getDecimalPlaces());
+        unit.setMultiplier(quantity.getUnitMultiplier().getUnitMultiplier());
+        unit.setSymbol(quantity.getUnit().getSymbol());
+        QuantityUnitSymbolPositionEnum symbolPosition = quantity.getUnit().getSymbolPosition();
+        if (symbolPosition != null) {
+            unit.setPosition(symbolPosition.toString());
+        }
+        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle()));
+        unit.setType(quantity.getQuantityType().toString());
+        return unit;
+    }
+
+    private Quantity getQuantityForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
+        switch (measure) {
+            case ABSOLUTE:
+                return indicatorVersion.getQuantity();
+            default:
+                RateDerivation rate = getRateDerivationForMeasure(measure, indicatorVersion); // TODO EDATOS-3663: test this, how it works??
+                if (rate != null) {
+                    return rate.getQuantity();
+                }
+        }
+        return null;
+    }
+
+    private RateDerivation getRateDerivationForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
+        for (DataSource datasource : indicatorVersion.getDataSources()) {
+            switch (measure) {
+                case ANNUAL_PERCENTAGE_RATE:
+                    if (datasource.getAnnualPercentageRate() != null) {
+                        return datasource.getAnnualPercentageRate();
+                    }
+                    break;
+                case ANNUAL_PUNTUAL_RATE:
+                    if (datasource.getAnnualPuntualRate() != null) {
+                        return datasource.getAnnualPuntualRate();
+                    }
+                    break;
+                case INTERPERIOD_PERCENTAGE_RATE:
+                    if (datasource.getInterperiodPercentageRate() != null) {
+                        return datasource.getInterperiodPercentageRate();
+                    }
+                    break;
+                case INTERPERIOD_PUNTUAL_RATE:
+                    if (datasource.getInterperiodPuntualRate() != null) {
+                        return datasource.getInterperiodPuntualRate();
+                    }
+                    break;
+            }
+        }
+        return null;
+    }
+
+}

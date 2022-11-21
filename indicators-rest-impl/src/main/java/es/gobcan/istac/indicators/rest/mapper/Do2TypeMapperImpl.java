@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
@@ -67,6 +68,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
@@ -99,6 +101,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
+
+    @Autowired
+    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
 
     private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
             MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
@@ -213,6 +218,25 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             IndicatorType target = new IndicatorType();
             indicatorDoToType(source, target);
+            return target;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public JsonStatDataType indicatorDoToJsonStatType(IndicatorVersion source, IndicatorObservationsExtendedVO dataTypeRequest) {
+        Assert.notNull(source);
+        try {
+
+            JsonStatDataType target = new JsonStatDataType();
+
+            target.setVersion(Do2JsonStatMapperUtil.JSON_STAT_VERSION);
+            target.setClazz(Do2JsonStatMapperUtil.JSON_STAT_CLASS);
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source));
+
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);

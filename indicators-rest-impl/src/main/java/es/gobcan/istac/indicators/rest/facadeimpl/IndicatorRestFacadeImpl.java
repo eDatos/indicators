@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,7 @@ import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -37,6 +40,8 @@ import es.gobcan.istac.indicators.rest.util.ConditionUtil;
 
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
+
+    public static final Map<String, List<String>> UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap<>());
 
     protected Logger                logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
@@ -112,18 +117,18 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
+    public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode) throws MetamacException {
+        IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(UNMODIFIABLE_EMPTY_MAP, UNMODIFIABLE_EMPTY_MAP); // no filter is applied so granularities and representations are empty
+        IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
+        return do2TypeMapper.indicatorDoToJsonStatType(indicatorVersion, indicatorObservationsExtended);
+    }
+
+    @Override
     public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
             throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
-
-        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
-        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
-        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
-
-        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
-        dataFilter.setGeoFilter(geoFilter);
-        dataFilter.setTimeFilter(timeFilter);
-        dataFilter.setMeasureFilter(measureFilter);
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
 
         DataType dataType;
         if (includeObservationMetadata) {
@@ -140,5 +145,18 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             dataType = do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
         }
         return dataType;
+    }
+
+    private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
+        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
+
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(geoFilter);
+        dataFilter.setTimeFilter(timeFilter);
+        dataFilter.setMeasureFilter(measureFilter);
+
+        return dataFilter;
     }
 }
