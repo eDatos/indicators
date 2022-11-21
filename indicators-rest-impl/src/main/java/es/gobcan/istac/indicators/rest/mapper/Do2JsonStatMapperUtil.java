@@ -1,11 +1,13 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -188,4 +190,10 @@ public class Do2JsonStatMapperUtil {
         return null;
     }
 
+    public List<Long> toJsonStatSize(IndicatorVersion source) throws MetamacException {
+        long geographicalValuesSize = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source).size();
+        long timeValuesSize = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source).size();
+        long measureValuesSize = indicatorsApiService.retrieveMeasureValuesInIndicator(source).size();
+        return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
+    }
 }

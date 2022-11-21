@@ -235,6 +235,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setClazz(Do2JsonStatMapperUtil.JSON_STAT_CLASS);
             target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
             target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source));
 
             return target;
