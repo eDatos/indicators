@@ -14,7 +14,7 @@ public class MappingJacksonJsonStatHttpMessageConverter extends MappingJacksonHt
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     public MappingJacksonJsonStatHttpMessageConverter() {
-        setSupportedMediaTypes(Collections.singletonList(new MediaType("application", "jsonstat+json", DEFAULT_CHARSET))); // FIXME EDATOS 3663: bad codification, i.e. Per�odos
+        setSupportedMediaTypes(Collections.singletonList(new MediaType("application", "jsonstat+json", DEFAULT_CHARSET)));
     }
 
     @PostConstruct
