@@ -91,7 +91,7 @@ public class Do2JsonStatMapperUtil {
         for (int i = 0; i < geographicalValues.size(); i++) {
             GeographicalValueVO geographicalValue = geographicalValues.get(i);
             String categoryCode = geographicalValue.getCode();
-            category.getIndex().put(categoryCode, i + 1L); // TODO EDATOS-3663: who cares about self-generated indices, right?????
+            category.getIndex().put(categoryCode, (long) i); // TODO EDATOS-3663: who cares about self-generated indices, right?????
             category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
         }
         return category;
@@ -113,7 +113,7 @@ public class Do2JsonStatMapperUtil {
         for (int i = 0; i < timeValues.size(); i++) {
             TimeValue timeValue = timeValues.get(i);
             String categoryCode = timeValue.getTimeValue();
-            category.getIndex().put(categoryCode, i + 1L); // TODO EDATOS-3663: who cares about self-generated indices, right?????
+            category.getIndex().put(categoryCode, (long) i); // TODO EDATOS-3663: who cares about self-generated indices, right?????
             category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
         }
         return category;
