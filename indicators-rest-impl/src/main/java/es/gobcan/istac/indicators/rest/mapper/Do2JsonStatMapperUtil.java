@@ -181,7 +181,7 @@ public class Do2JsonStatMapperUtil {
                 return indicatorVersion.getQuantity();
             default:
                 RateDerivation rate = getRateDerivationForMeasure(measure, indicatorVersion); // TODO EDATOS-3663: test this, how it works??
-                if (rate != null) {
+                if (rate != null) { // TODO EDATOS-3663: could this really be null?
                     return rate.getQuantity();
                 }
         }
