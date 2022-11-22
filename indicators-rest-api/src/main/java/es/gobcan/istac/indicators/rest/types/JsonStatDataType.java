@@ -15,11 +15,13 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.ALWAYS)
 public class JsonStatDataType {
+    public static final String JSON_STAT_VERSION = "2.0";
+    public static final String JSON_STAT_CLASS = "dataset";
 
-    private String version;
+    private String version = JSON_STAT_VERSION;
 
     @JsonProperty("class")
-    private String clazz;
+    private String clazz = JSON_STAT_CLASS;
 
     private String label;
     private String updated;

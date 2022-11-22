@@ -37,8 +37,6 @@ import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPER
 
 @Component
 public class Do2JsonStatMapperUtil {
-    public static final String JSON_STAT_VERSION = "2.0";
-    public static final String JSON_STAT_CLASS = "dataset";
 
     @Autowired
     private IndicatorsApiService indicatorsApiService;
