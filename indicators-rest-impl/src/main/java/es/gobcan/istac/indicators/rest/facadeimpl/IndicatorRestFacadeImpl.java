@@ -41,8 +41,6 @@ import es.gobcan.istac.indicators.rest.util.ConditionUtil;
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    public static final Map<String, List<String>> UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap<>());
-
     protected Logger                logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
@@ -119,7 +117,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(UNMODIFIABLE_EMPTY_MAP, UNMODIFIABLE_EMPTY_MAP); // no filter is applied so granularities and representations are empty
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP); // no filter is applied so granularities and representations are empty
         IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
         return do2TypeMapper.indicatorDoToJsonStatType(indicatorVersion, indicatorObservationsExtended);
     }
