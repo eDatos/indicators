@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
@@ -219,5 +219,26 @@ public class Do2JsonStatMapperUtil {
         long timeValuesSize = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source).size();
         long measureValuesSize = indicatorsApiService.retrieveMeasureValuesInIndicator(source).size();
         return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
+    }
+
+    public List<String> toJsonStatValue(IndicatorObservationsExtendedVO dataTypeRequest) {
+        List<String> geographicalCodes = dataTypeRequest.getGeographicalCodes();
+        List<String> timeValues = dataTypeRequest.getTimeCodes();
+        List<String> measureValues = dataTypeRequest.getMeasureCodes();
+        Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservations();
+
+        List<String> observations = new ArrayList<>();
+
+        for (String geographicalCode : geographicalCodes) {
+            for (String timeValueCode : timeValues) {
+                for (String measureValueCode : measureValues) {
+                    // Observation ID: Be careful!!! don't change order of ids
+                    String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
+                    ObservationExtendedDto observationDto = observationMap.get(id);
+                    observations.add(observationDto.getPrimaryMeasure());
+                }
+            }
+        }
+        return observations;
     }
 }
