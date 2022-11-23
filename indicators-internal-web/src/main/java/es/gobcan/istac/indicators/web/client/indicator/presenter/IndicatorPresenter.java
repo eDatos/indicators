@@ -14,6 +14,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -52,7 +53,6 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 

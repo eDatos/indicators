@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -12,7 +13,6 @@ import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public interface IndicatorUiHandler extends UiHandlers {
 

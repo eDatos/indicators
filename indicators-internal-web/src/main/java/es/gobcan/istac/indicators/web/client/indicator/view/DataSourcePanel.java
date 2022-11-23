@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
+import org.siemac.metamac.web.common.client.widgets.StatOperationsSearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
@@ -23,6 +24,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -63,12 +65,10 @@ import es.gobcan.istac.indicators.web.client.widgets.DataDefinitionsSearchWindow
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
-import es.gobcan.istac.indicators.web.client.widgets.StatOperationsSearchExternalItemLinkItem;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class DataSourcePanel extends VLayout {
 

@@ -17,6 +17,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyRestriction;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
@@ -25,7 +26,6 @@ import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaPropertyEnum
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class MetamacWebCriteriaUtils {
 

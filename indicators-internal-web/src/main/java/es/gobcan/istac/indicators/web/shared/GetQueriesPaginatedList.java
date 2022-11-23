@@ -3,12 +3,12 @@ package es.gobcan.istac.indicators.web.shared;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 @GenDispatch(isSecure = false)
 public class GetQueriesPaginatedList {
