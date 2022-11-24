@@ -60,7 +60,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             throw manageSrmInternalRestException(serviceContext, e);
         }
     }
-    
+
     @Override
     public ExternalItemsResult findOperations(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
         try {
@@ -68,7 +68,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
             String orderBy = StatisticalOperationsTypeEnum.ID.toString() + " " + OrderTypeEnum.ASC.toString();
-            
+
             Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, orderBy, limit, offset);
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findOperationsResult.getOperations(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
@@ -87,8 +87,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     private MetamacWebException manageSrmInternalRestException(ServiceContext ctx, Exception e) throws MetamacWebException {
         return restExceptionUtils.manageMetamacRestException(ctx, e, CommonServiceExceptionParameters.API_STATISTICAL_OPERATIONS_INTERNAL, restApiLocator.getStatisticalOperationsRestFacadeV10());
     }
-    
-    
+
     private List<ExternalItemDto> buildExternalItemDtosFromResources(List<ResourceInternal> resources, TypeExternalArtefactsEnum type) {
         List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
         for (ResourceInternal resource : resources) {
@@ -96,7 +95,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         }
         return results;
     }
-    
+
     private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());

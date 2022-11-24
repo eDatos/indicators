@@ -49,9 +49,9 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveDataStructureEdition(String uuid);
 
     void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
-    
+
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
-    
+
     void retrieveGeographicalValueDS(String uuid);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);

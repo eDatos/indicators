@@ -9,25 +9,24 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-
 @GenDispatch(isSecure = false)
 public class GetQueriesPaginatedList {
 
     @In(1)
-    int                   firstResult;
+    int                                              firstResult;
 
     @In(2)
-    int                   maxResults;
+    int                                              maxResults;
 
     @In(3)
-    StatisticalOperationsExternalResourceWebCriteria      criteria;
+    StatisticalOperationsExternalResourceWebCriteria criteria;
 
     @Out(1)
-    List<ExternalItemDto> queriesList;
+    List<ExternalItemDto>                            queriesList;
 
     @Out(2)
-    Integer               firstResultOut;
+    Integer                                          firstResultOut;
 
     @Out(3)
-    Integer               totalResults;
+    Integer                                          totalResults;
 }

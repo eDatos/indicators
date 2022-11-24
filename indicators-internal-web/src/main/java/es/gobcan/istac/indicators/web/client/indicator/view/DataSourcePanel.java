@@ -14,7 +14,6 @@ import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.StatOperationsSearchExternalItemLinkItem;
-import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
@@ -73,37 +72,37 @@ import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
 public class DataSourcePanel extends VLayout {
 
     // View Form
-    private ViewDataSourceGeneralForm        generalForm;
-    private GroupDynamicForm                 dataForm;
-    private ViewRateDerivationForm           interperiodPuntualRateForm;
-    private ViewRateDerivationForm           annualPuntualRateForm;
-    private ViewRateDerivationForm           interperiodPercentageRateForm;
-    private ViewRateDerivationForm           annualPercentageRateForm;
+    private ViewDataSourceGeneralForm                generalForm;
+    private GroupDynamicForm                         dataForm;
+    private ViewRateDerivationForm                   interperiodPuntualRateForm;
+    private ViewRateDerivationForm                   annualPuntualRateForm;
+    private ViewRateDerivationForm                   interperiodPercentageRateForm;
+    private ViewRateDerivationForm                   annualPercentageRateForm;
 
     // Edition Form
-    private GroupDynamicForm                 generalEditionForm;
-    private ViewDataSourceGeneralForm        generalStaticEditionForm;
-    private GroupDynamicForm                 dataEditionForm;
-    private RateDerivationForm               interperiodPuntualRateEditionForm;
-    private RateDerivationForm               annualPuntualRateEditionForm;
-    private RateDerivationForm               interperiodPercentageRateEditionForm;
-    private RateDerivationForm               annualPercentageRateEditionForm;
+    private GroupDynamicForm                         generalEditionForm;
+    private ViewDataSourceGeneralForm                generalStaticEditionForm;
+    private GroupDynamicForm                         dataEditionForm;
+    private RateDerivationForm                       interperiodPuntualRateEditionForm;
+    private RateDerivationForm                       annualPuntualRateEditionForm;
+    private RateDerivationForm                       interperiodPercentageRateEditionForm;
+    private RateDerivationForm                       annualPercentageRateEditionForm;
 
-    private DataDefinitionsSearchWindow      dataDefinitionsSearchWindow;
+    private DataDefinitionsSearchWindow              dataDefinitionsSearchWindow;
 
-    private JsonStatSearchWindow             jsonStatSearchWindow;
-    private DataSourceMainFormLayout         mainFormLayout;
+    private JsonStatSearchWindow                     jsonStatSearchWindow;
+    private DataSourceMainFormLayout                 mainFormLayout;
 
     // When we are editing the form, but query dependent fields are in view mode
-    private boolean                          queryEditionViewMode;
+    private boolean                                  queryEditionViewMode;
 
-    private DataSourceDto                    dataSourceDto;
-    private DataStructureDto                 dataStructureDtoEdition;
-    private IndicatorDto                     indicatorDto;
-    private IndicatorUiHandler               uiHandlers;
+    private DataSourceDto                            dataSourceDto;
+    private DataStructureDto                         dataStructureDtoEdition;
+    private IndicatorDto                             indicatorDto;
+    private IndicatorUiHandler                       uiHandlers;
 
-    private StatOperationsSearchExternalItemLinkItem          searchQueryMetamacWindow;
-    private List<String>                     editionLanguages;
+    private StatOperationsSearchExternalItemLinkItem searchQueryMetamacWindow;
+    private List<String>                             editionLanguages;
 
     public DataSourcePanel() {
         // MainFormLayout
@@ -718,8 +717,8 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, searchQueryMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym, surveyUrl,
-                publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, searchQueryMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym,
+                surveyUrl, publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
                 variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
@@ -892,17 +891,17 @@ public class DataSourcePanel extends VLayout {
 
     private StatOperationsSearchExternalItemLinkItem getQueryMetamacItem() {
         return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuerySelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
-    
+
             @Override
             protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
                 uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
             }
-    
+
             @Override
             protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
                 uiHandlers.retrieveStatisticalOperationsForQuerySelection(firstResult, maxResults, criteria);
             }
-            
+
             @Override
             protected void retrieveQueryForRelatedQuery(ExternalItemDto selectedResource) {
                 uiHandlers.retrieveDataStructureEdition(selectedResource.getUrn());
@@ -911,7 +910,7 @@ public class DataSourcePanel extends VLayout {
             }
         };
     }
-    
+
     private void setSelectedRelatedQueryInEditionForm(ExternalItemDto selectedResource) {
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, selectedResource);
     }
@@ -1131,7 +1130,7 @@ public class DataSourcePanel extends VLayout {
             searchQueryMetamacWindow.setResources(queriesDtos, firstResult, elementsInPage, totalResults);
         }
     }
-    
+
     // UTILS
     private boolean dataStructureHasGeoVariable() {
         if (dataStructureDtoEdition != null) {
