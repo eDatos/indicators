@@ -3,7 +3,7 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -48,9 +48,9 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveDataStructure(String uuid);
     void retrieveDataStructureEdition(String uuid);
 
-    void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, QueryWebCriteria webCriteria);
+    void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
     
-    void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria);
+    void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
     
     void retrieveGeographicalValueDS(String uuid);
 

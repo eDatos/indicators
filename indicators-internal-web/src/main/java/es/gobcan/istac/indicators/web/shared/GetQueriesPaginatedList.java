@@ -3,7 +3,7 @@ package es.gobcan.istac.indicators.web.shared;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -20,7 +20,7 @@ public class GetQueriesPaginatedList {
     int                   maxResults;
 
     @In(3)
-    QueryWebCriteria      criteria;
+    StatisticalOperationsExternalResourceWebCriteria      criteria;
 
     @Out(1)
     List<ExternalItemDto> queriesList;

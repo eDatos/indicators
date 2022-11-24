@@ -24,7 +24,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -894,12 +894,12 @@ public class DataSourcePanel extends VLayout {
         return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.QUERY_METAMAC, getConstants().dataSourceQuerySelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
     
             @Override
-            protected void retrieveResultSetQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+            protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
                 uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
             }
     
             @Override
-            protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, QueryWebCriteria criteria) {
+            protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
                 uiHandlers.retrieveStatisticalOperationsForQuerySelection(firstResult, maxResults, criteria);
             }
             

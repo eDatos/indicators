@@ -14,7 +14,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
-import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -427,7 +427,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
     
     @Override
-    public void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, QueryWebCriteria webCriteria) {
+    public void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria) {
         dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
 
             @Override
@@ -438,7 +438,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
     
     @Override
-    public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+    public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
         dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
 
             @Override

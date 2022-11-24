@@ -17,7 +17,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyRestriction;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
-import org.siemac.metamac.web.common.shared.criteria.QueryWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
@@ -165,7 +165,7 @@ public class MetamacWebCriteriaUtils {
 
     public static String buildQueryForQueryVersion(MetamacWebCriteria webCriteria) {
 
-        QueryWebCriteria queryWebCriteria = (QueryWebCriteria) webCriteria;
+        StatisticalOperationsExternalResourceWebCriteria queryWebCriteria = (StatisticalOperationsExternalResourceWebCriteria) webCriteria;
 
         StringBuilder queryBuilder = new StringBuilder();
         if (queryWebCriteria != null) {
