@@ -20,6 +20,5 @@ public class FileDownloadServlet extends FileDownloadServletBase {
         } else {
             throw new InvalidArgumentException("You must specify some action");
         }
-
     }
 }
