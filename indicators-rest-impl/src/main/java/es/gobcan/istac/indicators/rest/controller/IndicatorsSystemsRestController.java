@@ -108,8 +108,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
                                                                             ) throws MetamacException {
         // @formatter:on
 
-        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP, true);
-        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance, dataType);
+        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance);
         return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 

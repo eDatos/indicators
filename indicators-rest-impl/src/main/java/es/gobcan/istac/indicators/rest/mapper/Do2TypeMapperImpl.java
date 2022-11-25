@@ -213,7 +213,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance source, DataType observations, IndicatorVersion indicatorVersion) {
+    public JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance source, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations) {
         Assert.notNull(source);
         try {
             JsonStatDataType target = new JsonStatDataType();

@@ -264,11 +264,4 @@ public class Do2JsonStatMapperUtil {
         return observations;
     }
 
-    List<String> toJsonStatValue(DataType observations) {
-        List<String> values = new ArrayList<>();
-        for (String value : observations.getObservation()) {
-            values.add(Objects.equals(".", value) ? null : value);
-        }
-        return values;
-    }
 }

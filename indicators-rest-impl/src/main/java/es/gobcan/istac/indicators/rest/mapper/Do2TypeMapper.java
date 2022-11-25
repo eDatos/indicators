@@ -40,7 +40,7 @@ public interface Do2TypeMapper {
     // Indicators Instance
     IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source);
     List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources);
-    JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance indicatorInstance, DataType observations, IndicatorVersion indicatorVersion);
+    JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations);
 
     // Indicator
     IndicatorType indicatorDoToType(final IndicatorVersion sources);
