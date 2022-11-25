@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
@@ -25,6 +27,7 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.i18n.Translations;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.JsonStatCategoryType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
 import es.gobcan.istac.indicators.rest.types.JsonStatUnitType;
@@ -53,20 +56,32 @@ public class Do2JsonStatMapperUtil {
     }
 
     public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorVersion source) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
+        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source);
+    }
+
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorInstance indicatorInstance, IndicatorVersion source) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(indicatorInstance.getUuid());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(indicatorInstance.getUuid());
+        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source);
+    }
+
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(List<GeographicalValueVO> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues, IndicatorVersion source)
+    throws MetamacException {
         Map<String, JsonStatDimensionType> jsonStatDimensionsMap = new HashMap<>();
 
         // Geographical
-        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
         JsonStatDimensionType geographicalDimension = createGeographicalDimension(geographicalValues);
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalDimension);
 
         // Time
-        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
         JsonStatDimensionType timeDimension = createTimeDimension(timeValues);
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.TIME.name(), timeDimension);
 
         // Measure
-        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
         JsonStatDimensionType measureDimension = createMeasureDimension(measureValues, source);
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureDimension);
 
@@ -221,6 +236,13 @@ public class Do2JsonStatMapperUtil {
         return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
     }
 
+    public List<Long> toJsonStatSize(IndicatorInstance source) throws MetamacException {
+        long geographicalValuesSize = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid()).size();
+        long timeValuesSize = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(source.getUuid()).size();
+        long measureValuesSize = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid()).size();
+        return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
+    }
+
     public List<String> toJsonStatValue(IndicatorObservationsExtendedVO dataTypeRequest) {
         List<String> geographicalCodes = dataTypeRequest.getGeographicalCodes();
         List<String> timeValues = dataTypeRequest.getTimeCodes();
@@ -240,5 +262,13 @@ public class Do2JsonStatMapperUtil {
             }
         }
         return observations;
+    }
+
+    List<String> toJsonStatValue(DataType observations) {
+        List<String> values = new ArrayList<>();
+        for (String value : observations.getObservation()) {
+            values.add(Objects.equals(".", value) ? null : value);
+        }
+        return values;
     }
 }

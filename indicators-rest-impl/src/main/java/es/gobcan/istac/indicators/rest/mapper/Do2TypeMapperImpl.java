@@ -213,6 +213,26 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
+    public JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance source, DataType observations, IndicatorVersion indicatorVersion) {
+        Assert.notNull(source);
+        try {
+            JsonStatDataType target = new JsonStatDataType();
+
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion));
+            target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
+            target.setUpdated(source.getLastUpdated().toString());
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes()))); // TODO EDATOS-3663 check this is the attribute we want for the dto
+
+            return target;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @Override
     public IndicatorType indicatorDoToType(IndicatorVersion source) {
         Assert.notNull(source);
         try {
