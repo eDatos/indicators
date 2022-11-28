@@ -125,6 +125,9 @@
             'shortMonths': ['Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
             'thousandsSep': '.',
             'decimalPoint': ','
+        },
+        'CAPTCHA': {
+            'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         }
     };
 }());

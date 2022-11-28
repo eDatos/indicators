@@ -107,6 +107,9 @@
             'TITLE': 'Temporal serie',
             'DESCRIPTION': 'Chart showing the time evolution of an indicator for different geographical values'
         },
+        'RECENT': {
+            'TITLE': 'Last updated indicators'
+        },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Unsupported widget type',
             'URL_NOT_PROVIDED': 'Error, web service url not provided'
