@@ -182,6 +182,9 @@ public class Do2JsonStatMapperUtil {
     }
 
     private JsonStatUnitType toJsonStatUnit(Quantity quantity) {
+        if (quantity == null) {
+            return null;
+        }
         JsonStatUnitType unit = new JsonStatUnitType();
         unit.setDecimals(quantity.getDecimalPlaces());
         unit.setMultiplier(quantity.getUnitMultiplier().getUnitMultiplier());
@@ -200,8 +203,8 @@ public class Do2JsonStatMapperUtil {
             case ABSOLUTE:
                 return indicatorVersion.getQuantity();
             default:
-                RateDerivation rate = getRateDerivationForMeasure(measure, indicatorVersion); // TODO EDATOS-3663: test this, how it works??
-                if (rate != null) { // TODO EDATOS-3663: could this really be null?
+                RateDerivation rate = getRateDerivationForMeasure(measure, indicatorVersion);
+                if (rate != null) {
                     return rate.getQuantity();
                 }
         }
