@@ -7,28 +7,24 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @JsonSerialize(include = JsonSerialize.Inclusion.ALWAYS)
 public class JsonStatExtensionType {
 
-    String datasetId;
-    String datasetUrn;
+    String indicatorId;
+    String indicatorUuid;
     String lang;
-    String survey;
-    String publishers;
-    String dataProviders;
-    String dataProvidersAnnotations;
 
-    public String getDatasetId() {
-        return datasetId;
+    public String getIndicatorId() {
+        return indicatorId;
     }
 
-    public void setDatasetId(String datasetId) {
-        this.datasetId = datasetId;
+    public void setIndicatorId(String indicatorId) {
+        this.indicatorId = indicatorId;
     }
 
-    public String getDatasetUrn() {
-        return datasetUrn;
+    public String getIndicatorUuid() {
+        return indicatorUuid;
     }
 
-    public void setDatasetUrn(String datasetUrn) {
-        this.datasetUrn = datasetUrn;
+    public void setIndicatorUuid(String indicatorUuid) {
+        this.indicatorUuid = indicatorUuid;
     }
 
     public String getLang() {
@@ -37,38 +33,6 @@ public class JsonStatExtensionType {
 
     public void setLang(String lang) {
         this.lang = lang;
-    }
-
-    public String getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(String survey) {
-        this.survey = survey;
-    }
-
-    public String getPublishers() {
-        return publishers;
-    }
-
-    public void setPublishers(String publishers) {
-        this.publishers = publishers;
-    }
-
-    public String getDataProviders() {
-        return dataProviders;
-    }
-
-    public void setDataProviders(String dataProviders) {
-        this.dataProviders = dataProviders;
-    }
-
-    public String getDataProvidersAnnotations() {
-        return dataProvidersAnnotations;
-    }
-
-    public void setDataProvidersAnnotations(String dataProvidersAnnotations) {
-        this.dataProvidersAnnotations = dataProvidersAnnotations;
     }
 
     @Override

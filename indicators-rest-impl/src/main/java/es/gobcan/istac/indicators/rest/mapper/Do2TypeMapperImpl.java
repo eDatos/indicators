@@ -222,6 +222,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
             target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion));
+            target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
             target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes()))); // TODO EDATOS-3663 check this is the attribute we want for the dto
@@ -254,6 +255,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
             target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source));
+            target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString()); // TODO EDATOS-3663 check right date
             target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes()))); // TODO EDATOS-3663 check this is the attribute we want for the dto

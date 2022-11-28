@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.StringJoiner;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,9 +29,9 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.i18n.Translations;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
-import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.JsonStatCategoryType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
+import es.gobcan.istac.indicators.rest.types.JsonStatExtensionType;
 import es.gobcan.istac.indicators.rest.types.JsonStatUnitType;
 
 import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
@@ -264,4 +266,24 @@ public class Do2JsonStatMapperUtil {
         return observations;
     }
 
+    public JsonStatExtensionType toJsonStatExtension(IndicatorVersion source) {
+        return getJsonStatExtensionType(source.getCode(), source.getUuid(), source.getTitle());
+    }
+
+    public JsonStatExtensionType toJsonStatExtension(IndicatorInstance source) {
+        return getJsonStatExtensionType(source.getCode(), source.getUuid(), source.getTitle());
+    }
+
+    private JsonStatExtensionType getJsonStatExtensionType(String code, String uuid, InternationalString title) {
+        JsonStatExtensionType extension = new JsonStatExtensionType();
+        extension.setIndicatorId(code);
+        extension.setIndicatorUuid(uuid);
+        StringJoiner joiner = new StringJoiner(",");
+        for (LocalisedString localisedString : title.getTexts()) {
+            String locale = localisedString.getLocale();
+            joiner.add(locale);
+        }
+        extension.setLang(joiner.toString());
+        return extension;
+    }
 }
