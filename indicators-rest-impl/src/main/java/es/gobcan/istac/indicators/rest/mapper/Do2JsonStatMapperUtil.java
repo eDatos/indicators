@@ -62,104 +62,114 @@ public class Do2JsonStatMapperUtil {
         return format;
     }
 
-    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorVersion source) throws MetamacException {
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorVersion source, IndicatorObservationsExtendedVO observations) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
         List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source);
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
-        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source);
+        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source, observations);
     }
 
-    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorInstance indicatorInstance, IndicatorVersion source) throws MetamacException {
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(IndicatorInstance indicatorInstance, IndicatorVersion source, IndicatorObservationsExtendedVO observations) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
         List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(indicatorInstance.getUuid());
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(indicatorInstance.getUuid());
-        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source);
+        return toJsonStatDimensions(geographicalValues, timeValues, measureValues, source, observations);
     }
 
-    public Map<String, JsonStatDimensionType> toJsonStatDimensions(List<GeographicalValueVO> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues, IndicatorVersion source)
+    public Map<String, JsonStatDimensionType> toJsonStatDimensions(List<GeographicalValueVO> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues, IndicatorVersion source,
+        IndicatorObservationsExtendedVO observations)
     throws MetamacException {
         Map<String, JsonStatDimensionType> jsonStatDimensionsMap = new HashMap<>();
 
         // Geographical
-        JsonStatDimensionType geographicalDimension = createGeographicalDimension(geographicalValues);
+        JsonStatDimensionType geographicalDimension = createGeographicalDimension(geographicalValues, observations.getGeographicalCodes());
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalDimension);
 
         // Time
-        JsonStatDimensionType timeDimension = createTimeDimension(timeValues);
+        JsonStatDimensionType timeDimension = createTimeDimension(timeValues, observations.getTimeCodes());
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.TIME.name(), timeDimension);
 
         // Measure
-        JsonStatDimensionType measureDimension = createMeasureDimension(measureValues, source);
+        JsonStatDimensionType measureDimension = createMeasureDimension(measureValues, source, observations.getMeasureCodes());
         jsonStatDimensionsMap.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureDimension);
 
         return jsonStatDimensionsMap;
     }
 
-    private JsonStatDimensionType createGeographicalDimension(List<GeographicalValueVO> geographicalValues) {
+    private JsonStatDimensionType createGeographicalDimension(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) {
         JsonStatDimensionType geographicalDimension = new JsonStatDimensionType();
         String dimensionLabel = translations.get(Translations.DIMENSIONS_GEOGRAPHIC_NAME);
         geographicalDimension.setLabel(dimensionLabel);
-        geographicalDimension.setCategory(createGeographicalCategory(geographicalValues));
+        geographicalDimension.setCategory(createGeographicalCategory(geographicalValues, filterGeographicalCodes));
         return geographicalDimension;
     }
 
-    private JsonStatCategoryType createGeographicalCategory(List<GeographicalValueVO> geographicalValues) {
+    private JsonStatCategoryType createGeographicalCategory(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
         JsonStatCategoryType category = new JsonStatCategoryType();
-        for (int i = 0; i < geographicalValues.size(); i++) {
-            GeographicalValueVO geographicalValue = geographicalValues.get(i);
+        int i = 0;
+        for (GeographicalValueVO geographicalValue : geographicalValues) {
             String categoryCode = geographicalValue.getCode();
-            category.getIndex().put(categoryCode, (long) i);
-            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
+            if (filterGeographicalCodes.contains(categoryCode)) {
+                category.getIndex().put(categoryCode, (long) i);
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
+                i++;
+            }
         }
         return category;
     }
 
-    private JsonStatDimensionType createTimeDimension(List<TimeValue> timeValues) {
+    private JsonStatDimensionType createTimeDimension(List<TimeValue> timeValues, List<String> filterTimeCodes) {
         JsonStatDimensionType timeDimension = new JsonStatDimensionType();
         String dimensionLabel = translations.get(Translations.DIMENSIONS_TIME_NAME);
         timeDimension.setLabel(dimensionLabel);
-        timeDimension.setCategory(createTimeCategory(timeValues));
+        timeDimension.setCategory(createTimeCategory(timeValues, filterTimeCodes));
         return timeDimension;
     }
 
-    private JsonStatCategoryType createTimeCategory(List<TimeValue> timeValues) {
+    private JsonStatCategoryType createTimeCategory(List<TimeValue> timeValues, List<String> filterTimeCodes) {
         if (CollectionUtils.isEmpty(timeValues)) {
             return null;
         }
         JsonStatCategoryType category = new JsonStatCategoryType();
-        for (int i = 0; i < timeValues.size(); i++) {
-            TimeValue timeValue = timeValues.get(i);
+        int i = 0;
+        for (TimeValue timeValue : timeValues) {
             String categoryCode = timeValue.getTimeValue();
-            category.getIndex().put(categoryCode, (long) i);
-            category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
+            if (filterTimeCodes.contains(categoryCode)) {
+                category.getIndex().put(categoryCode, (long) i);
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
+                i++;
+            }
         }
         return category;
     }
 
-    private JsonStatDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+    private JsonStatDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, List<String> filterMeasureCodes) throws MetamacException {
         JsonStatDimensionType measureDimension = new JsonStatDimensionType();
         String dimensionLabel = translations.get(Translations.DIMENSIONS_MEASURE_NAME);
         measureDimension.setLabel(dimensionLabel);
-        measureDimension.setCategory(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion));
+        measureDimension.setCategory(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion, filterMeasureCodes));
         return measureDimension;
     }
 
-    private JsonStatCategoryType measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+    private JsonStatCategoryType measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, List<String> filterMeasureCodes) throws MetamacException {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
         JsonStatCategoryType category = new JsonStatCategoryType();
-        for (int i = 0; i < measureValues.size(); i++) {
-            MeasureValue measureValue = measureValues.get(i);
-            Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
+        int i = 0;
+        for (MeasureValue measureValue : measureValues) {
             String categoryCode = measureValue.getMeasureValue().name();
-            String categoryLabel = toJsonStatCategoryCode(measureValue.getMeasureValue());
-            category.getLabel().put(categoryCode, categoryLabel);
-            category.getIndex().put(categoryCode, (long) i);
-            category.getUnit().put(categoryCode, toJsonStatUnit(quantity));
+            if (filterMeasureCodes.contains(categoryCode)) {
+                String categoryLabel = toJsonStatCategoryCode(measureValue.getMeasureValue());
+                Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
+                category.getLabel().put(categoryCode, categoryLabel);
+                category.getIndex().put(categoryCode, (long) i);
+                category.getUnit().put(categoryCode, toJsonStatUnit(quantity));
+                i++;
+            }
         }
         return category;
     }
@@ -239,17 +249,10 @@ public class Do2JsonStatMapperUtil {
         return null;
     }
 
-    public List<Long> toJsonStatSize(IndicatorVersion source) throws MetamacException {
-        long geographicalValuesSize = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source).size();
-        long timeValuesSize = indicatorsApiService.retrieveTimeValuesInIndicatorVersion(source).size();
-        long measureValuesSize = indicatorsApiService.retrieveMeasureValuesInIndicator(source).size();
-        return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
-    }
-
-    public List<Long> toJsonStatSize(IndicatorInstance source) throws MetamacException {
-        long geographicalValuesSize = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid()).size();
-        long timeValuesSize = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(source.getUuid()).size();
-        long measureValuesSize = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid()).size();
+    public List<Long> toJsonStatSize(IndicatorObservationsExtendedVO source) {
+        long geographicalValuesSize = source.getGeographicalCodes().size();
+        long timeValuesSize = source.getTimeCodes().size();
+        long measureValuesSize = source.getMeasureCodes().size();
         return Arrays.asList(geographicalValuesSize, timeValuesSize, measureValuesSize);
     }
 

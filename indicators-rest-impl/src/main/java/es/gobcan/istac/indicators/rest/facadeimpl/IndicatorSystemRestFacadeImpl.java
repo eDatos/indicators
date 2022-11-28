@@ -81,11 +81,11 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
+    public JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
         IndicatorInstance indicatorInstance = indicatorsApiService.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(indicatorInstance.getIndicator().getCode());
-        IndicatorsDataFilterVO indicatorsDataFilterVO = getIndicatorDataFilter(MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP);
-        IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), indicatorsDataFilterVO);
+        IndicatorsDataFilterVO dataFilter = getIndicatorDataFilter(selectedRepresentations, selectedGranularities);
+        IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
         return dto2TypeMapper.indicatorsInstanceDoToJsonStatType(indicatorInstance, indicatorVersion, instanceObservations);
     }
 

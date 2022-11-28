@@ -221,8 +221,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
-            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
-            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion));
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion, observations));
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
@@ -255,8 +255,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
-            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
-            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source));
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, observations));
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());

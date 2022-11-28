@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -115,9 +113,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode) throws MetamacException {
+    public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP); // no filter is applied so granularities and representations are empty
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
         IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
         return do2TypeMapper.indicatorDoToJsonStatType(indicatorVersion, indicatorObservationsExtended);
     }
