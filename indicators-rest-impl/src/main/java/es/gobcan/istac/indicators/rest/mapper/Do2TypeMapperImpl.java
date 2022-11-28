@@ -645,7 +645,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     @Override
     public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target) {
         try {
-            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid());
+            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(source.getIndicator().getCode());
 
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
