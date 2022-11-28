@@ -170,6 +170,10 @@
                 }
 
                 var context = {};
+                context.translations = {
+                    indicatorTitle: EDatos.common.I18n.translate('INDICATOR.TITLE', this.locale)
+                };
+
                 context.measures = _.map(this.measures, function (measure) {
                     return measuresLabels[measure];
                 });
