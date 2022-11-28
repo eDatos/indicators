@@ -127,7 +127,7 @@
             'decimalPoint': ','
         },
         'CAPTCHA': {
-            'LABEL': "Escriviu el valor de la imatge mostrada a sobre"
+            'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         }
     };
 }());
