@@ -44,6 +44,11 @@
 		<filter-name>JsonpCallbackFilter</filter-name>
 		<filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
 	</filter>
+
+	<filter>
+		<filter-name>JsonStatFilter</filter-name>
+		<filter-class>es.gobcan.istac.indicators.rest.filter.JsonStatFilter</filter-class>
+	</filter>
 	
 	<filter>
 		<filter-name>CORSFilter</filter-name>
@@ -63,6 +68,11 @@
 
 	<filter-mapping>
 		<filter-name>JsonpCallbackFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>JsonStatFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 		
