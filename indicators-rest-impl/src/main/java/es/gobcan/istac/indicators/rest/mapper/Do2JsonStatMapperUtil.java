@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,10 @@ import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPER
 
 @Component
 public class Do2JsonStatMapperUtil {
+
+    public static final String GEO_ROLE = "geo";
+    public static final String TIME_ROLE = "time";
+    public static final String METRIC_ROLE = "metric";
 
     @Autowired
     private IndicatorsApiService indicatorsApiService;
@@ -285,5 +290,13 @@ public class Do2JsonStatMapperUtil {
         }
         extension.setLang(joiner.toString());
         return extension;
+    }
+
+    public Map<String, List<String>> createJsonStatRole() {
+        Map<String, List<String>> role = new HashMap<>();
+        role.put(GEO_ROLE, Collections.singletonList(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()));
+        role.put(TIME_ROLE, Collections.singletonList(IndicatorDataDimensionTypeEnum.TIME.name()));
+        role.put(METRIC_ROLE, Collections.singletonList(IndicatorDataDimensionTypeEnum.MEASURE.name()));
+        return role;
     }
 }

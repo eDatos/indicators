@@ -220,6 +220,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
             target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion));
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
@@ -253,6 +254,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(source));
             target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source));
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
