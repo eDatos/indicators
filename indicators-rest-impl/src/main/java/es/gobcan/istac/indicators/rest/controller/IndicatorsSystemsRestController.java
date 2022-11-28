@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.rest.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -96,6 +98,18 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
         IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         return new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET, produces = "application/jsonstat+json")
+    @ResponseBody
+    // @formatter:off
+    public ResponseEntity<JsonStatDataType> retrieveIndicatorsInstanceJsonStat(@PathVariable("idIndicatorSystem") final String idIndicatorSystem,
+                                                                            @PathVariable("idIndicatorInstance") final String idIndicatorInstance
+                                                                            ) throws MetamacException {
+        // @formatter:on
+
+        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance);
+        return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)

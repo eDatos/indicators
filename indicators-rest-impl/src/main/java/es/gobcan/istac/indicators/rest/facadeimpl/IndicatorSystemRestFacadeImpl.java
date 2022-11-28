@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
@@ -36,6 +38,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -75,6 +78,15 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
         IndicatorInstance indicatorInstance = getIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         return dto2TypeMapper.indicatorsInstanceDoToType(indicatorInstance);
+    }
+
+    @Override
+    public JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
+        IndicatorInstance indicatorInstance = indicatorsApiService.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
+        IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(indicatorInstance.getIndicator().getCode());
+        IndicatorsDataFilterVO indicatorsDataFilterVO = getIndicatorDataFilter(MapUtils.EMPTY_MAP, MapUtils.EMPTY_MAP);
+        IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), indicatorsDataFilterVO);
+        return dto2TypeMapper.indicatorsInstanceDoToJsonStatType(indicatorInstance, indicatorVersion, instanceObservations);
     }
 
     protected PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
@@ -163,14 +175,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws MetamacException {
         IndicatorInstance indicatorInstance = getIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
-        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
-        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
-        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
-
-        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
-        dataFilter.setGeoFilter(geoFilter);
-        dataFilter.setTimeFilter(timeFilter);
-        dataFilter.setMeasureFilter(measureFilter);
+        IndicatorsDataFilterVO dataFilter = getIndicatorDataFilter(selectedRepresentations, selectedGranularities);
 
         DataType dataType;
         if (includeObservationMetadata) {
@@ -188,6 +193,18 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         }
 
         return dataType;
+    }
+
+    private static IndicatorsDataFilterVO getIndicatorDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
+        IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
+        IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
+
+        IndicatorsDataFilterVO dataFilter = new IndicatorsDataFilterVO();
+        dataFilter.setGeoFilter(geoFilter);
+        dataFilter.setTimeFilter(timeFilter);
+        dataFilter.setMeasureFilter(measureFilter);
+        return dataFilter;
     }
 
 }
