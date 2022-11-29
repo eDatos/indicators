@@ -100,7 +100,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET, produces = "application/jsonstat+json")
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
     @ResponseBody
     // @formatter:off
     public ResponseEntity<JsonStatDataType> retrieveIndicatorsInstanceJsonStat(@PathVariable("idIndicatorSystem") final String idIndicatorSystem,
