@@ -104,11 +104,14 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @ResponseBody
     // @formatter:off
     public ResponseEntity<JsonStatDataType> retrieveIndicatorsInstanceJsonStat(@PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                            @PathVariable("idIndicatorInstance") final String idIndicatorInstance
+                                                                            @PathVariable("idIndicatorInstance") final String idIndicatorInstance,
+                                                                            @RequestParam(required = false, value = "representation") String representation,
+                                                                            @RequestParam(required = false, value = "granularity") String granularity
                                                                             ) throws MetamacException {
         // @formatter:on
-
-        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance);
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
         return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 
