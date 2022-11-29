@@ -64,7 +64,7 @@ public class IndicatorsRestController extends AbstractRestController {
         return new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}", method = RequestMethod.GET, produces = "application/jsonstat+json")
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
     @ResponseBody
     // @formatter:off
     public ResponseEntity<JsonStatDataType> retrieveIndicatorJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
