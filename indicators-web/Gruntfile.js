@@ -167,7 +167,11 @@ module.exports = function (grunt) {
             widgets: {
                 src: widgetsSrc,
                 dest: widgetsPath + '/widget.min.all.js',
-                separator: ';'
+                separator: ';',
+                options: {
+                    banner: "if(!window.edatosWidgetScriptAlreadyExecuted){window.edatosWidgetScriptAlreadyExecuted = true;",
+                    footer: "}"
+                }
             }
         },
         concat: {
