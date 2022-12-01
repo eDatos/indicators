@@ -17,8 +17,9 @@ public class JsonStatFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonStatFilter.class);
     public static final String JSONSTAT_MIME_TYPE = "application/jsonstat+json";
-    public static final String URL_JSONSTAT_TERMINATION = ".jsonstat";
     public static final String REQUEST_PARAMETER_TYPE = "_type";
+    public static final String JSONSTAT_PARAMETER_VALUE = "jsonstat";
+    public static final String JSONSTAT_URL_TERMINATION = ".jsonstat";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -27,13 +28,13 @@ public class JsonStatFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         String acceptType = request.getParameter(REQUEST_PARAMETER_TYPE);
-        if (acceptType != null && acceptType.equals(JSONSTAT_MIME_TYPE)) {
+        if (acceptType != null && acceptType.equals(JSONSTAT_PARAMETER_VALUE)) {
             LOGGER.debug("JSON-stat MIME type detected on query parameter");
             request = getRequestWrapperForParameter(request);
         }
 
         String url = ((HttpServletRequest) request).getRequestURL().toString();
-        if (url.endsWith(URL_JSONSTAT_TERMINATION)) {
+        if (url.endsWith(JSONSTAT_URL_TERMINATION)) {
             LOGGER.debug("JSON-stat termination detected on url");
             request = getRequestWrapperForUrl(request);
         }
@@ -50,7 +51,7 @@ public class JsonStatFilter implements Filter {
     private ServletRequest getRequestWrapperForUrl(ServletRequest request) {
         MutableHttpServletRequestWrapper wrapper = new MutableHttpServletRequestWrapper((HttpServletRequest) request);
         wrapper.putHeader("Accept", JSONSTAT_MIME_TYPE);
-        wrapper.removeTermination(URL_JSONSTAT_TERMINATION);
+        wrapper.removeTermination(JSONSTAT_URL_TERMINATION);
         return wrapper;
     }
 
