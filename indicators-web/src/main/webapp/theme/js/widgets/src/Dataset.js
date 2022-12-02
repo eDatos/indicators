@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     var Dataset = function () {
         this.data = {};
@@ -225,4 +225,4 @@
 
     Istac.widget.Dataset = Dataset;
 
-}(jQuery));
+}(window.jQuery, window._));

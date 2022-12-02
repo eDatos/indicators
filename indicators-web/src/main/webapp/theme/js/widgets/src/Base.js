@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     var Dataset = Istac.widget.Dataset;
     var Datasets = Istac.widget.Datasets;
@@ -188,7 +188,8 @@
         },
 
         _getTimeGranularities: function () {
-            return $.ajax({
+            return $.
+            ajax({
                 url: this.apiUrl + '/timeGranularities',
                 dataType: 'jsonp',
                 jsonp: "_callback"
@@ -466,4 +467,4 @@
 
     };
 
-}(jQuery));
+}(window.jQuery, window._));

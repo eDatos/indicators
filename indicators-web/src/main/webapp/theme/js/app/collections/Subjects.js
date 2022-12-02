@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.collections.Subjects = Backbone.Collection.extend({
@@ -17,4 +17,4 @@
 
     _.extend(App.collections.Subjects.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));

@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.collections.GeographicalValues = Backbone.Collection.extend({
@@ -35,4 +35,4 @@
 
     _.extend(App.collections.GeographicalValues.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));

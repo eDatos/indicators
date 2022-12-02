@@ -53,5 +53,5 @@
     //Global export
     window.IstacWidget = Istac.widget.Factory;
 
-}(jQuery));
+}(window.jQuery));
 

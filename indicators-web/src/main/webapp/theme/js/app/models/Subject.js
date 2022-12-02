@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.models.Subject = Backbone.Model.extend({
@@ -17,4 +17,4 @@
 
     _.extend(App.models.Subject.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));

@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.WidgetCodeView = Backbone.View.extend({
@@ -107,4 +107,4 @@
 
     });
 
-}());
+}(window._));

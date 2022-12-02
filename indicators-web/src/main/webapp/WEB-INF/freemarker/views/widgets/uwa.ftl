@@ -15,6 +15,8 @@
     <meta name="debugMode" content="false"/>
 
 
+    <script type="text/javascript" src="${serverURL}/theme/js/libs/jquery-1.7.1.js"></script>
+    
     <link rel="stylesheet" type="text/css"
           href="//uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
     <title>${organisation} | [@apph.messageEscape 'page.widgets.title' /]</title>

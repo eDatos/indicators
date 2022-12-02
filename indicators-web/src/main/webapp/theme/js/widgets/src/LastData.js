@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     Istac.widget.LastData = function (options) {
         this.init(options);
@@ -202,4 +202,4 @@
         }
     );
 
-}(jQuery));
+}(window.jQuery, window._));

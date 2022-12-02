@@ -1,4 +1,4 @@
-(function () {
+(function (moment) {
     "use strict";
 
     var YEARLY_PATTERN = /^\d{4}$/;
@@ -57,4 +57,4 @@
     };
 
 
-}());
+}(window.moment));

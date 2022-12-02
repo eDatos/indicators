@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.collections.Indicators = App.collections.IndicatorsBase.extend({
@@ -31,4 +31,4 @@
 
     _.extend(App.collections.Indicators.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));
