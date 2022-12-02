@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     var validTypes = ["lastData", "temporal", "recent"];
@@ -79,4 +79,4 @@
 
     });
 
-}());
+}(window._));

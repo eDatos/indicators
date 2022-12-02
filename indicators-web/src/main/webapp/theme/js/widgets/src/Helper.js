@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     Istac.widget.helper = {};
 
@@ -158,4 +158,4 @@
         });
     }
 
-}(jQuery));
+}(window.jQuery, window._));

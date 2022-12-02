@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.WidgetDataOptionsTemporalView = Backbone.View.extend({
@@ -163,5 +163,5 @@
         }
 
     });
-}());
+}(window._));
 

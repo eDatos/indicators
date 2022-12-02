@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _, Highcharts) {
 
     Istac.widget.Temporal = function (options) {
         this.init(options);
@@ -221,4 +221,4 @@
 
     });
 
-}(jQuery));
+}(window.jQuery, window._, Highcharts));

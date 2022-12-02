@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.WidgetPreviewView = Backbone.View.extend({
@@ -89,5 +89,5 @@
         }
 
     });
-}());
+}(window._));
 

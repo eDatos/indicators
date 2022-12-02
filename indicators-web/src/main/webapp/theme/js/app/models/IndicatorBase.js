@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     /*
@@ -53,4 +53,4 @@
 
     _.extend(App.models.IndicatorBase.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));

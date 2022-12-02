@@ -1,7 +1,7 @@
 /**
  *
  */
-(function () {
+(function (_) {
     "use strict";
 
     App.collections.IndicatorSystems = Backbone.Collection.extend({
@@ -28,6 +28,6 @@
 
     _.extend(App.collections.IndicatorSystems.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));
 
 

@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.WidgetDataOptionsLastDataView = Backbone.View.extend({
@@ -264,5 +264,5 @@
 
 
     });
-}());
+}(window._));
 
