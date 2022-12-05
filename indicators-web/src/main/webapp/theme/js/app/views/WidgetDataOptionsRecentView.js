@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     var integerConverter = function (direction, val) {
@@ -210,5 +210,5 @@
         }
 
     });
-}());
+}(window._));
 

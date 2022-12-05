@@ -13,6 +13,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
@@ -22,6 +23,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
@@ -38,9 +40,11 @@ public interface Do2TypeMapper {
     // Indicators Instance
     IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source);
     List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources);
+    JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations);
 
     // Indicator
     IndicatorType indicatorDoToType(final IndicatorVersion sources);
+    JsonStatDataType indicatorDoToJsonStatType(final IndicatorVersion source, IndicatorObservationsExtendedVO dataTypeRequest);
     List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources);
 
     // Granularities

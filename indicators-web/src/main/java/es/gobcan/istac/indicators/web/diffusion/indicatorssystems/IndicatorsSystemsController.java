@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
@@ -35,7 +36,7 @@ public class IndicatorsSystemsController extends BaseController {
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder, HttpServletRequest request) throws Exception {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", request.getLocale())));
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
 
         return modelAndView;
     }
@@ -48,7 +49,7 @@ public class IndicatorsSystemsController extends BaseController {
 
         IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", request.getLocale()), code));
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request)), code));
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 

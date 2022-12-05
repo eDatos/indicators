@@ -3,7 +3,9 @@ package es.gobcan.istac.indicators.rest.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,12 @@ import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
-import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Controller("indicatorsSystemsRestController")
 public class IndicatorsSystemsRestController extends AbstractRestController {
@@ -96,6 +98,21 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
         IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         return new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
+    @ResponseBody
+    // @formatter:off
+    public ResponseEntity<JsonStatDataType> retrieveIndicatorsInstanceJsonStat(@PathVariable("idIndicatorSystem") final String idIndicatorSystem,
+                                                                            @PathVariable("idIndicatorInstance") final String idIndicatorInstance,
+                                                                            @RequestParam(required = false, value = "representation") String representation,
+                                                                            @RequestParam(required = false, value = "granularity") String granularity
+                                                                            ) throws MetamacException {
+        // @formatter:on
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
+        return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)

@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import es.gobcan.istac.indicators.web.shared.*;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -50,9 +50,68 @@ import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
+import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsResult;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
+import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsResult;
+import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
+import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeResult;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAction;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesResult;
+import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
+import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
+import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewDiffusionUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
+import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
+import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataResult;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorStreamMessageAction;
+import es.gobcan.istac.indicators.web.shared.ReSendIndicatorStreamMessageResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationResult;
+import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
+import es.gobcan.istac.indicators.web.shared.SaveDataSourceResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationResult;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
-import es.gobcan.istac.indicators.web.shared.criteria.QueryWebCriteria;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
@@ -132,7 +191,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
-        void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList);
+        void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
         void showInformationMessage(String title, String message);
 
@@ -427,18 +486,19 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveStatisticalOperationsForQuerySelection() {
-        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+    public void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
-                getView().setStatisticalOperationsForQuerySelection(result.getOperationsList());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForQuerySelection(result.getOperationsList(), result.getFirstResultOut(), result.getTotalResults());
+                    }
+                });
     }
 
     @Override
-    public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, QueryWebCriteria criteria) {
+    public void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
         dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
 
             @Override

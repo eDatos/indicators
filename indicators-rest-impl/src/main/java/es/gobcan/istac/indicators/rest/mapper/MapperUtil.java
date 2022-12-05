@@ -1,23 +1,52 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
-import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT_LANGUAGE;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
-
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
+
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT_LANGUAGE;
 
 public class MapperUtil {
 
     private MapperUtil() {
+    }
+
+    public static String getDefaultValue(InternationalString internationalString) {
+        if (internationalString == null || CollectionUtils.isEmpty(internationalString.getTexts())) {
+            return null;
+        }
+
+        for (LocalisedString text : internationalString.getTexts()) {
+            if (Objects.equals(DEFAULT_LANGUAGE, text.getLang())) {
+                return text.getValue();
+            }
+        }
+
+        return internationalString.getTexts().get(0).getValue();
+    }
+
+    public static String getDefaultValue(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString) {
+        if (internationalString == null || CollectionUtils.isEmpty(internationalString.getTexts())) {
+            return null;
+        }
+
+        for (org.siemac.metamac.core.common.ent.domain.LocalisedString text : internationalString.getTexts()) {
+            if (Objects.equals(DEFAULT_LANGUAGE, text.getLocale())) {
+                return text.getLabel();
+            }
+        }
+
+        return internationalString.getTexts().stream().findFirst().get().getLabel();
     }
 
     public static Map<String, String> getDefaultLabel(Object defaultLabel) {

@@ -1235,6 +1235,10 @@
         "tags": [ "Indicadores" ],
         "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
         "operationId": "findIndicator",
+        "produces":[
+           "application/json",
+           "application/jsonstat+json"
+        ],
         "parameters": [
           {
             "description": "Código del indicador a obtener.",
@@ -1244,7 +1248,7 @@
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante el valor de las mismas. <br> Ejemplo: representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE].",
+            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",
             "in": "query",
             "name": "representation",
             "type": "string"
@@ -1402,7 +1406,7 @@
     "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición devuelve los meteadatos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
+        "description": "<p>Esta petición devuelve los metadatos de una instancia de indicadores asociada a un sistema de indicadores específico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
         "operationId": "retrieveIndicatorsInstance",
         "parameters": [
           {
@@ -1436,6 +1440,10 @@
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición devuelve los datos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
         "operationId": "retrieveIndicatorsInstanceData",
+        "produces":[
+           "application/json",
+           "application/jsonstat+json"
+        ],
         "parameters": [
           {
             "description": "Código del sistema a obtener.",

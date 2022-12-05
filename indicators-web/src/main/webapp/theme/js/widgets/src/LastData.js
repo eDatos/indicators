@@ -1,12 +1,4 @@
-(function ($) {
-
-    var measuresLabels = {
-        'ABSOLUTE': EDatos.common.I18n.translate('MEASURE.ABSOLUTE'),
-        'ANNUAL_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PERCENTAGE_RATE'),
-        'ANNUAL_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PUNTUAL_RATE'),
-        'INTERPERIOD_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PERCENTAGE_RATE'),
-        'INTERPERIOD_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PUNTUAL_RATE'),
-    };
+(function ($, _) {
 
     Istac.widget.LastData = function (options) {
         this.init(options);
@@ -22,7 +14,7 @@
                 return _.last(arr, max);
             },
 
-            parseDataset: function (dataset) {
+            parseDataset: function (dataset, measuresLabels) {
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
 
@@ -169,14 +161,26 @@
             },
 
             renderTable: function (datasets) {
+                var measuresLabels = {
+                    'ABSOLUTE': EDatos.common.I18n.translate('MEASURE.ABSOLUTE', this.locale),
+                    'ANNUAL_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PERCENTAGE_RATE', this.locale),
+                    'ANNUAL_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.ANNUAL_PUNTUAL_RATE', this.locale),
+                    'INTERPERIOD_PERCENTAGE_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PERCENTAGE_RATE', this.locale),
+                    'INTERPERIOD_PUNTUAL_RATE': EDatos.common.I18n.translate('MEASURE.INTERPERIOD_PUNTUAL_RATE', this.locale),
+                }
+
                 var context = {};
+                context.translations = {
+                    indicatorTitle: EDatos.common.I18n.translate('INDICATOR.TITLE', this.locale)
+                };
+
                 context.measures = _.map(this.measures, function (measure) {
                     return measuresLabels[measure];
                 });
 
                 datasets = this.orderDatasetsBySelectionOrder(datasets);
 
-                context.datasets = _.map(datasets, this.parseDataset, this);
+                context.datasets = _.map(datasets, function (dataset) { return this.parseDataset(dataset, measuresLabels) }, this);
 
                 _.each(context.datasets, function (dataset, i) {
                     dataset.isOdd = i % 2 === 1;
@@ -198,4 +202,4 @@
         }
     );
 
-}(jQuery));
+}(window.jQuery, window._));

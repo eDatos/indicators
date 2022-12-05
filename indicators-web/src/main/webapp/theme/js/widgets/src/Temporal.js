@@ -1,8 +1,4 @@
-(function ($) {
-
-    Highcharts.setOptions({
-        lang: EDatos.common.I18n.translate('HIGHCHARTS')
-    });
+(function ($, _, Highcharts) {
 
     Istac.widget.Temporal = function (options) {
         this.init(options);
@@ -116,7 +112,7 @@
         },
 
         renderChart: function (chartData) {
-            var $chartContainer = $('<div id="chart"></div>');
+            var $chartContainer = $('<div id="' + this.getChartId() + '"></div>');
             $chartContainer.css('width', this.width - 20);
             $chartContainer.css('height', 250);
             this.contentContainer.html($chartContainer);
@@ -212,9 +208,17 @@
                 }
             }
 
+            Highcharts.setOptions({
+                lang: EDatos.common.I18n.translate('HIGHCHARTS', this.locale)
+            });
+
             $chartContainer.highcharts(highchartsOptions);
+        },
+
+        getChartId: function () {
+            return this.options.id ? 'chart-' + this.options.id : 'chart';
         }
 
     });
 
-}(jQuery));
+}(window.jQuery, window._, Highcharts));

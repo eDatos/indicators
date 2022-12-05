@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     var DatasetRequestBuilder = function (options) {
         this.apiUrl = options.apiUrl;
@@ -171,4 +171,4 @@
 
     Istac.widget.DatasetRequestBuilder = DatasetRequestBuilder;
 
-}(jQuery));
+}(window.jQuery, window._));

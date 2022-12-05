@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
+import org.siemac.metamac.rest.common.query.domain.OrderTypeEnum;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
+import es.gobcan.istac.indicators.web.client.enums.StatisticalOperationsTypeEnum;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
 @Component
@@ -58,15 +60,15 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             throw manageSrmInternalRestException(serviceContext, e);
         }
     }
-    
+
     @Override
     public ExternalItemsResult findOperations(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
         try {
             String query = buildQueryStatisticalOperation(criteria);
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
-            String orderBy = null;
-            
+            String orderBy = StatisticalOperationsTypeEnum.ID.toString() + " " + OrderTypeEnum.ASC.toString();
+
             Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, orderBy, limit, offset);
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findOperationsResult.getOperations(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
@@ -85,8 +87,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     private MetamacWebException manageSrmInternalRestException(ServiceContext ctx, Exception e) throws MetamacWebException {
         return restExceptionUtils.manageMetamacRestException(ctx, e, CommonServiceExceptionParameters.API_STATISTICAL_OPERATIONS_INTERNAL, restApiLocator.getStatisticalOperationsRestFacadeV10());
     }
-    
-    
+
     private List<ExternalItemDto> buildExternalItemDtosFromResources(List<ResourceInternal> resources, TypeExternalArtefactsEnum type) {
         List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
         for (ResourceInternal resource : resources) {
@@ -94,7 +95,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         }
         return results;
     }
-    
+
     private ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(resource.getId());

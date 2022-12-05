@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
@@ -67,6 +68,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
@@ -99,6 +101,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
+
+    @Autowired
+    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
 
     private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
             MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
@@ -208,11 +213,55 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
+    public JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance source, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations) {
+        Assert.notNull(source);
+        try {
+            JsonStatDataType target = new JsonStatDataType();
+
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion, observations));
+            target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
+            target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
+            target.setUpdated(source.getLastUpdated().toString());
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes())));
+
+            return target;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @Override
     public IndicatorType indicatorDoToType(IndicatorVersion source) {
         Assert.notNull(source);
         try {
             IndicatorType target = new IndicatorType();
             indicatorDoToType(source, target);
+            return target;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public JsonStatDataType indicatorDoToJsonStatType(IndicatorVersion source, IndicatorObservationsExtendedVO observations) {
+        Assert.notNull(source);
+        try {
+            JsonStatDataType target = new JsonStatDataType();
+
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setId(do2JsonStatMapperUtil.createJsonStatId());
+            target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
+            target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
+            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, observations));
+            target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
+            target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
+            target.setUpdated(source.getLastUpdated().toString());
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes())));
+
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -383,15 +432,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             for (int i = 0; i < geographicalCodes.size(); i++) {
                 String geographicalCode = geographicalCodes.get(i);
-                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
 
                 for (int j = 0; j < timeValues.size(); j++) {
                     String timeValueCode = timeValues.get(j);
-                    dataRepresentationTypeTime.getIndex().put(timeValueCode, j);
 
                     for (int k = 0; k < measureValues.size(); k++) {
                         String measureValueCode = measureValues.get(k);
-                        dataRepresentationTypeMeasure.getIndex().put(measureValueCode, k);
 
                         // Observation ID: Be careful!!! don't change order of ids
                         String geographicalValueCode = geographicalCode;
@@ -416,6 +462,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
+
+            for (int i = 0; i < geographicalCodes.size(); i++) {
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
+            }
+            for (int j = 0; j < timeValues.size(); j++) {
+                dataRepresentationTypeTime.getIndex().put(timeValues.get(j), j);
+            }
+            for (int k = 0; k < measureValues.size(); k++) {
+                dataRepresentationTypeMeasure.getIndex().put(measureValues.get(k), k);
+            }
+
             DataType dataType = new DataType();
             dataType.setFormat(format);
             dataType.setDimension(dimension);
@@ -637,7 +694,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     @Override
     public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target) {
         try {
-            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid());
+            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(source.getIndicator().getCode());
 
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 

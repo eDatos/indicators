@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     var Dataset = Istac.widget.Dataset;
     var Datasets = Istac.widget.Datasets;
@@ -59,7 +59,9 @@
             uwa: false,
             shadow: true,
             borderRadius: true,
-            scale: "natural"
+            scale: "natural",
+            locale: "navigator",
+            showLanguageDropdown: false
         },
 
         _containerTemplate: Handlebars.templates.container,
@@ -84,15 +86,27 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = options.locale || "es";
+            this.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
 
             this.datasets = [];
 
             //Create containers
+            var self = this;
             var templateOptions = {
                 widgetsTypeUrl: Istac.widget.configuration['indicators.widgets.typelist.url'],
                 organisation: Istac.widget.configuration['metamac.organisation'],
-                baseUrl: this.url
+                baseUrl: this.url,
+                translations: {
+                    common: {
+                        close: EDatos.common.I18n.translate("COMMON.CLOSE", this.locale)
+                    },
+                    embed: {
+                        credits: EDatos.common.I18n.translate("EMBED.CREDITS", this.locale),
+                        more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
+                    }
+                },
+                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } }),
+                languageSelectorId: this.getLanguageSelectorId()
             };
 
             if (this.options.uwa) {
@@ -136,7 +150,12 @@
             this.set('shadow', options.shadow);
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
+            this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.reloadData();
+        },
+
+        getLanguageSelectorId: function () {
+            return this.options.id ? 'widget-language-selector-' + this.options.id : 'widget-language-selector';
         },
 
         set: function (property, value) {
@@ -147,6 +166,10 @@
             if (_.isFunction(setter)) {
                 setter.call(this, value);
             }
+        },
+
+        setShowLanguageDropdown: function (showLanguageDropdown) {
+            this.el.find("#" + this.getLanguageSelectorId()).toggle(showLanguageDropdown);
         },
 
         _getSetterMethodName: function (property) {
@@ -165,7 +188,8 @@
         },
 
         _getTimeGranularities: function () {
-            return $.ajax({
+            return $.
+            ajax({
                 url: this.apiUrl + '/timeGranularities',
                 dataType: 'jsonp',
                 jsonp: "_callback"
@@ -230,14 +254,14 @@
         _getDefaultTitle: function () {
             var title;
             if (this.options.type === "lastData") {
-                title = EDatos.common.I18n.translate("LAST_DATA.TITLE");
+                title = EDatos.common.I18n.translate("LAST_DATA.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
-                title = EDatos.common.I18n.translate("RECENT.TITLE");
+                title = EDatos.common.I18n.translate("RECENT.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = this.options.geographicalValues[0];
@@ -247,7 +271,7 @@
                 if (this.datasets && this.datasets.length > 0) {
                     title = this.datasets[0].getTitle();
                 } else {
-                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE");
+                    title = EDatos.common.I18n.translate("TEMPORAL.TITLE", this.locale);
                 }
             }
             return title;
@@ -353,7 +377,7 @@
                 self.showEmbed();
                 return false;
             });
-            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE'));
+            this.el.find('.istac-widget-embed a').attr('title', EDatos.common.I18n.translate('EMBED.TITLE', this.locale));
         },
 
         openTag: function (tag, parameters) {
@@ -376,7 +400,7 @@
 
             var closeScript = this.closeTag('script');
 
-            var el = 'indicators-widget';
+            var el = this.options.el.substring(1);
             var code = '<div id="' + el + '"></div>';
             filteredOptions.el = '#' + el;
 
@@ -432,9 +456,15 @@
             if (this.afterRenderCallback) {
                 this.afterRenderCallback(this);
             }
+            var self = this;
+            this.el.find('#' + this.getLanguageSelectorId()).on("change", function (event) {
+                self.options.locale = event.target.value;
+                self.init(self.options);
+                self.render();
+            })
         }
 
 
     };
 
-}(jQuery));
+}(window.jQuery, window._));
