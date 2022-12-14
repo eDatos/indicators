@@ -28,7 +28,14 @@
         },
 
         getWidgetLocaleFromOptions: function (options) {
-            return options.locale === "navigator" ? navigator.language : (options.locale || options.languages[0] || "es");
+            var widgetLocale = options.locale;
+            if (widgetLocale === "navigator") {
+                widgetLocale = navigator.language;
+            }
+            if (!widgetLocale || !options.languages.includes(widgetLocale)) {
+                widgetLocale = (options.languages && options.languages[0]) || "es";
+            }
+            return widgetLocale;
         }
     }
 

@@ -1,7 +1,7 @@
 (function ($) {
 
-    var showError = function (key, locale) {
-        $(options.el).text(EDatos.common.I18n.translate(key, locale));
+    var showError = function (el, key, locale) {
+        $(el).text(EDatos.common.I18n.translate(key, locale));
     };
 
     Istac.widget.Factory = function (options, initCallback, afterRenderCallback) {
@@ -22,6 +22,9 @@
             configRequest.success(function onSuccess(configuration) {
                 Istac.widget.configuration = configuration;
 
+                options.languages = Istac.widget.configuration['metamac.internationalization.languages'].split(',').filter(function(language) { return language });
+                options.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
+
                 if (!options.uwa) {
                     Istac.widget.loader.all(options.url);
                 }
@@ -36,7 +39,7 @@
                 if (widget) {
                     widget.render();
                 } else {
-                    showError("ERROR.INVALID_WIDGET_TYPE", options.locale);
+                    showError(options.el, "ERROR.INVALID_WIDGET_TYPE", options.locale);
                 }
 
                 if (initCallback) {
@@ -45,7 +48,7 @@
                 Istac.widget.analytics.trackPageView(options);
             });
         } else {
-            showError("ERROR.URL_NOT_PROVIDED", options.locale);
+            showError(options.el, "ERROR.URL_NOT_PROVIDED", options.locale === "navigator" ? navigator.language : (options.locale || "es"));
         }
 
     };

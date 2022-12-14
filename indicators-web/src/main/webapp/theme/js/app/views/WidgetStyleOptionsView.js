@@ -28,7 +28,7 @@
                 showCustomStyle: this.model.get('style') === 'custom',
                 showTextColor: !this._isTemporal(),
                 showScale: this._isTemporal(),
-                languages: this.model.get('languages') || []
+                languages: edatosInternationalizationlanguages || []
             };
             this.$el.html(this.template(context));
 
