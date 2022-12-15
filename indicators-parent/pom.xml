@@ -143,7 +143,7 @@
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>7.2.0</metamac-core-common.version>
-		<metamac-web-common.version>5.2.0</metamac-web-common.version>
+		<metamac-web-common.version>5.2.1-SNAPSHOT</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>3.8.0</metamac-statistical-resources-rest-external-api.version>
