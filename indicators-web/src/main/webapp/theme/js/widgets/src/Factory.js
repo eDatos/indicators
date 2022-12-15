@@ -22,7 +22,7 @@
             configRequest.success(function onSuccess(configuration) {
                 Istac.widget.configuration = configuration;
 
-                options.languages = Istac.widget.configuration['metamac.internationalization.languages'].split(',').filter(function(language) { return language });
+                options.languages = Istac.widget.configuration['metamac.internationalization.languages'];
                 options.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
 
                 if (!options.uwa) {

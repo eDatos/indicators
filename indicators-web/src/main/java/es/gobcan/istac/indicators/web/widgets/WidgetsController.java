@@ -85,14 +85,14 @@ public class WidgetsController extends BaseController {
 
     @RequestMapping(value = "/widgets/external/configuration", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, String> properties() throws Exception {
-        Map<String, String> properties = new HashMap<String, String>();
+    public Map<String, Object> properties() throws Exception {
+        Map<String, Object> properties = new HashMap<>();
         properties.put(IndicatorsConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER, getVisualizerApplicationExternalUrlVisualizer());
         properties.put(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL, configurationService.retrieveWidgetsTypeListUrl());
         properties.put(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
         properties.put(IndicatorsConfigurationConstants.ANALYTICS_GOOGLE_TRACKING_ID, configurationService.retrieveAnalyticsGoogleTrackingId());
         properties.put(IndicatorsConfigurationConstants.METAMAC_ORGANISATION, configurationService.retrieveOrganisation());
-        properties.put(IndicatorsConfigurationConstants.INTERNATIONALIZATION_LANGUAGES, StringUtils.join(configurationService.retrieveInternationalizationLanguages(), ","));
+        properties.put(IndicatorsConfigurationConstants.INTERNATIONALIZATION_LANGUAGES, configurationService.retrieveInternationalizationLanguages());
         return properties;
     }
 

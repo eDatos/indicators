@@ -28,14 +28,13 @@
         },
 
         getWidgetLocaleFromOptions: function (options) {
-            var widgetLocale = options.locale;
-            if (widgetLocale === "navigator") {
-                widgetLocale = navigator.language;
+            if (!options.languages) {
+                console.error("No se han cargado los idiomas permitidos. Esto no deberia pasar.");
+                return "es";
             }
-            if (!widgetLocale || !options.languages.includes(widgetLocale)) {
-                widgetLocale = (options.languages && options.languages[0]) || "es";
-            }
-            return widgetLocale;
+
+            var widgetLocale = options.locale  === "navigator" ? navigator.language : options.locale;
+            return options.languages.includes(widgetLocale) ? widgetLocale : options.languages[0];
         }
     }
 
