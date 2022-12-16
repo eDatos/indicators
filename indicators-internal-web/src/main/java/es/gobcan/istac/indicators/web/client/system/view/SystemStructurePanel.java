@@ -1015,6 +1015,8 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
+            form.setValue(IndicatorInstanceDS.UUID, indInst.getUuid());
+
             form.setValue(IndicatorInstanceDS.TITLE, indInst.getTitle());
 
             form.setValue(IndicatorInstanceDS.IND_TEXT, new String()); // Indicator title set in setIndicator method
@@ -1042,6 +1044,8 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
+            editionForm.setValue(IndicatorInstanceDS.UUID, indInst.getUuid());
+
             editionForm.setValue(IndicatorInstanceDS.TITLE, indInst.getTitle());
 
             editionForm.setValue(IndicatorInstanceDS.IND_TEXT, new String()); // Indicator title set in setIndicator method
@@ -1070,6 +1074,8 @@ public class SystemStructurePanel extends HLayout {
 
         private void createViewForm() {
             form = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
+
+            ViewTextItem indicatorId = new ViewTextItem(IndicatorInstanceDS.UUID, getConstants().systemStrucIndInstanceUuid());
 
             ViewMultiLanguageTextItem name = new ViewMultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
 
@@ -1108,7 +1114,8 @@ public class SystemStructurePanel extends HLayout {
             ViewTextItem geoValue = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUES, getConstants().instanceGeographicalValues());
             geoValue.setShowIfCondition(getGeoValueIfFunction());
 
-            form.setFields(name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity, geoValue);
+            form.setFields(indicatorId, name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity,
+                    geoValue);
             mainFormLayout.addViewCanvas(form);
         }
 
@@ -1258,6 +1265,9 @@ public class SystemStructurePanel extends HLayout {
         private void createEditionForm() {
             editionForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
 
+            // Uuid
+            ViewTextItem indicatorId = new ViewTextItem(IndicatorInstanceDS.UUID, getConstants().systemStrucIndInstanceUuid());
+
             // Name
 
             MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH);
@@ -1291,7 +1301,8 @@ public class SystemStructurePanel extends HLayout {
             ViewTextItem geoValue = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUES, getConstants().instanceGeographicalValues());
             geoValue.setShowIfCondition(getGeoValueIfFunction());
 
-            editionForm.setFields(name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity, geoValue);
+            editionForm.setFields(indicatorId, name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity,
+                    geoValue);
 
             mainFormLayout.addEditionCanvas(editionForm);
         }
