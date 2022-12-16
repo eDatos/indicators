@@ -60,7 +60,6 @@
             shadow: true,
             borderRadius: true,
             scale: "natural",
-            locale: "navigator",
             showLanguageDropdown: false
         },
 
@@ -86,7 +85,7 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
+            this.locale = options.locale;
 
             this.datasets = [];
 
