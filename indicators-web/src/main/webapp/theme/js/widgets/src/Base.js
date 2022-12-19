@@ -104,7 +104,9 @@
                         more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
                     }
                 },
-                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } }),
+                languages: this.options.languages ? this.options.languages.map(function (language) {
+                    return { lang: language, selected: self.locale === language }
+                }) : [],
                 languageSelectorId: this.getLanguageSelectorId()
             };
 
@@ -168,7 +170,7 @@
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
-            this.el.find("#" + this.getLanguageSelectorId()).toggle(showLanguageDropdown);
+            this.el.find("#" + this.getLanguageSelectorId()).toggle(!!this.options.languages && !!this.options.languages.length && showLanguageDropdown);
         },
 
         _getSetterMethodName: function (property) {
@@ -428,7 +430,7 @@
             var requestUrl = this.datasetRequestBuilder.request(this.options);
             if (requestUrl) {
                 var req = $.ajax({
-                    url: requestUrl,
+                    url: 'http://localhost:8100/indicators_external_api_web_war_exploded/api/indicators/v1.0/indicatorsSystems/E30308A/indicatorsInstances/?q=id%20EQ%20%2238fe519b-136a-4938-879a-d8ecf4f7034f%22&limit=1000&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL%5BTENERIFE%5D,MEASURE%5BABSOLUTE%5D&granularity=TIME%5BHOURLY%5D',
                     dataType: 'jsonp',
                     jsonp: "_callback"
                 });
