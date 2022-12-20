@@ -24,7 +24,6 @@
   
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/translator.js" type='text/javascript'></script>
   <script id="apidocs-lang"></script>
-  <!-- <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/es.js" type='text/javascript'></script> -->
       
     <script type="text/javascript">
     $(function () {
@@ -53,7 +52,7 @@
         window.SwaggerTranslator.translate();
       }
       window.swaggerUi = new SwaggerUi({
-        url: url+'?chosenLocale='+localeValue,
+        url: url,
         dom_id: "swagger-ui-container",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
