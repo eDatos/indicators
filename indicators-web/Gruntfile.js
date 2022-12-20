@@ -143,6 +143,24 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetView.js'
     ]
 
+    var widgetBanner = "(function(window, _, $, jQuery, moment, Highcharts){" +
+        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
+        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
+        "   var old_ = _;" +
+        "   var old$ = $;" +
+        "   var oldJQuery = jQuery;" +
+        "   var oldMoment = moment;" +
+        "   var oldHighcharts = {...Highcharts};" +
+        "   window.Highcharts = undefined;" +
+        "   Highcharts = {};";
+
+    var widgetFooter = "window._ = old_;" +
+        "   window.$ = old$;" +
+        "   window.jQuery = oldJQuery;" +
+        "   window.moment = oldMoment;" +
+        "   window.Highcharts = oldHighcharts;" +
+        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));";
+
     grunt.initConfig({
         handlebars: {
             app: {
@@ -171,22 +189,8 @@ module.exports = function (grunt) {
                 dest: widgetsPath + '/widget.min.all.js',
                 separator: ';',
                 options: {
-                    banner: "(function(window, _, $, jQuery, moment, Highcharts){" +
-                        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
-                        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
-                        "   var old_ = _;" +
-                        "   var old$ = $;" +
-                        "   var oldJQuery = jQuery;" +
-                        "   var oldMoment = moment;" +
-                        "   var oldHighcharts = {...Highcharts};" +
-                        "   window.Highcharts = undefined;" +
-                        "   Highcharts = {};",
-                    footer: "window._ = old_;" +
-                        "   window.$ = old$;" +
-                        "   window.jQuery = oldJQuery;" +
-                        "   window.moment = oldMoment;" +
-                        "   window.Highcharts = oldHighcharts;" +
-                        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));"
+                    banner: widgetBanner,
+                    footer: widgetFooter
                 }
             }
         },
@@ -203,22 +207,8 @@ module.exports = function (grunt) {
                 src: widgetsSrc,
                 dest: widgetsPath + '/widget.min.all.js',
                 options: {
-                    banner: "(function(window, _, $, jQuery, moment, Highcharts){" +
-                        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
-                        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
-                        "   var old_ = _;" +
-                        "   var old$ = $;" +
-                        "   var oldJQuery = jQuery;" +
-                        "   var oldMoment = moment;" +
-                        "   var oldHighcharts = {...Highcharts};" +
-                        "   window.Highcharts = undefined;" +
-                        "   Highcharts = {};",
-                    footer: "window._ = old_;" +
-                        "   window.$ = old$;" +
-                        "   window.jQuery = oldJQuery;" +
-                        "   window.moment = oldMoment;" +
-                        "   window.Highcharts = oldHighcharts;" +
-                        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));"
+                    banner: widgetBanner,
+                    footer: widgetFooter
                 }
             }
         },
