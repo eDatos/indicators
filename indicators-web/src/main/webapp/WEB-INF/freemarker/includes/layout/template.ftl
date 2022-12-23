@@ -37,13 +37,9 @@
             var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
         </script>       
 
-        <!-- begin: #bloq_interior -->  
-        <div id="bloq_interior">    
-            <div class="contenido">
+        <div class="indicators-main">
                 [#nested]
             </div>
-        </div>
-        <!-- end: #bloq_interior -->
         
         <!-- begin: pie -->
         ${portalDefaultStyleFooter!}
