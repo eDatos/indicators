@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +32,6 @@ public class WidgetsController extends BaseController {
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
-
-    @Autowired
-    private MessageSource                  messageSource;
 
     private String removeLastSlashInUrl(String url) {
         if (url.endsWith("/")) {
@@ -115,9 +111,5 @@ public class WidgetsController extends BaseController {
         modelAndView.addObject("options", options);
 
         return modelAndView;
-    }
-
-    private String translate(String code, Locale locale) {
-        return messageSource.getMessage(code, null, locale);
     }
 }

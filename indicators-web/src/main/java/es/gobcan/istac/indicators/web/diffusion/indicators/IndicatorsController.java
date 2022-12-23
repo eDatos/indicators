@@ -4,8 +4,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,9 +18,6 @@ import es.gobcan.istac.indicators.web.diffusion.view.BreadcrumbList;
 @Controller
 public class IndicatorsController extends BaseController {
 
-    @Autowired
-    private MessageSource messageSource;
-
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public ModelAndView indicators(UriComponentsBuilder uriComponentsBuilder, HttpServletRequest request) throws Exception {
 
@@ -32,10 +27,6 @@ public class IndicatorsController extends BaseController {
         modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("entity.indicators", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
 
         return modelAndView;
-    }
-
-    private String translate(String code, Locale locale) {
-        return messageSource.getMessage(code, null, locale);
     }
 
 }
