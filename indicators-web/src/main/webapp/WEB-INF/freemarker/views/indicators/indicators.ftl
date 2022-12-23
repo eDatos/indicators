@@ -5,9 +5,7 @@
 <div id="indicators"></div>
 
 <script type="text/html" id="indicatorTmpl">
-	<div>		
-		<p><a href="<%= getVisualizerUrlForIndicator(id) %>" title="<%= getLabel(title) %>"><%= getLabel(title) %></a></p>
-	</div>
+	<a href="<%= getVisualizerUrlForIndicator(id) %>" title="<%= getLabel(title) %>"><%= getLabel(title) %></a>
 </script>
 
 <script type="text/html" id="noResultsTmpl">
@@ -78,12 +76,15 @@
 					
 					var subjectCodeIndicator = model.get("subjectCode");
 					if (subjectCodeLastIndicator != subjectCodeIndicator) {
-						viewHtml += '<h3>' + getLabel(model.get("subjectTitle")) + '</h3>';
+					    viewHtml += viewHtml != '' ? '</ul></li>' : '';
+						viewHtml += '<li>';
+						viewHtml +=   '<h3>' + getLabel(model.get("subjectTitle")) + '</h3>';
+						viewHtml +=   '<ul>';
 						subjectCodeLastIndicator = subjectCodeIndicator;
 					}
-					viewHtml += subViewHtml; 
+					viewHtml += '<li>' + subViewHtml + '</li>'; 
 				});
-				$(self.el).html(viewHtml);
+				$(self.el).html('<ul>' + viewHtml + '</ul>');
 			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}

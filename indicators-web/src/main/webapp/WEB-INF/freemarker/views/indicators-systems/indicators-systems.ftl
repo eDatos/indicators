@@ -12,9 +12,7 @@
 <div id="indicatorsSystems"></div>
 
 <script type="text/html" id="indicatorsSystemTmpl">
-	<div>
-		<p><a href='<%= serverURL %>/indicatorsSystems/<%=code%>.html'><%= getLabel(title) %></a></p>
-	</div>
+	<a href='<%= serverURL %>/indicatorsSystems/<%=code%>.html'><%= getLabel(title) %></a>
 </script>
 
 <script type="text/html" id="noResultsTmpl">
@@ -81,11 +79,11 @@
 
                 _.each(sorted, function(model){
 					var indicatorsSystemView = new IndicatorsSystemView({ model : model});
-					var subViewHtml = indicatorsSystemView.render();
-					viewHtml += subViewHtml; 
+					var subViewHtml = indicatorsSystemView.render();									
+					viewHtml += '<li>' + subViewHtml + '</li>'; 
 				});
 
-				$(self.el).html(viewHtml);
+				$(self.el).html('<ul>' + viewHtml + '</ul>');
 			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}
