@@ -44,15 +44,15 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("internationalizationLanguages", getinternationalizationLanguages());
         try {
             model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
-        } catch (MetamacException ignore) {
-            logger.info("The optional property 'internationalizationUrlParamId' could not be initialized.");
+        } catch (MetamacException metamacException) {
+            logger.debug("The optional property 'internationalizationUrlParamId' could not be initialized.");
         }
 
         try {
             model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
         } catch (MetamacException metamacException) {
             // Ignore property if it doesn't exist
-            logger.info("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
+            logger.debug("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
         }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
