@@ -146,7 +146,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getVisualizerExternalUrlBase() throws MetamacException {
-        return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase()));
+        return removeUrlProtocol(removeLastSlashInUrl(getConfigurationService().retrievePortalExternalUrlBase()));
     }
 
     private String getVisualizerApplicationExternalUrlBase() throws MetamacException {
@@ -158,11 +158,11 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getPermalinksUrlBaseWithProtocol() throws MetamacException {
-        return removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
+        return removeLastSlashInUrl(getConfigurationService().retrievePortalExternalApisPermalinksUrlBase());
     }
 
     private String getCaptchaExternalApiUrlBase() throws MetamacException {
-        return removeLastSlashInUrl(configurationService.retrieveCaptchaExternalApiUrlBase());
+        return removeLastSlashInUrl(getConfigurationService().retrieveCaptchaExternalApiUrlBase());
     }
 
     private String removeUrlProtocol(String url) {
