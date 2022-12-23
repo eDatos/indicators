@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +35,7 @@ public class IndicatorsSystemsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
         modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request)));
 
         return modelAndView;
     }
@@ -45,7 +48,9 @@ public class IndicatorsSystemsController extends BaseController {
 
         IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request)), code));
+        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", currentLocale), code));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 

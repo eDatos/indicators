@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.widgets;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -51,6 +53,7 @@ public class WidgetsController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_CREATOR);
 
         modelAndView.addObject("breadcrumbList", breadcrumbList);
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
         modelAndView.addObject("description", description);
 
         return modelAndView;

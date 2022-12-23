@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.indicators;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +26,9 @@ public class IndicatorsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_LIST);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("entity.indicators", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
+        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("entity.indicators", currentLocale)));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
 
         return modelAndView;
     }
