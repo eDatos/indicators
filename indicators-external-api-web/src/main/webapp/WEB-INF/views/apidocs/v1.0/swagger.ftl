@@ -1156,7 +1156,7 @@
         "operationId": "findIndicators",
         "parameters": [
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\", \"geographicalValue\" y \"geographicalGranulartity\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=geographicalGranularity EQ \"MUNICIPALITIES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
             "in": "query",
             "name": "q",
             "type": "string"
@@ -1348,7 +1348,7 @@
             "type": "string"
           },
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"geographicalValue\" y \"geographicalGranularity\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=geographicalGranularity EQ \"MUNICIPALITIES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
             "in": "query",
             "name": "q",
             "type": "string"
