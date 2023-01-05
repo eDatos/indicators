@@ -43,11 +43,10 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
         UPDATE, ID
     }
 
-    // The words of a value of an enumerated should be separated by underscores. In this case, the values GEOGRAPHICALVALUE, SUBJECTCODE AND GEOGRAPHICALGRANULARITY don't have the underscore for not
-    // changing the API and the
+    // The words of a value of an enumerated should be separated by underscores. In this case, the values GEOGRAPHICALVALUE and SUBJECTCODE don't have the underscore for not changing the API and the
     // documentation associated with them.
     public enum IndicatorsPropertyRestriction {
-        GEOGRAPHICALVALUE, SUBJECTCODE, ID, GEOGRAPHICALGRANULARITY
+        GEOGRAPHICALVALUE, SUBJECTCODE, ID
     }
 
     private class IndicatorsCriteriaCallback implements RestCriteria2SculptorCriteria.CriteriaCallback {
@@ -78,9 +77,6 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                     // We can use "lastValuesCache" because this cache have all the geographicalValues of the indicator with the lastData for each value.
                     // The lastValue for geocode01 and geocode02 can be different points of time.
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
-                }
-                case GEOGRAPHICALGRANULARITY: {
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().indicatorsInstances().geographicalGranularity().code(), value, propertyRestriction.getOperationType());
                 }
             }
             throw createInvalidParameterException("q");
