@@ -84,6 +84,7 @@
 					}
 					viewHtml += '<li>' + subViewHtml + '</li>'; 
 				});
+				viewHtml += viewHtml != '' ? '</ul></li>' : '';
 				$(self.el).html('<ul>' + viewHtml + '</ul>');
 			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
