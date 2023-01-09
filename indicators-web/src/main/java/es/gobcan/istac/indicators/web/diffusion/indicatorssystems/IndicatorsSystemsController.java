@@ -34,8 +34,9 @@ public class IndicatorsSystemsController extends BaseController {
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder, HttpServletRequest request) throws Exception {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
-        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request)));
+        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", currentLocale)));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
 
         return modelAndView;
     }
