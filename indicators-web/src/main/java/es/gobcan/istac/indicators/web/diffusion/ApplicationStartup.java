@@ -28,6 +28,9 @@ public class ApplicationStartup extends ApplicationStartupListener {
 
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_PORTAL_EXTERNAL_BASE);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_PORTAL_EXTERNAL_APIS_PERMALINKS);
+
+        checkOptionalProperty(IndicatorsConfigurationConstants.ENDPOINT_EXTERNAL_CAPTCHA_API);
+        checkOptionalProperty(IndicatorsConfigurationConstants.INTERNATIONALIZATION_COOKIE);
     }
 
 }

@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.widgets;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -12,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +35,6 @@ public class WidgetsController extends BaseController {
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
-    @Autowired
-    private MessageSource                  messageSource;
-
     private String removeLastSlashInUrl(String url) {
         if (url.endsWith("/")) {
             return StringUtils.removeEnd(url, "/");
@@ -55,6 +53,7 @@ public class WidgetsController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_CREATOR);
 
         modelAndView.addObject("breadcrumbList", breadcrumbList);
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
         modelAndView.addObject("description", description);
 
         return modelAndView;
@@ -115,9 +114,5 @@ public class WidgetsController extends BaseController {
         modelAndView.addObject("options", options);
 
         return modelAndView;
-    }
-
-    private String translate(String code, Locale locale) {
-        return messageSource.getMessage(code, null, locale);
     }
 }

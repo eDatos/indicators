@@ -8,6 +8,14 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 9.3.0 a 9.3.1-SNAPSHOT
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta
+
+```
+etc/changes-from-release/9.3.0/db/common-metadata/postgresql/*.sql
+```
+* Importante: Esta versión depende de la versión complementos-apps - 5.1.0 para ajustar del todo ciertos estilos.
+
 ## 8.5.3 a 9.0.0
 * A partir de esta versión de la aplicación se elimina el soporte para bases de datos Oracle o Sql Server, siendo PostgreSQL la única base de datos con soporte.
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta
