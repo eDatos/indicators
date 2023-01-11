@@ -2,7 +2,7 @@
     <span class="istac-widget-title-text">
         <a href="#" target="_blank"></a>
     </span>
-    <select id="{{ languageSelectorId }}" name="language" hidden>
+    <select id="{{ languageSelectorId }}" name="language" style="display: none;">
         {{#each languages}}
         {{#if this.selected}}
         <option value="{{ this.lang }}" selected>{{ this.lang }}</option>
