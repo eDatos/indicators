@@ -184,7 +184,7 @@ public class DataSourcePanel extends VLayout {
             @Override
             public void onClick(ClickEvent event) {
                 // Clear query form values
-                clearAllQueryValues();
+                // clearAllQueryValues(); // New behaviour: Don't clear query values on edit.
 
                 setEditionQueryMode();
             }
@@ -1012,9 +1012,7 @@ public class DataSourcePanel extends VLayout {
         dataStructureDtoEdition = null;
 
         generalStaticEditionForm.setValue(dataSourceDto);
-
-        // Edition values are not set. When edit query button is clicked, values will be cleared.
-        // generalEditionForm.setValue();
+        generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
         // Some rates may not exist
 
