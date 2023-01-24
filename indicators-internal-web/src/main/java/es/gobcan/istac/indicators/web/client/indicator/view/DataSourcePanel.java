@@ -183,9 +183,6 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                // Clear query form values
-                // clearAllQueryValues(); // New behaviour: Don't clear query values on edit.
-
                 setEditionQueryMode();
             }
         });
