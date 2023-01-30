@@ -244,8 +244,8 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setDataDefinitions(dataDefinitionsDtos);
     }
 
-    public void setStatisticalOperations(List<ExternalItemDto> operationsList) {
-        datasourcePanel.setStatisticalOperations(operationsList);
+    public void setStatisticalOperations(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        datasourcePanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
     public void setQueries(GetQueriesPaginatedListResult result) {

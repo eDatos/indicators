@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.Select2View = Backbone.View.extend({
@@ -103,4 +103,4 @@
 
     });
 
-}());
+}(window._));

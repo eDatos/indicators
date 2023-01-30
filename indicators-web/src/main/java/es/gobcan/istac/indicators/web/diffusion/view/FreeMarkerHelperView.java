@@ -1,7 +1,12 @@
 package es.gobcan.istac.indicators.web.diffusion.view;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,25 +44,25 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
+        model.put("internationalizationLanguages", getinternationalizationLanguages());
         try {
             model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
-        } catch (MetamacException ignore) {
-            logger.info("The optional property 'internationalizationUrlParamId' could not be initialized.");
+        } catch (MetamacException metamacException) {
+            logger.debug("The optional property 'internationalizationUrlParamId' could not be initialized.");
         }
 
         try {
             model.put("captchaExternalApiUrlBase", getCaptchaExternalApiUrlBase());
         } catch (MetamacException metamacException) {
             // Ignore property if it doesn't exist
-            logger.info("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
+            logger.debug("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
         }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
 
         addStatisticalVisualizerUtils(model);
 
-        String locale = getCurrentLocale(request);
-
+        Locale locale = getCurrentLocale(request);
         fillOptionalPortalDefaultStyleCssUrl(model);
         fillOptionalPortalDefaultStyleHeaderUrl(model, locale);
         fillOptionalPortalDefaultStyleFooterUrl(model, locale);
@@ -65,8 +70,17 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         super.doRender(model, request, response);
     }
 
-    private String getCurrentLocale(HttpServletRequest request) {
-        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
+    private List<String> getinternationalizationLanguages() {
+        try {
+            return getConfigurationService().retrieveInternationalizationLanguages();
+        } catch (MetamacException e) {
+            logger.info("The optional property 'internationalizationLanguages' could not be initialized.");
+            return new ArrayList<>();
+        }
+    }
+
+    private Locale getCurrentLocale(HttpServletRequest request) {
+        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
     }
 
     private void fillOptionalPortalDefaultStyleCssUrl(Map<String, Object> model) {
@@ -79,9 +93,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalPortalDefaultStyleFooterUrl(Map<String, Object> model, Locale locale) throws UnsupportedEncodingException, IOException {
         try {
-            String urlQueryParams = getLocaleQueryParam(model, locale);
+            String urlQueryParams = buildHeaderQuery(model, locale);
             model.put("portalDefaultStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
@@ -90,30 +104,16 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model, String locale) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalPortalDefaultStyleHeaderUrl(Map<String, Object> model, Locale locale) throws UnsupportedEncodingException, IOException {
         try {
-            String localeQueryParam = getLocaleQueryParam(model, locale);
 
-            // Model filled on the controller. For example es.gobcan.istac.indicators.web.widgets.WidgetsController
-            BreadcrumbList breadcrumbList = (BreadcrumbList) model.get("breadcrumbList");
-            String urlQueryParams = "";
-            if (breadcrumbList != null) {
-                urlQueryParams = breadcrumbList.getPortalUrlQueryParams();
-            }
-            if (StringUtils.isNotEmpty(localeQueryParam)) {
-                urlQueryParams += (StringUtils.isNotEmpty(urlQueryParams) ? '&' : '?') + localeQueryParam;
-            }
+            final String urlQueryParams = buildHeaderQuery(model, locale);
             model.put("portalDefaultStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrievePortalDefaultStyleHeaderUrl() + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
             }
         }
-    }
-
-    private String getLocaleQueryParam(Map<String, Object> model, String locale) {
-        String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
-        return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s", internationalizationUrlParamId, locale) : "";
     }
 
     private void addStatisticalVisualizerUtils(Map<String, Object> model) throws TemplateModelException {
@@ -134,7 +134,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getVisualizerExternalUrlBase() throws MetamacException {
-        return removeUrlProtocol(removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase()));
+        return removeUrlProtocol(removeLastSlashInUrl(getConfigurationService().retrievePortalExternalUrlBase()));
     }
 
     private String getVisualizerApplicationExternalUrlBase() throws MetamacException {
@@ -146,11 +146,11 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     }
 
     private String getPermalinksUrlBaseWithProtocol() throws MetamacException {
-        return removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
+        return removeLastSlashInUrl(getConfigurationService().retrievePortalExternalApisPermalinksUrlBase());
     }
 
     private String getCaptchaExternalApiUrlBase() throws MetamacException {
-        return removeLastSlashInUrl(configurationService.retrieveCaptchaExternalApiUrlBase());
+        return removeLastSlashInUrl(getConfigurationService().retrieveCaptchaExternalApiUrlBase());
     }
 
     private String removeUrlProtocol(String url) {
@@ -175,6 +175,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             configurationService = (IndicatorsConfigurationService) ApplicationContextProvider.getApplicationContext().getBean("configurationService");
         }
         return configurationService;
+    }
+
+    public static String buildHeaderQuery(Map<String, Object> model, Locale locale) {
+        String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
+        BreadcrumbList breadcrumbList = (BreadcrumbList) model.get("breadcrumbList");
+        String appName = (String) model.get(PARAM_APP_NAME);
+        return WebUtils.buildHeaderQuery(appName, breadcrumbList, internationalizationUrlParamId, locale);
     }
 
 }

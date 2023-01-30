@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, _) {
 
     var Dataset = function () {
         this.data = {};
@@ -71,7 +71,7 @@
                     var quantity = measureRepresentation.quantity;
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
-                        var unitMultiplierTitle = quantity.unitMultiplier.__default__;
+                        var unitMultiplierTitle = quantity.unitMultiplier[locale] || quantity.unitMultiplier.__default__;
                         if (unitMultiplierTitle !== "Unidades") {
                             result = result + unitMultiplierTitle + " de ";
                         }
@@ -80,7 +80,7 @@
                     if (quantity.unitSymbol) {
                         result = result + quantity.unitSymbol;
                     } else {
-                        result = result + quantity.unit.__default__;
+                        result = result + (quantity.unit[locale] || quantity.unit.__default__);
                     }
                     
                     if (quantity.baseValue) {
@@ -225,4 +225,4 @@
 
     Istac.widget.Dataset = Dataset;
 
-}(jQuery));
+}(window.jQuery, window._));

@@ -1,12 +1,13 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
+import static es.gobcan.istac.indicators.web.diffusion.view.WebUtils.PARAM_APP_NAME;
+
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,14 +30,13 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private RestApiLocatorExternal restApiLocatorExternal;
 
-    @Autowired
-    private MessageSource          messageSource;
-
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder, HttpServletRequest request) throws Exception {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request))));
+        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", currentLocale)));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
 
         return modelAndView;
     }
@@ -49,7 +49,9 @@ public class IndicatorsSystemsController extends BaseController {
 
         IndicatorsSystemType indicator = restApiLocatorExternal.getIndicatorsSystemsByCode(code);
 
-        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", RequestContextUtils.getLocaleResolver(request).resolveLocale(request)), code));
+        Locale currentLocale = RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
+        modelAndView.addObject("breadcrumbList", new BreadcrumbList(translate("page.indicators-system-list.title", currentLocale), code));
+        modelAndView.addObject(PARAM_APP_NAME, translate("app.title", currentLocale));
 
         int numberOfFixedDigitsInNumeration = numberOfFixedDigitsInNumeration(indicator);
 
@@ -81,10 +83,6 @@ public class IndicatorsSystemsController extends BaseController {
             }
         }
         return total;
-    }
-
-    private String translate(String code, Locale locale) {
-        return messageSource.getMessage(code, null, locale);
     }
 
 }

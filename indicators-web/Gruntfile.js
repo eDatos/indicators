@@ -29,6 +29,7 @@ module.exports = function (grunt) {
     var widgetsSrc = [
         widgetsPath + '/libs/underscore.js',
         widgetsPath + '/libs/jquery.js',
+        widgetsPath + '/libs/jquery.outro.js',
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
         widgetsPath + '/libs/jquery.sparkline.js',
         widgetsPath + '/libs/highcharts.js',
@@ -39,6 +40,7 @@ module.exports = function (grunt) {
         commonPath + '/Common.js',
         commonPath + '/translations/es.js',
         commonPath + '/translations/en.js',
+        commonPath + '/translations/ca.js',
         commonPath + '/Helper.js',
         commonPath + '/I18n.js',
 
@@ -141,6 +143,24 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetView.js'
     ]
 
+    var widgetBanner = "(function(window, _, $, jQuery, moment, Highcharts){" +
+        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
+        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
+        "   var old_ = _;" +
+        "   var old$ = $;" +
+        "   var oldJQuery = jQuery;" +
+        "   var oldMoment = moment;" +
+        "   var oldHighcharts = {...Highcharts};" +
+        "   window.Highcharts = undefined;" +
+        "   Highcharts = {};";
+
+    var widgetFooter = "window._ = old_;" +
+        "   window.$ = old$;" +
+        "   window.jQuery = oldJQuery;" +
+        "   window.moment = oldMoment;" +
+        "   window.Highcharts = oldHighcharts;" +
+        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));";
+
     grunt.initConfig({
         handlebars: {
             app: {
@@ -167,7 +187,11 @@ module.exports = function (grunt) {
             widgets: {
                 src: widgetsSrc,
                 dest: widgetsPath + '/widget.min.all.js',
-                separator: ';'
+                separator: ';',
+                options: {
+                    banner: widgetBanner,
+                    footer: widgetFooter
+                }
             }
         },
         concat: {
@@ -181,7 +205,11 @@ module.exports = function (grunt) {
             },
             widgets: {
                 src: widgetsSrc,
-                dest: widgetsPath + '/widget.min.all.js'
+                dest: widgetsPath + '/widget.min.all.js',
+                options: {
+                    banner: widgetBanner,
+                    footer: widgetFooter
+                }
             }
         },
         watch: {

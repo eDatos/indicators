@@ -5,14 +5,14 @@
     var defaultLocale = typeof window.defaultLocale !== 'undefined' ? window.defaultLocale : 'es';
 
     EDatos.common.I18n = {
-        translate: function (key) {
+        translate: function (key, locale) {
             if (key === null) {
                 console.warn("Tried to translate null key");
                 return '';
             }
 
             // Current locale            
-            var label = EDatos.common.helper.get(EDatos.common.translations[currentLocale], key);
+            var label = EDatos.common.helper.get(EDatos.common.translations[locale || currentLocale], key);
             if (label) {
                 return label;
             }
@@ -25,6 +25,16 @@
 
             console.warn('No translation found for "' + key + '"');
             return key;
+        },
+
+        getWidgetLocaleFromOptions: function (options) {
+            if (!options.languages) {
+                console.error("No se han cargado los idiomas permitidos. Esto no deberia pasar.");
+                return "es";
+            }
+
+            var widgetLocale = options.locale  === "navigator" ? navigator.language : options.locale;
+            return options.languages.includes(widgetLocale) ? widgetLocale : options.languages[0];
         }
     }
 

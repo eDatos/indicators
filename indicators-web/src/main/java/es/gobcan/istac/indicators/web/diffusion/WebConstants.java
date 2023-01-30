@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.diffusion;
 
 public interface WebConstants {
 
-    public String VIEW_NAME_INDEX                   = "/index";
+    public String VIEW_NAME_INDEX                   = "index";
 
     // Indicators systems
     public String VIEW_NAME_INDICATORS_SYSTEMS_LIST = "indicators-systems/indicators-systems";

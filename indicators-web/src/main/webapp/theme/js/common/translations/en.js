@@ -71,6 +71,16 @@
                         'LINE': 'Lines',
                         'BAR': 'Bars'
                     }
+                },
+                'LANGUAGE': {
+                    'TITLE' : 'Language',
+                    'DROPDOWN': {
+                        'TITLE': 'Add language selector'
+                    },
+                    'PREFERENCE': {
+                        'TITLE': 'Language to use',
+                        'NAVIGATOR': 'Browser language'
+                    }
                 }
             },
         },
@@ -96,6 +106,9 @@
         'TEMPORAL': {
             'TITLE': 'Temporal serie',
             'DESCRIPTION': 'Chart showing the time evolution of an indicator for different geographical values'
+        },
+        'RECENT': {
+            'TITLE': 'Last updated indicators'
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Unsupported widget type',

@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.views.TabView = Backbone.View.extend({
@@ -80,4 +80,4 @@
 
     });
 
-}());
+}(window._));

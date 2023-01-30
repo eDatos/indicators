@@ -2,7 +2,7 @@
     <p>{{ translate "EMBED.HELP" }}</p>
 
     <textarea id="code-container" readonly="readonly">
-<div id="indicators-widget"></div>
+<div id="{{ indicatorWidgetId }}"></div>
 <script src="{{script}}"></script>
 <script>
     new IstacWidget({{{ code }}});

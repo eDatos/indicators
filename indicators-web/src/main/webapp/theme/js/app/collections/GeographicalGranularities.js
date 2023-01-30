@@ -1,4 +1,4 @@
-(function () {
+(function (_) {
     "use strict";
 
     App.collections.GeographicalGranularities = Backbone.Collection.extend({
@@ -25,4 +25,4 @@
 
     _.extend(App.collections.GeographicalGranularities.prototype, App.mixins.JsonpSync);
 
-}());
+}(window._));

@@ -1160,7 +1160,7 @@
         "operationId": "findIndicators",
         "parameters": [
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\", \"geographicalValue\" y \"geographicalGranularity\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=geographicalGranularity EQ \"MUNICIPALITIES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
             "in": "query",
             "name": "q",
             "type": "string"
@@ -1239,6 +1239,10 @@
         "tags": [ "Indicadores" ],
         "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
         "operationId": "findIndicator",
+        "produces":[
+           "application/json",
+           "application/jsonstat+json"
+        ],
         "parameters": [
           {
             "description": "Código del indicador a obtener.",
@@ -1348,7 +1352,7 @@
             "type": "string"
           },
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"geographicalValue\" y \"geographicalGranularity\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=geographicalGranularity EQ \"MUNICIPALITIES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
             "in": "query",
             "name": "q",
             "type": "string"
@@ -1406,7 +1410,7 @@
     "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}": {
       "get": {
         "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición devuelve los meteadatos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
+        "description": "<p>Esta petición devuelve los metadatos de una instancia de indicadores asociada a un sistema de indicadores específico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
         "operationId": "retrieveIndicatorsInstance",
         "parameters": [
           {
@@ -1440,6 +1444,10 @@
         "tags": [ "Sistemas de indicadores" ],
         "description": "<p>Esta petición devuelve los datos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
         "operationId": "retrieveIndicatorsInstanceData",
+        "produces":[
+           "application/json",
+           "application/jsonstat+json"
+        ],
         "parameters": [
           {
             "description": "Código del sistema a obtener.",

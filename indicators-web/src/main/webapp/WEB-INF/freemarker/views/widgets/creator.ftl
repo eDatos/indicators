@@ -27,13 +27,16 @@
     var visualizerUrl = "${visualizerExternalUrlBase}";
     var permalinksUrlBase = "${permalinksUrlBase}"
     var permalinksUrlBaseWithProtocol = "${permalinksUrlBaseWithProtocol}"
+    var edatosInternationalizationlanguages = [];
+    [#list internationalizationLanguages as language]
+    edatosInternationalizationlanguages.push('${language}');
+    [/#list]
 
     var options = {};
     [#if RequestParameters.type??]
     options.type = '${RequestParameters.type?js_string}';
     [/#if]
-
-
+    options.locale = "navigator";
 
     $(function () {
         var widgetView = new App.views.WidgetView(options);

@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.rest.component.UriLinks;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -61,6 +62,19 @@ public class IndicatorsRestController extends AbstractRestController {
     public ResponseEntity<IndicatorBaseType> retrieveIndicator(@PathVariable("indicatorCode") final String indicatorCode) throws MetamacException {
         IndicatorBaseType indicatorBaseType = indicatorRestFacade.retrieveIndicator(indicatorCode);
         return new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
+    @ResponseBody
+    // @formatter:off
+    public ResponseEntity<JsonStatDataType> retrieveIndicatorJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
+                                                                      @RequestParam(required = false, value = "representation") String representation,
+                                                                      @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+        // @formatter:on
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        JsonStatDataType jsonStatIndicator = indicatorRestFacade.retrieveJsonStatIndicator(indicatorCode, selectedRepresentations, selectedGranularities);
+        return new ResponseEntity<>(jsonStatIndicator, null, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET)

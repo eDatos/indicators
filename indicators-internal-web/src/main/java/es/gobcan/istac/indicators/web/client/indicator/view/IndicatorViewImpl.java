@@ -247,9 +247,8 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList) {
-        dataSourcesPanel.setStatisticalOperations(operationsList);
-
+    public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        dataSourcesPanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
     @Override

@@ -7,7 +7,7 @@
 	<name>INDICATORS :: PARENT</name>
 	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
-	<version>9.2.2-SNAPSHOT</version>
+	<version>9.3.1-SNAPSHOT</version>
 
     <organization>
         <name>Arte Consultores, S.L.</name>
@@ -74,7 +74,6 @@
 		<commons-configuration.version>1.7</commons-configuration.version>
 		<commons-io.version>1.4</commons-io.version>
 		<commons-fileupload.version>1.2.2</commons-fileupload.version>
-		<guava.version>30.1.1-jre</guava.version>
 
 		<!-- Jersey, rest client -->
 		<jersey-client.version>1.12</jersey-client.version>
@@ -144,14 +143,14 @@
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>7.2.1-SNAPSHOT</metamac-core-common.version>
-		<metamac-web-common.version>5.0.0</metamac-web-common.version>
+		<metamac-web-common.version>5.2.1-SNAPSHOT</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>3.8.0</metamac-statistical-resources-rest-external-api.version>
 		<metamac-sso-client.version>4.0.0</metamac-sso-client.version>
 		<metamac-rest-common.version>2.2.0</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
-        <metamac-statistical-resources-kafka.version>5.0.2-SNAPSHOT</metamac-statistical-resources-kafka.version>
+        <metamac-statistical-resources-kafka.version>6.0.0</metamac-statistical-resources-kafka.version>
 	</properties>
 
 	<dependencyManagement>
@@ -249,11 +248,6 @@
 				<artifactId>commons-fileupload</artifactId>
 				<version>${commons-fileupload.version}</version>
 			</dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
 			<dependency>
 				<groupId>javax.persistence</groupId>
 				<artifactId>persistence-api</artifactId>

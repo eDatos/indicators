@@ -71,6 +71,16 @@
                         'LINE': 'Línies',
                         'BAR': 'Barres'
                     }
+                },
+                'LANGUAGE': {
+                    'TITLE' : 'Idioma',
+                    'DROPDOWN': {
+                        'TITLE': 'Afegir selector d\'idioma'
+                    },
+                    'PREFERENCE': {
+                        'TITLE': 'Idioma a utilitzar',
+                        'NAVIGATOR': 'Idioma del navegador'
+                    }
                 }
             },
         },
@@ -115,6 +125,9 @@
             'shortMonths': ['Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
             'thousandsSep': '.',
             'decimalPoint': ','
+        },
+        'CAPTCHA': {
+            'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         }
     };
 }());
