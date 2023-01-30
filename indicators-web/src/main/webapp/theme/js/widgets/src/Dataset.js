@@ -72,7 +72,7 @@
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[locale] || quantity.unitMultiplier.__default__;
-                        if (unitMultiplierTitle !== "Unidades") {
+                        if (quantity.unitMultiplier["es"] !== "Unidades") {
                             result = result + unitMultiplierTitle + " de ";
                         }
                     }
@@ -86,9 +86,9 @@
                     if (quantity.baseValue) {
                     	result += " (";
                     	if (quantity.baseLocation) {
-                    		result += this._getLabel(quantity.baseLocation.title);		
+                    		result += this._getLabel(quantity.baseLocation.title, locale);
                     	} else if (quantity.baseTime) {
-                    		result += this._getLabel(quantity.baseTime.title);
+                    		result += this._getLabel(quantity.baseTime.title, locale);
                     	}
                     	result += "&nbsp;=&nbsp;" + quantity.baseValue + ")";
                     }                    
