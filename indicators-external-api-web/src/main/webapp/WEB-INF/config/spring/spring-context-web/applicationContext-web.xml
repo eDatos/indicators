@@ -61,7 +61,7 @@
 <!--         <property name="maxUploadSize" value="100000"/> -->
 <!--     </bean> -->
 
-    <bean id="localeResolver" class="es.gobcan.istac.indicators.web.EdatosLocaleResolver">
+    <bean id="localeResolver" class="es.gobcan.istac.indicators.rest.spring.web.EdatosLocaleResolver">
     </bean>
 
 	<!--
