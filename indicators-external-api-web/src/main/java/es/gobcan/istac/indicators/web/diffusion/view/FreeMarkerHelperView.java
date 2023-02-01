@@ -34,8 +34,10 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", WebUtils.getFavicon());
         model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
-        fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, getCurrentLocale(request)));
-        fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, getCurrentLocale(request)));
+        String currentLocale = getCurrentLocale(request);
+        model.put("locale", currentLocale);
+        fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
+        fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
         fillOptionalApiStyleCssUrl(model);
 
         super.doRender(model, request, response);

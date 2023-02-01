@@ -15,11 +15,6 @@
             <ref bean="configurationService" />
         </property>
     </bean>
-    
-    <!-- Scans within the base package of the application for @Components to configure as beans -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:i18n/messages" />
-    </bean>
 
     <!-- Sets up standard HandlerMapping and HanderAdapter for use with annotations.
          Allows customization of various MVC-related aspects like binding and validation. -->
