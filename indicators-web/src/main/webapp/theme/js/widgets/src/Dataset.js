@@ -73,7 +73,7 @@
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[locale] || quantity.unitMultiplier.__default__;
                         if (quantity.unitMultiplier["es"] !== "Unidades") {
-                            result = result + unitMultiplierTitle + " de ";
+                            result = result + unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', locale);
                         }
                     }
 
