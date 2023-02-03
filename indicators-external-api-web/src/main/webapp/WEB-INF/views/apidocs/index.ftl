@@ -23,7 +23,7 @@
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lib/swagger-oauth.js" type='text/javascript'></script>
   
   <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/translator.js" type='text/javascript'></script>
-  <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/es.js" type='text/javascript'></script>
+  <script src="${indicatorsExternalApiUrlBase}/apidocs/lang/${locale}.js" type="text/javascript"></script>
       
     <script type="text/javascript">
     $(function () {

@@ -15,11 +15,6 @@
             <ref bean="configurationService" />
         </property>
     </bean>
-    
-    <!-- Scans within the base package of the application for @Components to configure as beans -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:i18n/messages" />
-    </bean>
 
     <!-- Sets up standard HandlerMapping and HanderAdapter for use with annotations.
          Allows customization of various MVC-related aspects like binding and validation. -->
@@ -60,10 +55,10 @@
         <!-- one of the properties available; the maximum file size in bytes -->
 <!--         <property name="maxUploadSize" value="100000"/> -->
 <!--     </bean> -->
-    
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-	</bean>
-	
+
+    <bean id="localeResolver" class="es.gobcan.istac.indicators.rest.spring.web.EdatosLocaleResolver">
+    </bean>
+
 	<!--
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">

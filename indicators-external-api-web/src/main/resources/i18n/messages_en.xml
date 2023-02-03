@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-    
-    <!-- TODO no existe internacionalización para las páginas de la API. Se han limpiado los mensajes porque ninguno se usaba. 
-    Si se necesita un ejemplo véase  /indicators-web/src/main/resources/i18n/messages_es.xml -->
-  
-</properties>
