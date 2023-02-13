@@ -9,7 +9,7 @@ public class JsonStatUnitType {
 
     private Integer decimals;
     private String symbol;
-    private String position = "END"; // default is end, as per the standard
+    private String position = "end"; // default is end, as per the standard
     private Integer multiplier;
     private String type;
     private String label;
@@ -35,7 +35,7 @@ public class JsonStatUnitType {
     }
 
     public void setPosition(String position) {
-        this.position = position;
+        this.position = position.toLowerCase();
     }
 
     public Integer getMultiplier() {
