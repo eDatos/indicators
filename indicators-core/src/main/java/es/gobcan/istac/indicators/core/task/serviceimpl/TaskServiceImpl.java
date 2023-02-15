@@ -338,7 +338,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     private synchronized void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String user, String code, boolean mergeTimeGranularities) throws MetamacException {
-        String taskName = PREFIX_JOB_EXPORTS_DSPL + indicatorUuid;
+        String taskName = PREFIX_JOB_EXPORTS_DSPL + indicatorUuid + "_" + System.currentTimeMillis();
         JobKey jobKey = new JobKey(taskName);
         TriggerKey triggerKey = new TriggerKey(taskName);
         checkExistsGarbage(taskName);
