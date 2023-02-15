@@ -69,26 +69,31 @@
                 var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
                 if (measureRepresentation) {
                     var quantity = measureRepresentation.quantity;
+                    var availableLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : Object.entries(quantity.unit).find(function (quantityUnitLocalizedString) {
+                        var locale = quantityUnitLocalizedString[0];
+                        var label = quantityUnitLocalizedString[1];
+                        return locale !== '__default__' && label === quantity.unit.__default__;
+                    })[0];
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
-                        var unitMultiplierTitle = quantity.unitMultiplier[locale] || quantity.unitMultiplier.__default__;
+                        var unitMultiplierTitle = quantity.unitMultiplier[availableLocale] || quantity.unitMultiplier.__default__;
                         if (quantity.unitMultiplier["es"] !== "Unidades") {
-                            result = result + unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', locale);
+                            result = result + unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', availableLocale);
                         }
                     }
 
                     if (quantity.unitSymbol) {
                         result = result + quantity.unitSymbol;
                     } else {
-                        result = result + (quantity.unit[locale] || quantity.unit.__default__);
+                        result = result + (quantity.unit[availableLocale] || quantity.unit.__default__);
                     }
                     
                     if (quantity.baseValue) {
                     	result += " (";
                     	if (quantity.baseLocation) {
-                    		result += this._getLabel(quantity.baseLocation.title, locale);
+                    		result += this._getLabel(quantity.baseLocation.title, availableLocale);
                     	} else if (quantity.baseTime) {
-                    		result += this._getLabel(quantity.baseTime.title, locale);
+                    		result += this._getLabel(quantity.baseTime.title, availableLocale);
                     	}
                     	result += "&nbsp;=&nbsp;" + quantity.baseValue + ")";
                     }                    
