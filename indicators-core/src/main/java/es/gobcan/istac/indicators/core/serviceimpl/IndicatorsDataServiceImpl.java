@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -27,15 +28,19 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +53,6 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
-import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
@@ -92,6 +96,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
+import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
@@ -119,6 +124,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private IndicatorsConfigurationService         configurationService;
+
+    @Autowired
+    private DsplExporterService                    dsplExporterService;
 
     @Autowired
     private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
@@ -392,7 +400,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    
     @Override
     public void manageDatabaseViewForLastVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getIsLastVersion()) {
@@ -1919,7 +1926,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private AttributeInstanceObservationDto createAttribute(String id, String locale, String value) {
         AttributeInstanceObservationDto attributeBasicDto = new AttributeInstanceObservationDto();
         attributeBasicDto.setAttributeId(id);
-        InternationalStringDto intStr = new InternationalStringDto();
+        es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto intStr = new es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto();
         LocalisedStringDto locStr = new LocalisedStringDto();
         locStr.setLocale(locale);
         locStr.setLabel(value);
@@ -2023,4 +2030,48 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
 
+    @Override
+    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        // Validation
+        InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
+        getTaskService().planifyExportsDsplJob(ctx, indicatorUuid, code, mergeTimeGranularities);
+    }
+
+    protected DsplExporterService getDsplExporterService() {
+        return dsplExporterService;
+    }
+
+    @Override
+    public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        LOG.info("Starting execute export DSPL process");
+
+        String statisticalOperationsApiUrlBase = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
+        StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(statisticalOperationsApiUrlBase,
+                StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread
+
+        Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
+        InternationalString title = getInternationalString(operation.getName());
+        InternationalString description = getInternationalString(operation.getDescription());
+
+        List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
+
+        getNoticesRestInternalService().createExportDSPLNotification(code, files);
+
+        LOG.info("Finished execute export DSPL process");
+    }
+
+    private InternationalString getInternationalString(org.siemac.metamac.rest.common.v1_0.domain.InternationalString source) {
+        if (source != null) {
+            InternationalString internationalString = new InternationalString();
+            List<LocalisedString> localisedStringList = source.getTexts();
+            for (LocalisedString localisedStringSource : localisedStringList) {
+                org.siemac.metamac.core.common.ent.domain.LocalisedString localisedString = new org.siemac.metamac.core.common.ent.domain.LocalisedString();
+                localisedString.setLocale(localisedStringSource.getLang());
+                localisedString.setLabel(localisedStringSource.getValue());
+                internationalString.addText(localisedString);
+            }
+            return internationalString;
+        }
+        return null;
+    }
 }

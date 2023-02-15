@@ -11,4 +11,5 @@ public class ServiceNoticeAction {
     public static final String INDICATOR_POPULATION_DATA_SUCCESS               = "notice_message.indicators.action.population_data.success";
     public static final String INDICATOR_POPULATION_DATA_ERROR                 = "notice_message.indicators.action.population_data.error";
     public static final String STREAM_MESSAGE_SEND_ERROR                       = "notice_message.indicators.action.sent_via_kafka.error";
+    public static final String INDICATOR_EXPORT_DSPL_SUCCESS                   = "notice_message.indicators.action.export_dspl.success";
 }

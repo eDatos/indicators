@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -61,6 +62,8 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
         }
 
+        String url = configurationService.retrieveIndicatorsWebInternalUrl() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
+
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
 
         List<String> datasetArchives = new ArrayList<String>();
@@ -77,7 +80,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 }
 
                 String zipFilename = zipFileNameZipDirectoryNonRecursively(dataset.getId(), datasetDirectory);
-                datasetArchives.add(zipFilename);
+                datasetArchives.add(url + zipFilename);
             }
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_FILES_CREATE_ERROR, indicatorsSystemUuid);

@@ -89,4 +89,8 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
 
+    @Override
+    public String retrieveIndicatorsWebInternalUrl() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DB_INDICATORS_WEB_INTERNAL_URL);
+    }
 }

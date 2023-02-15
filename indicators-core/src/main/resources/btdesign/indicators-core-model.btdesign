@@ -210,6 +210,8 @@ Application Indicators {
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Exports DSPL"
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
@@ -218,6 +220,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Exports dspl"
+	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Updates data for all published JSON-stat indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
@@ -555,8 +559,12 @@ Application Indicators {
 	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	        "Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Exports DSPL"
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Exports dspl"
+	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data JSON-stat"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
@@ -1438,6 +1446,8 @@ Application Indicators {
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
     		"Plannify a scheduled task to populate indicator's data"
     		planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Exports DSPL"
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 			"Perform the population task"
 			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
 			"Send success notification for de populate indicator data job"
@@ -1457,7 +1467,6 @@ Application Indicators {
 			markAllInProgressTaskToFailed();
 			
 			scheduleIndicatorsUpdateJob();
-			
     	}
     	
     	// ----------------------------------------------------------------

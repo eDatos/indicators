@@ -572,14 +572,14 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto, boolean mergingTimeGranularities) {
-        dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle(), indicatorsSystemDto.getDescription(), mergingTimeGranularities),
-                new WaitingAsyncCallbackHandlingError<ExportSystemInDsplResult>(this) {
+        dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle(), indicatorsSystemDto.getDescription(), mergingTimeGranularities,
+                indicatorsSystemDto.getCode()), new WaitingAsyncCallbackHandlingError<ExportSystemInDsplResult>(this) {
 
                     @Override
                     public void onWaitSuccess(ExportSystemInDsplResult result) {
                         if (result.getFiles() != null) {
                             for (String file : result.getFiles()) {
-                                CommonUtils.downloadFile(file);
+                                Window.open(file, "_blank", "");
                             }
                         }
                     }
