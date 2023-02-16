@@ -48,6 +48,6 @@ public class ExportSystemInDsplActionHandler extends SecurityActionHandler<Expor
         } catch (MetamacException e) {
             e.printStackTrace();
         }
-        return new ExportSystemInDsplResult(new ArrayList<>());
+        return new ExportSystemInDsplResult(null);
     }
 }

@@ -581,6 +581,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                             for (String file : result.getFiles()) {
                                 Window.open(file, "_blank", "");
                             }
+                        } else {
+                            fireSuccessMessage(getMessages().systemExported());
                         }
                     }
                 });
