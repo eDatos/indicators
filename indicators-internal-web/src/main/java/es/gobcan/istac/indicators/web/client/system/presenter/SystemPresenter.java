@@ -577,13 +577,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
                     @Override
                     public void onWaitSuccess(ExportSystemInDsplResult result) {
-                        if (result.getFiles() != null) {
-                            for (String file : result.getFiles()) {
-                                Window.open(file, "_blank", "");
-                            }
-                        } else {
-                            fireSuccessMessage(getMessages().systemExported());
-                        }
+                        fireSuccessMessage(getMessages().systemExported());
                     }
                 });
     }
