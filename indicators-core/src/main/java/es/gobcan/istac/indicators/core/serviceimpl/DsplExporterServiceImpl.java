@@ -62,7 +62,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
         }
 
-        String url = configurationService.retrieveIndicatorsWebInternalUrl() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
+        String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
 
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
 
