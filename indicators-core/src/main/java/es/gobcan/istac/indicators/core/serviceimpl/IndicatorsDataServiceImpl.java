@@ -35,7 +35,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
@@ -94,6 +93,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
+import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
@@ -123,27 +123,30 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService         configurationService;
+    private IndicatorsConfigurationService                configurationService;
 
     @Autowired
-    private DsplExporterService                    dsplExporterService;
+    private DsplExporterService                           dsplExporterService;
 
     @Autowired
-    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
+    private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
 
-    private static final Logger                    LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    @Autowired
+    private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    public static final String                     GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String                     TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String                     MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String                     CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String                     OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                     DATASET_REPOSITORY_LOCALE = "es";
+    private static final Logger                           LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final Double                     ZERO_RANGE                = 1E-6;
-    public static final int                        MAX_MEASURE_LENGTH        = 50;
+    public static final String                            GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String                            TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
 
-    private static final Map<String, String>       SPECIAL_STRING_MAPPING;
+    public static final Double                            ZERO_RANGE                = 1E-6;
+    public static final int                               MAX_MEASURE_LENGTH        = 50;
+
+    private static final Map<String, String>              SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -2050,28 +2053,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread
 
         Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
-        InternationalString title = getInternationalString(operation.getName());
-        InternationalString description = getInternationalString(operation.getDescription());
+        InternationalString title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
+        InternationalString description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
 
         List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
 
-        getNoticesRestInternalService().createExportDSPLNotification(code, files);
+        String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
+
+        getNoticesRestInternalService().createExportDSPLNotification(code, url, files);
 
         LOG.info("Finished execute export DSPL process");
     }
 
-    private InternationalString getInternationalString(org.siemac.metamac.rest.common.v1_0.domain.InternationalString source) {
-        if (source != null) {
-            InternationalString internationalString = new InternationalString();
-            List<LocalisedString> localisedStringList = source.getTexts();
-            for (LocalisedString localisedStringSource : localisedStringList) {
-                org.siemac.metamac.core.common.ent.domain.LocalisedString localisedString = new org.siemac.metamac.core.common.ent.domain.LocalisedString();
-                localisedString.setLocale(localisedStringSource.getLang());
-                localisedString.setLabel(localisedStringSource.getValue());
-                internationalString.addText(localisedString);
-            }
-            return internationalString;
-        }
-        return null;
-    }
 }

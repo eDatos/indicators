@@ -12,8 +12,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DB_INDICATORS_DRIVER_NAME           = "indicators.core.db.driver_name";
     public static final String DB_INDICATORS_DIALECT               = "indicators.core.db.dialect";
 
-    public static final String DB_INDICATORS_WEB_INTERNAL_URL      = "indicators.web.internal.url";
-
     public static final String DB_REPO_URL                         = "indicators.dsrepo.db.url";
     public static final String DB_REPO_USERNAME                    = "indicators.dsrepo.db.username";
     public static final String DB_REPO_PASSWORD                    = "indicators.dsrepo.db.password";

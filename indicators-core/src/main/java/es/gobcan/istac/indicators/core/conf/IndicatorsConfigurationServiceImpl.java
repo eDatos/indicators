@@ -88,4 +88,5 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
+
 }

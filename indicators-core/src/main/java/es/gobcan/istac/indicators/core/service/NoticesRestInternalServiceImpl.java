@@ -82,16 +82,16 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createExportDSPLNotification(String code, List<String> files) {
-        createExportDSPLNotification(ServiceNoticeAction.INDICATOR_EXPORT_DSPL_SUCCESS, ServiceNoticeMessage.INDICATOR_EXPORT_DSPL_SUCCESS, code, files);
+    public void createExportDSPLNotification(String code, String url, List<String> files) {
+        createExportDSPLNotification(ServiceNoticeAction.INDICATOR_EXPORT_DSPL_SUCCESS, ServiceNoticeMessage.INDICATOR_EXPORT_DSPL_SUCCESS, code, url, files);
     }
 
-    private void createExportDSPLNotification(String actionCode, String messageCode, String code, List<String> files) {
+    private void createExportDSPLNotification(String actionCode, String messageCode, String code, String url, List<String> files) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
             String subject = getMessageForCodeWithParams(actionCode, locale, code);
             String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
-            String messageBody = createExportDSPLMessage(messageCode, locale, files);
+            String messageBody = createExportDSPLMessage(messageCode, locale, url, files);
 
             // @formatter:off
             Message message = MessageBuilder.message()
@@ -113,10 +113,16 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         }
     }
 
-    private String createExportDSPLMessage(String messageCode, Locale locale, List<String> files) throws MetamacException {
+    private String createExportDSPLMessage(String messageCode, Locale locale, String url, List<String> files) throws MetamacException {
         StringBuilder messageBody = new StringBuilder(LocaleUtil.getMessageForCode(messageCode, locale));
         for (String fileName : files) {
-            messageBody.append(IndicatorsConstants.TSV_LINE_SEPARATOR + IndicatorsConstants.TSV_SEPARATOR + IndicatorsConstants.TSV_HEADER_ENVIRONMENT_SEPARATOR + fileName);
+            // @formatter:off
+            messageBody.append(IndicatorsConstants.TSV_LINE_SEPARATOR)
+                .append(IndicatorsConstants.TSV_SEPARATOR)
+                .append(IndicatorsConstants.TSV_HEADER_ENVIRONMENT_SEPARATOR)
+                .append(url)
+                .append(fileName);
+            // @formatter:on
         }
         return messageBody.toString();
     }
