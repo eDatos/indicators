@@ -14,9 +14,9 @@
 	<name>INDICATORS</name>
 
     <scm>
-        <connection>scm:git:http://git.arte-consultores.com/istac/indicators</connection>
-        <developerConnection>scm:git:http://git.arte-consultores.com/istac/indicators</developerConnection>
-        <url>http://git.arte-consultores.com/istac/indicators</url>
+        <connection>scm:git:https://git.arte-consultores.com/istac/indicators</connection>
+        <developerConnection>scm:git:https://git.arte-consultores.com/istac/indicators</developerConnection>
+        <url>https://git.arte-consultores.com/istac/indicators</url>
         <tag>HEAD</tag>
 	</scm>
 
