@@ -80,10 +80,10 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
 
     @Autowired
-    private Do2DtoMapper                           do2DtoMapper;
+    private Do2DtoMapper do2DtoMapper;
 
     @Autowired
-    private Dto2DoMapper                           dto2DoMapper;
+    private Dto2DoMapper dto2DoMapper;
 
     @Autowired
     private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -92,7 +92,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private StreamMessagingService                 streamMessagingService;
+    private StreamMessagingService streamMessagingService;
 
     @Autowired
     private List<StreamMessagingCallback<?, ?, ?>> streamMessagingCallbacks;
