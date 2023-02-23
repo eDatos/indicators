@@ -76,4 +76,7 @@ public class IndicatorsConstants {
     public static final String DOT_5_INCLUDED_ELSEWHERE                  = ".....";
     public static final String DOT_6_UNAVAILABLE_BY_HOLIDAYS             = "......";
 
+    public static final String FILE_DOWNLOAD_DIR_PATH                    = "files/download";
+    public static final String FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME    = "/files/download?fileName=";
+    public static final String PARAM_FILE_NAME                           = "fileName";
 }

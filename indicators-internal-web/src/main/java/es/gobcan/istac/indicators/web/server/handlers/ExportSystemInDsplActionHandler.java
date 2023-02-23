@@ -1,11 +1,11 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +18,8 @@ import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplResult;
 @Component
 public class ExportSystemInDsplActionHandler extends SecurityActionHandler<ExportSystemInDsplAction, ExportSystemInDsplResult> {
 
+    protected final Logger          logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
@@ -28,11 +30,10 @@ public class ExportSystemInDsplActionHandler extends SecurityActionHandler<Expor
     @Override
     public ExportSystemInDsplResult executeSecurityAction(ExportSystemInDsplAction action) throws ActionException {
         try {
-            List<String> files = indicatorsServiceFacade.exportIndicatorsSystemPublishedToDsplFiles(ServiceContextHolder.getCurrentServiceContext(), action.getSystemUuid(), action.getSystemTitle(),
-                    action.getSystemDescription(), action.isMergeTimeGranularities());
-            return new ExportSystemInDsplResult(files);
+            indicatorsServiceFacade.planifyExportsDsplJob(ServiceContextHolder.getCurrentServiceContext(), action.getSystemUuid(), action.getCode(), action.isMergeTimeGranularities());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
+        return new ExportSystemInDsplResult(null);
     }
 }

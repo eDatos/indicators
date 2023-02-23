@@ -80,10 +80,10 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
 
     @Autowired
-    private Do2DtoMapper                           do2DtoMapper;
+    private Do2DtoMapper do2DtoMapper;
 
     @Autowired
-    private Dto2DoMapper                           dto2DoMapper;
+    private Dto2DoMapper dto2DoMapper;
 
     @Autowired
     private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -92,10 +92,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private StreamMessagingService                 streamMessagingService;
+    private StreamMessagingService streamMessagingService;
 
     @Autowired
-    private List<StreamMessagingCallback<?,?,?>>   streamMessagingCallbacks;
+    private List<StreamMessagingCallback<?, ?, ?>> streamMessagingCallbacks;
 
     public IndicatorsServiceFacadeImpl() {
     }
@@ -655,7 +655,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
 
         IndicatorDto indicatorDto;
-        if(publishIndicatorResult.getPublicationFailedReason() == null) {
+        if (publishIndicatorResult.getPublicationFailedReason() == null) {
             SendStreamMessageResult streamMessageResult = getIndicatorsService().sendIndicator(ctx, publishIndicatorResult.getIndicatorVersion());
             indicatorDto = do2DtoMapper.indicatorDoToDto(ctx, getIndicatorsService().retrieveIndicatorPublished(ctx, uuid));
             publishIndicatorResultDto.setNotificationFailedReason(streamMessageResultToMetamacException(ctx, streamMessageResult));
@@ -683,7 +683,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void resendAllPendingAndFailedMessages(ServiceContext ctx) throws MetamacException {
-        for(StreamMessagingCallback<?,?,?> streamMessagingCallback : streamMessagingCallbacks) {
+        for (StreamMessagingCallback<?, ?, ?> streamMessagingCallback : streamMessagingCallbacks) {
             streamMessagingService.resendAllPendingAndFailedMessages(streamMessagingCallback);
         }
     }
@@ -1301,7 +1301,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      * Mapper from SendStreamMessageResult to MetamacException
      */
     private MetamacException streamMessageResultToMetamacException(ServiceContext ctx, SendStreamMessageResult streamMessageResult) {
-        if(streamMessageResult == null || streamMessageResult.getMainException() == null) {
+        if (streamMessageResult == null || streamMessageResult.getMainException() == null) {
             return null;
         }
         MetamacException notificationException = streamMessageResult.getMainException();
@@ -1313,4 +1313,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return TranslateExceptionUtils.translateMetamacException(ctx, notificationException);
     }
 
+    @Override
+    public void planifyExportsDsplJob(ServiceContext ctx, String systemUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        getIndicatorsDataService().planifyExportsDsplJob(ctx, systemUuid, code, mergeTimeGranularities);
+    }
+
+    @Override
+    public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities);
+    }
 }

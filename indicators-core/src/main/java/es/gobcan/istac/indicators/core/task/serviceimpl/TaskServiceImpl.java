@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
@@ -57,6 +58,7 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
 public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
     public static final String             PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
+    public static final String             PREFIX_JOB_EXPORTS_DSPL  = "exports_dspl_job_";
 
     protected final Logger                 logger                   = LoggerFactory.getLogger(getClass());
 
@@ -111,7 +113,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         checkExistsGarbage(populationIndicatorDataTaskName);
 
         JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid, populationIndicatorDataTaskName, user, populationIndicatorDataJobKey);
-        SimpleTrigger trigger = createPopulateIndicatorDataTrigger(populationIndicatorDataTriggerKey);
+        SimpleTrigger trigger = createTrigger(populationIndicatorDataTriggerKey);
 
         Task newTask = new Task(populationIndicatorDataTaskName);
         newTask.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
@@ -297,7 +299,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // @formatter:on
     }
 
-    private SimpleTrigger createPopulateIndicatorDataTrigger(TriggerKey triggerKey) {
+    private SimpleTrigger createTrigger(TriggerKey triggerKey) {
         // @formatter:off
         return TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
@@ -329,4 +331,39 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private NoticesRestInternalService getNoticesRestInternalService() {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
+
+    @Override
+    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        planifyExportsDsplJob(ctx, indicatorUuid, ctx.getUserId(), code, mergeTimeGranularities);
+    }
+
+    private synchronized void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String user, String code, boolean mergeTimeGranularities) throws MetamacException {
+        String taskName = PREFIX_JOB_EXPORTS_DSPL + indicatorUuid + "_" + System.currentTimeMillis();
+        JobKey jobKey = new JobKey(taskName);
+        TriggerKey triggerKey = new TriggerKey(taskName);
+        checkExistsGarbage(taskName);
+
+        JobDetail jobDetail = createExportsDSPLJob(ctx, indicatorUuid, code, mergeTimeGranularities, taskName, user, jobKey);
+        SimpleTrigger trigger = createTrigger(triggerKey);
+
+        Task newTask = new Task(taskName);
+        newTask.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
+        newTask.setExtensionPoint(indicatorUuid);
+        createTask(ctx, newTask);
+        scheduleJob(jobDetail, trigger);
+    }
+
+    private JobDetail createExportsDSPLJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, String taskName, String user, JobKey jobKey) {
+        // @formatter:off
+        return JobBuilder.newJob()
+                .ofType(ExportsDsplJob.class)
+                .withIdentity(jobKey)
+                .usingJobData(ExportsDsplJob.INDICATOR_UUID, indicatorUuid)
+                .usingJobData(ExportsDsplJob.MERGE_TIME_GRANULARITIES, mergeTimeGranularities)
+                .usingJobData(ExportsDsplJob.CODE, code)
+                .requestRecovery()
+                .build();
+        // @formatter:on
+    }
+
 }
