@@ -57,12 +57,12 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
 @Service("taskService")
 public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
-    public static final String             PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
-    public static final String             PREFIX_JOB_EXPORTS_DSPL  = "exports_dspl_job_";
+    public static final String PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
+    public static final String PREFIX_JOB_EXPORTS_DSPL = "exports_dspl_job_";
 
-    protected final Logger                 logger                   = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private SchedulerFactory               schedulerFactory         = null;
+    private SchedulerFactory schedulerFactory = null;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -361,6 +361,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 .usingJobData(ExportsDsplJob.INDICATOR_UUID, indicatorUuid)
                 .usingJobData(ExportsDsplJob.MERGE_TIME_GRANULARITIES, mergeTimeGranularities)
                 .usingJobData(ExportsDsplJob.CODE, code)
+                .usingJobData(ExportsDsplJob.USER, ctx.getUserId())
                 .requestRecovery()
                 .build();
         // @formatter:on

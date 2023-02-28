@@ -17,13 +17,14 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
 public class ExportsDsplJob implements Job {
 
-    protected final Logger          logger                   = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String      INDICATOR_UUID           = "indicatorUuid";
-    public static final String      CODE                     = "code";
-    public static final String      MERGE_TIME_GRANULARITIES = "mergeTimeGranularities";
+    public static final String INDICATOR_UUID = "indicatorUuid";
+    public static final String CODE = "code";
+    public static final String USER = "user";
+    public static final String MERGE_TIME_GRANULARITIES = "mergeTimeGranularities";
 
-    private IndicatorsServiceFacade indicatorsServiceFacade  = null;
+    private IndicatorsServiceFacade indicatorsServiceFacade = null;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -34,9 +35,10 @@ public class ExportsDsplJob implements Job {
 
         String indicatorUuid = jobDataMap.getString(INDICATOR_UUID);
         String code = (String) jobDataMap.get(CODE);
+        String user = (String) jobDataMap.get(USER);
         boolean mergeTimeGranularities = jobDataMap.getBoolean(MERGE_TIME_GRANULARITIES);
 
-        ServiceContext serviceContext = new ServiceContext("exportDSP", context.getFireInstanceId(), "metamac-core");
+        ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "metamac-core");
 
         try {
             getIndicatorsServiceFacade().executeExportDSPL(serviceContext, indicatorUuid, code, mergeTimeGranularities);

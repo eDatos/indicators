@@ -123,30 +123,30 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService                configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     @Autowired
-    private DsplExporterService                           dsplExporterService;
+    private DsplExporterService dsplExporterService;
 
     @Autowired
-    private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
+    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    private static final Logger                           LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String                            GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String                            TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
+    public static final String GEO_DIMENSION = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String TIME_DIMENSION = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String MEASURE_DIMENSION = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String CODE_ATTRIBUTE = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String DATASET_REPOSITORY_LOCALE = "es";
 
-    public static final Double                            ZERO_RANGE                = 1E-6;
-    public static final int                               MAX_MEASURE_LENGTH        = 50;
+    public static final Double ZERO_RANGE = 1E-6;
+    public static final int MAX_MEASURE_LENGTH = 50;
 
-    private static final Map<String, String>              SPECIAL_STRING_MAPPING;
+    private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -163,7 +163,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper               mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -2060,7 +2060,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
 
-        getNoticesRestInternalService().createExportDSPLNotification(code, url, files);
+        getNoticesRestInternalService().createExportDSPLNotification(ctx.getUserId(), code, url, files);
 
         LOG.info("Finished execute export DSPL process");
     }

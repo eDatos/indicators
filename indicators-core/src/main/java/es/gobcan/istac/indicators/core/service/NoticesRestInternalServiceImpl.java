@@ -43,21 +43,21 @@ import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
     @Autowired
-    private RestApiLocator                   restApiLocator;
+    private RestApiLocator restApiLocator;
 
     @Autowired
-    private IndicatorsConfigurationService   configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     @Autowired
-    private TranslateExceptions              translateExceptions;
+    private TranslateExceptions translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String                           indicatorsInternalWebUrlBase;
-    private String                           indicatorsApiInternalEndpointV10;
+    private String indicatorsInternalWebUrlBase;
+    private String indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
@@ -82,11 +82,11 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createExportDSPLNotification(String code, String url, List<String> files) {
-        createExportDSPLNotification(ServiceNoticeAction.INDICATOR_EXPORT_DSPL_SUCCESS, ServiceNoticeMessage.INDICATOR_EXPORT_DSPL_SUCCESS, code, url, files);
+    public void createExportDSPLNotification(String user, String code, String url, List<String> files) {
+        createExportDSPLNotification(user, ServiceNoticeAction.INDICATOR_EXPORT_DSPL_SUCCESS, ServiceNoticeMessage.INDICATOR_EXPORT_DSPL_SUCCESS, code, url, files);
     }
 
-    private void createExportDSPLNotification(String actionCode, String messageCode, String code, String url, List<String> files) {
+    private void createExportDSPLNotification(String user, String actionCode, String messageCode, String code, String url, List<String> files) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
             String subject = getMessageForCodeWithParams(actionCode, locale, code);
@@ -104,6 +104,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
                     .withSubject(subject)
                     .withMessages(message)
                     .withSendingApplication(sendingApp)
+                    .withReceivers(user)
                     .build();
             // @formatter:on
 
