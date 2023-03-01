@@ -19,9 +19,4 @@
     <bean class="es.gobcan.istac.indicators.rest.spring.JacksonFix" />
     <bean class="es.gobcan.istac.indicators.rest.jackson.MappingJacksonJsonStatHttpMessageConverter" />
 
-        <!-- Scans within the base package of the application for @Components to configure as beans -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:i18n/base-rest-messages" />
-        <property name="defaultEncoding" value="UTF-8"/>
-    </bean>
 </beans>
