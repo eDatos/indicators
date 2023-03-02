@@ -29,7 +29,7 @@ public class ExportsDsplJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobKey jobKey = context.getJobDetail().getKey();
-        logger.error("Exports DSPL Job: {} starting at {}", jobKey, new Date());
+        logger.info("Exports DSPL Job: {} starting at {}", jobKey, new Date());
 
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 
@@ -47,7 +47,7 @@ public class ExportsDsplJob implements Job {
             throw new JobExecutionException(e);
         }
 
-        logger.error("Exports DSPL Job: {} finished at {}", jobKey, new Date());
+        logger.info("Exports DSPL Job: {} finished at {}", jobKey, new Date());
     }
 
     private IndicatorsServiceFacade getIndicatorsServiceFacade() {
