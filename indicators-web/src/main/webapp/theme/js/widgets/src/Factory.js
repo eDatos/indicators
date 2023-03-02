@@ -48,7 +48,8 @@
                 Istac.widget.analytics.trackPageView(options);
             });
         } else {
-            showError(options.el, "ERROR.URL_NOT_PROVIDED", options.locale === "navigator" ? navigator.language : (options.locale || "es"));
+            var errorLocale = options.locale === "navigator" ? navigator.language : (options.locale || "es");
+            showError(options.el, "ERROR.URL_NOT_PROVIDED", errorLocale.substring(0,2));
         }
 
     };
