@@ -34,11 +34,8 @@
             }
 
             var widgetLocale = options.locale  === "navigator" ? navigator.language : options.locale;
-            var formattedWidgetLocaleIfValid = options.languages.find(function (language) {
-                var languageRegex = new RegExp("^" + language + "\\b");
-                return languageRegex.test(widgetLocale);
-            });
-            return formattedWidgetLocaleIfValid ? formattedWidgetLocaleIfValid : options.languages[0];
+            var formattedWidgetLocale = widgetLocale ? widgetLocale.substring(0,2) : null;
+            return formattedWidgetLocale && options.languages.includes(formattedWidgetLocale) ? formattedWidgetLocale : options.languages[0];
         },
     }
 
