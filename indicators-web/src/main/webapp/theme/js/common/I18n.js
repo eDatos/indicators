@@ -34,8 +34,12 @@
             }
 
             var widgetLocale = options.locale  === "navigator" ? navigator.language : options.locale;
-            return options.languages.includes(widgetLocale) ? widgetLocale : options.languages[0];
-        }
+            var formattedWidgetLocaleIfValid = options.languages.find(function (language) {
+                var languageRegex = new RegExp("^" + language + "\\b");
+                return languageRegex.test(widgetLocale);
+            });
+            return formattedWidgetLocaleIfValid ? formattedWidgetLocaleIfValid : options.languages[0];
+        },
     }
 
 }());
