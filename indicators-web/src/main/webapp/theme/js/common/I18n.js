@@ -34,8 +34,9 @@
             }
 
             var widgetLocale = options.locale  === "navigator" ? navigator.language : options.locale;
-            return options.languages.includes(widgetLocale) ? widgetLocale : options.languages[0];
-        }
+            var formattedWidgetLocale = widgetLocale ? widgetLocale.substring(0,2) : null;
+            return formattedWidgetLocale && options.languages.includes(formattedWidgetLocale) ? formattedWidgetLocale : options.languages[0];
+        },
     }
 
 }());
