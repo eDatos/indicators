@@ -105,7 +105,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
                     .withMessages(message)
                     .withSendingApplication(sendingApp)
                     .withReceivers(user)
-                    .withForceSend(Boolean.TRUE)
+                    //.withForceSend(Boolean.TRUE)
                     .build();
             // @formatter:on
 
