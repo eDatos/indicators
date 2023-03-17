@@ -80,7 +80,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
                 }
                 case GEOGRAPHICALGRANULARITY: {
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().indicatorsInstances().geographicalGranularity().code(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.geoCoverages().geographicalValue().granularity().code(), value, propertyRestriction.getOperationType());
                 }
             }
             throw createInvalidParameterException("q");
