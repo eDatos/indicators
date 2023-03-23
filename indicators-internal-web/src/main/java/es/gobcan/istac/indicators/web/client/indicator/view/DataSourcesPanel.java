@@ -224,7 +224,6 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void setCanEdit(IndicatorDto indicatorDto) {
-        toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource(indicatorDto) ? Visibility.VISIBLE : Visibility.HIDDEN);
         toolStrip.markForRedraw();
     }
 
