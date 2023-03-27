@@ -63,17 +63,15 @@
             return null;
         },
 
-        getUnit : function (measure, locale) {
+        getUnit : function (measure, locale, internationalizationLanguages) {
             var result = "";
             if (this.metadata) {
                 var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
                 if (measureRepresentation) {
                     var quantity = measureRepresentation.quantity;
-                    var availableLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : Object.entries(quantity.unit).find(function (quantityUnitLocalizedString) {
-                        var locale = quantityUnitLocalizedString[0];
-                        var label = quantityUnitLocalizedString[1];
-                        return locale !== '__default__' && label === quantity.unit.__default__;
-                    })[0];
+                    var availableLocale = quantity.unitSymbol ? locale : [locale, internationalizationLanguages ? internationalizationLanguages[0] : "es", Object.keys(quantity.unit)[0]].find(function (lang) {
+                        return lang && quantity.unit[lang];
+                    });
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[availableLocale] || quantity.unitMultiplier.__default__;
