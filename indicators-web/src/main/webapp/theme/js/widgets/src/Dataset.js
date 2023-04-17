@@ -69,9 +69,7 @@
                 var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
                 if (measureRepresentation) {
                     var quantity = measureRepresentation.quantity;
-                    var availableLocale = quantity.unitSymbol ? locale : [locale, internationalizationLanguages ? internationalizationLanguages[0] : "es", Object.keys(quantity.unit)[0]].find(function (lang) {
-                        return lang && quantity.unit[lang];
-                    });
+                    var availableLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : internationalizationLanguages[0];
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[availableLocale] || quantity.unitMultiplier.__default__;

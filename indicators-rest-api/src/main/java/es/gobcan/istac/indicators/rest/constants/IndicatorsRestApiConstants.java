@@ -13,6 +13,6 @@ public class IndicatorsRestApiConstants {
     public static final String PROP_ATTRIBUTE_OBS_CONF = "OBS_CONF";
 
     public static final String DEFAULT                 = "__default__";
-    public static final String DEFAULT_LANGUAGE        = "es";
-    public static final Locale DEFAULT_LOCALE          = LocaleUtils.toLocale(DEFAULT_LANGUAGE);
+    public static final String DEFAULT_LANGUAGE        = "es"; // TODO sigue teniendo sentido esta constante?
+    public static final Locale DEFAULT_LOCALE          = LocaleUtils.toLocale(DEFAULT_LANGUAGE); // TODO sigue teniendo sentido esta constante?
 }

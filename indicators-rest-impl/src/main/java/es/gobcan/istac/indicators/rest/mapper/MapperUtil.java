@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
@@ -36,12 +35,11 @@ public class MapperUtil {
         return internationalString.getTexts().stream().findFirst().get().getLabel();
     }
 
-    public static Map<String, String> getLocalisedLabel(InternationalString internationalString, String organizationDefaultLanguage) {
+    public static Map<String, String> getLocalisedLabel(InternationalString internationalString, String defaultLanguage) {
         if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
             return null;
         }
 
-        String defaultLanguage = StringUtils.isBlank(organizationDefaultLanguage) ? DEFAULT_LANGUAGE : organizationDefaultLanguage;
         Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
         String defaultLabel = null;
         String defaultLabelLocale = null;
@@ -57,12 +55,11 @@ public class MapperUtil {
         return labels;
     }
 
-    public static Map<String, String> getLocalisedLabel(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString, String organizationDefaultLanguage) {
+    public static Map<String, String> getLocalisedLabel(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString, String defaultLanguage) {
         if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
             return null;
         }
 
-        String defaultLanguage = StringUtils.isBlank(organizationDefaultLanguage) ? DEFAULT_LANGUAGE : organizationDefaultLanguage;
         Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
         String defaultLabel = null;
         String defaultLabelLocale = null;
@@ -78,12 +75,11 @@ public class MapperUtil {
         return labels;
     }
 
-    public static Map<String, String> getLocalisedLabel(InternationalStringDto internationalString, String organizationDefaultLanguage) {
+    public static Map<String, String> getLocalisedLabel(InternationalStringDto internationalString, String defaultLanguage) {
         if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
             return null;
         }
 
-        String defaultLanguage = StringUtils.isBlank(organizationDefaultLanguage) ? DEFAULT_LANGUAGE : organizationDefaultLanguage;
         Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
         String defaultLabel = null;
         String defaultLabelLocale = null;
@@ -99,24 +95,24 @@ public class MapperUtil {
         return labels;
     }
 
-    public static OperationIndicators getOperationIndicators(Operation operation, String organizationDefaultLanguage) {
+    public static OperationIndicators getOperationIndicators(Operation operation, String defaultLanguage) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
-        target.setTitle(getLocalisedLabel(operation.getName(), organizationDefaultLanguage));
-        target.setAcronym(getLocalisedLabel(operation.getAcronym(), organizationDefaultLanguage));
-        target.setDescription(getLocalisedLabel(operation.getDescription(), organizationDefaultLanguage));
-        target.setObjective(getLocalisedLabel(operation.getObjective(), organizationDefaultLanguage));
+        target.setTitle(getLocalisedLabel(operation.getName(), defaultLanguage));
+        target.setAcronym(getLocalisedLabel(operation.getAcronym(), defaultLanguage));
+        target.setDescription(getLocalisedLabel(operation.getDescription(), defaultLanguage));
+        target.setObjective(getLocalisedLabel(operation.getObjective(), defaultLanguage));
         target.setUri(operation.getSelfLink().getHref());
         return target;
     }
 
-    public static OperationIndicators getOperationIndicators(org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation operation, String organizationDefaultLanguage) {
+    public static OperationIndicators getOperationIndicators(org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation operation, String defaultLanguage) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
-        target.setTitle(getLocalisedLabel(operation.getName(), organizationDefaultLanguage));
-        target.setAcronym(getLocalisedLabel(operation.getAcronym(), organizationDefaultLanguage));
-        target.setDescription(getLocalisedLabel(operation.getDescription(), organizationDefaultLanguage));
-        target.setObjective(getLocalisedLabel(operation.getObjective(), organizationDefaultLanguage));
+        target.setTitle(getLocalisedLabel(operation.getName(), defaultLanguage));
+        target.setAcronym(getLocalisedLabel(operation.getAcronym(), defaultLanguage));
+        target.setDescription(getLocalisedLabel(operation.getDescription(), defaultLanguage));
+        target.setObjective(getLocalisedLabel(operation.getObjective(), defaultLanguage));
         target.setUri(operation.getSelfLink().getHref());
         return target;
     }
