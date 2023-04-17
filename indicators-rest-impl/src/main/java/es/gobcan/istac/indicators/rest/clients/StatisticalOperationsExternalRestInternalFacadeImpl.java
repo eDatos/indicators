@@ -19,6 +19,6 @@ public class StatisticalOperationsExternalRestInternalFacadeImpl implements Stat
     @Override
     public OperationIndicators retrieveOperationById(String operationCode) throws MetamacException {
         Operation operation = restApiLocator.getStatisticalOperationsRestFacadeV10().retrieveOperationById(operationCode);
-        return MapperUtil.getOperationIndicators(operation,metadataProperties.getDefaultLanguage());
+        return MapperUtil.getOperationIndicators(operation,metadataProperties.getDefaultInternationalizationLanguage());
     }
 }
