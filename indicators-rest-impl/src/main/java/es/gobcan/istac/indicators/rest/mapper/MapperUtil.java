@@ -14,20 +14,19 @@ import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 
 import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
-import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT_LANGUAGE;
 
 public class MapperUtil {
 
     private MapperUtil() {
     }
 
-    public static String getDefaultValue(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString) {
+    public static String getDefaultValue(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString, String defaultLanguage) {
         if (internationalString == null || CollectionUtils.isEmpty(internationalString.getTexts())) {
             return null;
         }
 
         for (org.siemac.metamac.core.common.ent.domain.LocalisedString text : internationalString.getTexts()) {
-            if (Objects.equals(DEFAULT_LANGUAGE, text.getLocale())) {
+            if (Objects.equals(defaultLanguage, text.getLocale())) {
                 return text.getLabel();
             }
         }

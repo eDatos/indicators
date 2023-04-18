@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
@@ -53,6 +54,9 @@ public class Do2JsonStatMapperUtil {
 
     @Autowired
     private Translations translations;
+
+    @Autowired
+    private MetadataProperties metadataProperties;
 
     public List<String> createJsonStatId() {
         List<String> format = new ArrayList<>();
@@ -114,7 +118,7 @@ public class Do2JsonStatMapperUtil {
             String categoryCode = geographicalValue.getCode();
             if (filterGeographicalCodes.contains(categoryCode)) {
                 category.getIndex().put(categoryCode, (long) i);
-                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
                 i++;
             }
         }
@@ -139,7 +143,7 @@ public class Do2JsonStatMapperUtil {
             String categoryCode = timeValue.getTimeValue();
             if (filterTimeCodes.contains(categoryCode)) {
                 category.getIndex().put(categoryCode, (long) i);
-                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
                 i++;
             }
         }
@@ -203,7 +207,7 @@ public class Do2JsonStatMapperUtil {
         if (symbolPosition != null) {
             unit.setPosition(symbolPosition.toString());
         }
-        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle()));
+        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         unit.setType(quantity.getQuantityType().toString());
         return unit;
     }

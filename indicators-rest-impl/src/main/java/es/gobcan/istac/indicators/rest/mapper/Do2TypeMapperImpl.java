@@ -222,7 +222,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             JsonStatDataType target = new JsonStatDataType();
 
-            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
@@ -230,7 +230,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes())));
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
 
             return target;
         } catch (Exception e) {
@@ -256,7 +256,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             JsonStatDataType target = new JsonStatDataType();
 
-            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
@@ -264,7 +264,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes())));
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
 
             return target;
         } catch (Exception e) {
