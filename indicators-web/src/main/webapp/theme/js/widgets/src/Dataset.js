@@ -73,6 +73,7 @@
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[unitLocale] || quantity.unitMultiplier.__default__;
+                        // quantity.unitMultiplier no tiene un ID para poder identificar que hablamos de unidades, pero si que podemos garantizar que cuando son las unidades: quantity.unitMultiplier["es"] === "Unidades"
                         if (quantity.unitMultiplier["es"] !== "Unidades") { // Por qué era esto?
                             result += unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', unitLocale);
                         }
