@@ -23,4 +23,5 @@ public interface NoticesRestInternalService {
     void createPopulateIndicatorDataErrorBackgroundNotification(String user, Indicator indicator, MetamacException metamacException);
     void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion);
     void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion);
+    void createExportDSPLNotification(String user, String code, String url, List<String> files);
 }

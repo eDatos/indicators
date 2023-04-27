@@ -43,21 +43,21 @@ import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
     @Autowired
-    private RestApiLocator                   restApiLocator;
+    private RestApiLocator restApiLocator;
 
     @Autowired
-    private IndicatorsConfigurationService   configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     @Autowired
-    private TranslateExceptions              translateExceptions;
+    private TranslateExceptions translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String                           indicatorsInternalWebUrlBase;
-    private String                           indicatorsApiInternalEndpointV10;
+    private String indicatorsInternalWebUrlBase;
+    private String indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
@@ -79,6 +79,54 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             createBackgroundNotification(ServiceNoticeAction.INDICATOR_CREATE_REPLACE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_CREATE_REPLACE_DATASET_ERROR, Arrays.asList(failedIndicator),
                     failedIndicator.getIndicator().getViewCode(), failedIndicator.getDataRepositoryTableName());
         }
+    }
+
+    @Override
+    public void createExportDSPLNotification(String user, String code, String url, List<String> files) {
+        createExportDSPLNotification(user, ServiceNoticeAction.INDICATOR_EXPORT_DSPL_SUCCESS, ServiceNoticeMessage.INDICATOR_EXPORT_DSPL_SUCCESS, code, url, files);
+    }
+
+    private void createExportDSPLNotification(String user, String actionCode, String messageCode, String code, String url, List<String> files) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            String subject = getMessageForCodeWithParams(actionCode, locale, code);
+            String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
+            String messageBody = createExportDSPLMessage(messageCode, locale, url, files);
+
+            // @formatter:off
+            Message message = MessageBuilder.message()
+                            .withText(messageBody)
+                            .build();
+            // @formatter:on
+
+            // @formatter:off
+            Notice notice = NoticeBuilder.notification()
+                    .withSubject(subject)
+                    .withMessages(message)
+                    .withSendingApplication(sendingApp)
+                    .withReceivers(user)
+                    .withForceSend(Boolean.TRUE)
+                    .build();
+            // @formatter:on
+
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notice);
+        } catch (MetamacException e) {
+            logger.error("Error creating createExportDSPLNotification:", e);
+        }
+    }
+
+    private String createExportDSPLMessage(String messageCode, Locale locale, String url, List<String> files) throws MetamacException {
+        StringBuilder messageBody = new StringBuilder(LocaleUtil.getMessageForCode(messageCode, locale));
+        for (String fileName : files) {
+            // @formatter:off
+            messageBody.append(IndicatorsConstants.TSV_LINE_SEPARATOR)
+                .append(IndicatorsConstants.TSV_SEPARATOR)
+                .append(IndicatorsConstants.TSV_HEADER_ENVIRONMENT_SEPARATOR)
+                .append(url)
+                .append(fileName);
+            // @formatter:on
+        }
+        return messageBody.toString();
     }
 
     @Override
@@ -144,7 +192,8 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Override
     public void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion) {
-        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, Collections.singletonList(indicatorVersion), indicatorVersion.getCode());
+        createBackgroundNotification(ServiceNoticeAction.STREAM_MESSAGE_SEND_ERROR, ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR, Collections.singletonList(indicatorVersion),
+                indicatorVersion.getCode());
     }
 
     @Override
@@ -172,7 +221,6 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     private void createBackgroundNotification(String actionCode, String messageCode, List<IndicatorVersion> failedIndicators, Object... messageParams) {
         try {
-
             Notice notification = createNotice(actionCode, messageCode, failedIndicators, messageParams);
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
 
@@ -202,10 +250,10 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
                 .build();
         // @formatter:off
     }
-    
+
     private Notice createPopulateIndicatorDataNotice(Locale locale, String actionCode, String actionParams, Message message, String user) {
         String subject = getMessageForCodeWithParams(actionCode, locale, actionParams);
-    
+
         // @formatter:off
         return NoticeBuilder.notification()
                 .withMessages(message)

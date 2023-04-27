@@ -26,6 +26,8 @@ public class JsonStatDataType {
     private String label;
     private String updated;
     private JsonStatExtensionType extension;
+
+    @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
     private List<String> note;
     private List<String> value = new ArrayList<>();
     private List<String> id;
@@ -82,6 +84,21 @@ public class JsonStatDataType {
     }
 
     public void setNote(List<String> note) {
+        if (note == null) {
+            this.note = null;
+            return;
+        }
+        boolean allNulls = true;
+        for (String elem : note) {
+            if (elem != null) {
+                allNulls = false;
+                break;
+            }
+        }
+        if (allNulls) {
+            this.note = null;
+            return;
+        }
         this.note = note;
     }
 

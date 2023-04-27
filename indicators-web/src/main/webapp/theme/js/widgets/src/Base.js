@@ -60,7 +60,6 @@
             shadow: true,
             borderRadius: true,
             scale: "natural",
-            locale: "navigator",
             showLanguageDropdown: false
         },
 
@@ -86,7 +85,7 @@
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
             // locale
-            this.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
+            this.locale = options.locale;
 
             this.datasets = [];
 
@@ -105,7 +104,9 @@
                         more: EDatos.common.I18n.translate("EMBED.MORE", this.locale)
                     }
                 },
-                languages: this.options.languages.map(function (language) { return { lang: language, selected: self.locale === language } }),
+                languages: this.options.languages ? this.options.languages.map(function (language) {
+                    return { lang: language, selected: self.locale === language }
+                }) : [],
                 languageSelectorId: this.getLanguageSelectorId()
             };
 
@@ -169,7 +170,7 @@
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
-            this.el.find("#" + this.getLanguageSelectorId()).toggle(showLanguageDropdown);
+            this.el.find("#" + this.getLanguageSelectorId()).toggle(!!this.options.languages && !!this.options.languages.length && showLanguageDropdown);
         },
 
         _getSetterMethodName: function (property) {

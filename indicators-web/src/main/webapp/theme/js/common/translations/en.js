@@ -128,6 +128,9 @@
         },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"
+        },
+        'CONNECTOR': {
+            'OF': ' of '
         }
     };
 }());

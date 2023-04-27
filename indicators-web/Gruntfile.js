@@ -29,8 +29,8 @@ module.exports = function (grunt) {
     var widgetsSrc = [
         widgetsPath + '/libs/underscore.js',
         widgetsPath + '/libs/jquery.js',
+        widgetsPath + '/libs/jquery.outro.js',
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
-        widgetsPath + '/libs/jquery.sparkline.intro.js',
         widgetsPath + '/libs/jquery.sparkline.js',
         widgetsPath + '/libs/highcharts.js',
         widgetsPath + '/libs/moment.js',
@@ -112,7 +112,6 @@ module.exports = function (grunt) {
         jsPath + '/widgets/libs/Class.js',
         jsPath + '/widgets/libs/raphael-min.js',
         jsPath + '/widgets/libs/highcharts.js',
-        jsPath + '/widgets/libs/jquery.sparkline.intro.js',
         jsPath + '/widgets/libs/jquery.sparkline.js',
         jsPath + '/widgets/libs/moment.js',
 
@@ -144,6 +143,24 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetView.js'
     ]
 
+    var widgetBanner = "(function(window, _, $, jQuery, moment, Highcharts){" +
+        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
+        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
+        "   var old_ = _;" +
+        "   var old$ = $;" +
+        "   var oldJQuery = jQuery;" +
+        "   var oldMoment = moment;" +
+        "   var oldHighcharts = {...Highcharts};" +
+        "   window.Highcharts = undefined;" +
+        "   Highcharts = {};";
+
+    var widgetFooter = "window._ = old_;" +
+        "   window.$ = old$;" +
+        "   window.jQuery = oldJQuery;" +
+        "   window.moment = oldMoment;" +
+        "   window.Highcharts = oldHighcharts;" +
+        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));";
+
     grunt.initConfig({
         handlebars: {
             app: {
@@ -172,22 +189,8 @@ module.exports = function (grunt) {
                 dest: widgetsPath + '/widget.min.all.js',
                 separator: ';',
                 options: {
-                    banner: "(function(window, _, $, jQuery, moment, Highcharts){" +
-                        "if(!window.edatosWidgetScriptAlreadyExecuted){" +
-                        "   window.edatosWidgetScriptAlreadyExecuted = true;" +
-                        "   var old_ = _;" +
-                        "   var old$ = $;" +
-                        "   var oldJQuery = jQuery;" +
-                        "   var oldMoment = moment;" +
-                        "   var oldHighcharts = {...Highcharts};" +
-                        "   window.Highcharts = undefined;" +
-                        "   Highcharts = {};",
-                    footer: "window._ = old_;" +
-                        "   window.$ = old$;" +
-                        "   window.jQuery = oldJQuery;" +
-                        "   window.moment = oldMoment;" +
-                        "   window.Highcharts = oldHighcharts;" +
-                        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));"
+                    banner: widgetBanner,
+                    footer: widgetFooter
                 }
             }
         },
@@ -202,7 +205,11 @@ module.exports = function (grunt) {
             },
             widgets: {
                 src: widgetsSrc,
-                dest: widgetsPath + '/widget.min.all.js'
+                dest: widgetsPath + '/widget.min.all.js',
+                options: {
+                    banner: widgetBanner,
+                    footer: widgetFooter
+                }
             }
         },
         watch: {

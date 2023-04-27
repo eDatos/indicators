@@ -1,22 +1,21 @@
 package es.gobcan.istac.indicators.web.diffusion.view;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.WebUtils;
 import org.siemac.metamac.core.common.util.swagger.SwaggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
-
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
-import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
 
 /**
  * FreeMarker view implementation to expose additional helpers
@@ -34,11 +33,18 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("indicatorsExternalApiUrlBaseSwagger", SwaggerUtils.normalizeUrlForSwagger(indicatorsExternalApiUrlBase));
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", WebUtils.getFavicon());
-        fillOptionalApiStyleHeaderUrl(model);
-        fillOptionalApiStyleFooterUrl(model);
+        model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
+        String currentLocale = getCurrentLocale(request);
+        model.put("locale", currentLocale);
+        fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
+        fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
         fillOptionalApiStyleCssUrl(model);
 
         super.doRender(model, request, response);
+    }
+
+    private String getCurrentLocale(HttpServletRequest request) {
+        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
     }
 
     private void fillOptionalApiStyleCssUrl(Map<String, Object> model) {
@@ -51,9 +57,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalApiStyleFooterUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalApiStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
         try {
-            model.put("apiStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleFooterUrl()));
+            model.put("apiStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -61,14 +67,19 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalApiStyleHeaderUrl(Map<String, Object> model) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalApiStyleHeaderUrl(Map<String, Object> model, String urlQueryParams) throws IOException {
         try {
-            model.put("apiStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleHeaderUrl()));
+            model.put("apiStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleHeaderUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
             }
         }
+    }
+
+    private String getLocaleQueryParam(Map<String, Object> model, String locale) {
+        String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
+        return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s", internationalizationUrlParamId, locale) : "";
     }
 
     private static IndicatorsConfigurationService getConfigurationService() {

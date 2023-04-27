@@ -27,15 +27,15 @@
     var visualizerUrl = "${visualizerExternalUrlBase}";
     var permalinksUrlBase = "${permalinksUrlBase}"
     var permalinksUrlBaseWithProtocol = "${permalinksUrlBaseWithProtocol}"
+    var edatosInternationalizationlanguages = [];
+    [#list internationalizationLanguages as language]
+    edatosInternationalizationlanguages.push('${language}');
+    [/#list]
 
     var options = {};
     [#if RequestParameters.type??]
     options.type = '${RequestParameters.type?js_string}';
     [/#if]
-    options.languages = [];
-    [#list internationalizationLanguages as language]
-    options.languages.push('${language}');
-    [/#list]
     options.locale = "navigator";
 
     $(function () {

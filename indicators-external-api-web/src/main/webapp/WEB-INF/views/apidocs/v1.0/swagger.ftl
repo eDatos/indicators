@@ -1,9 +1,13 @@
+[#ftl]
+[#macro messageEscape code, escape=false]
+  [#assign args = [] /]
+  ${springMacroRequestContext.getMessage(code, args, '', escape)}[/#macro]
 {
    "swagger":"2.0",
    "info":{
-      "description":"Un indicador es una medida de la intensidad de un fenómeno en el espacio-tiempo. Esa medida tiene datos de distintas granularidades espaciales (por ejemplo: islas y municipios), o de distintas unidades temporales (por ejemplo: años y meses). Un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida o la escolarización entre tantos otros. Los sistemas de indicadores están diseñados para aportar información más precisa sobre un fenómeno, y para ello se organizan en dimensiones o áreas de análisis, bajo las que se integran los indicadores. El objetivo de esta API es permitir el acceso a datos y metadatos de: Sistemas de indicadores, indicadores e instancias de indicadores.",
+      "description":"[@messageEscape 'api.doc.swagger.description'/]",
       "version":"4.5.2-SNAPSHOT",
-      "title":"API de Indicadores v1.0"
+      "title":"[@messageEscape 'api.doc.swagger.title'/]"
    },
   "host": "${indicatorsExternalApiUrlBaseSwagger}",
    "schemes":[
@@ -11,15 +15,15 @@
    ],
    "tags" : [
     {
-      "name" : "Indicadores",
+      "name" : "[@messageEscape 'api.doc.swagger.tags.indicators' /]",
       "description" : ""
     },
     {
-      "name" : "Sistemas de indicadores",
+      "name" : "[@messageEscape 'api.doc.swagger.tags.indicatorssistem' /]",
       "description" : ""
     },
     {
-      "name" : "Tablas de valores auxiliares",
+      "name" : "[@messageEscape 'api.doc.swagger.tags.tablevalues' /]",
       "description" : ""
     }
   ],
@@ -27,23 +31,23 @@
     "Attribute": {
       "properties": {
         "attachmentLevel": {
-          "description": "Nivel de los datos al que afecta el atributo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.attachmentLevel' /]",
           "type": "string"
         },
         "code": {
-          "description": "Código del atributo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.code' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del atributo."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.title' /]"
         }
       }
     },
     "Data": {
       "properties": {
         "attribute": {
-          "description": "Atributos que describen los datos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attribute' /]",
           "items": {
             "$ref": "#/definitions/DataAttributeMap"
           },
@@ -51,21 +55,21 @@
         },
         "dimension": {
           "$ref": "#/definitions/DataDimensionMap",
-          "description": "Dimensiones que identifican los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.dimension' /]"
         },
         "format": {
-          "description": "Orden en el que se deuvelven las dimensiones.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.format' /]",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.kind' /]",
           "type": "string"
         },
         "observation": {
-          "description": "Array de observaciones. Las observaciones se encuentran ordenadas por la combinación de las categorías manteniendo fijada siempre la primera categoría de la primera dimensión e iterando sobre las categorías de la última dimensión del array. Por ejemplo, dadas las dimensiones A, B y C con 3, 2, y 4 categorías respectivamente, los valores estarán ordenados de tal manera que primero se itere sobre las 4 categorías de C, posteriormente sobre las dos de B y por último sobre las 3 de A. En dicho ejemplo, el resultado sería el siguiente: A1B1C1, A1B1C2, A1B1C3, A1B1C4, A1B2C1, A1B2C2, A1B2C3, A1B2C4, A2B1C1, A2B1C2, A2B1C3, A1B1C4, A2B2C1, A2B2C2, A2B2C3, A2B2C4, A3B1C1, A3B1C2, A3B1C3, A3B1C4, A3B2C1, A3B2C2, A3B2C3, A3B2C4",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.observation' /]",
           "items": {
             "type": "string"
           },
@@ -73,10 +77,10 @@
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.parentlink' /]"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.selflink' /]",
           "type": "string"
         }
       }
@@ -84,12 +88,12 @@
     "DataAttribute": {
       "properties": {
         "code": {
-          "description": "Código del atributo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dataattribute.properties.code' /]",
           "type": "string"
         },
         "value": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Valor que toma el atributo."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dataattribute.properties.value' /]"
         }
       }
     },
@@ -97,7 +101,7 @@
       "properties": {
         "{attribute}": {
           "$ref": "#/definitions/DataAttribute",
-          "description": "Atributo que describe a los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dataattributemap.properties.attribute' /]"
         }
       }
     },
@@ -105,7 +109,7 @@
       "properties": {
         "representation": {
           "$ref": "#/definitions/DataDimensionRepresentation",
-          "description": "Representación de la dimensión. Incluye los posibles valores que toma la dimensión."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datadimension.properties.representation' /]"
         }
       }
     },
@@ -113,7 +117,7 @@
       "properties": {
         "{dimension}": {
           "$ref": "#/definitions/DataDimension",
-          "description": "Dimensión que identifica a los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionmap.properties.dimension' /]"
         }
       }
     },
@@ -121,10 +125,10 @@
       "properties": {
         "index": {
           "$ref": "#/definitions/DataDimensionRepresentationIndexMap",
-          "description": "Índice que se le asigna a cada una de las dimensiones."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionrepresentation.properties.index' /]"
         },
         "size": {
-          "description": "Número de posibles valores de la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionrepresentation.properties.size' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -133,7 +137,7 @@
     "DataDimensionRepresentationIndexMap": {
       "properties": {
         "{category}": {
-          "description": "Índice del código de la dimensión indicado.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionrepresentationindexmap.properties.category' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -142,45 +146,45 @@
     "ElementLevel": {
       "properties": {
         "elements": {
-          "description": "En caso de tratarse de un elemento de tipo \"dimensión\", este elemento podrá contener otros sub-elementos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.elementlevel.properties.elements' /]",
           "items": {
             "$ref": "#/definitions/ElementLevel"
           },
           "type": "array"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.elementlevel.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.elementlevel.properties.kind' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.elementlevel.properties.selflink' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.elementlevel.properties.title' /]"
         }
       }
     },
     "GeographicalDimension": {
       "properties": {
         "code": {
-          "description": "Código de la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicaldimension.properties.code' /]",
           "type": "string"
         },
         "granularity": {
-          "description": "Granularidades que intervienen en la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicaldimension.properties.granularity' /]",
           "items": {
             "$ref": "#/definitions/Granularity"
           },
           "type": "array"
         },
         "representation": {
-          "description": "Representación de la dimensión. Indica como se codifica la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicaldimension.properties.representation' /]",
           "items": {
             "$ref": "#/definitions/GeographicalRepresentation"
           },
@@ -191,34 +195,34 @@
     "GeographicalGranularity": {
       "properties": {
         "code": {
-          "description": "Código de la granularidad geográfica.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularity.properties.code' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre la granularidad geográfica."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularity.properties.title' /]"
         }
       }
     },
     "GeographicalGranularityList": {
       "properties": {
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularitylist.properties.items' /]",
           "items": {
             "$ref": "#/definitions/GeographicalGranularity"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularitylist.properties.kind' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularitylist.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalgranularitylist.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -227,25 +231,25 @@
     "GeographicalRepresentation": {
       "properties": {
         "code": {
-          "description": "Código del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalrepresentation.properties.code' /]",
           "type": "string"
         },
         "granularityCode": {
-          "description": "Granularidad del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalrepresentation.properties.granularitycode' /]",
           "type": "string"
         },
         "latitude": {
-          "description": "Latitud del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalrepresentation.properties.latitude' /]",
           "format": "double",
           "type": "number"
         },
         "longitude": {
-          "description": "Longitud del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalrepresentation.properties.longitude' /]",
           "format": "double",
           "type": "number"
         },
         "title": {
-          "description": "Nombre del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalrepresentation.properties.title' /]",
           "type": "string"
         }
       }
@@ -253,48 +257,48 @@
     "GeographicalValue": {
       "properties": {
         "code": {
-          "description": "Código del valor geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvalue.properties.code' /]",
           "type": "string"
         },
         "granularityCode": {
-          "description": "Granularidad del valor geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvalue.properties.granularitycode' /]",
           "type": "string"
         },
         "latitude": {
-          "description": "Latitud del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvalue.properties.latitude' /]",
           "format": "double",
           "type": "number"
         },
         "longitude": {
-          "description": "Longitud del recinto geográfico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvalue.properties.longitude' /]",
           "format": "double",
           "type": "number"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del valor geográfico."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvalue.properties.title' /]"
         }
       }
     },
     "GeographicalValueList": {
       "properties": {
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvaluelist.properties.items' /]",
           "items": {
             "$ref": "#/definitions/GeographicalValue"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvaluelist.properties.kind' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvaluelist.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.geographicalvaluelist.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -303,12 +307,12 @@
     "Granularity": {
       "properties": {
         "code": {
-          "description": "Código de la granularidad.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.granularity.properties.code' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre de la granularidad."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.granularity.properties.title' /]"
         }
       }
     },
@@ -316,63 +320,63 @@
       "properties": {
         "acronym": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Acrónimo del indicador, por ejemplo para el  Índice de Precios Industriales sería (IPRI)."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.acronym' /]"
         },
         "attribute": {
           "$ref": "#/definitions/MetadataAttributeMap",
-          "description": "Atributos que describen los datos del indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.attribute' /]"
         },
         "childLink": {
           "$ref": "#/definitions/Link",
-          "description": "Recurso de la API al que se puede acceder desde el recurso actual."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.childlink' /]"
         },
         "code": {
-          "description": "Código semántico del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.code' /]",
           "type": "string"
         },
         "conceptDescription": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción del indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.conceptdescription' /]"
         },
         "decimalPlaces": {
-          "description": "Especifica el número de decimales a utilizar para la visualización de los valores de un concepto métrico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.decimalplaces' /]",
           "format": "int32",
           "type": "integer"
         },
         "dimension": {
           "$ref": "#/definitions/MetadataDimensionMap",
-          "description": "Dimensiones que identifican los datos del indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.dimension' /]"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.kind' /]",
           "type": "string"
         },
         "notes": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Notas explicativas sobre el indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.notes' /]"
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.parentlink' /]"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.selflink' /]",
           "type": "string"
         },
         "subjectCode": {
-          "description": "Código del área temática, según clasificación ISTAC, en el que se cataloga el indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.subjectcode' /]",
           "type": "string"
         },
         "subjectTitle": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Etiqueta del área temática, según clasificación ISTAC, en el que se cataloga el indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.subjecttitle' /]"
         },
         "systemSurveyLinks": {
-          "description": "Sistemas de indicadores relacionados con el indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.systemsurveylinks' /]",
           "items": {
             "$ref": "#/definitions/Link"
           },
@@ -380,10 +384,10 @@
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.title' /]"
         },
         "version": {
-          "description": "Versión del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.version' /]",
           "type": "string"
         }
       }
@@ -392,50 +396,50 @@
       "properties": {
         "acronym": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Acrónimo del indicador, por ejemplo para el  Índice de Precios Industriales sería (IPRI)."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.acronym' /]"
         },
         "code": {
-          "description": "Código semántico del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.code' /]",
           "type": "string"
         },
         "conceptDescription": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción del indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.conceptdescription' /]"
         },
         "data": {
           "$ref": "#/definitions/Data",
-          "description": "Datos (observaciones) de un indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.data' /]"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.kind' /]",
           "type": "string"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata",
-          "description": "Metadatos de un indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.metadata' /]"
         },
         "notes": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Notas explicativas sobre el indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.notes' /]"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.selflink' /]",
           "type": "string"
         },
         "subjectCode": {
-          "description": "Código del área temática, según clasificación ISTAC, en el que se cataloga el indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.subjectcode' /]",
           "type": "string"
         },
         "subjectTitle": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Etiqueta del área temática, según clasificación ISTAC, en el que se cataloga el indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.subjecttitle' /]"
         },
         "systemSurveyLinks": {
-          "description": "Sistemas de indicadores relacionados con el indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.systemsurveylinks' /]",
           "items": {
             "$ref": "#/definitions/Link"
           },
@@ -443,10 +447,10 @@
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.title' /]"
         },
         "version": {
-          "description": "Versión del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.version' /]",
           "type": "string"
         }
       }
@@ -455,61 +459,61 @@
       "properties": {
         "acronym": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Acrónimo del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.acronym' /]"
         },
         "childLink": {
           "$ref": "#/definitions/Link",
-          "description": "Recurso de la API al que se puede acceder desde el recurso actual."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.childlink' /]"
         },
         "code": {
-          "description": "Código semántico del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.code' /]",
           "type": "string"
         },
         "description": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.description' /]"
         },
         "elements": {
-          "description": "Estructura del sistema de indicadores. La estructura se compone de elementos de tipo \"dimensión\" y elementos de tipo \"instancias de indicador\". ",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.elements' /]",
           "items": {
             "$ref": "#/definitions/ElementLevel"
           },
           "type": "array"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.kind' /]",
           "type": "string"
         },
         "objective": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Objetivo del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.objective' /]"
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.parentlink' /]"
         },
         "publicationDate": {
-          "description": "Fecha de publicación del sistema de indicadores.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.publicationdate' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.selflink' /]",
           "type": "string"
         },
         "statisticalOperationLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace a la documentación del sistema de indicadores en la API de operaciones estadísticas."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.statisticaloperationlink' /]"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.title' /]"
         },
         "version": {
-          "description": "Versión del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.version' /]",
           "type": "string"
         }
       }
@@ -518,46 +522,46 @@
       "properties": {
         "acronym": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Acrónimo del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.acronym' /]"
         },
         "code": {
-          "description": "Código semántico del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.code' /]",
           "type": "string"
         },
         "description": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.description' /]"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.kind' /]",
           "type": "string"
         },
         "objective": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Objetivo del sistema de indicadores."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.objective' /]"
         },
         "publicationDate": {
-          "description": "Fecha de publicación del sistema de indicadores.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.publicationdate' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.selflink' /]",
           "type": "string"
         },
         "statisticalOperationLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace a la documentación del sistema de indicadores en la API de operaciones estadísticas."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.statisticaloperationlink' /]"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.title' /]"
         },
         "version": {
-          "description": "Versión del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.version' /]",
           "type": "string"
         }
       }
@@ -565,47 +569,47 @@
     "IndicatorsPagination": {
       "properties": {
         "firstLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.firstlink' /]",
           "type": "string"
         },
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.items' /]",
           "items": {
             "$ref": "#/definitions/IndicatorBase"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.kind' /]",
           "type": "string"
         },
         "lastLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.lastlink' /]",
           "type": "string"
         },
         "limit": {
-          "description": "Número máximo de resultados a obtener.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.limit' /]",
           "type": "string"
         },
         "nextLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.nextlink' /]",
           "type": "string"
         },
         "offset": {
-          "description": "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.offset' /]",
           "format": "int32",
           "type": "integer"
         },
         "previousLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.previouslink' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorspagination.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -614,47 +618,47 @@
     "IndicatorsSystemsPagination": {
       "properties": {
         "firstLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.firstlink' /]",
           "type": "string"
         },
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.items' /]",
           "items": {
             "$ref": "#/definitions/IndicatorSystemBase"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.kind' /]",
           "type": "string"
         },
         "lastLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.lastlink' /]",
           "type": "string"
         },
         "limit": {
-          "description": "Número máximo de resultados a obtener.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.limit' /]",
           "type": "string"
         },
         "nextLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.nextlink' /]",
           "type": "string"
         },
         "offset": {
-          "description": "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.offset' /]",
           "format": "int32",
           "type": "integer"
         },
         "previousLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.previouslink' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorssystemspagination.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -664,52 +668,52 @@
       "properties": {
         "childLink": {
           "$ref": "#/definitions/Link",
-          "description": "Recurso de la API al que se puede acceder desde el recurso actual."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.childlink' /]"
         },
         "conceptDescription": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción de la instancia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.conceptdesctiption' /]"
         },
         "decimalPlaces": {
-          "description": "Especifica el número de decimales a utilizar para la visualización de los valores de un concepto métrico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.decimalplaces' /]",
           "format": "int32",
           "type": "integer"
         },
         "dimension": {
           "$ref": "#/definitions/MetadataDimensionMap",
-          "description": "Dimensiones de identifican a la instancia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.dimension' /]"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.kind' /]",
           "type": "string"
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.parentlink' /]"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.selflink' /]",
           "type": "string"
         },
         "subjectCode": {
-          "description": "Código del área temática, según clasificación ISTAC, en el que se cataloga la instancia de indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.subjectcode' /]",
           "type": "string"
         },
         "subjectTitle": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Etiqueta del área temática, según clasificación ISTAC, en el que se cataloga la instancia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.subjecttitle' /]"
         },
         "systemCode": {
-          "description": "Código del sistema de indicadores del que forma parte la instacia de un indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.systemcode' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.title' /]"
         }
       }
     },
@@ -717,90 +721,90 @@
       "properties": {
         "conceptDescription": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Descripción del indicador con el que se asocia la instancia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.conceptdescription' /]"
         },
         "data": {
           "$ref": "#/definitions/Data",
-          "description": "Datos de la instancia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.data' /]"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.kind' /]",
           "type": "string"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata",
-          "description": "Metadatos de la instanacia de indicador."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.metadata' /]"
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.parentlink' /]"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.selflink' /]",
           "type": "string"
         },
         "systemCode": {
-          "description": "Código del sistema de indicadores del que forma parte la instacia de un indicador.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.systemcode' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del recurso."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.title' /]"
         }
       }
     },
     "InstancesPagination": {
       "properties": {
         "firstLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la primera página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.firstlink' /]",
           "type": "string"
         },
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.items' /]",
           "items": {
             "$ref": "#/definitions/InstanceBase"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.kind' /]",
           "type": "string"
         },
         "lastLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la última página. Si no se muestra es porque ya estamos en ella. Tener en cuenta que cuando sólo existe una página, no existirá ni primera ni última.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.lastlink' /]",
           "type": "string"
         },
         "limit": {
-          "description": "Número máximo de resultados a obtener.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.limit' /]",
           "type": "string"
         },
         "nextLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página siguiente a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.nextlink' /]",
           "type": "string"
         },
         "offset": {
-          "description": "Desplazamiento. Número a partir del cual se comienzan a obtener los resultados.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.offset' /]",
           "format": "int32",
           "type": "integer"
         },
         "parentLink": {
           "$ref": "#/definitions/Link",
-          "description": "Enlace al recurso padre de la API."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.parentlink' /]"
         },
         "previousLink": {
-          "description": "Dado que se trata de un resultado páginado, este enlace nos permite desplazarnos a la página anterior a la que nos encontramos. Si no se muestra es porque no existe siguiente.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.previouslink' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso. Dado un resultado nos permite saber cómo realizar la petición a la API para volver a obtenerlo",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -809,11 +813,11 @@
     "InternationalString": {
       "properties": {
         "__default__": {
-          "description": "Traducción en el idioma por defecto.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.internationalstring.properties.default' /]",
           "type": "string"
         },
         "{locale}": {
-          "description": "Traducción en el locale especificado.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.internationalstring.properties.locale' /]",
           "type": "string"
         }
       }
@@ -821,11 +825,11 @@
     "Link": {
       "properties": {
         "href": {
-          "description": "Enlace al recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.link.properties.href' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.link.properties.kind' /]",
           "type": "string"
         }
       }
@@ -833,11 +837,11 @@
     "MeasureDimension": {
       "properties": {
         "code": {
-          "description": "Código de la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.measuredimension.properties.code' /]",
           "type": "string"
         },
         "representation": {
-          "description": "Representación de la dimensión. Indica como se codifica la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.measuredimension.properties.representation' /]",
           "items": {
             "$ref": "#/definitions/MeasureRepresentation"
           },
@@ -848,15 +852,15 @@
     "MeasureRepresentation": {
       "properties": {
         "code": {
-          "description": "Código de la medida.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.measurerepresentation.properties.code' /]",
           "type": "string"
         },
         "quantity": {
           "$ref": "#/definitions/Quantity",
-          "description": "Metadatos relacionados con la medida."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.measurerepresentation.properties.quantity' /]"
         },
         "title": {
-          "description": "Nombre de la medida.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.measurerepresentation.properties.title' /]",
           "type": "string"
         }
       }
@@ -865,11 +869,11 @@
       "properties": {
         "attribute": {
           "$ref": "#/definitions/MetadataAttributeMap",
-          "description": "Atributos de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadata.properties.attribute' /]"
         },
         "dimension": {
           "$ref": "#/definitions/MetadataDimensionMap",
-          "description": "Dimensiones de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadata.properties.dimension' /]"
         }
       }
     },
@@ -877,7 +881,7 @@
       "properties": {
         "{attribute}": {
           "$ref": "#/definitions/Attribute",
-          "description": "Atributo de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadataattributemap.properties.attribute' /]"
         }
       }
     },
@@ -885,15 +889,15 @@
       "properties": {
         "GEOGRAPHICAL": {
           "$ref": "#/definitions/GeographicalDimension",
-          "description": "Dimensión geográfica de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadatadimensionmap.properties.geographical' /]"
         },
         "MEASURE": {
           "$ref": "#/definitions/MeasureDimension",
-          "description": "Dimensión de medida de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadatadimensionmap.properties.measure' /]"
         },
         "TIME": {
           "$ref": "#/definitions/TimeDimension",
-          "description": "Dimensión temporal de los datos."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.metadatadimensionmap.properties.time' /]"
         }
       }
     },
@@ -901,75 +905,75 @@
       "properties": {
         "baseLocation": {
           "$ref": "#/definitions/GeographicalRepresentation",
-          "description": "Base espacial para un indicador tipo índice (index) espacial o temporal. El ejemplo más característico de índices espaciales son las Paridades de Poder Adquisitivo (PPA) que comparan los niveles de precios entre territorios, siendo el territorio base la referencia 100. Por ejemplo las PPA de Canarias comparan los niveles de precios entre islas, siendo el territorio base Canarias. Metadato asociado al tipo de medida index."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.baselocation' /]"
         },
         "baseQuantityLink": {
           "$ref": "#/definitions/Link",
-          "description": "Referencia al indicador sobre el que se calcula una tasa de variación. Metadato asociado al tipo de medida changerate."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.basequantitylink' /]"
         },
         "baseTime": {
           "$ref": "#/definitions/TimeRepresentation",
-          "description": "Base temporal de un indicador tipo índice (index) temporal. Por ejemplo, 2010. Metadato asociado al tipo de medida index."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.basetime' /]"
         },
         "baseValue": {
-          "description": "Valor de referencia de un índice (index), generalmente baseValue = 100. Metadato asociado al tipo de medida index.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.basevalue' /]",
           "format": "int32",
           "type": "integer"
         },
         "decimalPlaces": {
-          "description": "Especifica el número de decimales a utilizar para la visualización de los valores de un concepto métrico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.decimalplaces' /]",
           "format": "int32",
           "type": "integer"
         },
         "denominatorLink": {
           "$ref": "#/definitions/Link",
-          "description": "Otro indicador del sistema que es el denominador del indicador tipo proporción. Por ejemplo, para el indicador \"tasa de paro\" sería el indicador \"población activa\". Metadato asociado a los siguientes tipos de medida: fraction, ratio, rate, index y changerate."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.denominatorlink' /]"
         },
         "isPercentage": {
-          "description": "Atributo booleano que toma el valor TRUE si una fracción es un porcentaje y FALSE en caso contrario. Metadato asociado a los siguientes tipos de medida: ratio, rate, index y changerate.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.ispercentege' /]",
           "type": "boolean"
         },
         "max": {
-          "description": "Especifica el valor máximo que puede tomar la magnitud. En el el caso de una magnitud referenciada en una escala de intervalo (o de intensidad) indica el valor superior de la escala. Por ejemplo, para el Indice de Desarrollo Humano; max = 1. Metadato asociado a los siguientes tipos de medida: magnitude, fraction, ratio, rate, index y changerate.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.max' /]",
           "format": "int32",
           "type": "integer"
         },
         "min": {
-          "description": "Especifica el valor mínimo que puede tomar la magnitud. En el el caso de una magnitud referenciada en una escala de intervalo (o de intensidad) indica el valor inferior de la escala. Por ejemplo, para el Indice de Desarrollo Humano; min = 0. Metadato asociado a los siguientes tipos de medida: magnitude, fraction, ratio, rate, index y changerate.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.min' /]",
           "format": "int32",
           "type": "integer"
         },
         "numeratorLink": {
           "$ref": "#/definitions/Link",
-          "description": "Otro indicador del sistema que es el numerador del indicador tipo proporción. Por ejemplo, para el indicador \"tasa de paro\" sería el indicador \"población parada\". Metadato asociado a los siguientes tipos de medida: fraction, ratio, rate, index y changerate."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.numeratorlink' /]"
         },
         "percentageOf": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Si estamos ante un porcentaje, este atributo ofrece un texto descriptivo  que puede utilizarse para mostrarse junto al número y especifica de qué se trata dicho porcentaje. Por ejemplo, la métrica \"tasa de desempleo\" puede tener un atributo PercentageOf  \"% de la población activa\" para que el valor se lea como \"10,5% de la población activa\". Metadato asociado a los siguientes tipos de medida: ratio, rate, index y changerate."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.percentegeof' /]"
         },
         "significantDigits": {
-          "description": "Especifica el número de dígitos significativos para utilizar cuando se muestran los valores de un concepto métrico.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.significantdigits' /]",
           "format": "int32",
           "type": "integer"
         },
         "type": {
-          "description": "Existen diferentes tipos de medición (type) y asociados a cada una de ellos, diferentes metadatos que especifican mejor esa medida: medición (quantity), cantidad (amount), magnitud (magnitude), fracción (fraction),  ratio (ratio), tasa (rate), indice (index), tasa de variación (changerate). Se ha usado la clasificación utilizada por Google, en su estándar Dataset Publishing Language (DSPL).",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.type' /]",
           "type": "string"
         },
         "unit": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Define la unidad de medida de un indicador. Una unidad de medida es una cantidad estandarizada de una determinada magnitud, definida y adoptada por convención o por ley, por ejemplo: unidades física (kg, mm, °C, °F) o unidades monetarias (euros, pesetas, dólares). Cualquier valor de una cantidad física puede expresarse como un múltiplo de la unidad de medida. Una unidad de medida toma su valor a partir de un patrón o de una composición de otras unidades definidas previamente. Las primeras unidades se conocen como unidades básicas o de base (fundamentales), mientras que las segundas se llaman unidades derivadas. <br>También consideramos como unidades de medida las especificaciones de simples recuentos (por ejemplo personas, vehículos, viviendas)."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.unit' /]"
         },
         "unitMultiplier": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Literal que especifica el multiplicador de la unidad de medida. Por ejemplo \"Miles de personas\". Metadato asociado a todos los tipos de medida."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.unitmultiplier' /]"
         },
         "unitSymbol": {
-          "description": "Símbolo asociado a la unidad de medida, por ejemplo \"km\" para kilómetros. <br>Metadato asociado a todos los tipos de medida.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.unitsymbol' /]",
           "type": "string"
         },
         "unitSymbolPosition": {
-          "description": "Posición del símbolo de la unidad de medida, que puede ser delante o detrás de la cifra. <br>Metadato asociado a todos los tipos de medida.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.quantity.properties.unitsymbolposition' /]",
           "type": "string"
         }
       }
@@ -977,42 +981,42 @@
     "Subject": {
       "properties": {
         "code": {
-          "description": "Código semántico del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subject.properties.code' /]",
           "type": "string"
         },
         "id": {
-          "description": "Identificador del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subject.properties.id' /]",
           "type": "string"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subject.properties.kind' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre del tema estadístico."
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subject.properties.title' /]"
         }
       }
     },
     "SubjectList": {
       "properties": {
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subjectlist.properties.items' /]",
           "items": {
             "$ref": "#/definitions/Subject"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subjectlist.properties.kind' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subjectlist.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.subjectlist.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -1021,18 +1025,18 @@
     "TimeDimension": {
       "properties": {
         "code": {
-          "description": "Código de la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timedimension.properties.code' /]",
           "type": "string"
         },
         "granularity": {
-          "description": "Granularidades que intervienen en la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timedimension.properties.granularity' /]",
           "items": {
             "$ref": "#/definitions/Granularity"
           },
           "type": "array"
         },
         "representation": {
-          "description": "Representación de la dimensión. Indica como se codifica la dimensión.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timedimension.properties.representation' /]",
           "items": {
             "$ref": "#/definitions/TimeRepresentation"
           },
@@ -1043,22 +1047,22 @@
     "TimeGranularitiesList": {
       "properties": {
         "items": {
-          "description": "Listado de recursos.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularitieslist.properties.items' /]",
           "items": {
             "$ref": "#/definitions/TimeGranularity"
           },
           "type": "array"
         },
         "kind": {
-          "description": "Tipo del recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularitieslist.properties.kind' /]",
           "type": "string"
         },
         "selfLink": {
-          "description": "Enlace al propio recurso.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularitieslist.properties.selflink' /]",
           "type": "string"
         },
         "total": {
-          "description": "Número total de resultados existentes.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularitieslist.properties.total' /]",
           "format": "int32",
           "type": "integer"
         }
@@ -1067,27 +1071,27 @@
     "TimeGranularity": {
       "properties": {
         "code": {
-          "description": "Código de la granularidad temporal",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularity.properties.code' /]",
           "type": "string"
         },
         "title": {
           "$ref": "#/definitions/InternationalString",
-          "description": "Nombre la granularidad temporal"
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timegranularity.properties.title' /]"
         }
       }
     },
     "TimeRepresentation": {
       "properties": {
         "code": {
-          "description": "Código del momento de tiempo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timerepresentation.properties.code' /]",
           "type": "string"
         },
         "granularityCode": {
-          "description": "Granularidad del momento de tiempo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timerepresentation.properties.granularitycode' /]",
           "type": "string"
         },
         "title": {
-          "description": "Nombre del momento de tiempo.",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.timerepresentation.properties.title' /]",
           "type": "string"
         }
       }
@@ -1096,42 +1100,42 @@
   "paths": {
     "/v1.0/geographicGranularities": {
       "get": {
-        "tags": [ "Tablas de valores auxiliares" ],
-        "description": "<p>Esta petición devuelve la lista de granularidades geográficas tratadas en el banco de datos ISTAC-indicadores. Por ejemplo granularidad provincial, insular o municipal.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.geographicgranuarities.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.geographicgranuarities.get.description' /]",
         "operationId": "findGeographicGranularities",
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/GeographicalGranularityList"
             }
           }
         },
-        "summary": "Granularidades geográficas"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.geographicgranuarities.get.summary' /]"
       }
     },
     "/v1.0/geographicalValues": {
       "get": {
-        "tags": [ "Tablas de valores auxiliares" ],
-        "description": "<p>Esta petición devuelve los valores de una granularidad geográfica que a su vez forman parte de una un tema o un sistema de indicadores específicos.</p><br><p>Es importante tener en cuenta que de los parátemeros opcionales (<strong>subjectCode</strong> y <strong>systemCode</strong>) podrá estar cumplimentado uno de ellos o ninguno. En caso de que estén cumplimentados ambos, sólo se tendrá en cuenta el último.</p> <br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.description' /]",
         "operationId": "findGeographicalValues",
         "parameters": [
           {
-            "description": "Código del tema del que se desean obtener los valores geográficos.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.parameters.subjectCode' /]",
             "in": "query",
             "name": "subjectCode",
             "required": false,
             "type": "string"
           },
           {
-            "description": "Código del sistema de indicadores del que se desean obtener los valores geográficos.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.parameters.systemcode' /]",
             "in": "query",
             "name": "systemCode",
             "required": false,
             "type": "string"
           },
           {
-            "description": "Código de la granularidad geográfica.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.parameters.geographicalgranularitycode' /]",
             "in": "query",
             "name": "geographicalGranularityCode",
             "required": true,
@@ -1140,55 +1144,55 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/GeographicalValueList"
             }
           }
         },
-        "summary": "Valores geográficos"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.geographicalvalues.get.summary' /]"
       }
     },
     "/v1.0/indicators": {
       "get": {
-        "tags": [ "Indicadores" ],
-        "description": "<p>Esta petición aporta la lista de indicadores publicados en el banco de datos ISTAC-indicadores. Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales o temporales. Por ejemplo \"Tasa de paro\" es un indicador con diversas granularidades espaciales (insular, provincial y autonómica) y con el trimestre como una única granulariad temporal.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicators.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.description' /]",
         "operationId": "findIndicators",
         "parameters": [
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\", \"subjectCode\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"PARO_REGISTRADO\" <br> q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.q' /]",
             "in": "query",
             "name": "q",
             "type": "string"
           },
           {
-            "description": "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.order' /]",
             "in": "query",
             "name": "order",
             "type": "string"
           },
           {
-            "description": "Límite de resultados (número máximo). <br> Ejemplo: limit=10.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.limit' /]",
             "format": "int32",
             "in": "query",
             "name": "limit",
             "type": "integer"
           },
           {
-            "description": "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.offset' /]",
             "format": "int32",
             "in": "query",
             "name": "offset",
             "type": "integer"
           },
           {
-            "description": "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.fields' /]",
             "in": "query",
             "name": "fields",
             "type": "string"
           },
           {
-            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.get.parameters.representation' /]",
             "in": "query",
             "name": "representation",
             "type": "string"
@@ -1196,23 +1200,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/IndicatorsPagination"
             }
           }
         },
-        "summary": "Listado de indicadores"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicators.get.summary' /]"
       }
     },
     "/v1.0/indicators/{indicatorCode}": {
       "get": {
-        "tags": [ "Indicadores" ],
-        "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses. A través de esta petición se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido; asimismo a través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicators.code.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.get.description' /]",
         "operationId": "findIndicator",
         "parameters": [
           {
-            "description": "Código del indicador a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.get.parameters.indicatorcode' /]",
             "in": "path",
             "name": "indicatorCode",
             "required": true,
@@ -1221,19 +1225,19 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/Indicator"
             }
           }
         },
-        "summary": "Indicador"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicators.code.get.summary' /]"
       }
     },
     "/v1.0/indicators/{indicatorCode}/data": {
       "get": {
-        "tags": [ "Indicadores" ],
-        "description": "<p>Un indicador es una medida utilizada para conocer la intensidad de un fenómeno en el espacio-tiempo. Esa medida se puede referir a distintas granularidades espaciales, p.e. islas y municipios, o temporales, p.e. años y meses.  A través de la petición data se aportan los datos completos (para todos los espacio-tiempo) del indicador. Por otra parte a través de la petición metadata se ofrecen los metadatos que describen las características de un indicador específico, pemitiendo la compresión del hecho medido.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.description' /]",
         "operationId": "findIndicator",
         "produces":[
            "application/json",
@@ -1241,26 +1245,26 @@
         ],
         "parameters": [
           {
-            "description": "Código del indicador a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.parameters.indicatorcode' /]",
             "in": "path",
             "name": "indicatorCode",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.parameters.representation' /]",
             "in": "query",
             "name": "representation",
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.parameters.granularity' /]",
             "in": "query",
             "name": "granularity",
             "type": "string"
           },
           {
-            "description": "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.parameters.fields' /]",
             "in": "query",
             "name": "fields",
             "type": "string"
@@ -1268,30 +1272,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/Data"
             }
           }
         },
-        "summary": "Observaciones de un indicador"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.summary' /]"
       }
     },
     "/v1.0/indicatorsSystems": {
       "get": {
-        "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición aporta la lista de sistemas de indicadores publicados en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuáles se integran los indicadores. En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.description' /]",
         "operationId": "findIndicatorsSystems",
         "parameters": [
           {
-            "description": "Límite de resultados (número máximo). <br> Ejemplo: limit=10.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.parameters.limit' /]",
             "format": "int32",
             "in": "query",
             "name": "limit",
             "type": "integer"
           },
           {
-            "description": "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.parameters.offset' /]",
             "format": "int32",
             "in": "query",
             "name": "offset",
@@ -1300,23 +1304,23 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/IndicatorsSystemsPagination"
             }
           }
         },
-        "summary": "Listado de sistemas de indicadores"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.summary' /]"
       }
     },
     "/v1.0/indicatorsSystems/{indicatorSystemCode}": {
       "get": {
-        "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición ofrece los metadatos de un sistema de indicadores publicado en el banco de datos ISTAC-indicadores. Los indicadores son estadísticas simples o compuestas, sin embargo un solo indicador rara vez puede proporcionar información útil acerca de fenómenos complejos tales como la coyuntura económica, las condiciones de vida, la escolarización u otros. Los sistemas de indicadores generalmente están diseñados para generar más y más precisa información acerca de las condiciones de un fenómeno; y para ello se organizan en dimensiones o áreas de análisis, bajo las cuales se integran los indicadores.  En el ISTAC un sistema de indicadores se trata como una operación estadística, por lo que se puede consultar más información del sistema en la API de operaciones.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.get.description' /]",
         "operationId": "findIndicatorsSystem",
         "parameters": [
           {
-            "description": "Código del sistema a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.get.parameters.indicatorsystemcode' /]",
             "in": "path",
             "name": "indicatorSystemCode",
             "required": true,
@@ -1325,68 +1329,68 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/IndicatorSystem"
             }
           }
         },
-        "summary": "Sistema de indicadores"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.get.summary' /]"
       }
     },
     "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances": {
       "get": {
-        "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición devuelve las instacias de indicadores asociadas a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.description' /]",
         "operationId": "retrieveIndicatorsInstances",
         "parameters": [
           {
-            "description": "Código del sistema a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.indicatorsystemcode' /]",
             "in": "path",
             "name": "indicatorSystemCode",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Consulta. Los metadatos sobre los que se pueden construir las búsquedas son: \"id\" y \"geographicalValue\".<br> Ejemplos: <br>q=id EQ \"INDICADORES_MUNICIPALES\" <br> q=geographicalValue EQ \"ES\" <br> q=id IN (\"CODE-1\", \"CODE-2\").",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.q' /]",
             "in": "query",
             "name": "q",
             "type": "string"
           },
           {
-            "description": "Orden. Los posibles valores son \"update\" e \"id\" y los criterios de orden \"asc\" y \"desc\". <br> Ejemplo: order=update asc.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.order' /]",
             "in": "query",
             "name": "order",
             "type": "string"
           },
           {
-            "description": "Límite de resultados (número máximo). <br> Ejemplo: limit=10.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.limit' /]",
             "format": "int32",
             "in": "query",
             "name": "limit",
             "type": "integer"
           },
           {
-            "description": "Desplazamiento. Resultado a partir del que se devuelve. El valor por defecto es 0. <br> Ejemplo: offset=2.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.offset' /]",
             "format": "int32",
             "in": "query",
             "name": "offset",
             "type": "integer"
           },
           {
-            "description": "Permite personalizar la respuesta mediante la adición de nuevos campos. Los posibles valores son: \"+metadata\", \"+data\" y \"+observationsMetadata\". <br> Ejemplo: fields=+metadata.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.fields' /]",
             "in": "query",
             "name": "fields",
             "type": "string"
           },
           {
-            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.representation' /]",
             "in": "query",
             "name": "representation",
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. Su uso sólo tiene sentido cuando se ha incluído \"+data\" y/o \"+observationsMetadata\". <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.parameters.granularity' /]",
             "in": "query",
             "name": "granularity",
             "type": "string"
@@ -1394,30 +1398,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/InstancesPagination"
             }
           }
         },
-        "summary": "Instancias de sistema de indicadores"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.get.summary' /]"
       }
     },
     "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}": {
       "get": {
-        "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición devuelve los metadatos de una instancia de indicadores asociada a un sistema de indicadores específico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.get.description' /]",
         "operationId": "retrieveIndicatorsInstance",
         "parameters": [
           {
-            "description": "Código del sistema a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.get.parameters.indicatorsystemcode' /]",
             "in": "path",
             "name": "indicatorSystemCode",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Código de la instancia a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.get.parameters.indicatorinstancecode' /]",
             "in": "path",
             "name": "indicatorInstanceCode",
             "required": true,
@@ -1426,19 +1430,19 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/Instance"
             }
           }
         },
-        "summary": "Instancia de un sistema de indicadores"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.get.summary' /]"
       }
     },
     "/v1.0/indicatorsSystems/{indicatorSystemCode}/indicatorsInstances/{indicatorInstanceCode}/data": {
       "get": {
-        "tags": [ "Sistemas de indicadores" ],
-        "description": "<p>Esta petición devuelve los datos de una instacia de indicadores asociada a un sistema de indicadores especifico. Una instancia de un indicador no es más que una consulta espacio-temporal de un indicador a la hora de incorporarlo a un sistema de indicadores concreto. Por ejemplo, el indicador Paro registrado se incorpora al sistema Anuario de Indicadores Municipales como una consulta (instancia de indicador) a través de la cual se seleccionan los datos municipales y anuales de dicho indicador. </p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.description' /]",
         "operationId": "retrieveIndicatorsInstanceData",
         "produces":[
            "application/json",
@@ -1446,33 +1450,33 @@
         ],
         "parameters": [
           {
-            "description": "Código del sistema a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.parameters.indicatorsystemcode' /]",
             "in": "path",
             "name": "indicatorSystemCode",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Código de la instancia a obtener.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.parameters.indicatorinstancecode' /]",
             "in": "path",
             "name": "indicatorInstanceCode",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Permite filtrar los datos que se se obtienen en la respuesta. Para ello, bastará con especificar las dimensiones que se quieren filtrar y los valores a obtener para cada una de ellas. De las dimensiones que no se especifique ningún filtro se obtendrán todos los valores existentes. De manera adicional, las dimensiones temporales permiten el uso de los modificadores ~last, ~after y ~range. <br/>Ejemplos: <br/>\r\n- representation=GEOGRAPHICAL[35003|35005],MEASURE[ABSOLUTE]<br/>\r\n- representation=TIME[2009|2010],MEASURE[INDICE_OCUPACION_PLAZAS] <br/>\r\n- ~last=n devolverá los últimos n valores de la dimensión temporal. Ejemplo de uso: representation=TIME[~last=2] <br/>\r\n- ~after=FECHA devolverá las fechas posteriores a FECHA, incluida ella misma. Ejemplo de uso: representation=TIME[~after=2012-M02] <br/>\r\n- ~range=FECHA1;FECHA2 devolverá las fechas entre FECHA1 y FECHA2, ambas incluidas. Ejemplo de uso: representation=TIME[~range=2012;2013]",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.parameters.representation' /]",
             "in": "query",
             "name": "representation",
             "type": "string"
           },
           {
-            "description": "Permite filtrar las observaciones mediante las granularidades de las mismas. <br> Ejemplo: granularity=GEOGRAPHICAL[MUNICIPALITIES|PROVINCES],TIME[MONTHLY].",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.parameters.granularity' /]",
             "in": "query",
             "name": "granularity",
             "type": "string"
           },
           {
-            "description": "Permite personalizar la respuesta mediante la exclusión de campos. Los posibles valores son: \"-observationsMetadata\". <br> Ejemplo: fields=-observationsMetadata.",
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.parameters.fields' /]",
             "in": "query",
             "name": "fields",
             "type": "string"
@@ -1480,45 +1484,45 @@
         ],
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/Data"
             }
           }
         },
-        "summary": "Observaciones instancia de indicador"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.code.indicatorsinstance.code.data.get.summary' /]"
       }
     },
     "/v1.0/subjects": {
       "get": {
-        "tags": [ "Tablas de valores auxiliares" ],
-        "description": "<p>Esta petición devuelve los temas en los que el ISTAC clasifica sus operaciones estadísticas.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.subjects.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.subjects.get.description' /]",
         "operationId": "findSubjects",
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/SubjectList"
             }
           }
         },
-        "summary": "Temas estadísticos"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.subjects.get.summary' /]"
       }
     },
     "/v1.0/timeGranularities": {
       "get": {
-        "tags": [ "Tablas de valores auxiliares" ],
-        "description": "<p>Esta petición devuelve la lista de granularidades temporales tratadas en el banco de datos ISTAC-indicadores ordenadas de mayor a menor granularidad. Por ejemplo granularidad anual, trimestral o mensual.</p><br>",
+        "tags": [ "[@messageEscape 'api.doc.swagger.paths.timegranularities.get.tags' /]" ],
+        "description": "[@messageEscape 'api.doc.swagger.paths.timegranularities.get.description' /]",
         "operationId": "retrieveTimeGranularities",
         "responses": {
           "200": {
-            "description": "Éxito. Indica que la petición ha sido resuelta correctamente",
+            "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
             "schema": {
               "$ref": "#/definitions/TimeGranularitiesList"
             }
           }
         },
-        "summary": "Granularidades temporales"
+        "summary": "[@messageEscape 'api.doc.swagger.paths.timegranularities.get.summary' /]"
       }
     }
   }
