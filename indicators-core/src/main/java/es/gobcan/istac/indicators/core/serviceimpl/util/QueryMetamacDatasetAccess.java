@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 public class QueryMetamacDatasetAccess {
