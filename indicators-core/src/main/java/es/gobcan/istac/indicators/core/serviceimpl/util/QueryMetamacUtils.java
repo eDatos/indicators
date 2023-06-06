@@ -16,22 +16,22 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.ComponentType;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttribute;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttributes;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionType;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ComponentType;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionValues;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValues;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.QueryMetadataBase;
 
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -117,7 +117,7 @@ public class QueryMetamacUtils {
         return target;
     }
 
-    private static List<String> extractHeading(QueryMetadata metadata) {
+    private static List<String> extractHeading(QueryMetadataBase metadata) {
         List<String> result = new LinkedList<String>();
 
         for (String dimensionId : metadata.getRelatedDsd().getHeading().getDimensionIds()) {
@@ -127,7 +127,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static List<String> extractStub(QueryMetadata metadata) {
+    private static List<String> extractStub(QueryMetadataBase metadata) {
         List<String> result = new LinkedList<String>();
 
         for (String dimensionId : metadata.getRelatedDsd().getStub().getDimensionIds()) {
@@ -137,7 +137,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    public static String extractTemporalVariable(QueryMetadata metadata) {
+    public static String extractTemporalVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.TIME_DIMENSION);
     }
 
@@ -145,7 +145,7 @@ public class QueryMetamacUtils {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.TEMPORAL);
     }
 
-    public static List<String> extractSpatialVariableList(QueryMetadata metadata) {
+    public static List<String> extractSpatialVariableList(QueryMetadataBase metadata) {
         List<String> result = new ArrayList<>(1);
         String extractSpatialVariable = extractSpatialVariable(metadata);
         if (!StringUtils.isEmpty(extractSpatialVariable)) {
@@ -154,7 +154,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static String extractSpatialVariable(QueryMetadata metadata) {
+    private static String extractSpatialVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.GEOGRAPHIC_DIMENSION);
     }
 
@@ -177,7 +177,7 @@ public class QueryMetamacUtils {
         return getDo2DtoMapper().geographicalValueDoToDto(geographicalValue);
     }
 
-    public static String extractContVariable(QueryMetadata metadata) {
+    public static String extractContVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.MEASURE_DIMENSION);
     }
 
@@ -228,17 +228,17 @@ public class QueryMetamacUtils {
         return null;
     }
 
-    public static Map<String, List<String>> extractCodesCoverages(QueryMetadata metadata) {
+    public static Map<String, List<String>> extractCodesCoverages(QueryMetadataBase metadata) {
         return extractCoverages(metadata, false);
 
     }
 
-    public static Map<String, List<String>> extractValuesCoverages(QueryMetadata metadata) {
+    public static Map<String, List<String>> extractValuesCoverages(QueryMetadataBase metadata) {
         return extractCoverages(metadata, true);
 
     }
 
-    private static Map<String, List<String>> extractCoverages(QueryMetadata metadata, boolean trylabels) {
+    private static Map<String, List<String>> extractCoverages(QueryMetadataBase metadata, boolean trylabels) {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         Dimensions dimensions = metadata.getDimensions();

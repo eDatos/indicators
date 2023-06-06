@@ -10,7 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
     @Override
     public Queries findQueries(String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
-            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findQueries(query, orderBy, limit, offset, lang);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findQueries(query, orderBy, limit, offset, lang, null);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);
@@ -69,7 +69,7 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
                     break;
             }
 
-            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields, null, null);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);
