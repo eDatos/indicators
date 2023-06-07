@@ -1,10 +1,14 @@
 package es.gobcan.istac.indicators.rest.i18n;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
+import org.apache.commons.lang.LocaleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT_LOCALE;
+import javax.annotation.PostConstruct;
+
+import java.util.Locale;
 
 @Component
 public class Translations {
@@ -21,11 +25,21 @@ public class Translations {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private MetadataProperties metadataProperties;
+
+    private Locale defaultLocale;
+
+    @PostConstruct
+    public void setDefaultLocale() {
+        defaultLocale = LocaleUtils.toLocale(metadataProperties.getDefaultInternationalizationLanguage());
+    }
+
     public String get(String code) {
-        return messageSource.getMessage(code, null, DEFAULT_LOCALE);
+        return messageSource.getMessage(code, null, defaultLocale);
     }
 
     public String get(String code, Object[] objects) {
-        return messageSource.getMessage(code, objects, DEFAULT_LOCALE);
+        return messageSource.getMessage(code, objects, defaultLocale);
     }
 }

@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
+
+    @Autowired
+    private final MetadataProperties                                                                                                   metadataProperties                    = null;
 
     @Autowired
     private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
@@ -218,7 +222,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             JsonStatDataType target = new JsonStatDataType();
 
-            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
@@ -226,7 +230,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes())));
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
 
             return target;
         } catch (Exception e) {
@@ -252,7 +256,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             JsonStatDataType target = new JsonStatDataType();
 
-            target.setLabel(MapperUtil.getDefaultValue(source.getTitle()));
+            target.setLabel(MapperUtil.getDefaultValue(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
@@ -260,7 +264,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes())));
+            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
 
             return target;
         } catch (Exception e) {
@@ -288,7 +292,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity) {
         MetadataGranularityType metadataGranularityType = new MetadataGranularityType();
         metadataGranularityType.setCode(geographicalGranularity.getCode());
-        metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
+        metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         return metadataGranularityType;
     }
 
@@ -314,7 +318,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         for (TimeGranularity timeGranularity : timeGranularities) {
             MetadataGranularityType timeGranularityType = new MetadataGranularityType();
             timeGranularityType.setCode(timeGranularity.getGranularity().name());
-            timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle()));
+            timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             timeGranularityTypes.add(timeGranularityType);
         }
         return timeGranularityTypes;
@@ -327,7 +331,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         for (GeographicalValue geographicalValue : geographicalValues) {
             GeographicalValueType type = new GeographicalValueType();
             type.setCode(geographicalValue.getCode());
-            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             type.setGranularityCode(geographicalValue.getGranularity().getCode());
             type.setLatitude(geographicalValue.getLatitude());
             type.setLongitude(geographicalValue.getLongitude());
@@ -344,7 +348,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         for (GeographicalValueVO geographicalValue : geographicalValues) {
             GeographicalValueType type = new GeographicalValueType();
             type.setCode(geographicalValue.getCode());
-            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             type.setGranularityCode(geographicalValue.getGranularity().getCode());
             type.setLatitude(geographicalValue.getLatitude());
             type.setLongitude(geographicalValue.getLongitude());
@@ -358,7 +362,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         subjectBaseType.setId(subject.getId());
         subjectBaseType.setCode(subject.getId());
         subjectBaseType.setKind(IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
-        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle()));
+        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
@@ -509,7 +513,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             if (codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.OBS_CONF.getName())) {
                 AttributeType unitMultiplierAttribute = new AttributeType();
                 unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_OBS_CONF);
-                unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(codeAttributeBasicDto.getValue()));
+                unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(codeAttributeBasicDto.getValue(), metadataProperties.getDefaultInternationalizationLanguage()));
 
                 Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
                 observationAttributes.put(PROP_ATTRIBUTE_OBS_CONF, unitMultiplierAttribute);
@@ -525,12 +529,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         QuantityType quantityType = new QuantityType();
         quantityType.setType(QUANTITY_TYPE_MAPPING.get(source.getQuantityType()));
         if (source.getUnit() != null) {
-            quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle()));
+            quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             quantityType.setUnitSymbol(source.getUnit().getSymbol());
             quantityType.setUnitSymbolPosition(QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.get(source.getUnit().getSymbolPosition()));
         }
         if (source.getUnitMultiplier() != null) {
-            quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle()));
+            quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         }
         quantityType.setSignificantDigits(source.getSignificantDigits());
         quantityType.setDecimalPlaces(source.getDecimalPlaces());
@@ -547,7 +551,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
 
         quantityType.setIsPercentage(source.getIsPercentage());
-        quantityType.setPercentageOf(MapperUtil.getLocalisedLabel(source.getPercentageOf()));
+        quantityType.setPercentageOf(MapperUtil.getLocalisedLabel(source.getPercentageOf(), metadataProperties.getDefaultInternationalizationLanguage()));
         quantityType.setBaseValue(source.getBaseValue());
         if (source.getBaseTime() != null) {
             TimeValue timeValue = indicatorsApiService.retrieveTimeValueByCode(source.getBaseTime());
@@ -571,10 +575,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setSelfLink(createUrlIndicator(source.getIndicator()));
         target.setCode(source.getIndicator().getCode());
         target.setVersion(source.getVersionNumber());
-        target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
-        target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym()));
+        target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle()));
+        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
@@ -586,8 +590,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setSystemSurveyLinks(surveyLinks);
         }
         target.setQuantity(quantityDoToBaseType(source.getQuantity()));
-        target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription()));
-        target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes()));
+        target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
@@ -666,7 +670,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle()));
+        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
@@ -686,9 +690,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_INSTANCES, href));
 
         target.setSystemCode(indicatorsSystem.getCode());
-        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorInstance.getTitle()));
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorInstance.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
-        target.setConceptDescription(MapperUtil.getLocalisedLabel(sourceIndicatorVersion.getConceptDescription()));
+        target.setConceptDescription(MapperUtil.getLocalisedLabel(sourceIndicatorVersion.getConceptDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
@@ -758,7 +762,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setSubjectCode(indicatorVersion.getSubjectCode());
 
             // SUBJECT TITLE
-            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle()));
+            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
             // CHILD LINK
             String href = createUrlIndicatorInstanceData(indicatorsSystem, source);
@@ -809,7 +813,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         metadataRepresentationType.setCode(geographicalValue.getCode());
         metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
         metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
-        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
         return metadataRepresentationType;
     }
@@ -819,7 +823,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         metadataRepresentationType.setCode(geographicalValue.getCode());
         metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
         metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
-        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
         return metadataRepresentationType;
     }
@@ -840,7 +844,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
         metadataRepresentationType.setCode(timeValue.getTimeValue());
         metadataRepresentationType.setGranularityCode(timeValue.getGranularity().getName());
-        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         return metadataRepresentationType;
     }
 
@@ -852,7 +856,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         for (MeasureValue measureValue : measureValues) {
             MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
             metadataRepresentationType.setCode(measureValue.getMeasureValue().getName());
-            metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle()));
+            metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
             if (quantity != null) {
                 metadataRepresentationType.setQuantity(quantityDoToBaseType(quantity));
@@ -936,7 +940,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private TitleLinkType createTitleLinkType(final IndicatorVersion indicatorVersion) {
         String href = createUrlIndicator(indicatorVersion.getIndicator());
         TitleLinkType link = new TitleLinkType(IndicatorsRestConstants.KIND_INDICATOR, href);
-        link.setTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getTitle()));
+        link.setTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         return link;
     }
 
@@ -976,11 +980,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         if (source.getDimension() != null) {
             target.setId(source.getDimension().getUuid());
             target.setKind(IndicatorsRestConstants.KIND_INDICATOR_DIMENSION);
-            target.setTitle(MapperUtil.getLocalisedLabel(source.getDimension().getTitle()));
+            target.setTitle(MapperUtil.getLocalisedLabel(source.getDimension().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         } else {
             target.setId(source.getIndicatorInstance().getCode());
             target.setKind(IndicatorsRestConstants.KIND_INDICATOR_INSTANCE);
-            target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle()));
+            target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
             IndicatorsSystem indicatorsSystem = source.getIndicatorsSystemVersion().getIndicatorsSystem();
             String selfLinkURL = createUrlIndicatorInstance(indicatorsSystem, source.getIndicatorInstance());

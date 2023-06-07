@@ -77,6 +77,11 @@
 
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:i18n/rest-messages" />
+        <property name="basenames">
+            <list>
+                <value>classpath:i18n/base-rest-messages</value>
+                <value>classpath:i18n/rest-messages</value>
+            </list>
+        </property>
     </bean>
 </beans>
