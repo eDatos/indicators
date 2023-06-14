@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.siemac.metamac.core.common.util.Pair;
+import org.siemac.metamac.core.common.util.shared.Pair;
 
 public class DsplInstanceData {
 
