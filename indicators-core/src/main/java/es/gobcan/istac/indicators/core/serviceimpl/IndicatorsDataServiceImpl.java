@@ -337,7 +337,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 populateIndicatorVersionData(ctx, indicator.getUuid(), indicatorVersion.getVersionNumber());
             } catch (MetamacException e) {
                 LOG.error("Error populating indicatorVersion. Indicator: " + indicatorVersion.getIndicator().getCode() + " . Version: " + indicatorVersion.getVersionNumber());
-                LOG.debug("Detail of error: " + "Error populating indicatorVersion. Indicator: " + indicatorVersion.getIndicator().getCode() + " . Version: " + indicatorVersion.getVersionNumber(), e);
+                LOG.debug("Error detail: " + "Error populating indicatorVersion. Indicator: " + indicatorVersion.getIndicator().getCode() + " . Version: " + indicatorVersion.getVersionNumber(), e);
                 failedPopulationIndicators.add(indicatorVersion);
             }
         }
