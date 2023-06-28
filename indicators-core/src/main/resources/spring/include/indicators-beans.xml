@@ -7,6 +7,9 @@
 	<bean id="configurationService" class="es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationServiceImpl">
 		<property name="systemConfigurationFile"><value>classpath:indicators/environment.xml</value></property>
 	</bean>
+
+	<bean id="metadataProperties" class="es.gobcan.istac.indicators.core.conf.MetadataProperties">
+	</bean>
 	
 	<bean id="propertyPlaceholderConfigurer" class="org.siemac.metamac.core.common.conf.ConfigurationServicePropertyPlaceholderConfigurer">
 		<property name="configurationService">
