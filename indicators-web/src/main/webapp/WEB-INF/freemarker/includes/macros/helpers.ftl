@@ -8,8 +8,3 @@
 [#macro messageEscape code, escape=false]
 [#assign args = [] /]
 ${springMacroRequestContext.getMessage(code, args, '', escape)}[/#macro]
-
-[#--
- * returns current locale
- --]
-[#macro locale]${springMacroRequestContext.locale.getLanguage()}[/#macro]

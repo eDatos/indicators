@@ -11,7 +11,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 public class EdatosLocaleResolver extends SessionLocaleResolver {
 
     public EdatosLocaleResolver(MetadataProperties metadataProperties) {
-        setDefaultLocale(Locale.forLanguageTag(metadataProperties.getDefaultInternationalizationLanguage()));
+        Locale defaultLocale = Locale.forLanguageTag(metadataProperties.getDefaultInternationalizationLanguage());
+        setDefaultLocale(defaultLocale);
+        Locale.setDefault(defaultLocale);
     }
 
     @Override

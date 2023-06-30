@@ -66,6 +66,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         addStatisticalVisualizerUtils(model);
 
         Locale locale = getCurrentLocale(request);
+        model.put("locale", locale);
         fillOptionalPortalDefaultStyleCssUrl(model);
         fillOptionalPortalDefaultStyleHeaderUrl(model, locale);
         fillOptionalPortalDefaultStyleFooterUrl(model, locale);
