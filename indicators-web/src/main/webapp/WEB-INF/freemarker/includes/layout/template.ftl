@@ -29,7 +29,7 @@
         <!-- Global variables -->
         <script type="text/javascript">
             var serverURL = "${serverURL}";
-            var currentLocale = "${locale}";
+            var currentLocale = "[@apph.locale /]";
             var defaultLocale = "${defaultLocale}";
             [#if indicatorsExternalApiUrlBase??]
                 var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';
