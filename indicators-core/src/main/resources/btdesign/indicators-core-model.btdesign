@@ -914,6 +914,8 @@ Application Indicators {
 			"Stream message status"
             - @StreamMessageStatusEnum streamMessageStatus;
 		
+			- @ExternalItem categoryElement nullable cascade="all" databaseColumn="CATEGORY_ELEMENT_FK";
+		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				delete;
@@ -1644,6 +1646,8 @@ Application Indicators {
             
             "True if a task related with the indicator is being executed in background"
 			Boolean isTaskInBackground;
+			
+			- @ExternalItemDto categoryElement;
 	    }
 	    
 	    "Dto for indicator. Summary information"

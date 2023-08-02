@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -260,6 +261,23 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setEditionLanguages(List<String> languages) {
         dataSourcesPanel.setEditionLanguages(languages);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // EXTERNAL RESOURCES DATA SETTERS
+    // ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void setItemSchemes(String formItemName, ExternalItemsResult result) {
+        // without implement
+    }
+
+    @Override
+    public void setItems(String formItemName, ExternalItemsResult result) {
+        // only category_element for now. When more resources are filled, add condition like this for each resource.
+        // if (StringUtils.equals(IndicatorDS.CATEGORY_ELEMENT, formItemName)) {
+
+        generalPanel.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
     }
 
 }

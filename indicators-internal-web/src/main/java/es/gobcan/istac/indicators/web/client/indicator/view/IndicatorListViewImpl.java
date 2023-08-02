@@ -10,6 +10,7 @@ import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -74,6 +75,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             @Override
             public void onClick(ClickEvent event) {
                 window = new NewIndicatorWindow(getConstants().indicCreateTitle());
+                window.setUiHandlers(getUiHandlers());
                 getUiHandlers().retrieveSubjectsListForCreateIndicator();
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -330,5 +332,16 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     private IndicatorSummaryDto getDtoFromRecord(ListGridRecord record) {
         IndicatorRecord indicatorRecord = (IndicatorRecord) record;
         return (IndicatorSummaryDto) indicatorRecord.getIndicatorDto();
+    }
+
+    @Override
+    public void setItems(String formItemName, ExternalItemsResult result) {
+        if (window != null) {
+            window.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        }
+
+        if (searchSectionStack != null) {
+            searchSectionStack.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        }
     }
 }

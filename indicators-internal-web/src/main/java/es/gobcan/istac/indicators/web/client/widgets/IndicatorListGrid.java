@@ -62,7 +62,7 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField code = new ListGridField(CODE, getConstants().indicListHeaderIdentifier());
         code.setAlign(Alignment.LEFT);
         ListGridField name = new ListGridField(TITLE, getConstants().indicDetailTitle());
-        ListGridField subject = new ListGridField(SUBJECT_TITLE, getConstants().indicDetailSubject());
+        ListGridField subject = new ListGridField(SUBJECT_TITLE, getConstants().categoryElement());
 
         ListGridField notifyPopulationErrorsImage = new ListGridField(NOTIFY_POPULATION_ERRORS_IMAGE, getConstants().indicDetailNotifyPopulationErrors());
         notifyPopulationErrorsImage.setHidden(true);
@@ -151,10 +151,11 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField creationUserDiff = new ListGridField(CREATION_USER_DIFF, getConstants().indicDetailCreatedUser());
         creationUserDiff.setHidden(true);
 
-        setFields(code, name, subject, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, streamStatus, productionValidationDate, productionValidationUser, diffusionValidationDate,
-                diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion,
-                diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff,
-                publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
+        setFields(code, name, subject, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, streamStatus, productionValidationDate, productionValidationUser,
+                diffusionValidationDate, diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate,
+                creationUser, diffusionVersion, diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff,
+                diffusionValidationUserDiff, publicationDateDiff, publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff,
+                creationUserDiff);
 
         // @formatter:off
         setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, SUBJECT_TITLE, NOTIFY_POPULATION_ERRORS_IMAGE}), 

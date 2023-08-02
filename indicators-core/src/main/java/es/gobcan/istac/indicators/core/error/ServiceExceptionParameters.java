@@ -49,6 +49,7 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_VIEW_CODE                                                           = "parameter.indicators.indicator.view_code";
     public static final String INDICATOR_SUBJECT_CODE                                                        = "parameter.indicators.indicator.subject_code";
     public static final String INDICATOR_SUBJECT_TITLE                                                       = "parameter.indicators.indicator.subject_title";
+    public static final String INDICATOR_CATEGORY_ELEMENT                                                    = "parameter.indicators.indicator.category_element";
     public static final String INDICATOR_TITLE                                                               = "parameter.indicators.indicator.title";
     public static final String INDICATOR_ACRONYM                                                             = "parameter.indicators.indicator.acronym";
     public static final String INDICATOR_COMMENTS                                                            = "parameter.indicators.indicator.comments";

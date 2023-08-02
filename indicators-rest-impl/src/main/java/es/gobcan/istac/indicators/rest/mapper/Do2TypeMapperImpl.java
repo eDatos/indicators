@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -107,7 +107,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private final MetadataProperties                                                                                                   metadataProperties                    = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
+    private Do2JsonStatMapperUtil                                                                                                      do2JsonStatMapperUtil;
 
     private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
             MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
@@ -577,8 +577,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setVersion(source.getVersionNumber());
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setSubjectCode(source.getCategoryElement().getCode());
+        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getCategoryElement().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
@@ -670,7 +670,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit
+                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
@@ -759,10 +760,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
 
             // SUBJECT CODE
-            target.setSubjectCode(indicatorVersion.getSubjectCode());
+            target.setSubjectCode(indicatorVersion.getCategoryElement().getCode());
 
             // SUBJECT TITLE
-            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getCategoryElement().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
 
             // CHILD LINK
             String href = createUrlIndicatorInstanceData(indicatorsSystem, source);

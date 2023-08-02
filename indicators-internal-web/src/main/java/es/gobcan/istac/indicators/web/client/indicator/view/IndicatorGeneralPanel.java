@@ -6,7 +6,8 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
@@ -14,11 +15,15 @@ import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.WarningWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemSimpleItem;
+import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.IButton;
@@ -34,12 +39,14 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorDiffusionMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
@@ -62,6 +69,7 @@ public class IndicatorGeneralPanel extends VLayout {
     /* View Form */
     private GroupDynamicForm                 identifiersForm;
     private GroupDynamicForm                 contentClassifiersForm;
+
     private GroupDynamicForm                 contentDescriptorsForm;
     private GroupDynamicForm                 productionDescriptorsForm;
     private ViewQuantityForm                 quantityForm;
@@ -78,6 +86,8 @@ public class IndicatorGeneralPanel extends VLayout {
     private GroupDynamicForm                 diffusionDescriptorsEditionForm;
     private GroupDynamicForm                 publicationDescriptorsEditionForm;
     private GroupDynamicForm                 annotationsEditionForm;
+
+    private SearchExternalItemSimpleItem     categoryElement;
 
     private List<SubjectDto>                 subjectDtos;
 
@@ -270,6 +280,7 @@ public class IndicatorGeneralPanel extends VLayout {
         });
 
         mainFormLayout.getReSendStreamMessage().addClickHandler(new ClickHandler() {
+
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.reSendStreamMessageIndicator(indicator);
@@ -335,7 +346,10 @@ public class IndicatorGeneralPanel extends VLayout {
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
         ViewTextItem subjectCode = new ViewTextItem(IndicatorDS.SUBJECT_CODE, getConstants().indicDetailSubjectCode());
         ViewMultiLanguageTextItem subjectTitle = new ViewMultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
-        contentClassifiersForm.setFields(subjectCode, subjectTitle);
+
+        ExternalItemLinkItem externalItemCategoryElement = new ExternalItemLinkItem(IndicatorDS.CATEGORY_ELEMENT, getConstants().categoryElement());
+
+        contentClassifiersForm.setFields(subjectCode, subjectTitle, externalItemCategoryElement);
 
         // Content Descriptors Form
         contentDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
@@ -427,7 +441,11 @@ public class IndicatorGeneralPanel extends VLayout {
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
         RequiredSelectItem subject = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
-        contentClassifiersEditionForm.setFields(subject);
+
+        categoryElement = createCategoryElementsItem();
+        categoryElement.setRequired(true);
+
+        contentClassifiersEditionForm.setFields(subject, categoryElement);
 
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
@@ -557,6 +575,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // Content Classifiers
         contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
         contentClassifiersForm.setValue(IndicatorDS.SUBJECT_TITLE, indicatorDto.getSubjectTitle());
+        contentClassifiersForm.setValue(IndicatorDS.CATEGORY_ELEMENT, indicatorDto.getCategoryElement());
 
         // Content Descriptors
         contentDescriptorsForm.setValue(IndicatorDS.CONCEPT_DESCRIPTION, indicatorDto.getConceptDescription());
@@ -605,6 +624,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Content Classifiers
         contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT, indicatorDto.getSubjectCode());
+        contentClassifiersEditionForm.setValue(IndicatorDS.CATEGORY_ELEMENT, indicatorDto.getCategoryElement());
 
         // Content Descriptors
         contentDescriptorsEditionForm.setValue(IndicatorDS.CONCEPT_DESCRIPTION, indicatorDto.getConceptDescription());
@@ -651,6 +671,8 @@ public class IndicatorGeneralPanel extends VLayout {
             // Content Classifiers
             indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT));
             indicator.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT)));
+            indicator.setCategoryElement(contentClassifiersEditionForm.getValueAsExternalItemDto(IndicatorDS.CATEGORY_ELEMENT));
+
             // Content Descriptors
             indicator.setConceptDescription(contentDescriptorsEditionForm.getValueAsInternationalStringDto(IndicatorDS.CONCEPT_DESCRIPTION));
             // Quantity
@@ -730,4 +752,23 @@ public class IndicatorGeneralPanel extends VLayout {
         mainFormLayout.updateVisibilityNotifyPopulateErrors(notifyPopulationErrors);
     }
 
+    private SearchExternalItemSimpleItem createCategoryElementsItem() {
+        return new SearchExternalItemSimpleItem(IndicatorDS.CATEGORY_ELEMENT, getConstants().categoryElement(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                TypeExternalArtefactsEnum[] type = {TypeExternalArtefactsEnum.CATEGORY_ELEMENT};
+
+                SrmItemRestCriteria restCriteria = new SrmItemRestCriteria();
+                restCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CATEGORY_ELEMENT);
+                restCriteria.setCriteria(webCriteria.getCriteria());
+
+                uiHandlers.retrieveItems(IndicatorDS.CATEGORY_ELEMENT, restCriteria, type, firstResult, maxResults);
+            }
+        };
+    }
+
+    public void setCategoryElementExternalItem(List<ExternalItemDto> categoryElementExternalItem, int firstResult, int totalResults) {
+        categoryElement.setResources(categoryElementExternalItem, firstResult, totalResults);
+    }
 }

@@ -5,9 +5,13 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -51,6 +55,9 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
+import es.gobcan.istac.indicators.web.shared.external.RestWebCriteriaUtils;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 
@@ -71,6 +78,9 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
         void clearSearchSection();
 
         IndicatorCriteria getIndicatorCriteria();
+
+        // external items
+        void setItems(String formItemName, ExternalItemsResult result);
     }
 
     @ProxyCodeSplit
@@ -244,5 +254,45 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 retrieveIndicators(criteria);
             }
         });
+    }
+
+    //
+    // EXTERNAL RESOURCES
+    //
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        // without implement
+    }
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, int firstResult, int maxResults) {
+        // without implement
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        itemWebCriteria = RestWebCriteriaUtils.buildItemWebCriteria(itemWebCriteria, types);
+        retrieveItems(formItemName, itemWebCriteria, firstResult, maxResults);
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, int firstResult, int maxResults) {
+        dispatcher.execute(new GetExternalResourcesAction(itemWebCriteria, firstResult, maxResults), new WaitingAsyncCallbackHandlingError<GetExternalResourcesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetExternalResourcesResult result) {
+                getView().setItems(formItemName, result.getExternalItemsResult());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        // without implement
     }
 }

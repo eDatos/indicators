@@ -95,6 +95,7 @@ import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceAct
 import es.gobcan.istac.indicators.web.server.handlers.ValidateTicketActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.external.GetExternalResourcesActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -175,6 +176,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
 
 @Component
 public class ServerModule extends HandlerModule {
@@ -303,5 +305,8 @@ public class ServerModule extends HandlerModule {
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);
+
+        // external items
+        bindHandler(GetExternalResourcesAction.class, GetExternalResourcesActionHandler.class);
     }
 }

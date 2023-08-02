@@ -265,6 +265,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
             target.setSubjectTitle(null);
         }
 
+        target.setCategoryElement(externalItemDtoToDo(source.getCategoryElement(), target.getCategoryElement(), ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT));
+
         if (hasIndicatorDecimalPlacesChanged(source, target)) {
             target.setNeedsUpdate(Boolean.TRUE);
         }

@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
@@ -22,23 +23,29 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.widgets.CategoryElementSelectItem;
 
 public class NewIndicatorWindow extends CustomWindow {
 
-    private static final String VIEW_IDENTIFIER_PREFIX = "DV_";
-    private static final String FIELD_SAVE             = "save-ind";
-    private static final int    FORM_ITEM_WIDTH        = 300;
+    private static final String       VIEW_IDENTIFIER_PREFIX = "DV_";
+    private static final String       FIELD_SAVE             = "save-ind";
+    private static final int          FORM_ITEM_WIDTH        = 300;
 
-    private CustomDynamicForm   form;
+    private CustomDynamicForm         form;
 
-    private List<SubjectDto>    subjectDtos;
+    private List<SubjectDto>          subjectDtos;
+
+    private CategoryElementSelectItem categoryElementSelectItem;
 
     public NewIndicatorWindow(String title) {
         super(title);
-        setHeight(200);
+        setHeight(250);
         setWidth(450);
+
+        form = new CustomDynamicForm();
 
         RequiredTextItem codeItem = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
         codeItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
@@ -51,12 +58,14 @@ public class NewIndicatorWindow extends CustomWindow {
         titleItem.setWidth(FORM_ITEM_WIDTH);
         RequiredSelectItem subjectItem = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
         subjectItem.setWidth(FORM_ITEM_WIDTH);
+
+        categoryElementSelectItem = new CategoryElementSelectItem(form, true, FORM_ITEM_WIDTH);
+
         ButtonItem saveItem = new ButtonItem(FIELD_SAVE, MetamacWebCommon.getConstants().actionSave());
         saveItem.setColSpan(2);
         saveItem.setAlign(Alignment.CENTER);
 
-        form = new CustomDynamicForm();
-        form.setFields(codeItem, viewItem, titleItem, subjectItem, saveItem);
+        form.setFields(codeItem, viewItem, titleItem, subjectItem, categoryElementSelectItem.getItem(), saveItem);
 
         addItem(form);
         show();
@@ -72,6 +81,8 @@ public class NewIndicatorWindow extends CustomWindow {
         indicatorDto.setViewCode(VIEW_IDENTIFIER_PREFIX + form.getValueAsString(IndicatorDS.VIEW_CODE));
         indicatorDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(IndicatorDS.TITLE)));
         indicatorDto.setSubjectCode(form.getValueAsString(IndicatorDS.SUBJECT));
+        indicatorDto.setCategoryElement(categoryElementSelectItem.getValue());
+
         indicatorDto.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, form.getValueAsString(IndicatorDS.SUBJECT)));
         indicatorDto.setQuantity(new QuantityDto()); // Set always an empty Quantity (required by service)
         return indicatorDto;
@@ -87,4 +98,11 @@ public class NewIndicatorWindow extends CustomWindow {
         ((SelectItem) form.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
     }
 
+    public void setUiHandlers(IndicatorListUiHandler uiHandlers) {
+        categoryElementSelectItem.setUiHandlers(uiHandlers);
+    }
+
+    public void setCategoryElementExternalItem(List<ExternalItemDto> categoryElementExternalItem, int firstResult, int totalResults) {
+        categoryElementSelectItem.setCategoryElementExternalItem(categoryElementExternalItem, firstResult, totalResults);
+    }
 }

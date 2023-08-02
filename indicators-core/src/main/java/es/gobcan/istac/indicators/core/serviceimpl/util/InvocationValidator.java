@@ -48,7 +48,6 @@ public class InvocationValidator {
     // INDICATOR SYSTEM
     // --------------------------------------------------------------------------------------------
 
-    
     public static void checkCreateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1880,10 +1879,11 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getCategoryElement(), ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT, exceptions);
         if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
         }
-        
+
         if (indicatorVersion.getIndicator().getViewCode() != null && !ValidationUtils.matchPosgresqlObjectIdentifier(indicatorVersion.getIndicator().getViewCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_VIEW_CODE));
         }
