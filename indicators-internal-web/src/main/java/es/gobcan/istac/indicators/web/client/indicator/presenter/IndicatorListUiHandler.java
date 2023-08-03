@@ -14,9 +14,6 @@ public interface IndicatorListUiHandler extends SrmExternalResourcesUiHandlers {
 
     void goToIndicator(String code);
 
-    void retrieveSubjectsListForCreateIndicator();
-    void retrieveSubjectsListForSearchIndicator();
-
     void retrieveIndicators(IndicatorCriteria criteria);
 
     void exportIndicators(IndicatorCriteria criteria);

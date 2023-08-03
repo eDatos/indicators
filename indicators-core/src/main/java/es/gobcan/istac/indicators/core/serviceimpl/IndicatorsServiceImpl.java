@@ -22,7 +22,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -532,8 +531,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             return new PublishIndicatorResult(indicatorInProduction, TranslateExceptionUtils.translateMetamacException(ctx, e));
         }
 
-        tryRefreshSubjectTitle(indicatorInProduction);
-
         // Update indicator version metadata
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
@@ -568,22 +565,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getIndicatorRepository().save(indicator);
 
         return new PublishIndicatorResult(indicatorInProduction);
-    }
-
-    private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {
-        try {
-            Subject subject = subjectRepository.retrieveSubject(indicatorVersion.getSubjectCode());
-            InternationalString title = new InternationalString();
-            LocalisedString localised = new LocalisedString();
-            localised.setLabel(subject.getTitle());
-            localised.setLocale(indicatorsConfigurationService.retrieveLanguageDefault());
-            title.addText(localised);
-            indicatorVersion.setSubjectTitle(title);
-            LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());
-        } catch (Exception e) {
-            LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
-                    + indicatorVersion.getVersionNumber(), e);
-        }
     }
 
     @Override
@@ -1427,7 +1408,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void writeIndicatorVersion(OutputStreamWriter writer, IndicatorVersion indicatorVersion, List<String> languages) throws IOException {
         if (indicatorVersion != null) {
             writeInternationalString(writer, indicatorVersion.getTitle(), languages);
-            writeInternationalString(writer, indicatorVersion.getSubjectTitle(), languages);
+            writeInternationalString(writer, indicatorVersion.getCategoryElement().getTitle(), languages);
             writeCell(writer, indicatorVersion.getVersionNumber());
             writeCell(writer, indicatorVersion.getProcStatus());
             writeCell(writer, indicatorVersion.getNeedsUpdate());

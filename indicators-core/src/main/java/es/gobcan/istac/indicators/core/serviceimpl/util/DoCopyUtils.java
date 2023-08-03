@@ -45,8 +45,6 @@ public class DoCopyUtils {
         IndicatorVersion target = new IndicatorVersion();
         target.setTitle(copy(source.getTitle()));
         target.setAcronym(copy(source.getAcronym()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(copy(source.getSubjectTitle()));
         target.setCategoryElement(copy(source.getCategoryElement()));
         target.setNotes(copy(source.getNotes()));
         target.setConceptDescription(copy(source.getConceptDescription()));

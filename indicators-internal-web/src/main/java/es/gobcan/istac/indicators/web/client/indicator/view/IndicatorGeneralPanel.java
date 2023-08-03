@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -18,7 +17,6 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemSimpleItem;
@@ -30,13 +28,11 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
@@ -88,8 +84,6 @@ public class IndicatorGeneralPanel extends VLayout {
     private GroupDynamicForm                 annotationsEditionForm;
 
     private SearchExternalItemSimpleItem     categoryElement;
-
-    private List<SubjectDto>                 subjectDtos;
 
     public IndicatorGeneralPanel() {
         super();
@@ -344,12 +338,9 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
-        ViewTextItem subjectCode = new ViewTextItem(IndicatorDS.SUBJECT_CODE, getConstants().indicDetailSubjectCode());
-        ViewMultiLanguageTextItem subjectTitle = new ViewMultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
-
         ExternalItemLinkItem externalItemCategoryElement = new ExternalItemLinkItem(IndicatorDS.CATEGORY_ELEMENT, getConstants().categoryElement());
 
-        contentClassifiersForm.setFields(subjectCode, subjectTitle, externalItemCategoryElement);
+        contentClassifiersForm.setFields(externalItemCategoryElement);
 
         // Content Descriptors Form
         contentDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
@@ -440,12 +431,10 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
-        RequiredSelectItem subject = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
-
         categoryElement = createCategoryElementsItem();
         categoryElement.setRequired(true);
 
-        contentClassifiersEditionForm.setFields(subject, categoryElement);
+        contentClassifiersEditionForm.setFields(categoryElement);
 
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
@@ -573,8 +562,6 @@ public class IndicatorGeneralPanel extends VLayout {
                 .setIcons(StreamMessageStatusEnum.PENDING.equals(indicatorDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorDto.getStreamMessageStatus()));
 
         // Content Classifiers
-        contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
-        contentClassifiersForm.setValue(IndicatorDS.SUBJECT_TITLE, indicatorDto.getSubjectTitle());
         contentClassifiersForm.setValue(IndicatorDS.CATEGORY_ELEMENT, indicatorDto.getCategoryElement());
 
         // Content Descriptors
@@ -623,7 +610,6 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
 
         // Content Classifiers
-        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT, indicatorDto.getSubjectCode());
         contentClassifiersEditionForm.setValue(IndicatorDS.CATEGORY_ELEMENT, indicatorDto.getCategoryElement());
 
         // Content Descriptors
@@ -669,8 +655,6 @@ public class IndicatorGeneralPanel extends VLayout {
             indicator.setTitle(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.TITLE));
             indicator.setAcronym(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.ACRONYM));
             // Content Classifiers
-            indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT));
-            indicator.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT)));
             indicator.setCategoryElement(contentClassifiersEditionForm.getValueAsExternalItemDto(IndicatorDS.CATEGORY_ELEMENT));
 
             // Content Descriptors
@@ -703,12 +687,6 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setIndicatorListQuantityIndicatorBase(indicators);
     }
 
-    public void setSubjectsList(List<SubjectDto> subjectDtos) {
-        this.subjectDtos = subjectDtos;
-        LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
-        ((SelectItem) contentClassifiersEditionForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
-    }
-
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
         quantityEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
@@ -723,7 +701,6 @@ public class IndicatorGeneralPanel extends VLayout {
     }
 
     private void setEditionMode() {
-        uiHandlers.retrieveSubjects();
         mainFormLayout.setEditionMode();
     }
 

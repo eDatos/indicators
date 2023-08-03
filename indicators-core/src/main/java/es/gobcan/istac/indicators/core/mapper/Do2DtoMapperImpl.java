@@ -196,8 +196,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setViewCode(source.getIndicator().getViewCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
         target.setCategoryElement(externalItemDoToDto(source.getCategoryElement()));
         target.setQuantity(quantityDoToDto(source.getQuantity()));
         target.setConceptDescription(internationalStringToDto(source.getConceptDescription()));
@@ -567,11 +565,11 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setStreamMessageStatus(source.getStreamMessageStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
         if (source.getCategoryElement() != null) {
-            target.setSubjectCode(source.getCategoryElement().getCode());
-            target.setSubjectTitle(internationalStringToDto(source.getCategoryElement().getTitle()));
+            target.setCategoryElementCode(source.getCategoryElement().getCode());
+            target.setCategoryElementTitle(internationalStringToDto(source.getCategoryElement().getTitle()));
         } else {
-            target.setSubjectCode(null);
-            target.setSubjectTitle(null);
+            target.setCategoryElementCode(null);
+            target.setCategoryElementTitle(null);
         }
         target.setNeedsUpdate(source.getNeedsUpdate());
 

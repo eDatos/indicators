@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -128,11 +127,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setDiffusionIndicator(IndicatorDto indicator) {
         generalPanel.setDiffusionIndicator(indicator);
-    }
-
-    @Override
-    public void setSubjectsList(List<SubjectDto> subjectDtos) {
-        generalPanel.setSubjectsList(subjectDtos);
     }
 
     @Override

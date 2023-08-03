@@ -63,7 +63,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             String value = propertyRestriction.getValue();
             switch (propertyNameCriteria) {
                 case SUBJECTCODE: {
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.categoryElement().code(), value, propertyRestriction.getOperationType());
                 }
                 case ID: {
                     if (propertyRestriction.getValue() != null) {

@@ -43,7 +43,6 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
@@ -91,8 +90,6 @@ import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
@@ -163,8 +160,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setIndicatorQuantityNumerator(IndicatorDto indicator);
 
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
-
-        void setSubjectsList(List<SubjectDto> subjectDtos);
 
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
 
@@ -275,17 +270,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
                 fireSuccessMessage(getMessages().indicatorSaved());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveSubjects() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjectsList(result.getSubjectDtos());
             }
         });
     }

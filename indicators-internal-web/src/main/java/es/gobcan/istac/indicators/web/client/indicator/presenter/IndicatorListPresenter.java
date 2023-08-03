@@ -33,7 +33,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -52,8 +51,6 @@ import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
@@ -69,10 +66,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListUiHandler> {
 
         void setIndicatorList(List<IndicatorSummaryDto> indicatorList, int firstResult, int totalResults);
-
-        void setSubjectsForCreateIndicator(List<SubjectDto> subjectDtos);
-
-        void setSubjectsForSearchIndicator(List<SubjectDto> subjectDtos);
 
         // Search
         void clearSearchSection();
@@ -173,28 +166,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 fireSuccessMessage(getMessages().indicDeleted());
                 IndicatorCriteria criteria = getView().getIndicatorCriteria();
                 retrieveIndicators(criteria);
-            }
-        });
-    }
-
-    @Override
-    public void retrieveSubjectsListForCreateIndicator() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjectsForCreateIndicator(result.getSubjectDtos());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveSubjectsListForSearchIndicator() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjectsForSearchIndicator(result.getSubjectDtos());
             }
         });
     }

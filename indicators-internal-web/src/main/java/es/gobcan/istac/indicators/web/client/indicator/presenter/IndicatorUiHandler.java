@@ -18,7 +18,6 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
     void retrieveDiffusionIndicator(String code, String versionNumber);
     void saveIndicator(IndicatorDto indicator);
 
-    void retrieveSubjects();
     void retrieveGeographicalValuesByGranularity(String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
 

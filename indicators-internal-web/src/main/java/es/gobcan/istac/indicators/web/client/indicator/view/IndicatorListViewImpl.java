@@ -28,7 +28,6 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
@@ -76,7 +75,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             public void onClick(ClickEvent event) {
                 window = new NewIndicatorWindow(getConstants().indicCreateTitle());
                 window.setUiHandlers(getUiHandlers());
-                getUiHandlers().retrieveSubjectsListForCreateIndicator();
+
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
                     @Override
@@ -204,18 +203,6 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             codes.add(record.getAttribute(IndicatorDS.UUID));
         }
         return codes;
-    }
-
-    @Override
-    public void setSubjectsForCreateIndicator(List<SubjectDto> subjectDtos) {
-        if (window != null) {
-            window.setSubjetcs(subjectDtos);
-        }
-    }
-
-    @Override
-    public void setSubjectsForSearchIndicator(List<SubjectDto> subjectDtos) {
-        searchSectionStack.setSubjects(subjectDtos);
     }
 
     @Override

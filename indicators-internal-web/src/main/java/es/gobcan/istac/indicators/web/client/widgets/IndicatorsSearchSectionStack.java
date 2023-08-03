@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
@@ -23,7 +22,6 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientCriteriaUtils;
@@ -47,8 +45,6 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         advancedSearchForm.setVisible(false);
 
         TextItem title = new TextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
-        SelectItem subject = new SelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
-        subject.setWidth(300);
         categoryElementSelectItem = new CategoryElementSelectItem(advancedSearchForm, true, null);
         SelectItem productionVersionProcStatus = new SelectItem(IndicatorDS.PROC_STATUS, getConstants().indicatorProductionEnvironmentProcStatus());
         productionVersionProcStatus.setValueMap(CommonUtils.getProcStatusValueMap());
@@ -86,8 +82,8 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         notifyPopulationErrors.setValueMap(CommonUtils.getIndicatorNotifyPopulationErrorsValueMap());
         notifyPopulationErrors.setWidth(200);
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{title, subject, categoryElementSelectItem.getItem(), productionVersionProcStatus, diffusionVersionProcStatus, notifyPopulationErrors,
-                orderBy, orderType, searchItem};
+        FormItem[] advancedSearchFormItems = new FormItem[]{title, categoryElementSelectItem.getItem(), productionVersionProcStatus, diffusionVersionProcStatus, notifyPopulationErrors, orderBy,
+                orderType, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
 
@@ -99,7 +95,6 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
     @Override
     protected void showAdvancedSearchSection() {
         super.showAdvancedSearchSection();
-        getUiHandlers().retrieveSubjectsListForSearchIndicator();
     }
 
     public IndicatorCriteria getIndicatorCriteria() {
@@ -137,11 +132,6 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
 
     public void setCategoryElementExternalItem(List<ExternalItemDto> categoryElementExternalItem, int firstResult, int totalResults) {
         categoryElementSelectItem.setCategoryElementExternalItem(categoryElementExternalItem, firstResult, totalResults);
-    }
-
-    public void setSubjects(List<SubjectDto> subjectDtos) {
-        LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
-        ((SelectItem) advancedSearchForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
     }
 
     public void setUiHandlers(IndicatorListUiHandler uiHandlers) {
