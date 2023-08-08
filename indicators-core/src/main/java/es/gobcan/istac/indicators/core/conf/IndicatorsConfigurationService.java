@@ -23,12 +23,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveDbDataViewsRole() throws MetamacException;
 
-    String retrieveDbSubjectsColumnCode() throws MetamacException;
-
-    String retrieveDbSubjectsColumnTitle() throws MetamacException;
-
-    String retrieveDbSubjectsTable() throws MetamacException;
-
     String retrieveJaxiLocalUrl() throws MetamacException;
 
     String retrieveQuartzExpressionUpdateIndicators() throws MetamacException;

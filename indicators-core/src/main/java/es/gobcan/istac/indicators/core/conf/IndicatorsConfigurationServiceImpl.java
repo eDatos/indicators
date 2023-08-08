@@ -55,21 +55,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveDbSubjectsColumnCode() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsColumnTitle() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsTable() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
-    }
-
-    @Override
     public String retrieveJaxiLocalUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
     }
