@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -92,8 +91,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -777,17 +775,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
-    }
-
-    @Test
-    public void testRetrieveSubjects() throws Exception {
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextAdministrador());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoSistemaIndicadores());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoProduccion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoApoyoProduccion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoDifusion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoApoyoDifusion());
-
     }
 
     @Test

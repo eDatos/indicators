@@ -158,13 +158,7 @@ Application Indicators {
 	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
-	    	
-	    	// Subjects
-	    	Subject retrieveSubject(String code) throws MetamacException;
-	    	List<Subject> retrieveSubjects() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators() throws MetamacException;
-	    	
+	       	    	
 	    	// Units multipliers
 	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
@@ -541,11 +535,7 @@ Application Indicators {
 	    	@QuantityUnitDto updateQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
 	    	"Delete a quantity unit"
 	    	deleteQuantityUnit(String uuid) throws MetamacException;
-	    	
-			// SUBJECTS
-	    	"Retrieves all subjects. Important! Do not invoke this operation from public web application"
-	    	List<@SubjectDto> retrieveSubjects() throws MetamacException;
-	    	
+	
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -924,10 +914,8 @@ Application Indicators {
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
-            	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
-            	List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException;
-            	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
+
 			}
 		}     	
 		
@@ -1584,10 +1572,6 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Acronym"
        		- @InternationalStringDto acronym;
-       		"Subject code"
-			String subjectCode;
-			"Subject title"
-			- @InternationalStringDto subjectTitle;
 			"Concept"
        		- @InternationalStringDto conceptDescription;
 			"Comments"
@@ -1953,14 +1937,6 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Summary title"
        		- @InternationalStringDto titleSummary;
-    	}
-    	
-    	"Dto for subjects"
-    	DataTransferObject SubjectDto {
-	   		"Code"
-	   		String code;
-			"Title"
-			- @InternationalStringDto title;
     	}
     	
     	"Dto for data basic definition"

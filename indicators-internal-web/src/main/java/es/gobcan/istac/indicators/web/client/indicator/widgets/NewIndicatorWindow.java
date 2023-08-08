@@ -19,7 +19,6 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.widgets.CategoryElementSelectItem;
@@ -31,8 +30,6 @@ public class NewIndicatorWindow extends CustomWindow {
     private static final int          FORM_ITEM_WIDTH        = 300;
 
     private CustomDynamicForm         form;
-
-    private List<SubjectDto>          subjectDtos;
 
     private CategoryElementSelectItem categoryElementSelectItem;
 

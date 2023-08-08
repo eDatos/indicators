@@ -44,8 +44,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -54,7 +52,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -69,9 +66,6 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
  */
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
-
-    @Autowired(required = false)
-    private SubjectRepository                               subjectRepository;
 
     @Autowired
     private IndicatorsConfigurationService                  indicatorsConfigurationService;
@@ -806,65 +800,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
-    }
-
-    /**
-     * This operation retrieve subject from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public Subject retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubject(code, null);
-
-        // Retrieve
-        Subject subject = subjectRepository.retrieveSubject(code);
-        if (subject == null) {
-            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, code);
-        }
-        return subject;
-    }
-
-    /**
-     * This operation retrieves subjects from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public List<Subject> retrieveSubjects(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjects(null);
-
-        // Find
-        List<Subject> subjects = subjectRepository.findSubjects();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInPublishedIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInLastVersionIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInLastVersionIndicators();
-        return subjects;
     }
 
     // --------------------------------------------------------------------------------------------

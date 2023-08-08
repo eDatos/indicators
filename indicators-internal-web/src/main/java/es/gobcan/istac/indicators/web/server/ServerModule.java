@@ -65,7 +65,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListAction
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQueriesPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetStatisticalOperationsPaginatedListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHandler;
@@ -146,7 +145,6 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
@@ -269,8 +267,6 @@ public class ServerModule extends HandlerModule {
 
         bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
-        bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
-
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
 

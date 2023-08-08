@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.core.repositoryimpl;
 
 import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.DATA_GPE_UUIDS;
 import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_CODE;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PROC_STATUS;
 import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.PUBLISHED_STATUS;
 import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
 import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.UUID;
@@ -15,13 +14,11 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.ListBlockIterator;
 import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
@@ -78,10 +75,10 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
 
         // @formatter:off
         String query = "from IndicatorVersion iv " +
-                       "where iv.subjectCode = :subjectCode " +
-                           "and iv.procStatus = :publishedStatus " +
+                         "where iv.procStatus = :publishedStatus " +
                            "and iv.indicator.diffusionVersionNumber != null " +
-                           "and iv.indicator.diffusionVersionNumber = iv.versionNumber";
+                           "and iv.indicator.diffusionVersionNumber = iv.versionNumber " +
+                           "and iv.categoryElement.code = :subjectCode";
         // @formatter:on
 
         return findByQuery(query, parameters, Integer.MAX_VALUE);
@@ -117,49 +114,6 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             }
         }
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException {
-        Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.procStatus = :procStatus group by iv.subjectCode");
-        query.setParameter(PROC_STATUS, IndicatorProcStatusEnum.PUBLISHED);
-        List<Object> results = query.getResultList();
-
-        List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
-        if (results != null) {
-            for (Object result : results) {
-                String subjectCode = (String) ((Object[]) result)[0];
-                InternationalString subjectTitle = (InternationalString) ((Object[]) result)[1];
-
-                SubjectIndicatorResult subject = new SubjectIndicatorResult();
-                subject.setId(subjectCode);
-                subject.setTitle(subjectTitle);
-                subjectsResults.add(subject);
-            }
-        }
-        return subjectsResults;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException {
-        Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.isLastVersion = true group by iv.subjectCode");
-        List<Object> results = query.getResultList();
-
-        List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
-        if (results != null) {
-            for (Object result : results) {
-                String subjectCode = (String) ((Object[]) result)[0];
-                InternationalString subjectTitle = (InternationalString) ((Object[]) result)[1];
-
-                SubjectIndicatorResult subject = new SubjectIndicatorResult();
-                subject.setId(subjectCode);
-                subject.setTitle(subjectTitle);
-                subjectsResults.add(subject);
-            }
-        }
-        return subjectsResults;
     }
 
     @Override

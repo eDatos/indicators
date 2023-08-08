@@ -9,9 +9,6 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
-import es.gobcan.istac.indicators.core.enume.domain.*;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -23,10 +20,12 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 
 import com.google.gwt.http.client.URL;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
@@ -38,10 +37,17 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.MultipleGeographicalValueOrderTypeEnum;
@@ -151,16 +157,6 @@ public class CommonUtils {
         return valueMap;
     }
 
-    public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        valueMap.put(new String(), new String());
-        sortSubjectList(subjectDtos);
-        for (SubjectDto subjectDto : subjectDtos) {
-            valueMap.put(subjectDto.getCode(), InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
-        }
-        return valueMap;
-    }
-
     public static LinkedHashMap<String, String> getQuantityUnitsValueMap(List<QuantityUnitDto> units) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -178,17 +174,6 @@ public class CommonUtils {
             valueMap.put(position.getName(), getCoreMessages().getString(getCoreMessages().quantityUnitSymbolPositionEnum() + position.getName()));
         }
         return valueMap;
-    }
-
-    public static InternationalStringDto getSubjectTitleFromCode(List<SubjectDto> subjectDtos, String code) {
-        if (code != null) {
-            for (SubjectDto subjectDto : subjectDtos) {
-                if (code.equals(subjectDto.getCode())) {
-                    return subjectDto.getTitle();
-                }
-            }
-        }
-        return null;
     }
 
     public static LinkedHashMap<String, String> getVersionTypeValueMap() {
@@ -425,18 +410,6 @@ public class CommonUtils {
         } else {
             return indicatorSummaryDto.getProductionVersion().getNeedsUpdate();
         }
-    }
-
-    private static void sortSubjectList(List<SubjectDto> subjectDtos) {
-        Collections.sort(subjectDtos, new Comparator<SubjectDto>() {
-
-            @Override
-            public int compare(SubjectDto first, SubjectDto second) {
-                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
-                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
-                return firstText.compareTo(secondText);
-            }
-        });
     }
 
     private static void sortQuantityUnitsList(List<QuantityUnitDto> units) {

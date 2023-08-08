@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,7 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
@@ -102,6 +104,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
+
+    @Autowired
+    private final SrmRestInternalFacade                                                                                                srmRestInternalFacade                 = null;
 
     @Autowired
     private final MetadataProperties                                                                                                   metadataProperties                    = null;
@@ -577,8 +582,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setVersion(source.getVersionNumber());
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setSubjectCode(source.getCategoryElement().getCode());
-        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getCategoryElement().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        CategoryResourceInternal category = getCategoryByCategoryElement(source.getCategoryElement().getCode());
+
+        if (category != null) {
+            target.setSubjectCode(category.getId());
+            target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
+        }
 
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
@@ -592,6 +601,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setQuantity(quantityDoToBaseType(source.getQuantity()));
         target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage()));
+    }
+
+    private CategoryResourceInternal getCategoryByCategoryElement(String categoryElementCode) throws MetamacException {
+        return srmRestInternalFacade.retrieveCategoryByCategoryElement("urn:sdmx:org.sdmx.infomodel.categoryscheme.CategoryScheme=ISTAC:pruebas_tema_7(01.021)", categoryElementCode);
     }
 
     @Override
@@ -760,10 +773,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
 
             // SUBJECT CODE
-            target.setSubjectCode(indicatorVersion.getCategoryElement().getCode());
-
-            // SUBJECT TITLE
-            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getCategoryElement().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+            CategoryResourceInternal category = getCategoryByCategoryElement(indicatorVersion.getCategoryElement().getCode());
+            if (category != null) {
+                target.setSubjectCode(category.getId());
+                target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
+            }
 
             // CHILD LINK
             String href = createUrlIndicatorInstanceData(indicatorsSystem, source);
