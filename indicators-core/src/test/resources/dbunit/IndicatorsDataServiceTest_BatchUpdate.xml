@@ -237,8 +237,7 @@
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="1"
 				QUANTITY_FK="111"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -389,8 +388,7 @@
 	  			INDICATOR_FK="2"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="2"
 				QUANTITY_FK="211"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -882,8 +880,7 @@
 	  			INDICATOR_FK="3"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="3"
 				QUANTITY_FK="311"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1035,8 +1032,7 @@
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="4"
 				QUANTITY_FK="411"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1186,8 +1182,7 @@
 	  			INDICATOR_FK="5"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="5"
 				QUANTITY_FK="511"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1338,8 +1333,7 @@
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="6"
 				QUANTITY_FK="611"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1488,8 +1482,7 @@
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="7"
 				QUANTITY_FK="711"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1637,8 +1630,7 @@
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="8"
 				QUANTITY_FK="811"
 				IS_LAST_VERSION="0"
 				NEEDS_UPDATE="0"
@@ -1761,8 +1753,7 @@
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="DRAFT"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="9"
 				QUANTITY_FK="821"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -1911,8 +1902,7 @@
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="PUBLISHED"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="10"
 				QUANTITY_FK="911"
 				IS_LAST_VERSION="0"
 				NEEDS_UPDATE="0"
@@ -2035,8 +2025,7 @@
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="DRAFT"
 				
-				SUBJECT_CODE="3"
-				SUBJECT_TITLE_FK="2"
+				CATEGORY_ELEMENT_FK="11"
 				QUANTITY_FK="921"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -2150,6 +2139,125 @@
 						LAST_UPDATED="2011-03-04 05:06:07"
 						LAST_UPDATED_TZ="Europe/London"
 					/>
+					
+					
+	    			<TB_EXTERNAL_ITEMS
+                        ID="1"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "43"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="2"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "44"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="3"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "45"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="4"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "46"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="5"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "47"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                     <TB_EXTERNAL_ITEMS
+                        ID="6"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "48"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="7"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "49"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    
+                    <TB_EXTERNAL_ITEMS
+                        ID="8"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "50"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    <TB_EXTERNAL_ITEMS
+                        ID="9"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "51"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    <TB_EXTERNAL_ITEMS
+                        ID="10"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "52"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
+                    <TB_EXTERNAL_ITEMS
+                        ID="11"
+                        CODE="3"
+                        URI="/latest/categoryelements/3"
+                        URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+                        MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+                        TITLE_FK = "53"
+                        TYPE = "structuralResources#categoryElement"
+                        VERSION="1"
+                    />
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
 	<!-- ************************************************************************************ -->
@@ -2304,6 +2412,129 @@
         LABEL="Decenas" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="42"
+        VERSION="1"
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="43"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="54"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="43"
+        VERSION="1"
+    />
+
+      <TB_INTERNATIONAL_STRINGS
+        ID="44"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="55"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="44"
+        VERSION="1"
+    />
+      <TB_INTERNATIONAL_STRINGS
+        ID="45"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="56"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="45"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="46"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="57"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="46"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="47"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="58"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="47"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="48"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="59"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="48"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="49"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="60"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="49"
+        VERSION="1"
+    />
+   <TB_INTERNATIONAL_STRINGS
+        ID="50"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="61"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="50"
+        VERSION="1"
+    />
+       <TB_INTERNATIONAL_STRINGS
+        ID="51"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="62"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="51"
+        VERSION="1"
+    />
+       <TB_INTERNATIONAL_STRINGS
+        ID="52"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="63"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="52"
+        VERSION="1"
+    />
+       <TB_INTERNATIONAL_STRINGS
+        ID="53"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="64"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="53"
         VERSION="1"
     />
 </dataset>

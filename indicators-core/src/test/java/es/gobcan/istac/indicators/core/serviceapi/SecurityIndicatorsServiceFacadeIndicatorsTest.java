@@ -91,7 +91,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());

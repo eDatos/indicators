@@ -60,26 +60,6 @@
         LAST_UPDATED_TZ="Europe/London"
     />
     
-    
-    <!-- ************************************************************************************ -->
-    <!--                                 SUBJECT CODES                                        -->
-    <!-- ************************************************************************************ -->
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="EDUCACION"
-        DESCRIPCION="Educación"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="POLITICA_ECON"
-        DESCRIPCION="Política económica"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="SALUD"
-        DESCRIPCION="Salud"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="MEDIO_AMBIENTE"
-        DESCRIPCION="Medio ambiente"
-    />
   
     <!-- ************************************************************************************ -->
     <!--                                 GEOGRAPHICAL GRANULARITIES                           -->
@@ -255,8 +235,7 @@
                 INDICATOR_FK="1"
                 PROC_STATUS="DRAFT"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="1"
                 QUANTITY_FK="111"
                 IS_LAST_VERSION="0"
                 NEEDS_UPDATE="0"
@@ -378,8 +357,7 @@
                 INDICATOR_FK="1"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="2"
                 QUANTITY_FK="121"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="0"
@@ -527,8 +505,7 @@
                 INDICATOR_FK="2"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="3"
                 QUANTITY_FK="211"
                 IS_LAST_VERSION="0"
                 NEEDS_UPDATE="0"
@@ -674,8 +651,7 @@
                 INDICATOR_FK="3"
                 PROC_STATUS="DIFFUSION_VALIDATION"
                 
-                SUBJECT_CODE="POLITICA_ECON"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="4"
                 QUANTITY_FK="311"
                 IS_LAST_VERSION="0"
                 NEEDS_UPDATE="0"
@@ -821,8 +797,7 @@
                 INDICATOR_FK="4"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="POLITICA_ECON"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="5"
                 QUANTITY_FK="411"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="0"
@@ -968,8 +943,7 @@
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="2"
+                CATEGORY_ELEMENT_FK="6"
                 QUANTITY_FK="511"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="0"
@@ -1313,6 +1287,72 @@
                     LAST_UPDATED="2011-06-06 05:06:07"
                     LAST_UPDATED_TZ="Europe/London"
                 />
+                
+                <TB_EXTERNAL_ITEMS
+                    ID="1"
+                    CODE="EDUCACION"
+                    URI="/latest/categoryelements/EDUCACION"
+                    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+                    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+                    TITLE_FK = "52"
+                    TYPE = "structuralResources#categoryElement"
+                    VERSION="1"
+               />
+                    
+               <TB_EXTERNAL_ITEMS
+                    ID="2"
+                    CODE="EDUCACION"
+                    URI="/latest/categoryelements/EDUCACION"
+                    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+                    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+                    TITLE_FK = "52"
+                    TYPE = "structuralResources#categoryElement"
+                    VERSION="1"
+              />
+                    
+              <TB_EXTERNAL_ITEMS
+                    ID="3"
+                    CODE="EDUCACION"
+                    URI="/latest/categoryelements/EDUCACION"
+                    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+                    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+                    TITLE_FK = "52"
+                    TYPE = "structuralResources#categoryElement"
+                    VERSION="1"
+            />
+                    
+            <TB_EXTERNAL_ITEMS
+                    ID="4"
+                    CODE="POLITICA_ECON"
+                    URI="/latest/categoryelements/POLITICA_ECON"
+                    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=POLITICA_ECON"
+                    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=POLITICA_ECON"
+                    TITLE_FK = "54"
+                    TYPE = "structuralResources#categoryElement"
+                    VERSION="1"
+           />
+                    
+           <TB_EXTERNAL_ITEMS
+                   ID="5"
+                    CODE="POLITICA_ECON"
+                    URI="/latest/categoryelements/POLITICA_ECON"
+                    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=POLITICA_ECON"
+                    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=POLITICA_ECON"
+                    TITLE_FK = "54"
+                    TYPE = "structuralResources#categoryElement"
+                    VERSION="1"
+          />
+          <TB_EXTERNAL_ITEMS
+                   ID="6"
+                   CODE="EDUCACION"
+                   URI="/latest/categoryelements/EDUCACION"
+                   URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+                   MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+                   TITLE_FK = "55"
+                   TYPE = "structuralResources#categoryElement"
+                   VERSION="1"
+          />
+                    
     <!-- ************************************************************************************ -->
     <!--                                 INTERNATIONAL STRINGS                                -->
     <!-- ************************************************************************************ -->
@@ -1469,4 +1509,73 @@
         INTERNATIONAL_STRING_FK="50"
         VERSION="1"
     />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="51"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="65"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="51"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="52"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="66"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="52"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="53"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="67"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="53"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="54"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="68"
+        LABEL="Política económica" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="54"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="55"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="69"
+        LABEL="Política económica" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="55"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="56"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="70"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="56"
+        VERSION="1"
+    />
+    
+    
 </dataset>

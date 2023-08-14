@@ -80,7 +80,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Test
     public void testRetrieveIndicator() throws Exception {
-        // TODO EDATOS-4185 VER ESTE TEST
 
         String uuid = INDICATOR_1;
         String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
@@ -94,7 +93,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
         assertEquals("VIEWCODE_1", indicatorDto.getViewCode());
-        assertEquals(SUBJECT_1, indicatorDto.getCategoryElement().getCode());
+        assertEquals(CATEGORY_ELEMENT_1, indicatorDto.getCategoryElement().getCode());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getCategoryElement().getTitle(), "es", "Área temática 1", null, null);
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getTitle(), "es", "Título Indicator-1-v1 Educación", "en", "Title Indicator-1-v1");
@@ -275,7 +274,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -324,7 +323,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -352,7 +351,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -382,7 +381,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -414,7 +413,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -447,7 +446,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -480,7 +479,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -506,7 +505,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -568,7 +567,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -610,7 +609,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -713,7 +712,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setCode("CoDe-1");
         indicatorDto.setViewCode("ViewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -737,7 +736,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setCode("CoDe");
         indicatorDto.setViewCode("ViewCode_1");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -761,7 +760,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setCode("CoDe-1");
         indicatorDto.setViewCode("ViewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -784,7 +783,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setCode("CoDe");
         indicatorDto.setViewCode("ViewCode_1");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -810,7 +809,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setCode("code" + (new Date()).getTime());
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(NOT_EXISTS));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -818,12 +816,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
-            fail("subject code not exists");
+            fail("category element code not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SUBJECT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorDto.getCategoryElement().getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -864,7 +862,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("$viewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
@@ -893,7 +891,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
@@ -1193,7 +1191,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
 
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1214,7 +1212,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
 
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1235,7 +1233,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorDto.getProcStatus());
 
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1309,7 +1307,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String versionNumber = INDICATOR_3_VERSION;
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(SUBJECT_1));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
 
         try {
             indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -2801,8 +2799,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         {
             // Retrieve with subject x
+            // TODO EDATOS-4185 CAMBIAR
             MetamacCriteria criteria = new MetamacCriteria();
-            criteria.setRestriction(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
+            criteria.setRestriction(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ));
 
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(8, result.getResults().size());
@@ -2844,7 +2843,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Retrieve with subject x and code = y or z
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
+            // TODO EDATOS-4185 CAMBIAR
+            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ)); //
 
             MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
             disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-3", OperationType.EQ));
@@ -2943,7 +2943,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Educación", OperationType.LIKE));
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_4, OperationType.EQ));
+            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_4, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
@@ -2981,7 +2981,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Retrieve with subject x
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
+            // TODO EDATOS-4185 CAMBIAR
+            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaPaginator paginator = new MetamacCriteriaPaginator();
