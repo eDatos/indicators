@@ -2224,7 +2224,7 @@
                         URI="/latest/categoryelements/3"
                         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
                         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-                        TITLE_FK = "50"
+                        TITLE_FK = "54"
                         TYPE = "structuralResources#categoryElement"
                         VERSION="1"
                     />
@@ -2493,18 +2493,7 @@
         INTERNATIONAL_STRING_FK="49"
         VERSION="1"
     />
-   <TB_INTERNATIONAL_STRINGS
-        ID="50"
-        VERSION="1"
-    />
-    <TB_LOCALISED_STRINGS 
-        ID="61"
-        LABEL="Área temática 3" 
-        LOCALE="es"
-        INTERNATIONAL_STRING_FK="50"
-        VERSION="1"
-    />
-       <TB_INTERNATIONAL_STRINGS
+    <TB_INTERNATIONAL_STRINGS
         ID="51"
         VERSION="1"
     />
@@ -2535,6 +2524,17 @@
         LABEL="Área temática 3" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="53"
+        VERSION="1"
+    />
+       <TB_INTERNATIONAL_STRINGS
+        ID="54"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="61"
+        LABEL="Área temática 3" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="54"
         VERSION="1"
     />
 </dataset>
