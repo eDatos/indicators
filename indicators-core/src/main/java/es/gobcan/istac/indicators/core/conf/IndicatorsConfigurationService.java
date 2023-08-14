@@ -30,4 +30,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveHelpUrl() throws MetamacException;
 
     String retrieveKafkaQueryGroup() throws MetamacException;
+
+    String retrieveDefaultCategoryScheme() throws MetamacException;
 }

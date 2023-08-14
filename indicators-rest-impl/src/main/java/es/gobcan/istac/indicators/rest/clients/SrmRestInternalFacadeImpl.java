@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.rest.clients;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,31 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
 
         return null;
+    }
+
+    @Override
+    public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn) throws MetamacException {
+
+        String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+
+        return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, null, null, null, null, null);
+
+    }
+
+    @Override
+    public Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException {
+        String fields = "+categoryElement";
+
+        String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+
+        return restApiLocator.getSrmRestInternalFacadeV10().retrieveCategory(agencyId, resourceId, version, categoryCode);
+
     }
 
 }

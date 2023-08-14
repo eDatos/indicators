@@ -25,18 +25,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
 @Component(SrmRestInternalFacade.BEAN_ID)
 public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
-    private static Logger      logger = LoggerFactory.getLogger(SrmRestInternalFacadeImpl.class);
+    private static Logger          logger = LoggerFactory.getLogger(SrmRestInternalFacadeImpl.class);
 
     @Autowired
-    private RestApiLocator     restApiLocator;
+    private RestApiLocator         restApiLocator;
 
     @Autowired
-    private RestExceptionUtils restExceptionUtils;
+    private RestExceptionUtils     restExceptionUtils;
+
+    @Autowired
+    private SrmRestInternalService srmRestInternalService;
 
     @Override
     public ExternalItemsResult retrieveAllCategoryElements(ServiceContext serviceContext, ExternalResourceWebCriteria condition, int firstResult, int maxResults) throws MetamacWebException {
@@ -49,7 +53,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
 
         try {
-            CategoryElements categoryElements = restApiLocator.getSrmRestInternalFacadeV10().findCategoryElements(query, orderBy, limit, offset);
+            CategoryElements categoryElements = srmRestInternalService.findCategoryElements(query, orderBy, limit, offset);
             return ExternalItemWebUtils.getCategoryElementsAsExternalItemsResult(categoryElements);
         } catch (Exception e) {
             logger.error("Unable to find category elements from srm internal api", e);

@@ -24,6 +24,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -47,7 +48,6 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
@@ -113,6 +113,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private Do2JsonStatMapperUtil                                                                                                      do2JsonStatMapperUtil;
+
+    @Autowired
+    private IndicatorsConfigurationService                                                                                             configurationService;
 
     private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
             MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
@@ -363,34 +366,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return result;
     }
 
-    private void subjectDoToBaseType(SubjectIndicatorResult subject, SubjectBaseType subjectBaseType) {
-        subjectBaseType.setId(subject.getId());
-        subjectBaseType.setCode(subject.getId());
+    private void subjectDoToBaseType(CategoryResourceInternal category, SubjectBaseType subjectBaseType) {
+        subjectBaseType.setId(category.getNestedId() != null ? category.getNestedId() : category.getId());
+        subjectBaseType.setCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
         subjectBaseType.setKind(IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
-        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
-    public SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators) {
-        if (subject == null) {
+    public List<SubjectBaseType> subjectDoToBaseType(List<CategoryResourceInternal> categories) {
+        if (CollectionUtils.isEmpty(categories)) {
             return null;
         }
-        SubjectType subjectType = new SubjectType();
-        subjectDoToBaseType(subject, subjectType);
-        subjectType.setElements(indicatorDoToBaseType(indicators));
-
-        return subjectType;
-    }
-
-    @Override
-    public List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects) {
-        if (CollectionUtils.isEmpty(subjects)) {
-            return null;
-        }
-        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(subjects.size());
-        for (SubjectIndicatorResult subject : subjects) {
+        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(categories.size());
+        for (CategoryResourceInternal category : categories) {
             SubjectBaseType subjectType = new SubjectType();
-            subjectDoToBaseType(subject, subjectType);
+            subjectDoToBaseType(category, subjectType);
             subjectTypes.add(subjectType);
         }
         return subjectTypes;
@@ -585,7 +576,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         CategoryResourceInternal category = getCategoryByCategoryElement(source.getCategoryElement().getCode());
 
         if (category != null) {
-            target.setSubjectCode(category.getId());
+            target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
             target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
         }
 
@@ -604,7 +595,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private CategoryResourceInternal getCategoryByCategoryElement(String categoryElementCode) throws MetamacException {
-        return srmRestInternalFacade.retrieveCategoryByCategoryElement("urn:sdmx:org.sdmx.infomodel.categoryscheme.CategoryScheme=ISTAC:pruebas_tema_7(01.021)", categoryElementCode);
+        return srmRestInternalFacade.retrieveCategoryByCategoryElement(configurationService.retrieveDefaultCategoryScheme(), categoryElementCode);
     }
 
     @Override
@@ -775,7 +766,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // SUBJECT CODE
             CategoryResourceInternal category = getCategoryByCategoryElement(indicatorVersion.getCategoryElement().getCode());
             if (category != null) {
-                target.setSubjectCode(category.getId());
+                target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
                 target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
             }
 

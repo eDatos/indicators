@@ -70,6 +70,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultCategoryScheme() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_CATEGORY_SCHEME);
+    }
+
+    @Override
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
