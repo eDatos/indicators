@@ -1,14 +1,17 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
-import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
+import java.util.List;
+
 import org.apache.avro.specific.SpecificRecordBase;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import java.util.List;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 
 public interface StreamMessagingService {
+
+    public static final String BEAN_ID = "streamMessagingService";
 
     <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> SendStreamMessageResult sendMessage(E messageContent, StreamMessagingCallback<E, A, M> streamMessagingCallback);
     <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> void resendAllPendingAndFailedMessages(StreamMessagingCallback<E, A, M> streamMessagingCallback) throws MetamacException;

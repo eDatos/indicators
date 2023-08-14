@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.indicators.core.stream.message.IndicatorVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,10 +24,18 @@ public class IndicatorVersionDo2AvroMapper implements Do2AvroMapper<IndicatorVer
         if (source == null) {
             return null;
         }
+
+        String categoryElementCode = null;
+        InternationalString categoryElementTitle = null;
+        if (source.getCategoryElement() != null) {
+            categoryElementCode = source.getCategoryElement().getCode();
+            categoryElementTitle = source.getCategoryElement().getTitle();
+        }
+
         return IndicatorVersionAvro.newBuilder().setCode(source.getIndicator().getCode()).setDiffusionVersionNumber(source.getIndicator().getDiffusionVersionNumber())
                 .setDiffusionProcStatus(procStatusMapper.toAvro(source.getIndicator().getDiffusionProcStatus())).setIsPublished(source.getIndicator().getIsPublished()).setVersion(source.getVersion())
-                .setTitle(internationalStringMapper.toAvro(source.getTitle())).setAcronym(internationalStringMapper.toAvro(source.getAcronym())).setSubjectCode(source.getCategoryElement().getCode())
-                .setSubjectTitle(internationalStringMapper.toAvro(source.getCategoryElement().getTitle())).setConceptDescription(internationalStringMapper.toAvro(source.getConceptDescription()))
+                .setTitle(internationalStringMapper.toAvro(source.getTitle())).setAcronym(internationalStringMapper.toAvro(source.getAcronym())).setSubjectCode(categoryElementCode)
+                .setSubjectTitle(internationalStringMapper.toAvro(categoryElementTitle)).setConceptDescription(internationalStringMapper.toAvro(source.getConceptDescription()))
                 .setComments(internationalStringMapper.toAvro(source.getComments())).setNotes(internationalStringMapper.toAvro(source.getNotes()))
                 .setPublicationDate(datetimeDo2AvroMapper.toAvro(source.getPublicationDate())).setPublicationUser(source.getPublicationUser())
                 .setArchiveDate(datetimeDo2AvroMapper.toAvro(source.getArchiveDate())).setLastPopulateDate(datetimeDo2AvroMapper.toAvro(source.getLastPopulateDate())).build();

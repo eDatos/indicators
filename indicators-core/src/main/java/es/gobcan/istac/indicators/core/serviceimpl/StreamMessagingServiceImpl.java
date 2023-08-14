@@ -1,13 +1,13 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import es.gobcan.istac.indicators.core.dto.stream.AvroMessage;
-import es.gobcan.istac.indicators.core.dto.stream.MessageBase;
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
-import es.gobcan.istac.indicators.core.service.stream.ProducerBase;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
+import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
+import static org.siemac.edatos.core.common.constants.shared.ConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS;
+import static org.siemac.edatos.core.common.constants.shared.ConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
@@ -25,26 +25,27 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import es.gobcan.istac.indicators.core.dto.stream.AvroMessage;
+import es.gobcan.istac.indicators.core.dto.stream.MessageBase;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.mapper.Do2AvroMapper;
+import es.gobcan.istac.indicators.core.service.stream.ProducerBase;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 
-import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
-import static org.siemac.edatos.core.common.constants.shared.ConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS;
-import static org.siemac.edatos.core.common.constants.shared.ConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL;
-
-@Service
+@Service("streamMessagingService")
 public class StreamMessagingServiceImpl implements StreamMessagingService, ApplicationListener<ContextClosedEvent> {
 
-    private static final Logger LOGGER                = LoggerFactory.getLogger(StreamMessagingServiceImpl.class);
-    private static final String CONSUMER_QUERY_1_NAME = "structural_resources_producer";
+    private static final Logger                      LOGGER                = LoggerFactory.getLogger(StreamMessagingServiceImpl.class);
+    private static final String                      CONSUMER_QUERY_1_NAME = "structural_resources_producer";
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ConfigurationService                     configurationService;
 
     @Qualifier("txManager")
     @Autowired
-    private PlatformTransactionManager platformTransactionManager;
+    private PlatformTransactionManager               platformTransactionManager;
 
     private ProducerBase<Object, SpecificRecordBase> producer;
 
@@ -78,7 +79,8 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
                     if (result.isOk()) {
                         sentMessages++;
                     } else {
-                        LOGGER.warn("An error occurred while trying to send through Kafka the message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message), result.getMainException());
+                        LOGGER.warn("An error occurred while trying to send through Kafka the message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message),
+                                result.getMainException());
                     }
                 } catch (Exception e) {
                     LOGGER.warn("An error occurred while trying to send through Kafka the message identified by '{}'", streamMessagingCallback.getUniqueIdentifier(message), e);
@@ -92,13 +94,15 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
         }
     }
 
-    private <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> void updateMessageStatus(E messageContent, StreamMessageStatusEnum status, StreamMessagingCallback<E, A, M> streamMessagingCallback) {
+    private <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> void updateMessageStatus(E messageContent, StreamMessageStatusEnum status,
+            StreamMessagingCallback<E, A, M> streamMessagingCallback) {
         if (messageContent != null) {
             streamMessagingCallback.setStreamMessageStatus(messageContent, status);
         }
     }
 
-    private <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> void buildAndSendMessage(E messageContent, StreamMessagingCallback<E, A, M> streamMessagingCallback) throws MetamacException {
+    private <E, A extends SpecificRecordBase, M extends Do2AvroMapper<E, A>> void buildAndSendMessage(E messageContent, StreamMessagingCallback<E, A, M> streamMessagingCallback)
+            throws MetamacException {
         if (messageContent == null) {
             return;
         }

@@ -104,7 +104,7 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         criteria.setProductionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS)));
         criteria.setDiffusionVersionProcStatus(CommonUtils.getIndicatorProcStatusEnum(advancedSearchForm.getValueAsString(IndicatorDS.PROC_STATUS_DIFF)));
 
-        criteria.setSubjectCode(getCategoryElementCode());
+        criteria.setCategoryElementCode(getCategoryElementCode());
 
         String notifyPopulationErrors = advancedSearchForm.getValueAsString(IndicatorDS.NOTIFY_POPULATION_ERRORS);
         if (!StringUtils.isBlank(notifyPopulationErrors)) {
