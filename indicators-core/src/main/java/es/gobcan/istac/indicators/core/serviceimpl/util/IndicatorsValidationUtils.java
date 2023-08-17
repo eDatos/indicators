@@ -87,4 +87,8 @@ public class IndicatorsValidationUtils extends ValidationUtils {
         return Boolean.FALSE;
     }
 
+    public static void checkCategoryCacheRefreshJob(List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
+
 }

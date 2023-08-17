@@ -31,4 +31,14 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     public void testScheduleIndicatorsUpdateJob() throws Exception {
         // Quartz jobs are not tested
     }
+
+    @Override
+    public void testExecuteCategoryCacheRefreshTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshJob() throws Exception {
+        // Quartz jobs are not tested
+    }
 }

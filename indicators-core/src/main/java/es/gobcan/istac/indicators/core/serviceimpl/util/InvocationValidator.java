@@ -2134,4 +2134,24 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
+    /**
+     * Schedule category cache refresh job
+     */
+    public static void checkCategoryCacheRefreshJob(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkCategoryCacheRefreshJob(exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkRetrieveIndicatorsWithCategoryElement(ServiceContext ctx) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // nothing
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 }

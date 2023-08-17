@@ -117,6 +117,7 @@ Application Indicators {
     		> @IndicatorsSystemRepository
     		> @UnitMultiplierRepository
     		> @TaskService
+    		> @CategoryCacheService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -167,6 +168,8 @@ Application Indicators {
 	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	
+	    	List<MetamacExceptionItem> updateCategoryCacheAll() throws MetamacException;
     	}
     	
     	"Provides access to indicators data"
@@ -573,6 +576,7 @@ Application Indicators {
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	
 	    }
+	    
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
@@ -915,6 +919,7 @@ Application Indicators {
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
+            	List<String> findCategoryElementsInIndicators() throws MetamacException;
 
 			}
 		}     	
@@ -1420,6 +1425,11 @@ Application Indicators {
     		
     		"Schedule database dataset polling job"
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job"
+			scheduleCategoryCacheRefreshJob();	
+			"execute category element refresh job"
+			executeCategoryCacheRefreshTask() throws MetamacException;
     	}
     	
     	"Provides access to background data operations"
@@ -1453,6 +1463,12 @@ Application Indicators {
 			markAllInProgressTaskToFailed();
 			
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job"
+			scheduleCategoryCacheRefreshJob();
+			"Process category cache refresh"	
+			List<MetamacExceptionItem> processCategoryCacheRefreshTask() throws MetamacException;
+	
     	}
     	
     	// ----------------------------------------------------------------
@@ -1477,7 +1493,53 @@ Application Indicators {
 				deleteAndFlush(@Task task);
 			}
 	    }
+	    
+	   
 	}
+	
+	Module externalItemsCaches {
+		basePackage=es.gobcan.istac.indicators.core.externalitemscache
+		
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ---------------------------------------------------------------- 
+		
+		"Provides access to category cache elements"
+    	Service CategoryCacheService {
+    		> @CategoryCacheRepository
+		    @CategoryCache retrieveCategoryCacheByCategoryCode(String categoryCode) throws MetamacException;
+		    @CategoryCache retrieveCategoryCacheByCategoryElementCode(String categoryElementCode) throws MetamacException;
+		    List<MetamacExceptionItem> updateCategoryCacheAll(List<String> categoryElementsInIndicators)  throws MetamacException;
+		    List<@CategoryCache> retrieveAllCategories() throws MetamacException;
+
+		    
+    	}
+		
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+		 Entity CategoryCache {
+			databaseTable = "TB_CATEGORY_CACHE"
+			hint = "idSequence=CATEGORY_CACHE"
+        	!optimisticLocking
+        	
+        	gap
+
+			String categoryCode databaseColumn="Category_Code" not nullable;
+			- @InternationalString title cascade="all-delete-orphan" fetch="eager" databaseColumn="title_fk" nullable;
+			String categoryElementCode databaseColumn="Category_Element_Code" not nullable;
+			
+			Repository CategoryCacheRepository {
+				save;
+				delete;	
+				findAll;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+
+			}
+		}
+	}   	
 	
 	// ----------------------------------------------------------------
 	// 							ENUMS

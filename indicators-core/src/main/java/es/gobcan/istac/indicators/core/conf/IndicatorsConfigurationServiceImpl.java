@@ -79,4 +79,8 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
 
+    @Override
+    public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
+    }
 }

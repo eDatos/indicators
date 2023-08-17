@@ -66,4 +66,14 @@ public class TaskServiceTest implements TaskServiceTestBase {
     public void testPlanifyExportsDsplJob() throws Exception {
         // Quartz jobs are not tested
     }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshJob() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testProcessCategoryCacheRefreshTask() throws Exception {
+        // no test
+    }
 }

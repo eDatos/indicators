@@ -48,6 +48,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
@@ -366,20 +367,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return result;
     }
 
-    private void subjectDoToBaseType(CategoryResourceInternal category, SubjectBaseType subjectBaseType) {
-        subjectBaseType.setId(category.getNestedId() != null ? category.getNestedId() : category.getId());
-        subjectBaseType.setCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
+    private void subjectDoToBaseType(CategoryCache category, SubjectBaseType subjectBaseType) {
+        subjectBaseType.setId(category.getCategoryCode());
+        subjectBaseType.setCode(category.getCategoryCode());
         subjectBaseType.setKind(IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
-        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
+        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(category.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
-    public List<SubjectBaseType> subjectDoToBaseType(List<CategoryResourceInternal> categories) {
-        if (CollectionUtils.isEmpty(categories)) {
+    public List<SubjectBaseType> subjectDoToBaseType(List<CategoryCache> categoryCacheEntries) {
+        if (CollectionUtils.isEmpty(categoryCacheEntries)) {
             return null;
         }
-        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(categories.size());
-        for (CategoryResourceInternal category : categories) {
+        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(categoryCacheEntries.size());
+        for (CategoryCache category : categoryCacheEntries) {
             SubjectBaseType subjectType = new SubjectType();
             subjectDoToBaseType(category, subjectType);
             subjectTypes.add(subjectType);

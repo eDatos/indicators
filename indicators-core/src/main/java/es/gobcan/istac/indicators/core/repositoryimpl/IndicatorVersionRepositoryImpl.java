@@ -147,4 +147,19 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         return query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> findCategoryElementsInIndicators() {
+
+        // @formatter:off
+        String queryString = "select distinct ei.CODE "+
+                             "from TB_INDICATORS_VERSIONS id "+
+                             "INNER JOIN TB_EXTERNAL_ITEMS ei " + 
+                             "on id.CATEGORY_ELEMENT_FK = ei.ID ";
+        // @formatter:on
+
+        Query query = getEntityManager().createNativeQuery(queryString);
+        return query.getResultList();
+    }
+
 }

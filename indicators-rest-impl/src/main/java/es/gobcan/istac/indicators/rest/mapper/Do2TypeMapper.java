@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.rest.mapper;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -12,6 +11,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.types.DataType;
@@ -52,7 +52,7 @@ public interface Do2TypeMapper {
     List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
 
     // Subjects
-    List<SubjectBaseType> subjectDoToBaseType(List<CategoryResourceInternal> categories);
+    List<SubjectBaseType> subjectDoToBaseType(List<CategoryCache> categoryCacheEntries);
 
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);

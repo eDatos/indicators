@@ -1,9 +1,12 @@
 package es.gobcan.istac.indicators.core.task.serviceimpl;
 
 import static org.quartz.DateBuilder.futureDate;
+import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -42,6 +45,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
@@ -57,12 +61,12 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
 @Service("taskService")
 public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
-    public static final String PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
-    public static final String PREFIX_JOB_EXPORTS_DSPL = "exports_dspl_job_";
+    public static final String             PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
+    public static final String             PREFIX_JOB_EXPORTS_DSPL  = "exports_dspl_job_";
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger                 logger                   = LoggerFactory.getLogger(getClass());
 
-    private SchedulerFactory schedulerFactory = null;
+    private SchedulerFactory               schedulerFactory         = null;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -367,4 +371,36 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // @formatter:on
     }
 
+    @Override
+    public void scheduleCategoryCacheRefreshJob(ServiceContext ctx) {
+        try {
+            InvocationValidator.checkCategoryCacheRefreshJob(ctx);
+
+            JobDetail job = newJob(CategoryCacheRefreshJob.class).build();
+
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionCategoryCacheRefresh()).withMisfireHandlingInstructionDoNothing()).build();
+
+            Scheduler sched = schedulerFactory.getScheduler();
+            sched.scheduleJob(job, cronTrigger);
+
+            logger.info("category cache refresh job successfully scheduled at {} ", new Date());
+
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred scheduling category cache refresh job", e);
+        }
+    }
+
+    @Override
+    public List<MetamacExceptionItem> processCategoryCacheRefreshTask(ServiceContext ctx) throws MetamacException {
+        try {
+            InvocationValidator.checkCategoryCacheRefreshJob(ctx);
+
+            return this.getIndicatorsService().updateCategoryCacheAll(ctx);
+
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred trying to refresh category cache in indicators", e);
+        }
+        return new ArrayList<MetamacExceptionItem>();
+    }
 }

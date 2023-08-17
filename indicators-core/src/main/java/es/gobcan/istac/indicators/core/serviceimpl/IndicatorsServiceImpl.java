@@ -1386,4 +1386,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writer.write(cell.toString());
         }
     }
+
+    private List<String> retrieveCategoryElementsInIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
+
+        return getIndicatorVersionRepository().findCategoryElementsInIndicators();
+
+    }
+
+    @Override
+    public List<MetamacExceptionItem> updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+
+        return getCategoryCacheService().updateCategoryCacheAll(ctx, retrieveCategoryElementsInIndicators(ctx));
+    }
+
 }
