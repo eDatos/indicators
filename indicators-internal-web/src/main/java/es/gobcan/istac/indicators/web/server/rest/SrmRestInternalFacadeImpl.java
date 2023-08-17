@@ -11,8 +11,10 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.ExternalResourceWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
@@ -43,7 +45,8 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     private SrmRestInternalService srmRestInternalService;
 
     @Override
-    public ExternalItemsResult retrieveAllCategoryElements(ServiceContext serviceContext, ExternalResourceWebCriteria condition, int firstResult, int maxResults) throws MetamacWebException {
+    public ExternalItemsResult retrieveCategoryElementsByCategoryScheme(ServiceContext serviceContext, String categorySchemeUrn, ExternalResourceWebCriteria condition, int firstResult, int maxResults)
+            throws MetamacWebException {
         String limit = String.valueOf(maxResults);
         String offset = String.valueOf(firstResult);
         String orderBy = null;
@@ -53,10 +56,19 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
 
         try {
-            CategoryElements categoryElements = srmRestInternalService.findCategoryElements(query, orderBy, limit, offset);
+            List<ResourceInternal> categoryElements = new ArrayList<ResourceInternal>();
+
+            Categories categories = srmRestInternalService.retrieveCategoriesByCategoryScheme(categorySchemeUrn, query, orderBy, limit, offset);
+
+            for (CategoryResourceInternal category : categories.getCategories()) {
+                if (category.getCategoryElement() != null) {
+                    categoryElements.add(category.getCategoryElement());
+                }
+            }
+
             return ExternalItemWebUtils.getCategoryElementsAsExternalItemsResult(categoryElements);
         } catch (Exception e) {
-            logger.error("Unable to find category elements from srm internal api", e);
+            logger.error("Unable to find category elements for {} from srm internal api", categorySchemeUrn, e);
             throw manageSrmInternalRestException(serviceContext, e);
         }
     }
@@ -72,8 +84,10 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     public static String buildQueryCode(MetamacWebCriteria webCriteria) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
-            addSimpleRestCriteria(queryBuilder, webCriteria, CodeCriteriaPropertyRestriction.NAME, CodeCriteriaPropertyRestriction.ID, CodeCriteriaPropertyRestriction.URN);
+            addSimpleRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.CATEGORY_ELEMENT_SHORT_NAME, CategoryCriteriaPropertyRestriction.CATEGORY_ELEMENT_CODE,
+                    CategoryCriteriaPropertyRestriction.CATEGORY_ELEMENT_URN);
         }
+        appendConditionToQuery(queryBuilder, "CATEGORY_ELEMENT_CODE IS_NOT_NULL");
         return queryBuilder.toString();
     }
 

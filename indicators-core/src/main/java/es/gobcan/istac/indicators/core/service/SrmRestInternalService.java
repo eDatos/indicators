@@ -13,6 +13,7 @@ public interface SrmRestInternalService {
     public CategoryElements findCategoryElements(String query, String orderBy, String limit, String offset);
     public CategoryResourceInternal retrieveCategoryByCategoryElement(String categorySchemeUrn, String categoryElementCode) throws MetamacException;
     public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn) throws MetamacException;
+    public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn, String query, String orderBy, String limit, String offset) throws MetamacException;
     public Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException;
 
 }

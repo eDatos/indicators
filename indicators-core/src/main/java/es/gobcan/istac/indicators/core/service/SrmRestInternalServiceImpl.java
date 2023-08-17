@@ -53,6 +53,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     @Override
     public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn) throws MetamacException {
+        return retrieveCategoriesByCategoryScheme(categorySchemeUrn, null, null, null, null);
+    }
+
+    @Override
+    public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn, String query, String orderBy, String limit, String offset) throws MetamacException {
         String fields = "+categoryElement";
 
         String[] params = UrnUtils.splitUrnItemScheme(categorySchemeUrn);
@@ -60,7 +65,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String resourceId = params[1];
         String version = params[2];
 
-        return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, null, null, null, null, fields);
+        return restApiLocator.getSrmRestInternalFacadeV10().findCategories(agencyId, resourceId, version, query, orderBy, limit, offset, fields);
 
     }
 

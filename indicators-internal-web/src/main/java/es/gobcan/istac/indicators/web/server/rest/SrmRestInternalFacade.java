@@ -9,6 +9,7 @@ public interface SrmRestInternalFacade {
 
     public static final String BEAN_ID = "srmRestInternalFacade";
 
-    ExternalItemsResult retrieveAllCategoryElements(ServiceContext serviceContext, ExternalResourceWebCriteria condition, int firstResult, int maxResults) throws MetamacWebException;
+    ExternalItemsResult retrieveCategoryElementsByCategoryScheme(ServiceContext serviceContext, String categorySchemeUrn, ExternalResourceWebCriteria condition, int firstResult, int maxResults)
+            throws MetamacWebException;
 
 }
