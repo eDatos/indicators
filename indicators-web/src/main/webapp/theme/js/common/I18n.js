@@ -27,6 +27,14 @@
             return key;
         },
 
+        setCurrentLocale: function (locale) {
+          currentLocale = locale;
+        },
+
+        setDefaultLocale: function (locale) {
+            defaultLocale = locale;
+        },
+
         getWidgetLocaleFromOptions: function (options) {
             if (!options.languages) {
                 console.error("No se han cargado los idiomas permitidos. Esto no deberia pasar.");

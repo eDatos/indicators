@@ -12,7 +12,8 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ResourceWithStatisticalOperation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
@@ -81,9 +82,9 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
         return restExceptionUtils.manageMetamacRestException(ctx, e, CommonServiceExceptionParameters.API_STATISTICAL_OPERATIONS_INTERNAL, restApiLocator.getStatisticalOperationsRestFacadeV10());
     }
 
-    private List<ExternalItemDto> buildExternalItemDtosFromResources(List<Resource> resources, TypeExternalArtefactsEnum type) {
+    private List<ExternalItemDto> buildExternalItemDtosFromResources(List<ResourceWithStatisticalOperation> resources, TypeExternalArtefactsEnum type) {
         List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
-        for (Resource resource : resources) {
+        for (ResourceWithStatisticalOperation resource : resources) {
             results.add(buildExternalItemDtoFromResource(resource, type));
         }
         return results;

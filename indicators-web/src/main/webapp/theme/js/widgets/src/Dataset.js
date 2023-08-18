@@ -63,37 +63,34 @@
             return null;
         },
 
-        getUnit : function (measure, locale) {
+        getUnit : function (measure, locale, defaultLanguage) {
             var result = "";
             if (this.metadata) {
                 var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
                 if (measureRepresentation) {
                     var quantity = measureRepresentation.quantity;
-                    var availableLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : Object.entries(quantity.unit).find(function (quantityUnitLocalizedString) {
-                        var locale = quantityUnitLocalizedString[0];
-                        var label = quantityUnitLocalizedString[1];
-                        return locale !== '__default__' && label === quantity.unit.__default__;
-                    })[0];
+                    var unitLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : defaultLanguage;
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
-                        var unitMultiplierTitle = quantity.unitMultiplier[availableLocale] || quantity.unitMultiplier.__default__;
+                        var unitMultiplierTitle = quantity.unitMultiplier[unitLocale] || quantity.unitMultiplier.__default__;
+                        // quantity.unitMultiplier no tiene un ID para poder identificar que hablamos de unidades, pero si que podemos garantizar que cuando son las unidades: quantity.unitMultiplier["es"] === "Unidades"
                         if (quantity.unitMultiplier["es"] !== "Unidades") {
-                            result = result + unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', availableLocale);
+                            result += unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', unitLocale);
                         }
                     }
 
                     if (quantity.unitSymbol) {
-                        result = result + quantity.unitSymbol;
+                        result += quantity.unitSymbol;
                     } else {
-                        result = result + (quantity.unit[availableLocale] || quantity.unit.__default__);
+                        result += quantity.unit[unitLocale];
                     }
                     
                     if (quantity.baseValue) {
                     	result += " (";
                     	if (quantity.baseLocation) {
-                    		result += this._getLabel(quantity.baseLocation.title, availableLocale);
+                    		result += this._getLabel(quantity.baseLocation.title, unitLocale);
                     	} else if (quantity.baseTime) {
-                    		result += this._getLabel(quantity.baseTime.title, availableLocale);
+                    		result += this._getLabel(quantity.baseTime.title, unitLocale);
                     	}
                     	result += "&nbsp;=&nbsp;" + quantity.baseValue + ")";
                     }                    
