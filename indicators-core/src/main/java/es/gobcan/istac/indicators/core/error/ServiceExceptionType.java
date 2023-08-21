@@ -146,7 +146,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType UPDATE_CATEGORY_CACHE_JOB_ERROR_AND_CANT_MARK_AS_ERROR   = create("exception.indicators.task.error.update_category_cache_and_cant_mark_as_error");
     public static final CommonServiceExceptionType UPDATE_CATEGORY_CACHE_JOB_DUPLICATE_CAT_ELEMENT_ERROR    = create(
             "exception.indicators.task.error.update_category_cache_duplicate_category_element");
-
+    public static final CommonServiceExceptionType TASKS_JOB_UPDATE_CATEGORY_CACHE_IN_PROCESS               = create("exception.indicators.task.error.update_category_cache_in_progress");
     // Kafka
     public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGE_TO_STREAM_MESSAGING_SERVER = create("exception.indicators.stream_message.send_message.error");
     public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS              = create("exception.indicators.stream_message.missing_settings.error");

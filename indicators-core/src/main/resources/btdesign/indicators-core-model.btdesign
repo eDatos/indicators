@@ -1476,7 +1476,7 @@ Application Indicators {
 			scheduleIndicatorsUpdateJob();
 			
 			"Schedule category element refresh job manually from indicators app"
-			scheduleCategoryCacheRefreshManualJob();
+			scheduleCategoryCacheRefreshManualJob() throws MetamacException;
 			"Schedule category element refresh job automatically with cron expression"
 			scheduleCategoryCacheRefreshAutomaticJob();
 			"Process category cache refresh job manually from indicators app"	

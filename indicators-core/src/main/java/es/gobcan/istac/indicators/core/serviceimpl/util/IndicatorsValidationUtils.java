@@ -96,4 +96,8 @@ public class IndicatorsValidationUtils extends ValidationUtils {
     public static void checkScheduleCategoryCacheRefreshCronJob(List<MetamacExceptionItem> exceptions) {
         // DO NOTHING HERE
     }
+
+    public static void checkExistUpdateCategoryCacheTaskInResource(List<MetamacExceptionItem> exceptions) {
+        // DO NOTHING HERE
+    }
 }

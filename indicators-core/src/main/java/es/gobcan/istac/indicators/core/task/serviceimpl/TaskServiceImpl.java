@@ -14,6 +14,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;
@@ -285,8 +286,15 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         return getTaskRepository().findByCondition(conditions, pageAccess);
     }
 
-    private void checkExistTaskInResource(JobKey populationIndicatorDataJobKey) throws MetamacException {
-        checkSameJobNotExists(populationIndicatorDataJobKey);
+    private void checkExistTaskInResource(JobKey jobKey) throws MetamacException {
+        checkSameJobNotExists(jobKey);
+    }
+
+    private void checkExistTaskInResource(ServiceContext ctx, JobKey jobKey) throws MetamacException {
+        checkSameJobNotExists(jobKey);
+
+        checkExistUpdateCategoryCacheResource(ctx);
+
     }
 
     private void checkSameJobNotExists(JobKey populationIndicatorDataJobKey) throws MetamacException {
@@ -400,7 +408,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public void scheduleCategoryCacheRefreshManualJob(ServiceContext ctx) {
+    public void scheduleCategoryCacheRefreshManualJob(ServiceContext ctx) throws MetamacException {
 
         String taskName = createTaskNameForUpdateCategoryCache();
         JobKey jobKey = this.createJobKeyForUpdateCategoryCache();
@@ -409,10 +417,10 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         try {
             InvocationValidator.checkScheduleCategoryCacheRefreshManualJob(ctx, taskName);
 
-            checkExistTaskInResource(jobKey);
+            checkExistTaskInResource(ctx, jobKey);
 
             JobDetail job = newJob(CategoryCacheRefreshJob.class).withIdentity(jobKey).usingJobData(CategoryCacheRefreshJob.TASK_NAME, taskName)
-                    .usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, true).build();
+                    .usingJobData(CategoryCacheRefreshJob.SEND_NOTIFICATION, false).usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, true).build();
 
             Task task = new Task(taskName);
             task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
@@ -420,13 +428,16 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
             SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
-            Scheduler sched = schedulerFactory.getScheduler();
-            sched.scheduleJob(job, trigger);
-
-            logger.info("category cache refresh job successfully scheduled at {} ", new Date());
+            try {
+                Scheduler sched = schedulerFactory.getScheduler();
+                sched.scheduleJob(job, trigger);
+            } catch (SchedulerException e) {
+                logger.error("scheduleCategoryCacheRefreshManualJob: the job with key " + jobKey.getName() + " has failed", e);
+            }
 
         } catch (Exception e) {
-            logger.error("An unexpected error has occurred scheduling category cache refresh job", e);
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
+                    .build();
         }
     }
 
@@ -436,8 +447,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         try {
             InvocationValidator.checkScheduleCategoryCacheRefreshCronJob(ctx);
 
-            JobDetail job = newJob(CategoryCacheRefreshJob.class).usingJobData(CategoryCacheRefreshJob.TASK_NAME, "automaticJob").usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, false)
-                    .build();
+            JobDetail job = newJob(CategoryCacheRefreshJob.class).usingJobData(CategoryCacheRefreshJob.TASK_NAME, "automaticJob").usingJobData(CategoryCacheRefreshJob.SEND_NOTIFICATION, true)
+                    .usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, false).build();
 
             CronTrigger cronTrigger = TriggerBuilder.newTrigger()
                     .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionCategoryCacheRefresh()).withMisfireHandlingInstructionDoNothing()).build();
@@ -469,15 +480,18 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
     @Override
     public void processCategoryCacheRefreshAutomaticTask(ServiceContext ctx) throws MetamacException {
-        try {
 
-            InvocationValidator.checkScheduleCategoryCacheRefreshCronJob(ctx);
+        InvocationValidator.checkScheduleCategoryCacheRefreshCronJob(ctx);
 
-            updateCategoryCacheAll(ctx);
+        DateTime executionDate = new DateTime();
 
-        } catch (Exception e) {
-            logger.error("An unexpected error has occurred trying to refresh category cache in indicators", e);
-        }
+        logger.info("Execution start - update category cache in background at : {} ", executionDate);
+
+        updateCategoryCacheAll(ctx);
+
+        executionDate = new DateTime();
+
+        logger.info("Execution end - update category cache in background at : {} ", executionDate);
 
     }
 
@@ -485,6 +499,22 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         List<String> allCategoryElementsInIndicators = getIndicatorsService().retrieveCategoryElementsInIndicators(ctx);
 
         getCategoryCacheService().updateCategoryCacheAll(ctx, allCategoryElementsInIndicators);
+    }
+
+    private void checkExistUpdateCategoryCacheResource(ServiceContext ctx) throws MetamacException {
+        if (existUpdateCategoryCacheTaskInResource(ctx)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_UPDATE_CATEGORY_CACHE_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+        }
+    }
+
+    private boolean existUpdateCategoryCacheTaskInResource(ServiceContext ctx) throws MetamacException {
+        InvocationValidator.checkExistUpdateCategoryCacheTaskInResource(ctx);
+        try {
+            Scheduler sched = schedulerFactory.getScheduler();
+            return sched.checkExists(createJobKeyForUpdateCategoryCache());
+        } catch (SchedulerException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
+        }
     }
 
 }

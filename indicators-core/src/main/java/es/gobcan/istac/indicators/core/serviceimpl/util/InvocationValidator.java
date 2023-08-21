@@ -2165,4 +2165,15 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
+    /**
+     * Check if exists a update category cache job task
+     */
+    public static void checkExistUpdateCategoryCacheTaskInResource(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkExistUpdateCategoryCacheTaskInResource(exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 }

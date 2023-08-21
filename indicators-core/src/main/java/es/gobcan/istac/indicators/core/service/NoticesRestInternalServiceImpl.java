@@ -232,6 +232,17 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     }
 
+    private void createBackgroundNotificationWithoutResources(String actionCode, String messageCode) {
+        try {
+            Notice notification = createNoticewithoutResource(actionCode, messageCode);
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
+
+        } catch (MetamacException e) {
+            logger.error("Error creating createErrorBackgroundNotification:", e);
+        }
+
+    }
+
     private void createPopulateIndicatorDataBackgroundNotication(Locale locale, String actionCode, String messageCode, String user, Indicator indicator, Object... messageParams) {
         ResourceInternal resourceInternal = indicatorToResourceInternal(indicator);
 
@@ -281,14 +292,12 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             .withMessages(message)
             .withSendingApplication(sendingApp)
             .withSubject(subject)
-            //.withRoles(MetamacRolesEnum.ADMINISTRADOR)  // TODO EDATOS-4185
-            .withSendingUser("mquimar")
-            .withReceivers("mquimar")
+            .withRoles(MetamacRolesEnum.ADMINISTRADOR)  
             .build();
         // @formatter:on
     }
 
-    private Notice createNoticewithoutResource(String actionCode, String message, Object... messageParams) throws MetamacException {
+    private Notice createNoticewithoutResource(String actionCode, String message) throws MetamacException {
         Locale locale = configurationService.retrieveLanguageDefaultLocale();
         String subject = LocaleUtil.getMessageForCode(actionCode, locale);
         String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
@@ -395,7 +404,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             String localisedMessage = localisedException.getMessage();
             localisedMessage = ERROR + " - " + localisedMessage;
 
-            createBackgroundNotification(actionCode, localisedMessage, null);
+            createBackgroundNotificationWithoutResources(actionCode, localisedMessage);
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
