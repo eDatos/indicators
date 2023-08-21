@@ -1,10 +1,14 @@
 package es.gobcan.istac.indicators.core.service;
 
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.slf4j.Logger;
@@ -80,6 +84,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveCategory(agencyId, resourceId, version, categoryCode);
 
+    }
+
+    @Override
+    public String getQueryByCategoryElementCriteria(CategoryCriteriaPropertyRestriction categoryCriteria, String value) {
+        return fieldComparison(categoryCriteria, ComparisonOperator.EQ, value);
     }
 
     private RestException toRestException(Exception e) {

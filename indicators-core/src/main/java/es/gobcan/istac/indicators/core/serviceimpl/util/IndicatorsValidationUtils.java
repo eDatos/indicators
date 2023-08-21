@@ -9,6 +9,8 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
+
 public class IndicatorsValidationUtils extends ValidationUtils {
 
     /**
@@ -87,8 +89,11 @@ public class IndicatorsValidationUtils extends ValidationUtils {
         return Boolean.FALSE;
     }
 
-    public static void checkCategoryCacheRefreshJob(List<MetamacExceptionItem> exceptions) {
-        // NOTHING TO DO HERE
+    public static void checkScheduleCategoryCacheRefreshManualJob(String taskName, List<MetamacExceptionItem> exceptions) {
+        IndicatorsValidationUtils.checkParameterRequired(taskName, ServiceExceptionParameters.TASK_NAME, exceptions);
     }
 
+    public static void checkScheduleCategoryCacheRefreshCronJob(List<MetamacExceptionItem> exceptions) {
+        // DO NOTHING HERE
+    }
 }

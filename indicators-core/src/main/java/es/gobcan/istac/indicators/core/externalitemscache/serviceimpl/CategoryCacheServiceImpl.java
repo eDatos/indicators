@@ -10,18 +10,24 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCacheProperties;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 /**
@@ -38,6 +44,13 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
+
+    @Qualifier("txManager")
+    @Autowired
+    private PlatformTransactionManager                    platformTransactionManager;
+
+    @Autowired
+    NoticesRestInternalService                            noticesRestInternalService;
 
     public CategoryCacheServiceImpl() {
         // without implement
@@ -81,11 +94,10 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
     }
 
     @Override
-    public List<MetamacExceptionItem> updateCategoryCacheAll(ServiceContext ctx, List<String> categoryElementsInIndicators) throws MetamacException {
-        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+    public void updateCategoryCacheAll(ServiceContext ctx, List<String> categoryElementsInIndicators) throws MetamacException {
         List<CategoryCache> categoryCacheUpdated = new ArrayList<>();
 
-        HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = getCategoriesByDefaultCategoryScheme();
+        HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = getCategoriesByDefaultCategoryScheme(ctx);
 
         for (String categoryElement : categoryElementsInIndicators) {
             CategoryResourceInternal category = categoriesByCategoryElement.get(categoryElement);
@@ -99,8 +111,19 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
 
         createCategoryCacheEntries(categoryCacheUpdated);
 
-        return exceptionItems;
+    }
 
+    public void createCategoryCacheByCategoryElement(ServiceContext ctx, ExternalItem categoryElement) throws MetamacException {
+
+        String query = srmRestInternalService.getQueryByCategoryElementCriteria(CategoryCriteriaPropertyRestriction.CATEGORY_ELEMENT_CODE, categoryElement.getCode());
+        Categories categories = srmRestInternalService.retrieveCategoriesByCategoryScheme(configurationService.retrieveDefaultCategoryScheme(), query, null, null, null);
+
+        if (categories != null && !categories.getCategories().isEmpty()) {
+            CategoryResourceInternal category = categories.getCategories().get(0);
+            CategoryCache categoryCacheNew = createCategoryCacheEntry(category.getNestedId() != null ? category.getNestedId() : category.getId(),
+                    internationalString2InternationalStringMapper.internationalString2InternationalString(category.getName()), categoryElement.getCode(), ctx.getUserId());
+            getCategoryCacheRepository().save(categoryCacheNew);
+        }
     }
 
     private void deleteAllCacheEntries() {
@@ -118,14 +141,21 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
         }
     }
 
-    private HashMap<String, CategoryResourceInternal> getCategoriesByDefaultCategoryScheme() throws MetamacException {
+    private HashMap<String, CategoryResourceInternal> getCategoriesByDefaultCategoryScheme(ServiceContext ctx) throws MetamacException {
         HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = new HashMap<String, CategoryResourceInternal>();
 
         Categories categories = srmRestInternalService.retrieveCategoriesByCategoryScheme(configurationService.retrieveDefaultCategoryScheme());
 
         for (CategoryResourceInternal category : categories.getCategories()) {
             if (category.getCategoryElement() != null) {
-                categoriesByCategoryElement.put(category.getCategoryElement().getId(), category);
+                CategoryResourceInternal existingCategory = categoriesByCategoryElement.get(category.getCategoryElement().getId());
+                if (existingCategory == null) {
+                    categoriesByCategoryElement.put(category.getCategoryElement().getId(), category);
+                } else {
+                    String codeCategory = existingCategory.getNestedId() != null ? existingCategory.getNestedId() : existingCategory.getId();
+                    MetamacException e = new MetamacException(ServiceExceptionType.UPDATE_CATEGORY_CACHE_JOB_DUPLICATE_CAT_ELEMENT_ERROR, category.getCategoryElement().getId(), codeCategory);
+                    noticesRestInternalService.createUpdateCategoryCacheErrorNotification(ctx.getUserId(), ServiceNoticeAction.UPDATE_CATEGORY_CACHE_JOB, e);
+                }
             }
         }
 
@@ -143,4 +173,5 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
 
         return categoryCache;
     }
+
 }

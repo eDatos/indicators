@@ -20,4 +20,6 @@ public interface IndicatorListUiHandler extends SrmExternalResourcesUiHandlers {
 
     void enableNotifyPopulationErrors(List<String> uuids);
     void disableNotifyPopulationErrors(List<String> uuids);
+
+    void updateCategoryCache();
 }

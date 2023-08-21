@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
+import org.siemac.metamac.web.common.client.widgets.WarningWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
@@ -48,6 +50,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
     private ToolStripButton              newIndicatorActor;
     private ToolStripButton              deleteIndicatorActor;
     private ToolStripButton              exportIndicatorsButton;
+    private ToolStripButton              updatedCacheCategoriesButton;
 
     private ToolStripButton              enableNotifyPopulationErrors;
     private ToolStripButton              disableNotifyPopulationErrors;
@@ -109,6 +112,8 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             }
         });
 
+        updatedCacheCategoriesButton = createUpdatedCategoryCacheButton();
+
         enableNotifyPopulationErrors = new ToolStripButton(getConstants().indicatorEnableNotifyPopulationErrors(), IndicatorsResources.RESOURCE.enableNotification().getURL());
         enableNotifyPopulationErrors.setVisibility(Visibility.HIDDEN);
         enableNotifyPopulationErrors.addClickHandler(new ClickHandler() {
@@ -134,6 +139,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
         toolStrip.addButton(exportIndicatorsButton);
         toolStrip.addButton(enableNotifyPopulationErrors);
         toolStrip.addButton(disableNotifyPopulationErrors);
+        toolStrip.addButton(updatedCacheCategoriesButton);
 
         // Search
 
@@ -159,6 +165,31 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
                 deleteConfirmationWindow.hide();
             }
         });
+    }
+
+    private ToolStripButton createUpdatedCategoryCacheButton() {
+
+        ToolStripButton updateCategoryCacheButton = new ToolStripButton(getConstants().updateCategoryCache(), IndicatorsResources.RESOURCE.reload().getURL());
+        updateCategoryCacheButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final WarningWindow warningWindow = new WarningWindow(getConstants().warning(), getConstants().updateCategoryCacheWarning());
+                warningWindow.setCancelable(true);
+
+                warningWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        getUiHandlers().updateCategoryCache();
+                    }
+                });
+            }
+        });
+
+        newIndicatorActor.setVisibility(ClientSecurityUtils.canUpdatedCategoryCache() ? Visibility.VISIBLE : Visibility.HIDDEN);
+
+        return updateCategoryCacheButton;
     }
 
     @Override
@@ -330,5 +361,12 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
         if (searchSectionStack != null) {
             searchSectionStack.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
         }
+    }
+
+    @Override
+    public InformationWindow showInformationMessage(String title, String message) {
+        InformationWindow informationWindow = new InformationWindow(title, message);
+        informationWindow.show();
+        return informationWindow;
     }
 }

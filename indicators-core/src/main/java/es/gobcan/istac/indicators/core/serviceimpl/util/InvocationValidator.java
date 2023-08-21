@@ -2136,12 +2136,23 @@ public class InvocationValidator {
     }
 
     /**
-     * Schedule category cache refresh job
+     * Schedule category cache refresh cron job
      */
-    public static void checkCategoryCacheRefreshJob(ServiceContext ctx) throws MetamacException {
+    public static void checkScheduleCategoryCacheRefreshCronJob(ServiceContext ctx) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        IndicatorsValidationUtils.checkCategoryCacheRefreshJob(exceptions);
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshCronJob(exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Planify category cache refresh manual job
+     */
+    public static void checkScheduleCategoryCacheRefreshManualJob(ServiceContext ctx, String taskName) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshManualJob(taskName, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

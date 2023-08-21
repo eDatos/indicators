@@ -88,6 +88,7 @@ import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionVa
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToProductionValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateCategoryCacheActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
@@ -169,6 +170,7 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationA
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.UpdateCategoryCacheAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
@@ -304,5 +306,8 @@ public class ServerModule extends HandlerModule {
 
         // external items
         bindHandler(GetExternalResourcesAction.class, GetExternalResourcesActionHandler.class);
+
+        bindHandler(UpdateCategoryCacheAction.class, UpdateCategoryCacheActionHandler.class);
+
     }
 }

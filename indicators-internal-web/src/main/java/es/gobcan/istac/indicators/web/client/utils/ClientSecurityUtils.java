@@ -155,6 +155,10 @@ public class ClientSecurityUtils {
         return isNotTaskInBackground(indicatorDto) && SharedSecurityUtils.canPopulateIndicatorData(IndicatorsWeb.getCurrentUser());
     }
 
+    public static boolean canUpdatedCategoryCache() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
     // DATA SOURCES
 
     public static boolean canCreateDataSource(IndicatorDto indicatorDto) {

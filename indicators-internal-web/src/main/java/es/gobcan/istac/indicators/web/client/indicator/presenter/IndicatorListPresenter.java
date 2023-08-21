@@ -4,16 +4,20 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -51,12 +55,16 @@ import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.UpdateCategoryCacheAction;
+import es.gobcan.istac.indicators.web.shared.UpdateCategoryCacheResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
 import es.gobcan.istac.indicators.web.shared.external.RestWebCriteriaUtils;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
+
+    private static Logger            logger = Logger.getLogger(IndicatorListPresenter.class.getName());
 
     private DispatchAsync            dispatcher;
     private PlaceManager             placeManager;
@@ -74,6 +82,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
         // external items
         void setItems(String formItemName, ExternalItemsResult result);
+
+        InformationWindow showInformationMessage(String title, String message);
     }
 
     @ProxyCodeSplit
@@ -184,6 +194,26 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
             }
 
+        });
+    }
+
+    @Override
+    public void updateCategoryCache() {
+        final InformationWindow informationWindow = getView().showInformationMessage(getMessages().updateCategoryCache(), getMessages().updateCategoryCacheInProgress());
+        dispatcher.execute(new UpdateCategoryCacheAction(), new AsyncCallback<UpdateCategoryCacheResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.WARNING, "Could not update category cache", caught);
+                informationWindow.hide();
+                ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
+            }
+
+            @Override
+            public void onSuccess(UpdateCategoryCacheResult result) {
+                logger.log(Level.INFO, "Update category cache successful");
+                ShowMessageEvent.fireSuccessMessage(IndicatorListPresenter.this, getMessages().updateCategoryCacheSuccessful());
+            }
         });
     }
 

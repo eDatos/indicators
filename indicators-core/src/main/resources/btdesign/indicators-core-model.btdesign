@@ -144,6 +144,7 @@ Application Indicators {
             disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
             "Mark indicator for notify population errors"
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -169,7 +170,8 @@ Application Indicators {
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	
-	    	List<MetamacExceptionItem> updateCategoryCacheAll() throws MetamacException;
+	    	updateCategoryCacheAll() throws MetamacException;
+	    	
     	}
     	
     	"Provides access to indicators data"
@@ -574,6 +576,9 @@ Application Indicators {
 	    	@UnitMultiplierDto updateUnitMultiplier(@UnitMultiplierDto unitMultiplierDto) throws MetamacException;
 	    	"Delete a unit multiplier"
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	
+	    	// CACHE
+	    	updateCategoryCacheAll() throws MetamacException;
 	    	
 	    }
 	    
@@ -1422,21 +1427,26 @@ Application Indicators {
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
     		markAllInProgressTaskToFailed();
+    		markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
     		
     		"Schedule database dataset polling job"
 			scheduleIndicatorsUpdateJob();
 			
 			"Schedule category element refresh job"
-			scheduleCategoryCacheRefreshJob();	
-			"execute category element refresh job"
-			executeCategoryCacheRefreshTask() throws MetamacException;
+			scheduleCategoryCacheRefreshAutomaticJob();	
+			"execute category element refresh job manually from indicators app"
+			executeCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"execute category element refresh job automatically execution"
+			executeCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			
     	}
     	
     	"Provides access to background data operations"
     	Service TaskService {
     		> @TaskRepository
     		> @IndicatorsDataService
-    		> @IndicatorsService  		
+    		> @IndicatorsService  	
+    		> @CategoryCacheService	
     		
 			"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
@@ -1461,13 +1471,18 @@ Application Indicators {
 			markTaskAsFinished(String jobKey) throws MetamacException;	
 			"Mark task as failed on application startup"
 			markAllInProgressTaskToFailed();
+			markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
 			
 			scheduleIndicatorsUpdateJob();
 			
-			"Schedule category element refresh job"
-			scheduleCategoryCacheRefreshJob();
-			"Process category cache refresh"	
-			List<MetamacExceptionItem> processCategoryCacheRefreshTask() throws MetamacException;
+			"Schedule category element refresh job manually from indicators app"
+			scheduleCategoryCacheRefreshManualJob();
+			"Schedule category element refresh job automatically with cron expression"
+			scheduleCategoryCacheRefreshAutomaticJob();
+			"Process category cache refresh job manually from indicators app"	
+			processCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"Process category cache refresh job automatically with cron expression"			
+			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
 	
     	}
     	
@@ -1509,8 +1524,9 @@ Application Indicators {
     		> @CategoryCacheRepository
 		    @CategoryCache retrieveCategoryCacheByCategoryCode(String categoryCode) throws MetamacException;
 		    @CategoryCache retrieveCategoryCacheByCategoryElementCode(String categoryElementCode) throws MetamacException;
-		    List<MetamacExceptionItem> updateCategoryCacheAll(List<String> categoryElementsInIndicators)  throws MetamacException;
+		    updateCategoryCacheAll(List<String> categoryElementsInIndicators)  throws MetamacException;
 		    List<@CategoryCache> retrieveAllCategories() throws MetamacException;
+		    createCategoryCacheByCategoryElement(@ExternalItem categoryElement) throws MetamacException;
 
 		    
     	}

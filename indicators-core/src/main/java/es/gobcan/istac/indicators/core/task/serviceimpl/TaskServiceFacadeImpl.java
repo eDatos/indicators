@@ -49,12 +49,22 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
-    public void scheduleCategoryCacheRefreshJob(ServiceContext ctx) {
-        taskService.scheduleCategoryCacheRefreshJob(ctx);
+    public void scheduleCategoryCacheRefreshAutomaticJob(ServiceContext ctx) {
+        taskService.scheduleCategoryCacheRefreshAutomaticJob(ctx);
     }
 
     @Override
-    public void executeCategoryCacheRefreshTask(ServiceContext ctx) throws MetamacException {
-        taskService.processCategoryCacheRefreshTask(ctx);
+    public void executeCategoryCacheRefreshAutomaticTask(ServiceContext ctx) throws MetamacException {
+        taskService.processCategoryCacheRefreshAutomaticTask(ctx);
+    }
+
+    @Override
+    public void executeCategoryCacheRefreshManualTask(ServiceContext ctx, String taskName) throws MetamacException {
+        taskService.processCategoryCacheRefreshManualTask(ctx, taskName);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String jobKey, MetamacException exception) throws MetamacException {
+        taskService.markTaskAsFailed(ctx, jobKey, exception);
     }
 }

@@ -28,17 +28,27 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     }
 
     @Override
+    public void testMarkTaskAsFailed() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
     public void testScheduleIndicatorsUpdateJob() throws Exception {
         // Quartz jobs are not tested
     }
 
     @Override
-    public void testExecuteCategoryCacheRefreshTask() throws Exception {
+    public void testExecuteCategoryCacheRefreshManualTask() throws Exception {
         // no test
     }
 
     @Override
-    public void testScheduleCategoryCacheRefreshJob() throws Exception {
+    public void testExecuteCategoryCacheRefreshAutomaticTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshAutomaticJob() throws Exception {
         // Quartz jobs are not tested
     }
 }

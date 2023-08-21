@@ -33,6 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -52,6 +57,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -59,6 +65,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
@@ -74,8 +81,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private StreamMessagingService                          streamMessagingService;
 
     @Autowired
+    private TaskService                                     taskService;
+
+    @Autowired
     @Qualifier("indicatorStreamMessagingCallback")
     private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
+
+    @Autowired
+    @Qualifier("txManager")
+    private PlatformTransactionManager                      platformTransactionManager;
 
     private static final Logger                             LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
@@ -114,7 +128,52 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
+    }
+
+    private TransactionTemplate getTransactionTemplate() {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionTemplate;
+    }
+
+    private void updateCategoryCache(ServiceContext ctx, IndicatorVersion indicatorVersion) {
+
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
+
+            @Override
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+
+                try {
+                    if (indicatorVersion.getCategoryElement() != null) {
+                        CategoryCache categoryCache = getCategoryCacheService().retrieveCategoryCacheByCategoryElementCode(ctx, indicatorVersion.getCategoryElement().getCode());
+                        if (categoryCache == null) {
+                            getCategoryCacheService().createCategoryCacheByCategoryElement(ctx, indicatorVersion.getCategoryElement());
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error("Unable to update category cache in indicator creation/update for indicator code {}", indicatorVersion.getCode(), e);
+                }
+
+                return null;
+            }
+        });
+
+    }
+
+    abstract class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
+
+        public final T doInTransaction(TransactionStatus status) {
+            try {
+                return doInMetamacTransaction(status);
+            } catch (MetamacException e) {
+                throw new RuntimeException("Error in transactional method", e);
+            }
+        }
+
+        protected abstract T doInMetamacTransaction(TransactionStatus status) throws MetamacException;
     }
 
     @Override
@@ -248,6 +307,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
+
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
     }
 
@@ -1387,19 +1449,19 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
     }
 
-    private List<String> retrieveCategoryElementsInIndicators(ServiceContext ctx) throws MetamacException {
+    @Override
+    public void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+        taskService.scheduleCategoryCacheRefreshManualJob(ctx);
+    }
+
+    @Override
+    public List<String> retrieveCategoryElementsInIndicators(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
 
         return getIndicatorVersionRepository().findCategoryElementsInIndicators();
 
-    }
-
-    @Override
-    public List<MetamacExceptionItem> updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
-
-        return getCategoryCacheService().updateCategoryCacheAll(ctx, retrieveCategoryElementsInIndicators(ctx));
     }
 
 }

@@ -37,4 +37,11 @@ public class CategoryCacheServiceTest extends AbstractDbUnitJpaTests implements 
         // TODO Auto-generated method stub
         fail("testUpdateCategoryCache not implemented");
     }
+
+    @Test
+    public void testCreateCategoryCacheByCategoryElement() throws Exception {
+        // TODO Auto-generated method stub
+        fail("testCreateCategoryCacheByCategoryElement not implemented");
+    }
+
 }

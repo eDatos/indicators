@@ -38,7 +38,7 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
 
     private void schedulingCategoryCacheRefreshJob() {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
-        taskServiceFacade.scheduleCategoryCacheRefreshJob(ctx);
+        taskServiceFacade.scheduleCategoryCacheRefreshAutomaticJob(ctx);
     }
 
 }

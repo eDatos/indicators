@@ -5,7 +5,6 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -49,6 +48,7 @@ import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.task.domain.Task;
@@ -61,12 +61,14 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
 @Service("taskService")
 public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
-    public static final String             PREFIX_JOB_POPULATE_DATA = "job_populatedata_";
-    public static final String             PREFIX_JOB_EXPORTS_DSPL  = "exports_dspl_job_";
+    public static final String             PREFIX_JOB_POPULATE_DATA         = "job_populatedata_";
+    public static final String             PREFIX_JOB_EXPORTS_DSPL          = "exports_dspl_job_";
+    public static final String             PREFIX_JOB_UPDATE_CATEGORY_CACHE = "update_category_cache_from_srm";
+    public static final String             GROUP_EXTERNAL_CATEGORY_CACHE    = "externalCategoryCacheUpdate";
 
-    protected final Logger                 logger                   = LoggerFactory.getLogger(getClass());
+    protected final Logger                 logger                           = LoggerFactory.getLogger(getClass());
 
-    private SchedulerFactory               schedulerFactory         = null;
+    private SchedulerFactory               schedulerFactory                 = null;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -194,6 +196,20 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // Delete complete task
         Task task = retrieveTaskByJob(ctx, jobKey);
         getTaskRepository().delete(task);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String jobKey, MetamacException exception) throws MetamacException {
+        Task task = retrieveTaskByJob(ctx, jobKey);
+        // Plannify a recovery job
+        if (jobKey.startsWith(PREFIX_JOB_UPDATE_CATEGORY_CACHE)) {
+            processRollbackUpdateCategoryCacheTask(ctx, task.getJob(), exception);
+        }
+    }
+
+    private void processRollbackUpdateCategoryCacheTask(ServiceContext ctx, String jobKey, MetamacException e) throws MetamacException {
+        getNoticesRestInternalService().createUpdateCategoryCacheErrorNotification(ctx.getUserId(), ServiceNoticeAction.UPDATE_CATEGORY_CACHE_JOB, e);
+        markTaskAsFinished(ctx, jobKey);
     }
 
     @Override
@@ -332,6 +348,18 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         return TaskServiceImpl.PREFIX_JOB_POPULATE_DATA + indicatorUuid;
     }
 
+    public JobKey createJobKeyForUpdateCategoryCache() {
+        return new JobKey(createTaskNameForUpdateCategoryCache());
+    }
+
+    public String createTaskNameForUpdateCategoryCache() {
+        return TaskServiceImpl.PREFIX_JOB_UPDATE_CATEGORY_CACHE;
+    }
+
+    private TriggerKey createTriggerKeyForUpdateCategoryCach() {
+        return new TriggerKey(createTaskNameForUpdateCategoryCache(), GROUP_EXTERNAL_CATEGORY_CACHE);
+    }
+
     private NoticesRestInternalService getNoticesRestInternalService() {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
@@ -372,11 +400,44 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public void scheduleCategoryCacheRefreshJob(ServiceContext ctx) {
-        try {
-            InvocationValidator.checkCategoryCacheRefreshJob(ctx);
+    public void scheduleCategoryCacheRefreshManualJob(ServiceContext ctx) {
 
-            JobDetail job = newJob(CategoryCacheRefreshJob.class).build();
+        String taskName = createTaskNameForUpdateCategoryCache();
+        JobKey jobKey = this.createJobKeyForUpdateCategoryCache();
+        TriggerKey triggerKey = this.createTriggerKeyForUpdateCategoryCach();
+
+        try {
+            InvocationValidator.checkScheduleCategoryCacheRefreshManualJob(ctx, taskName);
+
+            checkExistTaskInResource(jobKey);
+
+            JobDetail job = newJob(CategoryCacheRefreshJob.class).withIdentity(jobKey).usingJobData(CategoryCacheRefreshJob.TASK_NAME, taskName)
+                    .usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, true).build();
+
+            Task task = new Task(taskName);
+            task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
+            createTask(ctx, task);
+
+            SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+            Scheduler sched = schedulerFactory.getScheduler();
+            sched.scheduleJob(job, trigger);
+
+            logger.info("category cache refresh job successfully scheduled at {} ", new Date());
+
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred scheduling category cache refresh job", e);
+        }
+    }
+
+    @Override
+    public void scheduleCategoryCacheRefreshAutomaticJob(ServiceContext ctx) {
+
+        try {
+            InvocationValidator.checkScheduleCategoryCacheRefreshCronJob(ctx);
+
+            JobDetail job = newJob(CategoryCacheRefreshJob.class).usingJobData(CategoryCacheRefreshJob.TASK_NAME, "automaticJob").usingJobData(CategoryCacheRefreshJob.IS_SCHEDULE_MANUAL, false)
+                    .build();
 
             CronTrigger cronTrigger = TriggerBuilder.newTrigger()
                     .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionCategoryCacheRefresh()).withMisfireHandlingInstructionDoNothing()).build();
@@ -392,15 +453,38 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public List<MetamacExceptionItem> processCategoryCacheRefreshTask(ServiceContext ctx) throws MetamacException {
+    public void processCategoryCacheRefreshManualTask(ServiceContext ctx, String taskName) throws MetamacException {
         try {
-            InvocationValidator.checkCategoryCacheRefreshJob(ctx);
+            InvocationValidator.checkScheduleCategoryCacheRefreshManualJob(ctx, taskName);
 
-            return this.getIndicatorsService().updateCategoryCacheAll(ctx);
+            updateCategoryCacheAll(ctx);
 
         } catch (Exception e) {
             logger.error("An unexpected error has occurred trying to refresh category cache in indicators", e);
         }
-        return new ArrayList<MetamacExceptionItem>();
+
+        markTaskAsFinished(ctx, taskName);
+
     }
+
+    @Override
+    public void processCategoryCacheRefreshAutomaticTask(ServiceContext ctx) throws MetamacException {
+        try {
+
+            InvocationValidator.checkScheduleCategoryCacheRefreshCronJob(ctx);
+
+            updateCategoryCacheAll(ctx);
+
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred trying to refresh category cache in indicators", e);
+        }
+
+    }
+
+    private void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+        List<String> allCategoryElementsInIndicators = getIndicatorsService().retrieveCategoryElementsInIndicators(ctx);
+
+        getCategoryCacheService().updateCategoryCacheAll(ctx, allCategoryElementsInIndicators);
+    }
+
 }
