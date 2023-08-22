@@ -1,34 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <dataset> 
-  <TB_CONFIGURATION/>  
-  <TV_CONSULTA/>  
-  <TB_INTERNATIONAL_STRINGS/>  
-  <TB_EXTERNAL_ITEMS/>  
-  <TB_INDICATORS/>  
-  <TB_LIS_UNITS_MULTIPLIERS/>  
-  <TB_LIS_QUANTITIES_UNITS/>  
-  <TB_LIS_GEOGR_GRANULARITIES/>  
-  <TB_LIS_GEOGR_VALUES/>  
-  <TB_QUANTITIES/>  
-  <TB_INDICATORS_VERSIONS/>  
-  <TB_RATES_DERIVATIONS/>  
-  <TB_DATA_SOURCES/>  
-  <TB_DATA_SOURCES_VARIABLES/>  
-  <TB_INDICATORS_INSTANCES/>  
-  <TB_INDICATORS_SYSTEMS/>  
-  <TB_INDIC_SYSTEMS_VERSIONS/>  
-  <TB_ELEMENTS_LEVELS/>  
-  <TB_DIMENSIONS/>  
-  <TB_INDIC_INST_LAST_VALUE/>  
-  <TB_IND_VERSION_GEO_COV/>  
-  <TB_INDIC_VERSION_LAST_VALUE/>  
-  <TB_TRANSLATIONS/>  
-  <TB_IND_VERSION_MEAS_COV/>  
-  <TB_IND_VERSION_TIME_COV/>  
-  <TB_INDICATORS_SYSTEMS_HIST/>  
-  <TB_LOCALISED_STRINGS/>  
-  <TB_CATEGORY_CACHE/>  
-  <TB_TASKS/>  
-  <TB_INDIC_INST_GEO_VALUES/> 
+ 	
+
+<TB_CATEGORY_CACHE
+     ID="1"
+     CATEGORY_CODE="category-ECONOMIA"
+     CATEGORY_ELEMENT_CODE="category-element-ECONOMIA"
+     TITLE_FK = "10001"
+     UUID="1"
+     CREATED_BY="user1"
+     CREATED_DATE="2011-01-01 01:02:04"
+     CREATED_DATE_TZ="Europe/London"
+     LAST_UPDATED_BY="user2"
+     LAST_UPDATED="2011-01-22 01:02:04"
+     LAST_UPDATED_TZ="Europe/London"
+      />
+<TB_CATEGORY_CACHE
+     ID="2"
+     CATEGORY_CODE="category-EDUCACION"
+     CATEGORY_ELEMENT_CODE="category-element-EDUCACION"
+     TITLE_FK = "10002"
+     UUID="2"
+     CREATED_BY="user1"
+     CREATED_DATE="2011-01-01 01:02:04"
+     CREATED_DATE_TZ="Europe/London"
+     LAST_UPDATED_BY="user2"
+     LAST_UPDATED="2011-01-22 01:02:04"
+     LAST_UPDATED_TZ="Europe/London"
+      />
+<TB_CATEGORY_CACHE
+     ID="3"
+     CATEGORY_CODE="category-SALUD"
+     CATEGORY_ELEMENT_CODE="category-element-SALUD"
+     TITLE_FK = "10003"
+     UUID="3"
+     CREATED_BY="user1"
+     CREATED_DATE="2011-01-01 01:02:04"
+     CREATED_DATE_TZ="Europe/London"
+     LAST_UPDATED_BY="user2"
+     LAST_UPDATED="2011-01-22 01:02:04"
+     LAST_UPDATED_TZ="Europe/London"
+      />
+<TB_CATEGORY_CACHE
+     ID="4"
+     CATEGORY_CODE="category-DEMOGRAFIA"
+     CATEGORY_ELEMENT_CODE="category-element-DEMOGRAFIA"
+     TITLE_FK = "10004"
+     UUID="4"
+     CREATED_BY="user1"
+     CREATED_DATE="2011-01-01 01:02:04"
+     CREATED_DATE_TZ="Europe/London"
+     LAST_UPDATED_BY="user2"
+     LAST_UPDATED="2011-01-22 01:02:04"
+     LAST_UPDATED_TZ="Europe/London"
+      /> 
+
+<!-- ************************************************************************************ -->
+	<!--                                 INTERNATIONAL STRINGS                                -->
+	<!-- ************************************************************************************ -->
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="10001"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10001"
+        LABEL="Economía" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="10001"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10002"
+        LABEL="Economy" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="10001"
+        VERSION="1"
+    />
+      <TB_INTERNATIONAL_STRINGS
+        ID="10002"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10003"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="10002"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10004"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="10002"
+        VERSION="1"
+    />
+      <TB_INTERNATIONAL_STRINGS
+        ID="10003"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10005"
+        LABEL="Salud" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="10003"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10006"
+        LABEL="Health" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="10003"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="10004"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10007"
+        LABEL="Demografía" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="10004"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="10008"
+        LABEL="Demografy" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="10004"
+        VERSION="1"
+    />
+    
 </dataset>

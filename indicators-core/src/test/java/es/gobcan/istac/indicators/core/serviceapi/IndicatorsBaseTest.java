@@ -278,6 +278,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         tables.add("TB_CONFIGURATION");
         tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TB_EXTERNAL_ITEMS");
+        tables.add("TB_CATEGORY_CACHE");
         tables.add("TB_LIS_QUANTITIES_UNITS");
         tables.add("TB_LIS_GEOGR_GRANULARITIES");
         tables.add("TB_LIS_GEOGR_VALUES");
@@ -328,6 +329,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         sequences.add("SEQ_INDICATORS_SYSTEMS_HIST");
         sequences.add("SEQ_TRANSLATIONS");
         sequences.add("SEQ_UNITS_MULTIPLIERS");
+        sequences.add("SEQ_CATEGORY_CACHE");
 
         return sequences;
     }
