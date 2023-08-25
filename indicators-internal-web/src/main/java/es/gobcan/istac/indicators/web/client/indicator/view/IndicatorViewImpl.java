@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
@@ -263,15 +264,21 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     @Override
     public void setItemSchemes(String formItemName, ExternalItemsResult result) {
-        // without implement
+        if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
     }
 
     @Override
     public void setItems(String formItemName, ExternalItemsResult result) {
-        // only category_element for now. When more resources are filled, add condition like this for each resource.
-        // if (StringUtils.equals(IndicatorDS.CATEGORY_ELEMENT, formItemName)) {
 
-        generalPanel.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        if (StringUtils.equals(IndicatorDS.CATEGORY_ELEMENT, formItemName)) {
+            generalPanel.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        } else if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
     }
 
 }

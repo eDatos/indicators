@@ -603,13 +603,17 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
     // Note: transforms all metadata regardless of the type
     // InvocationValidation checks metadata unexpected for each type
-    private QuantityDto quantityDoToDto(Quantity source) {
+    private QuantityDto quantityDoToDto(Quantity source) throws MetamacException {
         if (source == null) {
             return null;
         }
 
         QuantityDto target = new QuantityDto();
         target.setType(source.getQuantityType());
+
+        target.setUnitSrm(externalItemDoToDto(source.getUnitSrm()));
+
+        // TODO EDATOS-4197 QUITAR
         target.setUnitUuid(source.getUnit() != null ? source.getUnit().getUuid() : null);
         UnitMultiplier unitMultiplier = source.getUnitMultiplier();
         if (unitMultiplier != null) {
@@ -632,7 +636,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         return target;
     }
 
-    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
+    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) throws MetamacException {
         if (source == null) {
             return null;
         }

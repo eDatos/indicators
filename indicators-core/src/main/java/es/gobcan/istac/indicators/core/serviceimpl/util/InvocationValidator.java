@@ -1908,7 +1908,8 @@ public class InvocationValidator {
         // checks required
         if (checksRequired) {
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ServiceExceptionParametersInternal.QUANTITY_TYPE, exceptions);
-            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_UUID, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_UUID, exceptions); // TODO EDATOS-4197
+            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnitSrm(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_MULTIPLIER, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getDecimalPlaces(), parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES, exceptions);
             if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {

@@ -525,11 +525,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         QuantityType quantityType = new QuantityType();
         quantityType.setType(QUANTITY_TYPE_MAPPING.get(source.getQuantityType()));
-        if (source.getUnit() != null) {
-            quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
-            quantityType.setUnitSymbol(source.getUnit().getSymbol());
-            quantityType.setUnitSymbolPosition(QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.get(source.getUnit().getSymbolPosition()));
+
+        if (source.getUnitSrm() != null) {
+            quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnitSrm().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+            // TODO EDATOS-4197 VER QUE HACER CON ESTOS DOS VALORES.
+            // quantityType.setUnitSymbol(source.getUnit().getSymbol());
+            // quantityType.setUnitSymbolPosition(QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.get(source.getUnit().getSymbolPosition()));
         }
+
         if (source.getUnitMultiplier() != null) {
             quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         }

@@ -4,8 +4,12 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 
 import java.util.LinkedHashMap;
 
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -18,7 +22,9 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class BaseQuantityForm extends GroupDynamicForm {
 
@@ -284,4 +290,28 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new String();
     }
 
+    protected IndicatorUiHandler getIndicatorUiHandlers() {
+        return (IndicatorUiHandler) uiHandlers;
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // EXTERNAL RESOURCES ITEMS
+    // ------------------------------------------------------------------------------------------------------------
+
+    protected SearchSrmItemLinkItemWithSchemeFilterItem createExternalItemFromCodeList(final String name, String title) {
+        return new SearchSrmItemLinkItemWithSchemeFilterItem(name, title, IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
+                webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODE);
+                getIndicatorUiHandlers().retrieveItems(name, webCriteria, firstResult, maxResults);
+            }
+
+            @Override
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
+                webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODELIST);
+                getIndicatorUiHandlers().retrieveItemSchemes(name, webCriteria, firstResult, maxResults);
+            }
+        };
+    }
 }

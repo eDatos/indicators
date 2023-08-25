@@ -6,6 +6,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -28,7 +29,9 @@ public class ViewQuantityForm extends BaseQuantityForm {
         type.setVisible(false);
         ViewTextItem typeText = new ViewTextItem(IndicatorDS.QUANTITY_TYPE + "-text", getConstants().indicQuantityType());
 
-        ViewTextItem unitUuid = new ViewTextItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        ViewTextItem unitUuid = new ViewTextItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit()); // TODO EDATOS-4197 QUITAR
+
+        ExternalItemLinkItem unitItem = new ExternalItemLinkItem(IndicatorDS.QUANTITY_UNIT, getConstants().indicQuantityUnit());
 
         ViewMultiLanguageTextItem unitMultiplier = new ViewMultiLanguageTextItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
 
@@ -72,8 +75,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
 
-        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, baseValue, indexBaseType,
-                indexBaseTypeText, baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(type, typeText, unitUuid, unitItem, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, baseValue,
+                indexBaseType, indexBaseTypeText, baseTime, baseLocation, baseQuantityIndUuid);
     }
 
     public void setValue(QuantityDto quantityDto) {
@@ -81,7 +84,9 @@ public class ViewQuantityForm extends BaseQuantityForm {
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : "");
             setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityDto.getType() != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityDto.getType().toString()) : "");
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitTitle(quantityDto.getUnitUuid()));
+            setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitTitle(quantityDto.getUnitUuid())); // TODO EDATOS-4197 QUITAR
+
+            setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnitSrm());
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplierLabel());
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits() != null ? quantityDto.getSignificantDigits().toString() : "");
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
@@ -103,8 +108,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
             }
 
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
-            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
-                    .getConstants().no()) : "");
+            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT,
+                    quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null ? getIndexBaseTypeEnum(quantityDto).toString() : "");
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getIndexBaseType(quantityDto));
             setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");

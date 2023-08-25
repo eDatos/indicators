@@ -52,6 +52,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                 GeographicalValueCriteriaPropertyEnum.class, new GeographicalValueCriteriaCallback());
         unitMultiplierCriteriaMapper = new MetamacCriteria2SculptorCriteria<UnitMultiplier>(UnitMultiplier.class, UnitMultiplierCriteriaOrderEnum.class, UnitMultiplierCriteriaPropertyEnum.class,
                 new UnitMultiplierCriteriaCallback());
+
+        // TODO EDATOS-4197 QUITAR
         quantityUnitCriteriaMapper = new MetamacCriteria2SculptorCriteria<QuantityUnit>(QuantityUnit.class, QuantityUnitCriteriaOrderEnum.class, QuantityUnitCriteriaPropertyEnum.class,
                 new QuantityUnitCriteriaCallback());
         indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, IndicatorCriteriaOrderEnum.class, IndicatorCriteriaPropertyEnum.class,

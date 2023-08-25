@@ -13,6 +13,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -33,7 +34,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dspl.DsplConcept;
@@ -408,25 +408,25 @@ public class DsplTransformer {
     }
 
     private Set<DsplConcept> createConceptsForUsedUnits(Set<IndicatorVersion> usedIndicators) {
-        Set<QuantityUnit> units = calculateUsedQuantityUnits(usedIndicators);
+        Set<ExternalItem> units = calculateUsedQuantityUnits(usedIndicators);
 
         Set<DsplConcept> concepts = new HashSet<DsplConcept>();
-        for (QuantityUnit unit : units) {
+        for (ExternalItem unit : units) {
             concepts.add(createConceptForUnit(unit));
         }
         return concepts;
     }
 
-    private Set<QuantityUnit> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
-        Set<QuantityUnit> units = new HashSet<QuantityUnit>();
+    private Set<ExternalItem> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
+        Set<ExternalItem> units = new HashSet<ExternalItem>();
 
         for (IndicatorVersion indicatorVersion : indicators) {
-            units.add(indicatorVersion.getQuantity().getUnit());
+            units.add(indicatorVersion.getQuantity().getUnitSrm());
         }
         return units;
     }
 
-    private DsplConcept createConceptForUnit(QuantityUnit unit) {
+    private DsplConcept createConceptForUnit(ExternalItem unit) {
         DsplInfo info = new DsplInfo();
         populateDsplLocalisedTextForInternString(info.getName(), unit.getTitle());
 
@@ -438,7 +438,7 @@ public class DsplTransformer {
         return concept;
     }
 
-    private DsplTable createTableForUnit(QuantityUnit unit) {
+    private DsplTable createTableForUnit(ExternalItem unit) {
         DsplTable table = new DsplTable(getTableIdForUnitConcept(unit));
 
         DsplData data = createTableDataForUnit(unit);
@@ -447,20 +447,24 @@ public class DsplTransformer {
         return table;
     }
 
-    private DsplData createTableDataForUnit(QuantityUnit unit) {
+    private DsplData createTableDataForUnit(ExternalItem unit) {
         DsplData data = new DsplData();
 
         String idColumnName = getIdForUnitConcept(unit);
 
         Row row = new Row();
-        row.addColumn(new TextColumn(idColumnName), unit.getUuid());
+        row.addColumn(new TextColumn(idColumnName), unit.getUrn());
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
             row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
         }
-        if (unit.getSymbol() != null) {
-            row.addColumn(new TextColumn("symbol"), unit.getSymbol());
-            row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
-        }
+
+        /*
+         * TODO EDATOS-4197 VER COMO RELLENAR ESTOS CAMPOS
+         * if (unit.getSymbol() != null) {
+         * row.addColumn(new TextColumn("symbol"), unit.getSymbol());
+         * row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
+         * }
+         */
 
         data.setRows(Arrays.asList(row));
 
@@ -606,7 +610,8 @@ public class DsplTransformer {
     private void applyConceptAttributesForQuantity(DsplConcept concept, Quantity quantity) {
         if (quantity.getUnit() != null) {
             String unitValue = quantity.getUnit().getUuid();
-            DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnit()), unitValue);
+
+            DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnitSrm()), unitValue);
             concept.addAttribute(attribute);
         }
 
@@ -855,15 +860,15 @@ public class DsplTransformer {
         return idSlice + "_table";
     }
 
-    private String getIdForUnitConcept(QuantityUnit unit) {
-        return "unit_" + unit.getUuid();
+    private String getIdForUnitConcept(ExternalItem unit) {
+        return "unit_" + unit.getUrn();
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {
         return "quantity_" + indicatorQuantity.getUuid();
     }
 
-    private String getTableIdForUnitConcept(QuantityUnit unit) {
+    private String getTableIdForUnitConcept(ExternalItem unit) {
         return getIdForUnitConcept(unit) + "_table";
     }
 

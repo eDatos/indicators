@@ -58,7 +58,8 @@ public class DoCopyUtils {
     private static Quantity copy(Quantity source) {
         Quantity target = new Quantity();
         target.setQuantityType(source.getQuantityType());
-        target.setUnit(source.getUnit());
+        target.setUnit(source.getUnit()); // TODO EDATOS-4197 QUITAR
+        target.setUnitSrm(copy(source.getUnitSrm()));
         target.setUnitMultiplier(source.getUnitMultiplier());
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());

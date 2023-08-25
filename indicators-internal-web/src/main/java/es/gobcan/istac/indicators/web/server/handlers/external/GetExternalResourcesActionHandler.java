@@ -6,6 +6,8 @@ import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.constants.CommonSharedConstants;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,13 @@ public class GetExternalResourcesActionHandler extends SecurityActionHandler<Get
             case CATEGORY_ELEMENT:
                 result = srmRestInternalFacade.retrieveCategoryElementsByCategoryScheme(serviceContext, retrieveDefaultCategorySchemeProperty(serviceContext), action.getExternalResourceWebCriteria(),
                         action.getFirstResult(), action.getMaxResults());
+                break;
+            case CODELIST:
+                result = srmRestInternalFacade.findCodelists(serviceContext, (SrmExternalResourceRestCriteria) action.getExternalResourceWebCriteria(), action.getFirstResult(),
+                        action.getMaxResults());
+                break;
+            case CODE:
+                result = srmRestInternalFacade.findCodes(serviceContext, (SrmItemRestCriteria) action.getExternalResourceWebCriteria(), action.getFirstResult(), action.getMaxResults());
                 break;
             default:
                 throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, "An unknown exception has ocurred. Please contact system administrator.");

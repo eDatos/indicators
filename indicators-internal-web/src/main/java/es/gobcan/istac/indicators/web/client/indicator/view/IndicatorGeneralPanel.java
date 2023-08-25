@@ -20,6 +20,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTex
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemSimpleItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
@@ -747,5 +748,15 @@ public class IndicatorGeneralPanel extends VLayout {
 
     public void setCategoryElementExternalItem(List<ExternalItemDto> categoryElementExternalItem, int firstResult, int totalResults) {
         categoryElement.setResources(categoryElementExternalItem, firstResult, totalResults);
+    }
+
+    public void setQuantityUnitFilterExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) quantityEditionForm.getItem(formItemName)).setFilterResources(quantityUnitSchemeExternalItem, firstResult, quantityUnitSchemeExternalItem.size(),
+                totalResults);
+    }
+
+    public void setQuantityUnitExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) quantityEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult, quantityUnitSchemeExternalItem.size(),
+                totalResults);
     }
 }

@@ -23,6 +23,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -1177,4 +1178,26 @@ public class DataSourcePanel extends VLayout {
         editionLanguages = languages;
     }
 
+    public void setQuantityUnitFilterExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) interperiodPuntualRateEditionForm.getItem(formItemName)).setFilterResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) annualPuntualRateEditionForm.getItem(formItemName)).setFilterResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) interperiodPercentageRateEditionForm.getItem(formItemName)).setFilterResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) annualPercentageRateEditionForm.getItem(formItemName)).setFilterResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+
+    }
+
+    public void setQuantityUnitExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) interperiodPuntualRateEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) annualPuntualRateEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) interperiodPercentageRateEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+        ((SearchSrmItemLinkItemWithSchemeFilterItem) annualPercentageRateEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult,
+                quantityUnitSchemeExternalItem.size(), totalResults);
+    }
 }

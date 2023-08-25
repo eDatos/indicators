@@ -15,6 +15,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -68,6 +69,9 @@ public class QuantityForm extends BaseQuantityForm {
         LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(IndicatorsValues.getQuantityUnits());
         unitUuid.setValueMap(valueMap);
         unitUuid.setValidators(getQuantityRequiredIfValidator());
+
+        SearchExternalItemLinkItem unitItem = createExternalItemFromCodeList(IndicatorDS.QUANTITY_UNIT, getConstants().indicQuantityUnit());
+        unitItem.setRequired(true);
 
         CustomSelectItem unitMultiplier = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
         unitMultiplier.setValidators(getQuantityRequiredIfValidator());
@@ -155,8 +159,8 @@ public class QuantityForm extends BaseQuantityForm {
         searchIndicatorBaseUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchIndicatorBaseText = getSearchIndicatorBaseTextItem();
 
-        setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, percentageOf,
-                baseValue, indexBaseType, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
+        setFields(type, unitUuid, unitItem, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange,
+                percentageOf, baseValue, indexBaseType, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
     }
 
     public void setValue(QuantityDto quantityDto) {
@@ -164,7 +168,9 @@ public class QuantityForm extends BaseQuantityForm {
         clearValues();
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : null);
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
+            setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid()); // TODO EDATOS-4197 QUITAR
+
+            setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnitSrm());
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
             if (quantityDto.getSignificantDigits() != null) {
                 setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
@@ -214,31 +220,34 @@ public class QuantityForm extends BaseQuantityForm {
     }
 
     public QuantityDto getValue() {
-        quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum
-                .valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
+        quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty())
+                ? QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE))
+                : null);
 
         quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
+        quantityDto.setUnitSrm(getValueAsExternalItemDto(IndicatorDS.QUANTITY_UNIT));
         quantityDto.setUnitMultiplier(getStringValueAsInteger(IndicatorDS.QUANTITY_UNIT_MULTIPLIER));
         quantityDto.setSignificantDigits(getValueAsInteger(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS));
         quantityDto.setDecimalPlaces(getValueAsInteger(IndicatorDS.QUANTITY_DECIMAL_PLACES));
         // Only set value if item is visible (these item are quantity type dependent)
         quantityDto.setMinimum(getValueAsInteger(IndicatorDS.QUANTITY_MINIMUM));
         quantityDto.setMaximum(getValueAsInteger(IndicatorDS.QUANTITY_MAXIMUM));
-        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
-                .getUuidString(getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)) : null);
-        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
-                .getUuidString(getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)) : null);
-        quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean
-                .valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false) : null);
-        quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? getValueAsInternationalStringDto(IndicatorDS.QUANTITY_PERCENTAGE_OF) : null);
-        quantityDto.setBaseValue(getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible()
-                ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer) getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null)
+        quantityDto.setDenominatorIndicatorUuid(
+                getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)) : null);
+        quantityDto.setNumeratorIndicatorUuid(
+                getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)) : null);
+        quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible()
+                ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean.valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false)
                 : null);
+        quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? getValueAsInternationalStringDto(IndicatorDS.QUANTITY_PERCENTAGE_OF) : null);
+        quantityDto.setBaseValue(
+                getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer) getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
-        quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION))
-                .getSelectedGeoValue()) : null);
-        quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).isVisible() ? CommonUtils
-                .getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
+        quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible()
+                ? CommonUtils.getUuidString(((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue())
+                : null);
+        quantityDto.setBaseQuantityIndicatorUuid(
+                getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
         return quantityDto;
     }
 

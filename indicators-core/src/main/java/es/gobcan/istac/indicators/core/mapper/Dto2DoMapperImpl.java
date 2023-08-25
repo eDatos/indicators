@@ -406,6 +406,10 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         }
 
         target.setQuantityType(source.getType());
+
+        target.setUnitSrm(externalItemDtoToDo(source.getUnitSrm(), target.getUnitSrm(), ServiceExceptionParameters.QUANTITY_UNIT));
+
+        // TODO EDATOS-4197 QUITAR
         if (source.getUnitUuid() != null) {
             target.setUnit(indicatorsService.retrieveQuantityUnit(ctx, source.getUnitUuid()));
         } else {

@@ -967,6 +967,8 @@ Application Indicators {
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
             "Geographical value base"
 			- @GeographicalValue baseLocation nullable cascade="none" databaseColumn="BASE_LOCATION_FK";
+			"Unit"
+			- @ExternalItem unitSrm nullable cascade="all" databaseColumn="UNIT_SRM_FK";
 	    }
 	    
 	    "Metric characteristics of a data source of indicator"
@@ -1931,6 +1933,8 @@ Application Indicators {
 			String baseLocationUuid;
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
+			"Unit"
+			-@ExternalItemDto unitSrm;
 		}
 
 	    "Dto for rate derivation"
