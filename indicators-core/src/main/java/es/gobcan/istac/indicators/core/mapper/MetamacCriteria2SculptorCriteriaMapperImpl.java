@@ -17,8 +17,6 @@ import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropert
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaOrderEnum;
-import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.UnitMultiplierCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.UnitMultiplierCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -29,8 +27,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.QuantityUnitProperties;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -40,7 +36,6 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
 
     private MetamacCriteria2SculptorCriteria<GeographicalGranularity> geographicalGranularityCriteriaMapper = null;
     private MetamacCriteria2SculptorCriteria<GeographicalValue>       geographicalValueCriteriaMapper       = null;
-    private MetamacCriteria2SculptorCriteria<QuantityUnit>            quantityUnitCriteriaMapper            = null;
     private MetamacCriteria2SculptorCriteria<UnitMultiplier>          unitMultiplierCriteriaMapper          = null;
     private MetamacCriteria2SculptorCriteria<IndicatorVersion>        indicatorVersionCriteriaMapper        = null;
     private MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> indicatorsSystemVersionCriteriaMapper = null;
@@ -53,9 +48,6 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         unitMultiplierCriteriaMapper = new MetamacCriteria2SculptorCriteria<UnitMultiplier>(UnitMultiplier.class, UnitMultiplierCriteriaOrderEnum.class, UnitMultiplierCriteriaPropertyEnum.class,
                 new UnitMultiplierCriteriaCallback());
 
-        // TODO EDATOS-4197 QUITAR
-        quantityUnitCriteriaMapper = new MetamacCriteria2SculptorCriteria<QuantityUnit>(QuantityUnit.class, QuantityUnitCriteriaOrderEnum.class, QuantityUnitCriteriaPropertyEnum.class,
-                new QuantityUnitCriteriaCallback());
         indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, IndicatorCriteriaOrderEnum.class, IndicatorCriteriaPropertyEnum.class,
                 new IndicatorVersionCriteriaCallback());
         indicatorsSystemVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion>(IndicatorsSystemVersion.class, null, IndicatorsSystemCriteriaPropertyEnum.class,
@@ -205,51 +197,6 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         @Override
         public Property<UnitMultiplier> retrievePropertyOrderDefault() throws MetamacException {
             return UnitMultiplierProperties.id();
-        }
-    }
-
-    // -------------------------------------------------------------------------------------
-    // QUANTITY UNIT
-    // -------------------------------------------------------------------------------------
-
-    @Override
-    public MetamacCriteria2SculptorCriteria<QuantityUnit> getQuantityUnitCriteriaMapper() {
-        return quantityUnitCriteriaMapper;
-    }
-
-    private class QuantityUnitCriteriaCallback implements CriteriaCallback {
-
-        @Override
-        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            QuantityUnitCriteriaPropertyEnum propertyNameCriteria = QuantityUnitCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
-            switch (propertyNameCriteria) {
-                case UUID:
-                    return new SculptorPropertyCriteria(QuantityUnitProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
-                case SYMBOL_POSITION:
-                    return new SculptorPropertyCriteria(QuantityUnitProperties.symbolPosition(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
-                case TITLE:
-                    return new SculptorPropertyCriteria(QuantityUnitProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
-                default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
-            }
-        }
-
-        @Override
-        public Property<QuantityUnit> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            QuantityUnitCriteriaOrderEnum propertyNameCriteria = QuantityUnitCriteriaOrderEnum.fromValue(order.getPropertyName());
-            switch (propertyNameCriteria) {
-                case UUID:
-                    return QuantityUnitProperties.uuid();
-                case TITLE:
-                    return QuantityUnitProperties.title().texts().label();
-                default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
-            }
-        }
-
-        @Override
-        public Property<QuantityUnit> retrievePropertyOrderDefault() throws MetamacException {
-            return QuantityUnitProperties.id();
         }
     }
 

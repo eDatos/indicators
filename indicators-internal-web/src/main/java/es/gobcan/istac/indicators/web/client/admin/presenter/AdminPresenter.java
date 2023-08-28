@@ -50,7 +50,6 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
 
     public interface AdminView extends View, HasUiHandlers<AdminUiHandlers> {
 
-        void selectQuantityUnitsTab();
     }
 
     @ProxyCodeSplit
@@ -80,7 +79,7 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
         // Redirect to metadata tab
         // getView().selectQuantityUnitsTab();
         if (NameTokens.adminPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
-            goToQuantityUnitsTab();
+            goToUnitMultipliersTab();
         }
     }
 
@@ -94,14 +93,6 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
     protected void onReveal() {
         super.onReveal();
         setInSlot(TYPE_SetContextAreaContentToolBar, toolStripPresenterWidget);
-    }
-
-    // NAVIGATION
-    @Override
-    public void goToQuantityUnitsTab() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
-        hierarchy.add(new PlaceRequest(NameTokens.adminQuantityUnitsPage));
-        placeManager.revealPlaceHierarchy(hierarchy);
     }
 
     // NAVIGATION

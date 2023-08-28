@@ -11,7 +11,6 @@ import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
-import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
@@ -29,7 +28,6 @@ public interface IndicatorsWebGinjector extends MetamacWebGinjector {
     Provider<MainPagePresenter> getMainPagePresenter();
 
     AsyncProvider<AdminPresenter> getAdminPresenter();
-    AsyncProvider<AdminQuantityUnitsTabPresenter> getAdminQuantityUnitsTabPresenter();
     AsyncProvider<AdminGeoGranularitiesTabPresenter> getAdminGeoGranularitiesTabPresenter();
     AsyncProvider<AdminUnitMultipliersTabPresenter> getAdminUnitMultipliersTabPresenter();
     AsyncProvider<AdminGeoValuesTabPresenter> getAdminGeoValuesTabPresenter();

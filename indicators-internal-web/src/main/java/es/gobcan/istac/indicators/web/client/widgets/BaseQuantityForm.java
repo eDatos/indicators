@@ -5,7 +5,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
@@ -17,10 +16,8 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
-import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
@@ -277,17 +274,6 @@ public class BaseQuantityForm extends GroupDynamicForm {
                 return false;
             }
         };
-    }
-
-    protected String getQuantityUnitTitle(String unitUuid) {
-        if (unitUuid != null) {
-            for (QuantityUnitDto unit : IndicatorsValues.getQuantityUnits()) {
-                if (unitUuid.equals(unit.getUuid())) {
-                    return InternationalStringUtils.getLocalisedString(unit.getTitle());
-                }
-            }
-        }
-        return new String();
     }
 
     protected IndicatorUiHandler getIndicatorUiHandlers() {

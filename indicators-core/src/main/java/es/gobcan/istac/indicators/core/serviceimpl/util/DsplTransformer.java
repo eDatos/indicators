@@ -421,7 +421,7 @@ public class DsplTransformer {
         Set<ExternalItem> units = new HashSet<ExternalItem>();
 
         for (IndicatorVersion indicatorVersion : indicators) {
-            units.add(indicatorVersion.getQuantity().getUnitSrm());
+            units.add(indicatorVersion.getQuantity().getUnit());
         }
         return units;
     }
@@ -609,9 +609,9 @@ public class DsplTransformer {
 
     private void applyConceptAttributesForQuantity(DsplConcept concept, Quantity quantity) {
         if (quantity.getUnit() != null) {
-            String unitValue = quantity.getUnit().getUuid();
+            String unitValue = quantity.getUnit().getUrn();
 
-            DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnitSrm()), unitValue);
+            DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnit()), unitValue);
             concept.addAttribute(attribute);
         }
 

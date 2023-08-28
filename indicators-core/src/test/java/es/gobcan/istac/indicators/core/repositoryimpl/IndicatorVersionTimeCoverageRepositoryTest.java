@@ -16,7 +16,6 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionTimeCoverageRepository;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsBaseTest;
@@ -34,9 +33,6 @@ public class IndicatorVersionTimeCoverageRepositoryTest extends IndicatorsBaseTe
 
     @Autowired
     protected IndicatorsService            indicatorService;
-
-    @Autowired
-    protected QuantityUnitRepository       quantityUnitRepository;
 
     @Autowired
     protected UnitMultiplierRepository     unitMultiplierRepository;
@@ -92,7 +88,7 @@ public class IndicatorVersionTimeCoverageRepositoryTest extends IndicatorsBaseTe
         indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
-        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_01", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
         return indicatorVersion;
     }

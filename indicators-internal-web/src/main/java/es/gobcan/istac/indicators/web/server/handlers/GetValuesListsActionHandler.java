@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetValuesListsAction;
@@ -31,13 +30,11 @@ public class GetValuesListsActionHandler extends SecurityActionHandler<GetValues
     @Override
     public GetValuesListsResult executeSecurityAction(GetValuesListsAction action) throws ActionException {
         try {
-            List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.retrieveQuantityUnits(ServiceContextHolder.getCurrentServiceContext());
-
             List<GeographicalGranularityDto> geoGranularities = indicatorsServiceFacade.retrieveGeographicalGranularities(ServiceContextHolder.getCurrentServiceContext());
 
             List<UnitMultiplierDto> unitMultiplers = indicatorsServiceFacade.retrieveUnitsMultipliers(ServiceContextHolder.getCurrentServiceContext());
 
-            return new GetValuesListsResult(quantityUnits, geoGranularities, unitMultiplers);
+            return new GetValuesListsResult(geoGranularities, unitMultiplers);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

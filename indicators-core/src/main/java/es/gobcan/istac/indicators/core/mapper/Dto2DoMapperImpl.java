@@ -34,7 +34,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.RateDerivationRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -49,7 +48,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
@@ -407,14 +405,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
         target.setQuantityType(source.getType());
 
-        target.setUnitSrm(externalItemDtoToDo(source.getUnitSrm(), target.getUnitSrm(), ServiceExceptionParameters.QUANTITY_UNIT));
+        target.setUnit(externalItemDtoToDo(source.getUnit(), target.getUnit(), ServiceExceptionParameters.QUANTITY_UNIT));
 
-        // TODO EDATOS-4197 QUITAR
-        if (source.getUnitUuid() != null) {
-            target.setUnit(indicatorsService.retrieveQuantityUnit(ctx, source.getUnitUuid()));
-        } else {
-            target.setUnit(null);
-        }
         if (source.getUnitMultiplier() != null) {
             UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(ctx, source.getUnitMultiplier()); // only to check exists
             target.setUnitMultiplier(unitMultiplier);
@@ -468,38 +460,6 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
             return true;
         }
         return false;
-    }
-
-    @Override
-    public QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-
-        // If exists, retrieves existing entity. Otherwise, creates new entity
-        QuantityUnit target = new QuantityUnit();
-        if (source.getUuid() != null) {
-            target = indicatorsService.retrieveQuantityUnit(ctx, source.getUuid());
-            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
-        }
-
-        quantityUnitDtoToDo(ctx, source, target);
-        return target;
-    }
-
-    private QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source, QuantityUnit target) throws MetamacException {
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.QUANTITY_UNIT);
-        }
-
-        target.setSymbol(source.getSymbol());
-        target.setSymbolPosition(source.getSymbolPosition());
-        target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
-
-        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
-        target.setUpdateDate(new DateTime());
-
-        return target;
     }
 
     @Override

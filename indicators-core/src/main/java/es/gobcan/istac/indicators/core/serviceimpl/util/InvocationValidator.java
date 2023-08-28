@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -1195,16 +1194,6 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkCreateQuantityUnit(List<MetamacExceptionItem> exceptions, QuantityUnit quantityUnits) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        checkQuantityUnit(quantityUnits, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
     public static void checkDeleteQuantityUnit(List<MetamacExceptionItem> exceptions, String quantityUnitsUuid) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1213,24 +1202,6 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkParameterRequired(quantityUnitsUuid, ServiceExceptionParameters.QUANTITY_UNIT_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
-    }
-
-    public static void checkUpdateQuantityUnit(List<MetamacExceptionItem> exceptions, QuantityUnit quantityUnits) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        checkQuantityUnit(quantityUnits, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    private static void checkQuantityUnit(QuantityUnit quantityUnits, List<MetamacExceptionItem> exceptions) {
-        IndicatorsValidationUtils.checkParameterRequired(quantityUnits, ServiceExceptionParameters.QUANTITY_UNIT, exceptions);
-        if (quantityUnits == null) {
-            return;
-        }
-        IndicatorsValidationUtils.checkMetadataRequired(quantityUnits.getTitle(), ServiceExceptionParameters.QUANTITY_UNIT_TITLE, exceptions);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1908,8 +1879,7 @@ public class InvocationValidator {
         // checks required
         if (checksRequired) {
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ServiceExceptionParametersInternal.QUANTITY_TYPE, exceptions);
-            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_UUID, exceptions); // TODO EDATOS-4197
-            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnitSrm(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_MULTIPLIER, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getDecimalPlaces(), parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES, exceptions);
             if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {

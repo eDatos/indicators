@@ -208,7 +208,7 @@ public class Do2JsonStatMapperUtil {
         // if (symbolPosition != null) {
         // unit.setPosition(symbolPosition.toString());
         // }
-        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnitSrm().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         unit.setType(quantity.getQuantityType().toString());
         return unit;
     }

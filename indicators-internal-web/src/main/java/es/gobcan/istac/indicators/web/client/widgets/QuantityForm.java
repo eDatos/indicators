@@ -65,13 +65,9 @@ public class QuantityForm extends BaseQuantityForm {
         });
         type.setValidators(getQuantityRequiredIfValidator());
 
-        CustomSelectItem unitUuid = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
-        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(IndicatorsValues.getQuantityUnits());
-        unitUuid.setValueMap(valueMap);
-        unitUuid.setValidators(getQuantityRequiredIfValidator());
-
         SearchExternalItemLinkItem unitItem = createExternalItemFromCodeList(IndicatorDS.QUANTITY_UNIT, getConstants().indicQuantityUnit());
         unitItem.setRequired(true);
+        unitItem.setValidators(getQuantityRequiredIfValidator());
 
         CustomSelectItem unitMultiplier = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
         unitMultiplier.setValidators(getQuantityRequiredIfValidator());
@@ -159,8 +155,8 @@ public class QuantityForm extends BaseQuantityForm {
         searchIndicatorBaseUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchIndicatorBaseText = getSearchIndicatorBaseTextItem();
 
-        setFields(type, unitUuid, unitItem, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange,
-                percentageOf, baseValue, indexBaseType, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
+        setFields(type, unitItem, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, percentageOf,
+                baseValue, indexBaseType, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
     }
 
     public void setValue(QuantityDto quantityDto) {
@@ -168,9 +164,8 @@ public class QuantityForm extends BaseQuantityForm {
         clearValues();
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : null);
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid()); // TODO EDATOS-4197 QUITAR
 
-            setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnitSrm());
+            setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnit());
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
             if (quantityDto.getSignificantDigits() != null) {
                 setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
@@ -224,8 +219,7 @@ public class QuantityForm extends BaseQuantityForm {
                 ? QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE))
                 : null);
 
-        quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
-        quantityDto.setUnitSrm(getValueAsExternalItemDto(IndicatorDS.QUANTITY_UNIT));
+        quantityDto.setUnit(getValueAsExternalItemDto(IndicatorDS.QUANTITY_UNIT));
         quantityDto.setUnitMultiplier(getStringValueAsInteger(IndicatorDS.QUANTITY_UNIT_MULTIPLIER));
         quantityDto.setSignificantDigits(getValueAsInteger(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS));
         quantityDto.setDecimalPlaces(getValueAsInteger(IndicatorDS.QUANTITY_DECIMAL_PLACES));

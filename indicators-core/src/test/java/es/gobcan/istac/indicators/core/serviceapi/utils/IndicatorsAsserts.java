@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
@@ -26,7 +27,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -59,9 +59,13 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
     }
 
+    public static void assertEqualsExternalItemDto(ExternalItemDto expected, ExternalItemDto actual) {
+        assertEqualsExternalItemDto(expected, actual);
+    }
+
     public static void assertEqualsQuantity(QuantityDto expected, QuantityDto actual) {
         assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getUnitUuid(), actual.getUnitUuid());
+        assertEqualsExternalItemDto(expected.getUnit(), actual.getUnit());
         assertEquals(expected.getUnitMultiplier(), actual.getUnitMultiplier());
         assertEquals(expected.getSignificantDigits(), actual.getSignificantDigits());
         assertEquals(expected.getDecimalPlaces(), actual.getDecimalPlaces());
@@ -145,19 +149,6 @@ public class IndicatorsAsserts extends MetamacAsserts {
 
     public static void assertEqualsGeographicalValueDto(GeographicalValueDto expected, GeographicalValueDto actual) {
         assertEqualsCreatedGeographicalValueDto(expected, actual);
-        assertEquals(expected.getUuid(), actual.getUuid());
-        assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
-        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
-    }
-
-    public static void assertEqualsCreatedQuantityUnitDto(QuantityUnitDto expected, QuantityUnitDto actual) {
-        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getSymbol(), actual.getSymbol());
-        assertEquals(expected.getSymbolPosition(), actual.getSymbolPosition());
-    }
-
-    public static void assertEqualsQuantityUnitDto(QuantityUnitDto expected, QuantityUnitDto actual) {
-        assertEqualsCreatedQuantityUnitDto(expected, actual);
         assertEquals(expected.getUuid(), actual.getUuid());
         assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
         assertEquals(expected.getCreatedBy(), actual.getCreatedBy());

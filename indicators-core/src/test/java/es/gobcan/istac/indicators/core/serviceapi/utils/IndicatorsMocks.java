@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
@@ -19,9 +20,7 @@ import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 
 /**
  * Mocks
@@ -134,21 +133,6 @@ public class IndicatorsMocks extends MetamacMocks {
     }
 
     // -----------------------------------------------------------------
-    // QUANTITY UNIT
-    // -----------------------------------------------------------------
-
-    /**
-     * Mock a QuantityUnit
-     */
-    public static QuantityUnitDto mockQuantityUnit(String locale, String label) {
-        QuantityUnitDto quantityUnitDto = new QuantityUnitDto();
-        quantityUnitDto.setSymbol(mockString(2));
-        quantityUnitDto.setSymbolPosition(QuantityUnitSymbolPositionEnum.START);
-        quantityUnitDto.setTitle(mockInternationalStringDto(locale, label));
-        return quantityUnitDto;
-    }
-
-    // -----------------------------------------------------------------
     // UNIT MULTIPLIER
     // -----------------------------------------------------------------
 
@@ -160,6 +144,13 @@ public class IndicatorsMocks extends MetamacMocks {
         unitMultiplierDto.setUnitMultiplier(unitMultiplierValue);
         unitMultiplierDto.setTitle(mockInternationalStringDto());
         return unitMultiplierDto;
+    }
+
+    /**
+     * Mock an ExternalItemDto
+     */
+    public static ExternalItemDto mockExternalItemDto(String code, String urn, TypeExternalArtefactsEnum type) {
+        return mockExternalItemDtoComplete(code, urn, type);
     }
 
     // -----------------------------------------------------------------
@@ -216,4 +207,9 @@ public class IndicatorsMocks extends MetamacMocks {
         ExternalItem item = mockExternalItem(code, codeNested, uri, urnProvider, urn, type, title, managementAppUrl);
         return item;
     }
+
+    public static ExternalItemDto mockQuantityUnitExternalItemDto(String code) {
+        return mockExternalItemDtoComplete(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+    }
+
 }

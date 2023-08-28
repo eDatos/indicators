@@ -2,18 +2,6 @@
 
 <dataset>
 
-  
-  	<!-- ************************************************************************************ -->
-	<!--                                 QUANTITIES UNITS									  -->
-	<!-- ************************************************************************************ -->
-	<TB_LIS_QUANTITIES_UNITS 
-		ID="1" 
-		UUID="1"
-		SYMBOL="km"
-		SYMBOL_POSITION="END" 
-		TITLE_FK="1"
-        VERSION="0"
-	/>
     
     <TB_LIS_UNITS_MULTIPLIERS
         ID="1"
@@ -277,7 +265,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="12"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -427,7 +415,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="13"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -494,7 +482,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
-							UNIT_FK="1"
+							UNIT_FK="14"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -529,7 +517,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="2"
-							UNIT_FK="1"
+							UNIT_FK="15"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -564,7 +552,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="0"
-							UNIT_FK="1"
+							UNIT_FK="16"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -599,7 +587,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="0"
-							UNIT_FK="1"
+							UNIT_FK="17"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -697,7 +685,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
-							UNIT_FK="1"
+							UNIT_FK="18"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -732,7 +720,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="2"
-							UNIT_FK="1"
+							UNIT_FK="19"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -767,7 +755,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="0"
-							UNIT_FK="1"
+							UNIT_FK="20"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -802,7 +790,7 @@
 		  					UNIT_MULTIPLIER_FK="3"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="0"
-							UNIT_FK="1"
+							UNIT_FK="21"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -919,7 +907,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="22"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1071,7 +1059,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="23"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1221,7 +1209,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="24"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1372,7 +1360,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="25"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1521,7 +1509,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
   					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="26"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1670,7 +1658,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="27"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1793,7 +1781,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="28"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1942,7 +1930,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="29"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2065,7 +2053,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="0"
-					UNIT_FK="1"
+					UNIT_FK="30"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2258,6 +2246,219 @@
                         TYPE = "structuralResources#categoryElement"
                         VERSION="1"
                     />
+
+				    
+					    <!-- ************************************************************************************ -->
+					    <!--                                 QUANTITIES UNITS AS EXTERNAL ITEMS                   -->
+					    <!-- ************************************************************************************ -->
+					<TB_EXTERNAL_ITEMS
+					   ID="12"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "70"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />   
+					
+					<TB_EXTERNAL_ITEMS
+					   ID="13"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "71"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="14"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "72"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 
+					 <TB_EXTERNAL_ITEMS
+					   ID="15"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "73"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 /> 
+					 
+					 <TB_EXTERNAL_ITEMS
+					   ID="16"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "74"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 /> 
+					 
+					 <TB_EXTERNAL_ITEMS
+					   ID="17"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "75"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 /> 
+					 
+					 <TB_EXTERNAL_ITEMS
+					   ID="18"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "76"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 /> 
+					 
+					 <TB_EXTERNAL_ITEMS
+					   ID="19"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "77"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 /> 
+					
+					<TB_EXTERNAL_ITEMS
+					   ID="20"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "78"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 <TB_EXTERNAL_ITEMS
+					   ID="21"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "79"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 <TB_EXTERNAL_ITEMS
+					   ID="22"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "80"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="23"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "82"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 <TB_EXTERNAL_ITEMS
+					   ID="24"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "83"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="25"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "84"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="26"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "85"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 <TB_EXTERNAL_ITEMS
+					   ID="27"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "86"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="28"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "87"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="29"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "88"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					<TB_EXTERNAL_ITEMS
+					   ID="30"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "89"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+					 <TB_EXTERNAL_ITEMS
+					   ID="31"
+					   CODE="KM"
+					   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+					   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+					   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+					   TITLE_FK = "90"
+					   TYPE = "structuralResources#code"
+					   VERSION="1"
+					 />  
+    
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
 	<!-- ************************************************************************************ -->
@@ -2537,6 +2738,387 @@
         INTERNATIONAL_STRING_FK="54"
         VERSION="1"
     />
+<TB_INTERNATIONAL_STRINGS
+        ID="70"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="100"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="70"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="101"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="70"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="71"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="102"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="71"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="103"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="71"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="72"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="104"
+        LABEL="Kilogramos" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="72"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="105"
+        LABEL="Kilograms" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="72"
+        VERSION="1"
+    />    
+    
+     <TB_INTERNATIONAL_STRINGS
+        ID="73"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="106"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="73"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="107"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="73"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="74"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="108"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="74"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="109"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="74"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="75"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="110"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="75"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="111"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="75"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="76"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="112"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="76"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="113"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="76"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="77"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="114"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="77"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="115"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="77"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="78"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="116"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="78"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="117"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="78"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="79"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="118"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="79"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="119"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="79"
+        VERSION="1"
+    />    
+
+<TB_INTERNATIONAL_STRINGS
+        ID="80"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="120"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="80"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="121"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="80"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="82"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="122"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="82"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="123"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="82"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="83"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="124"
+        LABEL="Kilogramos" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="83"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="125"
+        LABEL="Kilograms" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="83"
+        VERSION="1"
+    />    
+    
+     <TB_INTERNATIONAL_STRINGS
+        ID="84"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="126"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="84"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="127"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="84"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="85"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="128"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="85"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="129"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="85"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="86"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="130"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="86"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="131"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="86"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="87"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="132"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="87"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="133"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="87"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="87"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="134"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="87"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="135"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="87"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="88"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="136"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="88"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="137"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="88"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="89"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="138"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="89"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="139"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="89"
+        VERSION="1"
+    />    
+        <TB_INTERNATIONAL_STRINGS
+        ID="90"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="140"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="90"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="141"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="90"
+        VERSION="1"
+    />        
 </dataset>
 
     

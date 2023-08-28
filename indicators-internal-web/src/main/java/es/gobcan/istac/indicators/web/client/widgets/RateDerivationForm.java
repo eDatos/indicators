@@ -38,7 +38,6 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
@@ -171,11 +170,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         ViewTextItem typeText = new ViewTextItem(IndicatorDS.QUANTITY_TYPE_TEXT, getConstants().indicQuantityType());
 
-        RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
-        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(IndicatorsValues.getQuantityUnits());
-        unitUuid.setValueMap(valueMap);
-        unitUuid.setShowIfCondition(getFormItemShowIfApplicable());
-
         SearchExternalItemLinkItem unitItem = createExternalItemFromCodeList(IndicatorDS.QUANTITY_UNIT, getConstants().indicQuantityUnit());
         unitItem.setRequired(true);
         unitItem.setShowIfCondition(getFormItemShowIfApplicable());
@@ -221,7 +215,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setVisible(false);
 
-        setFields(staticMethodType, methodType, viewMethod, methodCalculated, viewMethodLoad, methodLoad, rounding, type, typeText, unitUuid, unitItem, unitMultiplier, sigDigits, decPlaces, min, max,
+        setFields(staticMethodType, methodType, viewMethod, methodCalculated, viewMethodLoad, methodLoad, rounding, type, typeText, unitItem, unitMultiplier, sigDigits, decPlaces, min, max,
                 searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, isPercentangeText, percentageOf, baseQuantityIndUuid);
 
         markForRedraw();
@@ -265,8 +259,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         setValue(IndicatorDS.QUANTITY_TYPE, quantityType.toString());
         setValue(IndicatorDS.QUANTITY_TYPE_TEXT, getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()));
-        setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
-        setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnitSrm());
+        setValue(IndicatorDS.QUANTITY_UNIT, quantityDto.getUnit());
 
         if (quantityDto.getUnitMultiplier() != null) {
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
@@ -364,8 +357,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         }
 
         quantityDto.setType(quantityType);
-        quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID))); // TODO EDATOS-4197 QUITAR
-        quantityDto.setUnitSrm(getValueAsExternalItemDto(IndicatorDS.QUANTITY_UNIT));
+        quantityDto.setUnit(getValueAsExternalItemDto(IndicatorDS.QUANTITY_UNIT));
         quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? Integer.valueOf(getValueAsString(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer) getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
         quantityDto.setDecimalPlaces(getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) != null ? (Integer) getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) : null);
