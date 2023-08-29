@@ -59,13 +59,9 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
     }
 
-    public static void assertEqualsExternalItemDto(ExternalItemDto expected, ExternalItemDto actual) {
-        assertEqualsExternalItemDto(expected, actual);
-    }
-
     public static void assertEqualsQuantity(QuantityDto expected, QuantityDto actual) {
         assertEquals(expected.getType(), actual.getType());
-        assertEqualsExternalItemDto(expected.getUnit(), actual.getUnit());
+        assertEqualsExternalItemDtoWithoutUrls(expected.getUnit(), actual.getUnit());
         assertEquals(expected.getUnitMultiplier(), actual.getUnitMultiplier());
         assertEquals(expected.getSignificantDigits(), actual.getSignificantDigits());
         assertEquals(expected.getDecimalPlaces(), actual.getDecimalPlaces());
@@ -228,6 +224,21 @@ public class IndicatorsAsserts extends MetamacAsserts {
             for (String str : expected) {
                 assertTrue(actual.contains(str));
             }
+        }
+    }
+
+    public static void assertEqualsExternalItemDtoWithoutUrls(ExternalItemDto expected, ExternalItemDto actual) {
+        if (expected != null && actual != null) {
+
+            assertEquals(expected.getCode(), actual.getCode());
+            assertEquals(expected.getCodeNested(), actual.getCodeNested());
+            assertEquals(expected.getUrn(), actual.getUrn());
+            assertEquals(expected.getUrnProvider(), actual.getUrnProvider());
+            assertEquals(expected.getType(), actual.getType());
+            assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
+
+        } else if ((expected != null && actual == null) || (expected == null && actual != null)) {
+            fail();
         }
     }
 

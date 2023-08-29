@@ -3029,7 +3029,7 @@
         INTERNATIONAL_STRING_FK="86"
         VERSION="1"
     />    
-         <TB_INTERNATIONAL_STRINGS
+    <TB_INTERNATIONAL_STRINGS
         ID="87"
         VERSION="1"
     />
@@ -3047,24 +3047,7 @@
         INTERNATIONAL_STRING_FK="87"
         VERSION="1"
     />    
-    <TB_INTERNATIONAL_STRINGS
-        ID="87"
-        VERSION="1"
-    />
-    <TB_LOCALISED_STRINGS 
-        ID="134"
-        LABEL="Kilómetros" 
-        LOCALE="es"
-        INTERNATIONAL_STRING_FK="87"
-        VERSION="1"
-    />
-    <TB_LOCALISED_STRINGS 
-        ID="135"
-        LABEL="Kilometers" 
-        LOCALE="en"
-        INTERNATIONAL_STRING_FK="87"
-        VERSION="1"
-    />    
+
     <TB_INTERNATIONAL_STRINGS
         ID="88"
         VERSION="1"

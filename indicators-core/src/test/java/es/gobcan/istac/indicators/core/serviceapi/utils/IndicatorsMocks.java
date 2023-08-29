@@ -209,7 +209,8 @@ public class IndicatorsMocks extends MetamacMocks {
     }
 
     public static ExternalItemDto mockQuantityUnitExternalItemDto(String code) {
-        return mockExternalItemDtoComplete(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+        return mockExternalItemDto(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+
     }
 
 }

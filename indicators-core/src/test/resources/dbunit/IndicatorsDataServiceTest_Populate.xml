@@ -8828,9 +8828,28 @@
         ID="205"
         LABEL="Kilometers" 
         LOCALE="en"
-        INTERNATIONAL_STRING_FK="123"
+        INTERNATIONAL_STRING_FK="122"
         VERSION="1"
     />    
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="123"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="246"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="123"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="247"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="123"
+        VERSION="1"
+    />   
     
      <TB_INTERNATIONAL_STRINGS
         ID="124"
@@ -9199,19 +9218,37 @@
         VERSION="1"
     />
     <TB_LOCALISED_STRINGS 
-        ID="246"
+        ID="248"
         LABEL="Kilómetros" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="144"
         VERSION="1"
     />
     <TB_LOCALISED_STRINGS 
-        ID="247"
+        ID="249"
         LABEL="Kilometers" 
         LOCALE="en"
         INTERNATIONAL_STRING_FK="144"
         VERSION="1"
-    />   					
+    />   
+   <TB_INTERNATIONAL_STRINGS
+        ID="145"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="250"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="145"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="251"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="145"
+        VERSION="1"
+    />       					
 </dataset>
 
     

@@ -4012,137 +4012,7 @@
         TYPE = "structuralResources#categoryElement"
         VERSION="1"
    />	    
-  <TB_EXTERNAL_ITEMS
-         ID="19"
-         CODE="1"
-         URI="/latest/categoryelements/1"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
-         TITLE_FK = "69"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="20"
-         CODE="1"
-         URI="/latest/categoryelements/1"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
-         TITLE_FK = "70"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="21"
-         CODE="5"
-         URI="/latest/categoryelements/5"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=5"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=5"
-         TITLE_FK = "71"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />                                   
-    <TB_EXTERNAL_ITEMS
-         ID="22"
-         CODE="1"
-         URI="/latest/categoryelements/1"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
-         TITLE_FK = "72"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="23"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "73"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />                   			
-    <TB_EXTERNAL_ITEMS
-         ID="24"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "74"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />	
-   <TB_EXTERNAL_ITEMS
-         ID="25"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "75"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="26"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "76"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="27"
-          CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "77"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />                                   
-    <TB_EXTERNAL_ITEMS
-         ID="28"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "78"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-    <TB_EXTERNAL_ITEMS
-         ID="29"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "79"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />                   			
-    <TB_EXTERNAL_ITEMS
-         ID="30"
-         CODE="1"
-         URI="/latest/categoryelements/1"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
-         TITLE_FK = "80"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />	
-    <TB_EXTERNAL_ITEMS
-         ID="31"
-         CODE="3"
-         URI="/latest/categoryelements/3"
-         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
-         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
-         TITLE_FK = "81"
-         TYPE = "structuralResources#categoryElement"
-         VERSION="1"
-    />
-	           
+  	           
 	   <TB_EXTERNAL_ITEMS
 	   ID="32"
 	   CODE="KM"
@@ -4199,7 +4069,7 @@
 	   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
 	   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
 	   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
-	   TITLE_FK = "87"
+	   TITLE_FK = "224"
 	   TYPE = "structuralResources#code"
 	   VERSION="1"
 	 />  
@@ -7029,6 +6899,24 @@
         LABEL="Kilometers" 
         LOCALE="en"
         INTERNATIONAL_STRING_FK="223"
+        VERSION="1"
+    />   		
+      <TB_INTERNATIONAL_STRINGS
+        ID="224"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1680"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="224"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1681"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="224"
         VERSION="1"
     />   		                                                                                
 </dataset>

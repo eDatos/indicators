@@ -99,7 +99,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertNotNull(indicatorDto.getQuantity());
         assertEquals(QuantityTypeEnum.CHANGE_RATE, indicatorDto.getQuantity().getType());
-        assertEquals("1", indicatorDto.getQuantity().getUnit());
+        assertEquals(QUANTITY_UNIT_KM_CODE, indicatorDto.getQuantity().getUnit().getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getUnit().getTitle(), "es", "Kilómetros", "en", "Kilometers");
         assertEquals(Integer.valueOf(10), indicatorDto.getQuantity().getUnitMultiplier());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas", null, null);
         assertEquals(Integer.valueOf(2), indicatorDto.getQuantity().getSignificantDigits());
@@ -461,6 +462,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validate
         IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
     }
 
@@ -666,35 +668,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_QUANTITY_INDICATOR_UUID, e.getExceptionItems().get(9).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorErrorUnitNotExists() throws Exception {
-
-        IndicatorDto indicatorDto = new IndicatorDto();
-        indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto("CATEGORY_ELEMENT_01"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setQuantity(new QuantityDto());
-        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
-        indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(NOT_EXISTS));
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
-
-        try {
-            indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
-            fail("unit not exits");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-
-            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorDto.getQuantity().getUnit(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1637,7 +1610,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_UNIT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_UNIT, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
@@ -2518,7 +2491,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
                 assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
                 assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
-                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+                assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
                 assertEquals(Integer.valueOf(10), rateDerivationDto.getQuantity().getUnitMultiplier());
                 IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas", null, null);
                 assertEquals(Integer.valueOf(2), rateDerivationDto.getQuantity().getSignificantDigits());
@@ -2531,7 +2504,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals("2010", rateDerivationDto.getQuantity().getBaseTime());
                 assertEquals(GEOGRAPHICAL_VALUE_1, rateDerivationDto.getQuantity().getBaseLocationUuid());
                 assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
-                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+                assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
                 assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
                 assertEquals(INDICATOR_6, rateDerivationDto.getQuantity().getDenominatorIndicatorUuid());
             }
@@ -2541,7 +2514,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
                 assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
                 assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
-                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+                assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
                 assertEquals(Integer.valueOf(10000), rateDerivationDto.getQuantity().getUnitMultiplier());
                 IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas de miles", null, null);
             }
@@ -2551,7 +2524,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
                 assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
                 assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
-                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+                assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
                 assertEquals(Integer.valueOf(1000000), rateDerivationDto.getQuantity().getUnitMultiplier());
             }
 
@@ -3147,7 +3120,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("MethodOfInterperiod", rateDerivationDto.getMethod());
             assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
-            assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+            assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
+            IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnit().getTitle(), "es", "Kilómetros", "en", "Kilometers");
             assertEquals(Integer.valueOf(10), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(2), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getDecimalPlaces());
@@ -3158,7 +3132,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(RateDerivationMethodTypeEnum.LOAD, rateDerivationDto.getMethodType());
             assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
-            assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnit());
+            assertEquals(QUANTITY_UNIT_M_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
+            IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnit().getTitle(), "es", "Metros", "en", "Meters");
             assertEquals(Integer.valueOf(10000), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
@@ -3179,7 +3154,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("MethodOfInterperiod123", rateDerivationDto.getMethod());
             assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
-            assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnit());
+            assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
             assertEquals(Integer.valueOf(100), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
@@ -3190,7 +3165,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("MethodOfInterperiod1214", rateDerivationDto.getMethod());
             assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
-            assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnit());
+            assertEquals(QUANTITY_UNIT_M_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
             assertEquals(Integer.valueOf(1000), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
@@ -3436,7 +3411,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT_UUID, e.getExceptionItems().get(8).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT, e.getExceptionItems().get(8).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
