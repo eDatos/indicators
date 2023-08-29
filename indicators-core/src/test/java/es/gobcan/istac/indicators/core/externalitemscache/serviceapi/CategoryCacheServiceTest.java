@@ -104,7 +104,6 @@ public class CategoryCacheServiceTest extends MetamacDBUnitBaseTests implements 
         tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TB_CATEGORY_CACHE");
         tables.add("TB_EXTERNAL_ITEMS");
-        tables.add("TB_LIS_QUANTITIES_UNITS");
         tables.add("TB_LIS_UNITS_MULTIPLIERS");
         tables.add("TB_LIS_GEOGR_GRANULARITIES");
         tables.add("TB_LIS_GEOGR_VALUES");

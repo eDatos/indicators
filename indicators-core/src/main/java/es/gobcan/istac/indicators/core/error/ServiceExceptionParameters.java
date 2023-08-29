@@ -204,7 +204,6 @@ public class ServiceExceptionParameters {
     public static final String UNIT_MULTIPLIER_UUID                                                          = "parameter.indicators.unitMultiplier.uuid";
 
     public static final String QUANTITY_UNIT                                                                 = "parameter.indicators.quantityUnit";
-    public static final String QUANTITY_UNIT_UUID                                                            = "parameter.indicators.quantityUnit.uuid";
     public static final String QUANTITY_UNIT_TITLE                                                           = "parameter.indicators.quantityUnit.title";
 
     public static final String TIME_VALUE                                                                    = "parameter.indicators.time_value";

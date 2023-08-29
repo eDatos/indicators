@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -453,7 +454,7 @@ public class DsplTransformer {
         String idColumnName = getIdForUnitConcept(unit);
 
         Row row = new Row();
-        row.addColumn(new TextColumn(idColumnName), unit.getUrn());
+        row.addColumn(new TextColumn(idColumnName), getUUIDExternalItemUnit(unit));
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
             row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
         }
@@ -472,6 +473,10 @@ public class DsplTransformer {
         data.setColumnsToOrder(Arrays.asList(idColumnName));
 
         return data;
+    }
+
+    private String getUUIDExternalItemUnit(ExternalItem unit) {
+        return unit.getCode().toLowerCase() + "_" + UUID.randomUUID();
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {
@@ -861,7 +866,7 @@ public class DsplTransformer {
     }
 
     private String getIdForUnitConcept(ExternalItem unit) {
-        return "unit_" + unit.getUrn();
+        return "unit_" + getUUIDExternalItemUnit(unit);
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {

@@ -1194,16 +1194,6 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkDeleteQuantityUnit(List<MetamacExceptionItem> exceptions, String quantityUnitsUuid) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        IndicatorsValidationUtils.checkParameterRequired(quantityUnitsUuid, ServiceExceptionParameters.QUANTITY_UNIT_UUID, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
     // --------------------------------------------------------------------------------------------
     // DATA DEFINITIONS
     // --------------------------------------------------------------------------------------------

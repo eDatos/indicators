@@ -2941,14 +2941,14 @@
         ID="176"
         LABEL="Kilómetros" 
         LOCALE="es"
-        INTERNATIONAL_STRING_FK="95"
+        INTERNATIONAL_STRING_FK="96"
         VERSION="1"
     />
     <TB_LOCALISED_STRINGS 
         ID="177"
         LABEL="Kilometers" 
         LOCALE="en"
-        INTERNATIONAL_STRING_FK="95"
+        INTERNATIONAL_STRING_FK="96"
         VERSION="1"
     />       
 </dataset>
