@@ -57,6 +57,7 @@
 <!--     </bean> -->
 
     <bean id="localeResolver" class="es.gobcan.istac.indicators.rest.spring.web.EdatosLocaleResolver">
+        <constructor-arg ref="metadataProperties"/>
     </bean>
 
 	<!--

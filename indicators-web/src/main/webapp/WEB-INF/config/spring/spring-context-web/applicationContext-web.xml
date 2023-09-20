@@ -66,9 +66,10 @@
         <!-- one of the properties available; the maximum file size in bytes -->
 <!--         <property name="maxUploadSize" value="100000"/> -->
 <!--     </bean> -->
-    
-	<bean id="localeResolver" class="es.gobcan.istac.indicators.rest.spring.web.EdatosLocaleResolver">
-	</bean>
+
+    <bean id="localeResolver" class="es.gobcan.istac.indicators.rest.spring.web.EdatosLocaleResolver">
+        <constructor-arg ref="metadataProperties"/>
+    </bean>
 	
 	<!--
     <mvc:interceptors>

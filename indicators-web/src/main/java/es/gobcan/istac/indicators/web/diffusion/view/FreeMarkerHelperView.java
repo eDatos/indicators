@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -33,6 +34,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private static final String                   HTTPS = "https:";
 
     private static IndicatorsConfigurationService configurationService;
+    private static MetadataProperties metadataProperties;
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -59,6 +61,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
+        model.put("defaultLocale", getMetadataProperties().getDefaultInternationalizationLanguage());
 
         addStatisticalVisualizerUtils(model);
 
@@ -175,6 +178,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             configurationService = (IndicatorsConfigurationService) ApplicationContextProvider.getApplicationContext().getBean("configurationService");
         }
         return configurationService;
+    }
+
+    private static MetadataProperties getMetadataProperties() {
+        if (metadataProperties == null) {
+            metadataProperties = (MetadataProperties) ApplicationContextProvider.getApplicationContext().getBean("metadataProperties");
+        }
+        return metadataProperties;
     }
 
     public static String buildHeaderQuery(Map<String, Object> model, Locale locale) {
