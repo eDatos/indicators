@@ -8,6 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 9.5.0 a 9.5.1-SNAPSHOT
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta
+
+```
+etc/changes-from-release/9.5.0/db/common-metadata/postgresql/*.sql
+```
+
 ## 9.4.0 a 9.5.0
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta
 
