@@ -13,7 +13,7 @@ public class QuantityType implements Serializable {
 
     private QuantityTypeEnum               type               = null;
     private Map<String, String>            unit               = null;
-    private String                         unitSymbol         = null;
+    private Map<String, String>            unitSymbol         = null;
     private QuantityUnitSymbolPositionEnum unitSymbolPosition = null;
     private Map<String, String>            unitMultiplier     = null;
     private Integer                        significantDigits  = null;
@@ -46,11 +46,11 @@ public class QuantityType implements Serializable {
         this.unit = unit;
     }
 
-    public String getUnitSymbol() {
+    public Map<String, String> getUnitSymbol() {
         return unitSymbol;
     }
 
-    public void setUnitSymbol(String unitSymbol) {
+    public void setUnitSymbol(Map<String, String> unitSymbol) {
         this.unitSymbol = unitSymbol;
     }
 

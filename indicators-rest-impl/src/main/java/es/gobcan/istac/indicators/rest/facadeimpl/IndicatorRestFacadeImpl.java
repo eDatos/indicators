@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
@@ -39,16 +40,19 @@ import es.gobcan.istac.indicators.rest.util.ConditionUtil;
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger                logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
+    protected Logger                    logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper           do2TypeMapper;
+    private Do2TypeMapper               do2TypeMapper;
 
     @Autowired
-    protected IndicatorsApiService  indicatorsApiService;
+    protected IndicatorsApiService      indicatorsApiService;
 
     @Autowired
-    private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
+    private IndicatorsRest2DoMapper     indicatorsRest2DoMapper;
+
+    @Autowired
+    private final SrmRestInternalFacade srmRestInternalFacade = null;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -109,11 +113,12 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public IndicatorType retrieveIndicator(String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorsVersion = retrieveIndicatorByCode(indicatorCode);
-        return do2TypeMapper.indicatorDoToType(indicatorsVersion);
+        return do2TypeMapper.indicatorDoToType(indicatorsVersion, this.srmRestInternalFacade);
     }
 
     @Override
-    public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
+    public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+            throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
         IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
         IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);

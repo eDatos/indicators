@@ -11,6 +11,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +94,16 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     private RestException toRestException(Exception e) {
         throw toRestException(e);
+    }
+
+    @Override
+    public Code retrieveCodeOfCodelist(String codeUrn) throws MetamacException {
+        String[] params = UrnUtils.splitUrnItem(codeUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+        String codeId = params[3];
+
+        return restApiLocator.getSrmRestInternalFacadeV10().retrieveCode(agencyId, resourceId, version, codeId);
     }
 }

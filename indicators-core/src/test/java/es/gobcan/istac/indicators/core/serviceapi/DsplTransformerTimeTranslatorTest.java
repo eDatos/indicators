@@ -163,7 +163,7 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
         assertNotNull(dataset.getConcepts());
         assertEquals(3, dataset.getConcepts().size());
         assertNotNull(findNode(getGeoConceptId("countries"), dataset.getConcepts()));
-        assertNotNull(findNode(getUnitConceptId("unit-2"), dataset.getConcepts()));
+        assertNotNull(findNode(getUnitConceptId("unit_m"), dataset.getConcepts(), false));
         assertNotNull(findNode(getIndicatorConceptId(INDICATOR2_UUID), dataset.getConcepts()));
 
         // Slices
@@ -175,7 +175,7 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
         assertNotNull(dataset.getTables());
         assertEquals(3, dataset.getTables().size());
         assertNotNull(findNode(getGeoTableId("countries"), dataset.getTables()));
-        assertNotNull(findNode(getUnitTableId("unit-2"), dataset.getTables()));
+        assertNotNull(findNode("unit_m", dataset.getTables(), false));
         assertNotNull(findNode(getSliceTableId("countries", "monthly"), dataset.getTables()));
 
     }
@@ -274,12 +274,24 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
         return null;
     }
 
+    private <T extends DsplNode> T findNode(String id, Collection<T> nodes, boolean isEqual) {
+        if (isEqual) {
+            return findNode(id, nodes);
+        }
+        for (T node : nodes) {
+            if (node.getId().startsWith(id)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     private String getGeoConceptId(String geoGranularity) {
         return "geo_" + geoGranularity;
     }
 
     private String getUnitConceptId(String unitUuid) {
-        return "unit_" + unitUuid;
+        return unitUuid;
     }
 
     private String getIndicatorConceptId(String indicatorUuid) {
