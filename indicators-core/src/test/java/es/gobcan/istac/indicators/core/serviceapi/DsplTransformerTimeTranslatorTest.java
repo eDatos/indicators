@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
 
 /**
@@ -63,6 +64,9 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsConfigurationService   configurationService;
+
+    @Autowired
+    SrmRestInternalService                   srmRestInternalFacade;
 
     private DsplTransformerTimeTranslator    dsplTransformer;
 
@@ -112,7 +116,7 @@ public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
 
     @Before
     public void createTransformer() {
-        dsplTransformer = new DsplTransformerTimeTranslator(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
+        dsplTransformer = new DsplTransformerTimeTranslator(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
 
     @Test

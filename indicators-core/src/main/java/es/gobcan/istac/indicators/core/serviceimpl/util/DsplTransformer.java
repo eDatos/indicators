@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -54,6 +53,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -72,6 +72,7 @@ public class DsplTransformer {
     protected IndicatorsCoverageService      indicatorsCoverageService;
     protected IndicatorsService              indicatorsService;
     protected IndicatorsConfigurationService configurationService;
+    protected SrmRestInternalService         srmRestInternalFacade;
 
     private static final String              GEO_CONCEPT_BASE                  = "geo:location";
     private static final String              UNIT_CONCEPT_BASE                 = "unit:unit";
@@ -86,12 +87,13 @@ public class DsplTransformer {
     private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
     public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         this.indicatorsSystemsService = indicatorsSystemsService;
         this.indicatorsDataService = indicatorsDataService;
         this.indicatorsCoverageService = indicatorsCoverageService;
         this.indicatorsService = indicatorsService;
         this.configurationService = configurationService;
+        this.srmRestInternalFacade = srmRestInternalFacade;
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
@@ -459,13 +461,7 @@ public class DsplTransformer {
             row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
         }
 
-        /*
-         * TODO EDATOS-4197 VER COMO RELLENAR ESTOS CAMPOS
-         * if (unit.getSymbol() != null) {
-         * row.addColumn(new TextColumn("symbol"), unit.getSymbol());
-         * row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
-         * }
-         */
+        UnitUtils.setQuantityUnitMetadata(unit.getUrn(), row, configurationService, srmRestInternalFacade);
 
         data.setRows(Arrays.asList(row));
 
@@ -476,7 +472,7 @@ public class DsplTransformer {
     }
 
     private String getUUIDExternalItemUnit(ExternalItem unit) {
-        return unit.getCode().toLowerCase() + "_" + UUID.randomUUID();
+        return unit.getCode().toLowerCase() + "_" + unit.getId();
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {

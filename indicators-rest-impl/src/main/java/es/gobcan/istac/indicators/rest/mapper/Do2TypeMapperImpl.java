@@ -14,9 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Annotation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,7 +24,6 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -57,7 +54,6 @@ import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
-import es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
@@ -117,9 +113,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
-
-    @Autowired
-    private IndicatorsConfigurationService                                                       configurationService;
 
     private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
             MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
@@ -520,37 +513,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return null;
     }
 
-    private void setQuantityUnitMetadata(final Quantity source, QuantityType quantityType) throws MetamacException {
-        if (source.getUnit() != null) {
-            Code codeQuantityUnit = srmRestInternalFacade.retrieveCodeOfCodelistByUrn(source.getUnit().getUrn());
-            setQuantityUnitSymbol(quantityType, codeQuantityUnit);
-            setQuantityUnitSymbolPosition(quantityType, codeQuantityUnit);
-        }
-
-    }
-
-    private void setQuantityUnitSymbol(QuantityType quantityType, Code codeQuantityUnit) {
-        if (codeQuantityUnit.getShortName() != null) {
-            quantityType.setUnitSymbol(MapperUtil.getLocalisedLabel(codeQuantityUnit.getShortName(), metadataProperties.getDefaultInternationalizationLanguage()));
-        }
-    }
-
-    private void setQuantityUnitSymbolPosition(QuantityType quantityType, Code codeQuantityUnit) {
-        if (codeQuantityUnit.getAnnotations() != null && !codeQuantityUnit.getAnnotations().getAnnotations().isEmpty()) {
-            for (Annotation annotation : codeQuantityUnit.getAnnotations().getAnnotations()) {
-                // TODO EDATOS-4197 VER SI PONER EN COMMON-METADATA O UNA CONSTANTE
-                if ("SYMBOL_POSITION".equalsIgnoreCase(annotation.getType()) && annotation.getText() != null) {
-                    Map<String, String> annotationText = MapperUtil.getLocalisedLabel(annotation.getText(), metadataProperties.getDefaultInternationalizationLanguage());
-                    if (QuantityUnitSymbolPositionEnum.START.getName().equals(annotationText.get(IndicatorsRestApiConstants.DEFAULT))) {
-                        quantityType.setUnitSymbolPosition(QuantityUnitSymbolPositionEnum.START);
-                    } else if (QuantityUnitSymbolPositionEnum.END.getName().equals(annotationText.get(IndicatorsRestApiConstants.DEFAULT))) {
-                        quantityType.setUnitSymbolPosition(QuantityUnitSymbolPositionEnum.END);
-                    }
-                }
-            }
-        }
-    }
-
     private QuantityType quantityDoToBaseType(final Quantity source) throws MetamacException {
         Assert.notNull(source);
 
@@ -559,7 +521,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         if (source.getUnit() != null) {
             quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
-            setQuantityUnitMetadata(source, quantityType);
+            MapperUtil.setQuantityUnitMetadata(source, quantityType, metadataProperties, srmRestInternalFacade);
         }
 
         if (source.getUnitMultiplier() != null) {
@@ -628,7 +590,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private CategoryResourceInternal getCategoryByCategoryElement(String categoryElementCode) throws MetamacException {
-        return srmRestInternalFacade.retrieveCategoryByCategoryElement(configurationService.retrieveDefaultCategoryScheme(), categoryElementCode);
+        return srmRestInternalFacade.retrieveCategoryByCategoryElement(metadataProperties.getDefaultCategoryScheme(), categoryElementCode);
     }
 
     @Override

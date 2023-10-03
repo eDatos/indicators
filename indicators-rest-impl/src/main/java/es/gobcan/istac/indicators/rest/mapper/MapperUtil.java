@@ -1,19 +1,28 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
+import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.serviceimpl.util.InternationalStringUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.UnitUtils;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
-
-import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
+import es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants;
+import es.gobcan.istac.indicators.rest.types.QuantityType;
+import es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum;
 
 public class MapperUtil {
 
@@ -35,23 +44,7 @@ public class MapperUtil {
     }
 
     public static Map<String, String> getLocalisedLabel(InternationalString internationalString, String defaultLanguage) {
-        if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
-            return null;
-        }
-
-        Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
-        String defaultLabel = null;
-        String defaultLabelLocale = null;
-        for (LocalisedString localisedString : internationalString.getTexts()) {
-            labels.put(localisedString.getLang(), localisedString.getValue());
-            if ((defaultLabel == null) || (defaultLabel != null && localisedString.getLang().equals(defaultLanguage))
-                    || (defaultLabel != null && defaultLabelLocale.equals(defaultLanguage) && localisedString.getLang().startsWith(defaultLanguage))) {
-                defaultLabel = localisedString.getValue();
-                defaultLabelLocale = localisedString.getLang();
-            }
-        }
-        labels.put(DEFAULT, defaultLabel);
-        return labels;
+        return InternationalStringUtils.getLocalisedLabel(internationalString, defaultLanguage, DEFAULT);
     }
 
     public static Map<String, String> getLocalisedLabel(org.siemac.metamac.core.common.ent.domain.InternationalString internationalString, String defaultLanguage) {
@@ -116,4 +109,24 @@ public class MapperUtil {
         return target;
     }
 
+    public static void setQuantityUnitMetadata(final Quantity source, QuantityType quantityType, MetadataProperties metadataProperties, SrmRestInternalFacade srmRestInternalFacade)
+            throws MetamacException {
+        if (source.getUnit() != null) {
+            Code codeQuantityUnit = srmRestInternalFacade.retrieveCodeOfCodelistByUrn(source.getUnit().getUrn());
+
+            String quantityUnitSymbol = UnitUtils.getQuantityUnitSymbol(codeQuantityUnit, metadataProperties, IndicatorsRestApiConstants.DEFAULT);
+            quantityType.setUnitSymbol(quantityUnitSymbol);
+
+            String quantityUnitSymbolPosition = UnitUtils.getQuantityUnitSymbolPosition(codeQuantityUnit, metadataProperties, IndicatorsRestApiConstants.DEFAULT);
+
+            if (quantityUnitSymbolPosition != null) {
+                if (QuantityUnitSymbolPositionEnum.START.name().equals(quantityUnitSymbolPosition)) {
+                    quantityType.setUnitSymbolPosition(QuantityUnitSymbolPositionEnum.START);
+                } else {
+                    quantityType.setUnitSymbolPosition(QuantityUnitSymbolPositionEnum.END);
+                }
+            }
+        }
+
+    }
 }

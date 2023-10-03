@@ -75,6 +75,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CODELIST_ANNOTATION_TYPE_POSITION_UNIT_MEASURE);
+    }
+
+    @Override
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }

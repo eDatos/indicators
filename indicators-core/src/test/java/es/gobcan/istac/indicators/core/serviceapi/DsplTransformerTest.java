@@ -26,6 +26,7 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 
 /**
@@ -57,6 +58,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
+
+    @Autowired
+    SrmRestInternalService                                                      srmRestInternalFacade;
 
     private DsplTransformer                                                     dsplTransformer;
 
@@ -106,7 +110,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Before
     public void createTransformer() {
-        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
+        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
 
     @Test
