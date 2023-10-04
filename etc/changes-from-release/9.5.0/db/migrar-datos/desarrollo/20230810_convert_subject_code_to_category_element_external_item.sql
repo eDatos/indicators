@@ -1,3 +1,4 @@
+-- !!!ATENCIÓN SCRIPT SÓLO A EJECUTAR EN ENTORNO DE DESARROLLO
 -- ---------------------------------------------------------------------------------------------------
 -- PASO 1:  A ejecutar en la base de datos del SRM. 
 Precondición: Se deben haber creado los elementos de tema asociados a los SUBJECT_CODES siguientes:
