@@ -1,16 +1,17 @@
+-- !!!ATENCIÓN SCRIPT SÓLO A EJECUTAR EN ENTORNO DE DESARROLLO
 -- ---------------------------------------------------------------------------------------------------
 -- PASO 1:  A ejecutar en la base de datos del SRM. 
-Precondición: Se deben haber creado los elementos de tema asociados a los SUBJECT_CODES siguientes:
-- EMPLEO					
-- MEDIOAMBIENTE						
-- ECONOMIA							
-- SALUD										
-- DEMOGRAFIA						
-- EDUCACION	
+--Precondición: Se deben haber creado los elementos de tema asociados a los SUBJECT_CODES siguientes:
+-- EMPLEO					
+-- MEDIOAMBIENTE						
+-- ECONOMIA							
+-- SALUD										
+-- DEMOGRAFIA						
+-- EDUCACION	
 
-1) Crear el international string asociado al elemento de tema
-2) Crear el external item de dicha elemento de tema
-3) Actualizar la tabla tb_indicator_versions con el elemento de tema creado como external item-> category_element_fk
+--1) Crear el international string asociado al elemento de tema
+--2) Crear el external item de dicha elemento de tema
+--3) Actualizar la tabla tb_indicator_versions con el elemento de tema creado como external item-> category_element_fk
 -- ---------------------------------------------------------------------------------------------------
 
 -- PARO_REGISTRADO
