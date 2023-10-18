@@ -130,7 +130,8 @@
             'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         },
         'CONNECTOR': {
-            'OF': ' de '
+            'OF': ' de ',
+            'CONTRACTED_OF': ' d\''
         }
     };
 }());

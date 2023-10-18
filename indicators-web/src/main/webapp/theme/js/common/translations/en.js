@@ -130,7 +130,8 @@
             'LABEL': "Write the value of the image shown above"
         },
         'CONNECTOR': {
-            'OF': ' of '
+            'OF': ' of ',
+            'CONTRACTED_OF': ' of '
         }
     };
 }());
