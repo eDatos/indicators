@@ -19,7 +19,7 @@
 
 <script src="${serverURL}/theme/js/app.min.js"></script>
 [#if captchaExternalApiUrlBase??]
-<script src="${captchaExternalApiUrlBase}/authentication.js"></script>
+<script src="${captchaExternalApiUrlBase}/captcha.js"></script>
 [/#if]
 
 <script>
