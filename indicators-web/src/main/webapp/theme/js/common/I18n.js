@@ -35,6 +35,11 @@
             defaultLocale = locale;
         },
 
+        startsWithVowelOrH: function(string) {
+            var vowelAndHRegex = '^[aieouhAIEOUH].*';
+            return string.match(vowelAndHRegex);
+        },
+
         getWidgetLocaleFromOptions: function (options) {
             if (!options.languages) {
                 console.error("No se han cargado los idiomas permitidos. Esto no deberia pasar.");
