@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -39,7 +36,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -59,18 +55,20 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
 import es.gobcan.istac.indicators.core.mapper.SculptorCriteria2MetamacCriteriaMapper;
 import es.gobcan.istac.indicators.core.security.SecurityUtils;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 
 /**
@@ -80,10 +78,10 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
 
     @Autowired
-    private Do2DtoMapper do2DtoMapper;
+    private Do2DtoMapper                           do2DtoMapper;
 
     @Autowired
-    private Dto2DoMapper dto2DoMapper;
+    private Dto2DoMapper                           dto2DoMapper;
 
     @Autowired
     private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
@@ -92,7 +90,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private StreamMessagingService streamMessagingService;
+    private StreamMessagingService                 streamMessagingService;
 
     @Autowired
     private List<StreamMessagingCallback<?, ?, ?>> streamMessagingCallbacks;
@@ -832,24 +830,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<SubjectDto> retrieveSubjects(ServiceContext ctx) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve subjects
-        List<Subject> subjects = getIndicatorsService().retrieveSubjects(ctx);
-
-        // Transform
-        List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
-        for (Subject subject : subjects) {
-            subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
-        }
-
-        return subjectsDto;
-    }
-
-    @Override
     public List<String> retrieveDataDefinitionsOperationsCodes(ServiceContext ctx) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -1321,5 +1301,15 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
         getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities);
+    }
+
+    @Override
+    public void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // update category cache
+        getIndicatorsService().updateCategoryCacheAll(ctx);
     }
 }

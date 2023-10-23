@@ -1,17 +1,3 @@
--- En el Istac será una vista de una tabla
-
--- Creación de la vista en el ISTAC:
--- CREATE OR REPLACE FORCE VIEW tv_areas_tematicas (id_area_tematica,descripcion) AS SELECT id_catalogo, descripcion FROM tb_catalogo_operacion_estadist;
--- Area tematica
-CREATE TABLE TV_AREAS_TEMATICAS (
-  ID_AREA_TEMATICA VARCHAR(15) NOT NULL,
-  DESCRIPCION VARCHAR(200) NOT NULL
-);
-
-ALTER TABLE TV_AREAS_TEMATICAS ADD CONSTRAINT PK_TV_AREAS_TEMATICAS
-  PRIMARY KEY (ID_AREA_TEMATICA)
-;
-
 -- Consultas del gpe, OJO!!!! se puede simular de dos formas 
 -- 1) simulando una tabla:
 CREATE TABLE TV_CONSULTA (

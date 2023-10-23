@@ -9,7 +9,8 @@
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
 ## 9.5.0 a 9.5.1-SNAPSHOT
-* Es necesario ejecutar los scripts SQL contenidos en la carpeta
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta. *Los scripts de la carpeta "migrar-datos" deben ser los últimos en ejecutarse.*
+En esta carpeta hay una subcarpeta por cada entorno ya que el proceso de migración será distinto. Ejecutar en cada entorno el script correspondiente.
 
 ```
 etc/changes-from-release/9.5.0/db/common-metadata/postgresql/*.sql
@@ -21,6 +22,19 @@ etc/changes-from-release/9.5.0/db/common-metadata/postgresql/*.sql
 ```
 etc/changes-from-release/9.4.0/db/common-metadata/postgresql/*.sql
 ```
+
+* Ejecutar los scripts contenidos en la carepeta
+
+```
+etc/changes-from-release/9.4.0/db/indicators/postgresql/*.sql
+```
+
+* En EDATOS-4185 se elimna la tabla tv_areas_tematicas y ahora usará un esquema de temas del srm. Es necesario una migración de valores. Esta migración es diferente por cada entorno. Hay que ejecutar en cada entorno los scripts indicados en cada una de las carpetas que cuelgan de la siguiente raíz:
+
+```
+etc/changes-from-release/9.4.0/db/migrar-datos
+```
+
 
 ## 9.3.0 a 9.4.0
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta

@@ -47,4 +47,24 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     public void scheduleIndicatorsUpdateJob(ServiceContext ctx) {
         taskService.scheduleIndicatorsUpdateJob(ctx);
     }
+
+    @Override
+    public void scheduleCategoryCacheRefreshAutomaticJob(ServiceContext ctx) {
+        taskService.scheduleCategoryCacheRefreshAutomaticJob(ctx);
+    }
+
+    @Override
+    public void executeCategoryCacheRefreshAutomaticTask(ServiceContext ctx) throws MetamacException {
+        taskService.processCategoryCacheRefreshAutomaticTask(ctx);
+    }
+
+    @Override
+    public void executeCategoryCacheRefreshManualTask(ServiceContext ctx, String taskName) throws MetamacException {
+        taskService.processCategoryCacheRefreshManualTask(ctx, taskName);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String jobKey, MetamacException exception) throws MetamacException {
+        taskService.markTaskAsFailed(ctx, jobKey, exception);
+    }
 }

@@ -55,21 +55,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveDbSubjectsColumnCode() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsColumnTitle() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsTable() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
-    }
-
-    @Override
     public String retrieveJaxiLocalUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
     }
@@ -85,8 +70,17 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultCategoryScheme() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_CATEGORY_SCHEME);
+    }
+
+    @Override
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
 
+    @Override
+    public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
+    }
 }

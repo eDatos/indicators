@@ -515,7 +515,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
         String indicatorVersionNumber = INDICATOR4_VERSION;
-        String subjectCode = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber).getSubjectCode();
+        String subjectCode = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber).getCategoryElement().getCode();
         {
             when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
             indicatorsDataService.populateIndicatorVersionData(ctx, indicatorUuid, indicatorVersionNumber);

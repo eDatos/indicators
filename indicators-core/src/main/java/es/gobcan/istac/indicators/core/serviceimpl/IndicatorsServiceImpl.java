@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -26,7 +22,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -38,6 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -49,20 +49,23 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
@@ -71,20 +74,24 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
-    @Autowired(required = false)
-    private SubjectRepository              subjectRepository;
+    @Autowired
+    private IndicatorsConfigurationService                  indicatorsConfigurationService;
 
     @Autowired
-    private IndicatorsConfigurationService indicatorsConfigurationService;
+    private StreamMessagingService                          streamMessagingService;
 
     @Autowired
-    private StreamMessagingService         streamMessagingService;
+    private TaskService                                     taskService;
 
     @Autowired
     @Qualifier("indicatorStreamMessagingCallback")
     private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
 
-    private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+    @Autowired
+    @Qualifier("txManager")
+    private PlatformTransactionManager                      platformTransactionManager;
+
+    private static final Logger                             LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -121,7 +128,52 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
+    }
+
+    private TransactionTemplate getTransactionTemplate() {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionTemplate;
+    }
+
+    private void updateCategoryCache(ServiceContext ctx, IndicatorVersion indicatorVersion) {
+
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
+
+            @Override
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+
+                try {
+                    if (indicatorVersion.getCategoryElement() != null) {
+                        CategoryCache categoryCache = getCategoryCacheService().retrieveCategoryCacheByCategoryElementCode(ctx, indicatorVersion.getCategoryElement().getCode());
+                        if (categoryCache == null) {
+                            getCategoryCacheService().createCategoryCacheByCategoryElement(ctx, indicatorVersion.getCategoryElement());
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error("Unable to update category cache in indicator creation/update for indicator code {}", indicatorVersion.getCode(), e);
+                }
+
+                return null;
+            }
+        });
+
+    }
+
+    abstract class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
+
+        public final T doInTransaction(TransactionStatus status) {
+            try {
+                return doInMetamacTransaction(status);
+            } catch (MetamacException e) {
+                throw new RuntimeException("Error in transactional method", e);
+            }
+        }
+
+        protected abstract T doInMetamacTransaction(TransactionStatus status) throws MetamacException;
     }
 
     @Override
@@ -255,6 +307,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
+
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
     }
 
@@ -532,8 +587,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             return new PublishIndicatorResult(indicatorInProduction, TranslateExceptionUtils.translateMetamacException(ctx, e));
         }
 
-        tryRefreshSubjectTitle(indicatorInProduction);
-
         // Update indicator version metadata
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
@@ -568,22 +621,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getIndicatorRepository().save(indicator);
 
         return new PublishIndicatorResult(indicatorInProduction);
-    }
-
-    private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {
-        try {
-            Subject subject = subjectRepository.retrieveSubject(indicatorVersion.getSubjectCode());
-            InternationalString title = new InternationalString();
-            LocalisedString localised = new LocalisedString();
-            localised.setLabel(subject.getTitle());
-            localised.setLocale(indicatorsConfigurationService.retrieveLanguageDefault());
-            title.addText(localised);
-            indicatorVersion.setSubjectTitle(title);
-            LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());
-        } catch (Exception e) {
-            LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
-                    + indicatorVersion.getVersionNumber(), e);
-        }
     }
 
     @Override
@@ -825,65 +862,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
-    }
-
-    /**
-     * This operation retrieve subject from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public Subject retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubject(code, null);
-
-        // Retrieve
-        Subject subject = subjectRepository.retrieveSubject(code);
-        if (subject == null) {
-            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, code);
-        }
-        return subject;
-    }
-
-    /**
-     * This operation retrieves subjects from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public List<Subject> retrieveSubjects(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjects(null);
-
-        // Find
-        List<Subject> subjects = subjectRepository.findSubjects();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInPublishedIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInLastVersionIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInLastVersionIndicators();
-        return subjects;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1427,7 +1405,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void writeIndicatorVersion(OutputStreamWriter writer, IndicatorVersion indicatorVersion, List<String> languages) throws IOException {
         if (indicatorVersion != null) {
             writeInternationalString(writer, indicatorVersion.getTitle(), languages);
-            writeInternationalString(writer, indicatorVersion.getSubjectTitle(), languages);
+            writeInternationalString(writer, indicatorVersion.getCategoryElement().getTitle(), languages);
             writeCell(writer, indicatorVersion.getVersionNumber());
             writeCell(writer, indicatorVersion.getProcStatus());
             writeCell(writer, indicatorVersion.getNeedsUpdate());
@@ -1470,4 +1448,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writer.write(cell.toString());
         }
     }
+
+    @Override
+    public void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+        taskService.scheduleCategoryCacheRefreshManualJob(ctx);
+    }
+
+    @Override
+    public List<String> retrieveCategoryElementsInIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
+
+        return getIndicatorVersionRepository().findCategoryElementsInIndicators();
+
+    }
+
 }

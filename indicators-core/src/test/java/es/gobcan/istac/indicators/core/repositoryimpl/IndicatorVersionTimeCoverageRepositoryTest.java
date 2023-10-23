@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -88,8 +89,7 @@ public class IndicatorVersionTimeCoverageRepositoryTest extends IndicatorsBaseTe
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));

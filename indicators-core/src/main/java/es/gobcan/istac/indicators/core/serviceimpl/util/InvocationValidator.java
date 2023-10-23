@@ -48,7 +48,6 @@ public class InvocationValidator {
     // INDICATOR SYSTEM
     // --------------------------------------------------------------------------------------------
 
-    
     public static void checkCreateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1878,12 +1877,11 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getViewCode(), ServiceExceptionParameters.INDICATOR_VIEW_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
-        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
-        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getCategoryElement(), ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT, exceptions);
         if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
         }
-        
+
         if (indicatorVersion.getIndicator().getViewCode() != null && !ValidationUtils.matchPosgresqlObjectIdentifier(indicatorVersion.getIndicator().getViewCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_VIEW_CODE));
         }
@@ -2133,6 +2131,48 @@ public class InvocationValidator {
         }
 
         IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Schedule category cache refresh cron job
+     */
+    public static void checkScheduleCategoryCacheRefreshCronJob(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshCronJob(exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Planify category cache refresh manual job
+     */
+    public static void checkScheduleCategoryCacheRefreshManualJob(ServiceContext ctx, String taskName) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshManualJob(taskName, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkRetrieveIndicatorsWithCategoryElement(ServiceContext ctx) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // nothing
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Check if exists a update category cache job task
+     */
+    public static void checkExistUpdateCategoryCacheTaskInResource(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkExistUpdateCategoryCacheTaskInResource(exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

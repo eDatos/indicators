@@ -30,11 +30,9 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
 
-
     @Value("${datasource.default_schema}")
     private String                        defaultSchema;
 
-    
     private HashMap<String, List<String>> tablePrimaryKeys                                 = null;
 
     // -------------------------------------------------------------------------------
@@ -42,13 +40,6 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     // -------------------------------------------------------------------------------
 
     protected static String               NOT_EXISTS                                       = "not-exists";
-
-    // Subject codes
-    protected static String               SUBJECT_CODE_1                                   = "1";
-    protected static String               SUBJECT_CODE_2                                   = "2";
-    protected static String               SUBJECT_CODE_3                                   = "3";
-    protected static String               SUBJECT_CODE_4                                   = "4";
-    protected static String               SUBJECT_CODE_NOT_EXIST                           = "not-exists";
 
     // Indicators systems
     protected static String               INDICATORS_SYSTEM_1                              = "IndSys-1";
@@ -192,12 +183,15 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               UNIT_MULTIPLIER_6                                = "6";
     protected static String               UNIT_MULTIPLIER_7                                = "7";
 
-    // Subjects
-    protected static String               SUBJECT_1                                        = "1";
-    protected static String               SUBJECT_2                                        = "2";
-    protected static String               SUBJECT_3                                        = "3";
-    protected static String               SUBJECT_4                                        = "4";
-    protected static String               SUBJECT_5                                        = "5";
+    // Category elements
+    protected static String               CATEGORY_ELEMENT_1                               = "1";
+    protected static String               CATEGORY_ELEMENT_2                               = "2";
+    protected static String               CATEGORY_ELEMENT_3                               = "3";
+    protected static String               CATEGORY_ELEMENT_4                               = "4";
+    protected static String               CATEGORY_ELEMENT_5                               = "5";
+    protected static String               CATEGORY_ELEMENT_6                               = "6";
+    protected static String               CATEGORY_ELEMENT_7                               = "7";
+    protected static String               CATEGORY_ELEMENT_8                               = "8";
 
     // -------------------------------------------------------------------------------
     // SERVICE CONTEXT
@@ -283,6 +277,8 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         List<String> tables = new ArrayList<String>();
         tables.add("TB_CONFIGURATION");
         tables.add("TB_INTERNATIONAL_STRINGS");
+        tables.add("TB_EXTERNAL_ITEMS");
+        tables.add("TB_CATEGORY_CACHE");
         tables.add("TB_LIS_QUANTITIES_UNITS");
         tables.add("TB_LIS_GEOGR_GRANULARITIES");
         tables.add("TB_LIS_GEOGR_VALUES");
@@ -298,14 +294,12 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         tables.add("TB_INDICATORS_SYSTEMS");
         tables.add("TB_INDIC_SYSTEMS_VERSIONS");
         tables.add("TB_ELEMENTS_LEVELS");
-        tables.add("TB_EXTERNAL_ITEMS");
         tables.add("TB_LOCALISED_STRINGS");
         tables.add("TB_INDIC_VERSION_LAST_VALUE");
         tables.add("TB_INDIC_INST_LAST_VALUE");
         tables.add("TB_INDIC_INST_GEO_VALUES");
         tables.add("TB_INDICATORS_SYSTEMS_HIST");
         tables.add("TB_TRANSLATIONS");
-        tables.add("TV_AREAS_TEMATICAS");
         tables.add("TV_CONSULTA");
         return tables;
     }
@@ -315,6 +309,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         List<String> sequences = new ArrayList<String>();
         sequences.add("SEQ_I18NSTRS");
         sequences.add("SEQ_L10NSTRS");
+        sequences.add("SEQ_EXTERNAL_ITEMS");
         sequences.add("SEQ_INDIC_VERSION_LAST_VALUE");
         sequences.add("SEQ_INDIC_INST_LAST_VALUE");
         sequences.add("SEQ_INDIC_SYSTEMS_VERSIONS");
@@ -334,6 +329,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         sequences.add("SEQ_INDICATORS_SYSTEMS_HIST");
         sequences.add("SEQ_TRANSLATIONS");
         sequences.add("SEQ_UNITS_MULTIPLIERS");
+        sequences.add("SEQ_CATEGORY_CACHE");
 
         return sequences;
     }
@@ -369,7 +365,6 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected Map<String, List<String>> getTablePrimaryKeys() {
         if (tablePrimaryKeys == null) {
             tablePrimaryKeys = new HashMap<String, List<String>>();
-            tablePrimaryKeys.put("TV_AREAS_TEMATICAS", Arrays.asList("ID_AREA_TEMATICA"));
             tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
             tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE_FK", "INDICATOR_INSTANCE_FK"));
         }
@@ -390,7 +385,7 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
             iterator.set(iterator.next().toLowerCase());
         }
     }
-    
+
     protected List<String> getIndicatorsInstancesUUIDs(List<IndicatorInstance> indicatorsInstances) {
         if (indicatorsInstances == null) {
             return null;

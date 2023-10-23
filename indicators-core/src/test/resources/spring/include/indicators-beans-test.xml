@@ -9,10 +9,6 @@
 	</bean>
 
 	<bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider"/>
-
-
-    <bean id="subjectRepository" class="es.gobcan.istac.indicators.core.repositoryimpl.SubjectRepositoryImpl"/>
-    
     
     <bean id="kafkaConsumerLauncher" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="es.gobcan.istac.indicators.core.service.stream.KafkaConsumerLauncher" />

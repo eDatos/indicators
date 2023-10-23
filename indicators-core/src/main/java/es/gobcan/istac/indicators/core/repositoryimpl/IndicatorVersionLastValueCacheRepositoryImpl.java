@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GEO_CODE;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_UUID;
+import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.GEO_CODE;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.INDICATOR_UUID;
-import static es.gobcan.istac.indicators.core.repositoryimpl.util.SqlQueryParameters.SUBJECT_CODE;
 
 /**
  * Repository implementation for IndicatorVersionLastValueCache
@@ -27,7 +28,7 @@ public class IndicatorVersionLastValueCacheRepositoryImpl extends IndicatorVersi
     public List<IndicatorVersion> findLastNIndicatorsVersionsWithGeoCodeAndSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, int n) {
         String queryHql = "select distinct(tuple.indicatorVersion), tuple.lastDataUpdated ";
         queryHql += "from IndicatorVersionLastValueCache tuple ";
-        queryHql += "where tuple.indicatorVersion.subjectCode = :subjectCode ";
+        queryHql += "where tuple.indicatorVersion.categoryElement.code = :subjectCode ";
         queryHql += "and tuple.geographicalCode = :geoCode ";
         queryHql += "order by tuple.lastDataUpdated.datetime desc";
 

@@ -17,10 +17,6 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_DRIVER_NAME);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_USERNAME);
         checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
-
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
-        checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
     }
 
     @Override
@@ -33,7 +29,7 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
     public void checkApiProperties() {
         // Statistical Operations
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
-        
+
         // Indicators
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_INTERNAL_API);
     }
@@ -57,6 +53,8 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
         checkRequiredProperty(IndicatorsConfigurationConstants.HELP_URL);
+
+        checkRequiredProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
     }
 
     @Override

@@ -123,7 +123,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                 case GEOGRAPHICAL_GRANULARITY_CODE:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case GEOGRAPHICAL_GRANULARITY_TITLE:
-                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().title().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case UUID:
                     return new SculptorPropertyCriteria(GeographicalValueProperties.uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case CODE:
@@ -301,8 +302,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             switch (propertyNameCriteria) {
                 case CODE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
-                case SUBJECT_CODE:
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case CATEGORY_ELEMENT_CODE:
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.categoryElement().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case NOTIFY_POPULATION_ERRORS:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().notifyPopulationErrors(), propertyRestriction.getBooleanValue(), propertyRestriction.getOperationType());
                 case TITLE:

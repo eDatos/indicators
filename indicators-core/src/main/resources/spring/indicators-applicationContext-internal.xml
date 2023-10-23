@@ -10,8 +10,6 @@
     <context:exclude-filter type="regex" expression=".*web.*"/> 
   </context:component-scan>  
 
-  <bean id="subjectRepository" class="es.gobcan.istac.indicators.core.repositoryimpl.SubjectRepositoryImpl"/>
-
   <!-- import additional spring configuration files -->  
   <import resource="classpath:/spring/include/indicators-applicationContext-base.xml"/>  
   <import resource="classpath:/spring/include/indicators-datasources-internal.xml"/>  

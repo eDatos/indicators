@@ -23,12 +23,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveDbDataViewsRole() throws MetamacException;
 
-    String retrieveDbSubjectsColumnCode() throws MetamacException;
-
-    String retrieveDbSubjectsColumnTitle() throws MetamacException;
-
-    String retrieveDbSubjectsTable() throws MetamacException;
-
     String retrieveJaxiLocalUrl() throws MetamacException;
 
     String retrieveQuartzExpressionUpdateIndicators() throws MetamacException;
@@ -36,4 +30,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveHelpUrl() throws MetamacException;
 
     String retrieveKafkaQueryGroup() throws MetamacException;
+
+    String retrieveDefaultCategoryScheme() throws MetamacException;
+
+    String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;
 }

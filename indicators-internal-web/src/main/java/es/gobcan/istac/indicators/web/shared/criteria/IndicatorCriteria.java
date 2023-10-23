@@ -17,11 +17,11 @@ public class IndicatorCriteria extends PaginationWebCriteria {
     private String                     title;
     private IndicatorProcStatusEnum    productionVersionProcStatus;
     private IndicatorProcStatusEnum    diffusionVersionProcStatus;
-    private String                     subjectCode;
+    private String                     categoryElementCode;
 
     private List<MetamacCriteriaOrder> orders           = new ArrayList<MetamacCriteriaOrder>();
 
-    private Boolean notifyPopulationErrors;
+    private Boolean                    notifyPopulationErrors;
 
     public IndicatorCriteria() {
         setFirstResult(0);
@@ -60,14 +60,6 @@ public class IndicatorCriteria extends PaginationWebCriteria {
         this.diffusionVersionProcStatus = diffusionVersionProcStatus;
     }
 
-    public String getSubjectCode() {
-        return subjectCode;
-    }
-
-    public void setSubjectCode(String subjectCode) {
-        this.subjectCode = subjectCode;
-    }
-
     public List<MetamacCriteriaOrder> getOrders() {
         return orders;
     }
@@ -78,9 +70,17 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     public void setNotifyPopulationErrors(Boolean notifyPopulationErrors) {
         this.notifyPopulationErrors = notifyPopulationErrors;
-    }    
-    
+    }
+
     public Boolean getNotifyPopulationErrors() {
         return notifyPopulationErrors;
+    }
+
+    public String getCategoryElementCode() {
+        return categoryElementCode;
+    }
+
+    public void setCategoryElementCode(String categoryElementCode) {
+        this.categoryElementCode = categoryElementCode;
     }
 }

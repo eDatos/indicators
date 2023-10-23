@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -34,7 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
@@ -89,8 +89,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode("MYCODE");
         indicatorVersion.getIndicator().setViewCode("MYVIEWCODE");
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
@@ -118,8 +117,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
@@ -148,8 +146,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
@@ -319,23 +316,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         // Publish
         indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
-    }
-
-    @Test
-    public void testPublishIndicatorSubjectTitleChange() throws Exception {
-
-        String uuid = INDICATOR_13;
-        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
-
-        String subjectTitleOld = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber).getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH);
-        // Publish
-        indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
-
-        // Validate properties are not in Dto
-        IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
-        assertTrue(indicatorCreated.getIndicator().getIsPublished());
-        assertFalse(subjectTitleOld.equals(indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)));
-        assertEquals("Área temática 5", indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH));
     }
 
     @Test

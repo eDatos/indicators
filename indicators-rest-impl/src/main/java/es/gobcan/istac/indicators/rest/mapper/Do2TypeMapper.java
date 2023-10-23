@@ -11,7 +11,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.types.DataType;
@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
-import es.gobcan.istac.indicators.rest.types.SubjectType;
 
 public interface Do2TypeMapper {
 
@@ -53,8 +52,7 @@ public interface Do2TypeMapper {
     List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
 
     // Subjects
-    SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators);
-    List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects);
+    List<SubjectBaseType> subjectDoToBaseType(List<CategoryCache> categoryCacheEntries);
 
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);

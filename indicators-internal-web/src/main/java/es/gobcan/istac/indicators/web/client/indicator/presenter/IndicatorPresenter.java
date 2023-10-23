@@ -9,11 +9,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -39,7 +43,6 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
@@ -87,8 +90,6 @@ import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
@@ -112,6 +113,9 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
+import es.gobcan.istac.indicators.web.shared.external.RestWebCriteriaUtils;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
@@ -157,8 +161,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
-        void setSubjectsList(List<SubjectDto> subjectDtos);
-
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
 
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
@@ -196,6 +198,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void showInformationMessage(String title, String message);
 
         void setEditionLanguages(List<String> languages);
+
+        // external items
+        void setItemSchemes(String formItemName, ExternalItemsResult result);
+        void setItems(String formItemName, ExternalItemsResult result);
     }
 
     @Inject
@@ -264,17 +270,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
                 fireSuccessMessage(getMessages().indicatorSaved());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveSubjects() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjectsList(result.getSubjectDtos());
             }
         });
     }
@@ -763,6 +758,53 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setEditionLanguages(result.getLanguages());
             }
         });
+    }
+
+    //
+    // EXTERNAL RESOURCES
+    //
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        srmItemSchemeRestCriteria = RestWebCriteriaUtils.buildItemSchemeWebCriteria(srmItemSchemeRestCriteria, types);
+        retrieveItemSchemes(formItemName, srmItemSchemeRestCriteria, firstResult, maxResults);
+    }
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, int firstResult, int maxResults) {
+        dispatcher.execute(new GetExternalResourcesAction(srmItemSchemeRestCriteria, firstResult, maxResults), new WaitingAsyncCallbackHandlingError<GetExternalResourcesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetExternalResourcesResult result) {
+                getView().setItemSchemes(formItemName, result.getExternalItemsResult());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        itemWebCriteria = RestWebCriteriaUtils.buildItemWebCriteria(itemWebCriteria, types);
+        retrieveItems(formItemName, itemWebCriteria, firstResult, maxResults);
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, int firstResult, int maxResults) {
+        dispatcher.execute(new GetExternalResourcesAction(itemWebCriteria, firstResult, maxResults), new WaitingAsyncCallbackHandlingError<GetExternalResourcesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetExternalResourcesResult result) {
+                getView().setItems(formItemName, result.getExternalItemsResult());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        // without implement
     }
 
 }

@@ -1,0 +1,33 @@
+package es.gobcan.istac.indicators.rest.clients;
+
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+
+@Component(SrmRestInternalFacade.BEAN_ID)
+public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
+
+    @Autowired
+    private SrmRestInternalService srmRestInternalService;
+
+    @Override
+    public CategoryResourceInternal retrieveCategoryByCategoryElement(String categorySchemeUrn, String categoryElementCode) throws MetamacException {
+        return srmRestInternalService.retrieveCategoryByCategoryElement(categorySchemeUrn, categoryElementCode);
+    }
+
+    @Override
+    public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn) throws MetamacException {
+        return srmRestInternalService.retrieveCategoriesByCategoryScheme(categorySchemeUrn);
+    }
+
+    @Override
+    public Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException {
+        return srmRestInternalService.retrieveCategoryByCode(categorySchemeUrn, categoryCode);
+    }
+
+}

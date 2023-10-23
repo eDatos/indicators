@@ -48,6 +48,11 @@ public class TaskServiceTest implements TaskServiceTestBase {
     }
 
     @Override
+    public void testMarkTaskAsFailed() throws Exception {
+        // No tests for task repository
+    }
+
+    @Override
     public void testRetrieveTaskByJob() throws Exception {
         // No tests for task repository
     }
@@ -65,5 +70,25 @@ public class TaskServiceTest implements TaskServiceTestBase {
     @Override
     public void testPlanifyExportsDsplJob() throws Exception {
         // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshAutomaticJob() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshManualJob() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testProcessCategoryCacheRefreshAutomaticTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testProcessCategoryCacheRefreshManualTask() throws Exception {
+        // no test
     }
 }

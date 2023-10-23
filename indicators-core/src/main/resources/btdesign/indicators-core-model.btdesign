@@ -117,6 +117,7 @@ Application Indicators {
     		> @IndicatorsSystemRepository
     		> @UnitMultiplierRepository
     		> @TaskService
+    		> @CategoryCacheService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -143,6 +144,7 @@ Application Indicators {
             disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
             "Mark indicator for notify population errors"
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -158,13 +160,7 @@ Application Indicators {
 	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
-	    	
-	    	// Subjects
-	    	Subject retrieveSubject(String code) throws MetamacException;
-	    	List<Subject> retrieveSubjects() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators() throws MetamacException;
-	    	
+	       	    	
 	    	// Units multipliers
 	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
@@ -173,6 +169,9 @@ Application Indicators {
 	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	
+	    	updateCategoryCacheAll() throws MetamacException;
+	    	
     	}
     	
     	"Provides access to indicators data"
@@ -541,11 +540,7 @@ Application Indicators {
 	    	@QuantityUnitDto updateQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
 	    	"Delete a quantity unit"
 	    	deleteQuantityUnit(String uuid) throws MetamacException;
-	    	
-			// SUBJECTS
-	    	"Retrieves all subjects. Important! Do not invoke this operation from public web application"
-	    	List<@SubjectDto> retrieveSubjects() throws MetamacException;
-	    	
+	
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -582,7 +577,11 @@ Application Indicators {
 	    	"Delete a unit multiplier"
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	
+	    	// CACHE
+	    	updateCategoryCacheAll() throws MetamacException;
+	    	
 	    }
+	    
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
@@ -857,11 +856,7 @@ Application Indicators {
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
        		"Acronym"
        		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
-       		"Subject code"
-			String subjectCode not nullable;
-       		"Subject title"
-       		- @InternationalString subjectTitle cascade="all" not nullable databaseColumn="SUBJECT_TITLE_FK";
-       		"Concept associated with the indicator"
+        	"Concept associated with the indicator"
        		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
 			"Comments"
        		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
@@ -914,6 +909,8 @@ Application Indicators {
 			"Stream message status"
             - @StreamMessageStatusEnum streamMessageStatus;
 		
+			- @ExternalItem categoryElement nullable cascade="all" databaseColumn="CATEGORY_ELEMENT_FK";
+		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				delete;
@@ -926,10 +923,9 @@ Application Indicators {
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
-            	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
-            	List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException;
-            	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
+            	List<String> findCategoryElementsInIndicators() throws MetamacException;
+
 			}
 		}     	
 		
@@ -1431,16 +1427,26 @@ Application Indicators {
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
     		markAllInProgressTaskToFailed();
+    		markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
     		
     		"Schedule database dataset polling job"
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job"
+			scheduleCategoryCacheRefreshAutomaticJob();	
+			"execute category element refresh job manually from indicators app"
+			executeCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"execute category element refresh job automatically execution"
+			executeCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			
     	}
     	
     	"Provides access to background data operations"
     	Service TaskService {
     		> @TaskRepository
     		> @IndicatorsDataService
-    		> @IndicatorsService  		
+    		> @IndicatorsService  	
+    		> @CategoryCacheService	
     		
 			"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
@@ -1465,8 +1471,19 @@ Application Indicators {
 			markTaskAsFinished(String jobKey) throws MetamacException;	
 			"Mark task as failed on application startup"
 			markAllInProgressTaskToFailed();
+			markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
 			
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job manually from indicators app"
+			scheduleCategoryCacheRefreshManualJob() throws MetamacException;
+			"Schedule category element refresh job automatically with cron expression"
+			scheduleCategoryCacheRefreshAutomaticJob();
+			"Process category cache refresh job manually from indicators app"	
+			processCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"Process category cache refresh job automatically with cron expression"			
+			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
+	
     	}
     	
     	// ----------------------------------------------------------------
@@ -1491,7 +1508,54 @@ Application Indicators {
 				deleteAndFlush(@Task task);
 			}
 	    }
+	    
+	   
 	}
+	
+	Module externalItemsCaches {
+		basePackage=es.gobcan.istac.indicators.core.externalitemscache
+		
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ---------------------------------------------------------------- 
+		
+		"Provides access to category cache elements"
+    	Service CategoryCacheService {
+    		> @CategoryCacheRepository
+		    @CategoryCache retrieveCategoryCacheByCategoryCode(String categoryCode) throws MetamacException;
+		    @CategoryCache retrieveCategoryCacheByCategoryElementCode(String categoryElementCode) throws MetamacException;
+		    updateCategoryCacheAll(List<String> categoryElementsInIndicators)  throws MetamacException;
+		    List<@CategoryCache> retrieveAllCategories() throws MetamacException;
+		    createCategoryCacheByCategoryElement(@ExternalItem categoryElement) throws MetamacException;
+
+		    
+    	}
+		
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+		 Entity CategoryCache {
+			databaseTable = "TB_CATEGORY_CACHE"
+			hint = "idSequence=CATEGORY_CACHE"
+        	!optimisticLocking
+        	
+        	gap
+
+			String categoryCode databaseColumn="Category_Code" not nullable;
+			- @InternationalString title cascade="all-delete-orphan" fetch="eager" databaseColumn="title_fk" nullable;
+			String categoryElementCode databaseColumn="Category_Element_Code" not nullable;
+			
+			Repository CategoryCacheRepository {
+				save;
+				delete;	
+				findAll;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+
+			}
+		}
+	}   	
 	
 	// ----------------------------------------------------------------
 	// 							ENUMS
@@ -1586,10 +1650,6 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Acronym"
        		- @InternationalStringDto acronym;
-       		"Subject code"
-			String subjectCode;
-			"Subject title"
-			- @InternationalStringDto subjectTitle;
 			"Concept"
        		- @InternationalStringDto conceptDescription;
 			"Comments"
@@ -1644,6 +1704,8 @@ Application Indicators {
             
             "True if a task related with the indicator is being executed in background"
 			Boolean isTaskInBackground;
+			
+			- @ExternalItemDto categoryElement;
 	    }
 	    
 	    "Dto for indicator. Summary information"
@@ -1673,10 +1735,10 @@ Application Indicators {
             - @StreamMessageStatusEnum streamMessageStatus;
        		"Title"
        		- @InternationalStringDto title;
-       		"Subject code"
-			String subjectCode;       		
-       		"Subject title"
-       		- @InternationalStringDto subjectTitle;
+       		"Category element code"
+			String categoryElementCode;      
+			"Category element title"
+			- @InternationalStringDto categoryElementTitle;       		
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
 
@@ -1953,14 +2015,6 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Summary title"
        		- @InternationalStringDto titleSummary;
-    	}
-    	
-    	"Dto for subjects"
-    	DataTransferObject SubjectDto {
-	   		"Code"
-	   		String code;
-			"Title"
-			- @InternationalStringDto title;
     	}
     	
     	"Dto for data basic definition"

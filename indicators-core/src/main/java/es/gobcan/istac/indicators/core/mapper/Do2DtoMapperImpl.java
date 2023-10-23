@@ -35,7 +35,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -60,11 +59,9 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
@@ -196,8 +193,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setViewCode(source.getIndicator().getViewCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
+        target.setCategoryElement(externalItemDoToDto(source.getCategoryElement()));
         target.setQuantity(quantityDoToDto(source.getQuantity()));
         target.setConceptDescription(internationalStringToDto(source.getConceptDescription()));
         target.setComments(internationalStringToDto(source.getComments()));
@@ -321,33 +317,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdatedBy(source.getLastUpdatedBy());
 
         target.setOptimisticLockingVersion(source.getVersion());
-
-        return target;
-    }
-
-    @Override
-    public SubjectDto subjectDoToDto(Subject source) throws MetamacException {
-
-        SubjectDto target = new SubjectDto();
-        target.setCode(source.getId());
-
-        InternationalStringDto title = new InternationalStringDto();
-        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-        localisedStringDto.setLabel(source.getTitle());
-        // subjects are not localised. We show them only on the default language
-        localisedStringDto.setLocale(configurationService.retrieveLanguageDefault());
-        title.addText(localisedStringDto);
-        target.setTitle(title);
-
-        return target;
-    }
-
-    @Override
-    public SubjectDto subjectDoToDto(SubjectIndicatorResult source) {
-
-        SubjectDto target = new SubjectDto();
-        target.setCode(source.getId());
-        target.setTitle(internationalStringToDto(source.getTitle()));
 
         return target;
     }
@@ -565,8 +534,13 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setProcStatus(source.getProcStatus());
         target.setStreamMessageStatus(source.getStreamMessageStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
+        if (source.getCategoryElement() != null) {
+            target.setCategoryElementCode(source.getCategoryElement().getCode());
+            target.setCategoryElementTitle(internationalStringToDto(source.getCategoryElement().getTitle()));
+        } else {
+            target.setCategoryElementCode(null);
+            target.setCategoryElementTitle(null);
+        }
         target.setNeedsUpdate(source.getNeedsUpdate());
 
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));

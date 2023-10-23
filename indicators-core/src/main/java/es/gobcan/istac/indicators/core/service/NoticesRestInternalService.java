@@ -1,12 +1,13 @@
 package es.gobcan.istac.indicators.core.service;
 
-import es.gobcan.istac.indicators.core.domain.Indicator;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import java.util.List;
+
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import java.util.List;
+import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 
 public interface NoticesRestInternalService {
 
@@ -24,4 +25,6 @@ public interface NoticesRestInternalService {
     void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion);
     void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion);
     void createExportDSPLNotification(String user, String code, String url, List<String> files);
+    void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception);
+    void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception);
 }

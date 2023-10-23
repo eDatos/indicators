@@ -16,7 +16,6 @@ import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
-
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
@@ -50,8 +49,8 @@ public class IndicatorsAsserts extends MetamacAsserts {
     public static void assertEqualsIndicator(IndicatorDto expected, IndicatorDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getViewCode(), actual.getViewCode());
-        assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
-        assertEqualsInternationalString(expected.getSubjectTitle(), actual.getSubjectTitle());
+        assertEquals(expected.getCategoryElement().getCode(), actual.getCategoryElement().getCode());
+        assertEqualsInternationalString(expected.getCategoryElement().getTitle(), actual.getCategoryElement().getTitle());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
         assertEqualsInternationalString(expected.getNotes(), actual.getNotes());
