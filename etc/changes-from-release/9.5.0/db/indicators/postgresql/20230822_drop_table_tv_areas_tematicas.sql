@@ -4,5 +4,5 @@
 -- Se elimina la tabla tv_areas_tematicas que ya no será utilizada
 -- --------------------------------------------------------------------------------------------------
 
-drop table tv_areas_tematicas
+drop table tv_areas_tematicas;
 commit;
