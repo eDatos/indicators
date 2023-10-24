@@ -2891,42 +2891,8 @@
                         LAST_UPDATED_BY="user2"
                         LAST_UPDATED="2011-03-04 05:06:07"
                         LAST_UPDATED_TZ="Europe/London"
-                    />				
-			  
-	<!-- ************************************************************************************ -->
-	<!--                                 QUANTITIES UNITS		                              -->
-	<!-- ************************************************************************************ -->
-	<TB_LIS_QUANTITIES_UNITS
-		ID="1"
- 		UUID="1"
-  		SYMBOL="km"
-  		TITLE_FK="33"
-  		SYMBOL_POSITION="END"
-        
-        VERSION="1"
-        CREATED_BY="user1"
-        CREATED_DATE="2011-01-01 01:02:04"
-        CREATED_DATE_TZ="Europe/London"
-        LAST_UPDATED_BY="user2"
-        LAST_UPDATED="2011-01-22 01:02:04"
-        LAST_UPDATED_TZ="Europe/London"
-	/>
-    
-	<TB_LIS_QUANTITIES_UNITS
-		ID="2"
- 		UUID="2"
-  		SYMBOL="[null]"
-  		TITLE_FK="34"
-  		SYMBOL_POSITION="START"
-        
-        VERSION="1"
-        CREATED_BY="user1"
-        CREATED_DATE="2011-01-01 01:02:04"
-        CREATED_DATE_TZ="Europe/London"
-        LAST_UPDATED_BY="user2"
-        LAST_UPDATED="2011-01-22 01:02:04"
-        LAST_UPDATED_TZ="Europe/London"
-	/>
+                    />						  
+	
   		  
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL VALUES	                              -->
