@@ -6,6 +6,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 
 public interface SrmRestInternalService {
 
@@ -17,5 +18,6 @@ public interface SrmRestInternalService {
     public Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn, String query, String orderBy, String limit, String offset) throws MetamacException;
     public Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException;
     public String getQueryByCategoryElementCriteria(CategoryCriteriaPropertyRestriction categoryCriteria, String value);
+    public Code retrieveCodeOfCodelist(String codeUrn) throws MetamacException;
 
 }

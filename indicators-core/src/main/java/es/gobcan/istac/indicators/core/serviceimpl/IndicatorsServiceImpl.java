@@ -48,7 +48,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -862,71 +861,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
-    }
-
-    // --------------------------------------------------------------------------------------------
-    // QUANTITY UNITS
-    // --------------------------------------------------------------------------------------------
-
-    @Override
-    public PagedResult<QuantityUnit> findQuantityUnits(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkFindQuantityUnits(null, conditions, pagingParameter);
-
-        // Find
-        PagedResult<QuantityUnit> result = getQuantityUnitRepository().findByCondition(conditions, pagingParameter);
-        return result;
-    }
-
-    @Override
-    public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
-
-        // Retrieve
-        QuantityUnit quantityUnit = getQuantityUnitRepository().retrieveQuantityUnit(uuid);
-        if (quantityUnit == null) {
-            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND, uuid);
-        }
-        return quantityUnit;
-    }
-
-    @Override
-    public List<QuantityUnit> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnits(null);
-
-        // Find
-        List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
-        return quantityUnits;
-    }
-
-    @Override
-    public QuantityUnit createQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkCreateQuantityUnit(null, quantityUnit);
-
-        // Repository operation
-        return getQuantityUnitRepository().save(quantityUnit);
-    }
-
-    @Override
-    public QuantityUnit updateQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkUpdateQuantityUnit(null, quantityUnit);
-
-        // Repository operation
-        return getQuantityUnitRepository().save(quantityUnit);
-    }
-
-    @Override
-    public void deleteQuantityUnit(ServiceContext ctx, String quantityUnitUuid) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkDeleteQuantityUnit(null, quantityUnitUuid);
-
-        // Repository operation
-        QuantityUnit quantityUnit = retrieveQuantityUnit(ctx, quantityUnitUuid);
-        getQuantityUnitRepository().delete(quantityUnit);
     }
 
     // --------------------------------------------------------------------------------------------

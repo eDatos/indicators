@@ -111,7 +111,6 @@ Application Indicators {
     		> @IndicatorVersionTimeCoverageRepository
     		> @IndicatorVersionMeasureCoverageRepository
     		> @DataSourceRepository
-    		> @QuantityUnitRepository
     		> @IndicatorInstanceRepository
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
@@ -152,14 +151,6 @@ Application Indicators {
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
 	    	List<@DataSource> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	
-	    	// Quantity units
-	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
-	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
-	    	PagedResult<@QuantityUnit> findQuantityUnits(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
-	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
-	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
-	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
 	       	    	
 	    	// Units multipliers
 	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
@@ -529,17 +520,6 @@ Application Indicators {
 	    	"Retrieves all data sources of indicator"
 	    	List<@DataSourceDto> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
-	    	// QUANTITY UNITS
-	    	"Find quantity units by criteria"
-	    	MetamacCriteriaResult<@QuantityUnitDto> findQuantityUnits(MetamacCriteria criteria) throws MetamacException;
-	    	"Retrieve all quantity units"
-	    	List<@QuantityUnitDto> retrieveQuantityUnits() throws MetamacException;
-	    	"Create a quantity unit"
-	    	@QuantityUnitDto createQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
-	    	"Update a quantity unit"
-	    	@QuantityUnitDto updateQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
-	    	"Delete a quantity unit"
-	    	deleteQuantityUnit(String uuid) throws MetamacException;
 	
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
@@ -937,6 +917,8 @@ Application Indicators {
 
 	    	"Type"
 			- @QuantityTypeEnum quantityType nullable;
+			"Unit"
+			- @ExternalItem unit nullable cascade="all" databaseColumn="unit_fk";
 			"Multiplier of percentage"
 			- @UnitMultiplier unitMultiplier required cascade="none" databaseColumn="UNIT_MULTIPLIER_FK";
 			"Number of significant digits to use when displaying the values of a metric concept"
@@ -957,8 +939,6 @@ Application Indicators {
 			String baseTime nullable;
 			
 			// Relations
-			"Unit"
-			- @QuantityUnit unit nullable cascade="none" databaseColumn="UNIT_FK";
 			"Numerator of the fraction"
 			- @Indicator numerator nullable cascade="none" databaseColumn="NUMERATOR_FK";
 			"Denominator of the fraction"
@@ -967,6 +947,7 @@ Application Indicators {
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
             "Geographical value base"
 			- @GeographicalValue baseLocation nullable cascade="none" databaseColumn="BASE_LOCATION_FK";
+			
 	    }
 	    
 	    "Metric characteristics of a data source of indicator"
@@ -1069,33 +1050,7 @@ Application Indicators {
 			"Category"
 			String category not nullable;
         }
-        
-        "Table values for quantity units"
-	    Entity QuantityUnit {
-        	databaseTable = "TB_LIS_QUANTITIES_UNITS"
-        	hint="idSequence=QUANTITIES_UNITS"
-			
-			"Symbol of unit (example: km)"
-			String symbol nullable;
-			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition nullable;
-       		"Title of unit"
-       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
-       		
-       		"Last update to optimistic locking"
-			DateTimeTZ updateDate nullable;
-       		
-       		Repository QuantityUnitRepository {
-       			findAll;
-            	protected List<@QuantityUnit> findByQuery;
-            	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@QuantityUnit retrieveQuantityUnit(String uuid);
-            	findByCondition(PagingParameter pagingParameter);
-            	save;
-            	delete;
-			}
-        }
-        
+         
         "Table values for geographical values"
 	    Entity GeographicalValue {
         	databaseTable = "TB_LIS_GEOGR_VALUES"
@@ -1902,7 +1857,7 @@ Application Indicators {
 			"Type"
 			- @QuantityTypeEnum type;
 			"Unit"
-			String unitUuid;
+			-@ExternalItemDto unit;
 			"Multiplier of percentage. Default must be 1"
 			Integer unitMultiplier;
 			"Unit multiplier label"
@@ -1931,6 +1886,7 @@ Application Indicators {
 			String baseLocationUuid;
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
+			
 		}
 
 	    "Dto for rate derivation"
@@ -1944,20 +1900,6 @@ Application Indicators {
        		"Rounding"
 			- @RateDerivationRoundingEnum rounding;
 	    }
-	    
-	   	"Dto for units of quantities"
-    	DataTransferObject QuantityUnitDto extends @AuditDto {
-	   		"Uuid"
-	   		String uuid;
-			"Symbol of unit (example: km)"
-			String symbol;
-			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition;
-       		"Title of unit"
-       		- @InternationalStringDto title;
-       		
-       		Long optimisticLockingVersion;	
-    	}
     	
     	"Base Dto for geographical values"
     	DataTransferObject GeographicalValueBaseDto extends @AuditDto {
@@ -2136,12 +2078,6 @@ Application Indicators {
     		INDEX,
     		CHANGE_RATE
     	}
-    	
-    	"Type of symbol position of quantity unit"
-    	enum QuantityUnitSymbolPositionEnum {
-    		START,
-    		END
-    	}	
 
 	   	"Type of rate derivation"
     	enum RateDerivationMethodTypeEnum {

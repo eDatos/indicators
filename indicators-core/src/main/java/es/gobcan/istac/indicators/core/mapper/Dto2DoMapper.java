@@ -13,7 +13,6 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -23,7 +22,6 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 public interface Dto2DoMapper extends CommonDto2DoMapper {
@@ -48,9 +46,6 @@ public interface Dto2DoMapper extends CommonDto2DoMapper {
 
     // International string
     InternationalString internationalStringDtoToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException;
-
-    // Quantity Units
-    QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source) throws MetamacException;
 
     // Geographical Value
     GeographicalValue geographicalValueDtoToDo(ServiceContext ctx, GeographicalValueDto source) throws MetamacException;

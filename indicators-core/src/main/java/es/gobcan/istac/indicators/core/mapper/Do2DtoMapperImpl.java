@@ -33,7 +33,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
@@ -57,7 +56,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
@@ -300,25 +298,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
             targets.add(target);
         }
         return targets;
-    }
-
-    @Override
-    public QuantityUnitDto quantityUnitDoToDto(QuantityUnit source) {
-
-        QuantityUnitDto target = new QuantityUnitDto();
-        target.setUuid(source.getUuid());
-        target.setSymbol(source.getSymbol());
-        target.setSymbolPosition(source.getSymbolPosition());
-        target.setTitle(internationalStringToDto(source.getTitle()));
-
-        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
-        target.setCreatedBy(source.getCreatedBy());
-        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
-        target.setLastUpdatedBy(source.getLastUpdatedBy());
-
-        target.setOptimisticLockingVersion(source.getVersion());
-
-        return target;
     }
 
     @Override
@@ -603,14 +582,16 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
     // Note: transforms all metadata regardless of the type
     // InvocationValidation checks metadata unexpected for each type
-    private QuantityDto quantityDoToDto(Quantity source) {
+    private QuantityDto quantityDoToDto(Quantity source) throws MetamacException {
         if (source == null) {
             return null;
         }
 
         QuantityDto target = new QuantityDto();
         target.setType(source.getQuantityType());
-        target.setUnitUuid(source.getUnit() != null ? source.getUnit().getUuid() : null);
+
+        target.setUnit(externalItemDoToDto(source.getUnit()));
+
         UnitMultiplier unitMultiplier = source.getUnitMultiplier();
         if (unitMultiplier != null) {
             target.setUnitMultiplier(unitMultiplier.getUnitMultiplier());
@@ -632,7 +613,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         return target;
     }
 
-    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
+    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) throws MetamacException {
         if (source == null) {
             return null;
         }

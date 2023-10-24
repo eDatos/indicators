@@ -3,8 +3,6 @@ package es.gobcan.istac.indicators.web.client.utils;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,14 +34,12 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
@@ -153,25 +149,6 @@ public class CommonUtils {
         valueMap.put(new String(), new String());
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
             valueMap.put(geographicalValueDto.getUuid(), CommonWebUtils.getElementName(geographicalValueDto.getCode(), geographicalValueDto.getTitle()));
-        }
-        return valueMap;
-    }
-
-    public static LinkedHashMap<String, String> getQuantityUnitsValueMap(List<QuantityUnitDto> units) {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        valueMap.put(new String(), new String());
-        sortQuantityUnitsList(units);
-        for (QuantityUnitDto unit : units) {
-            valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
-        }
-        return valueMap;
-    }
-
-    public static LinkedHashMap<String, String> getQuantityUnitsSymbolPositionValueMap() {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        valueMap.put(new String(), new String());
-        for (QuantityUnitSymbolPositionEnum position : QuantityUnitSymbolPositionEnum.values()) {
-            valueMap.put(position.getName(), getCoreMessages().getString(getCoreMessages().quantityUnitSymbolPositionEnum() + position.getName()));
         }
         return valueMap;
     }
@@ -410,18 +387,6 @@ public class CommonUtils {
         } else {
             return indicatorSummaryDto.getProductionVersion().getNeedsUpdate();
         }
-    }
-
-    private static void sortQuantityUnitsList(List<QuantityUnitDto> units) {
-        Collections.sort(units, new Comparator<QuantityUnitDto>() {
-
-            @Override
-            public int compare(QuantityUnitDto first, QuantityUnitDto second) {
-                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
-                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
-                return firstText.compareTo(secondText);
-            }
-        });
     }
 
     public static int getFirstResultToReloadAfterDeletion(PaginatedCheckListGrid listGrid) {

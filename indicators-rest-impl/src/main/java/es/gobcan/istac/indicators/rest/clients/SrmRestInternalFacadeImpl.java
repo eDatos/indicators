@@ -4,6 +4,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,4 +31,8 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         return srmRestInternalService.retrieveCategoryByCode(categorySchemeUrn, categoryCode);
     }
 
+    @Override
+    public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException {
+        return srmRestInternalService.retrieveCodeOfCodelist(codeUrn);
+    }
 }

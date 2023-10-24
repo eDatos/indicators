@@ -35,7 +35,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -54,7 +53,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -1093,85 +1091,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
         } catch (PersistenceException e) {
             throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------
-    // QUANTITY UNITS
-    // -------------------------------------------------------------------------------------------
-
-    @Override
-    public MetamacCriteriaResult<QuantityUnitDto> findQuantityUnits(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getQuantityUnitCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
-
-        // Find
-        PagedResult<QuantityUnit> result = getIndicatorsService().findQuantityUnits(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
-
-        // Transform
-        return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuantiyUnit(result, sculptorCriteria.getPageSize());
-    }
-
-    @Override
-    public List<QuantityUnitDto> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve quantityUnits
-        List<QuantityUnit> quantityUnits = getIndicatorsService().retrieveQuantityUnits(ctx);
-
-        // Transform
-        List<QuantityUnitDto> quantityUnitsDto = new ArrayList<QuantityUnitDto>();
-        for (QuantityUnit quantityUnit : quantityUnits) {
-            quantityUnitsDto.add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
-        }
-
-        return quantityUnitsDto;
-    }
-
-    @Override
-    public QuantityUnitDto createQuantityUnit(ServiceContext ctx, QuantityUnitDto quantityUnitDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        QuantityUnit quantityUnit = dto2DoMapper.quantityUnitDtoToDo(ctx, quantityUnitDto);
-
-        // Service call
-        quantityUnit = getIndicatorsService().createQuantityUnit(ctx, quantityUnit);
-
-        // Transform to Dto
-        return do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-    }
-
-    @Override
-    public QuantityUnitDto updateQuantityUnit(ServiceContext ctx, QuantityUnitDto quantityUnitDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        QuantityUnit quantityUnit = dto2DoMapper.quantityUnitDtoToDo(ctx, quantityUnitDto);
-
-        // Service call
-        quantityUnit = getIndicatorsService().updateQuantityUnit(ctx, quantityUnit);
-
-        // Transform to Dto
-        return do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-    }
-
-    @Override
-    public void deleteQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Service call
-        try {
-            getIndicatorsService().deleteQuantityUnit(ctx, uuid);
-        } catch (PersistenceException e) {
-            throw new MetamacException(e, ServiceExceptionType.QUANTITY_UNIT_CAN_NOT_BE_REMOVED, uuid);
         }
     }
 

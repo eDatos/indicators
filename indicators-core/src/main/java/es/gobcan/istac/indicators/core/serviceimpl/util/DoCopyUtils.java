@@ -58,7 +58,7 @@ public class DoCopyUtils {
     private static Quantity copy(Quantity source) {
         Quantity target = new Quantity();
         target.setQuantityType(source.getQuantityType());
-        target.setUnit(source.getUnit());
+        target.setUnit(copy(source.getUnit()));
         target.setUnitMultiplier(source.getUnitMultiplier());
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());

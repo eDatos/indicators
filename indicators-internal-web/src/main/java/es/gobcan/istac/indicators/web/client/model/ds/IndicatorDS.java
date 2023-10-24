@@ -43,7 +43,7 @@ public class IndicatorDS extends DataSource {
     public static String LAST_UPDATE_DATE                      = "ind-last-update-date";
     public static String LAST_UPDATE_USER                      = "ind-last-update-user";
     // QUANTITY
-    public static String QUANTITY_UNIT_UUID                    = "q-unit-uuid";
+    public static String QUANTITY_UNIT                         = "q-unit";
     public static String QUANTITY_UNIT_MULTIPLIER              = "q-unit-mul";
     public static String QUANTITY_SIGNIFICANT_DIGITS           = "q-sig-dig";
     public static String QUANTITY_DECIMAL_PLACES               = "q-dec";

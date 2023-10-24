@@ -4,8 +4,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface AdminUiHandlers extends UiHandlers {
 
-    void goToQuantityUnitsTab();
-
     void goToGeoGranularitiesTab();
 
     void goToGeoValuesTab();

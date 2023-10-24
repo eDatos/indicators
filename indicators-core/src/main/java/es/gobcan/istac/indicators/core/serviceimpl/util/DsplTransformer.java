@@ -13,6 +13,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -33,7 +34,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dspl.DsplConcept;
@@ -53,6 +53,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -71,6 +72,7 @@ public class DsplTransformer {
     protected IndicatorsCoverageService      indicatorsCoverageService;
     protected IndicatorsService              indicatorsService;
     protected IndicatorsConfigurationService configurationService;
+    protected SrmRestInternalService         srmRestInternalFacade;
 
     private static final String              GEO_CONCEPT_BASE                  = "geo:location";
     private static final String              UNIT_CONCEPT_BASE                 = "unit:unit";
@@ -85,12 +87,13 @@ public class DsplTransformer {
     private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
     public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         this.indicatorsSystemsService = indicatorsSystemsService;
         this.indicatorsDataService = indicatorsDataService;
         this.indicatorsCoverageService = indicatorsCoverageService;
         this.indicatorsService = indicatorsService;
         this.configurationService = configurationService;
+        this.srmRestInternalFacade = srmRestInternalFacade;
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
@@ -408,17 +411,17 @@ public class DsplTransformer {
     }
 
     private Set<DsplConcept> createConceptsForUsedUnits(Set<IndicatorVersion> usedIndicators) {
-        Set<QuantityUnit> units = calculateUsedQuantityUnits(usedIndicators);
+        Set<ExternalItem> units = calculateUsedQuantityUnits(usedIndicators);
 
         Set<DsplConcept> concepts = new HashSet<DsplConcept>();
-        for (QuantityUnit unit : units) {
+        for (ExternalItem unit : units) {
             concepts.add(createConceptForUnit(unit));
         }
         return concepts;
     }
 
-    private Set<QuantityUnit> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
-        Set<QuantityUnit> units = new HashSet<QuantityUnit>();
+    private Set<ExternalItem> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
+        Set<ExternalItem> units = new HashSet<ExternalItem>();
 
         for (IndicatorVersion indicatorVersion : indicators) {
             units.add(indicatorVersion.getQuantity().getUnit());
@@ -426,7 +429,7 @@ public class DsplTransformer {
         return units;
     }
 
-    private DsplConcept createConceptForUnit(QuantityUnit unit) {
+    private DsplConcept createConceptForUnit(ExternalItem unit) {
         DsplInfo info = new DsplInfo();
         populateDsplLocalisedTextForInternString(info.getName(), unit.getTitle());
 
@@ -438,7 +441,7 @@ public class DsplTransformer {
         return concept;
     }
 
-    private DsplTable createTableForUnit(QuantityUnit unit) {
+    private DsplTable createTableForUnit(ExternalItem unit) {
         DsplTable table = new DsplTable(getTableIdForUnitConcept(unit));
 
         DsplData data = createTableDataForUnit(unit);
@@ -447,20 +450,18 @@ public class DsplTransformer {
         return table;
     }
 
-    private DsplData createTableDataForUnit(QuantityUnit unit) {
+    private DsplData createTableDataForUnit(ExternalItem unit) {
         DsplData data = new DsplData();
 
         String idColumnName = getIdForUnitConcept(unit);
 
         Row row = new Row();
-        row.addColumn(new TextColumn(idColumnName), unit.getUuid());
+        row.addColumn(new TextColumn(idColumnName), getUUIDExternalItemUnit(unit));
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
             row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
         }
-        if (unit.getSymbol() != null) {
-            row.addColumn(new TextColumn("symbol"), unit.getSymbol());
-            row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
-        }
+
+        UnitUtils.setQuantityUnitMetadata(unit.getUrn(), row, configurationService, srmRestInternalFacade);
 
         data.setRows(Arrays.asList(row));
 
@@ -468,6 +469,10 @@ public class DsplTransformer {
         data.setColumnsToOrder(Arrays.asList(idColumnName));
 
         return data;
+    }
+
+    private String getUUIDExternalItemUnit(ExternalItem unit) {
+        return unit.getCode().toLowerCase() + "_" + unit.getId();
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {
@@ -605,7 +610,8 @@ public class DsplTransformer {
 
     private void applyConceptAttributesForQuantity(DsplConcept concept, Quantity quantity) {
         if (quantity.getUnit() != null) {
-            String unitValue = quantity.getUnit().getUuid();
+            String unitValue = quantity.getUnit().getUrn();
+
             DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnit()), unitValue);
             concept.addAttribute(attribute);
         }
@@ -855,15 +861,15 @@ public class DsplTransformer {
         return idSlice + "_table";
     }
 
-    private String getIdForUnitConcept(QuantityUnit unit) {
-        return "unit_" + unit.getUuid();
+    private String getIdForUnitConcept(ExternalItem unit) {
+        return "unit_" + getUUIDExternalItemUnit(unit);
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {
         return "quantity_" + indicatorQuantity.getUuid();
     }
 
-    private String getTableIdForUnitConcept(QuantityUnit unit) {
+    private String getTableIdForUnitConcept(ExternalItem unit) {
         return getIdForUnitConcept(unit) + "_table";
     }
 

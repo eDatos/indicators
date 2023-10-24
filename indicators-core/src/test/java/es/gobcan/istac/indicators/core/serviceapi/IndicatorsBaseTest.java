@@ -173,6 +173,9 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               QUANTITY_UNIT_1                                  = "1";
     protected static String               QUANTITY_UNIT_2                                  = "2";
     protected static String               QUANTITY_UNIT_3                                  = "3";
+    protected static String               QUANTITY_UNIT_KM_CODE                            = "KM";
+    protected static String               QUANTITY_UNIT_M_CODE                             = "M";
+    protected static String               QUANTITY_UNIT_KG_CODE                            = "KG";
 
     // Unit multiplier
     protected static String               UNIT_MULTIPLIER_1                                = "1";
@@ -279,7 +282,6 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TB_EXTERNAL_ITEMS");
         tables.add("TB_CATEGORY_CACHE");
-        tables.add("TB_LIS_QUANTITIES_UNITS");
         tables.add("TB_LIS_GEOGR_GRANULARITIES");
         tables.add("TB_LIS_GEOGR_VALUES");
         tables.add("TB_INDICATORS");
@@ -323,7 +325,6 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
         sequences.add("SEQ_ELEMENTS_LEVELS");
         sequences.add("SEQ_RATES_DERIVATIONS");
         sequences.add("SEQ_QUANTITIES");
-        sequences.add("SEQ_QUANTITIES_UNITS");
         sequences.add("SEQ_GEOGR_VALUES");
         sequences.add("SEQ_GEOGR_GRANULARITIES");
         sequences.add("SEQ_INDICATORS_SYSTEMS_HIST");
