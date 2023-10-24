@@ -23,6 +23,7 @@ commit;
 -- Add job configuration
 
 -- !! ATENTION Configure cron expression
+-- Ej: a las 21 cada día: '0 0 21 * * ?'
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE,EXTERNALLY_PUBLISHED) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,true,'indicators.category_cache_refresh.cron_expression',xxxxxx,false);
 UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQUENCE_NAME = 'DATA_CONFIGURATIONS';
 
@@ -30,8 +31,8 @@ commit;
 
 ----------------------------------------------
 --EXAMPLE IN DEV 
--- 0 0 * ? * * Every hour
---insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE,EXTERNALLY_PUBLISHED) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,true,'indicators.category_cache_refresh.cron_expression','0 */5 * ? * *',false);
+-- 0 0 21 * * ? A las 21 cada día
+--insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE,EXTERNALLY_PUBLISHED) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,true,'indicators.category_cache_refresh.cron_expression','0 0 21 * * ?',false);
 --UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQUENCE_NAME = 'DATA_CONFIGURATIONS';
 --commit;
 ---------------------------------------------
