@@ -9,9 +9,12 @@
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
 ## 9.5.0 a 9.5.1-SNAPSHOT
+* Es necesario ejecutar el script "20231001_create_constant_properties_in_common_metadata.sql" que se encuentra en el srm y que crea el metadato "metamac.srm.codelist.annotation.type.position_unit" en common-metadata
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta. *Los scripts de la carpeta "migrar-datos" y "migrar-unidades-medida" deben ser los últimos en ejecutarse.*
 * Una terminado todo el despliegue para tener actualizada la caché de temas, ir a la aplicación de indicators y, en la vista principal, pulsar el botón "Actualizar caché de temas"*
-En esta carpeta hay una subcarpeta por cada entorno ya que el proceso de migración será distinto. Ejecutar en cada entorno el script correspondiente.
+
+* En esta carpeta hay una subcarpeta por cada entorno ya que el proceso de migración será distinto. Ejecutar en cada entorno el script correspondiente.
+
 
 ```
 etc/changes-from-release/9.5.0/db/common-metadata/postgresql/*.sql
