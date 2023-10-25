@@ -4,7 +4,9 @@
 --PRECONDICIÓN: deben haberse lanzado el resto de scripts asociados a la tarea
 -- --------------------------------------------------------------------------------------------------
 
--- PASO 1 Obtener los datos del srm.
+-- PASO 0 Ejecutar script en bd indicators que  crea tabla de migración "20231005_1_create_migration_tables.sql"
+
+-- PASO 1 Obtener los datos del srm. Lanzar la consulta en la bd del srm de este entorno
 
 select 'insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, MANAGEMENT_APP_URL, VERSION, TYPE, label_es, label_ca, label_en) values('
 || '''' || co_detail.code || ''','
@@ -15,9 +17,9 @@ select 'insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, M
 || ''''  || '/#structuralResources/codelists/codelist;id=' || o_detail.code || ':' || c.code || '(' || c.version_logic || ')' || '/code;id=' || co_detail.code  || ''','
 || '0, '
 || '''structuralResources#code'','
-|| '''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
-|| coalesce('''' || (select "label"  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
-|| coalesce('''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
+|| '''' || (select replace("label", '''', '''''') from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
+|| coalesce('''' || (select replace("label", '''', '''''')   from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
+|| coalesce('''' || (select replace("label", '''', '''''')  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
 || ');'
  from tb_item_schemes_versions a, tb_annotable_artefacts c, 
       tb_organisations o, tb_annotable_artefacts o_detail, tb_codelists_versions d, tb_codes co, tb_annotable_artefacts co_detail
@@ -46,7 +48,7 @@ insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, MANAGEMEN
 --PASO 3 Asociar los códigos antiguos a los nuevos en temp_mig_units. Para ello asociarlo con esta consulta:
 select 'UPDATE temp_mig_units set id_unit_tb_lis_quantities =' || q.id || ' where urn=''' || d.urn || ''';'
 from tb_lis_quantities_units q, tb_localised_strings l, temp_mig_units d where q.title_fk = l.international_string_fk and l.locale = 'es'
-and d."label_es" ilike l."label" || '%'   
+and d."label_es" ilike l."label" || '%';  
 
 -- PASO 4 ejecutar los UPDATE DEL PASO ANTERIOR EN LA BD INDICATORS.
 /*
