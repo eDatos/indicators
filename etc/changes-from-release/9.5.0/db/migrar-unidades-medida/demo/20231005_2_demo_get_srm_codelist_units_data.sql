@@ -4,7 +4,9 @@
 --PRECONDICIÓN: deben haberse lanzado el resto de scripts asociados a la tarea
 -- --------------------------------------------------------------------------------------------------
 
--- PASO 1 Obtener los datos del srm.
+-- PASO 0 Ejecutar script en bd indicators que  crea tabla de migración "20231005_1_create_migration_tables.sql"
+
+-- PASO 1 Obtener los datos del srm. Lanzar la consulta en la bd del srm de este entorno
 
 select 'insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, MANAGEMENT_APP_URL, VERSION, TYPE, label_es, label_ca, label_en) values('
 || '''' || co_detail.code || ''','
@@ -32,7 +34,7 @@ and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'EUR_L', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_M2', 'EUR_MILES', 'EUR_MILLONES', 'EUR_PERSONA', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_PERSONA',  'HA', 'HORAS', 'INDICE', 'KG', 'KM', 'KM2', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NOCHES', 'NUMERO', 'PERSONAS', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_100000',  'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
 
 
 
@@ -46,7 +48,7 @@ insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, MANAGEMEN
 --PASO 3 Asociar los códigos antiguos a los nuevos en temp_mig_units. Para ello asociarlo con esta consulta:
 select 'UPDATE temp_mig_units set id_unit_tb_lis_quantities =' || q.id || ' where urn=''' || d.urn || ''';'
 from tb_lis_quantities_units q, tb_localised_strings l, temp_mig_units d where q.title_fk = l.international_string_fk and l.locale = 'es'
-and d."label_es" ilike l."label" || '%'   
+and d."label_es" ilike l."label" || '%';   
 
 -- PASO 4 ejecutar los UPDATE DEL PASO ANTERIOR EN LA BD INDICATORS.
 /*

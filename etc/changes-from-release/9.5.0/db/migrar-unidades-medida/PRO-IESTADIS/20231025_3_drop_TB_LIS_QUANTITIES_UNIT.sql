@@ -3,6 +3,8 @@
 -- 
 -- --------------------------------------------------------------------------------------------------
 
+DROP TABLE temp_mig_units;
+
 DROP TABLE tb_lis_quantities_units;
 	
 commit;	
