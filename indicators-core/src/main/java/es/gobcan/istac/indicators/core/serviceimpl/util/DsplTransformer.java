@@ -610,7 +610,7 @@ public class DsplTransformer {
 
     private void applyConceptAttributesForQuantity(DsplConcept concept, Quantity quantity) {
         if (quantity.getUnit() != null) {
-            String unitValue = quantity.getUnit().getUrn();
+            String unitValue = getUUIDExternalItemUnit(quantity.getUnit());
 
             DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnit()), unitValue);
             concept.addAttribute(attribute);
