@@ -472,7 +472,7 @@ public class DsplTransformer {
     }
 
     private String getUUIDExternalItemUnit(ExternalItem unit) {
-        return unit.getCode().toLowerCase() + "_" + unit.getId();
+        return unit.getCode().toLowerCase();
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {
