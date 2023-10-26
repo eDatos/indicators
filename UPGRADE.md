@@ -11,10 +11,10 @@
 ## 9.5.0 a 9.5.1-SNAPSHOT
 * Es necesario en srm haber creado un tipo de anotación denominada "SYMBOL_POSITION" desde el menú "Administración" en el srm. Descripción "Posición del símbolo en las unidades de medida"
 * Es necesario ejecutar el script "20231001_create_constant_properties_in_common_metadata.sql" que se encuentra en el srm y que crea el metadato "metamac.srm.codelist.annotation.type.position_unit" en common-metadata
-* Es necesario ejecutar los scripts SQL contenidos en la carpeta. *Los scripts de la carpeta "migrar-datos" y "migrar-unidades-medida" deben ser los últimos en ejecutarse.*
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta. *Los scripts de la carpeta "migrar-datos" y "migrar-unidades-medida" deben ser los últimos en ejecutarse.
+** Para el caso de la migración en la carpeta "migrar-datos" se refiere a la migración de áreas temáticas a elementos de tema. En esta carpeta hay una subcarpeta por cada entorno ya que el proceso de migración será distinto. Ejecutar en cada entorno el script correspondiente.
+** Para el caso de migrar-unidades-medida deben ejecutarse los scripts en el orden numerado de cada uno. El script 2, además, hace uso de un script de ayuda que precarga todos los datos necesarios para la migración en una tabla temporal temp_mig_units. Previamente se debe ejecutar este script que se encuentra en "/indicators/etc/helpers/migrar-unidades-medidas/20231005_2_precarga_demo_get_srm_codelist_units_data.sql" En este script se debe cambiar la consulta que se ejecutará en el srm en cada entorno como se indica en el propio script ya que la clasificación usada en cada entorno es diferente.
 * Una terminado todo el despliegue para tener actualizada la caché de temas, ir a la aplicación de indicators y, en la vista principal, pulsar el botón "Actualizar caché de temas"*
-
-* En esta carpeta hay una subcarpeta por cada entorno ya que el proceso de migración será distinto. Ejecutar en cada entorno el script correspondiente.
 
 
 ```
