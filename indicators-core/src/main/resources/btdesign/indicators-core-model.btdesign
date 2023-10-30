@@ -210,6 +210,7 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Updates data for all published JSON-stat indicators"
@@ -538,8 +539,6 @@ Application Indicators {
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
-	    	"Exports dspl"
-	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data JSON-stat"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
@@ -1381,6 +1380,9 @@ Application Indicators {
     		"Send error notification for de populate indicator data job"
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
+	    	"Perform the exports dspl task"
+	    	executeExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	
     		markAllInProgressTaskToFailed();
     		markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
     		
@@ -1416,6 +1418,9 @@ Application Indicators {
     		"Send error notification for de populate indicator data job"
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
+			"Perform the export dspl task"
+			processExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+			
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;
 			"Updates a task"

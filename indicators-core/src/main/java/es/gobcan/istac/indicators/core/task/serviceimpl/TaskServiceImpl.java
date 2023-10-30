@@ -174,6 +174,12 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
+    public void processExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities);
+        markTaskAsFinished(ctx, jobKey);
+    }
+
+    @Override
     public Task createTask(ServiceContext ctx, Task task) throws MetamacException {
         return getTaskRepository().save(task);
     }

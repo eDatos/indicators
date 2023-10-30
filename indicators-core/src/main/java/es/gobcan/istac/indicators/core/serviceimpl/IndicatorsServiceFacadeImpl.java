@@ -1218,11 +1218,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
-        getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities);
-    }
-
-    @Override
     public void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
 
         // Security
