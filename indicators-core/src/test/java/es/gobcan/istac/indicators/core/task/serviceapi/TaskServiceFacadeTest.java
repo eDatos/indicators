@@ -23,6 +23,11 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     }
 
     @Override
+    public void testExecuteExportDSPLTask() throws Exception {
+        // See tests in DsplExporterServiceTest
+    }
+
+    @Override
     public void testMarkAllInProgressTaskToFailed() throws Exception {
         // Quartz jobs are not tested
     }
