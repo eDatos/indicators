@@ -3,9 +3,9 @@
 
     App.views.WidgetDataOptionsLastDataView = Backbone.View.extend({
 
-        template : App.loadTemplate('data-options-lastData'),
+        template: App.loadTemplate('data-options-lastData'),
 
-        initialize : function () {
+        initialize: function () {
             this._modelBinder = new Backbone.ModelBinder();
 
             this.measures = new App.collections.Measures();
@@ -16,7 +16,24 @@
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
 
-            this.model.on('change:groupType', this._fetchGeographicalValuesAndTimeGranularities, this);
+            this.model.on('change:groupType', function (model, value) {
+
+                this.geographicalGranularities.reset([]);
+                this.geographicalValues.reset([]);
+                this.instances.reset([]);
+                this.indicators.reset([]);
+
+                switch (value) {
+                    case 'allValues':
+                        this._fetchGeographicalGranularities();
+                        this._fetchIndicators();
+                        break;
+                    default:
+                        this._fetchGeographicalValuesAndTimeGranularities();
+                        break;
+                }
+
+            }, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValuesAndTimeGranularities, this);
@@ -26,7 +43,7 @@
 
             this.model.on('change:subjectCode', this._fetchIndicators, this);
             this.model.on('change:geographicalValues', this._fetchIndicators, this);
-            
+
             this.model.on('change:instances', this.updatePreview, this);
             this.model.on('change:measures', this.updatePreview, this);
             this.model.on('change:indicators', this.updatePreview, this);
@@ -34,16 +51,16 @@
             this.measures.resetDefaults();
         },
 
-        events : {
-            "click .widget-update-preview" : "updatePreview"
+        events: {
+            "click .widget-update-preview": "updatePreview"
         },
 
-        updatePreview : function () {
+        updatePreview: function () {
             this.trigger("updatePreviewData");
             return false;
         },
 
-        _fetchGeographicalGranularities : function () {
+        _fetchGeographicalGranularities: function () {
             this.geographicalGranularities.reset([]);
             this.model.set('geographicalGranularityCode', undefined);
 
@@ -55,13 +72,14 @@
                 this.geographicalGranularities.fetchByIndicatorSystemCode(indicatorSystemCode);
             } else if (groupType === 'subject' && subjectCode) {
                 this.geographicalGranularities.fetchBySubjectCode(subjectCode);
+            } else if (groupType === 'allValues') {
+                this.geographicalGranularities.fetchAll();
             }
         },
 
-        _fetchGeographicalValuesAndTimeGranularities : function () {
+        _fetchGeographicalValuesAndTimeGranularities: function () {
             this.geographicalValues.reset([]);
             this.model.set('instances', undefined);
-
             var geographicalGranularityCode = this.model.get('geographicalGranularityCode');
             var groupType = this.model.get('groupType');
             var indicatorSystemCode = this.model.get('indicatorSystem');
@@ -71,10 +89,13 @@
                 this.geographicalValues.fetchByIndicatorSystemCodeAndGeographicalGranularityCode(indicatorSystemCode, geographicalGranularityCode);
             } else if (geographicalGranularityCode && groupType === 'subject' && subjectCode) {
                 this.geographicalValues.fetchBySubjectCodeAndGeographicalGranularityCode(subjectCode, geographicalGranularityCode);
+            } else if (geographicalGranularityCode && groupType === 'allValues') {
+                this.geographicalValues.fetchAllAndGeographicalGranularityCode(geographicalGranularityCode);
             }
+
         },
 
-        _fetchIndicatorInstances : function () {
+        _fetchIndicatorInstances: function () {
             this.instances.reset([]);
 
             var groupType = this.model.get('groupType');
@@ -87,27 +108,29 @@
             }
         },
 
-        _fetchIndicators : function () {
+        _fetchIndicators: function () {
             this.indicators.reset([]);
-
+debugger;
             var groupType = this.model.get('groupType');
             var subjectCode = this.model.get('subjectCode');
             var geographicalValues = this.model.get('geographicalValues');
             var geographicalValue = geographicalValues[0];
             if (groupType === 'subject' && subjectCode && geographicalValue) {
                 this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue);
+            }else if (groupType === 'allValues' && geographicalValue){
+                this.indicators.fetchAllByGeographicalValueCode(geographicalValue);
             }
         },
 
-        _renderMeasures : function () {
+        _renderMeasures: function () {
             // Measures
             var measuresView = new App.views.Select2View({
-                el : this.$('.widget-data-measures'),
-                collection : this.measures,
-                idAttribute : 'id',
-                textAttribute : 'text',
-                multiple : true,
-                width : "600px"
+                el: this.$('.widget-data-measures'),
+                collection: this.measures,
+                idAttribute: 'id',
+                textAttribute: 'text',
+                multiple: true,
+                width: "600px"
             });
 
             measuresView.on('change', function (measures) {
@@ -120,15 +143,15 @@
             }, this);
         },
 
-        _renderSystems : function () {
+        _renderSystems: function () {
             // Systems
             var indicatorSystemView = new App.views.Select2View({
-                el : this.$('.widget-data-system'),
-                collection : this.systems,
-                idAttribute : 'code',
-                textAttribute : 'title',
-                multiple : false,
-                width : "600px"
+                el: this.$('.widget-data-system'),
+                collection: this.systems,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: false,
+                width: "600px"
             });
 
             indicatorSystemView.on('change', function (indicatorSystem) {
@@ -137,15 +160,15 @@
             }, this);
         },
 
-        _renderSubjects : function () {
+        _renderSubjects: function () {
             // Subjects
             var subjectSystemView = new App.views.Select2View({
-                el : this.$('.widget-data-subject'),
-                collection : this.subjects,
-                idAttribute : 'code',
-                textAttribute : 'title',
-                multiple : false,
-                width : "600px"
+                el: this.$('.widget-data-subject'),
+                collection: this.subjects,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: false,
+                width: "600px"
             });
 
             subjectSystemView.on('change', function (subject) {
@@ -154,15 +177,15 @@
             }, this);
         },
 
-        _renderGranularities : function () {
+        _renderGranularities: function () {
             // Granularities
             var geographicalGranularitiesView = new App.views.Select2View({
-                el : this.$(".widget-data-geographicalGranularities"),
-                collection : this.geographicalGranularities,
-                idAttribute : 'code',
-                textAttribute : 'title',
-                multiple : false,
-                width : "600px"
+                el: this.$(".widget-data-geographicalGranularities"),
+                collection: this.geographicalGranularities,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: false,
+                width: "600px"
             });
 
             geographicalGranularitiesView.on('change', function (granularity) {
@@ -171,16 +194,16 @@
             }, this);
         },
 
-        _renderGeographicalValues : function () {
+        _renderGeographicalValues: function () {
             // GeographicalValues
             var geographicalValuesView = new App.views.Select2View({
-                el : this.$(".widget-data-geographicalValues"),
-                collection : this.geographicalValues,
-                idAttribute : 'code',
-                textAttribute : 'title',
-                multiple : false,
-                width : "600px",
-                sort : false
+                el: this.$(".widget-data-geographicalValues"),
+                collection: this.geographicalValues,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: false,
+                width: "600px",
+                sort: false
             });
 
             geographicalValuesView.on('change', function (geographicalValue) {
@@ -189,31 +212,33 @@
             }, this);
         },
 
-        _renderGroupType : function () {
+        _renderGroupType: function () {
             // Group type
             var toggleGroupType = function () {
                 var groupType = this.model.get('groupType');
                 var toggleSystem = groupType === 'system';
                 var toggleSubject = groupType === 'subject';
+                var toggleAllValues = groupType === 'allValues';
                 this.$('.widget-data-system').toggle(toggleSystem);
                 this.$('.widget-data-subject').toggle(toggleSubject);
                 this.$(".widget-data-instances").toggle(toggleSystem);
                 this.$(".widget-data-indicators").toggle(toggleSubject);
+                this.$(".widget-data-all-indicators").toggle(toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
             toggleGroupType();
         },
 
-        _renderIndicators : function () {
+        _renderIndicators: function () {
             // Indicators
             var indicatorsView = new App.views.Select2View({
-                el : this.$(".widget-data-indicators"),
-                collection : this.indicators,
-                idAttribute : 'code',
-                textAttribute : 'title',
-                multiple : true,
-                width : "600px"
+                el: this.$(".widget-data-indicators"),
+                collection: this.indicators,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: true,
+                width: "600px"
             });
             indicatorsView.on('change', function (indicators) {
                 var value = indicators ? _.pluck(indicators, "id") : [];
@@ -221,15 +246,30 @@
             }, this);
         },
 
-        _renderInstances : function () {
+        _renderAllIndicators: function () {
+            // Indicators
+            var indicatorsView = new App.views.Select2View({
+                el: this.$(".widget-data-all-indicators"),
+                collection: this.indicators,
+                idAttribute: 'code',
+                textAttribute: 'title',
+                multiple: true,
+                width: "600px"
+            });
+            indicatorsView.on('change', function (indicators) {
+                var value = indicators ? _.pluck(indicators, "id") : [];
+                this.model.set('indicators', value);
+            }, this);
+        },
+        _renderInstances: function () {
             // Instances
             var instancesView = new App.views.Select2View({
-                el : this.$(".widget-data-instances"),
-                collection : this.instances,
-                idAttribute : 'id',
-                textAttribute : 'title',
-                multiple : true,
-                width : "600px"
+                el: this.$(".widget-data-instances"),
+                collection: this.instances,
+                idAttribute: 'id',
+                textAttribute: 'title',
+                multiple: true,
+                width: "600px"
             });
             instancesView.on('change', function (instances) {
                 var value = instances ? _.pluck(instances, "id") : [];
@@ -237,7 +277,7 @@
             }, this);
         },
 
-        render : function () {
+        render: function () {
             this.$el.html(this.template());
 
             // Bind radio button
@@ -250,6 +290,7 @@
             this._renderGranularities();
             this._renderGeographicalValues();
             this._renderIndicators();
+            this._renderAllIndicators();
             this._renderInstances();
 
             // Visible zones
@@ -260,7 +301,6 @@
 
             return this;
         }
-
 
 
     });

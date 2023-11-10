@@ -29,6 +29,14 @@
                     geographicalGranularityCode : granularityCode
                 }
             });
+        },
+
+        fetchAllAndGeographicalGranularityCode : function (granularityCode) {
+            return this.fetch({
+                data : {
+                    geographicalGranularityCode : granularityCode
+                }
+            });
         }
 
     });

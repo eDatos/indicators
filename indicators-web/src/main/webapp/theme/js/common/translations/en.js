@@ -16,6 +16,7 @@
                 'SYSTEM': 'System',
                 'SYSTEM_OR_SUBJECT': 'System or subject',
                 'SUBJECT': 'Subject',
+                'ALL_SUBJECT': 'All subjects',
                 'INDICATORS': 'Indicators',
                 'GEOGRAPHICAL_VALUES': 'Geographical values',
                 'TIME_GRANULARITIES': 'Time granularities',
