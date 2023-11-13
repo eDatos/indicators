@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -31,6 +28,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -58,8 +56,12 @@ import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
@@ -1616,4 +1618,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return target;
     }
+
+    @Override
+    public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        VariableElementAvro variableElementAvro = (VariableElementAvro) message;
+        int c = 1;
+    }
+
 }

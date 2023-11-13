@@ -7,7 +7,8 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstant
 
 public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl implements IndicatorsConfigurationService {
 
-    final String INDICATOR_QUERY_GROUP = "INDICATOR_QUERY_GROUP";
+    final String INDICATOR_QUERY_GROUP            = "INDICATOR_QUERY_GROUP";
+    final String INDICATOR_VARIABLE_ELEMENT_GROUP = "INDICATOR_VARIABLE_ELEMENT_GROUP";
 
     @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
@@ -82,6 +83,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
+    }
+
+    @Override
+    public String retrieveKafkaVariableElementGroup() throws MetamacException {
+        return INDICATOR_VARIABLE_ELEMENT_GROUP;
     }
 
     @Override

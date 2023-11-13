@@ -81,6 +81,8 @@ Application Indicators {
 	    	@GeographicalValue createGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -446,6 +448,8 @@ Application Indicators {
 	    	@GeographicalValueDto updateGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
 	    	"Delete a geographical value"
 	    	deleteGeographicalValue(String uuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
