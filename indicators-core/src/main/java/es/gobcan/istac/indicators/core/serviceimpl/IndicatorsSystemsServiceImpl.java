@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -59,6 +60,7 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.mapper.VariableElementAvro2DoMapper;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -74,7 +76,7 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
 
     @Autowired
-    ConfigurationService                                           configurationService;
+    private IndicatorsConfigurationService                         configurationService;
 
     @Autowired
     private StreamMessagingService                                 streamMessagingService;
@@ -82,6 +84,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     @Autowired
     @Qualifier("indicatorsSystemStreamMessagingCallback")
     private StreamMessagingCallback<IndicatorsSystemVersion, ?, ?> streamMessagingCallback;
+
+    @Autowired
+    VariableElementAvro2DoMapper                                   variableElementAvro2DoMapper;
 
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
@@ -1622,7 +1627,69 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     @Override
     public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         VariableElementAvro variableElementAvro = (VariableElementAvro) message;
-        int c = 1;
+
+        if (checkIsDefaultTerritoryVariable(variableElementAvro.getVariable().getUrn())) {
+
+            GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(variableElementAvro.getCode());
+
+            if (geographicalValue == null) {
+                createGeographicalValue(ctx, variableElementAvro);
+            } else {
+                updateGeopgraphicalValue(ctx, geographicalValue, variableElementAvro);
+            }
+        }
     }
 
+    private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
+        String territoryVariableUrnDefault = configurationService.retrieveDefaultTerritoryVariable();
+
+        return territoryVariableUrnDefault.equals(variableUrn);
+    }
+
+    private GeographicalValue createGeographicalValue(ServiceContext ctx, VariableElementAvro variableElementAvro) throws MetamacException {
+        GeographicalValue geographicalValue = getGeographicalValueFromVariableElementAvro(ctx, variableElementAvro);
+        return createGeographicalValue(ctx, geographicalValue);
+    }
+
+    private GeographicalValue updateGeopgraphicalValue(ServiceContext ctx, GeographicalValue geographicalValue, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (checkDeleteGeopgraphicalValue(variableElementAvro)) {
+            deleteGeographicalValue(ctx, geographicalValue.getUuid());
+            return null;
+        }
+
+        GeographicalValue geographicalValueSource = getGeographicalValueFromVariableElementAvro(ctx, variableElementAvro);
+
+        geographicalValue.setLongitude(geographicalValueSource.getLongitude());
+        geographicalValue.setLatitude(geographicalValueSource.getLatitude());
+        geographicalValue.setTitle(geographicalValueSource.getTitle());
+        geographicalValue.setOrder(geographicalValueSource.getCode());
+        geographicalValue.setUpdateDate(new DateTime());
+
+        return updateGeographicalValue(ctx, geographicalValue);
+    }
+
+    private boolean checkDeleteGeopgraphicalValue(VariableElementAvro variableElementAvro) throws MetamacException {
+        if (variableElementAvro.getValidTo() != null) {
+            Instant instant = Instant.ofEpochMilli(variableElementAvro.getValidTo().getInstant());
+            DateTime now = new DateTime();
+            return now.isAfter(instant.toEpochMilli());
+        }
+        return false;
+    }
+
+    private GeographicalValue getGeographicalValueFromVariableElementAvro(ServiceContext ctx, VariableElementAvro variableElementAvro) throws MetamacException {
+        GeographicalGranularity geographicalGranularity = null;
+        if (variableElementAvro.getGeographicGranularities() != null) {
+            geographicalGranularity = getGeographicalGranularityRepository().findGeographicalGranularityByCode(variableElementAvro.getGeographicGranularities().getCode());
+
+            if (geographicalGranularity == null) {
+                geographicalGranularity = variableElementAvro2DoMapper.granularityRelatedResourceToDoGeographicalGranularity(variableElementAvro.getGeographicGranularities());
+                geographicalGranularity = createGeographicalGranularity(ctx, geographicalGranularity);
+            }
+
+        }
+        GeographicalValue geographicalValueResult = variableElementAvro2DoMapper.variableElementAvroToDoGeographicalValue(ctx, variableElementAvro, geographicalGranularity);
+        geographicalValueResult.setGranularity(geographicalGranularity);
+        return geographicalValueResult;
+    }
 }

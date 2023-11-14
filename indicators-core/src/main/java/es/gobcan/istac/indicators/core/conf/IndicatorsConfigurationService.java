@@ -35,6 +35,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveDefaultCategoryScheme() throws MetamacException;
 
+    String retrieveDefaultTerritoryVariable() throws MetamacException;
+
     String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException;
 
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;

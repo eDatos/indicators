@@ -76,6 +76,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultTerritoryVariable() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_TERRITORY_VARIABLE);
+    }
+
+    @Override
     public String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CODELIST_ANNOTATION_TYPE_POSITION_UNIT_MEASURE);
     }
