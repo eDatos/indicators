@@ -123,30 +123,30 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService                configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     @Autowired
-    private DsplExporterService                           dsplExporterService;
+    private DsplExporterService dsplExporterService;
 
     @Autowired
-    private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
+    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    private static final Logger                           LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String                            GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String                            TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
+    public static final String GEO_DIMENSION = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String TIME_DIMENSION = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String MEASURE_DIMENSION = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String CODE_ATTRIBUTE = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String DATASET_REPOSITORY_LOCALE = "es";
 
-    public static final Double                            ZERO_RANGE                = 1E-6;
-    public static final int                               MAX_MEASURE_LENGTH        = 50;
+    public static final Double ZERO_RANGE = 1E-6;
+    public static final int MAX_MEASURE_LENGTH = 50;
 
-    private static final Map<String, String>              SPECIAL_STRING_MAPPING;
+    private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -163,7 +163,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper               mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -593,7 +593,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private IndicatorObservationsVO findObservationsInIndicatorInstanceWithIndicatorVersion(ServiceContext ctx, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion,
-            IndicatorsDataFilterVO dataFilter) throws MetamacException {
+                                                                                            IndicatorsDataFilterVO dataFilter) throws MetamacException {
 
         List<String> geoCodes = retrieveGeographicalCodesInstanceFiltered(ctx, indicatorInstance, indicatorVersion, dataFilter.getGeoFilter());
         List<String> timeCodes = retrieveTimeValuesInstanceFiltered(ctx, indicatorInstance, indicatorVersion, dataFilter.getTimeFilter());
@@ -712,7 +712,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid,
-            IndicatorsDataFilterVO dataFilter) throws MetamacException {
+                                                                                                                         IndicatorsDataFilterVO dataFilter) throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(ctx, indInstance.getIndicator().getUuid());
 
@@ -721,7 +721,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public IndicatorObservationsExtendedVO findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid,
-            IndicatorsDataFilterVO dataFilter) throws MetamacException {
+                                                                                                                           IndicatorsDataFilterVO dataFilter) throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
 
@@ -729,7 +729,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private IndicatorObservationsExtendedVO findObservationsExtendedInIndicatorInstanceWithIndicatorVersion(ServiceContext ctx, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion,
-            IndicatorsDataFilterVO dataFilter) throws MetamacException {
+                                                                                                            IndicatorsDataFilterVO dataFilter) throws MetamacException {
 
         List<String> geoCodes = retrieveGeographicalCodesInstanceFiltered(ctx, indicatorInstance, indicatorVersion, dataFilter.getGeoFilter());
         List<String> timeCodes = retrieveTimeValuesInstanceFiltered(ctx, indicatorInstance, indicatorVersion, dataFilter.getTimeFilter());
@@ -748,7 +748,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     protected IndicatorObservationsExtendedVO buildIndicatorsObservationsExtended(List<String> geoCodes, List<String> timeCodes, List<String> measureCodes,
-            Map<String, ObservationExtendedDto> observations) {
+                                                                                  Map<String, ObservationExtendedDto> observations) {
         IndicatorObservationsExtendedVO indicatorObservations = new IndicatorObservationsExtendedVO();
         indicatorObservations.setGeographicalCodes(geoCodes);
         indicatorObservations.setTimeCodes(timeCodes);
@@ -767,7 +767,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorVersionLastValue> findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ServiceContext ctx, String subjectCode, String geoCode,
-            List<MeasureDimensionTypeEnum> measureValues, int numResults) throws MetamacException {
+                                                                                                                            List<MeasureDimensionTypeEnum> measureValues, int numResults) throws MetamacException {
         // Validation
         InvocationValidator.checkFindLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(subjectCode, geoCode, measureValues, numResults, null);
 
@@ -787,7 +787,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorVersionLastValue> findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(ServiceContext ctx, List<String> indicatorsCodes, String geoCode,
-            List<MeasureDimensionTypeEnum> measures) throws MetamacException {
+                                                                                                            List<MeasureDimensionTypeEnum> measures) throws MetamacException {
         // Validation
         InvocationValidator.checkFindLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(indicatorsCodes, geoCode, measures, null);
 
@@ -820,7 +820,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ServiceContext ctx, String systemCode, String geoCode,
-            List<MeasureDimensionTypeEnum> measureValues, int numResults) throws MetamacException {
+                                                                                                                                  List<MeasureDimensionTypeEnum> measureValues, int numResults) throws MetamacException {
         // Validation
         InvocationValidator.checkFindLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(systemCode, geoCode, measureValues, numResults, null);
 
@@ -840,7 +840,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(ServiceContext ctx, String systemCode, List<String> instancesCodes, String geoCode,
-            List<MeasureDimensionTypeEnum> measures) throws MetamacException {
+                                                                                                              List<MeasureDimensionTypeEnum> measures) throws MetamacException {
         // Validation
         InvocationValidator.checkFindLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(systemCode, instancesCodes, geoCode, measures, null);
 
@@ -2056,12 +2056,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
         InternationalString title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
         InternationalString description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
-
-        List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
-
-        String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
-
-        getNoticesRestInternalService().createExportDSPLNotification(ctx.getUserId(), code, url, files);
+        try {
+            List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
+            String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
+            getNoticesRestInternalService().createExportDSPLNotification(ctx.getUserId(), code, url, files);
+        } catch (MetamacException e) {
+            getNoticesRestInternalService().createExportDSPLErrorNotification(ctx.getUserId(), code, e);
+        }
 
         LOG.info("Finished execute export DSPL process");
     }

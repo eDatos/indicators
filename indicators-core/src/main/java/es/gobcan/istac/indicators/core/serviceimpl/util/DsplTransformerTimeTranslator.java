@@ -52,6 +52,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                                          IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
+
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
@@ -208,6 +209,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         }
         return mapping;
     }
+
     private String transformTimeValueToGranularity(String timeCode, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         TimeValue timeValue = TimeVariableUtils.parseTimeValue(timeCode);
         DateTime date = new DateTime(TimeVariableUtils.timeValueToLastPossibleDate(timeValue));
@@ -246,7 +248,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             case DAILY:
                 return buildDailyTimeValue(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
             default: // Hourly value is not supported by DSLP
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED,timeGranularity);
         }
     }
 
