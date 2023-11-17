@@ -813,8 +813,6 @@ public class DsplTransformer {
             case WEEKLY:
             case DAILY:
                 return new DateColumn("day", "yyyyMMdd");
-            case HOURLY:
-                return new DateColumn("hour", "HHmm");
             default: // Hourly value is not supported by DSLP
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
@@ -842,8 +840,6 @@ public class DsplTransformer {
             case WEEKLY:
             case DAILY:
                 return "time:day";
-            case HOURLY:
-                return "time:hour";
             default: // Hourly value is not supported by DSLP
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
