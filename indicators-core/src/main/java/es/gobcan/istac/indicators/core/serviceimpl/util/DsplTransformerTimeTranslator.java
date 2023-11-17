@@ -49,7 +49,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(DsplTransformerTimeTranslator.class);
 
     public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
+                                         IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
     @Override
@@ -245,6 +245,8 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                 return buildWeeklyTimeValue(date.getYear(), date.getWeekOfWeekyear());
             case DAILY:
                 return buildDailyTimeValue(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+            case HOURLY:
+                return timeCode;
             default: // Hourly value is not supported by DSLP
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
         }
