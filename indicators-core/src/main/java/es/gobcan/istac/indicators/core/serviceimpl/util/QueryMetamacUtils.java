@@ -43,6 +43,8 @@ import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 
 public class QueryMetamacUtils {
 
+    private static Map<String, String> variableElementsByCode = new HashMap<String, String>();
+
     public static es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query) throws IOException, MetamacException {
         if (query == null) {
             return null;
@@ -267,10 +269,24 @@ public class QueryMetamacUtils {
                 List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
                 for (EnumeratedDimensionValue enumeratedDimensionValue : values) {
                     String extractValue;
-                    if (trylabels) {
-                        extractValue = extractValueForDefaultLanguage(enumeratedDimensionValue.getName());
+                    InternationalString name;
+                    String valueId;
+
+                    if (DimensionType.GEOGRAPHIC_DIMENSION.equals(dimension.getType())) {
+                        name = enumeratedDimensionValue.getVariableElement().getName();
+                        valueId = enumeratedDimensionValue.getVariableElement().getId();
+                        if (variableElementsByCode.get(enumeratedDimensionValue.getId()) == null) {
+                            variableElementsByCode.put(enumeratedDimensionValue.getId(), valueId);
+                        }
                     } else {
-                        extractValue = enumeratedDimensionValue.getId();
+                        name = enumeratedDimensionValue.getName();
+                        valueId = enumeratedDimensionValue.getId();
+                    }
+
+                    if (trylabels) {
+                        extractValue = extractValueForDefaultLanguage(name);
+                    } else {
+                        extractValue = valueId;
                     }
                     valuesResult.add(extractValue);
                 }
@@ -292,7 +308,7 @@ public class QueryMetamacUtils {
         }
 
         int numDimensions = data.getDimensions().getDimensions().size();
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query);
+        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode);
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
@@ -333,5 +349,4 @@ public class QueryMetamacUtils {
     public static Do2DtoMapper getDo2DtoMapper() {
         return ApplicationContextProvider.getApplicationContext().getBean(Do2DtoMapper.class);
     }
-
 }
