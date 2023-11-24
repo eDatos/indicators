@@ -86,7 +86,7 @@ and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'EUR_L', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_M2', 'EUR_MILES', 'EUR_MILLONES', 'EUR_PERSONA', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS');
 
  */
  
@@ -170,6 +170,16 @@ Ejemplos
 UPDATE temp_mig_units set id_unit_tb_lis_quantities = 41 where urn=urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.004).FINCAS;
 UPDATE temp_mig_units set id_unit_tb_lis_quantities = 21 where urn=urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.004).VOTOS;
 */
+
+-- Paso 4.1. Problemas por entorno. Los problemas que se vean corregir a mano. A continuación pasar para cada entorno los updates con correcciones manuales.
+-------- PRE ISTAC 
+/*
+  1. MWH se asocia a ID 60 en indicadores que es MW. Se corrige
+UPDATES A EJECUTAR:
+UPDATE temp_mig_units set id_unit_tb_lis_quantities = 53 where CODE = 'MWH'  
+ */
+--------FIN PRE ISTAC
+
 
 -- PASO 5 Asegurarse que todo está listo
 select case when (select count(*) from tb_lis_quantities_units a where a.id not in(select coalesce(id_unit_tb_lis_quantities,0) from temp_mig_units)) = 0 then 'TODO CORRECTO. PUEDES SEGUIR ADELANTE.' else 'ERROR. HAY ENTRADAS QUE NO TIENEN RELACIÓN ENTRE UNIDAD ANTIGUA Y NUEVA' end 
