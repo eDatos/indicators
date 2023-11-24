@@ -16,9 +16,9 @@ public class JsonStatDatasetAccess {
 
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
 
-    public JsonStatDatasetAccess(JsonStatData jsonStatData) {
+    public JsonStatDatasetAccess(JsonStatData jsonStatData, List<String> geographicalDimensionsId) {
         initializeObservations(jsonStatData);
-        initializeDimensionsForData(jsonStatData);
+        initializeDimensionsForData(jsonStatData, geographicalDimensionsId);
     }
 
     public String[] getObservations() {
@@ -33,7 +33,7 @@ public class JsonStatDatasetAccess {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
     }
 
-    private void initializeDimensionsForData(JsonStatData jsonStatData) {
+    private void initializeDimensionsForData(JsonStatData jsonStatData, List<String> geographicalDimensionsId) {
         List<String> dimensionRepresentations = jsonStatData.getId();
         this.dimensionsOrderedForData = new ArrayList<String>(dimensionRepresentations.size());
         this.dimensionValuesOrderedForDataByDimensionId = new HashMap<String, List<String>>(dimensionRepresentations.size());
@@ -45,7 +45,20 @@ public class JsonStatDatasetAccess {
 
             this.dimensionValuesOrderedForDataByDimensionId.put(dimensionId, new ArrayList<String>(categories.size()));
             for (int i = 0; i < categories.size(); i++) {
-                this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(getKey(categories, i));
+
+                if (geographicalDimensionsId.contains(dimensionId)) {
+                    // String variableElement = variableElementsByCode.get(getKey(categories, i));
+                    // TODO EDATOS-3827 PENDIENTE
+                    String variableElement = getKey(categories, i);
+
+                    if (variableElement != null) {
+                        this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(variableElement);
+                    } else {
+                        // TODO EDATOS-3827 ERROR PORQUE NO SE ENCUENTRA.
+                    }
+                } else {
+                    this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(getKey(categories, i));
+                }
             }
         }
     }

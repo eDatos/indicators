@@ -111,7 +111,7 @@ public class QueryMetamacUtils {
         }
 
         // Data
-        target.processData(extractData(query));
+        target.processData(extractData(query, target.getSpatialVariables()));
 
         // VariablesInOrder
         target.setVariablesInOrder(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
@@ -298,7 +298,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static List<DataContent> extractData(Query query) throws MetamacException {
+    private static List<DataContent> extractData(Query query, List<String> geographicalDimensionsId) throws MetamacException {
         List<DataContent> result = new LinkedList<DataContent>();
 
         Data data = query.getData();
@@ -308,7 +308,7 @@ public class QueryMetamacUtils {
         }
 
         int numDimensions = data.getDimensions().getDimensions().size();
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode);
+        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));

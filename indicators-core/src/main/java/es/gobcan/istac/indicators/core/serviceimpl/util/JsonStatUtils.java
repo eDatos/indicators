@@ -84,7 +84,7 @@ public class JsonStatUtils {
         target.setPublishers(JsonStatUtils.toList(jsonStatData.getSource()));
 
         // Data
-        target.processData(jsonStatDataValuesToDataContent(jsonStatData));
+        target.processData(jsonStatDataValuesToDataContent(jsonStatData, target.getSpatialVariables()));
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(jsonStatData));
@@ -101,7 +101,7 @@ public class JsonStatUtils {
         return result;
     }
 
-    public static List<DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData) {
+    public static List<DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData, List<String> geographicalDimensionsId) {
         List<DataContent> result = new LinkedList<DataContent>();
 
         int numDimensions = jsonStatData.getId().size();
@@ -109,7 +109,7 @@ public class JsonStatUtils {
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
 
-        JsonStatDatasetAccess jsonStatDatasetAccess = new JsonStatDatasetAccess(jsonStatData);
+        JsonStatDatasetAccess jsonStatDatasetAccess = new JsonStatDatasetAccess(jsonStatData, geographicalDimensionsId);
 
         int observationIndex = 0;
         while (stack.size() > 0) {

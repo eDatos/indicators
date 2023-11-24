@@ -394,7 +394,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_5))).thenReturn(CONTENT_JSON_STAT_5);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_5);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 
@@ -469,7 +469,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_6))).thenReturn(CONTENT_JSON_STAT_6);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_6);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 
@@ -531,7 +531,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_7))).thenReturn(CONTENT_JSON_STAT_7);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_7);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData);
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 
