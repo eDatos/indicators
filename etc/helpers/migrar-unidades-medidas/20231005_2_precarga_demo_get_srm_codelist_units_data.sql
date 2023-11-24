@@ -18,9 +18,9 @@ select 'insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, M
 || ''''  || '/#structuralResources/codelists/codelist;id=' || o_detail.code || ':' || c.code || '(' || c.version_logic || ')' || '/code;id=' || co_detail.code  || ''','
 || '0, '
 || '''structuralResources#code'','
-|| '''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
-|| coalesce('''' || (select "label"  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
-|| coalesce('''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
+|| '''' || (select replace(label, '''', '''''') from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
+|| coalesce('''' || (select replace(label, '''', '''''')  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
+|| coalesce('''' || (select replace(label, '''', '''''') from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
 || ');'
  from tb_item_schemes_versions a, tb_annotable_artefacts c, 
       tb_organisations o, tb_annotable_artefacts o_detail, tb_codelists_versions d, tb_codes co, tb_annotable_artefacts co_detail
