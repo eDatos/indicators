@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
@@ -49,7 +50,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(DsplTransformerTimeTranslator.class);
 
     public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-                                         IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
 
@@ -112,7 +113,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
             return datasets;
         } catch (MetamacException e) {
-            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
         }
     }
 
@@ -248,7 +249,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             case DAILY:
                 return buildDailyTimeValue(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
             default: // Hourly value is not supported by DSLP
-                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED,timeGranularity);
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED, timeGranularity);
         }
     }
 

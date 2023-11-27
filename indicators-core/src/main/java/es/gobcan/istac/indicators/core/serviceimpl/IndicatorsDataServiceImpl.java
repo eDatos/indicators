@@ -605,7 +605,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             observations = findObservationsByDimensions(indicatorVersion, newConditions);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getUuid(), indicatorInstance.getUuid());
+            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
         }
 
         return buildIndicatorsObservations(geoCodes, timeCodes, measureCodes, observations);
@@ -741,7 +742,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             observations = findObservationsExtendedByDimensions(indicatorVersion, newConditions);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getUuid(), indicatorInstance.getUuid());
+            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
         }
 
         return buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations);
