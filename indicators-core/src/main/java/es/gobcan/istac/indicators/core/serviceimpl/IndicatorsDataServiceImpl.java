@@ -95,6 +95,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
@@ -130,6 +131,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
+
+    @Autowired
+    private SrmRestInternalService                        srmRestInternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
@@ -1571,11 +1575,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         // Metamac
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                        data = QueryMetamacUtils.queryMetamacToData(query);
+                        data = QueryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
                     } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
-                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
+                        Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
                     } else {
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
@@ -2066,4 +2071,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Finished execute export DSPL process");
     }
 
+    private Map<String, String> getVariableElementsByCodeOfCodelist() throws MetamacException {
+        return srmRestInternalService.retrieveVariableElementsByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+    }
 }

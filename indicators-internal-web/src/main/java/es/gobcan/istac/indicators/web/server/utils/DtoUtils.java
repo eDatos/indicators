@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
@@ -130,7 +131,7 @@ public class DtoUtils {
      * @return
      * @throws MetamacException
      */
-    public static DataStructureDto createDataStructureDto(Query query) throws MetamacException {
+    public static DataStructureDto createDataStructureDto(Query query, SrmRestInternalService srmRestInternalService) throws MetamacException {
         if (query == null) {
             return null;
         }
@@ -176,7 +177,7 @@ public class DtoUtils {
         dataStructureDto.setSpatialVariables(QueryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
 
         // Spatial Value
-        dataStructureDto.setGeographicalValueDto(QueryMetamacUtils.extractGeographicalValueDto(query));
+        dataStructureDto.setGeographicalValueDto(QueryMetamacUtils.extractGeographicalValueDto(query, srmRestInternalService));
 
         // Cont Variable
         dataStructureDto.setContVariable(QueryMetamacUtils.extractContVariable(query.getMetadata()));

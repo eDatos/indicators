@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -394,7 +395,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_5))).thenReturn(CONTENT_JSON_STAT_5);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_5);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
+            // TODO EDATOS-3827 repasar este test
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 
@@ -469,7 +471,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_6))).thenReturn(CONTENT_JSON_STAT_6);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_6);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
+            // TODO EDATOS-3827 repasar este test
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 
@@ -531,7 +534,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_7))).thenReturn(CONTENT_JSON_STAT_7);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_7);
 
-            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, null);
+            // TODO EDATOS-3827 repasar este test
+            List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
 

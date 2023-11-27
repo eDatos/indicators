@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
+
 import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class JsonStatDatasetAccess {
 
@@ -16,9 +19,9 @@ public class JsonStatDatasetAccess {
 
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
 
-    public JsonStatDatasetAccess(JsonStatData jsonStatData, List<String> geographicalDimensionsId) {
+    public JsonStatDatasetAccess(JsonStatData jsonStatData, List<String> geographicalDimensionsId, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
         initializeObservations(jsonStatData);
-        initializeDimensionsForData(jsonStatData, geographicalDimensionsId);
+        initializeDimensionsForData(jsonStatData, geographicalDimensionsId, variableElementsByCodesOfCodelist);
     }
 
     public String[] getObservations() {
@@ -33,7 +36,7 @@ public class JsonStatDatasetAccess {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
     }
 
-    private void initializeDimensionsForData(JsonStatData jsonStatData, List<String> geographicalDimensionsId) {
+    private void initializeDimensionsForData(JsonStatData jsonStatData, List<String> geographicalDimensionsId, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
         List<String> dimensionRepresentations = jsonStatData.getId();
         this.dimensionsOrderedForData = new ArrayList<String>(dimensionRepresentations.size());
         this.dimensionValuesOrderedForDataByDimensionId = new HashMap<String, List<String>>(dimensionRepresentations.size());
@@ -47,14 +50,12 @@ public class JsonStatDatasetAccess {
             for (int i = 0; i < categories.size(); i++) {
 
                 if (geographicalDimensionsId.contains(dimensionId)) {
-                    // String variableElement = variableElementsByCode.get(getKey(categories, i));
-                    // TODO EDATOS-3827 PENDIENTE
-                    String variableElement = getKey(categories, i);
+                    String variableElement = variableElementsByCodesOfCodelist.get(getKey(categories, i));
 
                     if (variableElement != null) {
                         this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(variableElement);
                     } else {
-                        // TODO EDATOS-3827 ERROR PORQUE NO SE ENCUENTRA.
+                        throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, getKey(categories, i));
                     }
                 } else {
                     this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(getKey(categories, i));

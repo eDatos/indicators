@@ -17,7 +17,9 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ComponentType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
@@ -27,6 +29,8 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensio
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValue;
@@ -40,12 +44,13 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public class QueryMetamacUtils {
 
     private static Map<String, String> variableElementsByCode = new HashMap<String, String>();
 
-    public static es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query) throws IOException, MetamacException {
+    public static es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query, SrmRestInternalService srmRestInternalService) throws IOException, MetamacException {
         if (query == null) {
             return null;
         }
@@ -84,7 +89,7 @@ public class QueryMetamacUtils {
 
         // Spatial Variables
         target.setSpatialVariables(extractSpatialVariableList(query.getMetadata()));
-        target.setGeographicalValueDto(extractGeographicalValueDto(query));
+        target.setGeographicalValueDto(extractGeographicalValueDto(query, srmRestInternalService));
 
         // Cont Variable
         target.setContVariable(extractContVariable(query.getMetadata()));
@@ -164,16 +169,35 @@ public class QueryMetamacUtils {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
     }
 
-    public static GeographicalValueDto extractGeographicalValueDto(Query query) throws MetamacException {
+    private static String getVariableElementByCodeUrn(Query query, SrmRestInternalService srmRestInternalService, String spatialValue) throws MetamacException {
+        List<String> spatialAttributeCodeUrn = extractCodeUrnOfSpecificTypeAttribute(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
+
+        if (spatialAttributeCodeUrn.isEmpty()) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, spatialValue);
+        }
+
+        Code code = srmRestInternalService.retrieveCodeOfCodelist(spatialAttributeCodeUrn.get(0));
+
+        if (code != null && code.getVariableElement() != null && code.getVariableElement().getId() != null) {
+            return code.getVariableElement().getId();
+        } else {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, spatialValue);
+        }
+
+    }
+
+    public static GeographicalValueDto extractGeographicalValueDto(Query query, SrmRestInternalService srmRestInternalService) throws MetamacException {
         String extractSpatialValue = extractSpatialValue(query);
         if (StringUtils.isEmpty(extractSpatialValue)) {
             return null;
         }
 
+        String variableElementCode = getVariableElementByCodeUrn(query, srmRestInternalService, extractSpatialValue);
+
         // Retrieve
-        GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(extractSpatialValue);
+        GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(variableElementCode);
         if (geographicalValue == null) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, extractSpatialValue);
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, variableElementCode);
         }
 
         return getDo2DtoMapper().geographicalValueDoToDto(geographicalValue);
@@ -210,6 +234,28 @@ public class QueryMetamacUtils {
         }
 
         return null;
+    }
+
+    private static List<String> extractCodeUrnOfSpecificTypeAttribute(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
+        List<String> spatialValues = new ArrayList<String>();
+        if (attributes == null || dataAttributes == null) {
+            return spatialValues;
+        }
+
+        for (Attribute attribute : attributes.getAttributes()) {
+            if (componentType.equals(attribute.getType())) {
+                AttributeValues attributeValues = attribute.getAttributeValues();
+                if (attributeValues instanceof EnumeratedAttributeValues) {
+
+                    for (EnumeratedAttributeValue value : ((EnumeratedAttributeValues) attributeValues).getValues()) {
+                        spatialValues.add(value.getUrn());
+                    }
+
+                }
+            }
+        }
+
+        return spatialValues;
     }
 
     public static String extractSpecificAttributeValuesByType(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {

@@ -37,6 +37,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveDefaultTerritoryVariable() throws MetamacException;
 
+    String retrieveDefaultTerritoryCodelistForGpeJsonStat() throws MetamacException;
+
     String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException;
 
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;

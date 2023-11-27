@@ -11,6 +11,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+
 public class QueryMetamacDatasetAccess {
 
     public static String              DATA_SEPARATOR = " | ";
@@ -68,7 +70,7 @@ public class QueryMetamacDatasetAccess {
                     if (variableElement != null) {
                         this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(variableElement);
                     } else {
-                        // TODO EDATOS-3827 ERROR PORQUE NO SE ENCUENTRA.
+                        throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, codeRepresentation.getCode());
                     }
                 } else {
                     this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(codeRepresentation.getCode());

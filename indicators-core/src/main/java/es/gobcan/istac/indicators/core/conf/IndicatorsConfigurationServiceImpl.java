@@ -81,6 +81,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultTerritoryCodelistForGpeJsonStat() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_TERRITORY_CODELIST_GPE_JSONSTAT);
+    }
+
+    @Override
     public String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CODELIST_ANNOTATION_TYPE_POSITION_UNIT_MEASURE);
     }

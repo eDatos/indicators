@@ -33,6 +33,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED        = create("exception.indicators.geographical_value.already_exists.code_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED       = create("exception.indicators.geographical_value.already_exists.order_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED                    = create("exception.indicators.geographical_value.can_not_be_removed");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE        = create("exception.indicators.geographical_variable_element.not_found_code");
 
     // Geographical granularities
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND                       = create("exception.indicators.geographical_granularity.not_found");
