@@ -1598,7 +1598,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         }
                         Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
                         DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
-                        data = GpeUtils.GpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
+                        data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
                     }
                     dataCache.put(dataSource.getQueryUuid(), data);
                 }
