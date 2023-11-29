@@ -1,7 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.RoundingMode;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +67,7 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
+import es.gobcan.istac.indicators.core.domain.DataGpe;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -101,6 +107,7 @@ import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.GpeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
@@ -1576,19 +1583,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                                 es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                         data = QueryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
+
                     } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                         String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                         JsonStatData jsonStatData = jsonToJsonStatData(json);
                         Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
                         data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
                     } else {
+
                         // GPE-JAXI
                         String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
                         if (json == null) {
                             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
                         }
-                        data = jsonToData(json);
-
+                        Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                        DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
+                        data = GpeUtils.GpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
                     }
                     dataCache.put(dataSource.getQueryUuid(), data);
                 }
@@ -1599,6 +1609,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
         return dataCache;
+    }
+
+    public String retrieveGpePruebas(String uuid) throws MetamacException {
+        try (InputStream inputStream = new URL(uuid).openStream(); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
+            LOG.info("Retriving JSON-stat from URL: {}", uuid);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            int cp;
+            while ((cp = bufferedReader.read()) != -1) {
+                stringBuilder.append((char) cp);
+            }
+
+            LOG.info("Retrieved JSON-stat from URL: {}", uuid);
+
+            return stringBuilder.toString();
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+        }
     }
 
     /*
@@ -2014,15 +2042,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private JsonStatData jsonToJsonStatData(String json) throws IOException {
         return mapper.readValue(json, JsonStatData.class);
-    }
-
-    /*
-     * Private methods that get data from jaxi
-     */
-    private Data jsonToData(String json) throws IOException {
-        Data target = new Data();
-        target = mapper.readValue(json, Data.class);
-        return target;
     }
 
     private String getDataViewsRole() throws MetamacException {
