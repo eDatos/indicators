@@ -1576,32 +1576,35 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
 
                 Data data = dataCache.get(dataSource.getQueryUuid());
-                if (data == null) {
-                    // Recalculate
-                    if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                        // Metamac
-                        Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
-                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                        data = QueryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
 
-                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
-                        String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
-                        JsonStatData jsonStatData = jsonToJsonStatData(json);
-                        Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
-                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
-                    } else {
-
-                        // GPE-JAXI
-                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
-                        if (json == null) {
-                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
-                        }
-                        Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
-                        DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
-                        data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
-                    }
-                    dataCache.put(dataSource.getQueryUuid(), data);
+                if (data != null) {
+                    return dataCache;
                 }
+
+                // Recalculate
+                if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    // Metamac
+                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                            es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                    data = QueryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
+
+                } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
+                    String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
+                    JsonStatData jsonStatData = jsonToJsonStatData(json);
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                    data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
+                } else {
+
+                    // GPE-JAXI
+                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
+                    if (json == null) {
+                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
+                    }
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                    DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
+                    data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
+                }
+                dataCache.put(dataSource.getQueryUuid(), data);
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
