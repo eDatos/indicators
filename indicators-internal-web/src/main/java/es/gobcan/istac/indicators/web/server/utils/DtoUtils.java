@@ -188,6 +188,9 @@ public class DtoUtils {
         // Value Codes
         dataStructureDto.setValueCodes(QueryMetamacUtils.extractCodesCoverages(query.getMetadata()));
 
+        // Geographical codelist urn
+        dataStructureDto.setGeographicalCodelistUrn(QueryMetamacUtils.extractGeographicalCodelistUrn(query));
+
         return dataStructureDto;
     }
 

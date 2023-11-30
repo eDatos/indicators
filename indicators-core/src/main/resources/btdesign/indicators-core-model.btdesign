@@ -1014,6 +1014,8 @@ Application Indicators {
             - @QueryEnvironmentEnum queryEnvironment not nullable;
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
+            "Geographical codelist urn" 
+            String geographicalCodelistUrn nullable databaseColumn="GEOGRAPHICAL_CODELIST_URN";
              		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
@@ -1791,6 +1793,8 @@ Application Indicators {
 			List<String> publishers;	
 			"Version to optimistic locking"
 			Long versionOptimisticLocking;		
+			"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
 	    }
 	    
 	    "Dto for variables and categories"
@@ -2008,6 +2012,8 @@ Application Indicators {
     		MapList valueLabels;
     		"Codes for every value in every variable"
     		MapList valueCodes;
+    		"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
     	}
     	
     	"Dto for data"

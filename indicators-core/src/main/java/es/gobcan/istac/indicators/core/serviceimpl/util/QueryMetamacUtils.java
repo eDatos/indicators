@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import static org.siemac.edatos.core.common.util.GeneratorUrnUtils.generateSdmxCodelistUrn;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,7 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -274,6 +277,50 @@ public class QueryMetamacUtils {
         }
 
         return null;
+    }
+
+    public static String extractGeographicalCodelistUrn(Query query) {
+
+        // first try dimension
+        Dimensions dimensions = query.getMetadata().getDimensions();
+
+        if (dimensions == null) {
+            return null;
+        }
+
+        for (Dimension dimension : dimensions.getDimensions()) {
+            if (DimensionType.GEOGRAPHIC_DIMENSION.equals(dimension.getType())) {
+
+                DimensionValues dimensionValues = dimension.getDimensionValues();
+
+                if (dimensionValues instanceof EnumeratedDimensionValues) {
+                    List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
+
+                    if (values != null && !values.isEmpty()) {
+                        EnumeratedDimensionValue firstValue = values.get(0);
+                        return extractUrnCodelistFromUrnCode(firstValue.getUrn());
+                    }
+                }
+            }
+        }
+
+        // spatial attribute
+        String extractSpatialValue = extractSpatialValue(query);
+        if (!StringUtils.isEmpty(extractSpatialValue)) {
+            return extractUrnCodelistFromUrnCode(extractSpatialValue);
+        }
+
+        return null;
+    }
+
+    private static String extractUrnCodelistFromUrnCode(String urnCode) {
+        String[] params = UrnUtils.splitUrnItem(urnCode);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+
+        String[] agenciesID = agencyId.contains(".") ? agencyId.split(".") : new String[]{agencyId};
+        return generateSdmxCodelistUrn(agenciesID, resourceId, version);
     }
 
     public static Map<String, List<String>> extractCodesCoverages(QueryMetadataBase metadata) {

@@ -275,6 +275,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSourceSurveyAcronym(internationalStringToDto(source.getSourceSurveyAcronym()));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.doString2DtoList(source.getPublishers()));
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
 
         target.setAnnualPuntualRate(rateDerivationDoToDto(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDoToDto(source.getAnnualPercentageRate()));
@@ -287,6 +288,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 
@@ -385,7 +387,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(DataStructure source) {
+    public DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
@@ -403,6 +405,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setSpatialVariables(source.getSpatialVariables());
 
+        if (source.getSpatialVariables() != null && !source.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
+
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
             target.setValueCodes(source.getValueCodes());
@@ -417,7 +423,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
+    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
 
         // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
@@ -443,6 +449,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         // GPE: spatials -> JSON-stat: role - geo (primer elemento)
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
+        if (target.getSpatialVariables() != null && !target.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
 
         // GPE: categories - variable -> JSON-stat: dimension - label
         target.setVariables(jsonStatData.getVariables());

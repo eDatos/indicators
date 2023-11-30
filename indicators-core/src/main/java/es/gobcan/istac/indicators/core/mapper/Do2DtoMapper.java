@@ -81,8 +81,8 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
 
     // DataStructure
-    DataStructureDto dataStructureDoToDto(DataStructure source);
-    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure);
+    DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException;
+    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure) throws MetamacException;
 
     // Data
     DataDto dataDoToDto(Data source);

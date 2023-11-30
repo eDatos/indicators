@@ -298,6 +298,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setSourceSurveyAcronym(internationalStringDtoToDo(source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.dtoList2DtoString(source.getPublishers()));
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
 
         // Related entities
         target.setAnnualPuntualRate(rateDerivationDtoToDo(ctx, source.getAnnualPuntualRate(), target.getAnnualPuntualRate()));
