@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -26,12 +27,12 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
@@ -127,11 +128,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setDiffusionIndicator(IndicatorDto indicator) {
         generalPanel.setDiffusionIndicator(indicator);
-    }
-
-    @Override
-    public void setSubjectsList(List<SubjectDto> subjectDtos) {
-        generalPanel.setSubjectsList(subjectDtos);
     }
 
     @Override
@@ -260,6 +256,29 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setEditionLanguages(List<String> languages) {
         dataSourcesPanel.setEditionLanguages(languages);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // EXTERNAL RESOURCES DATA SETTERS
+    // ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void setItemSchemes(String formItemName, ExternalItemsResult result) {
+        if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
+    }
+
+    @Override
+    public void setItems(String formItemName, ExternalItemsResult result) {
+
+        if (StringUtils.equals(IndicatorDS.CATEGORY_ELEMENT, formItemName)) {
+            generalPanel.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        } else if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
     }
 
 }

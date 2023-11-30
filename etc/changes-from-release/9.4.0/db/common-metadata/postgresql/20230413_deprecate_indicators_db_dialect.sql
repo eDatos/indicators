@@ -5,7 +5,6 @@
 -- --------------------------------------------------------------------------------------------------
 
 update tb_data_configurations set conf_key = 'deprecated.indicators.core.db.dialect' where conf_key ='indicators.core.db.dialect';
-commit;
 
 update tb_data_configurations set conf_key = 'deprecated.indicators.dsrepo.db.dialect' where conf_key ='indicators.dsrepo.db.dialect';
 commit;

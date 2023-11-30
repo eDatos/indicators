@@ -1,20 +1,26 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
+import org.siemac.metamac.core.common.constants.CoreCommonConstants;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 
 /**
  * Mocks
@@ -127,21 +133,6 @@ public class IndicatorsMocks extends MetamacMocks {
     }
 
     // -----------------------------------------------------------------
-    // QUANTITY UNIT
-    // -----------------------------------------------------------------
-
-    /**
-     * Mock a QuantityUnit
-     */
-    public static QuantityUnitDto mockQuantityUnit(String locale, String label) {
-        QuantityUnitDto quantityUnitDto = new QuantityUnitDto();
-        quantityUnitDto.setSymbol(mockString(2));
-        quantityUnitDto.setSymbolPosition(QuantityUnitSymbolPositionEnum.START);
-        quantityUnitDto.setTitle(mockInternationalStringDto(locale, label));
-        return quantityUnitDto;
-    }
-
-    // -----------------------------------------------------------------
     // UNIT MULTIPLIER
     // -----------------------------------------------------------------
 
@@ -154,4 +145,72 @@ public class IndicatorsMocks extends MetamacMocks {
         unitMultiplierDto.setTitle(mockInternationalStringDto());
         return unitMultiplierDto;
     }
+
+    /**
+     * Mock an ExternalItemDto
+     */
+    public static ExternalItemDto mockExternalItemDto(String code, String urn, TypeExternalArtefactsEnum type) {
+        return mockExternalItemDtoComplete(code, urn, type);
+    }
+
+    // -----------------------------------------------------------------
+    // EXTERNAL ITEMS
+    // -----------------------------------------------------------------
+
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urnProvider, String urn, TypeExternalArtefactsEnum type) {
+        ExternalItem target = new ExternalItem();
+        target.setVersion(Long.valueOf(0));
+        target.setCode(code);
+        target.setCodeNested(codeNested);
+        target.setUri(uri);
+        target.setUrn(urn);
+        target.setUrnProvider(urnProvider);
+        target.setType(type);
+        return target;
+    }
+
+    public static ExternalItem mockExternalItem(String code, String codeNested, String uri, String urnProvider, String urn, TypeExternalArtefactsEnum type, InternationalString title,
+            String managementAppUrl) {
+        ExternalItem target = mockExternalItem(code, codeNested, uri, urnProvider, urn, type);
+        target.setTitle(title);
+        target.setManagementAppUrl(managementAppUrl);
+        return target;
+    }
+
+    public static ExternalItem mockExternalItem(String code, TypeExternalArtefactsEnum type) {
+        String urn = mockCategoryElementUrn(code);
+        return mockExternalItem(code, null, urn, type);
+    }
+
+    private static ExternalItem mockExternalItem(String code, String codeNested, String urn, TypeExternalArtefactsEnum type) {
+        String uri = CoreCommonConstants.API_LATEST_WITH_SLASHES + code;
+        String urnProvider = urn + ":provider";
+        InternationalString title = mockInternationalString(code, "title");
+        String managementAppUrl = CoreCommonConstants.URL_SEPARATOR + code;
+
+        if (TypeExternalArtefactsEnumUtils.isExternalItemOfCommonMetadataApp(type) || TypeExternalArtefactsEnum.VARIABLE_ELEMENT.equals(type)
+                || TypeExternalArtefactsEnum.CATEGORY_ELEMENT.equals(type)) {
+            urnProvider = null;
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfStatisticalOperationsApp(type)) {
+            urnProvider = null;
+        } else if (TypeExternalArtefactsEnumUtils.isExternalItemOfSrmApp(type)) {
+            // nothing to do with urnInternal because it's ok for SrmExternalItems
+            if (StringUtils.isBlank(codeNested)) {
+                if (TypeExternalArtefactsEnum.AGENCY.equals(type) || TypeExternalArtefactsEnum.CATEGORY.equals(type)) {
+                    codeNested = code;
+                }
+            }
+        } else {
+            fail("Unexpected type of ExternalItem:" + type);
+        }
+
+        ExternalItem item = mockExternalItem(code, codeNested, uri, urnProvider, urn, type, title, managementAppUrl);
+        return item;
+    }
+
+    public static ExternalItemDto mockQuantityUnitExternalItemDto(String code) {
+        return mockExternalItemDto(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+
+    }
+
 }

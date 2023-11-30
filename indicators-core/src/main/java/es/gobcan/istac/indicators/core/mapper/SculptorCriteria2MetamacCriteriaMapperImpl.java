@@ -14,13 +14,11 @@ import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 @Component
@@ -77,19 +75,6 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
             target.setResults(new ArrayList<GeographicalGranularityDto>());
             for (GeographicalGranularity geographicalGranularity : source.getValues()) {
                 target.getResults().add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
-            }
-        }
-        return target;
-    }
-
-    @Override
-    public MetamacCriteriaResult<QuantityUnitDto> pageResultToMetamacCriteriaResultQuantiyUnit(PagedResult<QuantityUnit> source, Integer pageSize) {
-        MetamacCriteriaResult<QuantityUnitDto> target = new MetamacCriteriaResult<QuantityUnitDto>();
-        target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
-        if (source.getValues() != null) {
-            target.setResults(new ArrayList<QuantityUnitDto>());
-            for (QuantityUnit quantityUnit : source.getValues()) {
-                target.getResults().add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
             }
         }
         return target;

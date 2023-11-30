@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -47,6 +48,9 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     @Autowired
     private IndicatorsConfigurationService configurationService;
 
+    @Autowired
+    SrmRestInternalService                 srmRestInternalFacade;
+
     @Override
     public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description,
             boolean mergeTimeGranularities) throws MetamacException {
@@ -56,9 +60,11 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
         DsplTransformer transformer = null;
         if (mergeTimeGranularities) {
-            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService,
+                    srmRestInternalFacade);
         } else {
-            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService,
+                    srmRestInternalFacade);
         }
 
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);

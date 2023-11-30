@@ -70,21 +70,18 @@
                 if (measureRepresentation) {
                     var quantity = measureRepresentation.quantity;
                     var unitLocale = (quantity.unitSymbol || quantity.unit[locale]) ? locale : defaultLanguage;
+                    var unit = quantity.unitSymbol ? quantity.unitSymbol : quantity.unit[unitLocale];
 
                     if (!_.isUndefined(quantity.unitMultiplier)) {
                         var unitMultiplierTitle = quantity.unitMultiplier[unitLocale] || quantity.unitMultiplier.__default__;
                         // quantity.unitMultiplier no tiene un ID para poder identificar que hablamos de unidades, pero si que podemos garantizar que cuando son las unidades: quantity.unitMultiplier["es"] === "Unidades"
                         if (quantity.unitMultiplier["es"] !== "Unidades") {
-                            result += unitMultiplierTitle + EDatos.common.I18n.translate('CONNECTOR.OF', unitLocale);
+                            result += unitMultiplierTitle + EDatos.common.I18n.translate(EDatos.common.I18n.startsWithVowelOrH(unit) ? 'CONNECTOR.CONTRACTED_OF' : 'CONNECTOR.OF', unitLocale);
                         }
                     }
 
-                    if (quantity.unitSymbol) {
-                        result += quantity.unitSymbol;
-                    } else {
-                        result += quantity.unit[unitLocale];
-                    }
-                    
+                    result += unit;
+
                     if (quantity.baseValue) {
                     	result += " (";
                     	if (quantity.baseLocation) {

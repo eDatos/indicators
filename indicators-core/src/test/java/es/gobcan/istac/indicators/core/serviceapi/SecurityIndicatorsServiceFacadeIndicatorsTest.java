@@ -19,13 +19,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
@@ -92,14 +89,13 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
-        indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setCategoryElement(IndicatorsMocks.mockCategoryElementExternalItemDto(CATEGORY_ELEMENT_1));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
-        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(10));
 
         // With access
@@ -625,169 +621,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, IndicatorsDataBaseTest.INIT_VERSION);
-    }
-
-    @Test
-    public void testRetrieveQuantityUnits() throws Exception {
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextAdministrador());
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoSistemaIndicadores());
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoProduccion());
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoApoyoProduccion());
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoDifusion());
-        indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextTecnicoApoyoDifusion());
-    }
-
-    @Test
-    public void testCreateQuantityUnit() throws Exception {
-        QuantityUnitDto quantityUnitDto = IndicatorsMocks.mockQuantityUnit("es", "personas");
-
-        // With access
-        indicatorsServiceFacade.createQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
-
-        // Without access
-        try {
-            indicatorsServiceFacade.createQuantityUnit(getServiceContextTecnicoSistemaIndicadores(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.createQuantityUnit(getServiceContextTecnicoProduccion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.createQuantityUnit(getServiceContextTecnicoApoyoProduccion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.createQuantityUnit(getServiceContextTecnicoDifusion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.createQuantityUnit(getServiceContextTecnicoApoyoDifusion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testUpdateQuantityUnit() throws Exception {
-        QuantityUnit quantityUnit = indicatorsService.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
-        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-
-        // With access
-        quantityUnitDto = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
-
-        // Without access
-        try {
-            indicatorsServiceFacade.updateQuantityUnit(getServiceContextTecnicoSistemaIndicadores(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.updateQuantityUnit(getServiceContextTecnicoProduccion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.updateQuantityUnit(getServiceContextTecnicoApoyoProduccion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.updateQuantityUnit(getServiceContextTecnicoDifusion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.updateQuantityUnit(getServiceContextTecnicoApoyoDifusion(), quantityUnitDto);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testDeleteQuantityUnit() throws Exception {
-        indicatorsServiceFacade.deleteQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_3);
-    }
-
-    @Test
-    public void testDeleteQuantityUnitErrorWithoutRole() throws Exception {
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoSistemaIndicadores(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoProduccion(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoApoyoProduccion(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoDifusion(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextTecnicoApoyoDifusion(), QUANTITY_UNIT_1);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testRetrieveSubjects() throws Exception {
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextAdministrador());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoSistemaIndicadores());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoProduccion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoApoyoProduccion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoDifusion());
-        indicatorsServiceFacade.retrieveSubjects(getServiceContextTecnicoApoyoDifusion());
-
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.notices.v1_0.domain.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,13 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 public class NoticesRestInternalServiceTest {
 
     @Autowired
-    private NoticesRestInternalService              noticesRestInternalService;
-    
-    private static final String MY_DATA_REPOSITORY_TABLE_NAME = "MYDATAREPOSITORYTABLENAME";
-    private static final String MY_CODE                       = "MYCODE";
-    private static final String MY_VIEW_CODE                  = "MYVIEWCODE";
-    private static final String MY_DATA_VIEWS_ROLE            = "MYDATAVIEWSROLE";
-    private static final String MY_OLD_DATASET_ID             = "MYOLDDATASETID";
+    private NoticesRestInternalService noticesRestInternalService;
+
+    private static final String        MY_DATA_REPOSITORY_TABLE_NAME = "MYDATAREPOSITORYTABLENAME";
+    private static final String        MY_CODE                       = "MYCODE";
+    private static final String        MY_VIEW_CODE                  = "MYVIEWCODE";
+    private static final String        MY_DATA_VIEWS_ROLE            = "MYDATAVIEWSROLE";
+    private static final String        MY_OLD_DATASET_ID             = "MYOLDDATASETID";
 
     @Test
     public void testCreateNotice() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
@@ -62,14 +63,14 @@ public class NoticesRestInternalServiceTest {
 
         assertNotNull(noticeAssignRolePermissionsDataset.getMessages().getMessages().get(0).getText());
 
-        Notice noticeUpdateIndicatorsData = (Notice) createNotice.invoke(noticesRestInternalService, ServiceNoticeAction.INDICATOR_POPULATION_ERROR,
-                ServiceNoticeMessage.INDICATOR_POPULATION_ERROR, Arrays.asList(failedIndicator), new Object[]{});
+        Notice noticeUpdateIndicatorsData = (Notice) createNotice.invoke(noticesRestInternalService, ServiceNoticeAction.INDICATOR_POPULATION_ERROR, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR,
+                Arrays.asList(failedIndicator), new Object[]{});
 
         assertNotNull(noticeUpdateIndicatorsData.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
         assertNotNull(noticeUpdateIndicatorsData.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
 
-        Notice noticeDeleteDataset = (Notice) createNotice.invoke(noticesRestInternalService, ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR,
-                ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), new Object[]{MY_OLD_DATASET_ID});
+        Notice noticeDeleteDataset = (Notice) createNotice.invoke(noticesRestInternalService, ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR,
+                Arrays.asList(failedIndicator), new Object[]{MY_OLD_DATASET_ID});
 
         assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getManagementAppLink());
         assertNotNull(noticeDeleteDataset.getMessages().getMessages().get(0).getResources().getResources().get(0).getSelfLink());
@@ -98,8 +99,7 @@ public class NoticesRestInternalServiceTest {
         indicatorVersion.setVersionNumber(IndicatorsDataBaseTest.INIT_VERSION_SOME_MINOR_INCREMENTS);
         indicatorVersion.setDataRepositoryTableName(MY_DATA_REPOSITORY_TABLE_NAME);
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         return indicatorVersion;
     }
 }

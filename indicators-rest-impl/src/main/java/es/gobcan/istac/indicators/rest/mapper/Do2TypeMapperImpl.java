@@ -12,9 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -45,11 +46,11 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
@@ -77,6 +78,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.QuantityType;
+import es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 import es.gobcan.istac.indicators.rest.types.SubjectType;
 import es.gobcan.istac.indicators.rest.types.TitleLinkType;
@@ -85,41 +87,41 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks                                                                                                                           uriLinks;
+    UriLinks                                                                                     uriLinks;
 
     @Autowired
-    private TranslationRepository                                                                                                      translationRepository;
+    private TranslationRepository                                                                translationRepository;
 
-    private static ThreadLocal<Map<String, Map<String, Object>>>                                                                       requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>>                                 requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                                                                                                 @Override
-                                                                                                                                                                                 protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                                                                                                     return new HashMap<String, Map<String, Object>>();
-                                                                                                                                                                                 }
-                                                                                                                                                                             };
+                                                                                                                                           @Override
+                                                                                                                                           protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                                                               return new HashMap<String, Map<String, Object>>();
+                                                                                                                                           }
+                                                                                                                                       };
     @Autowired
-    private final IndicatorsApiService                                                                                                 indicatorsApiService                  = null;
-
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade                                                                              statisticalOperations                 = null;
+    private final IndicatorsApiService                                                           indicatorsApiService                  = null;
 
     @Autowired
-    private final MetadataProperties                                                                                                   metadataProperties                    = null;
+    private final StatisticalOperationsRestInternalFacade                                        statisticalOperations                 = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
+    private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
 
-    private static final List<String>                                                                                                  measuresOrder                         = Arrays.asList(
-            MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
-            MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private final MetadataProperties                                                             metadataProperties                    = null;
 
-    private static final EnumMap<QuantityUnitSymbolPositionEnum, es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(
-            es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.class);
+    @Autowired
+    private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
+
+    private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+            MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+            MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+
+    private static final EnumMap<QuantityUnitSymbolPositionEnum, QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(QuantityUnitSymbolPositionEnum.class);
     static {
-        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.START,
-                es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum.START);
-        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum.END,
-                es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum.END);
+        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(QuantityUnitSymbolPositionEnum.START, QuantityUnitSymbolPositionEnum.START);
+        QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(QuantityUnitSymbolPositionEnum.END, QuantityUnitSymbolPositionEnum.END);
     }
 
     private static final EnumMap<QuantityTypeEnum, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum> QUANTITY_TYPE_MAPPING = new EnumMap<>(
@@ -239,7 +241,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public IndicatorType indicatorDoToType(IndicatorVersion source) {
+    public IndicatorType indicatorDoToType(IndicatorVersion source, SrmRestInternalFacade srmRestInternalFacade) {
         Assert.notNull(source);
         try {
             IndicatorType target = new IndicatorType();
@@ -358,34 +360,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return result;
     }
 
-    private void subjectDoToBaseType(SubjectIndicatorResult subject, SubjectBaseType subjectBaseType) {
-        subjectBaseType.setId(subject.getId());
-        subjectBaseType.setCode(subject.getId());
+    private void subjectDoToBaseType(CategoryCache category, SubjectBaseType subjectBaseType) {
+        subjectBaseType.setId(category.getCategoryCode());
+        subjectBaseType.setCode(category.getCategoryCode());
         subjectBaseType.setKind(IndicatorsRestConstants.API_INDICATORS_SUBJECTS);
-        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(category.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
 
     @Override
-    public SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators) {
-        if (subject == null) {
+    public List<SubjectBaseType> subjectDoToBaseType(List<CategoryCache> categoryCacheEntries) {
+        if (CollectionUtils.isEmpty(categoryCacheEntries)) {
             return null;
         }
-        SubjectType subjectType = new SubjectType();
-        subjectDoToBaseType(subject, subjectType);
-        subjectType.setElements(indicatorDoToBaseType(indicators));
-
-        return subjectType;
-    }
-
-    @Override
-    public List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects) {
-        if (CollectionUtils.isEmpty(subjects)) {
-            return null;
-        }
-        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(subjects.size());
-        for (SubjectIndicatorResult subject : subjects) {
+        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(categoryCacheEntries.size());
+        for (CategoryCache category : categoryCacheEntries) {
             SubjectBaseType subjectType = new SubjectType();
-            subjectDoToBaseType(subject, subjectType);
+            subjectDoToBaseType(category, subjectType);
             subjectTypes.add(subjectType);
         }
         return subjectTypes;
@@ -528,11 +518,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         QuantityType quantityType = new QuantityType();
         quantityType.setType(QUANTITY_TYPE_MAPPING.get(source.getQuantityType()));
+
         if (source.getUnit() != null) {
             quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
-            quantityType.setUnitSymbol(source.getUnit().getSymbol());
-            quantityType.setUnitSymbolPosition(QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.get(source.getUnit().getSymbolPosition()));
+            MapperUtil.setQuantityUnitMetadata(source, quantityType, metadataProperties, srmRestInternalFacade);
         }
+
         if (source.getUnitMultiplier() != null) {
             quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(source.getUnitMultiplier().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         }
@@ -577,8 +568,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setVersion(source.getVersionNumber());
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        CategoryResourceInternal category = getCategoryByCategoryElement(source.getCategoryElement().getCode());
+
+        if (category != null) {
+            target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
+            target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
+        }
 
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
@@ -592,6 +587,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setQuantity(quantityDoToBaseType(source.getQuantity()));
         target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage()));
+    }
+
+    private CategoryResourceInternal getCategoryByCategoryElement(String categoryElementCode) throws MetamacException {
+        return srmRestInternalFacade.retrieveCategoryByCategoryElement(metadataProperties.getDefaultCategoryScheme(), categoryElementCode);
     }
 
     @Override
@@ -670,7 +669,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit
+                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
@@ -759,10 +759,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
 
             // SUBJECT CODE
-            target.setSubjectCode(indicatorVersion.getSubjectCode());
-
-            // SUBJECT TITLE
-            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+            CategoryResourceInternal category = getCategoryByCategoryElement(indicatorVersion.getCategoryElement().getCode());
+            if (category != null) {
+                target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
+                target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
+            }
 
             // CHILD LINK
             String href = createUrlIndicatorInstanceData(indicatorsSystem, source);

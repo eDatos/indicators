@@ -17,7 +17,6 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabView;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter.AdminGeoValuesTabView;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
-import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabView;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter.AdminUnitMultipliersTabView;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUiHandlers;
 
@@ -27,20 +26,15 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
     private TitleLabel adminLabel;
     private TabSet     tabset;
 
-    private Tab        quantityUnitsTab;
     private Tab        geoGranularitiesTab;
     private Tab        unitMultipliersTab;
     private Tab        geoValuesTab;
 
     @Inject
-    public AdminViewImpl(AdminQuantityUnitsTabView quantityUnitsView, AdminGeoGranularitiesTabView geoGranularitiesView, AdminUnitMultipliersTabView unitMultipliersTabView,
-            AdminGeoValuesTabView geoValuesTabView) {
+    public AdminViewImpl(AdminGeoGranularitiesTabView geoGranularitiesView, AdminUnitMultipliersTabView unitMultipliersTabView, AdminGeoValuesTabView geoValuesTabView) {
 
         adminLabel = new TitleLabel();
         adminLabel.setStyleName("sectionTitleLeftMargin");
-
-        quantityUnitsTab = new Tab(getConstants().adminQuantityUnits());
-        quantityUnitsTab.setPane((Canvas) quantityUnitsView.asWidget());
 
         unitMultipliersTab = new Tab(getConstants().adminUnitMultipliers());
         unitMultipliersTab.setPane((Canvas) unitMultipliersTabView.asWidget());
@@ -52,7 +46,6 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
         geoValuesTab.setPane((Canvas) geoValuesTabView.asWidget());
 
         tabset = new TabSet();
-        tabset.addTab(quantityUnitsTab);
         tabset.addTab(unitMultipliersTab);
         tabset.addTab(geoGranularitiesTab);
         tabset.addTab(geoValuesTab);
@@ -65,14 +58,6 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
     }
 
     private void bindEvents() {
-        quantityUnitsTab.addTabSelectedHandler(new TabSelectedHandler() {
-
-            @Override
-            public void onTabSelected(TabSelectedEvent event) {
-                getUiHandlers().goToQuantityUnitsTab();
-            }
-        });
-
         geoGranularitiesTab.addTabSelectedHandler(new TabSelectedHandler() {
 
             @Override
@@ -96,11 +81,6 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
                 getUiHandlers().goToUnitMultipliersTab();
             }
         });
-    }
-
-    @Override
-    public void selectQuantityUnitsTab() {
-        tabset.selectTab(quantityUnitsTab);
     }
 
     @Override

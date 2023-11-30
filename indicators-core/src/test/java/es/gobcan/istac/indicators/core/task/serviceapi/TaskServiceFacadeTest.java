@@ -23,12 +23,37 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     }
 
     @Override
+    public void testExecuteExportDSPLTask() throws Exception {
+        // See tests in DsplExporterServiceTest
+    }
+
+    @Override
     public void testMarkAllInProgressTaskToFailed() throws Exception {
         // Quartz jobs are not tested
     }
 
     @Override
+    public void testMarkTaskAsFailed() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
     public void testScheduleIndicatorsUpdateJob() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testExecuteCategoryCacheRefreshManualTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testExecuteCategoryCacheRefreshAutomaticTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testScheduleCategoryCacheRefreshAutomaticJob() throws Exception {
         // Quartz jobs are not tested
     }
 }

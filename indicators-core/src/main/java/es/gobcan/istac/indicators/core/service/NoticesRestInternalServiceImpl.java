@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -36,6 +35,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.navigation.InternalWebApplicationNavigation;
 import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
 import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
@@ -43,21 +43,23 @@ import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+
+    private static final String              ERROR  = "ERROR";
 
     @Autowired
-    private RestApiLocator restApiLocator;
+    private RestApiLocator                   restApiLocator;
 
     @Autowired
-    private IndicatorsConfigurationService configurationService;
+    private IndicatorsConfigurationService   configurationService;
 
     @Autowired
-    private TranslateExceptions translateExceptions;
+    private TranslateExceptions              translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String indicatorsInternalWebUrlBase;
-    private String indicatorsApiInternalEndpointV10;
+    private String                           indicatorsInternalWebUrlBase;
+    private String                           indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
@@ -230,6 +232,17 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     }
 
+    private void createBackgroundNotificationWithoutResources(String actionCode, String messageCode) {
+        try {
+            Notice notification = createNoticewithoutResource(actionCode, messageCode);
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
+
+        } catch (MetamacException e) {
+            logger.error("Error creating createErrorBackgroundNotification:", e);
+        }
+
+    }
+
     private void createPopulateIndicatorDataBackgroundNotication(Locale locale, String actionCode, String messageCode, String user, Indicator indicator, Object... messageParams) {
         ResourceInternal resourceInternal = indicatorToResourceInternal(indicator);
 
@@ -277,6 +290,21 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         // @formatter:off
         return NoticeBuilder.notification()
             .withMessages(message)
+            .withSendingApplication(sendingApp)
+            .withSubject(subject)
+            .withRoles(MetamacRolesEnum.ADMINISTRADOR)  
+            .build();
+        // @formatter:on
+    }
+
+    private Notice createNoticewithoutResource(String actionCode, String message) throws MetamacException {
+        Locale locale = configurationService.retrieveLanguageDefaultLocale();
+        String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+        String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
+
+        // @formatter:off
+        return NoticeBuilder.notification()
+            .withMessagesWithoutResources(message)
             .withSendingApplication(sendingApp)
             .withSubject(subject)
             .withRoles(MetamacRolesEnum.ADMINISTRADOR)
@@ -366,5 +394,29 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             targets.getTexts().add(target);
         }
         return targets;
+    }
+
+    public void createErrorBackgroundNotification(String user, String actionCode, MetamacException exception) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+
+            Throwable localisedException = translateExceptions.translateException(locale, exception);
+            String localisedMessage = localisedException.getMessage();
+            localisedMessage = ERROR + " - " + localisedMessage;
+
+            createBackgroundNotificationWithoutResources(actionCode, localisedMessage);
+        } catch (MetamacException e) {
+            logger.error("Error creating createErrorBackgroundNotification:", e);
+        }
+    }
+
+    @Override
+    public void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception) {
+        createErrorBackgroundNotification(user, actionCode, exception);
+    }
+
+    @Override
+    public void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception) {
+        createErrorBackgroundNotification(user, actionCode, exception);
     }
 }

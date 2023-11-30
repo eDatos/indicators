@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.ARCHIVE
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.ARCHIVED_DATE_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.ARCHIVED_USER;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.ARCHIVED_USER_DIFF;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.CATEGORY_ELEMENT;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.CODE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.CREATION_DATE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.CREATION_DATE_DIFF;
@@ -34,7 +35,6 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICA
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.PUBLICATION_USER_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.STREAM_STATUS;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.STREAM_STATUS_DIFF;
-import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.SUBJECT_TITLE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.TITLE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION_NUMBER;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.VERSION_NUMBER_DIFF;
@@ -62,7 +62,7 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField code = new ListGridField(CODE, getConstants().indicListHeaderIdentifier());
         code.setAlign(Alignment.LEFT);
         ListGridField name = new ListGridField(TITLE, getConstants().indicDetailTitle());
-        ListGridField subject = new ListGridField(SUBJECT_TITLE, getConstants().indicDetailSubject());
+        ListGridField categoryElement = new ListGridField(CATEGORY_ELEMENT, getConstants().categoryElement());
 
         ListGridField notifyPopulationErrorsImage = new ListGridField(NOTIFY_POPULATION_ERRORS_IMAGE, getConstants().indicDetailNotifyPopulationErrors());
         notifyPopulationErrorsImage.setHidden(true);
@@ -151,13 +151,14 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField creationUserDiff = new ListGridField(CREATION_USER_DIFF, getConstants().indicDetailCreatedUser());
         creationUserDiff.setHidden(true);
 
-        setFields(code, name, subject, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, streamStatus, productionValidationDate, productionValidationUser, diffusionValidationDate,
-                diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate, creationUser, diffusionVersion,
-                diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff, diffusionValidationUserDiff, publicationDateDiff,
-                publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff, creationUserDiff);
+        setFields(code, name, categoryElement, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, streamStatus, productionValidationDate, productionValidationUser,
+                diffusionValidationDate, diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate,
+                creationUser, diffusionVersion, diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff,
+                diffusionValidationUserDiff, publicationDateDiff, publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff,
+                creationUserDiff);
 
         // @formatter:off
-        setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, SUBJECT_TITLE, NOTIFY_POPULATION_ERRORS_IMAGE}), 
+        setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, CATEGORY_ELEMENT, NOTIFY_POPULATION_ERRORS_IMAGE}), 
                 new HeaderSpan(getConstants().indicatorProductionEnvironment(), new String[]{VERSION_NUMBER, 
                                                                                             PROC_STATUS, 
                                                                                             NEEDS_UPDATE,

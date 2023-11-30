@@ -17,7 +17,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
@@ -28,11 +27,6 @@ import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 
 public class IndicatorsExternalApiServiceImpl extends IndicatorsApiServiceBaseImpl implements IndicatorsApiService {
-
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException {
-        return indicatorsService.retrieveSubjectsInPublishedIndicators(IndicatorsRestConstants.SERVICE_CONTEXT);
-    }
 
     @Override
     public PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
@@ -61,7 +55,8 @@ public class IndicatorsExternalApiServiceImpl extends IndicatorsApiServiceBaseIm
 
     @Override
     public PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsInstancesInPublishedIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        return indicatorsSystemsService.findIndicatorsInstancesInPublishedIndicatorsSystems(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(),
+                sculptorCriteria.getPagingParameter());
     }
 
     @Override

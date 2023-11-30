@@ -47,7 +47,6 @@ public class IndicatorsWeb extends MetamacSecurityEntryPoint {
 
             @Override
             public void onWaitSuccess(GetValuesListsResult result) {
-                IndicatorsValues.setQuantityUnits(result.getQuantityUnits());
                 IndicatorsValues.setUnitMultipliers(result.getUnitMultiplers());
                 IndicatorsValues.setGeographicalGranularities(result.getGeoGranularities());
                 loadApplication();

@@ -37,6 +37,10 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         taskService.createPopulateIndicatorDataErrorBackgroundNotification(ctx, user, indicatorUuid, metamacException);
     }
 
+    public void executeExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+        taskService.processExportDSPLTask(ctx, jobKey, indicatorUuid, code, mergeTimeGranularities);
+    }
+
     @Override
     // This method is only used on application startup
     public void markAllInProgressTaskToFailed(ServiceContext ctx) {
@@ -46,5 +50,25 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     @Override
     public void scheduleIndicatorsUpdateJob(ServiceContext ctx) {
         taskService.scheduleIndicatorsUpdateJob(ctx);
+    }
+
+    @Override
+    public void scheduleCategoryCacheRefreshAutomaticJob(ServiceContext ctx) {
+        taskService.scheduleCategoryCacheRefreshAutomaticJob(ctx);
+    }
+
+    @Override
+    public void executeCategoryCacheRefreshAutomaticTask(ServiceContext ctx) throws MetamacException {
+        taskService.processCategoryCacheRefreshAutomaticTask(ctx);
+    }
+
+    @Override
+    public void executeCategoryCacheRefreshManualTask(ServiceContext ctx, String taskName) throws MetamacException {
+        taskService.processCategoryCacheRefreshManualTask(ctx, taskName);
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String jobKey, MetamacException exception) throws MetamacException {
+        taskService.markTaskAsFailed(ctx, jobKey, exception);
     }
 }

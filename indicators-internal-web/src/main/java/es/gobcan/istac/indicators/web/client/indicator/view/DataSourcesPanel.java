@@ -10,7 +10,6 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 
-import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -287,5 +286,14 @@ public class DataSourcesPanel extends VLayout {
 
     public void setEditionLanguages(List<String> languages) {
         datasourcePanel.setEditionLanguages(languages);
+    }
+
+    public void setQuantityUnitFilterExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        datasourcePanel.setQuantityUnitFilterExternalItem(quantityUnitSchemeExternalItem, formItemName, firstResult, totalResults);
+
+    }
+
+    public void setQuantityUnitExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        datasourcePanel.setQuantityUnitExternalItem(quantityUnitSchemeExternalItem, formItemName, firstResult, totalResults);
     }
 }

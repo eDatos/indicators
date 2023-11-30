@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplSlice;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -48,8 +49,8 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(DsplTransformerTimeTranslator.class);
 
     public DsplTransformerTimeTranslator(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
-        super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
+        super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {

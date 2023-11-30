@@ -8,6 +8,5 @@ import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 
 public interface SubjectsRestFacade {
 
-    List<SubjectBaseType> retrieveSubjects() throws MetamacException;
-
+    List<SubjectBaseType> retrieveCategoriesMarkAsSubjects() throws MetamacException;
 }

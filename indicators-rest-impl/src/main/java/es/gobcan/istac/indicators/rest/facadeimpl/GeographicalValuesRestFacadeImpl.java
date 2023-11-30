@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -11,9 +12,11 @@ import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -23,6 +26,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
@@ -42,6 +46,12 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Autowired
     private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
 
+    @Autowired
+    private final SrmRestInternalFacade            srmRestInternalFacade = null;
+
+    @Autowired
+    private IndicatorsConfigurationService         configurationService;
+
     private String getGranularityUuidByCode(String granularityCode) throws MetamacException {
         GeographicalGranularity granularity = indicatorsSystemsService.retrieveGeographicalGranularityByCode(IndicatorsRestConstants.SERVICE_CONTEXT, granularityCode);
         return granularity.getUuid();
@@ -50,8 +60,8 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(IndicatorsRestConstants.SERVICE_CONTEXT,
-                indicatorsSystemCode, granularityUuid);
+        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService
+                .retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(IndicatorsRestConstants.SERVICE_CONTEXT, indicatorsSystemCode, granularityUuid);
         return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
@@ -80,7 +90,8 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
         SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(),
+                sculptorCriteria.getPagingParameter());
 
         List<GeographicalValue> geographicalValues = result.getValues();
         return mapper.geographicalValuesDoToType(geographicalValues);
@@ -89,8 +100,14 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(IndicatorsRestConstants.SERVICE_CONTEXT, subjectCode,
-                granularityUuid);
+
+        Category category = srmRestInternalFacade.retrieveCategoryByCode(configurationService.retrieveDefaultCategoryScheme(), subjectCode);
+
+        List<GeographicalValueVO> geographicalValues = new ArrayList<GeographicalValueVO>();;
+        if (category != null && category.getCategoryElement() != null) {
+            geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(IndicatorsRestConstants.SERVICE_CONTEXT,
+                    category.getCategoryElement().getId(), granularityUuid);
+        }
         return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
