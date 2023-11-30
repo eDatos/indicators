@@ -94,7 +94,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '2.4'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
@@ -110,7 +110,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '01.002'
+and c.version_logic = '01.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'IECM'
@@ -126,7 +126,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '03.002'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
