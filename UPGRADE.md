@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 9.5.0 a 9.5.1-SNAPSHOT
+## 9.5.0 a 9.6.0
 * Es necesario en srm haber creado un tipo de anotación denominada "SYMBOL_POSITION" desde el menú "Administración" en el srm. Descripción "Posición del símbolo en las unidades de medida"
 * Es necesario ejecutar el script "20231001_create_constant_properties_in_common_metadata.sql" que se encuentra en el srm y que crea el metadato "metamac.srm.codelist.annotation.type.position_unit" en common-metadata
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta. *Los scripts de la carpeta "migrar-areas-tematicas" y "migrar-unidades-medida" deben ser los últimos en ejecutarse.
