@@ -1,7 +1,7 @@
 -- ---------------------------------------------------------------------------------------------------
 -- EDATOS-4185 - Añadir metadato elemento de tema a los indicadores
 -- 
--- Script para realizar la migración de las áreas temáticas a elementos de tema provenientes del srm en PRE IESTADIS
+-- Script para realizar la migración de las áreas temáticas a elementos de tema provenientes del srm en PRE/PRO IESTADIS
 -- Se obtienen las sentencias a ejecutar a partir de una consulta.
 -- ---------------------------------------------------------------------------------------------------
 
