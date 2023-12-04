@@ -1572,6 +1572,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      */
     private Map<String, Data> retrieveDatasFromProvider(ServiceContext ctx, List<DataSource> dataSources) throws MetamacException {
         Map<String, Data> dataCache = new HashMap<String, Data>();
+
         for (DataSource dataSource : dataSources) {
             try {
 
@@ -1586,7 +1587,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     // Metamac
                     Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    data = QueryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
+                    data = queryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
 
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                     String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
@@ -2095,5 +2097,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private Map<String, String> getVariableElementsByCodeOfCodelist() throws MetamacException {
         return srmRestInternalService.retrieveVariableElementsByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+    }
+
+    @Override
+    public void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, List<IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException {
+
+        LOG.info("Starting populate indicators because changes in geographical codelist. Number of affected indicators {} indicatores", indicatorsVersionToPopulate.size());
+
+        for (IndicatorVersion indicatorVersion : indicatorsVersionToPopulate) {
+            planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+        }
+
+        LOG.info("Finished populate indicators because changes in geographical codelist");
     }
 }

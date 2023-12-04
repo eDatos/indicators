@@ -135,14 +135,14 @@ public class DtoUtils {
         if (query == null) {
             return null;
         }
-
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         // UUid
         dataStructureDto.setUuid(query.getUrn());
 
         // Title
-        dataStructureDto.setTitle(QueryMetamacUtils.extractValueForDefaultLanguage(query.getName()));
+        dataStructureDto.setTitle(queryMetamacUtils.extractValueForDefaultLanguage(query.getName()));
 
         // PX Uri
         dataStructureDto.setQueryUrn(query.getUrn());
@@ -153,11 +153,11 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(QueryMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(queryMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Maintainer
         Resource maintainer = query.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = QueryMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = queryMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
         } else {
@@ -165,31 +165,31 @@ public class DtoUtils {
         }
 
         // Variables
-        dataStructureDto.setVariables(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
+        dataStructureDto.setVariables(queryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         // Temporal Variables
-        dataStructureDto.setTemporalVariable(QueryMetamacUtils.extractTemporalVariable(query.getMetadata()));
+        dataStructureDto.setTemporalVariable(queryMetamacUtils.extractTemporalVariable(query.getMetadata()));
 
         // Temporal Value
-        dataStructureDto.setTemporalValue(QueryMetamacUtils.extractTemporalValue(query));
+        dataStructureDto.setTemporalValue(queryMetamacUtils.extractTemporalValue(query));
 
         // Spatial Variables
-        dataStructureDto.setSpatialVariables(QueryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
+        dataStructureDto.setSpatialVariables(queryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
 
         // Spatial Value
-        dataStructureDto.setGeographicalValueDto(QueryMetamacUtils.extractGeographicalValueDto(query, srmRestInternalService));
+        dataStructureDto.setGeographicalValueDto(queryMetamacUtils.extractGeographicalValueDto(query, srmRestInternalService));
 
         // Cont Variable
-        dataStructureDto.setContVariable(QueryMetamacUtils.extractContVariable(query.getMetadata()));
+        dataStructureDto.setContVariable(queryMetamacUtils.extractContVariable(query.getMetadata()));
 
         // Value Labels
-        dataStructureDto.setValueLabels(QueryMetamacUtils.extractValuesCoverages(query.getMetadata()));
+        dataStructureDto.setValueLabels(queryMetamacUtils.extractValuesCoverages(query.getMetadata()));
 
         // Value Codes
-        dataStructureDto.setValueCodes(QueryMetamacUtils.extractCodesCoverages(query.getMetadata()));
+        dataStructureDto.setValueCodes(queryMetamacUtils.extractCodesCoverages(query.getMetadata()));
 
         // Geographical codelist urn
-        dataStructureDto.setGeographicalCodelistUrn(QueryMetamacUtils.extractGeographicalCodelistUrn(query));
+        dataStructureDto.setGeographicalCodelistUrn(queryMetamacUtils.extractGeographicalCodelistUrn(query));
 
         return dataStructureDto;
     }

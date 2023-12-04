@@ -33,6 +33,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveKafkaVariableElementGroup() throws MetamacException;
 
+    String retrieveKafkaCodelistGroup() throws MetamacException;
+
     String retrieveDefaultCategoryScheme() throws MetamacException;
 
     String retrieveDefaultTerritoryVariable() throws MetamacException;

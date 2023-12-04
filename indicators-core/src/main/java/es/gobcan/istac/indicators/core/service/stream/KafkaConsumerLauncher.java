@@ -14,6 +14,7 @@ import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     private Map<String, Future<?>>         futuresMap;
     private static final String            CONSUMER_QUERY_1_NAME            = "indicators_consumer_query_1";
     private static final String            CONSUMER_VARIABLE_ELEMENT_1_NAME = "indicators_consumer_variable_element_1";
+    private static final String            CONSUMER_CODELIST_1_NAME         = "indicators_consumer_codelist_1";
     private static final String            KAFKA_FAILED_CACHE_NAME          = "kafkaFailed";
 
     @Autowired
@@ -77,6 +79,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         futuresMap = new HashMap<>();
         futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
         futuresMap.put(CONSUMER_VARIABLE_ELEMENT_1_NAME, startConsumerForVariableElementTopic(ac));
+        futuresMap.put(CONSUMER_CODELIST_1_NAME, startConsumerForCodelistTopic(ac));
 
         startKeepAliveKafkaThread(ac);
     }
@@ -119,6 +122,19 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Future<?> startConsumerForCodelistTopic(ApplicationContext context) throws MetamacException {
+        String topicVariableElementPublication = configurationService.retrieveKafkaTopicCodelistsPublication();
+        KafkaConsumerThread<CodelistAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
+        KafkaConsumer<String, CodelistAvro> consumerFromBegin = createCodelistConsumerFromCurrentOffset(topicVariableElementPublication, CONSUMER_CODELIST_1_NAME);
+        consumerThread.setConsumer(consumerFromBegin);
+        consumerThread.setTopicName(topicVariableElementPublication);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setNoticesRestInternalService(noticesRestInternalService);
+        consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
+        return threadPoolTaskExecutor.submit(consumerThread);
+    }
+
     private Properties getConsumerProperties(String clientId, String group) throws MetamacException {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
@@ -151,6 +167,12 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return kafkaConsumer;
     }
 
+    private KafkaConsumer<String, CodelistAvro> createCodelistConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, CodelistAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaCodelistGroup()));
+        kafkaConsumer.subscribe(Collections.singletonList(topic));
+        return kafkaConsumer;
+    }
+
     class KeepAliveKafkaThread implements Runnable {
 
         @Override
@@ -167,6 +189,9 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                                     break;
                                 case CONSUMER_VARIABLE_ELEMENT_1_NAME:
                                     futuresMap.put(CONSUMER_VARIABLE_ELEMENT_1_NAME, startConsumerForVariableElementTopic(ApplicationContextProvider.getApplicationContext()));
+                                    break;
+                                case CONSUMER_CODELIST_1_NAME:
+                                    futuresMap.put(CONSUMER_CODELIST_1_NAME, startConsumerForCodelistTopic(ApplicationContextProvider.getApplicationContext()));
                                     break;
                                 default:
                                     break;

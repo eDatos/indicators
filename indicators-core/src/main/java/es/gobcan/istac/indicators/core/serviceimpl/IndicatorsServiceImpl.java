@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -27,6 +29,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1395,6 +1398,42 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
 
         return getIndicatorVersionRepository().findCategoryElementsInIndicators();
+
+    }
+
+    @Override
+    public List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return Collections.emptyList();
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            return retrieveIndicatorsByGeographicalCodelist(ctx, codelistAvro.getUrn());
+        }
+        return Collections.emptyList();
+
+    }
+
+    private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
+        String territoryVariableUrnDefault = indicatorsConfigurationService.retrieveDefaultTerritoryVariable();
+
+        return territoryVariableUrnDefault.equals(variableUrn);
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, String codelistUrn) throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
 
     }
 

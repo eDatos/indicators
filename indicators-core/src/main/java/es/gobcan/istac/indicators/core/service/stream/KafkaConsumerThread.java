@@ -17,6 +17,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
@@ -139,9 +140,10 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
     public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         if (message instanceof QueryVersionAvro) {
             indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
-        }
-        if (message instanceof VariableElementAvro) {
+        } else if (message instanceof VariableElementAvro) {
             indicatorsServiceFacade.updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+        } else if (message instanceof CodelistAvro) {
+            indicatorsServiceFacade.populateIndicatorsDataFromGeographicalCodelist(ctx, message);
         }
     }
 

@@ -911,6 +911,16 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        List<IndicatorVersion> indicatorsVersionToPopulate = this.getIndicatorsService().retrieveIndicatorsByGeographicalCodelist(ctx, message);
+
+        this.getIndicatorsDataService().populateIndicatorsDataFromGeographicalCodelist(ctx, indicatorsVersionToPopulate);
+    }
+
+    @Override
     public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);

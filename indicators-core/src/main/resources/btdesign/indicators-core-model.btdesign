@@ -82,7 +82,7 @@ Application Indicators {
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
 	    	"Update geographical values table from srm"
-	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
+	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -146,6 +146,8 @@ Application Indicators {
             "Mark indicator for notify population errors"
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
+	    	"Get indicator versions where geographical codelist match with the changed codelist" 
+	    	List<@IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -212,6 +214,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators when geographical codelist changes" 
+	    	populateIndicatorsDataFromGeographicalCodelist(List<@IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException;
 	    	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
@@ -450,6 +454,8 @@ Application Indicators {
 	    	deleteGeographicalValue(String uuid) throws MetamacException;
 	    	"Update geographical values table from srm"
 	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
+	    	"Update indicators when geographical codelist changes" 
+	    	populateIndicatorsDataFromGeographicalCodelist(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
