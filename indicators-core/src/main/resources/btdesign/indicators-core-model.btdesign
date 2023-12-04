@@ -446,12 +446,6 @@ Application Indicators {
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Create a geographical value"
-	    	@GeographicalValueDto createGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Update a geographical value"
-	    	@GeographicalValueDto updateGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Delete a geographical value"
-	    	deleteGeographicalValue(String uuid) throws MetamacException;
 	    	"Update geographical values table from srm"
 	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
 	    	"Update indicators when geographical codelist changes" 

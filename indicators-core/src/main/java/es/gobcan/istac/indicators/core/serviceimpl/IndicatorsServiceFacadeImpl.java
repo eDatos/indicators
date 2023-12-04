@@ -975,50 +975,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
     }
 
-    @Override
-    public GeographicalValueDto createGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
-
-        // Service call
-        geographicalValue = getIndicatorsSystemsService().createGeographicalValue(ctx, geographicalValue);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-    }
-
-    @Override
-    public GeographicalValueDto updateGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
-
-        // Service call
-        geographicalValue = getIndicatorsSystemsService().updateGeographicalValue(ctx, geographicalValue);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-    }
-
-    @Override
-    public void deleteGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Service call
-        try {
-            getIndicatorsSystemsService().deleteGeographicalValue(ctx, uuid);
-        } catch (PersistenceException e) {
-            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
-        }
-
-    }
-
     // -------------------------------------------------------------------------------------------
     // GEOGRAPHICAL GRANULARITIES
     // -------------------------------------------------------------------------------------------
