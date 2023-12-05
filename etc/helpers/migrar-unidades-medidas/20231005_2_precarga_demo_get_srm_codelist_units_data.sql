@@ -94,7 +94,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '2.4'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
@@ -110,7 +110,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '01.002'
+and c.version_logic = '01.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'IECM'
@@ -126,13 +126,13 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '03.002'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'EUR_L', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_M2', 'EUR_MILES', 'EUR_MILLONES', 'EUR_PERSONA', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS');
 */
  
  /* ENTORNO DE DESARROLLO
