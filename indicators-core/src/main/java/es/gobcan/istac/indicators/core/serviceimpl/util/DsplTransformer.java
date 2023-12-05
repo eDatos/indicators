@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -458,7 +459,7 @@ public class DsplTransformer {
         Row row = new Row();
         row.addColumn(new TextColumn(idColumnName), getUUIDExternalItemUnit(unit));
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
-            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
+            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), StringEscapeUtils.escapeCsv(localisedStr.getLabel()));
         }
 
         UnitUtils.setQuantityUnitMetadata(unit.getUrn(), row, configurationService, srmRestInternalFacade);
