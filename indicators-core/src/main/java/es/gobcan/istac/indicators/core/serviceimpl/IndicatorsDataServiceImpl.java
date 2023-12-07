@@ -204,9 +204,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             // Call jaxi for query structure
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
-            return jsonToDataStructure(json);
+            DataStructure dataStructure = jsonToDataStructure(json);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            return GpeUtils.gpeDataStructureToDataStructure(dataStructure, variableElementsByCodesOfCodelist);
+
         } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -214,15 +222,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
-
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             JsonStatData jsonStatData = jsonToJsonStatData(json);
             LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            JsonStatUtils.jsonStatDataToGeographicVariableElements(uuid, jsonStatData, variableElementsByCodesOfCodelist);
+
             return jsonStatData;
+
         } catch (Exception e) {
             LOG.error("Unexpected error occurred retrieving JSON-stat file {} : ", uuid, e);
-            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -1593,7 +1609,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                     String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
                     JsonStatData jsonStatData = jsonToJsonStatData(json);
-                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
                     data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
                 } else {
 
@@ -1602,7 +1618,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     if (json == null) {
                         throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
                     }
-                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsByCodeOfCodelist();
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
                     DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
                     data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
                 }
@@ -2095,8 +2111,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Finished execute export DSPL process");
     }
 
-    private Map<String, String> getVariableElementsByCodeOfCodelist() throws MetamacException {
-        return srmRestInternalService.retrieveVariableElementsByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+    private Map<String, String> getVariableElementsIdByCodeOfCodelist() throws MetamacException {
+        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
     }
 
     @Override

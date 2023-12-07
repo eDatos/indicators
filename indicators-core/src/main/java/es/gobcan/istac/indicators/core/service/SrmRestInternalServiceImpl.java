@@ -114,20 +114,27 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public Map<String, String> retrieveVariableElementsByCodesOfCodelists(String codelistUrn) throws MetamacException {
+    public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
         Map<String, String> variableElementsByCodesOfCodelist = new HashMap<String, String>();
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
-        String agencyId = params[0];
-        String resourceId = params[1];
-        String version = params[2];
-        String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
-        Codes codes = restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
+        Codes codes = retrieveCodesOfCodelist(codelistUrn);
 
         for (CodeResourceInternal code : codes.getCodes()) {
             variableElementsByCodesOfCodelist.put(code.getId(), code.getVariableElement().getId());
         }
         return variableElementsByCodesOfCodelist;
+    }
+
+    private Codes retrieveCodesOfCodelist(String codelistUrn) {
+
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = "~latest";
+        String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+
+        return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
+
     }
 
 }

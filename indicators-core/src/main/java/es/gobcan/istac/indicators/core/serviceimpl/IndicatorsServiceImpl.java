@@ -29,6 +29,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
@@ -1411,7 +1413,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
-            return retrieveIndicatorsByGeographicalCodelist(ctx, codelistAvro.getUrn());
+            if (checkIsDefaultCodelistForGpeJsonStat(codelistAvro.getUrn())) {
+                return retrieveIndicatorsGpeOrJsonStatEnvironment();
+            } else {
+                return retrieveIndicatorsByGeographicalCodelist(codelistAvro.getUrn());
+            }
         }
         return Collections.emptyList();
 
@@ -1423,11 +1429,40 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return territoryVariableUrnDefault.equals(variableUrn);
     }
 
-    private List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, String codelistUrn) throws MetamacException {
+    private boolean checkIsDefaultCodelistForGpeJsonStat(String codelistUrn) throws MetamacException {
+        String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat();
+
+        String[] defaultParams = UrnUtils.splitUrnItemScheme(codelistDefault);
+        String defaultAgencyId = defaultParams[0];
+        String defaultResourceId = defaultParams[1];
+
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+
+        return defaultAgencyId.equals(agencyId) && defaultResourceId.equals(resourceId);
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(String codelistUrn) throws MetamacException {
 
         PagingParameter pagingParameter = PagingParameter.noLimits();
         ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
         conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsGpeOrJsonStatEnvironment() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE.getValue()).or()
+                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT.getValue());
         List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find

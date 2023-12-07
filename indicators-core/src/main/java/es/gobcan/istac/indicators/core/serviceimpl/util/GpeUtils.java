@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataGpe;
+import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class GpeUtils {
@@ -29,6 +30,17 @@ public class GpeUtils {
         data.processData(variableElementsByCodesOfCodelist);
 
         return data;
+    }
+
+    public static DataStructure gpeDataStructureToDataStructure(DataStructure dataStructure, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
+        if (dataStructure == null) {
+            return null;
+        }
+
+        // Value Codes
+        dataStructure.setValueCodes(convertValueCodesToVariableElementCodes(dataStructure.getValueCodes(), dataStructure.getSpatialVariables(), variableElementsByCodesOfCodelist));
+
+        return dataStructure;
     }
 
     private static Map<String, List<String>> convertValueCodesToVariableElementCodes(Map<String, List<String>> valueCodes, List<String> geographicalDimensionsId,

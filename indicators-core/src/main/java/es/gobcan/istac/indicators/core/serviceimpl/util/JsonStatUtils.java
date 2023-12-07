@@ -95,6 +95,16 @@ public class JsonStatUtils {
         return target;
     }
 
+    public static void jsonStatDataToGeographicVariableElements(String uuid, JsonStatData jsonStatData, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
+        if (jsonStatData == null) {
+            return;
+        }
+
+        // Value Codes
+        jsonStatData.setValueCodes(convertValueCodesToVariableElementCodes(jsonStatData.getValueCodes(), JsonStatUtils.toList(jsonStatData.getSpatialVariable()), variableElementsByCodesOfCodelist));
+
+    }
+
     private static List<String> extractVariablesFromDimensions(JsonStatData jsonStatData) {
         List<String> result = new ArrayList<>();
         for (String dimensionId : jsonStatData.getId()) {
