@@ -152,6 +152,8 @@
                         result = this._selectedInstancesRequest(options);
                     } else if (options.groupType === 'subject') {
                         result = this._selectedIndicatorsRequest(options);
+                    }else if (options.groupType === 'allValues') {
+                        result = this._selectedIndicatorsRequest(options);
                     }
                 } else if (options.type === 'recent') {
                     if (options.groupType === 'system') {
