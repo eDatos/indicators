@@ -421,7 +421,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_5))).thenReturn(CONTENT_JSON_STAT_5);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_5);
 
-            // TODO EDATOS-3827 repasar este test
             List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
@@ -497,7 +496,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_6))).thenReturn(CONTENT_JSON_STAT_6);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_6);
 
-            // TODO EDATOS-3827 repasar este test
             List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
@@ -560,7 +558,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             when(indicatorsDataProviderService.retrieveJsonStat(Matchers.any(ServiceContext.class), Matchers.eq(URL_JSON_STAT_7))).thenReturn(CONTENT_JSON_STAT_7);
             JsonStatData jsonStatData = indicatorsDataService.retrieveJsonStatData(getServiceContextAdministrador(), URL_JSON_STAT_7);
 
-            // TODO EDATOS-3827 repasar este test
             List<DataContent> dataContent = JsonStatUtils.jsonStatDataValuesToDataContent(jsonStatData, new ArrayList<String>(), new HashMap<String, String>());
 
             assertEquals(jsonStatData.getValue().size(), dataContent.size());
