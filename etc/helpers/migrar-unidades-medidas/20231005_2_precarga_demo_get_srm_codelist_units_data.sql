@@ -179,7 +179,7 @@ and l."label" in('Megavatio hora', 'Gigavatios-hora', 'Euros por persona', 'Euro
 --Paso 5.1 Lanzar en la bd indicadores los UPDATE generados en el paso anterior
 
 -- PASO 6 Asegurarse que todo está listo
-select case when (select count(*) from tb_lis_quantities_units a where a.id not in(select coalesce(id_unit_tb_lis_quantities,0) from temp_mig_units)) = 0 then 'TODO CORRECTO. PUEDES SEGUIR ADELANTE.' else 'ERROR. HAY ENTRADAS QUE NO TIENEN RELACIÓN ENTRE UNIDAD ANTIGUA Y NUEVA' end 
+select case when (select count(*) from tb_lis_quantities_units a where a.id not in(select coalesce(id_unit_tb_lis_quantities,0) from temp_mig_units)) = 0 then 'TODO CORRECTO. PUEDES SEGUIR ADELANTE.' else 'ERROR. HAY ENTRADAS QUE NO TIENEN RELACIÓN ENTRE UNIDAD ANTIGUA Y NUEVA' end; 
 
 
 -- PASO FINAL COMPROBACIONES DE DATOS
