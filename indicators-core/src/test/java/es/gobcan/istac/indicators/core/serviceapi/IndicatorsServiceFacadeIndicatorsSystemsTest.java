@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -44,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
@@ -59,8 +61,10 @@ import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.util.GpeTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
@@ -70,9 +74,12 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
+
+    List<GeographicalValue>               geographicalValues = new ArrayList<GeographicalValue>();
 
     @Autowired
     protected IndicatorsServiceFacade     indicatorsServiceFacade;
@@ -85,6 +92,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;
+
+    @Autowired
+    private SrmRestInternalService        srmRestInternalService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+    }
 
     @Test
     @Transactional
@@ -4324,13 +4342,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertNotNull(geographicalValueDto);
         assertEquals(uuid, geographicalValueDto.getUuid());
-        assertEquals("ES", geographicalValueDto.getCode());
+        assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValueDto.getCode());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularity().getUuid());
         assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
         assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
-        assertEquals("ES", geographicalValueDto.getOrder());
+        assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValueDto.getOrder());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
     }
 
@@ -4382,11 +4400,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
-            assertEquals("FR", geographicalValues.get(1).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(7).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(7).getCode());
+            assertEquals("EN-LN_VARIABLE_ELEMENT", geographicalValues.get(7).getCode());
         }
 
         // All, only 1 results
@@ -4403,7 +4421,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
         }
 
         // All, only 1 result second page
@@ -4421,7 +4439,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
-            assertEquals("FR", geographicalValues.get(0).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getCode());
         }
 
         // By granularity, with order default
@@ -4440,7 +4458,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
         }
         // By granularity order by "order" desc
         {
@@ -4463,11 +4481,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
-            assertEquals("FR", geographicalValues.get(0).getCode());
-            assertEquals("FR", geographicalValues.get(0).getOrder());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(1).getUuid());
-            assertEquals("ES", geographicalValues.get(1).getCode());
-            assertEquals("ES", geographicalValues.get(1).getOrder());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(1).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(1).getOrder());
         }
         // By granularity order by "order" asc
         {
@@ -4490,8 +4508,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
             assertEquals("FR", geographicalValues.get(1).getCode());
             assertEquals("FR", geographicalValues.get(1).getOrder());
@@ -4627,7 +4645,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
      * @Test
      * @Transactional
      * public void testCreateGeographicalValueErrorCodeDuplicated() throws Exception {
-     * String code = "ES";
+     * String code = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
      * GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(code, "SPAIN", GEOGRAPHICAL_GRANULARITY_1);
      * try {
      * indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
@@ -4657,7 +4675,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
      * @Test
      * @Transactional
      * public void testCreateGeographicalValueErrorOrderDuplicated() throws Exception {
-     * String order = "ES";
+     * String order = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
      * GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("SPAIN", order, GEOGRAPHICAL_GRANULARITY_1);
      * try {
      * indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);

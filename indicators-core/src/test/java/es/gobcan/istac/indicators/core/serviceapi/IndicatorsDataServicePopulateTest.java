@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -42,6 +43,8 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
@@ -49,7 +52,8 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
@@ -255,6 +259,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     /* PRODUCTION VERSION ONLY */
     private static final String              INDICATORS_SYSTEM3_UUID                  = "IndSys-3";
     private static final String              INDICATORS_SYSTEM3_PRODUCTION_VERSION    = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    List<GeographicalValue>                  geographicalValues                       = new ArrayList<GeographicalValue>();
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -277,8 +282,15 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorVersionRepository       indicatorVersionRepository;
 
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
     @Before
     public void initMock() throws MetamacException {
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
     }
 
     /*
@@ -301,7 +313,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
@@ -414,7 +427,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR2_UUID, INDICATOR2_VERSION);
@@ -432,7 +446,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
@@ -451,7 +465,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
@@ -469,7 +483,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR4_UUID, INDICATOR4_VERSION);
@@ -487,7 +501,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR5_UUID, INDICATOR5_VERSION);
@@ -505,7 +519,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR6_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION);
@@ -515,27 +530,27 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
-            String key = generateObservationUniqueKey("ES", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
-            String key = generateObservationUniqueKey("ES61", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES611", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
         }
         {
-            String key = generateObservationUniqueKey("ES612", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por secreto estadístico"));
         }
         {
-            String key = generateObservationUniqueKey("ES613", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato incluido en otra categoría"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key,
                     createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
         }
@@ -554,7 +569,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
         List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
         checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
@@ -585,7 +600,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         /* ABSOLUTE */
@@ -617,7 +632,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2012-02", "2012-02-29", "2012-02-28", "2012-02-27", "2011-02", "2011-02-28", "2011-02-27"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         /* ABSOLUTE */
@@ -650,7 +665,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         /* ABSOLUTE */
@@ -683,7 +698,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name()));
         /* ABSOLUTE */
         List<String> absolute = Arrays.asList("34413", null/* ... */, null/* . */, "2036", "30413", "1952", null /* .. */, null /* - */);
@@ -698,45 +713,45 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
-            String key = generateObservationUniqueKey("ES", "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2010-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
 
         {
-            String key = generateObservationUniqueKey("ES", "2010-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key,
                     createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad, No procede"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2010-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2010-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
@@ -755,7 +770,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
@@ -790,7 +805,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2009", "2009-12", "2009-11"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
@@ -822,7 +837,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
@@ -858,7 +873,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
@@ -893,7 +908,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR16_UUID, newVersion);
@@ -1063,7 +1078,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
@@ -1129,7 +1145,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         // Check new Versions
@@ -1176,7 +1192,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         {

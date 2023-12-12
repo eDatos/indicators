@@ -8,17 +8,21 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,13 +30,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 
 /**
  * Test to IndicatorsSystemService. Testing: indicators systems, dimensions, indicators instances
@@ -40,11 +47,13 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-data-service-mockito.xml",
-        "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
+
+    List<GeographicalValue>               geographicalValues = new ArrayList<GeographicalValue>();
 
     @Autowired
     protected IndicatorsSystemsService    indicatorsSystemService;
@@ -54,6 +63,17 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;
+
+    @Autowired
+    private SrmRestInternalService        srmRestInternalService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+    }
 
     @Test
     public void testCreateIndicatorsSystem() throws Exception {
@@ -220,7 +240,8 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystems() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorInstanceProperties.uuid())
+                    .ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -237,7 +258,8 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES611").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611).orderBy(IndicatorInstanceProperties.uuid())
+                    .ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -254,7 +276,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystemsFilteredBySystem() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_1).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -268,7 +290,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_3).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -283,7 +305,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_10).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 

@@ -84,7 +84,7 @@
 	<!-- ************************************************************************************ -->
   	<TB_LIS_GEOGR_VALUES 
   		ID="1" 
-  		CODE="ES" 
+  		CODE="ES_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="1"
@@ -102,7 +102,7 @@
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="2" 
-  		CODE="ES61" 
+  		CODE="ES61_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="2"
@@ -120,7 +120,7 @@
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="3" 
-  		CODE="ES611" 
+  		CODE="ES611_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="3"
@@ -138,7 +138,7 @@
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="4" 
-  		CODE="ES612" 
+  		CODE="ES612_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="4"
@@ -156,7 +156,7 @@
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="5" 
-  		CODE="ES613" 
+  		CODE="ES613_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="5"
@@ -174,7 +174,7 @@
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="6" 
-  		CODE="ES614" 
+  		CODE="ES614_VARIABLE_ELEMENT" 
   		LATITUDE="20.0656233" 
   		LONGITUDE="-25.454564645" 
   		UUID="6"

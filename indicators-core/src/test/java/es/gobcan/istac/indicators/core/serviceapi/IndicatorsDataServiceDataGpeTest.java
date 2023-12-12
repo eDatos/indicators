@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -29,16 +31,20 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
@@ -70,6 +76,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     private static final String              URL_JSON_STAT_7          = "https://ibestat.caib.es/ibestat/service/ibestat/pxcontent/6/es/898714f0-bfa5-4dc8-b711-e6155b78bcee/E30162_02030.json";
     private static final String              CONTENT_JSON_STAT_7      = readFile("json-stat/E30162_02030.json");
 
+    List<GeographicalValue>                  geographicalValues       = new ArrayList<GeographicalValue>();
+
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
 
@@ -81,6 +89,19 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
+
+    @Autowired
+    private IndicatorsSystemsService         indicatorsSystemsService;
+
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+    }
 
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
@@ -111,6 +132,9 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Test
     public void testRetrieveDataStructure() throws Exception {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
 
         DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals("Sociedades mercantiles que amplían capital Gran PX.", dataStruc.getTitle());
@@ -132,10 +156,12 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
                 " RIOJA (LA)", " CEUTA", " MELILLA", "TOTAL DE SOCIEDADES", "Número de sociedades"};
         checkElementsInCollection(labels, dataStruc.getValueLabels().values());
 
+        // this indicator does not have any spatial variable. "Provincias por CC.AA." is not defined as spatial in "structure_1.json" Because of this, the codes are not converted to variable elements.
         String[] codes = new String[]{"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09", "ES", "ES61", "ES611", "ES612", "ES613", "ES614", "ES615", "ES616", "ES617", "ES618", "ES24",
                 "ES241", "ES242", "ES243", "ES12", "ES53", "ES70", "ES701", "ES702", "ES13", "ES41", "ES411", "ES412", "ES413", "ES414", "ES415", "ES416", "ES417", "ES418", "ES419", "ES42", "ES421",
                 "ES422", "ES423", "ES424", "ES425", "ES51", "ES511", "ES512", "ES513", "ES514", "ES52", "ES521", "ES522", "ES523", "ES43", "ES431", "ES432", "ES11", "ES111", "ES112", "ES113", "ES114",
                 "ES30", "ES62", "ES22", "ES21", "ES211", "ES212", "ES213", "ES23", "ES63", "ES64", "T", "NumSoc"};
+
         checkElementsInCollection(codes, dataStruc.getValueCodes().values());
 
         String temporalVar = "Periodos";

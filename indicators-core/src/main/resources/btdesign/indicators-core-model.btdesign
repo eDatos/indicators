@@ -78,6 +78,7 @@ Application Indicators {
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	@GeographicalValue retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	List<@GeographicalValue> findAllGeographicalValues() throws MetamacException;
 	    	@GeographicalValue createGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;

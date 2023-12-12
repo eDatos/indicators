@@ -845,6 +845,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public List<GeographicalValue> findAllGeographicalValues(ServiceContext ctx) throws MetamacException {
+
+        // Find
+        return getGeographicalValueRepository().findAll();
+    }
+
+    @Override
     public GeographicalValue createGeographicalValue(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkCreateGeographicalValue(null, geographicalValue);
