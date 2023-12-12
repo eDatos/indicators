@@ -33,7 +33,21 @@
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
 
-            this.model.on('change:groupType', this._fetchGeographicalGranularities, this);
+            this.model.on('change:groupType', function (model, value) {
+                this.geographicalGranularities.reset([]);
+                this.geographicalValues.reset([]);
+                this.instances.reset([]);
+                this.indicators.reset([]);
+                switch (value) {
+                    case 'allValues':
+                        this._fetchGeographicalGranularities();
+                        this._fetchGeographicalValuesAndTimeGranularities();
+                        break;
+                    default:
+                        this._fetchGeographicalGranularities();
+                        break;
+                }
+            }, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValuesAndTimeGranularities, this);
@@ -56,6 +70,8 @@
                 this.geographicalGranularities.fetchByIndicatorSystemCode(indicatorSystemCode);
             } else if (groupType === 'subject' && subjectCode) {
                 this.geographicalGranularities.fetchBySubjectCode(subjectCode);
+            }else if (groupType === 'allValues') {
+                this.geographicalGranularities.fetchAll();
             }
         },
 
@@ -72,6 +88,8 @@
                 this.geographicalValues.fetchByIndicatorSystemCodeAndGeographicalGranularityCode(indicatorSystemCode, geographicalGranularityCode);
             } else if (geographicalGranularityCode && groupType === 'subject' && subjectCode) {
                 this.geographicalValues.fetchBySubjectCodeAndGeographicalGranularityCode(subjectCode, geographicalGranularityCode);
+            }else if (geographicalGranularityCode && groupType === 'allValues') {
+                this.geographicalValues.fetchAllAndGeographicalGranularityCode(geographicalGranularityCode);
             }
         },
 

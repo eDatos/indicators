@@ -49,13 +49,13 @@
             var measureRepresentation = this._measureRepresentation(options.measures);
             return "&representation=" + geographicalRepresentation+","+measureRepresentation;
         },
-        
+
         _geographicalRepresentation : function(geoValues) {
         	this._validateOneOrMore(geoValues);
         	var geographicalRepresentation = geoValues.join("|");
         	return "GEOGRAPHICAL[" + geographicalRepresentation + "]";
         },
-        
+
         _measureRepresentation : function(measureValues) {
         	this._validateOneOrMore(measureValues);
         	var measureRepresentation = measureValues.join("|");
@@ -114,16 +114,22 @@
             this._validateOne(options.geographicalValues);
 
             var geographicalValue = options.geographicalValues[0];
-            return this.apiUrl + '/indicators/?q=subjectCode EQ "'
-                + options.subjectCode
-                + '" AND geographicalValue EQ "'
-                + geographicalValue
-                + '"&order=update DESC, id DESC'
-                + this._limit(options.nrecent)
-                + this._fieldsParameter()
-                + this._representation(options);
+            var requestUrl = this.apiUrl + '/indicators/?q=';
+
+            if (options.groupType === 'allValues') {
+                requestUrl += 'geographicalValue EQ "' + geographicalValue + '"';
+            } else {
+                requestUrl += 'subjectCode EQ "' + options.subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"';
+            }
+
+            requestUrl += '&order=update DESC, id DESC' +
+                this._limit(options.nrecent) +
+                this._fieldsParameter() +
+                this._representation(options);
+
+            return requestUrl;
         },
-        
+
         _limit : function(limit) {
         	limit = limit || 1000;
         	return '&limit=' + limit;
@@ -150,15 +156,13 @@
                 if (options.type === 'lastData') {
                     if (options.groupType === 'system') {
                         result = this._selectedInstancesRequest(options);
-                    } else if (options.groupType === 'subject') {
-                        result = this._selectedIndicatorsRequest(options);
-                    }else if (options.groupType === 'allValues') {
+                    } else if (options.groupType === 'subject' || options.groupType === 'allValues') {
                         result = this._selectedIndicatorsRequest(options);
                     }
                 } else if (options.type === 'recent') {
                     if (options.groupType === 'system') {
                         result = this._recentInstancesRequest(options);
-                    } else if (options.groupType === 'subject') {
+                    } else if (options.groupType === 'subject' || options.groupType === 'allValues') {
                         result = this._recentIndicatorsRequest(options);
                     }
                 } else if (options.type === 'temporal') {

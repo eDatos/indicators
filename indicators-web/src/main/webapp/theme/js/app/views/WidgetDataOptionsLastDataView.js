@@ -110,7 +110,6 @@
 
         _fetchIndicators: function () {
             this.indicators.reset([]);
-debugger;
             var groupType = this.model.get('groupType');
             var subjectCode = this.model.get('subjectCode');
             var geographicalValues = this.model.get('geographicalValues');
