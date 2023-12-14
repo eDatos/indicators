@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -20,6 +21,7 @@ import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -906,8 +908,18 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        // Service call
+        try {
+            this.getIndicatorsSystemsService().updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+        } catch (PersistenceException e) {
+            String uuid = StringUtils.EMPTY;
+            if (message != null) {
+                VariableElementAvro variableElementAvro = (VariableElementAvro) message;
+                uuid = variableElementAvro.getCode();
 
-        this.getIndicatorsSystemsService().updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+            }
+            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
+        }
     }
 
     @Override

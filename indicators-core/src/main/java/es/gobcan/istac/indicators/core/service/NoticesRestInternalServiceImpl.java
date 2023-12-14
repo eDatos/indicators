@@ -232,9 +232,9 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     }
 
-    private void createBackgroundNotificationWithoutResources(String actionCode, String messageCode) {
+    private void createBackgroundNotificationWithoutResources(String actionCode, String messageCode, String messageParams) {
         try {
-            Notice notification = createNoticewithoutResource(actionCode, messageCode);
+            Notice notification = createNoticewithoutResource(actionCode, messageCode, messageParams);
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
 
         } catch (MetamacException e) {
@@ -297,9 +297,9 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         // @formatter:on
     }
 
-    private Notice createNoticewithoutResource(String actionCode, String message) throws MetamacException {
+    private Notice createNoticewithoutResource(String actionCode, String message, String messageParams) throws MetamacException {
         Locale locale = configurationService.retrieveLanguageDefaultLocale();
-        String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+        String subject = (messageParams == null) ? LocaleUtil.getMessageForCode(actionCode, locale) : getMessageForCodeWithParams(actionCode, locale, messageParams);
         String sendingApp = MetamacApplicationsEnum.GESTOR_INDICADORES.getName();
 
         // @formatter:off
@@ -396,7 +396,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         return targets;
     }
 
-    public void createErrorBackgroundNotification(String user, String actionCode, MetamacException exception) {
+    public void createErrorBackgroundNotification(String actionCode, String messageParams, MetamacException exception) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
 
@@ -404,7 +404,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             String localisedMessage = localisedException.getMessage();
             localisedMessage = ERROR + " - " + localisedMessage;
 
-            createBackgroundNotificationWithoutResources(actionCode, localisedMessage);
+            createBackgroundNotificationWithoutResources(actionCode, localisedMessage, messageParams);
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
@@ -412,11 +412,16 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Override
     public void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception) {
-        createErrorBackgroundNotification(user, actionCode, exception);
+        createErrorBackgroundNotification(actionCode, null, exception);
+    }
+
+    @Override
+    public void updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(String actionCode, String messageParams, MetamacException exception) {
+        createErrorBackgroundNotification(actionCode, messageParams, exception);
     }
 
     @Override
     public void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception) {
-        createErrorBackgroundNotification(user, actionCode, exception);
+        createErrorBackgroundNotification(actionCode, null, exception);
     }
 }

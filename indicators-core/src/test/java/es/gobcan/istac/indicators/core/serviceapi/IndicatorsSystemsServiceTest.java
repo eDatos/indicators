@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -19,6 +21,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -572,11 +575,9 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             // delete
             indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
             fail("delete geographical value is being Used");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(GEOGRAPHICAL_VALUE_CODE_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        } catch (PersistenceException e) {
+            ConstraintViolationException exception = (ConstraintViolationException) e.getCause();
+            assertEquals("fk_tb_ind_version_geo_cov_geographical_value_fk", exception.getConstraintName());
         }
 
     }

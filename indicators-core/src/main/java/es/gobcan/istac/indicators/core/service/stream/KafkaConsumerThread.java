@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import net.sf.ehcache.Cache;
@@ -118,7 +119,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                 try {
                     ServiceContext serviceContext = createServiceContext(logMessage);
 
-                    updateIndicatorsFromKafkaMessage(serviceContext, record.value());
+                    updateIndicatorsFromKafkaMessage(serviceContext, record.value(), record.key());
                     commitSync(record);
                 } catch (Exception e) {
                     LOGGER.error("Unable to process resource received from Kafka. The business of application has failed", e);
@@ -137,13 +138,22 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         }
     }
 
-    public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+    public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) throws MetamacException {
         if (message instanceof QueryVersionAvro) {
             indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
         } else if (message instanceof VariableElementAvro) {
-            indicatorsServiceFacade.updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+            updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
         } else if (message instanceof CodelistAvro) {
             indicatorsServiceFacade.populateIndicatorsDataFromGeographicalCodelist(ctx, message);
+        }
+    }
+
+    private void updateIndicatorsFromKafkaVariableElementMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) {
+        try {
+            indicatorsServiceFacade.updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+        } catch (MetamacException e) {
+            LOGGER.error("An error has occurred in the Kafka client with variable element message", e);
+            noticesRestInternalService.updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(ServiceNoticeMessage.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, recordKey, e);
         }
     }
 

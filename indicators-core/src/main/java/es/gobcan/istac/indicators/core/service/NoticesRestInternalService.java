@@ -27,4 +27,5 @@ public interface NoticesRestInternalService {
     void createExportDSPLNotification(String user, String code, String url, List<String> files);
     void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception);
     void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception);
+    void updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(String actionCode, String messageParams, MetamacException exception);
 }
