@@ -116,11 +116,10 @@
             var geographicalValue = options.geographicalValues[0];
             var requestUrl = this.apiUrl + '/indicators/?q=';
 
-            if (options.groupType === 'allValues') {
-                requestUrl += 'geographicalValue EQ "' + geographicalValue + '"';
-            } else {
-                requestUrl += 'subjectCode EQ "' + options.subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"';
+            if (options.groupType != 'allValues') {
+                requestUrl += 'subjectCode EQ "' + options.subjectCode + '" AND ';
             }
+            requestUrl += 'geographicalValue EQ "' + geographicalValue + '"';
 
             requestUrl += '&order=update DESC, id DESC' +
                 this._limit(options.nrecent) +
