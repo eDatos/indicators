@@ -1635,6 +1635,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         VariableElementAvro variableElementAvro = (VariableElementAvro) message;
 
+        InvocationValidator.checkVariableElementAvro(null, variableElementAvro);
+
         if (checkIsDefaultTerritoryVariable(variableElementAvro.getVariable().getUrn())) {
 
             GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(variableElementAvro.getCode());
@@ -1654,16 +1656,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     private GeographicalValue createGeographicalValue(ServiceContext ctx, VariableElementAvro variableElementAvro) throws MetamacException {
+        InvocationValidator.checkCreateGeographicalValue(null, variableElementAvro);
         GeographicalValue geographicalValue = getGeographicalValueFromVariableElementAvro(ctx, variableElementAvro);
         return createGeographicalValue(ctx, geographicalValue);
     }
 
     private GeographicalValue updateGeopgraphicalValue(ServiceContext ctx, GeographicalValue geographicalValue, VariableElementAvro variableElementAvro) throws MetamacException {
+        InvocationValidator.checkUpdateGeographicalValue(null, variableElementAvro);
         if (checkDeleteGeopgraphicalValue(variableElementAvro)) {
             deleteGeographicalValue(ctx, geographicalValue.getUuid());
             return null;
         }
-
         GeographicalValue geographicalValueSource = getGeographicalValueFromVariableElementAvro(ctx, variableElementAvro);
 
         geographicalValue.setLongitude(geographicalValueSource.getLongitude());
@@ -1671,6 +1674,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         geographicalValue.setTitle(geographicalValueSource.getTitle());
         geographicalValue.setOrder(geographicalValueSource.getCode());
         geographicalValue.setUpdateDate(new DateTime());
+        geographicalValue.setGranularity(geographicalValueSource.getGranularity());
 
         return updateGeographicalValue(ctx, geographicalValue);
     }

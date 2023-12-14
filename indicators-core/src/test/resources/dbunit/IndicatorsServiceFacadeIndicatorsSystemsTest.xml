@@ -3063,6 +3063,25 @@
         LAST_UPDATED="2011-01-22 01:02:04"
         LAST_UPDATED_TZ="Europe/London"
     />
+    
+     <TB_LIS_GEOGR_VALUES 
+        ID="10" 
+        CODE="LPA_VARIABLE_ELEMENT" 
+        LATITUDE="20.0656233" 
+        LONGITUDE="-25.454564645" 
+        UUID="10"
+        TITLE_FK="[null]"
+        GLOBAL_ORDER="ES0105" 
+        GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
 	
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->

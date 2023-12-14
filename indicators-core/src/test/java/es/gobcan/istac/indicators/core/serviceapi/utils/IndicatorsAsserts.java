@@ -15,8 +15,14 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.srm.core.stream.message.InternationalStringAvro;
+import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
@@ -121,8 +127,40 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsInternationalStringDto(internationalStringDto, locale1, label1, locale2, label2);
     }
 
+    public static void assertEqualsInternationalStringAvro(InternationalStringAvro internationalStringAvro, InternationalString internationalString) {
+
+        for (LocalisedStringAvro localisedAvro : internationalStringAvro.getLocalisedStrings()) {
+            LocalisedString localised = getLocalised(localisedAvro.getLocale(), internationalString);
+            assertEquals(localisedAvro.getLabel(), localised.getLabel());
+        }
+
+        assertEquals(internationalString.getTexts().size(), internationalStringAvro.getLocalisedStrings().size());
+    }
+
+    public static LocalisedString getLocalised(String locale, InternationalString internationalString) {
+        if (locale == null) {
+            return null;
+        }
+        for (LocalisedString localstr : internationalString.getTexts()) {
+            if (locale.equalsIgnoreCase(localstr.getLocale())) {
+                return localstr;
+            }
+        }
+        return null;
+    }
+
     public static void assertEqualsDate(String expected, Date actual) {
         assertEquals(expected, (new DateTime(actual)).toString("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public static void assertEqualsGeographicalValue(VariableElementAvro variableElementAvro, GeographicalValue geographicalValueCreated) {
+        assertNotNull(geographicalValueCreated);
+        assertNotNull(geographicalValueCreated.getUuid());
+        assertEquals(geographicalValueCreated.getCode(), variableElementAvro.getCode());
+        assertEquals(geographicalValueCreated.getGranularity().getCode(), variableElementAvro.getGeographicGranularities().getCode());
+        assertEquals(variableElementAvro.getLatitud(), geographicalValueCreated.getLatitude());
+        assertEquals(variableElementAvro.getLongitud(), geographicalValueCreated.getLongitude());
+        IndicatorsAsserts.assertEqualsInternationalStringAvro(variableElementAvro.getShortName(), geographicalValueCreated.getTitle());
     }
 
     public static void assertEqualsIndicatorInstance(IndicatorInstanceDto expected, IndicatorInstanceDto actual) {
