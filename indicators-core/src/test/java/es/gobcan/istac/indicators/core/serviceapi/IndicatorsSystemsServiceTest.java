@@ -571,6 +571,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         try {
             // delete
             indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("delete geographical value is being Used");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED.getCode(), e.getExceptionItems().get(0).getCode());
