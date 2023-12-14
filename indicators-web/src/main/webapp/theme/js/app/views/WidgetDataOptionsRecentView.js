@@ -88,7 +88,7 @@
                 this.geographicalValues.fetchByIndicatorSystemCodeAndGeographicalGranularityCode(indicatorSystemCode, geographicalGranularityCode);
             } else if (geographicalGranularityCode && groupType === 'subject' && subjectCode) {
                 this.geographicalValues.fetchBySubjectCodeAndGeographicalGranularityCode(subjectCode, geographicalGranularityCode);
-            }else if (geographicalGranularityCode && groupType === 'allValues') {
+            } else if (geographicalGranularityCode && groupType === 'allValues') {
                 this.geographicalValues.fetchAllAndGeographicalGranularityCode(geographicalGranularityCode);
             }
         },
