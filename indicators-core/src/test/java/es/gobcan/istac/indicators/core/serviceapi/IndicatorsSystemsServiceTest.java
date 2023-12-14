@@ -461,7 +461,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_ORDER, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
