@@ -1,12 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.RoundingMode;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1630,24 +1625,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
         return dataCache;
-    }
-
-    public String retrieveGpePruebas(String uuid) throws MetamacException {
-        try (InputStream inputStream = new URL(uuid).openStream(); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
-            LOG.info("Retriving JSON-stat from URL: {}", uuid);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            int cp;
-            while ((cp = bufferedReader.read()) != -1) {
-                stringBuilder.append((char) cp);
-            }
-
-            LOG.info("Retrieved JSON-stat from URL: {}", uuid);
-
-            return stringBuilder.toString();
-        } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
-        }
     }
 
     /*
