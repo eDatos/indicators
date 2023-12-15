@@ -305,9 +305,9 @@ public class QueryMetamacUtils {
         }
 
         // spatial attribute
-        String extractSpatialValue = extractSpatialValue(query);
-        if (!StringUtils.isEmpty(extractSpatialValue)) {
-            return extractUrnCodelistFromUrnCode(extractSpatialValue);
+        List<String> extractSpatialValues = extractCodeUrnOfSpecificTypeAttribute(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
+        if (extractSpatialValues != null && !extractSpatialValues.isEmpty()) {
+            return extractUrnCodelistFromUrnCode(extractSpatialValues.get(0));
         }
 
         return null;
