@@ -14,8 +14,8 @@ INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VE
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Demography' || ''', ''en'', currval(''SEQ_I18NSTRS''), 1);
 INSERT INTO TB_EXTERNAL_ITEMS(ID, CODE, URI, URN, MANAGEMENT_APP_URL, VERSION, TITLE_FK, TYPE) values (nextval(''SEQ_EXTERNAL_ITEMS''), ''DEMOGRAFIA'', ''/latest/categoryelements/DEMOGRAFIA'', ''urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=DEMOGRAFIA'', ''/#structuralResources/categoryElement;id=DEMOGRAFIA'', 1, currval(''SEQ_I18NSTRS''), ''structuralResources#categoryElement'');
 UPDATE TB_INDICATORS_VERSIONS SET CATEGORY_ELEMENT_FK= currval(''SEQ_EXTERNAL_ITEMS'') where id =' || id || ';'
-from TB_INDICATORS_VERSIONS where deprecated_subject_code = '10';
-
+from TB_INDICATORS_VERSIONS where deprecated_subject_code = '10'
+UNION ALL
 -- ECONOMIA
 select  
 'INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval(''SEQ_I18NSTRS''), 1);  
@@ -24,21 +24,18 @@ INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VE
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Economy' || ''', ''en'', currval(''SEQ_I18NSTRS''), 1);
 INSERT INTO TB_EXTERNAL_ITEMS(ID, CODE, URI, URN, MANAGEMENT_APP_URL, VERSION, TITLE_FK, TYPE) values (nextval(''SEQ_EXTERNAL_ITEMS''), ''ECONOMIA'', ''/latest/categoryelements/ECONOMIA'', ''urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=ECONOMIA'', ''/#structuralResources/categoryElement;id=ECONOMIA'', 1, currval(''SEQ_I18NSTRS''), ''structuralResources#categoryElement'');
 UPDATE TB_INDICATORS_VERSIONS SET CATEGORY_ELEMENT_FK= currval(''SEQ_EXTERNAL_ITEMS'') where id =' || id || ';'
-from TB_INDICATORS_VERSIONS where deprecated_subject_code = '20';
-
-
+from TB_INDICATORS_VERSIONS where deprecated_subject_code = '20'
+UNION ALL
 -- ESTADÍSTICAS NO DESGLOSADAS POR TEMA
-
 select  
 'INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval(''SEQ_I18NSTRS''), 1);  
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Estadísticas no desglosables por tema' || ''', ''es'', currval(''SEQ_I18NSTRS''), 1);
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Estadístiques no desglossades per tema' || ''', ''ca'', currval(''SEQ_I18NSTRS''), 1);
 INSERT INTO TB_EXTERNAL_ITEMS(ID, CODE, URI, URN, MANAGEMENT_APP_URL, VERSION, TITLE_FK, TYPE) values (nextval(''SEQ_EXTERNAL_ITEMS''), ''ESTADISTICAS_SIN_TEMA'', ''/latest/categoryelements/ESTADISTICAS_SIN_TEMA'', ''urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=ESTADISTICAS_SIN_TEMA'', ''/#structuralResources/categoryElement;id=ESTADISTICAS_SIN_TEMA'', 1, currval(''SEQ_I18NSTRS''), ''structuralResources#categoryElement'');
 UPDATE TB_INDICATORS_VERSIONS SET CATEGORY_ELEMENT_FK= currval(''SEQ_EXTERNAL_ITEMS'') where id =' || id || ';'
-from TB_INDICATORS_VERSIONS where deprecated_subject_code = '90';
-
+from TB_INDICATORS_VERSIONS where deprecated_subject_code = '90'
+UNION ALL
 -- SOCIEDAD
-
 select  
 'INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval(''SEQ_I18NSTRS''), 1);  
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Sociedad' || ''', ''es'', currval(''SEQ_I18NSTRS''), 1);
@@ -46,10 +43,9 @@ INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VE
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Society' || ''', ''en'', currval(''SEQ_I18NSTRS''), 1);
 INSERT INTO TB_EXTERNAL_ITEMS(ID, CODE, URI, URN, MANAGEMENT_APP_URL, VERSION, TITLE_FK, TYPE) values (nextval(''SEQ_EXTERNAL_ITEMS''), ''SOCIEDAD'', ''/latest/categoryelements/SOCIEDAD'', ''urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=SOCIEDAD'', ''/#structuralResources/categoryElement;id=SOCIEDAD'', 1, currval(''SEQ_I18NSTRS''), ''structuralResources#categoryElement'');
 UPDATE TB_INDICATORS_VERSIONS SET CATEGORY_ELEMENT_FK= currval(''SEQ_EXTERNAL_ITEMS'') where id =' || id || ';'
-from TB_INDICATORS_VERSIONS where deprecated_subject_code = '30';
-
+from TB_INDICATORS_VERSIONS where deprecated_subject_code = '30'
+UNION ALL
 -- MEDIO_AMBIENTE
-
 select  
 'INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval(''SEQ_I18NSTRS''), 1);  
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || 'Territorio y medio ambiente' || ''', ''es'', currval(''SEQ_I18NSTRS''), 1);
