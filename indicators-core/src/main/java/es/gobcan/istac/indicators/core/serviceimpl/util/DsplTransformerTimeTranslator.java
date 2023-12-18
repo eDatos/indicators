@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
@@ -52,6 +53,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         super(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
     }
+
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
@@ -111,7 +113,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
             return datasets;
         } catch (MetamacException e) {
-            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
         }
     }
 
@@ -208,6 +210,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
         }
         return mapping;
     }
+
     private String transformTimeValueToGranularity(String timeCode, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
         TimeValue timeValue = TimeVariableUtils.parseTimeValue(timeCode);
         DateTime date = new DateTime(TimeVariableUtils.timeValueToLastPossibleDate(timeValue));
@@ -246,7 +249,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             case DAILY:
                 return buildDailyTimeValue(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
             default: // Hourly value is not supported by DSLP
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED, timeGranularity);
         }
     }
 

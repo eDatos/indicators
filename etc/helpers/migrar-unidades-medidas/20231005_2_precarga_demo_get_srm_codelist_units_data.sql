@@ -1,10 +1,8 @@
 -- --------------------------------------------------------------------------------------------------
 -- EDATOS-4197 - Añadir metadato unidad de medida que utilice un external item de de un código de clasificación del srm.
 
---PRECONDICIÓN: deben haberse lanzado el resto de scripts asociados a la tarea
+--PRECONDICIÓN: deben haberse lanzado el resto de scripts asociados a la tarea. Debe estar creada la tabla "temp_mig_units" a través del script "20231005_1_create_migration_tables.sql"
 -- --------------------------------------------------------------------------------------------------
-
--- PASO 0 Ejecutar script en bd indicators que  crea tabla de migración "20231005_1_create_migration_tables.sql"
 
 -- PASO 1 Obtener los datos del srm. Lanzar la consulta en la bd del srm de este entorno
 --ATENCIÓN EL WHERE CAMBIA POR ENTORNO RELLENAR CON FILL-ME SEGÚN SE INDICA
@@ -18,9 +16,9 @@ select 'insert into temp_mig_units( CODE, CODE_NESTED, URI, URN, URN_PROVIDER, M
 || ''''  || '/#structuralResources/codelists/codelist;id=' || o_detail.code || ':' || c.code || '(' || c.version_logic || ')' || '/code;id=' || co_detail.code  || ''','
 || '0, '
 || '''structuralResources#code'','
-|| '''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
-|| coalesce('''' || (select "label"  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
-|| coalesce('''' || (select "label" from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
+|| '''' || (select replace(label, '''', '''''') from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'es') || ''','
+|| coalesce('''' || (select replace(label, '''', '''''')  from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'ca') || '''', 'null') || ','
+|| coalesce('''' || (select replace(label, '''', '''''') from tb_localised_strings co_title where co_title.international_string_fk = co_detail.name_fk and co_title.locale = 'en') || '''', 'null') 
 || ');'
  from tb_item_schemes_versions a, tb_annotable_artefacts c, 
       tb_organisations o, tb_annotable_artefacts o_detail, tb_codelists_versions d, tb_codes co, tb_annotable_artefacts co_detail
@@ -48,7 +46,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '2.4'
+and c.version_logic = '02.004'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
@@ -86,7 +84,7 @@ and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'EUR_L', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_M2', 'EUR_MILES', 'EUR_MILLONES', 'EUR_PERSONA', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS');
 
  */
  
@@ -96,7 +94,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '2.4'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
@@ -112,7 +110,7 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '01.002'
+and c.version_logic = '01.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'IECM'
@@ -128,13 +126,13 @@ and c.public_logic = true
 and d.tb_item_schemes_versions = a.id
 and c.latest_version_number_public is not null
 and c.code = 'CL_UNIDADES_MEDIDA'
-and c.version_logic = '03.002'
+and c.version_logic = '03.003'
 and o.id = c.maintainer_fk
 and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'EUR_L', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_M2', 'EUR_MILES', 'EUR_MILLONES', 'EUR_PERSONA', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'VEHICULOS_1000');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS');
 */
  
  /* ENTORNO DE DESARROLLO
@@ -171,8 +169,17 @@ UPDATE temp_mig_units set id_unit_tb_lis_quantities = 41 where urn=urn:sdmx:org.
 UPDATE temp_mig_units set id_unit_tb_lis_quantities = 21 where urn=urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.004).VOTOS;
 */
 
--- PASO 5 Asegurarse que todo está listo
-select case when (select count(*) from tb_lis_quantities_units a where a.id not in(select coalesce(id_unit_tb_lis_quantities,0) from temp_mig_units)) = 0 then 'TODO CORRECTO. PUEDES SEGUIR ADELANTE.' else 'ERROR. HAY ENTRADAS QUE NO TIENEN RELACIÓN ENTRE UNIDAD ANTIGUA Y NUEVA' end 
+--Paso 5 Ajustar updates anteriores con errores detectados en distintos entornos. Ejecutar la siguiente consulta en la bd indicadores
+select 'UPDATE temp_mig_units set id_unit_tb_lis_quantities =' || q.id || ' where urn=''' || d.urn || ''';'
+from tb_lis_quantities_units q, tb_localised_strings l, temp_mig_units d where q.title_fk = l.international_string_fk and l.locale = 'es'
+and d."label_es" ilike l."label" || '%'
+and d."label_es" in('Gigavatios-hora', 'Euros por persona', 'Euros por metro cuadrado', 'Kilómetros cuadrados', 'Metros cuadrados', 'Kilovatios-hora', 'Vehículos por cada 1.000 personas', 'Metros cúbicos')  
+and l."label" in('Megavatio hora', 'Gigavatios-hora', 'Euros por persona', 'Euros por metro cuadrado', 'Kilómetros cuadrados', 'Metros cuadrados', 'Kilovatios-hora', 'Vehículos por cada 1.000 personas', 'Metros cúbicos');
+
+--Paso 5.1 Lanzar en la bd indicadores los UPDATE generados en el paso anterior
+
+-- PASO 6 Asegurarse que todo está listo
+select case when (select count(*) from tb_lis_quantities_units a where a.id not in(select coalesce(id_unit_tb_lis_quantities,0) from temp_mig_units)) = 0 then 'TODO CORRECTO. PUEDES SEGUIR ADELANTE.' else 'ERROR. HAY ENTRADAS QUE NO TIENEN RELACIÓN ENTRE UNIDAD ANTIGUA Y NUEVA' end; 
 
 
 -- PASO FINAL COMPROBACIONES DE DATOS

@@ -33,6 +33,11 @@ public class TaskServiceTest implements TaskServiceTestBase {
     }
 
     @Override
+    public void testProcessExportDSPLTask() throws Exception {
+        // See tests in DsplExporterServiceTest
+    }
+
+    @Override
     public void testCreateTask() throws Exception {
         // No tests for task repository
     }
