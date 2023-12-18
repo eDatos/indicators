@@ -72,7 +72,12 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
                 }
             }
 
-            return ExternalItemWebUtils.getCategoryElementsAsExternalItemsResult(categoryElements);
+            ExternalItemsResult result = ExternalItemWebUtils.getCategoryElementsAsExternalItemsResult(categoryElements);
+            result.setFirstResult(categories.getOffset() != null ? categories.getOffset().intValue() : 0);
+            result.setTotalResults(categories.getOffset() != null ? categories.getTotal().intValue() : 0);
+
+            return result;
+
         } catch (Exception e) {
             logger.error("Unable to find category elements for {} from srm internal api", categorySchemeUrn, e);
             throw manageSrmInternalRestException(serviceContext, e);
