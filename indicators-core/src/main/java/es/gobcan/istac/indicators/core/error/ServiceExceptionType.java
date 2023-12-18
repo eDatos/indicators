@@ -39,6 +39,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND_WITH_CODE             = create("exception.indicators.geographical_granularity.not_found_code");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED  = create("exception.indicators.geographical_granularity.already_exists.order_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED              = create("exception.indicators.geographical_granularity.can_not_be_removed");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED              = create("exception.indicators.geographical_granularity_time.not_supported");
 
     // Quantity units
     public static final CommonServiceExceptionType QUANTITY_UNIT_NOT_FOUND                                  = create("exception.indicators.quantity_unit.not_found");
