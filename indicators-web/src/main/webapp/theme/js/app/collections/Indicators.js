@@ -25,6 +25,13 @@
                 q : 'subjectCode EQ "' + subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"'
             };
             return this.fetchWithoutLimit({data : data});
+        },
+
+        fetchAllByGeographicalValueCode : function ( geographicalValue) {
+            var data = {
+                q : 'geographicalValue EQ "' + geographicalValue + '"'
+            };
+            return this.fetchWithoutLimit({data : data});
         }
 
     });

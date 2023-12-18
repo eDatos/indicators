@@ -19,6 +19,10 @@
 
         fetchBySubjectCode : function (subjectCode) {
             return this.fetch({ data : {subjectCode : subjectCode } });
+        },
+
+        fetchAll : function (subjectCode) {
+            return this.fetch({ data : {} });
         }
 
     });
