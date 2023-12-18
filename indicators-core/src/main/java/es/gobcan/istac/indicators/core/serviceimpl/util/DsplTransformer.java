@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -347,12 +348,12 @@ public class DsplTransformer {
         String idColumnName = getIdForGeoConcept(granularity);
         for (GeographicalValue geoValue : geoValues) {
             Row row = new Row();
-            row.addColumn(new TextColumn(idColumnName), geoValue.getCode().toUpperCase());
+            row.addColumn(new TextColumn(idColumnName), StringEscapeUtils.escapeCsv(geoValue.getCode().toUpperCase()));
             for (LocalisedString localisedStr : geoValue.getTitle().getTexts()) {
-                row.addColumn(new TextColumn("name", localisedStr.getLocale()), localisedStr.getLabel());
+                row.addColumn(new TextColumn("name", localisedStr.getLocale()), StringEscapeUtils.escapeCsv(localisedStr.getLabel()));
             }
-            row.addColumn(new FloatColumn("latitude"), String.valueOf(geoValue.getLatitude()));
-            row.addColumn(new FloatColumn("longitude"), String.valueOf(geoValue.getLongitude()));
+            row.addColumn(new FloatColumn("latitude"), StringEscapeUtils.escapeCsv(String.valueOf(geoValue.getLatitude())));
+            row.addColumn(new FloatColumn("longitude"), StringEscapeUtils.escapeCsv(String.valueOf(geoValue.getLongitude())));
             data.setRows(Arrays.asList(row));
         }
         // Sort by col id
@@ -456,9 +457,9 @@ public class DsplTransformer {
         String idColumnName = getIdForUnitConcept(unit);
 
         Row row = new Row();
-        row.addColumn(new TextColumn(idColumnName), getUUIDExternalItemUnit(unit));
+        row.addColumn(new TextColumn(idColumnName), StringEscapeUtils.escapeCsv(getUUIDExternalItemUnit(unit)));
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
-            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
+            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), StringEscapeUtils.escapeCsv(localisedStr.getLabel()));
         }
 
         UnitUtils.setQuantityUnitMetadata(unit.getUrn(), row, configurationService, srmRestInternalFacade);
@@ -740,13 +741,13 @@ public class DsplTransformer {
                 String dsplTimeCode = transformTimeCodeToDataExplorerCompatible(timeCode);
 
                 Row row = new Row();
-                row.addColumn(getColumnForGeo(geoGranularity), geoCode);
-                row.addColumn(getColumnForTime(timeGranularity), dsplTimeCode);
+                row.addColumn(getColumnForGeo(geoGranularity), StringEscapeUtils.escapeCsv(geoCode));
+                row.addColumn(getColumnForTime(timeGranularity), StringEscapeUtils.escapeCsv(dsplTimeCode));
 
                 for (IndicatorInstance instance : instances) {
                     DsplInstanceData data = dataByInstanceUuid.get(instance.getUuid());
                     String value = data.get(geoCode, timeCode);
-                    row.addColumn(getColumnForInstanceMetric(instance), value);
+                    row.addColumn(getColumnForInstanceMetric(instance), StringEscapeUtils.escapeCsv(value));
                 }
                 rows.add(row);
             }
