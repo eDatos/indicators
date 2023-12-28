@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Annotation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
@@ -27,8 +28,8 @@ public class UnitUtils {
         try {
             if (unitUrn != null) {
                 Code codeQuantityUnit = srmRestInternalFacade.retrieveCodeOfCodelist(unitUrn);
-                row.addColumn(new TextColumn("symbol"), getQuantityUnitSymbol(codeQuantityUnit, configurationService, DEFAULT_LABEL));
-                row.addColumn(new TextColumn("symbol_position"), getQuantityUnitSymbolPosition(codeQuantityUnit, configurationService, DEFAULT_LABEL));
+                row.addColumn(new TextColumn("symbol"), StringEscapeUtils.escapeCsv(getQuantityUnitSymbol(codeQuantityUnit, configurationService, DEFAULT_LABEL)));
+                row.addColumn(new TextColumn("symbol_position"), StringEscapeUtils.escapeCsv(getQuantityUnitSymbolPosition(codeQuantityUnit, configurationService, DEFAULT_LABEL)));
 
             }
         } catch (Exception e) {
