@@ -8,7 +8,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
-import com.smartgwt.client.widgets.toolbar.ToolStripSeparator;
 
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
@@ -37,9 +36,7 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
 
         // Add buttons to toolStrip
         toolStrip.addButton(systemListButton);
-        toolStrip.addMember(new ToolStripSeparator());
         toolStrip.addButton(indicatorListButton);
-        toolStrip.addMember(new ToolStripSeparator());
         toolStrip.addButton(adminButton);
     }
 
