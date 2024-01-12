@@ -4,15 +4,14 @@
 -- Script para migrar la relación entre códigos de los codelists indicados y sus elementos de variable asociados.
 -- --------------------------------------------------------------------------------------------------
 
--- 1 Asegurarse de que las tablas de migración están creadas: 1-create_migration_table_geographical_values.sql y 2-create_migration_table_link_geo_values_with_codes.sql en la bd indicators
--- El script 2-create_migration_table_link_geo_values_with_codes.sql se debe ejecutar también la bd indicators_data creando la tabla "temp_mig_codes_with_var_element"
+-- PRECONDICIÓN: Asegurarse de que las tablas de migración están creadas en las bases de datos indicadas en cada uno de los scripts: 1-create_migration_table_geographical_values.sql y 2-create_migration_table_link_geo_values_with_codes.sql 
 
--- 2 Ejecutar la siguiente consulta en la bd del SRM para los codelists indicados
-
-  select ' INSERT INTO temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) VALUES('
-|| '''' || c.urn || ''','
-|| '''' || t_codes.code || ''',' 
-|| '''' || t_ve.code || ''');' 
+-- 1 Ejecutar la siguiente consulta en la bd del SRM para los codelists indicados
+ insert into  temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) 
+ select 
+ c.urn, 
+ t_codes.code,
+ t_ve.code 
  from tb_item_schemes_versions a, tb_annotable_artefacts c, tb_codelists_versions d, tb_m_codelists_versions g, 
       tb_codes e , tb_annotable_artefacts t_codes, tb_m_codes f, 
       tb_m_variable_elements ve, tb_annotable_artefacts t_ve, tb_m_variables v, tb_annotable_artefacts t_v
@@ -34,6 +33,10 @@ and c.urn IN
   XXX -- clasificación nor normalizada con los valores del GPE y jsonstat
  )*/ 
  
- --3. Volcar resultados obtenidos en apartado anterior.
- -- 3.1)El resultado anterior volcarlo sobre la base de datos indicators. Puede tardar tiempo.
- -- 3.2)El resultado anterior volcarlo sobre la base de datos indicators_data. Puede tardar tiempo. En pruebas se detecta que es más rápido exportar la tabla creada en el apartado anterior en tb_indicators a CSV y luego importarla en esta base de datos.
+ --1.2 Exportar la tabla a CSV.
+--1.3 Importar la tabla anterior a la tabla "temp_mig_codes_with_var_element" en indicators.
+--1.4 Importar la tabla anterior a la tabla "temp_mig_codes_with_var_element" en indicators_data.
+--1.5 Borrar tabla temp_mig_codes_with_var_element de la base de datos del srm. Situarse en la base de datos metamac_structural_resources y hacer:
+drop table temp_mig_codes_with_var_element;
+ 
+ 

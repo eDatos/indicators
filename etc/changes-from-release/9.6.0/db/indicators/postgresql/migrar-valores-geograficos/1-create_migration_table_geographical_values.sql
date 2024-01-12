@@ -4,7 +4,9 @@
 -- Script con tabla temporal para migración de datos de valores geográficos de srm a indicators. Elementos de variable  de la variable VR_TERRITORIO
 -- --------------------------------------------------------------------------------------------------
 
---1 Ejecutar este script en la base de datos tb_indicators
+--1 Ejecutar este script 
+----1.1 en la base de datos tb_indicators
+----1.2 en la base de datos metamac_structural_resources
 
 CREATE TABLE temp_mig_geo_values (
 	code varchar(255) NOT NULL,

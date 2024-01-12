@@ -8,6 +8,7 @@
 --1 Ejecutar este script en las siguientes bases de datos:
 ----1.1 tb_indicators
 ----1.2 tb_indicators_data
+----1.3 en la base de datos metamac_structural_resources
 
 CREATE TABLE temp_mig_codes_with_var_element (
 	urn_codelist varchar(4000),
