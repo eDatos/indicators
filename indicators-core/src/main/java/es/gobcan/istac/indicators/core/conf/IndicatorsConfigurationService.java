@@ -44,4 +44,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException;
 
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;
+
+    String retrieveCronExpressionGeographicalValuesMigrationTemporalTask() throws MetamacException;
 }

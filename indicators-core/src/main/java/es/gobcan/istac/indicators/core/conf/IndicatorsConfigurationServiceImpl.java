@@ -110,4 +110,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
     }
+
+    @Override
+    public String retrieveCronExpressionGeographicalValuesMigrationTemporalTask() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_GEOGRAPHICAL_VALUES_MIGRATION);
+    }
 }

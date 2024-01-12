@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,19 @@ public class DataGpe extends Data {
     private int getIndexSpatialVariable() {
         String spatialVariable;
         int indexSpatialVariable = -1;
-        if (this.getSpatialVariables() != null && !this.getSpatialVariables().isEmpty()) {
+        List<String> dimensions = new ArrayList<String>();
+
+        for (String dim : this.getStub()) {
+            dimensions.add(dim);
+        }
+
+        for (String dim : this.getHeading()) {
+            dimensions.add(dim);
+        }
+
+        if (this.getSpatialVariables() != null && !this.getSpatialVariables().isEmpty() && !dimensions.isEmpty()) {
             spatialVariable = this.getSpatialVariables().get(0);
-            indexSpatialVariable = this.getStub().indexOf(spatialVariable);
+            indexSpatialVariable = dimensions.indexOf(spatialVariable);
         }
         return indexSpatialVariable;
     }

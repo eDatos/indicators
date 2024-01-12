@@ -30,6 +30,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -69,6 +71,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
@@ -96,6 +99,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private PlatformTransactionManager                      platformTransactionManager;
 
     private static final Logger                             LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+
+    @Autowired
+    private StatisticalResoucesRestExternalService          statisticalResoucesRestExternalService;
 
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -1463,6 +1469,37 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
         conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE.getValue()).or()
                 .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT.getValue());
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    @Override
+    public void updateDatasourceCodelistForGeographicalValuesMigration(ServiceContext ctx) throws MetamacException {
+
+        List<IndicatorVersion> queryBasedIndicators = retrieveIndicatorsEdatos();
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
+        for (IndicatorVersion indicatorVersion : queryBasedIndicators) {
+            for (DataSource dataSource : indicatorVersion.getDataSources()) {
+                Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                        es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn(query);
+                dataSource.setGeographicalCodelistUrn(codelistUrn);
+                getDataSourceRepository().save(dataSource);
+            }
+        }
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsEdatos() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.METAMAC);
         List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
