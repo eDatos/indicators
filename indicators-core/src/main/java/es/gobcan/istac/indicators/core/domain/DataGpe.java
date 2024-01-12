@@ -26,21 +26,22 @@ public class DataGpe extends Data {
 
     public void processData(Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
 
-        int indexSpatialVariable = getIndexSpatialVariable();
+        List<Integer> indexSpatialVariable = getIndexSpatialVariable();
 
         setData(new HashMap<String, DataContent>());
         for (DataContent content : dataList) {
 
-            changeCodeOfCodelistForVariableElement(variableElementsByCodesOfCodelist, indexSpatialVariable, content);
+            for (int spatialIndex : indexSpatialVariable) {
+                changeCodeOfCodelistForVariableElement(variableElementsByCodesOfCodelist, spatialIndex, content);
 
-            String key = StringUtils.join(content.getDimCodes(), "#");
-            getData().put(key, content);
+                String key = StringUtils.join(content.getDimCodes(), "#");
+                getData().put(key, content);
+            }
         }
     }
 
-    private int getIndexSpatialVariable() {
-        String spatialVariable;
-        int indexSpatialVariable = -1;
+    private List<Integer> getIndexSpatialVariable() {
+        List<Integer> indexSpatialVariable = new ArrayList<Integer>();
         List<String> dimensions = new ArrayList<String>();
 
         for (String dim : this.getStub()) {
@@ -52,8 +53,9 @@ public class DataGpe extends Data {
         }
 
         if (this.getSpatialVariables() != null && !this.getSpatialVariables().isEmpty() && !dimensions.isEmpty()) {
-            spatialVariable = this.getSpatialVariables().get(0);
-            indexSpatialVariable = dimensions.indexOf(spatialVariable);
+            for (String spatialVariableName : this.getSpatialVariables()) {
+                indexSpatialVariable.add(dimensions.indexOf(spatialVariableName));
+            }
         }
         return indexSpatialVariable;
     }
