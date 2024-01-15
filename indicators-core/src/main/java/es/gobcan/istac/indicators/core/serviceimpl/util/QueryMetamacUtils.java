@@ -51,9 +51,15 @@ import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public class QueryMetamacUtils {
 
-    private Map<String, String> variableElementsByCode = new HashMap<String, String>();
+    private Map<String, String>    variableElementsByCode = new HashMap<String, String>();
 
-    public es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query, SrmRestInternalService srmRestInternalService) throws IOException, MetamacException {
+    private SrmRestInternalService srmRestInternalService;
+
+    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService) {
+        this.srmRestInternalService = srmRestInternalService;
+    }
+
+    public es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query) throws IOException, MetamacException {
         if (query == null) {
             return null;
         }
@@ -92,7 +98,7 @@ public class QueryMetamacUtils {
 
         // Spatial Variables
         target.setSpatialVariables(extractSpatialVariableList(query.getMetadata()));
-        target.setGeographicalValueDto(extractGeographicalValueDto(query, srmRestInternalService));
+        target.setGeographicalValueDto(extractGeographicalValueDto(query));
 
         // Cont Variable
         target.setContVariable(extractContVariable(query.getMetadata()));
@@ -172,7 +178,7 @@ public class QueryMetamacUtils {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
     }
 
-    private String getVariableElementByCodeUrn(Query query, SrmRestInternalService srmRestInternalService, String spatialValue) throws MetamacException {
+    private String getVariableElementByCodeUrn(Query query, String spatialValue) throws MetamacException {
         List<String> spatialAttributeCodeUrn = extractCodeUrnOfSpecificTypeAttribute(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
 
         if (spatialAttributeCodeUrn.isEmpty()) {
@@ -189,13 +195,13 @@ public class QueryMetamacUtils {
 
     }
 
-    public GeographicalValueDto extractGeographicalValueDto(Query query, SrmRestInternalService srmRestInternalService) throws MetamacException {
+    public GeographicalValueDto extractGeographicalValueDto(Query query) throws MetamacException {
         String extractSpatialValue = extractSpatialValue(query);
         if (StringUtils.isEmpty(extractSpatialValue)) {
             return null;
         }
 
-        String variableElementCode = getVariableElementByCodeUrn(query, srmRestInternalService, extractSpatialValue);
+        String variableElementCode = getVariableElementByCodeUrn(query, extractSpatialValue);
 
         // Retrieve
         GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(variableElementCode);

@@ -135,7 +135,7 @@ public class DtoUtils {
         if (query == null) {
             return null;
         }
-        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         // UUid
@@ -177,7 +177,7 @@ public class DtoUtils {
         dataStructureDto.setSpatialVariables(queryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
 
         // Spatial Value
-        dataStructureDto.setGeographicalValueDto(queryMetamacUtils.extractGeographicalValueDto(query, srmRestInternalService));
+        dataStructureDto.setGeographicalValueDto(queryMetamacUtils.extractGeographicalValueDto(query));
 
         // Cont Variable
         dataStructureDto.setContVariable(queryMetamacUtils.extractContVariable(query.getMetadata()));

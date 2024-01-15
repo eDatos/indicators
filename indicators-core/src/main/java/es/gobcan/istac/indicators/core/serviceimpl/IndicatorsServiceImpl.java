@@ -1482,7 +1482,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public void updateDatasourceCodelistForGeographicalValuesMigration(ServiceContext ctx) throws MetamacException {
 
         List<IndicatorVersion> queryBasedIndicators = retrieveIndicatorsEdatos();
-        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null);
         for (IndicatorVersion indicatorVersion : queryBasedIndicators) {
             for (DataSource dataSource : indicatorVersion.getDataSources()) {
                 Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),

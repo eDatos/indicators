@@ -1598,8 +1598,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     // Metamac
                     Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils();
-                    data = queryMetamacUtils.queryMetamacToData(query, srmRestInternalService);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
+                    data = queryMetamacUtils.queryMetamacToData(query);
 
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                     String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
