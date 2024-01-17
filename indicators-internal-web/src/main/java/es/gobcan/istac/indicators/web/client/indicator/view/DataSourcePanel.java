@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
@@ -69,6 +70,7 @@ import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class DataSourcePanel extends VLayout {
 
@@ -195,12 +197,18 @@ public class DataSourcePanel extends VLayout {
     }
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
+        generalForm.setValue(DataSourceDS.GEO_VALUE_ITEM, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
         generalStaticEditionForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
     }
 
+    // TODO EDATOS-3827 quitar este código y el resto hacia atrás.
+
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+        // ((GeographicalSelectItem2) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+    }
+
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).setGeoValuesValueMap(result);
     }
 
     public void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
@@ -295,16 +303,20 @@ public class DataSourcePanel extends VLayout {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_METAMAC) : null);
 
-                dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
+                // TODO EDATOS-3827 Ver si DataSourceDS.GEO_VALUE_UUID_METAMAC se puede pasar a RelatedResourceDto.
+                RelatedResourceDto geoValue = new RelatedResourceDto();
+                geoValue.setUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
                         ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
                         : null);
+                dataSourceDto.setGeographicalValue(geoValue);
 
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
 
-                dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible()
-                        ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).getSelectedGeoValue())
+                dataSourceDto.setGeographicalValue(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM).isVisible()
+                        ? (((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).getSelectedGeoValue())
                         : null);
+
             }
         }
 
@@ -503,6 +515,13 @@ public class DataSourcePanel extends VLayout {
         annualPuntualRateEditionForm.setUiHandlers(uiHandlers);
         annualPercentageRateForm.setUiHandlers(uiHandlers);
         annualPercentageRateEditionForm.setUiHandlers(uiHandlers);
+
+        GeographicalSelectItem geographicalSelectItem = ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM));
+
+        if (geographicalSelectItem != null) {
+            geographicalSelectItem.setUiHandlers(uiHandlers);
+        }
+
     }
 
     public void setIndicator(IndicatorDto indicatorDto) {
@@ -659,7 +678,7 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        final GeographicalSelectItem geographicalValueMulti = new GeographicalSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        final GeographicalSelectItem geographicalValueMulti = new GeographicalSelectItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue(), this.uiHandlers);
         geographicalValueMulti.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
         geographicalValueMulti.setRequired(true);
         geographicalValueMulti.setShowIfCondition(new FormItemIfFunction() {
@@ -669,17 +688,12 @@ public class DataSourcePanel extends VLayout {
                 return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasGeoValue();
             }
         });
+
         geographicalValueMulti.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
 
             @Override
             public void onChanged(ChangedEvent event) {
-                // Clear geographical value
-                geographicalValueMulti.setGeoValuesValueMap(new LinkedHashMap<String, String>());
-                geographicalValueMulti.setGeoValue(new String());
-                // Set values with selected granularity
-                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    uiHandlers.retrieveGeographicalValuesByGranularity(event.getValue().toString());
-                }
+                geographicalValueMulti.clearGeographicalValue();
             }
         });
 
@@ -1065,7 +1079,7 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).setValueMap();
-        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC)).clearValue();
         ((HiddenItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_UUID_METAMAC)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();

@@ -287,8 +287,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
-        if (source.getGeographicalValueUuid() != null) {
-            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValueUuid()));
+        if (source.getGeographicalValue() != null) {
+            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValue().getUuid()));
         } else {
             target.setGeographicalValue(null);
         }

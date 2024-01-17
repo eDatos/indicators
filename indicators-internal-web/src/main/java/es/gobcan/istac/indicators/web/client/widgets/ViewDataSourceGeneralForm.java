@@ -113,7 +113,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             }
         });
 
-        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue());
         geographicalValue.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -169,8 +169,8 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
         setValue(DataSourceDS.GEO_VALUE, ""); // Set in method setGeographicalValue
-        if (dataSourceDto.getGeographicalValueUuid() != null && !dataSourceDto.getGeographicalValueUuid().isEmpty()) {
-            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
+        if (dataSourceDto.getGeographicalValue() != null) {
+            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValue());
         }
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 

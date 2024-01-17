@@ -128,7 +128,7 @@ public class QuantityForm extends BaseQuantityForm {
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
         baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
-        final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
+        final GeographicalSelectItem2 baseLocation = new GeographicalSelectItem2(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setRequired(true);
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
         baseLocation.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
@@ -192,8 +192,8 @@ public class QuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
             // Base location granularity set in setGeographicalGranularity method
-            ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(new String());
-            ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValue(quantityDto.getBaseLocationUuid());
+            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(new String());
+            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValue(quantityDto.getBaseLocationUuid());
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, quantityDto.getBaseQuantityIndicatorUuid()); // Value set in setIndicatorQuantityIndicatorBase method
@@ -237,8 +237,10 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setBaseValue(
                 getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer) getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
+
+        // TODO EDATOS-3827 Cambiar por nuevo componente.
         quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible()
-                ? CommonUtils.getUuidString(((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue())
+                ? CommonUtils.getUuidString(((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue())
                 : null);
         quantityDto.setBaseQuantityIndicatorUuid(
                 getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
@@ -297,14 +299,15 @@ public class QuantityForm extends BaseQuantityForm {
         ((CustomSelectItem) getItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)).setValueMap(CommonUtils.getUnitMultiplierValueMap(unitMultiplierDtos));
     }
 
+    // TODO EDATOS-3827 quitar GeographicalSelectItem2
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+        ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
     }
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         if (geographicalValueDto != null) {
             GeographicalGranularityDto granularityDto = geographicalValueDto.getGranularity();
-            ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(granularityDto != null ? granularityDto.getUuid() : null);
+            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(granularityDto != null ? granularityDto.getUuid() : null);
             // Make sure value map is set properly
             if (uiHandlers instanceof IndicatorUiHandler) {
                 ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesByGranularity(granularityDto != null ? granularityDto.getUuid() : null);

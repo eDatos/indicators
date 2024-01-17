@@ -37,6 +37,7 @@ import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class DataSourcesPanel extends VLayout {
 
@@ -266,6 +267,10 @@ public class DataSourcesPanel extends VLayout {
 
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         datasourcePanel.setGeographicalValues(geographicalValueDtos);
+    }
+
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        datasourcePanel.setGeographicalValuesAsRelatedResources(result);
     }
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {

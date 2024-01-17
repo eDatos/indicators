@@ -25,7 +25,9 @@ import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 
 /**
  * Mocks
@@ -150,6 +152,19 @@ public class IndicatorsMocks extends MetamacMocks {
         geographicalValueDto.setGranularity(granularity);
 
         return geographicalValueDto;
+    }
+
+    /**
+     * Mock a GeographicalValue as RelatedResourceDto
+     */
+    public static RelatedResourceDto mockRelatedResourceAsGeographicalValue(String code, String geoValueUuid) {
+        RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
+        relatedResourceDto.setCode(code);
+        relatedResourceDto.setTitle(mockInternationalStringDto());
+        relatedResourceDto.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        relatedResourceDto.setUuid(geoValueUuid);
+
+        return relatedResourceDto;
     }
 
     /**

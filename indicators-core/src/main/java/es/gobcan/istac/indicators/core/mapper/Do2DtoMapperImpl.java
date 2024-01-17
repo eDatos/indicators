@@ -57,9 +57,11 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
@@ -267,7 +269,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
-        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
+        target.setGeographicalValue(geographicalValueDoToRelatedResourceDto(source.getGeographicalValue()));
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setSourceSurveyCode(source.getSourceSurveyCode());
@@ -320,6 +322,21 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setOptimisticLockingVersion(source.getVersion());
 
+        return target;
+    }
+
+    @Override
+    public RelatedResourceDto geographicalValueDoToRelatedResourceDto(GeographicalValue source) {
+
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setId(source.getId()); // Database id. Only to efficient save operations
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        target.setUuid(source.getUuid());
         return target;
     }
 

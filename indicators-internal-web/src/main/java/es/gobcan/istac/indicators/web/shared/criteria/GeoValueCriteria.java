@@ -10,11 +10,20 @@ import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class GeoValueCriteria extends PaginationWebCriteria {
 
-    private static final long          serialVersionUID = 5888787900805195271L;
+    private static final long serialVersionUID = 5888787900805195271L;
 
-    private String                     granularityCode;
+    private String            granularityCode;
+    private String            geographicalGranularityUuid;
 
-    private List<MetamacCriteriaOrder> orders           = new ArrayList<MetamacCriteriaOrder>();
+    public String getGeographicalGranularityUuid() {
+        return geographicalGranularityUuid;
+    }
+
+    public void setGeographicalGranularityUuid(String geographicalGranularityUuid) {
+        this.geographicalGranularityUuid = geographicalGranularityUuid;
+    }
+
+    private List<MetamacCriteriaOrder> orders = new ArrayList<MetamacCriteriaOrder>();
 
     public GeoValueCriteria() {
         setFirstResult(0);

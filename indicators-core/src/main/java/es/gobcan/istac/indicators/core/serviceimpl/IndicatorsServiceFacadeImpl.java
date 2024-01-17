@@ -55,6 +55,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -985,6 +986,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform - return all elements. There is not limit of 1000 elements.
         return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
+    }
+
+    @Override
+    public MetamacCriteriaResult<RelatedResourceDto> findGeographicalValuesForIndicatorByCondition(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria, true);
+
+        PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform - return all elements. There is not limit of 1000 elements.
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultVariableElementToMetamacCriteriaResultRelatedResource(result, sculptorCriteria.getPageSize());
     }
 
     // -------------------------------------------------------------------------------------------

@@ -60,6 +60,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeA
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQueriesPaginatedListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetRelatedResourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetStatisticalOperationsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesByGranularityInIndicatorActionHandler;
@@ -135,6 +136,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorAction;
@@ -288,6 +290,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetExternalResourcesAction.class, GetExternalResourcesActionHandler.class);
 
         bindHandler(UpdateCategoryCacheAction.class, UpdateCategoryCacheActionHandler.class);
+
+        bindHandler(GetRelatedResourcesAction.class, GetRelatedResourcesActionHandler.class);
 
     }
 }

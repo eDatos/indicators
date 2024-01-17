@@ -3327,7 +3327,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setQueryText("queryText1");
         dataSourceDto.setTimeValue("2010");
-        dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        dataSourceDto.setGeographicalValue(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(GEOGRAPHICAL_VALUE_1, GEOGRAPHICAL_VALUE_CODE_1));
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalStringDto());
@@ -3547,7 +3547,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setQueryUrn("px1");
         dataSourceDto.setQueryText("queryText1");
         dataSourceDto.setTimeValue("xxx");
-        dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        dataSourceDto.setGeographicalValue(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(GEOGRAPHICAL_VALUE_1, GEOGRAPHICAL_VALUE_CODE_1));
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -3599,7 +3599,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable");
         dataSourceDto.setTimeValue("2010");
         dataSourceDto.setGeographicalVariable("geographicalVariable");
-        dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        dataSourceDto.setGeographicalValue(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(GEOGRAPHICAL_VALUE_1, GEOGRAPHICAL_VALUE_CODE_1));
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");

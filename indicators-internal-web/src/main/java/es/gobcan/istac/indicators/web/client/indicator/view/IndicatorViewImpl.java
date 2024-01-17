@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresen
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
@@ -133,7 +134,12 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         generalPanel.setGeographicalValues(geographicalValueDtos);
-        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
+        // dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
+    }
+
+    @Override
+    public void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result) {
+        dataSourcesPanel.setGeographicalValuesAsRelatedResources(result);
     }
 
     @Override

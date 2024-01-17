@@ -8,6 +8,7 @@ import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExtern
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -19,6 +20,7 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
     void saveIndicator(IndicatorDto indicator);
 
     void retrieveGeographicalValuesByGranularity(String geographicalGranularityUuid);
+    void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
 
     void sendToProductionValidation(String uuid);
@@ -50,7 +52,7 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
 
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
 
-    void retrieveGeographicalValueDS(String uuid);
+    void retrieveGeographicalValueDS(RelatedResourceDto geographicalValue);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);

@@ -89,7 +89,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getTimeVariable(), actual.getTimeVariable());
         assertEquals(expected.getTimeValue(), actual.getTimeValue());
         assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());
-        assertEquals(expected.getGeographicalValueUuid(), actual.getGeographicalValueUuid());
+        assertEquals(expected.getGeographicalValue().getUuid(), actual.getGeographicalValue().getUuid());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
             assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());

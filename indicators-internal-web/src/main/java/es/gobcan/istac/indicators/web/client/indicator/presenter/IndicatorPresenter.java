@@ -43,8 +43,10 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -88,6 +90,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlRes
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesAction;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
@@ -112,6 +116,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
@@ -162,6 +167,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
+        void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result);
 
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
@@ -285,6 +291,26 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setGeographicalValues(result.getGeographicalValueDtos());
             }
         });
+    }
+
+    @Override
+    public void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, final String geographicalGranularityUuid) {
+        GeoValueCriteria geoValueWebCriteria = new GeoValueCriteria();
+        geoValueWebCriteria.setCriteria(criteria);
+        geoValueWebCriteria.setGeographicalGranularityUuid(geographicalGranularityUuid);
+        dispatcher.execute(new GetRelatedResourcesAction(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE, firstResult, maxResults, geoValueWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetRelatedResourcesResult>(this) {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fireErrorMessage(IndicatorPresenter.this, caught);
+                    }
+                    @Override
+                    public void onWaitSuccess(GetRelatedResourcesResult result) {
+                        getView().setGeographicalValuesAsRelatedResource(result);
+                    }
+                });
+
     }
 
     @Override
@@ -504,8 +530,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveGeographicalValueDS(final String uuid) {
-        dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
+    public void retrieveGeographicalValueDS(final RelatedResourceDto geographicalValue) {
+        dispatcher.execute(new GetGeographicalValueAction(geographicalValue.getUuid()), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
 
             @Override
             public void onWaitSuccess(GetGeographicalValueResult result) {

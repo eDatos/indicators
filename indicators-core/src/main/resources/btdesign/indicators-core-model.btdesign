@@ -447,6 +447,7 @@ Application Indicators {
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@RelatedResourceDto> findGeographicalValuesForIndicatorByCondition(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
 	    	"Update geographical values table from srm"
@@ -1780,7 +1781,7 @@ Application Indicators {
 			"Geographical variable"
 			String geographicalVariable;
 			"Geographical value, if geographical variable is not provided"
-			String geographicalValueUuid;
+			- @RelatedResourceDto geographicalValue nullable;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
 			"Absolute method. Must be OBS_VALUE or a variable value"
@@ -2065,6 +2066,10 @@ Application Indicators {
        		
        		Long optimisticLockingVersion;	
     	}
+    	
+    	DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
+			- @TypeRelatedResourceEnum type required;
+		}
 	}
 	
 	// ----------------------------------------------------------------
@@ -2174,5 +2179,9 @@ Application Indicators {
            SENT,
            FAILED
        }
+       
+       enum TypeRelatedResourceEnum {
+    		GEOGRAPHICAL_VALUE
+    	}
 	}
 }
