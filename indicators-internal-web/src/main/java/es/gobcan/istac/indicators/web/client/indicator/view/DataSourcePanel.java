@@ -44,7 +44,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
@@ -194,17 +193,6 @@ public class DataSourcePanel extends VLayout {
         createEditionForm();
 
         addMember(mainFormLayout);
-    }
-
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalForm.setValue(DataSourceDS.GEO_VALUE_ITEM, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
-        generalStaticEditionForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
-    }
-
-    // TODO EDATOS-3827 quitar este código y el resto hacia atrás.
-
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        // ((GeographicalSelectItem2) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
     }
 
     public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {

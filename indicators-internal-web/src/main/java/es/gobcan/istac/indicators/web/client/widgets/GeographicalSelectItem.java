@@ -177,8 +177,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         final int FIRST_RESULST = 0;
         final int MAX_RESULTS = 8;
 
-        // TODO EDATOS-3827 crear constante "dataSourceGeographicalValueSelection" con texto parecido a getConstants().codelistFamilySelection()"
-        searchGeoValueWindow = new SearchRelatedResourcePaginatedWindow(getConstants().dataSourceGeographicalValue(), MAX_RESULTS, new PaginatedAction() {
+        searchGeoValueWindow = new SearchRelatedResourcePaginatedWindow(getConstants().dataSourceGeographicalValueSelection(), MAX_RESULTS, new PaginatedAction() {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {

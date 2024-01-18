@@ -21,7 +21,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -265,16 +264,8 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setDataStructureForEdition(dataStructureDto);
     }
 
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        datasourcePanel.setGeographicalValues(geographicalValueDtos);
-    }
-
     public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
         datasourcePanel.setGeographicalValuesAsRelatedResources(result);
-    }
-
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        datasourcePanel.setGeographicalValue(geographicalValueDto);
     }
 
     public DataSourceDto getDataSourceDto() {

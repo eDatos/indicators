@@ -43,7 +43,6 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
@@ -180,10 +179,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setDataStructure(DataStructureDto dataStructureDto);
 
         void setDataStructureForEdition(DataStructureDto dataStructureDto);
-
-        void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
-
-        void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
 
         void onDataSourceSaved(DataSourceDto dataSourceDto);
 
@@ -525,17 +520,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(GetQueriesPaginatedListResult result) {
                 getView().setQueriesForRelatedQuery(result);
-            }
-        });
-    }
-
-    @Override
-    public void retrieveGeographicalValueDS(final RelatedResourceDto geographicalValue) {
-        dispatcher.execute(new GetGeographicalValueAction(geographicalValue.getUuid()), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValueDS(result.getGeographicalValueDto());
             }
         });
     }

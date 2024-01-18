@@ -4,6 +4,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -113,7 +114,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             }
         });
 
-        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue());
+        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
         geographicalValue.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -168,10 +169,8 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
-        setValue(DataSourceDS.GEO_VALUE, ""); // Set in method setGeographicalValue
-        if (dataSourceDto.getGeographicalValue() != null) {
-            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValue());
-        }
+        setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(dataSourceDto.getGeographicalValue().getTitle()));
+
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
         // OTHER_VARIABLES set in setVariablesAndCategories method in ViewVariableCanvasItem

@@ -8,7 +8,6 @@ import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExtern
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.web.client.enums.EnvironmentTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -51,8 +50,6 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
     void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
 
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
-
-    void retrieveGeographicalValueDS(RelatedResourceDto geographicalValue);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);
