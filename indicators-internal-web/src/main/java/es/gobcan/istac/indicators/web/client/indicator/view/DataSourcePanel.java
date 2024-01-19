@@ -291,12 +291,19 @@ public class DataSourcePanel extends VLayout {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_METAMAC) : null);
 
-                // TODO EDATOS-3827 Ver si DataSourceDS.GEO_VALUE_UUID_METAMAC se puede pasar a RelatedResourceDto.
-                RelatedResourceDto geoValue = new RelatedResourceDto();
-                geoValue.setUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
+                String uuid = generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
                         ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
-                        : null);
-                dataSourceDto.setGeographicalValue(geoValue);
+                        : null;
+
+                if (!StringUtils.isEmpty(uuid)) {
+                    RelatedResourceDto geoValue = new RelatedResourceDto();
+                    geoValue.setUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
+                            ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
+                            : null);
+                    dataSourceDto.setGeographicalValue(geoValue);
+                } else {
+                    dataSourceDto.setGeographicalValue(null);
+                }
 
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);

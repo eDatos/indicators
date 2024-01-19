@@ -169,7 +169,10 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
-        setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(dataSourceDto.getGeographicalValue().getTitle()));
+        setValue(DataSourceDS.GEO_VALUE, "");
+        if (dataSourceDto.getGeographicalValue() != null) {
+            setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(dataSourceDto.getGeographicalValue().getTitle()));
+        }
 
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
