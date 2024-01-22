@@ -19,6 +19,8 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +101,7 @@ public class DsplTransformer {
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
         IndicatorsSystemVersion indicatorsSystemVersion;
         try {
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
@@ -115,41 +118,46 @@ public class DsplTransformer {
 
             List<DsplDataset> datasets = new ArrayList<DsplDataset>();
             for (IstacTimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
-                LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
+                try {
+                    LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
 
-                List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
+                    List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
 
-                // topics
-                LOG.info("Building topics with granularity " + timeGranularity + " ...");
-                Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
+                    // topics
+                    LOG.info("Building topics with granularity " + timeGranularity + " ...");
+                    Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
 
-                // concepts
-                LOG.info("Building concepts with granularity " + timeGranularity + " ...");
-                List<DsplConcept> concepts = new ArrayList<DsplConcept>();
-                concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
-                List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
-                concepts.addAll(metrics);
+                    // concepts
+                    LOG.info("Building concepts with granularity " + timeGranularity + " ...");
+                    List<DsplConcept> concepts = new ArrayList<DsplConcept>();
+                    concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
+                    List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
+                    concepts.addAll(metrics);
 
-                // slides
-                LOG.info("Computing slices with granularity " + timeGranularity + " ...");
-                Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
+                    // slides
+                    LOG.info("Computing slices with granularity " + timeGranularity + " ...");
+                    Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
 
-                if (slices.size() > 0) {
-                    LOG.info("Building slices with granularity " + timeGranularity + " ...");
-                    DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
-                    DsplInfo providerInfo = buildProviderInfo();
-                    String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
-                    DsplDataset dataset = new DsplDataset(datasetId, datasetInfo, providerInfo);
+                    if (slices.size() > 0) {
+                        LOG.info("Building slices with granularity " + timeGranularity + " ...");
+                        DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
+                        DsplInfo providerInfo = buildProviderInfo();
+                        String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
+                        DsplDataset dataset = new DsplDataset(datasetId, datasetInfo, providerInfo);
 
-                    dataset.addConcepts(concepts);
-                    dataset.addTopics(topics);
-                    dataset.addSlices(slices);
+                        dataset.addConcepts(concepts);
+                        dataset.addTopics(topics);
+                        dataset.addSlices(slices);
 
-                    datasets.add(dataset);
-                    LOG.info("Dataset with granularity " + timeGranularity + " has been built");
+                        datasets.add(dataset);
+                        LOG.info("Dataset with granularity " + timeGranularity + " has been built");
+                    }
+                } catch (MetamacException e) {
+                    exceptions.addAll(e.getExceptionItems());
                 }
             }
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
+            ExceptionUtils.throwIfException(exceptions);
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
