@@ -132,7 +132,7 @@ and o.nameable_artefact_fk = o_detail.id
 and o_detail.code = 'ISTAC'
 and co.item_scheme_version_fk = a.id
 and co_detail.id = co.nameable_artefact_fk
-and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS');
+and co_detail.code in('ANIOS', 'CABEZAS', 'CM', 'DIAS', 'EMPRESAS', 'ESP', 'ESTABLECIMIENTOS', 'EUR', 'EUR_MILES', 'EUR_MILLONES', 'G', 'GW', 'GWH', 'HA', 'HL', 'HORAS', 'HORAS_MILES', 'INDICE', 'KCAL', 'KG', 'KM', 'KM2', 'KW', 'MILES', 'KWH', 'L', 'M', 'M2', 'M3', 'MESES', 'MINUTOS', 'MW', 'MWH', 'NAC', 'NOCHES', 'NUMERO', 'OZ', 'PERSONAS', 'PERSONAS_MILES', 'PLAZAS', 'POR_CADA_1000', 'POR_CADA_10000', 'POR_CADA_100000', 'POR_MILLA', 'PORCENTAJE', 'PUESTOS_TRABAJO', 'PUNTOS', 'UG', 'T', 'TJ', 'UTA', 'UNIONES', 'USD', 'VEHICULOS', 'EUR_PERSONA');
 */
  
  /* ENTORNO DE DESARROLLO
@@ -173,7 +173,7 @@ UPDATE temp_mig_units set id_unit_tb_lis_quantities = 21 where urn=urn:sdmx:org.
 select 'UPDATE temp_mig_units set id_unit_tb_lis_quantities =' || q.id || ' where urn=''' || d.urn || ''';'
 from tb_lis_quantities_units q, tb_localised_strings l, temp_mig_units d where q.title_fk = l.international_string_fk and l.locale = 'es'
 and d."label_es" ilike l."label" || '%'
-and d."label_es" in('Gigavatios-hora', 'Euros por persona', 'Euros por metro cuadrado', 'Kilómetros cuadrados', 'Metros cuadrados', 'Kilovatios-hora', 'Vehículos por cada 1.000 personas', 'Metros cúbicos')  
+and d."label_es" in('Megavatio hora', 'Gigavatios-hora', 'Euros por persona', 'Euros por metro cuadrado', 'Kilómetros cuadrados', 'Metros cuadrados', 'Kilovatios-hora', 'Vehículos por cada 1.000 personas', 'Metros cúbicos')  
 and l."label" in('Megavatio hora', 'Gigavatios-hora', 'Euros por persona', 'Euros por metro cuadrado', 'Kilómetros cuadrados', 'Metros cuadrados', 'Kilovatios-hora', 'Vehículos por cada 1.000 personas', 'Metros cúbicos');
 
 --Paso 5.1 Lanzar en la bd indicadores los UPDATE generados en el paso anterior
