@@ -5,8 +5,10 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavigationClickHandler;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
@@ -25,6 +27,10 @@ import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 public class BaseQuantityForm extends GroupDynamicForm {
 
     protected IndicatorUiHandler uiHandlers;
+
+    public IndicatorUiHandler getUiHandlers() {
+        return uiHandlers;
+    }
 
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
@@ -275,10 +281,6 @@ public class BaseQuantityForm extends GroupDynamicForm {
         };
     }
 
-    protected IndicatorUiHandler getIndicatorUiHandlers() {
-        return (IndicatorUiHandler) uiHandlers;
-    }
-
     // ------------------------------------------------------------------------------------------------------------
     // EXTERNAL RESOURCES ITEMS
     // ------------------------------------------------------------------------------------------------------------
@@ -289,13 +291,23 @@ public class BaseQuantityForm extends GroupDynamicForm {
             @Override
             protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODE);
-                getIndicatorUiHandlers().retrieveItems(name, webCriteria, firstResult, maxResults);
+                getUiHandlers().retrieveItems(name, webCriteria, firstResult, maxResults);
             }
 
             @Override
             protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODELIST);
-                getIndicatorUiHandlers().retrieveItemSchemes(name, webCriteria, firstResult, maxResults);
+                getUiHandlers().retrieveItemSchemes(name, webCriteria, firstResult, maxResults);
+            }
+        };
+    }
+
+    protected CustomLinkItemNavigationClickHandler getCustomLinkItemNavigationClickHandler() {
+        return new CustomLinkItemNavigationClickHandler() {
+
+            @Override
+            public BaseUiHandlers getBaseUiHandlers() {
+                return getUiHandlers();
             }
         };
     }

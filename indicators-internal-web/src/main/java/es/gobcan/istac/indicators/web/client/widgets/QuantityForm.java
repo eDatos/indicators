@@ -181,10 +181,13 @@ public class QuantityForm extends BaseQuantityForm {
             }
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
+            GeographicalSelectItem geoValue = (GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM);
             if (quantityDto.getBaseLocation() != null) {
-                GeographicalSelectItem geoValue = (GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM);
                 geoValue.setGeoGranularity(quantityDto.getBaseLocation().getGranularityCode());
                 geoValue.setGeoValue(quantityDto.getBaseLocation());
+            } else {
+                geoValue.setGeoGranularity(null);
+                geoValue.setGeoValue(null);
             }
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());

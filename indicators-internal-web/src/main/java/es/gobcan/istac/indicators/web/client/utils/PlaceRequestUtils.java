@@ -54,13 +54,11 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     public static List<PlaceRequest> buildAbsoluteAdminPlaceRequest() {
         List<PlaceRequest> placeRequestHierarchy = new ArrayList<PlaceRequest>();
         placeRequestHierarchy.add(new PlaceRequest(NameTokens.adminPage));
-        // placeRequestHierarchy.add(new PlaceRequest(NameTokens.adminGeoValuesPage));
         return placeRequestHierarchy;
     }
 
     public static PlaceRequest buildRelativeGeoValuePlaceRequest(String geoValueCode) {
         return new PlaceRequest(NameTokens.adminGeoValuesPage).with(es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams.adminGeoValueParam, geoValueCode);
-        // PlaceRequest placeRequest = new PlaceRequest(NameTokens.adminGeoValuesPage);
     }
 
     public static List<PlaceRequest> buildAbsoluteGeoValueAdminPlaceRequest(String geoValueCode) {
