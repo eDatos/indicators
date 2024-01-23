@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -29,8 +28,6 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
-import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -41,6 +38,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class QuantityForm extends BaseQuantityForm {
 
@@ -128,7 +126,7 @@ public class QuantityForm extends BaseQuantityForm {
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
         baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
-        final GeographicalSelectItem2 baseLocation = new GeographicalSelectItem2(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
+        final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM, getConstants().indicQuantityBaseLocation(), this.uiHandlers);
         baseLocation.setRequired(true);
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
         baseLocation.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
@@ -136,15 +134,7 @@ public class QuantityForm extends BaseQuantityForm {
 
             @Override
             public void onChanged(ChangedEvent event) {
-                // Clear geographical value
-                baseLocation.setGeoValuesValueMap(new LinkedHashMap<String, String>());
-                baseLocation.setGeoValue(new String());
-                // Set values with selected granularity
-                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    if (uiHandlers instanceof IndicatorUiHandler) {
-                        ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesByGranularity(event.getValue().toString());
-                    }
-                }
+                baseLocation.clearGeographicalValue();
             }
         });
 
@@ -191,9 +181,11 @@ public class QuantityForm extends BaseQuantityForm {
             }
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
-            // Base location granularity set in setGeographicalGranularity method
-            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(new String());
-            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValue(quantityDto.getBaseLocationUuid());
+            if (quantityDto.getBaseLocation() != null) {
+                GeographicalSelectItem geoValue = (GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM);
+                geoValue.setGeoGranularity(quantityDto.getBaseLocation().getGranularityCode());
+                geoValue.setGeoValue(quantityDto.getBaseLocation());
+            }
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, quantityDto.getBaseQuantityIndicatorUuid()); // Value set in setIndicatorQuantityIndicatorBase method
@@ -238,10 +230,9 @@ public class QuantityForm extends BaseQuantityForm {
                 getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer) getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
 
-        // TODO EDATOS-3827 Cambiar por nuevo componente.
-        quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible()
-                ? CommonUtils.getUuidString(((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue())
-                : null);
+        quantityDto.setBaseLocation(
+                getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM).isVisible() ? (((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM)).getSelectedGeoValue()) : null);
+
         quantityDto.setBaseQuantityIndicatorUuid(
                 getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
         return quantityDto;
@@ -297,22 +288,6 @@ public class QuantityForm extends BaseQuantityForm {
 
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
         ((CustomSelectItem) getItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)).setValueMap(CommonUtils.getUnitMultiplierValueMap(unitMultiplierDtos));
-    }
-
-    // TODO EDATOS-3827 quitar GeographicalSelectItem2
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
-    }
-
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        if (geographicalValueDto != null) {
-            GeographicalGranularityDto granularityDto = geographicalValueDto.getGranularity();
-            ((GeographicalSelectItem2) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(granularityDto != null ? granularityDto.getUuid() : null);
-            // Make sure value map is set properly
-            if (uiHandlers instanceof IndicatorUiHandler) {
-                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesByGranularity(granularityDto != null ? granularityDto.getUuid() : null);
-            }
-        }
     }
 
     public RequiredIfValidator getQuantityRequiredIfValidator() {
@@ -461,6 +436,20 @@ public class QuantityForm extends BaseQuantityForm {
         searchIndicatorBaseText.setValidators(validator);
 
         return searchIndicatorBaseText;
+    }
+
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        ((GeographicalSelectItem) this.getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM)).setGeoValuesValueMap(result);
+    }
+
+    @Override
+    public void setUiHandlers(IndicatorUiHandler uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        GeographicalSelectItem geographicalSelectItem = ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM));
+
+        if (geographicalSelectItem != null) {
+            geographicalSelectItem.setUiHandlers(uiHandlers);
+        }
     }
 
 }

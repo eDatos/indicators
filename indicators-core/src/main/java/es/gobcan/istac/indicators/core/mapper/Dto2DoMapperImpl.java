@@ -20,7 +20,6 @@ import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
@@ -60,16 +59,13 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
-    private IndicatorsSystemsService       indicatorsSystemsService;
+    private IndicatorsSystemsService indicatorsSystemsService;
 
     @Autowired
-    private IndicatorsService              indicatorsService;
+    private IndicatorsService        indicatorsService;
 
     @Autowired
-    private RateDerivationRepository       rateDerivationRepository;
-
-    @Autowired
-    private IndicatorsConfigurationService configurationService;
+    private RateDerivationRepository rateDerivationRepository;
 
     @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
@@ -431,8 +427,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
 
-        if (source.getBaseLocationUuid() != null) {
-            target.setBaseLocation(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getBaseLocationUuid()));
+        if (source.getBaseLocation() != null) {
+            target.setBaseLocation(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getBaseLocation().getUuid()));
         } else {
             target.setBaseLocation(null);
         }

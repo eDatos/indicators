@@ -113,7 +113,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getPercentageOf(), "es", "Porcentaje de 1", "en", "Percentage of 1");
         assertNull(indicatorDto.getQuantity().getBaseValue());
         assertNull(indicatorDto.getQuantity().getBaseTime());
-        assertNull(indicatorDto.getQuantity().getBaseLocationUuid());
+        assertNull(indicatorDto.getQuantity().getBaseLocation().getUuid());
         assertEquals(INDICATOR_3, indicatorDto.getQuantity().getBaseQuantityIndicatorUuid());
 
         IndicatorsAsserts.assertEqualsDate("2011-01-01 01:02:04", indicatorDto.getCreatedDate());
@@ -578,7 +578,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
-        indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
+        indicatorDto.getQuantity().setBaseLocation(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(GEOGRAPHICAL_VALUE_1, GEOGRAPHICAL_VALUE_CODE_1));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -620,7 +620,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
-        indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
+        indicatorDto.getQuantity().setBaseLocation(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(GEOGRAPHICAL_VALUE_1, GEOGRAPHICAL_VALUE_CODE_1));
         indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_5);
 
         try {
@@ -2502,7 +2502,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getPercentageOf(), "es", "Porcentaje xx", null, null);
                 assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getBaseValue());
                 assertEquals("2010", rateDerivationDto.getQuantity().getBaseTime());
-                assertEquals(GEOGRAPHICAL_VALUE_1, rateDerivationDto.getQuantity().getBaseLocationUuid());
+                assertEquals(GEOGRAPHICAL_VALUE_1, rateDerivationDto.getQuantity().getBaseLocation().getUuid());
                 assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
                 assertEquals(QUANTITY_UNIT_KM_CODE, rateDerivationDto.getQuantity().getUnit().getCode());
                 assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
@@ -3143,7 +3143,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getPercentageOf(), "es", "Porcentaje xx", null, null);
             assertNull(rateDerivationDto.getQuantity().getBaseValue());
             assertNull(rateDerivationDto.getQuantity().getBaseTime());
-            assertNull(rateDerivationDto.getQuantity().getBaseLocationUuid());
+            assertNull(rateDerivationDto.getQuantity().getBaseLocation().getUuid());
             assertEquals(INDICATOR_1, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
             assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
             assertEquals(INDICATOR_6, rateDerivationDto.getQuantity().getDenominatorIndicatorUuid());
@@ -3175,7 +3175,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertNull(rateDerivationDto.getQuantity().getPercentageOf());
             assertNull(rateDerivationDto.getQuantity().getBaseValue());
             assertNull(rateDerivationDto.getQuantity().getBaseTime());
-            assertNull(rateDerivationDto.getQuantity().getBaseLocationUuid());
+            assertNull(rateDerivationDto.getQuantity().getBaseLocation().getUuid());
             assertEquals(INDICATOR_1, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
             assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
             assertEquals(INDICATOR_6, rateDerivationDto.getQuantity().getDenominatorIndicatorUuid());
@@ -3817,7 +3817,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPercentageRate().getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_2));
         dataSourceDto.getAnnualPercentageRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseLocationUuid(NOT_EXISTS);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseLocation(IndicatorsMocks.mockRelatedResourceAsGeographicalValue(NOT_EXISTS, NOT_EXISTS));
         dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
 
         try {
@@ -3827,7 +3827,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(dataSourceDto.getAnnualPercentageRate().getQuantity().getBaseLocationUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(dataSourceDto.getAnnualPercentageRate().getQuantity().getBaseLocation().getUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

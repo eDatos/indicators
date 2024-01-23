@@ -21,7 +21,6 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
-import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.widgets.windows.search.SearchRelatedResourceLinkItem;
 import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
@@ -30,6 +29,9 @@ public class GeographicalSelectItem extends CustomCanvasItem {
     private CustomSelectItem                     geoGranularitItem;
     private SearchRelatedResourceLinkItem        geoValueItem;
     private SearchRelatedResourcePaginatedWindow searchGeoValueWindow;
+
+    private static final String                  GEO_VALUE             = "geo-val";
+    private static final String                  GEO_VALUE_GRANULARITY = "geo-val-granularity";
 
     public SearchRelatedResourceLinkItem getGeoValueItem() {
         return geoValueItem;
@@ -64,10 +66,10 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
     private void create(String formItemWidth) {
         setTitleVAlign(VerticalAlignment.TOP);
-        geoGranularitItem = new CustomSelectItem(DataSourceDS.GEO_VALUE_GRANULARITY, "geo-gran");
+        geoGranularitItem = new CustomSelectItem(GEO_VALUE_GRANULARITY, "geo-gran");
         geoGranularitItem.setWidth(formItemWidth);
         geoGranularitItem.setShowTitle(false);
-        geoValueItem = createGeoValueItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        geoValueItem = createGeoValueItem(GEO_VALUE, getConstants().dataSourceGeographicalValue());
         geoValueItem.setWidth(formItemWidth);
         geoValueItem.setShowTitle(false);
         geoValueItem.setStartRow(true);
@@ -100,8 +102,8 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         geoGranularitItem.setValue(granularity);
     }
 
-    public void setGeoValue(String value) {
-        geoValueItem.setValue(value);
+    public void setGeoValue(RelatedResourceDto geoValue) {
+        geoValueItem.setRelatedResource(geoValue);
     }
 
     public SelectItem getGeoGranularitySelectItem() {
@@ -144,7 +146,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
     }
 
     public RelatedResourceDto getSelectedGeoValue() {
-        return ((SearchRelatedResourceLinkItem) form.getItem(DataSourceDS.GEO_VALUE)).getRelatedResourceDto();
+        return ((SearchRelatedResourceLinkItem) form.getItem(GEO_VALUE)).getRelatedResourceDto();
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -165,7 +167,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
                         RelatedResourceDto selectedGeoValue = searchGeoValueWindow.getSelectedRelatedResource();
                         searchGeoValueWindow.markForDestroy();
                         // Set selected geo value in form
-                        ((SearchRelatedResourceLinkItem) form.getItem(DataSourceDS.GEO_VALUE)).setRelatedResource(selectedGeoValue);
+                        ((SearchRelatedResourceLinkItem) form.getItem(GEO_VALUE)).setRelatedResource(selectedGeoValue);
                     }
                 });
             }
@@ -181,12 +183,12 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                String granularityUuid = form.getValueAsString(DataSourceDS.GEO_VALUE_GRANULARITY);
+                String granularityUuid = form.getValueAsString(GEO_VALUE_GRANULARITY);
                 getUiHandlers().retrieveGeographicalValuesByGranularity(firstResult, maxResults, searchGeoValueWindow.getRelatedResourceCriteria(), granularityUuid);
             }
         });
 
-        String granularityUuid = form.getValueAsString(DataSourceDS.GEO_VALUE_GRANULARITY);
+        String granularityUuid = form.getValueAsString(GEO_VALUE_GRANULARITY);
         getUiHandlers().retrieveGeographicalValuesByGranularity(FIRST_RESULST, MAX_RESULTS, null, granularityUuid);
 
         searchGeoValueWindow.getListGridItem().getListGrid().setSelectionType(SelectionStyle.SINGLE);
@@ -194,7 +196,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults, String criteria) {
-                String granularityUuid = form.getValueAsString(DataSourceDS.GEO_VALUE_GRANULARITY);
+                String granularityUuid = form.getValueAsString(GEO_VALUE_GRANULARITY);
                 getUiHandlers().retrieveGeographicalValuesByGranularity(firstResult, maxResults, criteria, granularityUuid);
             }
         });

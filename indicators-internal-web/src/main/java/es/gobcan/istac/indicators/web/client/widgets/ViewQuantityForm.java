@@ -113,10 +113,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
             setValue(IndicatorDS.QUANTITY_BASE_LOCATION, ""); // Base location set in setGeographicalValue method
-            if (!StringUtils.isBlank(quantityDto.getBaseLocationUuid())) {
-                if (uiHandlers instanceof IndicatorUiHandler) {
-                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
-                }
+            if (quantityDto.getBaseLocation() != null) {
+                setValue(IndicatorDS.QUANTITY_BASE_LOCATION, InternationalStringUtils.getLocalisedString(quantityDto.getBaseLocation().getTitle()));
             }
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, ""); // Value set in setIndicatorQuantityIndicatorBase method

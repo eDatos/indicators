@@ -337,6 +337,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
         target.setUuid(source.getUuid());
+        target.setGranularityCode(source.getGranularity().getCode());
         return target;
     }
 
@@ -634,7 +635,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setPercentageOf(internationalStringToDto(source.getPercentageOf()));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
-        target.setBaseLocationUuid(source.getBaseLocation() != null ? source.getBaseLocation().getUuid() : null);
+        target.setBaseLocation(geographicalValueDoToRelatedResourceDto(source.getBaseLocation()));
         target.setBaseQuantityIndicatorUuid(source.getBaseQuantity() != null ? source.getBaseQuantity().getUuid() : null);
 
         return target;

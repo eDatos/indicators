@@ -41,7 +41,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -75,11 +74,6 @@ import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
@@ -167,10 +161,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
-        void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result);
-
-        void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
         // Data source
 
@@ -279,19 +270,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveGeographicalValuesByGranularity(final String geographicalGranularityUuid) {
-        Builder builder = new Builder();
-        GetGeographicalValuesAction action = builder.geographicalGranularityUuid(geographicalGranularityUuid).build();
-        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValues(result.getGeographicalValueDtos());
-            }
-        });
-    }
-
-    @Override
     public void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, final String geographicalGranularityUuid) {
         GeoValueCriteria geoValueWebCriteria = new GeoValueCriteria();
         geoValueWebCriteria.setCriteria(criteria);
@@ -309,17 +287,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                     }
                 });
 
-    }
-
-    @Override
-    public void retrieveGeographicalValue(final String geographicalValueUuid) {
-        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValue(result.getGeographicalValueDto());
-            }
-        });
     }
 
     @Override

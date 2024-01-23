@@ -1909,7 +1909,7 @@ Application Indicators {
 			"Time value base"
 			String baseTime;
 			"Geographical value base"
-			String baseLocationUuid;
+			- @RelatedResourceDto baseLocation nullable;			
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
 			
@@ -2069,6 +2069,7 @@ Application Indicators {
     	
     	DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
+			String granularityCode;
 		}
 	}
 	

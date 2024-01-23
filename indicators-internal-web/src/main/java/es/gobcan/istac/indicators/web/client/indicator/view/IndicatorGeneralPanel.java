@@ -31,7 +31,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -48,6 +47,7 @@ import es.gobcan.istac.indicators.web.client.widgets.IndicatorDiffusionMainFormL
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class IndicatorGeneralPanel extends VLayout {
 
@@ -692,13 +692,8 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
 
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        quantityEditionForm.setGeographicalValues(geographicalValueDtos);
-    }
-
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        quantityForm.setGeographicalValue(geographicalValueDto);
-        quantityEditionForm.setGeographicalValue(geographicalValueDto);
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        quantityEditionForm.setGeographicalValuesAsRelatedResources(result);
     }
 
     private void setEditionMode() {

@@ -79,7 +79,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsInternationalString(expected.getPercentageOf(), actual.getPercentageOf());
         assertEquals(expected.getBaseValue(), actual.getBaseValue());
         assertEquals(expected.getBaseTime(), actual.getBaseTime());
-        assertEquals(expected.getBaseLocationUuid(), actual.getBaseLocationUuid());
+        assertEquals(expected.getBaseLocation().getUuid(), actual.getBaseLocation().getUuid());
         assertEquals(expected.getBaseQuantityIndicatorUuid(), actual.getBaseQuantityIndicatorUuid());
     }
 

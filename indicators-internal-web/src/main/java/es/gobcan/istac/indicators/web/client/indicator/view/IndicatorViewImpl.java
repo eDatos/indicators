@@ -24,7 +24,6 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -132,19 +131,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        generalPanel.setGeographicalValues(geographicalValueDtos);
-        // dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    @Override
     public void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result) {
+        generalPanel.setGeographicalValuesAsRelatedResources(result);
         dataSourcesPanel.setGeographicalValuesAsRelatedResources(result);
-    }
-
-    @Override
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalPanel.setGeographicalValue(geographicalValueDto);
     }
 
     @Override

@@ -10,7 +10,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchS
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
-import com.gwtplatform.mvp.client.UiHandlers;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -25,19 +24,19 @@ import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class BaseQuantityForm extends GroupDynamicForm {
 
-    protected UiHandlers uiHandlers;
+    protected IndicatorUiHandler uiHandlers;
 
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
     }
 
-    public void setUiHandlers(UiHandlers uiHandlers) {
+    public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
 
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {
         String baseTime = quantityDto.getBaseTime();
-        String baseLocation = quantityDto.getBaseLocationUuid();
+        String baseLocation = quantityDto.getBaseLocation() != null ? quantityDto.getBaseLocation().getUuid() : null;
         if (baseTime != null && !baseTime.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_TIME;
         } else if (baseLocation != null && !baseLocation.isEmpty()) {
