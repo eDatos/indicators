@@ -164,7 +164,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent arg0) {
                         RelatedResourceDto selectedGeoValue = searchGeoValueWindow.getSelectedRelatedResource();
                         searchGeoValueWindow.markForDestroy();
-                        // Set selected family in form
+                        // Set selected geo value in form
                         ((SearchRelatedResourceLinkItem) form.getItem(DataSourceDS.GEO_VALUE)).setRelatedResource(selectedGeoValue);
                     }
                 });

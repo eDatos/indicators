@@ -12,8 +12,18 @@ public class GeoValueCriteria extends PaginationWebCriteria {
 
     private static final long serialVersionUID = 5888787900805195271L;
 
-    private String            granularityCode;
-    private String            geographicalGranularityUuid;
+    private String            geographicalValueCode;
+
+    public String getGeographicalValueCode() {
+        return geographicalValueCode;
+    }
+
+    public void setGeographicalValueCode(String geographicalValueCode) {
+        this.geographicalValueCode = geographicalValueCode;
+    }
+
+    private String granularityCode;
+    private String geographicalGranularityUuid;
 
     public String getGeographicalGranularityUuid() {
         return geographicalGranularityUuid;

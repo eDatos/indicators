@@ -32,6 +32,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
@@ -126,6 +127,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     private Logger                   logger = Logger.getLogger(IndicatorPresenter.class.getName());
 
     private DispatchAsync            dispatcher;
+    private final PlaceManager       placeManager;
     private String                   indicatorCode;
     private IndicatorDto             indicatorDto;
     private List<DataSourceDto>      datasourcesDtos;
@@ -206,10 +208,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Inject
-    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher, ToolStripPresenterWidget toolStripPresenterWidget) {
+    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, ToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
+        this.placeManager = placeManager;
         this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
@@ -814,7 +817,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void goTo(List<PlaceRequest> location) {
-        // without implement
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 
 }

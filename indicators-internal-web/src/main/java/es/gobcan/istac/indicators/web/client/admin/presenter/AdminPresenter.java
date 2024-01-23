@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -26,6 +27,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
+import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUiHandlers;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
@@ -50,6 +52,7 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
 
     public interface AdminView extends View, HasUiHandlers<AdminUiHandlers> {
 
+        void selectTab(String tabName, String geoValue);
     }
 
     @ProxyCodeSplit
@@ -76,11 +79,21 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
 
-        // Redirect to metadata tab
-        // getView().selectQuantityUnitsTab();
+        String tab = request.getParameter(PlaceRequestParams.adminTabParam, null);
+        String tabParam = request.getParameter(PlaceRequestParams.adminGeoValueParam, null);
+
         if (NameTokens.adminPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
-            goToUnitMultipliersTab();
+            if (StringUtils.isEmpty(tab)) {
+                goToUnitMultipliersTab();
+                getView().selectTab(NameTokens.adminUnitMultipliersPage, null);
+            } else {
+                if (NameTokens.adminGeoValuesPage.equals(tab)) {
+                    getView().selectTab(NameTokens.adminGeoValuesPage, tabParam);
+
+                }
+            }
         }
+
     }
 
     @Override
@@ -106,8 +119,24 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
     // NAVIGATION
     @Override
     public void goToGeoValuesTab() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
-        hierarchy.add(new PlaceRequest(NameTokens.adminGeoValuesPage));
+        if (hasToResetTabGeoValue(placeManager.getCurrentPlaceRequest())) {
+            List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
+            hierarchy.add(new PlaceRequest(NameTokens.adminGeoValuesPage));
+            placeManager.revealPlaceHierarchy(hierarchy);
+        }
+    }
+
+    // selectTab is required when the access is from external page (through a link) But in this case, geoValue tab is loaded before with a specific criteria and specific geoValue. So it is not
+    // necessary this load. In other cases it is necessary to clear the listGrid value selected in geoValue tab.
+    private boolean hasToResetTabGeoValue(PlaceRequest current) {
+        return current == null || placeManager.getCurrentPlaceRequest().getParameter(PlaceRequestParams.adminGeoValueParam, null) == null;
+    }
+
+    // NAVIGATION
+    @Override
+    public void goToGeoValuesTab(String geoValue) {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.buildAbsoluteAdminPlaceRequest();
+        hierarchy.add(PlaceRequestUtils.buildRelativeGeoValuePlaceRequest(geoValue));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 
@@ -117,5 +146,12 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
         hierarchy.add(new PlaceRequest(NameTokens.adminUnitMultipliersPage));
         placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 }

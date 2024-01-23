@@ -13,6 +13,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -132,17 +133,33 @@ public class AdminGeoValuesTabViewImpl extends ViewWithUiHandlers<AdminGeoValues
     // DATA
 
     @Override
-    public void setGeoValues(int firstResult, List<GeographicalValueDto> dtos, int totalResults) {
+    public void setGeoValues(int firstResult, List<GeographicalValueDto> dtos, int totalResults, String defaultGeoValue) {
         geoValuePanel.hide();
 
         listGrid.getListGrid().resetSort();
         GeoValueRecord[] records = new GeoValueRecord[dtos.size()];
         int index = 0;
+        int indexGeoValue = -1;
         for (GeographicalValueDto ds : dtos) {
             records[index++] = RecordUtils.getGeoValueRecord(ds);
+            if (defaultGeoValue != null && defaultGeoValue.equals(ds.getCode())) {
+                indexGeoValue = index - 1;
+            }
         }
         listGrid.getListGrid().setData(records);
         listGrid.refreshPaginationInfo(firstResult, dtos.size(), totalResults);
+        selectGeoValues(indexGeoValue);
+    }
+
+    @Override
+    public void selectGeoValues(int indexDefaultGeoValue) {
+        RecordList recordList = listGrid.getListGrid().getDataAsRecordList();
+        if (indexDefaultGeoValue >= 0) {
+            GeoValueRecord recordG = (GeoValueRecord) recordList.get(indexDefaultGeoValue);
+            listGrid.getListGrid().selectRecord(recordG);
+            GeographicalValueDto selected = recordG.getDto();
+            selectGeoGranularity(selected);
+        }
     }
 
     @Override
