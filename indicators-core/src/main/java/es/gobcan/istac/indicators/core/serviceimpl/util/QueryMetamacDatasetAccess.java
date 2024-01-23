@@ -72,7 +72,9 @@ public class QueryMetamacDatasetAccess {
     }
 
     /**
-     * Init observations attributes values
+     * Initialize observations attributes values.
+     *
+     * @param query The Query object containing the data and metadata.
      */
     private void initializeObservationsAttributes(Query query) {
         List<DataAttribute> dataAttributes = query.getData().getAttributes().getAttributes();
@@ -81,6 +83,12 @@ public class QueryMetamacDatasetAccess {
         this.observationsAttributes = getObservationsAttributesDataValue(query, attributesIds, attributesString);
     }
 
+    /**
+     * Get attribute IDs from a list of DataAttributes.
+     *
+     * @param dataAttributes The list of DataAttributes.
+     * @return An array of attribute IDs.
+     */
     private static String[] getAttributesIds(List<DataAttribute> dataAttributes) {
         String[] ids = new String[dataAttributes.size()];
         int index = 0;
@@ -90,6 +98,14 @@ public class QueryMetamacDatasetAccess {
         return ids;
     }
 
+    /**
+     * Get observations attributes data values based on attribute IDs and a string of attribute values.
+     *
+     * @param query             The Query object containing the metadata.
+     * @param attributesIds     An array of attribute IDs.
+     * @param attributesString  A string of attribute values.
+     * @return An array of observations attributes data values.
+     */
     private String[] getObservationsAttributesDataValue(Query query, String[] attributesIds, String attributesString) {
         String[] dataArrayAttributes = StringUtils.splitByWholeSeparatorPreserveAllTokens(attributesString, DATA_SEPARATOR);
 
@@ -102,6 +118,13 @@ public class QueryMetamacDatasetAccess {
         return dataArrayAttributes;
     }
 
+    /**
+     * Process a specific attribute, updating dataArrayAttributes based on attribute values.
+     *
+     * @param query                The Query object containing the metadata.
+     * @param attributeId          The ID of the attribute to process.
+     * @param dataArrayAttributes  An array of attribute values to be updated.
+     */
     private void processAttribute(Query query, String attributeId, String[] dataArrayAttributes) {
         for (Attribute attribute : query.getMetadata().getAttributes().getAttributes()) {
             if (Objects.equals(attribute.getId(), attributeId)) {
@@ -110,6 +133,12 @@ public class QueryMetamacDatasetAccess {
         }
     }
 
+    /**
+     * Update dataArrayAttributes based on enumerated attribute values.
+     *
+     * @param attribute           The Attribute object containing enumerated values.
+     * @param dataArrayAttributes An array of attribute values to be updated.
+     */
     private void updateDataArrayAttributes(Attribute attribute, String[] dataArrayAttributes) {
         EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
 
