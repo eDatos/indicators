@@ -384,7 +384,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
-                LOG.info("DataOperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
+                LOG.info("dataoperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
@@ -1698,6 +1698,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
+        //Atributo de la observacion
+        String attributeText = content.getCommentDataNoteCell();
         String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
@@ -1711,22 +1713,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         // Check for dotted notation
-        if (isSpecialString(value)) {
+        if (isSpecialString(value) && attributeText.isEmpty()) {
             String text = getSpecialStringMeaning(value);
             // Some Special Strings may not need to create an attribute
             if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(value)));
+                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
             }
             observation.setPrimaryMeasure(null);
         } else {
-            Double numValue = null;
             try {
-                numValue = Double.parseDouble(value);
+                String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
+                observation.setPrimaryMeasure(formattedValue);
+                if (!attributeText.isEmpty()) {
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attributeText));
+                }
             } catch (NumberFormatException e) {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
             }
-            String formattedValue = formatValue(numValue, dataOperation);
-            observation.setPrimaryMeasure(formattedValue);
         }
 
         return observation;

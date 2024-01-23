@@ -305,10 +305,13 @@ public class QueryMetamacUtils {
             List<String> dimCodes = elem.getDimCodes();
 
             if (dimCodes.size() == numDimensions) {
+                int index = observationIndex++;
                 // We have all dimensions here
                 DataContent dataContent = new DataContent();
                 dataContent.setDimCodes(dimCodes);
-                dataContent.setValue(queryMetamacDatasetAccess.getObservations()[observationIndex++]);
+                dataContent.setValue(queryMetamacDatasetAccess.getObservations()[index]);
+                //crodrod: habra que poner las distintas traducciones¿?¿?
+                 dataContent.setCommentDataNoteCell(queryMetamacDatasetAccess.getObservationsAttributes()[index]);
                 result.add(dataContent);
             } else {
                 String dimensionId = queryMetamacDatasetAccess.getDimensionsOrderedForData().get(dimensionPosition + 1);

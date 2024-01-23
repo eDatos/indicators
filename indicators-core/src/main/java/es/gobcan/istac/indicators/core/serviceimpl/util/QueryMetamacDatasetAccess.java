@@ -1,28 +1,27 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 public class QueryMetamacDatasetAccess {
 
-    public static String              DATA_SEPARATOR = " | ";
+    public static String DATA_SEPARATOR = " | ";
 
     // Data
-    private String[]                  observations;
-    private List<String>              dimensionsOrderedForData;
+    private String[] observations;
+
+    private String[] observationsAttributes;
+    private List<String> dimensionsOrderedForData;
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
 
     public QueryMetamacDatasetAccess(Query query) throws MetamacException {
 
         initializeObservations(query);
+        initializeObservationsAttributes(query);
         initializeDimensionsForData(query);
     }
 
@@ -36,6 +35,10 @@ public class QueryMetamacDatasetAccess {
 
     public String[] getObservations() {
         return observations;
+    }
+
+    public String[] getObservationsAttributes() {
+        return observationsAttributes;
     }
 
     /**
@@ -67,4 +70,56 @@ public class QueryMetamacDatasetAccess {
     public static String[] dataToDataArray(String data) {
         return StringUtils.splitByWholeSeparatorPreserveAllTokens(data, DATA_SEPARATOR);
     }
+
+    /**
+     * Init observations attributes values
+     */
+    private void initializeObservationsAttributes(Query query) {
+        List<DataAttribute> dataAttributes = query.getData().getAttributes().getAttributes();
+        String attributesString = dataAttributes.get(0).getValue();
+        String[] attributesIds = getAttributesIds(dataAttributes);
+        this.observationsAttributes = getObservationsAttributesDataValue(query, attributesIds, attributesString);
+    }
+
+    private static String[] getAttributesIds(List<DataAttribute> dataAttributes) {
+        String[] ids = new String[dataAttributes.size()];
+        int index = 0;
+        for (DataAttribute dataAttribute : dataAttributes) {
+            ids[index++] = dataAttribute.getId();
+        }
+        return ids;
+    }
+
+    private String[] getObservationsAttributesDataValue(Query query, String[] attributesIds, String attributesString) {
+        String[] dataArrayAttributes = StringUtils.splitByWholeSeparatorPreserveAllTokens(attributesString, DATA_SEPARATOR);
+
+        for (String attributeId : attributesIds) {
+            if (attributeId != null && !attributeId.isEmpty()) {
+                processAttribute(query, attributeId, dataArrayAttributes);
+            }
+        }
+
+        return dataArrayAttributes;
+    }
+
+    private void processAttribute(Query query, String attributeId, String[] dataArrayAttributes) {
+        for (Attribute attribute : query.getMetadata().getAttributes().getAttributes()) {
+            if (Objects.equals(attribute.getId(), attributeId)) {
+                updateDataArrayAttributes(attribute, dataArrayAttributes);
+            }
+        }
+    }
+
+    private void updateDataArrayAttributes(Attribute attribute, String[] dataArrayAttributes) {
+        EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
+
+        for (int i = 0; i < attributeValues.getValues().size(); i++) {
+            for (int j = 0; j < dataArrayAttributes.length; j++) {
+                if (Objects.equals(attributeValues.getValues().get(i).getId(), dataArrayAttributes[j])) {
+                    dataArrayAttributes[j] = attributeValues.getValues().get(i).getName().getTexts().get(0).getValue();
+                }
+            }
+        }
+    }
+
 }
