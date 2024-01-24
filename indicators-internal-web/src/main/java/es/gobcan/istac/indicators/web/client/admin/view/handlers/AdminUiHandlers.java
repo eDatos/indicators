@@ -7,7 +7,6 @@ public interface AdminUiHandlers extends BaseUiHandlers {
     void goToGeoGranularitiesTab();
 
     void goToGeoValuesTab();
-    void goToGeoValuesTab(String geoValue);
 
     void goToUnitMultipliersTab();
 

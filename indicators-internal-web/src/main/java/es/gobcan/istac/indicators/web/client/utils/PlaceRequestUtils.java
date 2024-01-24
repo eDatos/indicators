@@ -41,19 +41,16 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
         return getParamFromUrl(placeManager, NameTokens.adminGeoValuesPage, es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams.adminGeoValueParam);
     }
 
-    public static String getTabParamFromUrl(PlaceManager placeManager) {
-        return getParamFromUrl(placeManager, NameTokens.adminGeoValuesPage, es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams.adminGeoValueParam);
-    }
-
     // ---------------------------------------------------------------------------
     // ADMIN
     // ---------------------------------------------------------------------------
 
-    // Annotation type
+    // Geo value tab admin location
 
     public static List<PlaceRequest> buildAbsoluteAdminPlaceRequest() {
         List<PlaceRequest> placeRequestHierarchy = new ArrayList<PlaceRequest>();
         placeRequestHierarchy.add(new PlaceRequest(NameTokens.adminPage));
+
         return placeRequestHierarchy;
     }
 
@@ -62,11 +59,12 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     public static List<PlaceRequest> buildAbsoluteGeoValueAdminPlaceRequest(String geoValueCode) {
-        List<PlaceRequest> placeRequestHierarchy = new ArrayList<PlaceRequest>();
-        placeRequestHierarchy.add(new PlaceRequest(NameTokens.adminPage).with(es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams.adminTabParam, NameTokens.adminGeoValuesPage)
-                .with(es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams.adminGeoValueParam, geoValueCode));
+        List<PlaceRequest> placeRequestHierarchy = buildAbsoluteAdminPlaceRequest();
+        placeRequestHierarchy.add(buildRelativeGeoValuePlaceRequest(geoValueCode));
         return placeRequestHierarchy;
     }
+
+    // Controller of related resource location
 
     public static List<PlaceRequest> buildAbsoluteResourcePlaceRequest(RelatedResourceDto relatedResourceDto) {
         if (relatedResourceDto != null) {

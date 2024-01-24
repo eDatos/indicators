@@ -300,21 +300,6 @@ public class DataSourcePanel extends VLayout {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_METAMAC) : null);
 
-                /*
-                 * String uuid = generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
-                 * ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
-                 * : null;
-                 * if (!StringUtils.isEmpty(uuid)) {
-                 * RelatedResourceDto geoValue = new RelatedResourceDto();
-                 * geoValue.setUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
-                 * ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
-                 * : null);
-                 * dataSourceDto.setGeographicalValue(geoValue);
-                 * } else {
-                 * dataSourceDto.setGeographicalValue(null);
-                 * }
-                 */
-
                 RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC);
                 geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
 
@@ -384,8 +369,6 @@ public class DataSourcePanel extends VLayout {
         if (dataStructureDto.getGeographicalValueDto() != null) {
             RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC);
             geoValue.setRelatedResource(geographicalValueDtoToRelatedResourceDto(dataStructureDto.getGeographicalValueDto()));
-            // generalEditionForm.setValue(DataSourceDS.GEO_VALUE_TEXT_METAMAC, InternationalStringUtils.getLocalisedString(dataStructureDto.getGeographicalValueDto().getTitle()));
-            // generalEditionForm.setValue(DataSourceDS.GEO_VALUE_UUID_METAMAC, dataStructureDto.getGeographicalValueDto().getUuid());
         }
 
         // Spatial variable

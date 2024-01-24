@@ -103,10 +103,9 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
     }
 
     @Override
-    public void selectTab(String tabName, String geoValue) {
+    public void selectTab(String tabName) {
         if (NameTokens.adminGeoValuesPage.equals(tabName)) {
             tabset.selectTab(geoValuesTab);
-            getUiHandlers().goToGeoValuesTab(geoValue);
 
         } else if (NameTokens.adminUnitMultipliersPage.equals(tabName)) {
             tabset.selectTab(unitMultipliersTab);

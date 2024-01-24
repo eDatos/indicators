@@ -120,8 +120,6 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         });
 
         RelatedResourceLinkItem geographicalValue = new RelatedResourceLinkItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue(), getCustomLinkItemNavigationClickHandler());
-
-        // ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
         geographicalValue.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -166,13 +164,6 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
         setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
 
-        // ABSOLUTE_METHOD set in setDataStructure method in DataSourcesPanel
-        // if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
-        // setValue(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceObsValue());
-        // } else {
-        // setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
-        // }
-
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
@@ -180,18 +171,8 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) getItem(DataSourceDS.GEO_VALUE_ITEM);
         geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
 
-        /*
-         * TODO EDATOS-3827 QUITAR
-         * setValue(DataSourceDS.GEO_VALUE, "");
-         * if (dataSourceDto.getGeographicalValue() != null) {
-         * setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(dataSourceDto.getGeographicalValue().getTitle()));
-         * }
-         */
-
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
-        // OTHER_VARIABLES set in setVariablesAndCategories method in ViewVariableCanvasItem
-        // ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
