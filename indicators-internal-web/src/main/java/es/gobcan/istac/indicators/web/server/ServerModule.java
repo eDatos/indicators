@@ -44,7 +44,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranulariti
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularityActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetHelpUrlActionHandler;
@@ -120,7 +119,6 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndic
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularityAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
@@ -249,7 +247,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
         bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
 
-        bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
