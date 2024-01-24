@@ -2070,6 +2070,7 @@ Application Indicators {
     	DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
 			- @TypeRelatedResourceEnum type required;
 			String granularityCode;
+			String granularityUuid;
 		}
 	}
 	

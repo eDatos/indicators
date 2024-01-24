@@ -338,6 +338,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
         target.setUuid(source.getUuid());
         target.setGranularityCode(source.getGranularity().getCode());
+        target.setGranularityUuid(source.getGranularity().getUuid());
         return target;
     }
 

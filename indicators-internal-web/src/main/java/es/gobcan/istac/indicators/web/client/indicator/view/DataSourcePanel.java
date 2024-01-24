@@ -1040,7 +1040,7 @@ public class DataSourcePanel extends VLayout {
 
         GeographicalSelectItem geoValue = (GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM);
         if (dataSourceDto.getGeographicalValue() != null) {
-            geoValue.setGeoGranularity(dataSourceDto.getGeographicalValue().getGranularityCode());
+            geoValue.setGeoGranularity(dataSourceDto.getGeographicalValue().getGranularityUuid());
             geoValue.setGeoValue(dataSourceDto.getGeographicalValue());
         } else {
             geoValue.setGeoGranularity(null);

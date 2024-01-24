@@ -183,7 +183,7 @@ public class QuantityForm extends BaseQuantityForm {
 
             GeographicalSelectItem geoValue = (GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM);
             if (quantityDto.getBaseLocation() != null) {
-                geoValue.setGeoGranularity(quantityDto.getBaseLocation().getGranularityCode());
+                geoValue.setGeoGranularity(quantityDto.getBaseLocation().getGranularityUuid());
                 geoValue.setGeoValue(quantityDto.getBaseLocation());
             } else {
                 geoValue.setGeoGranularity(null);
