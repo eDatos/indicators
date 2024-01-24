@@ -14,6 +14,8 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +59,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
 
             IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
@@ -93,7 +96,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
 
             // slides
             LOG.info("Computing slices ...");
-            Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instances, minTimeGranularity);
+            Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instances, minTimeGranularity, exceptions);
 
             if (slices.size() > 0) {
                 LOG.info("Building slices ...");
@@ -109,6 +112,8 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                 datasets.add(dataset);
                 LOG.info("Dataset has been built");
             }
+
+            ExceptionUtils.throwIfException(exceptions);
 
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
             return datasets;
