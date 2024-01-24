@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,11 +154,24 @@ public class DsplTransformer {
                 }
             }
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
-            ExceptionUtils.throwIfException(exceptions);
+            ExceptionUtils.throwIfException(clearDuplicatedExceptions(exceptions));
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
         }
+    }
+
+    private List<MetamacExceptionItem> clearDuplicatedExceptions(List<MetamacExceptionItem> exceptions) {
+        List<MetamacExceptionItem> notDuplicatedExceptions = new ArrayList<>();
+        HashMap<String, MetamacExceptionItem> exceptionsHash = new HashMap<>();
+        for (MetamacExceptionItem exception : exceptions) {
+            Serializable[] parameters = exception.getMessageParameters();
+            if (parameters.length == 4 && exceptionsHash.get(parameters[1]) == null) {
+                exceptionsHash.put((String) parameters[1], exception);
+                notDuplicatedExceptions.add(exception);
+            }
+        }
+        return notDuplicatedExceptions;
     }
 
     protected DsplInfo buildProviderInfo() throws MetamacException {
