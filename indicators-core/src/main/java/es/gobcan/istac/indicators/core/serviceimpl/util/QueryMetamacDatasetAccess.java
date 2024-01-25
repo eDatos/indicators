@@ -1,25 +1,18 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import java.util.*;
-
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
+
+import java.util.*;
 
 public class QueryMetamacDatasetAccess {
-
-    protected IndicatorsConfigurationService configurationService;
-
     public static String DATA_SEPARATOR = " | ";
 
-    //Lo ideal es que se cargara directamente desde configurationService.retrieveLanguageDefaultLocale().getLanguage()
-    public static String DATASET_REPOSITORY_LOCALE = "es";
-
-    private String OBSERVATION_ATTRIBUTE_ID = "ESTADO_OBSERVACION";
+    private final String OBSERVATION_ATTRIBUTE_ID = "ESTADO_OBSERVACION";
 
     // Data
     private String[] observations;
@@ -33,8 +26,6 @@ public class QueryMetamacDatasetAccess {
         initializeObservations(query);
         initializeObservationsAttributes(query);
         initializeDimensionsForData(query);
-
-        this.configurationService = configurationService;
     }
 
     public List<String> getDimensionsOrderedForData() {
@@ -141,7 +132,6 @@ public class QueryMetamacDatasetAccess {
         for (int i = 0; i < attributeValues.getValues().size(); i++) {
             for (int j = 0; j < dataArrayAttributes.length; j++) {
                 if (Objects.equals(attributeValues.getValues().get(i).getId(), dataArrayAttributes[j])) {
-//                    dataArrayAttributes[j] = attributeValues.getValues().get(i).getName().getTexts().get(0).getValue();
                     String localizedValue = getLocalizedValue(attributeValues.getValues().get(i));
                     // Asigna el valor en el locale correspondiente a dataArrayAttributes[j]
                     dataArrayAttributes[j] = localizedValue;
@@ -162,7 +152,7 @@ public class QueryMetamacDatasetAccess {
 
         // Recorre todos los LocalisedString en el ArrayList
         for (LocalisedString localisedString : texts) {
-            if (localisedString.getLang() != null && localisedString.getLang().equals(DATASET_REPOSITORY_LOCALE)) {
+            if (localisedString.getLang() != null && localisedString.getLang().equals(IndicatorsConstants.DATASET_REPOSITORY_LOCALE)) {
                 // Si la propiedad 'lang' es igual a DATASET_REPOSITORY_LOCALE, devuelve el valor
                 return localisedString.getValue();
             }

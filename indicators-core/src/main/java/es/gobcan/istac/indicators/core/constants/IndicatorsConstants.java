@@ -7,6 +7,7 @@ public class IndicatorsConstants {
 
     public static final String LOCALE_SPANISH                            = "es";
     public static final String LOCALE_ENGLISH                            = "en";
+    public static final String DATASET_REPOSITORY_LOCALE                 = "es";
     public static final String SECURITY_APPLICATION_ID                   = "GESTOR_INDICADORES";
 
     // Translations
