@@ -102,7 +102,7 @@ public class DsplTransformer {
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
         IndicatorsSystemVersion indicatorsSystemVersion;
         try {
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
@@ -154,7 +154,7 @@ public class DsplTransformer {
                 }
             }
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
-            ExceptionUtils.throwIfException(clearDuplicatedExceptions(exceptions));
+            ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
@@ -664,7 +664,7 @@ public class DsplTransformer {
     }
 
     protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity,
-            List<MetamacExceptionItem> exceptions) throws MetamacException {
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         Set<DsplSlice> slices = new HashSet<DsplSlice>();
 
         Set<GeographicalGranularity> granularitiesUsed = calculateGeoGranularitiesUsedInInstances(ctx, instances);

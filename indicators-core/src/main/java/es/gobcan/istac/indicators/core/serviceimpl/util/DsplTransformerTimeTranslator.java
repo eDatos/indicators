@@ -59,7 +59,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
     @Override
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
-            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
 
             IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
@@ -113,7 +113,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
                 LOG.info("Dataset has been built");
             }
 
-            ExceptionUtils.throwIfException(exceptions);
+            ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
 
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
             return datasets;
