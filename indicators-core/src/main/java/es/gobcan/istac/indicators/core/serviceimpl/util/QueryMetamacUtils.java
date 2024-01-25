@@ -310,7 +310,7 @@ public class QueryMetamacUtils {
                 DataContent dataContent = new DataContent();
                 dataContent.setDimCodes(dimCodes);
                 dataContent.setValue(queryMetamacDatasetAccess.getObservations()[index]);
-                //crodrod: habra que poner las distintas traducciones¿?¿?
+                //crodrod: tendria que venir con el lenguaje ya por defecto desde el QuerymetamacDataAccess
                  dataContent.setCommentDataNoteCell(queryMetamacDatasetAccess.getObservationsAttributes()[index]);
                 result.add(dataContent);
             } else {

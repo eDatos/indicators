@@ -141,8 +141,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
     public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
     public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
-
+    public static String                                  DATASET_REPOSITORY_LOCALE = "es";
     public static final Double                            ZERO_RANGE                = 1E-6;
     public static final int                               MAX_MEASURE_LENGTH        = 50;
 
@@ -165,7 +164,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private final ObjectMapper               mapper = new ObjectMapper();
 
-    public IndicatorsDataServiceImpl() {
+    public IndicatorsDataServiceImpl(){
     }
 
     @Override
@@ -1695,10 +1694,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
+    /**
+     * Retrieves observation values based on the provided data, data operation, variable codes, geographical information,
+     * and time value. Constructs an ObservationExtendedDto object with dimensions and attributes, handling special string
+     * cases and other values using helper methods.
+     *
+     * @param dataOperation      An object representing a data operation.
+     * @param data              An object representing data.
+     * @param varCodes           A map containing variable codes.
+     * @param geoValue           A string representing geographical information.
+     * @param originalTimeValue  A string representing the original time value.
+     * @return ObservationExtendedDto The constructed ObservationExtendedDto object.
+     * @throws MetamacException If there is an error populating the observation.
+     */
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
         //Atributo de la observacion
+
         String attributeText = content.getCommentDataNoteCell();
         String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
@@ -1712,28 +1725,53 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             value = "..";
         }
 
-        // Check for dotted notation
         if (isSpecialString(value) && attributeText.isEmpty()) {
-            String text = getSpecialStringMeaning(value);
-            // Some Special Strings may not need to create an attribute
-            if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
-            }
-            observation.setPrimaryMeasure(null);
+            handleSpecialString(observation, value);
         } else {
-            try {
-                String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
-                observation.setPrimaryMeasure(formattedValue);
-                if (!attributeText.isEmpty()) {
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attributeText));
-                }
-            } catch (NumberFormatException e) {
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
-            }
+            handleNonSpecialString(observation, value, attributeText, dataOperation);
         }
 
         return observation;
     }
+
+    /**
+     * Handles special string cases. Retrieves the meaning of the special string using getSpecialStringMeaning and adds
+     * attributes to the provided ObservationExtendedDto object. Sets the primary measure to null.
+     *
+     * @param observation An ObservationExtendedDto object to which special string attributes will be added.
+     * @param value       A string representing a special string.
+     */
+    private void handleSpecialString(ObservationExtendedDto observation, String value) {
+        String text = getSpecialStringMeaning(value);
+        if (!StringUtils.isEmpty(text)) {
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
+        }
+        observation.setPrimaryMeasure(null);
+    }
+
+    /**
+     * Handles other non-special string values. Parses and formats the value, sets the primary measure, and adds
+     * attributes to the provided ObservationExtendedDto object.
+     *
+     * @param observation    An ObservationExtendedDto object.
+     * @param value          A string representing the numeric value.
+     * @param attributeText  A string representing the attribute text.
+     * @param dataOperation  A DataOperation object.
+     * @throws MetamacException If there is an error formatting the value.
+     */
+    private void handleNonSpecialString(ObservationExtendedDto observation, String value, String attributeText, DataOperation dataOperation) throws MetamacException {
+        try {
+            String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
+            observation.setPrimaryMeasure(formattedValue);
+            if (!attributeText.isEmpty()) {
+                //crodrod: quizas la variable estatica DATASET_REPOSITORY_LOCALE deberia de ser precargada desde
+                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attributeText));
+            }
+        } catch (NumberFormatException e) {
+            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
+        }
+    }
+
 
     /*
      * Get value has to take a look to method type and methd
