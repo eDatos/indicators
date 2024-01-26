@@ -161,19 +161,6 @@ public class DsplTransformer {
         }
     }
 
-    private List<MetamacExceptionItem> clearDuplicatedExceptions(List<MetamacExceptionItem> exceptions) {
-        List<MetamacExceptionItem> notDuplicatedExceptions = new ArrayList<>();
-        HashMap<String, MetamacExceptionItem> exceptionsHash = new HashMap<>();
-        for (MetamacExceptionItem exception : exceptions) {
-            Serializable[] parameters = exception.getMessageParameters();
-            if (parameters.length == 4 && exceptionsHash.get(parameters[1]) == null) {
-                exceptionsHash.put((String) parameters[1], exception);
-                notDuplicatedExceptions.add(exception);
-            }
-        }
-        return notDuplicatedExceptions;
-    }
-
     protected DsplInfo buildProviderInfo() throws MetamacException {
         DsplInfo providerInfo = new DsplInfo();
 
