@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
@@ -79,8 +80,20 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsInternationalString(expected.getPercentageOf(), actual.getPercentageOf());
         assertEquals(expected.getBaseValue(), actual.getBaseValue());
         assertEquals(expected.getBaseTime(), actual.getBaseTime());
-        assertEquals(expected.getBaseLocation().getUuid(), actual.getBaseLocation().getUuid());
+        assertRelatedResource(expected.getBaseLocation(), actual.getBaseLocation());
         assertEquals(expected.getBaseQuantityIndicatorUuid(), actual.getBaseQuantityIndicatorUuid());
+    }
+
+    private static void assertRelatedResource(RelatedResourceDto expected, RelatedResourceDto actual) {
+        if (expected == null && actual == null) {
+            return;
+        } else {
+            assertEquals(expected.getUuid(), actual.getUuid());
+            assertEquals(expected.getCode(), actual.getCode());
+            assertEquals(expected.getGranularityUuid(), actual.getGranularityUuid());
+            assertEquals(expected.getType(), actual.getType());
+        }
+
     }
 
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
@@ -89,7 +102,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getTimeVariable(), actual.getTimeVariable());
         assertEquals(expected.getTimeValue(), actual.getTimeValue());
         assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());
-        assertEquals(expected.getGeographicalValue().getUuid(), actual.getGeographicalValue().getUuid());
+        assertRelatedResource(expected.getGeographicalValue(), actual.getGeographicalValue());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
             assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());

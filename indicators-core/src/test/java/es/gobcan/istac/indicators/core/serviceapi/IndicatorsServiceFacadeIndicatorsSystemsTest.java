@@ -4395,16 +4395,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), null);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(9, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(10, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
             assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(7).getUuid());
-            assertEquals("EN-LN_VARIABLE_ELEMENT", geographicalValues.get(7).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(8).getUuid());
+            assertEquals("EN-LN_VARIABLE_ELEMENT", geographicalValues.get(8).getCode());
         }
 
         // All, only 1 results
@@ -4416,7 +4416,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
@@ -4434,7 +4434,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
@@ -4511,8 +4511,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
             assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
-            assertEquals("FR", geographicalValues.get(1).getCode());
-            assertEquals("FR", geographicalValues.get(1).getOrder());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getOrder());
         }
     }
 

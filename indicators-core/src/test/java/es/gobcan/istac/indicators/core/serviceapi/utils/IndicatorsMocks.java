@@ -157,13 +157,14 @@ public class IndicatorsMocks extends MetamacMocks {
     /**
      * Mock a GeographicalValue as RelatedResourceDto
      */
-    public static RelatedResourceDto mockRelatedResourceAsGeographicalValue(String code, String geoValueUuid) {
+    public static RelatedResourceDto mockRelatedResourceAsGeographicalValue(String code, String geoValueUuid, String granularityUuid, String granularityCode) {
         RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
         relatedResourceDto.setCode(code);
         relatedResourceDto.setTitle(mockInternationalStringDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
         relatedResourceDto.setUuid(geoValueUuid);
-
+        relatedResourceDto.setGranularityCode(granularityCode);
+        relatedResourceDto.setGranularityUuid(granularityUuid);
         return relatedResourceDto;
     }
 

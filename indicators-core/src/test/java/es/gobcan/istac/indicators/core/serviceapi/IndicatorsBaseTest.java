@@ -131,6 +131,8 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               GEOGRAPHICAL_GRANULARITY_4                       = "4";
     protected static String               GEOGRAPHICAL_GRANULARITY_5                       = "5";
 
+    protected static String               GEOGRAPHICAL_GRANULARITY_1_CODE                  = "COUNTRIES";
+
     // Indicators
     protected static final String         INDICATOR1_UUID                                  = "Indicator-1";
     protected static final String         INDICATOR1_DS_GPE_UUID                           = "Indicator-1-v1-DataSource-1-GPE-TIME";
