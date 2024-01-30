@@ -43,23 +43,24 @@ import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
-    private static final String              ERROR  = "ERROR";
+    private static final String ERROR = "ERROR";
 
-    @Autowired
-    private RestApiLocator                   restApiLocator;
 
     @Autowired
-    private IndicatorsConfigurationService   configurationService;
+    private RestApiLocator restApiLocator;
 
     @Autowired
-    private TranslateExceptions              translateExceptions;
+    private IndicatorsConfigurationService configurationService;
+
+    @Autowired
+    private TranslateExceptions translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String                           indicatorsInternalWebUrlBase;
-    private String                           indicatorsApiInternalEndpointV10;
+    private String indicatorsInternalWebUrlBase;
+    private String indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
@@ -114,6 +115,27 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notice);
         } catch (MetamacException e) {
             logger.error("Error creating createExportDSPLNotification:", e);
+        }
+    }
+
+    @Override
+    public void createExportDSPLErrorNotification(String user, String code, MetamacException exception) {
+        createDSPLErrorBackgroundNotification(user, code, exception);
+    }
+
+    public void createDSPLErrorBackgroundNotification(String user, String actionCode, MetamacException exception) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+
+            Throwable localisedException = translateExceptions.translateException(locale, exception);
+            String localisedMessage = localisedException.getMessage();
+            String causeMessage = localisedException.getCause().getMessage();
+            localisedMessage = ERROR + " - " + localisedMessage + "\n\t";
+            localisedMessage += causeMessage;
+
+            createBackgroundNotificationWithoutResources(actionCode, localisedMessage);
+        } catch (MetamacException e) {
+            logger.error("Error creating createErrorBackgroundNotification:", e);
         }
     }
 

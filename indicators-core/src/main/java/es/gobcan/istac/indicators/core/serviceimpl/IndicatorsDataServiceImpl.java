@@ -627,7 +627,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             observations = findObservationsByDimensions(indicatorVersion, newConditions);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorInstance.getUuid());
+            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
         }
 
         return buildIndicatorsObservations(geoCodes, timeCodes, measureCodes, observations);
@@ -763,7 +764,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             observations = findObservationsExtendedByDimensions(indicatorVersion, newConditions);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorInstance.getUuid());
+            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
         }
 
         return buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations);
@@ -2078,12 +2080,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
         InternationalString title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
         InternationalString description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
-
-        List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
-
-        String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
-
-        getNoticesRestInternalService().createExportDSPLNotification(ctx.getUserId(), code, url, files);
+        try {
+            List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
+            String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;
+            getNoticesRestInternalService().createExportDSPLNotification(ctx.getUserId(), code, url, files);
+        } catch (MetamacException e) {
+            getNoticesRestInternalService().createExportDSPLErrorNotification(ctx.getUserId(), code, e);
+        }
 
         LOG.info("Finished execute export DSPL process");
     }

@@ -36,7 +36,7 @@ and q.deprecated_unit_fk = t.id_unit_tb_lis_quantities;
 -- PASO 3 Ejecutar las sentencias generadas en el paso anterior para cada entrada en tb_quantities en la bd indicators
 
 -- PASO 4 Asegurarse que todo ha ido bien
-select case when (select count(*) from tb_quantities where deprecated_unit_fk is not null and unit_fk is null) = 0 then 'PROCESO CORRECTO' else 'ERROR. HAY ENTRADAS QUE NO SE HAN MIGRADO' end 
+select case when (select count(*) from tb_quantities where deprecated_unit_fk is not null and unit_fk is null) = 0 then 'PROCESO CORRECTO' else 'ERROR. HAY ENTRADAS QUE NO SE HAN MIGRADO' end;
 
 -- PASO 5 HACER COMMIT;
 commit;
