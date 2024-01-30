@@ -43,24 +43,23 @@ import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 @Component(NoticesRestInternalService.BEAN_ID)
 public class NoticesRestInternalServiceImpl implements NoticesRestInternalService {
 
-    private static Logger logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
+    private static Logger                    logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
-    private static final String ERROR = "ERROR";
-
-
-    @Autowired
-    private RestApiLocator restApiLocator;
+    private static final String              ERROR  = "ERROR";
 
     @Autowired
-    private IndicatorsConfigurationService configurationService;
+    private RestApiLocator                   restApiLocator;
 
     @Autowired
-    private TranslateExceptions translateExceptions;
+    private IndicatorsConfigurationService   configurationService;
+
+    @Autowired
+    private TranslateExceptions              translateExceptions;
 
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
-    private String indicatorsInternalWebUrlBase;
-    private String indicatorsApiInternalEndpointV10;
+    private String                           indicatorsInternalWebUrlBase;
+    private String                           indicatorsApiInternalEndpointV10;
 
     @PostConstruct
     public void init() throws Exception {
@@ -133,7 +132,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             localisedMessage = ERROR + " - " + localisedMessage + "\n\t";
             localisedMessage += causeMessage;
 
-            createBackgroundNotificationWithoutResources(actionCode, localisedMessage);
+            createBackgroundNotificationWithoutResources(actionCode, localisedMessage, null);
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
