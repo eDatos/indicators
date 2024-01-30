@@ -30,10 +30,13 @@ public class DataGpe extends Data {
 
         setData(new HashMap<String, DataContent>());
         for (DataContent content : dataList) {
-
-            for (int spatialIndex : indexSpatialVariable) {
-                changeCodeOfCodelistForVariableElement(variableElementsByCodesOfCodelist, spatialIndex, content);
-
+            if (!indexSpatialVariable.isEmpty()) {
+                for (int spatialIndex : indexSpatialVariable) {
+                    changeCodeOfCodelistForVariableElement(variableElementsByCodesOfCodelist, spatialIndex, content);
+                    String key = StringUtils.join(content.getDimCodes(), "#");
+                    getData().put(key, content);
+                }
+            } else {
                 String key = StringUtils.join(content.getDimCodes(), "#");
                 getData().put(key, content);
             }
