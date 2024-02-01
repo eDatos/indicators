@@ -144,7 +144,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         } else if (message instanceof VariableElementAvro) {
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
         } else if (message instanceof CodelistAvro) {
-            indicatorsServiceFacade.populateIndicatorsDataFromGeographicalCodelist(ctx, message);
+            indicatorsServiceFacade.processCodelistKafkaMessage(ctx, message);
         }
     }
 

@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +30,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
@@ -57,6 +57,7 @@ import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageCodelistActionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
@@ -73,7 +74,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
-import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;;
 
 /**
  * Implementation of IndicatorsService
@@ -1429,20 +1430,59 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     }
 
+    @Override
+    public StreamMessageCodelistActionEnum getCodelistAction(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return null;
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES;
+        } else if (checkIsLastNumberVersionDefaultGranularityCodelist(codelistAvro)) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES;
+        }
+        return null;
+
+    }
+
     private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
         String territoryVariableUrnDefault = indicatorsConfigurationService.retrieveDefaultTerritoryVariable();
 
         return territoryVariableUrnDefault.equals(variableUrn);
     }
 
+    private boolean checkIsLastNumberVersionDefaultGranularityCodelist(CodelistAvro codelistAvro) throws MetamacException {
+
+        if (!Boolean.TRUE.equals(codelistAvro.getLatestVersionNumberPublic())) {
+            return false;
+        }
+
+        String geographicalGranularityCodelistUrnDefault = indicatorsConfigurationService.retrieveDefaultCodelistGeographicalGranularityUrn();
+
+        String[] paramsDefaultGranularityCodelist = splitUrnItemScheme(geographicalGranularityCodelistUrnDefault);
+        String agencyIdDefault = paramsDefaultGranularityCodelist[0];
+        String resourceIdDefault = paramsDefaultGranularityCodelist[1];
+
+        String[] paramsCodelistAvro = splitUrnItemScheme(codelistAvro.getUrn());
+        String agencyId = paramsCodelistAvro[0];
+        String resourceId = paramsCodelistAvro[1];
+
+        return agencyIdDefault.equals(agencyId) && resourceIdDefault.equals(resourceId);
+
+    }
+
     private boolean checkIsDefaultCodelistForGpeJsonStat(String codelistUrn) throws MetamacException {
         String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat();
 
-        String[] defaultParams = UrnUtils.splitUrnItemScheme(codelistDefault);
+        String[] defaultParams = splitUrnItemScheme(codelistDefault);
         String defaultAgencyId = defaultParams[0];
         String defaultResourceId = defaultParams[1];
 
-        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        String[] params = splitUrnItemScheme(codelistUrn);
         String agencyId = params[0];
         String resourceId = params[1];
 

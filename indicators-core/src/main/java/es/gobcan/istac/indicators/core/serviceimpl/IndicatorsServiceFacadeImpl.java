@@ -60,6 +60,7 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageCodelistActionEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -924,13 +925,32 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+    public void processCodelistKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        StreamMessageCodelistActionEnum streamMessageCodelistActionEnum = getIndicatorsService().getCodelistAction(ctx, message);
+
+        if (streamMessageCodelistActionEnum == null) {
+            return;
+        }
+
+        if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES.equals(streamMessageCodelistActionEnum)) {
+            populateIndicatorsDataFromGeographicalCodelist(ctx, message);
+        } else if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES.equals(streamMessageCodelistActionEnum)) {
+            updateGeopgraphicalGranularities(ctx, message);
+        }
+    }
+
+    private void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
 
         List<IndicatorVersion> indicatorsVersionToPopulate = this.getIndicatorsService().retrieveIndicatorsByGeographicalCodelist(ctx, message);
 
         this.getIndicatorsDataService().populateIndicatorsDataFromGeographicalCodelist(ctx, indicatorsVersionToPopulate);
+    }
+
+    private void updateGeopgraphicalGranularities(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        this.getIndicatorsSystemsService().updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(ctx, message);
     }
 
     @Override
