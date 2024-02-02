@@ -1071,49 +1071,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return geographicalGranularitysDto;
     }
 
-    @Override
-    public GeographicalGranularityDto createGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
-
-        // Service call
-        geographicalGranularity = getIndicatorsSystemsService().createGeographicalGranularity(ctx, geographicalGranularity);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-    }
-
-    @Override
-    public GeographicalGranularityDto updateGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
-
-        // Service call
-        geographicalGranularity = getIndicatorsSystemsService().updateGeographicalGranularity(ctx, geographicalGranularity);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-    }
-
-    @Override
-    public void deleteGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Service call
-        try {
-            getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
-        } catch (PersistenceException e) {
-            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
-        }
-    }
-
     // -------------------------------------------------------------------------------------------
     // UNIT MULTIPLIERS
     // -------------------------------------------------------------------------------------------

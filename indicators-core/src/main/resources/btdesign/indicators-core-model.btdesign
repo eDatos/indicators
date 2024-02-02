@@ -467,12 +467,6 @@ Application Indicators {
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Create a geographical granularity"
-	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Update a geographical granularity"
-	    	@GeographicalGranularityDto updateGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Delete a geographical granularity"
-	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
 	    	"Retrieves time granularities in the indicator"
