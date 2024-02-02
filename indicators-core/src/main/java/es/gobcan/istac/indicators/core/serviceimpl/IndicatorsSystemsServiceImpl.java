@@ -1669,7 +1669,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             return;
         }
 
-        Codes granularityCodes = srmRestExternalService.retrieveCodesOfCodelist(codelistAvro.getUrn(), true);
+        Codes granularityCodes = srmRestExternalService.retrieveCodesFromCodelist(codelistAvro.getUrn(), true);
 
         for (CodeResource granularityCode : granularityCodes.getCodes()) {
             GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().findGeographicalGranularityByCode(granularityCode.getId());
