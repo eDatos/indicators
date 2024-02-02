@@ -42,7 +42,7 @@ INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VE
 case when t.label_en is not null then '
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || replace(t.label_en, '''', '''''') || ''', ''en'', currval(''SEQ_I18NSTRS''), 1);' else '' end || '
 INSERT INTO tb_lis_geogr_granularities(id, code, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk)
- values (nextval(''SEQ_GEOGR_VALUES''),'
+ values (nextval(''SEQ_GEOGR_GRANULARITIES''),'
 || '''' || t.granularity_code || ''', '
 || 'null, '
 || 'null, '
