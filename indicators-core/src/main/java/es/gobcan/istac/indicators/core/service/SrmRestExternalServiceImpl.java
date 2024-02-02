@@ -13,7 +13,7 @@ public class SrmRestExternalServiceImpl implements SrmRestExternalService {
     private RestApiLocator restApiLocator;
 
     @Override
-    public Codes retrieveCodesOfCodelist(String codelistUrn, boolean retrieveLastVersion) {
+    public Codes retrieveCodesFromCodelist(String codelistUrn, boolean retrieveLastVersion) {
 
         String[] params = splitUrnItemScheme(codelistUrn);
         String agencyId = params[0];
