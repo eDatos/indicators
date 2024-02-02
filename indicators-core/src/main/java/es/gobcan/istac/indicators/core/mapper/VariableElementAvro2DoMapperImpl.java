@@ -24,6 +24,7 @@ public class VariableElementAvro2DoMapperImpl implements VariableElementAvro2DoM
         geographicalValue.setLongitude(variableElementAvro.getLongitud());
         geographicalValue.setTitle(RestMapper.getInternationalStringFromInternationalStringAvro(variableElementAvro.getShortName()));
         geographicalValue.setOrder(variableElementAvro.getCode());
+        geographicalValue.setVersion(0L);
 
         return geographicalValue;
     }
