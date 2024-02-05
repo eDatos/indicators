@@ -12,8 +12,7 @@ import java.util.*;
 public class QueryMetamacDatasetAccess {
     public static String DATA_SEPARATOR = " | ";
 
-    private final String OBSERVATION_ATTRIBUTE_ID = "ESTADO_OBSERVACION";
-
+    private final String ATTACHMENT_LEVEL = "PRIMARY_MEASURE";
     // Data
     private String[] observations;
 
@@ -82,39 +81,105 @@ public class QueryMetamacDatasetAccess {
     private void initializeObservationsAttributes(Query query) {
 
         List<DataAttribute> dataAttributes = query.getData().getAttributes().getAttributes();
-        String attributesString = null;
-        // Iteramos sobre los atributos para encontrar el valor del atributo deseado
-        for (DataAttribute dataAttribute : dataAttributes) {
-            if (OBSERVATION_ATTRIBUTE_ID.equals(dataAttribute.getId())) {
-                attributesString = dataAttribute.getValue();
-                break;  // Rompemos el bucle una vez que encontramos el atributo con el ID deseado y definido en OBSERVATION_ATTRIBUTE_ID
+        Attributes metadataAttributes  = query.getMetadata().getAttributes();
+        List<DataAttribute> dataAttributesDef = new ArrayList<>();
+
+        // Recoger solo los atributos con ATTACHMENT_LEVEL
+        for (Attribute metadataAttribute : metadataAttributes.getAttributes()) {
+            if (metadataAttribute.getAttachmentLevel().name().equals(ATTACHMENT_LEVEL)) {
+                for (DataAttribute dataAttribute : dataAttributes) {
+                    if (metadataAttribute.getId().equals(dataAttribute.getId())) {
+                        dataAttributesDef.add(dataAttribute);
+                        break;
+                    }
+                }
             }
         }
-        this.observationsAttributes = getObservationsAttributesDataValue(query, attributesString);
+
+        Map<String, String[]> attributesMap = new HashMap<>();
+
+        // Iterar sobre los atributos para encontrar el valor del atributo deseado
+        for (DataAttribute dataAttribute : dataAttributes) {
+            String attributeId = dataAttribute.getId();
+            for (DataAttribute dataAttributeDef : dataAttributesDef) {
+                if (dataAttributeDef.getId().equals(attributeId)) {
+                    attributesMap.put(attributeId, getObservationsAttributesDataValue(query, dataAttribute.getValue(), attributeId));
+                }
+
+            }
+        }
+
+        // Obtener el String[] consolidado
+        this.observationsAttributes = consolidateAttributesMap(attributesMap);
     }
 
     /**
-     * Get observations attributes data values based on attribute IDs and a string of attribute values.
+     * Consolidates the values from a Map of String arrays into a single String array.
      *
-     * @param query            The Query object containing the metadata¡
-     * @param attributesString A string of attribute values.
-     * @return An array of observations attributes data values.
+     * The resulting array contains concatenated entries in the format "key1:value1;key2:value3", where each entry
+     * corresponds to a position across the arrays associated with each key in the original map.
+     *
+     * Empty values are omitted from the entries, and the assumption is that all arrays associated with each key
+     * have the same length.
+     *
+     * @param attributesMap The Map containing String arrays associated with keys.
+     * @return A String array containing consolidated entries based on the values from attributesMap.
      */
-    private String[] getObservationsAttributesDataValue(Query query, String attributesString) {
+    private static String[] consolidateAttributesMap(Map<String, String[]> attributesMap) {
+        List<String> consolidatedList = new ArrayList<>();
+
+        // Obtener el largo de los arrays asociados a la primera clave (suponiendo que todos son del mismo largo)
+        int arrayLength = attributesMap.values().iterator().next().length;
+
+        // Iterar sobre cada posición de los arrays
+        for (int i = 0; i < arrayLength; i++) {
+            StringBuilder entry = new StringBuilder();
+
+            // Construir cada entrada
+            for (Map.Entry<String, String[]> entrySet : attributesMap.entrySet()) {
+                String key = entrySet.getKey();
+                String[] values = entrySet.getValue();
+                String value = (i < values.length) ? values[i] : "";
+
+                if (!value.isEmpty()) {
+                    entry.append(key).append(":").append(value);
+
+                    if (i < arrayLength - 1) {
+                        entry.append(";");
+                    }
+                }
+            }
+
+            consolidatedList.add(entry.toString());
+        }
+
+        return consolidatedList.toArray(new String[0]);
+    }
+
+    /**
+     * Gets observation attributes' data values based on attribute IDs and a string of attribute values.
+     *
+     * @param query            The Query object containing the metadata.
+     * @param attributesString A string of attribute values.
+     * @param attributeId      The ID of the attribute to process.
+     * @return An array of observation attributes' data values.
+     */
+    private String[] getObservationsAttributesDataValue(Query query, String attributesString, String attributeId) {
         String[] dataArrayAttributes = StringUtils.splitByWholeSeparatorPreserveAllTokens(attributesString, DATA_SEPARATOR);
-        processAttribute(query, dataArrayAttributes);
+        processAttribute(query, dataArrayAttributes, attributeId);
         return dataArrayAttributes;
     }
 
     /**
-     * Process a specific attribute, updating dataArrayAttributes based on attribute values.
+     * Processes a specific attribute, updating dataArrayAttributes based on attribute values.
      *
      * @param query               The Query object containing the metadata.
      * @param dataArrayAttributes An array of attribute values to be updated.
+     * @param attributeId         The ID of the attribute to process.
      */
-    private void processAttribute(Query query, String[] dataArrayAttributes) {
+    private void processAttribute(Query query, String[] dataArrayAttributes, String attributeId) {
         for (Attribute attribute : query.getMetadata().getAttributes().getAttributes()) {
-            if (Objects.equals(attribute.getId(), OBSERVATION_ATTRIBUTE_ID)) {
+            if (Objects.equals(attribute.getId(), attributeId)) {
                 updateDataArrayAttributes(attribute, dataArrayAttributes);
             }
         }
