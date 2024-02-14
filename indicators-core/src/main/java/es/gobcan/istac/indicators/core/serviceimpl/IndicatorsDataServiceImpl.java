@@ -1659,14 +1659,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         //acciones sobre el map de atributos
 
 
-        // Recorrer el mapa y obtener solo el valor String
-        AttributeDto obsConfAux = new AttributeDto();
-        for (Map.Entry<String, String[]> entry : observationsMapAttributes.entrySet()){
-            String key = entry.getKey();
-            String[] values = entry.getValue();
-            obsConfAux = new AttributeDto();
+        // Recorrer el mapa y obtener solo el valor del key
+        for (String key : observationsMapAttributes.keySet()) {
+            AttributeDto obsConfAux = new AttributeDto();
             obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-            obsConfAux.setAttributeId("OBS_"+key);
+            obsConfAux.setAttributeId("OBS_" + key);
             datasetRepoDto.getAttributes().add(obsConfAux);
         }
 
