@@ -18,12 +18,14 @@ import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
  */
 public class Data extends DataStructure {
 
-    private QueryEnvironmentEnum     queryEnvironmentEnum = null;
-    private String                   temporalValue        = null;
-    private GeographicalValueDto     geographicalValueDto = null;
+    private QueryEnvironmentEnum queryEnvironmentEnum = null;
+    private String temporalValue = null;
+    private GeographicalValueDto geographicalValueDto = null;
     private Map<String, DataContent> data;
-    private List<String>             variablesInOrder     = new ArrayList<String>();
-    
+
+    private Map<String, String[]> dataMapAttributes;
+    private List<String> variablesInOrder = new ArrayList<String>();
+
     @JsonProperty("data")
     public void processData(List<DataContent> dataList) {
         data = new HashMap<String, DataContent>();
@@ -32,7 +34,11 @@ public class Data extends DataStructure {
             data.put(key, content);
         }
     }
-    
+
+    public void processObservationsAttributes(Map<String, String[]> observationsMapAttributes) {
+        dataMapAttributes = observationsMapAttributes;
+    }
+
     /*
      * All variables must be selected
      */
@@ -47,7 +53,7 @@ public class Data extends DataStructure {
 
         for (String dim : variablesInOrder) {
             String dimCodeFound = null;
-            for (Entry<String,String> entry : dimensionsCodes.entrySet()) {
+            for (Entry<String, String> entry : dimensionsCodes.entrySet()) {
                 if (dim.equals(entry.getKey())) {
                     dimCodeFound = entry.getValue();
                 }
@@ -58,23 +64,23 @@ public class Data extends DataStructure {
                 return null;
             }
         }
-        String key = StringUtils.join(dimCodes,"#");
+        String key = StringUtils.join(dimCodes, "#");
         return data.get(key);
     }
-    
+
     public void setVariablesInOrder(List<String> variablesInOrder) {
         this.variablesInOrder = variablesInOrder;
     }
-    
+
     public boolean hasContVariable() {
         return !StringUtils.isBlank(getContVariable());
     }
-    
+
     public void setQueryEnvironmentEnum(QueryEnvironmentEnum queryEnvironmentEnum) {
         this.queryEnvironmentEnum = queryEnvironmentEnum;
     }
-    
-    
+
+
     public QueryEnvironmentEnum getQueryEnvironmentEnum() {
         return queryEnvironmentEnum;
     }
@@ -93,5 +99,9 @@ public class Data extends DataStructure {
 
     public void setGeographicalValueDto(GeographicalValueDto geographicalValueDto) {
         this.geographicalValueDto = geographicalValueDto;
+    }
+
+    public Map<String, String[]> getDataMapAttributes() {
+        return dataMapAttributes;
     }
 }

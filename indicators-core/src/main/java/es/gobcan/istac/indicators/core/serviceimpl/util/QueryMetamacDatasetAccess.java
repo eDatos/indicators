@@ -17,11 +17,11 @@ public class QueryMetamacDatasetAccess {
     private String[] observations;
 
     private String[] observationsAttributes;
+    private Map<String, String[]> observationsMapAttributes;
     private List<String> dimensionsOrderedForData;
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
 
     public QueryMetamacDatasetAccess(Query query) throws MetamacException {
-
         initializeObservations(query);
         initializeObservationsAttributes(query);
         initializeDimensionsForData(query);
@@ -42,6 +42,11 @@ public class QueryMetamacDatasetAccess {
     public String[] getObservationsAttributes() {
         return observationsAttributes;
     }
+
+    public Map<String, String[]> getObservationsMapAttributes() {
+        return observationsMapAttributes;
+    }
+
 
     /**
      * Init observations values
@@ -81,7 +86,7 @@ public class QueryMetamacDatasetAccess {
     private void initializeObservationsAttributes(Query query) {
 
         List<DataAttribute> dataAttributes = query.getData().getAttributes().getAttributes();
-        Attributes metadataAttributes  = query.getMetadata().getAttributes();
+        Attributes metadataAttributes = query.getMetadata().getAttributes();
         List<DataAttribute> dataAttributesDef = new ArrayList<>();
 
         // Recoger solo los atributos con ATTACHMENT_LEVEL
@@ -108,17 +113,18 @@ public class QueryMetamacDatasetAccess {
 
             }
         }
-
+        this.observationsMapAttributes = attributesMap;
+        
         // Obtener el String[] consolidado
         this.observationsAttributes = consolidateAttributesMap(attributesMap);
     }
 
     /**
      * Consolidates the values from a Map of String arrays into a single String array.
-     *
+     * <p>
      * The resulting array contains concatenated entries in the format "key1:value1;key2:value3", where each entry
      * corresponds to a position across the arrays associated with each key in the original map.
-     *
+     * <p>
      * Empty values are omitted from the entries, and the assumption is that all arrays associated with each key
      * have the same length.
      *

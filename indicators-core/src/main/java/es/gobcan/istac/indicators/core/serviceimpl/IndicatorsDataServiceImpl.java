@@ -314,7 +314,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber);
+            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber, getObservationsMapAttributes(dataCache, dataOps));
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
@@ -339,6 +339,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
             }
         }
+    }
+
+    public Map<String, String[]> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+        return dataCache.get(dataOps.get(0).getDataGpeUuid()).getDataMapAttributes();
     }
 
     @Override
@@ -1631,6 +1635,53 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return datasetRepoDto;
     }
+
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, Map<String, String[]> observationsMapAttributes) throws MetamacException {
+        DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
+        datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
+        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
+        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+
+        AttributeDto code = new AttributeDto();
+        code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        code.setAttributeId(CODE_ATTRIBUTE);
+
+
+        AttributeDto obsConf = new AttributeDto();
+        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+
+        datasetRepoDto.getAttributes().add(code);
+        datasetRepoDto.getAttributes().add(obsConf);
+
+
+        //acciones sobre el map de atributos
+
+
+        // Recorrer el mapa y obtener solo el valor String
+        AttributeDto obsConfAux = new AttributeDto();
+        for (Map.Entry<String, String[]> entry : observationsMapAttributes.entrySet()){
+            String key = entry.getKey();
+            String[] values = entry.getValue();
+            obsConfAux = new AttributeDto();
+            obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConfAux.setAttributeId("OBS_"+key);
+            datasetRepoDto.getAttributes().add(obsConfAux);
+        }
+
+        List<String> languages = new ArrayList<String>();
+        languages.add(DATASET_REPOSITORY_LOCALE);
+        datasetRepoDto.setLanguages(languages);
+
+        try {
+            datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
+        }
+        return datasetRepoDto;
+    }
+
 
     /**
      * Retrieves observation values based on the provided data, data operation, variable codes, geographical information,
