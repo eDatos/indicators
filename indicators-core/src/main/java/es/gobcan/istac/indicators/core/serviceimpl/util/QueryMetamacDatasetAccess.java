@@ -11,15 +11,12 @@ import java.util.*;
 
 public class QueryMetamacDatasetAccess {
     public static String DATA_SEPARATOR = " | ";
-
-    private final String ATTACHMENT_LEVEL = "PRIMARY_MEASURE";
-    // Data
     private String[] observations;
-
-    private String[] observationsAttributes;
-    private Map<String, String[]> observationsMapAttributes;
+    private List<DataAttribute> observationsAttributes;
     private List<String> dimensionsOrderedForData;
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
+    private List<String> attributesMetadataMap;
+
 
     public QueryMetamacDatasetAccess(Query query) throws MetamacException {
         initializeObservations(query);
@@ -39,14 +36,17 @@ public class QueryMetamacDatasetAccess {
         return observations;
     }
 
-    public String[] getObservationsAttributes() {
-        return observationsAttributes;
+    public List<String> getObservationsAttributes(int index) {
+        List<String> attributeValues = new ArrayList<>();
+        for (DataAttribute attribute : observationsAttributes) {
+            attributeValues.add(StringUtils.splitByWholeSeparatorPreserveAllTokens(attribute.getValue(), DATA_SEPARATOR)[index]);
+        }
+        return attributeValues;
     }
 
-    public Map<String, String[]> getObservationsMapAttributes() {
-        return observationsMapAttributes;
+    public List<String> getAttributesMetadataMap() {
+        return attributesMetadataMap;
     }
-
 
     /**
      * Init observations values
@@ -78,20 +78,15 @@ public class QueryMetamacDatasetAccess {
         return StringUtils.splitByWholeSeparatorPreserveAllTokens(data, DATA_SEPARATOR);
     }
 
-    /**
-     * Initialize observations attributes values.
-     *
-     * @param query The Query object containing the data and metadata.
-     */
     private void initializeObservationsAttributes(Query query) {
-
         List<DataAttribute> dataAttributes = query.getData().getAttributes().getAttributes();
         Attributes metadataAttributes = query.getMetadata().getAttributes();
+
+        this.attributesMetadataMap = new ArrayList<>();
         List<DataAttribute> dataAttributesDef = new ArrayList<>();
 
-        // Recoger solo los atributos con ATTACHMENT_LEVEL
         for (Attribute metadataAttribute : metadataAttributes.getAttributes()) {
-            if (metadataAttribute.getAttachmentLevel().name().equals(ATTACHMENT_LEVEL)) {
+            if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
                 for (DataAttribute dataAttribute : dataAttributes) {
                     if (metadataAttribute.getId().equals(dataAttribute.getId())) {
                         dataAttributesDef.add(dataAttribute);
@@ -100,67 +95,17 @@ public class QueryMetamacDatasetAccess {
                 }
             }
         }
-
-        Map<String, String[]> attributesMap = new HashMap<>();
-
-        // Iterar sobre los atributos para encontrar el valor del atributo deseado
-        for (DataAttribute dataAttribute : dataAttributes) {
-            String attributeId = dataAttribute.getId();
-            for (DataAttribute dataAttributeDef : dataAttributesDef) {
-                if (dataAttributeDef.getId().equals(attributeId)) {
-                    attributesMap.put(attributeId, getObservationsAttributesDataValue(query, dataAttribute.getValue(), attributeId));
-                }
-
-            }
-        }
-        this.observationsMapAttributes = attributesMap;
-        
-        // Obtener el String[] consolidado
-        this.observationsAttributes = consolidateAttributesMap(attributesMap);
-    }
-
-    /**
-     * Consolidates the values from a Map of String arrays into a single String array.
-     * <p>
-     * The resulting array contains concatenated entries in the format "key1:value1;key2:value3", where each entry
-     * corresponds to a position across the arrays associated with each key in the original map.
-     * <p>
-     * Empty values are omitted from the entries, and the assumption is that all arrays associated with each key
-     * have the same length.
-     *
-     * @param attributesMap The Map containing String arrays associated with keys.
-     * @return A String array containing consolidated entries based on the values from attributesMap.
-     */
-    private static String[] consolidateAttributesMap(Map<String, String[]> attributesMap) {
-        List<String> consolidatedList = new ArrayList<>();
-
-        // Obtener el largo de los arrays asociados a la primera clave (suponiendo que todos son del mismo largo)
-        int arrayLength = attributesMap.values().iterator().next().length;
-
-        // Iterar sobre cada posición de los arrays
-        for (int i = 0; i < arrayLength; i++) {
-            StringBuilder entry = new StringBuilder();
-
-            // Construir cada entrada
-            for (Map.Entry<String, String[]> entrySet : attributesMap.entrySet()) {
-                String key = entrySet.getKey();
-                String[] values = entrySet.getValue();
-                String value = (i < values.length) ? values[i] : "";
-
-                if (!value.isEmpty()) {
-                    entry.append(key).append(":").append(value);
-
-                    if (i < arrayLength - 1) {
-                        entry.append(";");
-                    }
-                }
-            }
-
-            consolidatedList.add(entry.toString());
+        for (DataAttribute dataAttributeDef : dataAttributesDef) {
+            this.attributesMetadataMap.add(dataAttributeDef.getId());
+            dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(),dataAttributeDef.getId()));
         }
 
-        return consolidatedList.toArray(new String[0]);
+
+
+        this.observationsAttributes = dataAttributesDef;
     }
+
+
 
     /**
      * Gets observation attributes' data values based on attribute IDs and a string of attribute values.
@@ -170,10 +115,10 @@ public class QueryMetamacDatasetAccess {
      * @param attributeId      The ID of the attribute to process.
      * @return An array of observation attributes' data values.
      */
-    private String[] getObservationsAttributesDataValue(Query query, String attributesString, String attributeId) {
+    private String getObservationsAttributesDataValue(Query query, String attributesString, String attributeId) {
         String[] dataArrayAttributes = StringUtils.splitByWholeSeparatorPreserveAllTokens(attributesString, DATA_SEPARATOR);
         processAttribute(query, dataArrayAttributes, attributeId);
-        return dataArrayAttributes;
+        return String.join(DATA_SEPARATOR, dataArrayAttributes);
     }
 
     /**
@@ -199,12 +144,10 @@ public class QueryMetamacDatasetAccess {
      */
     private void updateDataArrayAttributes(Attribute attribute, String[] dataArrayAttributes) {
         EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
-
         for (int i = 0; i < attributeValues.getValues().size(); i++) {
             for (int j = 0; j < dataArrayAttributes.length; j++) {
                 if (Objects.equals(attributeValues.getValues().get(i).getId(), dataArrayAttributes[j])) {
                     String localizedValue = getLocalizedValue(attributeValues.getValues().get(i));
-                    // Asigna el valor en el locale correspondiente a dataArrayAttributes[j]
                     dataArrayAttributes[j] = localizedValue;
                 }
             }
@@ -220,7 +163,6 @@ public class QueryMetamacDatasetAccess {
      */
     private String getLocalizedValue(EnumeratedAttributeValue attributeValue) {
         List<LocalisedString> texts = attributeValue.getName().getTexts();
-
         // Recorre todos los LocalisedString en el ArrayList
         for (LocalisedString localisedString : texts) {
             if (localisedString.getLang() != null && localisedString.getLang().equals(IndicatorsConstants.DATASET_REPOSITORY_LOCALE)) {
@@ -228,7 +170,6 @@ public class QueryMetamacDatasetAccess {
                 return localisedString.getValue();
             }
         }
-
         // Si no se encuentra DATASET_REPOSITORY_LOCALE, devuelve null
         return null;
     }

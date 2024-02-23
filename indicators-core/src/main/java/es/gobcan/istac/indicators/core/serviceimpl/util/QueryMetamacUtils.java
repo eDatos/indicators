@@ -113,7 +113,7 @@ public class QueryMetamacUtils {
         // Data
         target.processData(extractData(query, queryMetamacDatasetAccess));
 
-        target.processObservationsAttributes(queryMetamacDatasetAccess.getObservationsMapAttributes());
+        target.processObservationsAttributesMap(queryMetamacDatasetAccess.getAttributesMetadataMap());
 
         // VariablesInOrder
         target.setVariablesInOrder(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
@@ -313,8 +313,7 @@ public class QueryMetamacUtils {
                 DataContent dataContent = new DataContent();
                 dataContent.setDimCodes(dimCodes);
                 dataContent.setValue(queryMetamacDatasetAccess.getObservations()[index]);
-                //crodrod: tendria que venir con el lenguaje ya por defecto desde el QuerymetamacDataAccess
-                 dataContent.setCommentDataNoteCell(queryMetamacDatasetAccess.getObservationsAttributes()[index]);
+                dataContent.setAttributesObservations(queryMetamacDatasetAccess.getObservationsAttributes(index));
                 result.add(dataContent);
             } else {
                 String dimensionId = queryMetamacDatasetAccess.getDimensionsOrderedForData().get(dimensionPosition + 1);

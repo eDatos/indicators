@@ -19,6 +19,9 @@ public class DataContent {
     @JsonProperty
     private List<String> dimCodes;
 
+    //todo crear variable mapa atributes
+    private List<String> attributesObservations;
+
     public String getValue() {
         return value;
     }
@@ -39,6 +42,14 @@ public class DataContent {
         return commentDataNoteCell;
     }
 
+    public List<String> getAttributesObservations() {
+        return attributesObservations;
+    }
+
+    public void setAttributesObservations(List<String> attributesObservations) {
+        this.attributesObservations = attributesObservations;
+    }
+
     public void setCommentDataNoteCell(String commentDataNoteCell) {
         this.commentDataNoteCell = commentDataNoteCell;
     }
@@ -50,6 +61,7 @@ public class DataContent {
     public void setDimCodes(List<String> dimCodes) {
         this.dimCodes = dimCodes;
     }
+
 
 }
 

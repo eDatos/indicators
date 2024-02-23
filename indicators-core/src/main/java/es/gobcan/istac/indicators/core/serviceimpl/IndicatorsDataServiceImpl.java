@@ -38,11 +38,15 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -341,7 +345,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    public Map<String, String[]> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+    public List<String> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
         return dataCache.get(dataOps.get(0).getDataGpeUuid()).getDataMapAttributes();
     }
 
@@ -1455,6 +1459,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private List<ObservationExtendedDto> createObservationsFromDataOperationJson(DataOperation dataOperation, Data data, List<String> geoValues, List<String> timeValues) throws MetamacException {
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+
         for (String geoVal : geoValues) {
             for (String timeVal : timeValues) {
                 // Map for querying the data from the json
@@ -1472,10 +1477,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
 
                 ObservationExtendedDto observation = getObservationValue(dataOperation, data, varCodesForQueryJson, geoVal, timeVal);
-
                 checkMaxObservationValueLength(dataOperation, observation);
-
                 observations.add(observation);
+
             }
         }
         return observations;
@@ -1636,7 +1640,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
-    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, Map<String, String[]> observationsMapAttributes) throws MetamacException {
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, List<String> observationsMapAttributes) throws MetamacException {
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
         datasetRepoDto.getDimensions().add(GEO_DIMENSION);
@@ -1657,13 +1661,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
 
         //acciones sobre el map de atributos
-
-
         // Recorrer el mapa y obtener solo el valor del key
-        for (String key : observationsMapAttributes.keySet()) {
+        for (String key : observationsMapAttributes) {
             AttributeDto obsConfAux = new AttributeDto();
             obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-            obsConfAux.setAttributeId("OBS_" + key);
+            obsConfAux.setAttributeId(key);
             datasetRepoDto.getAttributes().add(obsConfAux);
         }
 
@@ -1697,8 +1699,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
         //Atributo de la observacion
-
-        String attributeText = content.getCommentDataNoteCell();
         String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
@@ -1711,22 +1711,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             value = "..";
         }
 
-        if (isSpecialString(value) && attributeText.isEmpty()) {
+        if (isSpecialString(value)) {
             handleSpecialString(observation, value);
         } else {
-            handleNonSpecialString(observation, value, attributeText, dataOperation);
+            List<String> observationKeys = data.getDataMapAttributes();
+            for (int i = 0; i < observationKeys.size(); i++) {
+                String observationKey = observationKeys.get(i);
+                handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
+            }
         }
 
         return observation;
     }
 
-    /**
-     * Handles special string cases. Retrieves the meaning of the special string using getSpecialStringMeaning and adds
-     * attributes to the provided ObservationExtendedDto object. Sets the primary measure to null.
-     *
-     * @param observation An ObservationExtendedDto object to which special string attributes will be added.
-     * @param value       A string representing a special string.
-     */
     private void handleSpecialString(ObservationExtendedDto observation, String value) {
         String text = getSpecialStringMeaning(value);
         if (!StringUtils.isEmpty(text)) {
@@ -1735,24 +1732,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.setPrimaryMeasure(null);
     }
 
-    /**
-     * Handles other non-special string values. Parses and formats the value, sets the primary measure, and adds
-     * attributes to the provided ObservationExtendedDto object.
-     *
-     * @param observation   An ObservationExtendedDto object.
-     * @param value         A string representing the numeric value.
-     * @param attributeText A string representing the attribute text.
-     * @param dataOperation A DataOperation object.
-     * @throws MetamacException If there is an error formatting the value.
-     */
-    private void handleNonSpecialString(ObservationExtendedDto observation, String value, String attributeText, DataOperation dataOperation) throws MetamacException {
+    private void handleNonSpecialString(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition) throws MetamacException {
         try {
             String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
             observation.setPrimaryMeasure(formattedValue);
-            if (!attributeText.isEmpty()) {
-                //crodrod: quizas la variable estatica DATASET_REPOSITORY_LOCALE deberia de ser precargada desde
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attributeText));
-            }
+            String observationEntry = content.getAttributesObservations().get(observationPosition);
+            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+
         } catch (NumberFormatException e) {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
         }
