@@ -499,18 +499,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private Map<String, AttributeType> setObservationAttributes(ObservationExtendedDto observationDto) throws MetamacException {
+        Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
         for (AttributeInstanceObservationDto codeAttributeBasicDto : observationDto.getAttributes()) {
-            if (codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.OBS_CONF.getName())) {
+            if (!codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.CODE.getName())
+                    && !codeAttributeBasicDto.getValue().getLocalisedLabel(metadataProperties.getDefaultInternationalizationLanguage()).isEmpty()) {
                 AttributeType unitMultiplierAttribute = new AttributeType();
-                unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_OBS_CONF);
+                unitMultiplierAttribute.setCode(codeAttributeBasicDto.getAttributeId());
                 unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(codeAttributeBasicDto.getValue(), metadataProperties.getDefaultInternationalizationLanguage()));
-
-                Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
-                observationAttributes.put(PROP_ATTRIBUTE_OBS_CONF, unitMultiplierAttribute);
-                return observationAttributes;
+                observationAttributes.put(codeAttributeBasicDto.getAttributeId(), unitMultiplierAttribute);
             }
         }
-        return null;
+        return observationAttributes;
     }
 
     private QuantityType quantityDoToBaseType(final Quantity source) throws MetamacException {
