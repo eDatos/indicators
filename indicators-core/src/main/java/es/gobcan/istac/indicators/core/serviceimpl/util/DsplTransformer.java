@@ -101,7 +101,7 @@ public class DsplTransformer {
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
         IndicatorsSystemVersion indicatorsSystemVersion;
         try {
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
@@ -118,46 +118,42 @@ public class DsplTransformer {
 
             List<DsplDataset> datasets = new ArrayList<DsplDataset>();
             for (IstacTimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
-                try {
-                    LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
+                LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
 
-                    List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
+                List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
 
-                    // topics
-                    LOG.info("Building topics with granularity " + timeGranularity + " ...");
-                    Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
+                // topics
+                LOG.info("Building topics with granularity " + timeGranularity + " ...");
+                Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
 
-                    // concepts
-                    LOG.info("Building concepts with granularity " + timeGranularity + " ...");
-                    List<DsplConcept> concepts = new ArrayList<DsplConcept>();
-                    concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
-                    List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
-                    concepts.addAll(metrics);
+                // concepts
+                LOG.info("Building concepts with granularity " + timeGranularity + " ...");
+                List<DsplConcept> concepts = new ArrayList<DsplConcept>();
+                concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
+                List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
+                concepts.addAll(metrics);
 
-                    // slides
-                    LOG.info("Computing slices with granularity " + timeGranularity + " ...");
-                    Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
+                // slides
+                LOG.info("Computing slices with granularity " + timeGranularity + " ...");
+                Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity, exceptions);
 
-                    if (slices.size() > 0) {
-                        LOG.info("Building slices with granularity " + timeGranularity + " ...");
-                        DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
-                        DsplInfo providerInfo = buildProviderInfo();
-                        String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
-                        DsplDataset dataset = new DsplDataset(datasetId, datasetInfo, providerInfo);
+                if (slices.size() > 0) {
+                    LOG.info("Building slices with granularity " + timeGranularity + " ...");
+                    DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
+                    DsplInfo providerInfo = buildProviderInfo();
+                    String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
+                    DsplDataset dataset = new DsplDataset(datasetId, datasetInfo, providerInfo);
 
-                        dataset.addConcepts(concepts);
-                        dataset.addTopics(topics);
-                        dataset.addSlices(slices);
+                    dataset.addConcepts(concepts);
+                    dataset.addTopics(topics);
+                    dataset.addSlices(slices);
 
-                        datasets.add(dataset);
-                        LOG.info("Dataset with granularity " + timeGranularity + " has been built");
-                    }
-                } catch (MetamacException e) {
-                    exceptions.addAll(e.getExceptionItems());
+                    datasets.add(dataset);
+                    LOG.info("Dataset with granularity " + timeGranularity + " has been built");
                 }
             }
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
-            ExceptionUtils.throwIfException(exceptions);
+            ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
@@ -653,7 +649,8 @@ public class DsplTransformer {
         }
     }
 
-    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         Set<DsplSlice> slices = new HashSet<DsplSlice>();
 
         Set<GeographicalGranularity> granularitiesUsed = calculateGeoGranularitiesUsedInInstances(ctx, instances);
@@ -665,7 +662,7 @@ public class DsplTransformer {
                     instancesUsingGeoGranularity.add(instance);
                 }
             }
-            DsplSlice slice = createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+            DsplSlice slice = createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
             if (slice != null) {
                 slices.add(slice);
             }
@@ -678,9 +675,9 @@ public class DsplTransformer {
         return granularities.contains(geoGranularity);
     }
 
-    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
-            throws MetamacException {
-        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
+        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
 
         // No data
         if (table.getData().getColumnNames().size() == 0) {
@@ -703,22 +700,22 @@ public class DsplTransformer {
         return slice;
     }
 
-    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
-            throws MetamacException {
+    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         String sliceId = getIdForSlice(geoGranularity, timeGranularity);
         DsplTable table = new DsplTable(getTableIdForSlice(sliceId));
 
-        DsplData data = createTableDataForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+        DsplData data = createTableDataForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
         table.setData(data);
 
         return table;
     }
 
-    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances)
-            throws MetamacException {
+    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         DsplData data = new DsplData();
 
-        Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity);
+        Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity, exceptions);
         data.setRows(rows);
 
         // Set data order, first geo dim then time
@@ -730,17 +727,21 @@ public class DsplTransformer {
         return data;
     }
     private Set<Row> createTableDataRowsForSliceInIndicatorsInstances(ServiceContext ctx, Set<IndicatorInstance> instances, GeographicalGranularity geoGranularity,
-            IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+            IstacTimeGranularityEnum timeGranularity, Set<MetamacExceptionItem> exceptions) throws MetamacException {
         Set<String> geoCodes = new HashSet<String>();
         Set<String> timeCodes = new HashSet<String>();
 
         Map<String, DsplInstanceData> dataByInstanceUuid = new HashMap<String, DsplInstanceData>();
 
         for (IndicatorInstance instance : instances) {
-            DsplInstanceData data = buildInstanceData(ctx, instance, geoGranularity, timeGranularity);
-            dataByInstanceUuid.put(instance.getUuid(), data);
-            geoCodes.addAll(data.getGeoCodes());
-            timeCodes.addAll(data.getTimeCodes());
+            try {
+                DsplInstanceData data = buildInstanceData(ctx, instance, geoGranularity, timeGranularity);
+                dataByInstanceUuid.put(instance.getUuid(), data);
+                geoCodes.addAll(data.getGeoCodes());
+                timeCodes.addAll(data.getTimeCodes());
+            } catch (MetamacException e) {
+                exceptions.addAll(e.getExceptionItems());
+            }
         }
 
         Set<Row> rows = new HashSet<DsplData.Row>();
