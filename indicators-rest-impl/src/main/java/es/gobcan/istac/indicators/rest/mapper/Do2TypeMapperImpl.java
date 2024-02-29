@@ -499,17 +499,29 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private Map<String, AttributeType> setObservationAttributes(ObservationExtendedDto observationDto) throws MetamacException {
-        Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
+        Map<String, AttributeType> observationAttributes = new LinkedHashMap<>();
+
         for (AttributeInstanceObservationDto codeAttributeBasicDto : observationDto.getAttributes()) {
-            if (!codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.CODE.getName())
-                    && !codeAttributeBasicDto.getValue().getLocalisedLabel(metadataProperties.getDefaultInternationalizationLanguage()).isEmpty()) {
-                AttributeType unitMultiplierAttribute = new AttributeType();
-                unitMultiplierAttribute.setCode(codeAttributeBasicDto.getAttributeId());
-                unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(codeAttributeBasicDto.getValue(), metadataProperties.getDefaultInternationalizationLanguage()));
-                observationAttributes.put(codeAttributeBasicDto.getAttributeId(), unitMultiplierAttribute);
+            if (isAttributeValid(codeAttributeBasicDto)) {
+                AttributeType attributeType = createAttributeType(codeAttributeBasicDto);
+                observationAttributes.put(codeAttributeBasicDto.getAttributeId(), attributeType);
             }
         }
-        return observationAttributes;
+
+        return observationAttributes.isEmpty() ? null : observationAttributes;
+    }
+
+    private boolean isAttributeValid(AttributeInstanceObservationDto attributeDto) {
+        String attributeId = attributeDto.getAttributeId();
+        String valueLabel = attributeDto.getValue().getLocalisedLabel(metadataProperties.getDefaultInternationalizationLanguage());
+        return !attributeId.equals(IndicatorDataAttributeTypeEnum.CODE.getName()) && !valueLabel.isEmpty();
+    }
+
+    private AttributeType createAttributeType(AttributeInstanceObservationDto attributeDto) {
+        AttributeType attributeType = new AttributeType();
+        attributeType.setCode(attributeDto.getAttributeId());
+        attributeType.setValue(MapperUtil.getLocalisedLabel(attributeDto.getValue(), metadataProperties.getDefaultInternationalizationLanguage()));
+        return attributeType;
     }
 
     private QuantityType quantityDoToBaseType(final Quantity source) throws MetamacException {
