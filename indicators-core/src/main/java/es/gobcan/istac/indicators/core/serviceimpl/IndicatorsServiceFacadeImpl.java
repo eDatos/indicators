@@ -739,6 +739,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public void deleteTemporalFile(ServiceContext ctx, String temporalFile) throws MetamacException {
+        getIndicatorsService().deleteTemporalFile(ctx, temporalFile);
+    }
+
+    @Override
     public void disableNotifyPopulationErrors(ServiceContext ctx, String indicatorVersionUuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
