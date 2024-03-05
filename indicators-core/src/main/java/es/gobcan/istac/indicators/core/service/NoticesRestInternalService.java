@@ -25,6 +25,7 @@ public interface NoticesRestInternalService {
     void createIndicatorStreamMessageErrorBackgroundNotification(IndicatorVersion indicatorVersion);
     void createIndicatorsSystemStreamMessageErrorBackgroundNotification(IndicatorsSystemVersion indicatorsSystemVersion);
     void createExportDSPLNotification(String user, String code, String url, List<String> files);
+    void createExportDSPLErrorNotification(String user, String code,  MetamacException exception);
     void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception);
     void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception);
 }

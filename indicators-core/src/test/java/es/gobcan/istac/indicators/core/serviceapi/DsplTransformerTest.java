@@ -126,8 +126,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
             assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("Sistema de indicadores 2", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
 

@@ -51,7 +51,6 @@ public class DataSourceMainFormLayout extends InternationalMainFormLayout {
 
         addEditionCanvas(label);
 
-        toolStrip.addSeparator();
         toolStrip.addButton(editQueryButton);
     }
 
