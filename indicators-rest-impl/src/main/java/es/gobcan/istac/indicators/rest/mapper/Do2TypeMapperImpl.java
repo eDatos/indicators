@@ -14,7 +14,12 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -41,17 +46,20 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.domain.TranslationRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
+import es.gobcan.istac.indicators.rest.clients.StatisticalResourceRestExternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
@@ -87,38 +95,41 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks                                                                                     uriLinks;
+    UriLinks uriLinks;
 
     @Autowired
-    private TranslationRepository                                                                translationRepository;
+    private TranslationRepository translationRepository;
 
-    private static ThreadLocal<Map<String, Map<String, Object>>>                                 requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache         = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                                                           @Override
-                                                                                                                                           protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                                                               return new HashMap<String, Map<String, Object>>();
-                                                                                                                                           }
-                                                                                                                                       };
+        @Override
+        protected java.util.Map<String, Map<String, Object>> initialValue() {
+            return new HashMap<String, Map<String, Object>>();
+        }
+    };
     @Autowired
-    private final IndicatorsApiService                                                           indicatorsApiService                  = null;
-
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade                                        statisticalOperations                 = null;
+    private final  IndicatorsApiService                          indicatorsApiService = null;
 
     @Autowired
-    private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
+    private final StatisticalOperationsRestInternalFacade statisticalOperations = null;
 
     @Autowired
-    private final MetadataProperties                                                             metadataProperties                    = null;
+    private final SrmRestInternalFacade srmRestInternalFacade = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
+    private final MetadataProperties metadataProperties = null;
 
-    private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
-            MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
-            MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
+
+    @Autowired
+    private final StatisticalResourceRestExternalFacade statisticalResourceRestExternalFacade = null;
+
+    private static final List<String> measuresOrder = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+            MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     private static final EnumMap<QuantityUnitSymbolPositionEnum, QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(QuantityUnitSymbolPositionEnum.class);
+
     static {
         QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(QuantityUnitSymbolPositionEnum.START, QuantityUnitSymbolPositionEnum.START);
         QUANTITY_UNIT_SYMBOL_POSITION_MAPPING.put(QuantityUnitSymbolPositionEnum.END, QuantityUnitSymbolPositionEnum.END);
@@ -126,6 +137,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private static final EnumMap<QuantityTypeEnum, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum> QUANTITY_TYPE_MAPPING = new EnumMap<>(
             es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.class);
+
     static {
         QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.AMOUNT, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.AMOUNT);
         QUANTITY_TYPE_MAPPING.put(es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum.CHANGE_RATE, es.gobcan.istac.indicators.rest.types.QuantityTypeEnum.CHANGE_RATE);
@@ -241,7 +253,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public IndicatorType indicatorDoToType(IndicatorVersion source, SrmRestInternalFacade srmRestInternalFacade) {
+    public IndicatorType indicatorDoToType(IndicatorVersion source) {
         Assert.notNull(source);
         try {
             IndicatorType target = new IndicatorType();
@@ -662,6 +674,19 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
+
+        Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
+                Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+
+        Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+        for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+            if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                target.setAttribute(metadataAttributes);
+            }
+        }
+
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF);
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
         target.setAttribute(metadataAttributes);
@@ -676,12 +701,24 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
     }
 
+    private MetadataAttributeType createMetadataAttributeType(Attribute attribute) {
+        MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
+        metadataAttributeUnit.setCode(attribute.getId());
+        String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(attribute.getId()).toString();
+        Translation translation = translationRepository.findTranslationByCode(translationCode);
+        Object title = (translation != null) ? translation.getTitle() : attribute.getName();
+        Map<String, String> localisedLabel = MapperUtil.getLocalisedLabel((InternationalString) title, metadataProperties.getDefaultInternationalizationLanguage());
+        metadataAttributeUnit.setTitle(localisedLabel);
+        metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
+        return metadataAttributeUnit;
+    }
+
     private MetadataAttributeType createMetadataAttributeType(String code) {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit
-                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit.setTitle(
+                MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
@@ -1042,6 +1079,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         String parentLink = uriLinks.getIndicatorsSystemsLink();
         target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_SYSTEMS, parentLink));
     }
+
     private void operationBaseDoToType(OperationIndicators sourceOperation, IndicatorsSystemBaseType target) {
         target.setId(sourceOperation.getId());
         target.setCode(sourceOperation.getId());
@@ -1052,6 +1090,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         target.setStatisticalOperationLink(new LinkType(IndicatorsRestConstants.KIND_STATISTICAL_OPERATION, sourceOperation.getUri()));
     }
+
     private String createUrlIndicator(Indicator indicator) {
         return uriLinks.getIndicatorLink(indicator.getCode());
     }
