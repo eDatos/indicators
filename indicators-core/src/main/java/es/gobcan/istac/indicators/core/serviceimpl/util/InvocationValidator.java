@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.edatos.dataset.repository.util.ValidationUtils;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -961,6 +962,26 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkCreateGeographicalValue(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkGeographicalValue(variableElementAvro, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkVariableElementAvro(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(variableElementAvro, ServiceExceptionParameters.GEOGRAPHICAL_VALUE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkDeleteGeographicalValue(List<MetamacExceptionItem> exceptions, String geographicalValueUuid) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -981,6 +1002,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkUpdateGeographicalValue(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkGeographicalValue(variableElementAvro, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     private static void checkGeographicalValue(GeographicalValue geographicalValue, List<MetamacExceptionItem> exceptions) {
         IndicatorsValidationUtils.checkParameterRequired(geographicalValue, ServiceExceptionParameters.GEOGRAPHICAL_VALUE, exceptions);
         if (geographicalValue == null) {
@@ -989,6 +1020,15 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getCode(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getGranularity(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getOrder(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_ORDER, exceptions);
+    }
+
+    private static void checkGeographicalValue(VariableElementAvro variableElementAvro, List<MetamacExceptionItem> exceptions) {
+
+        if (variableElementAvro == null) {
+            return;
+        }
+        IndicatorsValidationUtils.checkMetadataRequired(variableElementAvro.getCode(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(variableElementAvro.getGeographicGranularities(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, exceptions);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.core.service;
 
 import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
@@ -12,6 +15,9 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,4 +112,29 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveCode(agencyId, resourceId, version, codeId);
     }
+
+    @Override
+    public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        Map<String, String> variableElementsByCodesOfCodelist = new HashMap<String, String>();
+
+        Codes codes = retrieveCodesOfCodelist(codelistUrn);
+
+        for (CodeResourceInternal code : codes.getCodes()) {
+            variableElementsByCodesOfCodelist.put(code.getId(), code.getVariableElement().getId());
+        }
+        return variableElementsByCodesOfCodelist;
+    }
+
+    private Codes retrieveCodesOfCodelist(String codelistUrn) {
+
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = "~latest";
+        String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+
+        return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
+
+    }
+
 }

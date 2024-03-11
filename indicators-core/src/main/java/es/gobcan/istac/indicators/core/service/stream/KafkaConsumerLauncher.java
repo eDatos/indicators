@@ -14,6 +14,8 @@ import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,11 +34,13 @@ import net.sf.ehcache.CacheManager;
 @Component
 public class KafkaConsumerLauncher implements ApplicationListener<ContextRefreshedEvent> {
 
-    protected static final Log             LOGGER                  = LogFactory.getLog(KafkaConsumerLauncher.class);
+    protected static final Log             LOGGER                           = LogFactory.getLog(KafkaConsumerLauncher.class);
 
     private Map<String, Future<?>>         futuresMap;
-    private static final String            CONSUMER_QUERY_1_NAME   = "indicators_consumer_query_1";
-    private static final String            KAFKA_FAILED_CACHE_NAME = "kafkaFailed";
+    private static final String            CONSUMER_QUERY_1_NAME            = "indicators_consumer_query_1";
+    private static final String            CONSUMER_VARIABLE_ELEMENT_1_NAME = "indicators_consumer_variable_element_1";
+    private static final String            CONSUMER_CODELIST_1_NAME         = "indicators_consumer_codelist_1";
+    private static final String            KAFKA_FAILED_CACHE_NAME          = "kafkaFailed";
 
     @Autowired
     private ThreadPoolTaskExecutor         threadPoolTaskExecutor;
@@ -61,14 +65,23 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 KafkaInitializeTopics.propagateCreationOfTopics(configurationService);
                 prepareFailedMessageCache();
 
-                futuresMap = new HashMap<>();
-                futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
-                startKeepAliveKafkaThread(ac);
+               startConsumers(ac);
+                
             } catch (Exception e) {
                 LOGGER.error(e, e.getCause());
             }
             // @formatter:on
         }
+    }
+
+    private void startConsumers(ApplicationContext ac) throws MetamacException {
+
+        futuresMap = new HashMap<>();
+        futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ac));
+        futuresMap.put(CONSUMER_VARIABLE_ELEMENT_1_NAME, startConsumerForVariableElementTopic(ac));
+        futuresMap.put(CONSUMER_CODELIST_1_NAME, startConsumerForCodelistTopic(ac));
+
+        startKeepAliveKafkaThread(ac);
     }
 
     private void prepareFailedMessageCache() {
@@ -87,7 +100,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
     private Future<?> startConsumerForQueryTopic(ApplicationContext context) throws MetamacException {
         String topicQueryPublication = configurationService.retrieveKafkaTopicQueryPublication();
         KafkaConsumerThread<QueryVersionAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
-        KafkaConsumer<String, QueryVersionAvro> consumerFromBegin = createConsumerFromCurrentOffset(topicQueryPublication, CONSUMER_QUERY_1_NAME);
+        KafkaConsumer<String, QueryVersionAvro> consumerFromBegin = createQueryConsumerFromCurrentOffset(topicQueryPublication, CONSUMER_QUERY_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
         consumerThread.setTopicName(topicQueryPublication);
         consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
@@ -96,10 +109,36 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
-    private Properties getConsumerProperties(String clientId) throws MetamacException {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Future<?> startConsumerForVariableElementTopic(ApplicationContext context) throws MetamacException {
+        String topicVariableElementPublication = configurationService.retrieveKafkaTopicVariableElementPublication();
+        KafkaConsumerThread<VariableElementAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
+        KafkaConsumer<String, VariableElementAvro> consumerFromBegin = createVariableElementConsumerFromCurrentOffset(topicVariableElementPublication, CONSUMER_VARIABLE_ELEMENT_1_NAME);
+        consumerThread.setConsumer(consumerFromBegin);
+        consumerThread.setTopicName(topicVariableElementPublication);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setNoticesRestInternalService(noticesRestInternalService);
+        consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
+        return threadPoolTaskExecutor.submit(consumerThread);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Future<?> startConsumerForCodelistTopic(ApplicationContext context) throws MetamacException {
+        String topicVariableElementPublication = configurationService.retrieveKafkaTopicCodelistsPublication();
+        KafkaConsumerThread<CodelistAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
+        KafkaConsumer<String, CodelistAvro> consumerFromBegin = createCodelistConsumerFromCurrentOffset(topicVariableElementPublication, CONSUMER_CODELIST_1_NAME);
+        consumerThread.setConsumer(consumerFromBegin);
+        consumerThread.setTopicName(topicVariableElementPublication);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setNoticesRestInternalService(noticesRestInternalService);
+        consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
+        return threadPoolTaskExecutor.submit(consumerThread);
+    }
+
+    private Properties getConsumerProperties(String clientId, String group) throws MetamacException {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configurationService.retrieveKafkaBootStrapServers());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, configurationService.retrieveKafkaQueryGroup());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, group);
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, io.confluent.kafka.serializers.KafkaAvroDeserializer.class);
@@ -116,8 +155,20 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return props;
     }
 
-    private KafkaConsumer<String, QueryVersionAvro> createConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
-        KafkaConsumer<String, QueryVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId));
+    private KafkaConsumer<String, QueryVersionAvro> createQueryConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, QueryVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaQueryGroup()));
+        kafkaConsumer.subscribe(Collections.singletonList(topic));
+        return kafkaConsumer;
+    }
+
+    private KafkaConsumer<String, VariableElementAvro> createVariableElementConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, VariableElementAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaVariableElementGroup()));
+        kafkaConsumer.subscribe(Collections.singletonList(topic));
+        return kafkaConsumer;
+    }
+
+    private KafkaConsumer<String, CodelistAvro> createCodelistConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, CodelistAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaCodelistGroup()));
         kafkaConsumer.subscribe(Collections.singletonList(topic));
         return kafkaConsumer;
     }
@@ -135,6 +186,12 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                             switch (entry.getKey()) {
                                 case CONSUMER_QUERY_1_NAME:
                                     futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ApplicationContextProvider.getApplicationContext()));
+                                    break;
+                                case CONSUMER_VARIABLE_ELEMENT_1_NAME:
+                                    futuresMap.put(CONSUMER_VARIABLE_ELEMENT_1_NAME, startConsumerForVariableElementTopic(ApplicationContextProvider.getApplicationContext()));
+                                    break;
+                                case CONSUMER_CODELIST_1_NAME:
+                                    futuresMap.put(CONSUMER_CODELIST_1_NAME, startConsumerForCodelistTopic(ApplicationContextProvider.getApplicationContext()));
                                     break;
                                 default:
                                     break;

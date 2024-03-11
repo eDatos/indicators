@@ -12,9 +12,9 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ResourceWithStatisticalOperation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
@@ -38,6 +39,9 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
 
     @Autowired
     private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
+
+    @Autowired
+    private SrmRestInternalService                 srmRestInternalService;
 
     @Autowired
     private ConfigurationService                   configurationService;
@@ -67,7 +71,7 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
             String languageDefault = configurationService.retrieveLanguageDefault();
             Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
 
-            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query);
+            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query, srmRestInternalService);
             return dataStructureDto;
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);

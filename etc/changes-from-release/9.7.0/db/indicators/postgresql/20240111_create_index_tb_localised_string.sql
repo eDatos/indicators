@@ -1,0 +1,1 @@
+CREATE INDEX tb_localised_strings_international_string_fk ON tb_localised_strings (international_string_fk);

@@ -16,14 +16,19 @@ import org.apache.kafka.common.TopicPartition;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import net.sf.ehcache.Cache;
@@ -33,13 +38,13 @@ import net.sf.ehcache.Element;
 @Scope("prototype")
 public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnable {
 
-    protected static Log LOGGER = LogFactory.getLog(KafkaConsumerThread.class);
+    protected static Log               LOGGER       = LogFactory.getLog(KafkaConsumerThread.class);
 
-    private static final String      MAX_POOL_MSG = "We have set a poll of 1 message at most. This error can not be given.";
+    private static final String        MAX_POOL_MSG = "We have set a poll of 1 message at most. This error can not be given.";
 
-    private KafkaConsumer<String, T> consumer;
-    private String                   topicName;
-    private IndicatorsServiceFacade  indicatorsServiceFacade;
+    private KafkaConsumer<String, T>   consumer;
+    private String                     topicName;
+    private IndicatorsServiceFacade    indicatorsServiceFacade;
     private NoticesRestInternalService noticesRestInternalService;
     private Cache                      kafkaFailedMessagesCache;
 
@@ -68,9 +73,9 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         LOGGER.info("Reading KAFKA topic: " + topicName);
 
         try {
-            
+
             Map<Integer, Long> pendigOffsetsToCommit = new HashMap<Integer, Long>(); // K:partition, V:offset
-            
+
             while (alwaysWithDelay()) {
                 // Milliseconds, spent waiting in poll if data is not available in the buffer
                 ConsumerRecords<String, T> records = consumer.poll(100);
@@ -107,14 +112,14 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                     .append(" [").append(new DateTime(record.timestamp(), DateTimeZone.forID("Atlantic/Canary"))).append("]");
                 // @formatter:on
                 String logMessage = logMessageBldr.toString();
-                
+
                 pendigOffsetsToCommit.put(record.partition(), record.offset());
-                
+
                 LOGGER.info(logMessage.toString());
                 try {
                     ServiceContext serviceContext = createServiceContext(logMessage);
 
-                    indicatorsServiceFacade.updateIndicatorsDataFromMetamac(serviceContext, record.value());
+                    updateIndicatorsFromKafkaMessage(serviceContext, record.value(), record.key());
                     commitSync(record);
                 } catch (Exception e) {
                     LOGGER.error("Unable to process resource received from Kafka. The business of application has failed", e);
@@ -130,6 +135,25 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         } finally {
             LOGGER.info("Closing the consumer...");
             consumer.close();
+        }
+    }
+
+    public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) throws MetamacException {
+        if (message instanceof QueryVersionAvro) {
+            indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
+        } else if (message instanceof VariableElementAvro) {
+            updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
+        } else if (message instanceof CodelistAvro) {
+            indicatorsServiceFacade.populateIndicatorsDataFromGeographicalCodelist(ctx, message);
+        }
+    }
+
+    private void updateIndicatorsFromKafkaVariableElementMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) {
+        try {
+            indicatorsServiceFacade.updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+        } catch (MetamacException e) {
+            LOGGER.error("An error has occurred in the Kafka client with variable element message", e);
+            noticesRestInternalService.updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(ServiceNoticeMessage.INDICATOR_RECEIVED_FROM_KAFKA_ERROR, recordKey, e);
         }
     }
 

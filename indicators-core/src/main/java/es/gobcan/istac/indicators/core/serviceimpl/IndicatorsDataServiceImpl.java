@@ -62,6 +62,7 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
+import es.gobcan.istac.indicators.core.domain.DataGpe;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -95,11 +96,13 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.GpeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
@@ -130,6 +133,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
+
+    @Autowired
+    private SrmRestInternalService                        srmRestInternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
@@ -193,9 +199,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             // Call jaxi for query structure
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
-            return jsonToDataStructure(json);
+            DataStructure dataStructure = jsonToDataStructure(json);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            return GpeUtils.gpeDataStructureToDataStructure(dataStructure, variableElementsByCodesOfCodelist);
+
         } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -203,15 +217,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
-
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             JsonStatData jsonStatData = jsonToJsonStatData(json);
             LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            JsonStatUtils.jsonStatDataToGeographicVariableElements(uuid, jsonStatData, variableElementsByCodesOfCodelist);
+
             return jsonStatData;
+
         } catch (Exception e) {
             LOG.error("Unexpected error occurred retrieving JSON-stat file {} : ", uuid, e);
-            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -1563,32 +1585,41 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      */
     private Map<String, Data> retrieveDatasFromProvider(ServiceContext ctx, List<DataSource> dataSources) throws MetamacException {
         Map<String, Data> dataCache = new HashMap<String, Data>();
+
         for (DataSource dataSource : dataSources) {
             try {
 
                 Data data = dataCache.get(dataSource.getQueryUuid());
-                if (data == null) {
-                    // Recalculate
-                    if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                        // Metamac
-                        Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
-                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                        data = QueryMetamacUtils.queryMetamacToData(query);
-                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
-                        String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
-                        JsonStatData jsonStatData = jsonToJsonStatData(json);
-                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
-                    } else {
-                        // GPE-JAXI
-                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
-                        if (json == null) {
-                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
-                        }
-                        data = jsonToData(json);
 
-                    }
-                    dataCache.put(dataSource.getQueryUuid(), data);
+                if (data != null) {
+                    return dataCache;
                 }
+
+                // Recalculate
+                if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    // Metamac
+                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                            es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
+                    data = queryMetamacUtils.queryMetamacToData(query);
+
+                } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
+                    String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
+                    JsonStatData jsonStatData = jsonToJsonStatData(json);
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+                    data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
+                } else {
+
+                    // GPE-JAXI
+                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
+                    if (json == null) {
+                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
+                    }
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+                    DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
+                    data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
+                }
+                dataCache.put(dataSource.getQueryUuid(), data);
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
@@ -2013,15 +2044,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return mapper.readValue(json, JsonStatData.class);
     }
 
-    /*
-     * Private methods that get data from jaxi
-     */
-    private Data jsonToData(String json) throws IOException {
-        Data target = new Data();
-        target = mapper.readValue(json, Data.class);
-        return target;
-    }
-
     private String getDataViewsRole() throws MetamacException {
         return configurationService.retrieveDbDataViewsRole();
     }
@@ -2069,4 +2091,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Finished execute export DSPL process");
     }
 
+    private Map<String, String> getVariableElementsIdByCodeOfCodelist() throws MetamacException {
+        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+    }
+
+    @Override
+    public void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, List<IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException {
+
+        LOG.info("Starting populate indicators because changes in geographical codelist. Number of affected indicators {} indicatores", indicatorsVersionToPopulate.size());
+
+        for (IndicatorVersion indicatorVersion : indicatorsVersionToPopulate) {
+            planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+        }
+
+        LOG.info("Finished populate indicators because changes in geographical codelist");
+    }
 }

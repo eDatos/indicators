@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 public interface SculptorCriteria2MetamacCriteriaMapper {
@@ -23,6 +24,8 @@ public interface SculptorCriteria2MetamacCriteriaMapper {
     MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(ServiceContext ctx, PagedResult<IndicatorVersion> source, Integer pageSize) throws MetamacException;
 
     MetamacCriteriaResult<GeographicalValueDto> pageResultToMetamacCriteriaResultGeographicalValue(PagedResult<GeographicalValue> source, Integer pageSize);
+
+    MetamacCriteriaResult<RelatedResourceDto> pageResultVariableElementToMetamacCriteriaResultRelatedResource(PagedResult<GeographicalValue> source, Integer pageSize);
 
     MetamacCriteriaResult<GeographicalGranularityDto> pageResultToMetamacCriteriaResultGeographicalGranularity(PagedResult<GeographicalGranularity> source, Integer pageSize);
 

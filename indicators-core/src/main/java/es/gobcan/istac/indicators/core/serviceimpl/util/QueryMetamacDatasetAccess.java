@@ -7,9 +7,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class QueryMetamacDatasetAccess {
 
@@ -20,10 +22,10 @@ public class QueryMetamacDatasetAccess {
     private List<String>              dimensionsOrderedForData;
     private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
 
-    public QueryMetamacDatasetAccess(Query query) throws MetamacException {
+    public QueryMetamacDatasetAccess(Query query, Map<String, String> variableElementsByCode, List<String> geographicalDimensionsId) throws MetamacException {
 
         initializeObservations(query);
-        initializeDimensionsForData(query);
+        initializeDimensionsForData(query, variableElementsByCode, geographicalDimensionsId);
     }
 
     public List<String> getDimensionsOrderedForData() {
@@ -48,7 +50,10 @@ public class QueryMetamacDatasetAccess {
     /**
      * Init dimensions and dimensions values. Builds a map with dimensions values to get order provided in DATA, because observations are retrieved in API with this order
      */
-    private void initializeDimensionsForData(Query query) throws MetamacException {
+    private void initializeDimensionsForData(Query query, Map<String, String> variableElementsByCode, List<String> geographicalDimensionsId) throws MetamacException {
+        if (geographicalDimensionsId == null) {
+            geographicalDimensionsId = new ArrayList<String>();
+        }
         List<DimensionRepresentation> dimensionRepresentations = query.getData().getDimensions().getDimensions();
         this.dimensionsOrderedForData = new ArrayList<String>(dimensionRepresentations.size());
         this.dimensionValuesOrderedForDataByDimensionId = new HashMap<String, List<String>>(dimensionRepresentations.size());
@@ -59,7 +64,17 @@ public class QueryMetamacDatasetAccess {
             List<CodeRepresentation> codesRepresentations = dimensionRepresentation.getRepresentations().getRepresentations();
             this.dimensionValuesOrderedForDataByDimensionId.put(dimensionId, new ArrayList<String>(codesRepresentations.size()));
             for (CodeRepresentation codeRepresentation : codesRepresentations) {
-                this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(codeRepresentation.getCode());
+                if (geographicalDimensionsId.contains(dimensionId)) {
+                    String variableElement = variableElementsByCode.get(codeRepresentation.getCode());
+
+                    if (variableElement != null) {
+                        this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(variableElement);
+                    } else {
+                        throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, codeRepresentation.getCode());
+                    }
+                } else {
+                    this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(codeRepresentation.getCode());
+                }
             }
         }
     }

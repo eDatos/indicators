@@ -9,12 +9,24 @@
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
 ## 9.7.0 a 9.7.1-SNAPSHOT
-* Es necesario ejecutar los scripts SQL contenidos en la carpeta.
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
 
 ```
-etc/changes-from-release/9.7.0/db/*.sql
+etc/changes-from-release/9.7.0/db/common-metadata/postgresql/*.sql
+```
+
+* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la siguiente carpeta (excepto los scripts que se encuentran dentro de la carpeta "migrar-valores-geograficos" que se ejecutarán en el siguiente paso:
 
 ```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/*.sql
+```
+
+* Se ha realizado un proceso de migración de los valores geográficos cuya gestión desaparece de indicators y se usará, en su lugar los elementos de variable que proceden del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de los valores geográficos como de los valores que se encuentran en las diferentes tablas que la referencian. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
+
+```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/migrar-valores-geograficos/*.sql
+```
+
 
 ## 9.5.0 a 9.6.0
 * Es necesario en srm haber creado un tipo de anotación denominada "SYMBOL_POSITION" desde el menú "Administración" en el srm. Descripción "Posición del símbolo en las unidades de medida"

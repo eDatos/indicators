@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -44,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
@@ -59,8 +61,10 @@ import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.util.GpeTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
@@ -70,9 +74,12 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
+
+    List<GeographicalValue>               geographicalValues = new ArrayList<GeographicalValue>();
 
     @Autowired
     protected IndicatorsServiceFacade     indicatorsServiceFacade;
@@ -85,6 +92,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;
+
+    @Autowired
+    private SrmRestInternalService        srmRestInternalService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+    }
 
     @Test
     @Transactional
@@ -4324,13 +4342,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertNotNull(geographicalValueDto);
         assertEquals(uuid, geographicalValueDto.getUuid());
-        assertEquals("ES", geographicalValueDto.getCode());
+        assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValueDto.getCode());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularity().getUuid());
         assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
         assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
-        assertEquals("ES", geographicalValueDto.getOrder());
+        assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValueDto.getOrder());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
     }
 
@@ -4377,16 +4395,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), null);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(9, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(10, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
-            assertEquals("FR", geographicalValues.get(1).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(7).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(7).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(8).getUuid());
+            assertEquals("EN-LN_VARIABLE_ELEMENT", geographicalValues.get(8).getCode());
         }
 
         // All, only 1 results
@@ -4398,12 +4416,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
         }
 
         // All, only 1 result second page
@@ -4416,12 +4434,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(1), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(10), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(1, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
-            assertEquals("FR", geographicalValues.get(0).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getCode());
         }
 
         // By granularity, with order default
@@ -4440,7 +4458,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
         }
         // By granularity order by "order" desc
         {
@@ -4463,11 +4481,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
-            assertEquals("FR", geographicalValues.get(0).getCode());
-            assertEquals("FR", geographicalValues.get(0).getOrder());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(1).getUuid());
-            assertEquals("ES", geographicalValues.get(1).getCode());
-            assertEquals("ES", geographicalValues.get(1).getOrder());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(1).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(1).getOrder());
         }
         // By granularity order by "order" asc
         {
@@ -4490,368 +4508,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
-            assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals("ES", geographicalValues.get(0).getOrder());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getCode());
+            assertEquals(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
-            assertEquals("FR", geographicalValues.get(1).getCode());
-            assertEquals("FR", geographicalValues.get(1).getOrder());
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValue() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("CANARIAS", "CANARIAS", GEOGRAPHICAL_GRANULARITY_2);
-
-        // Create
-        GeographicalValueDto geographicalValueDtoCreated = indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-
-        // Validate
-        assertNotNull(geographicalValueDtoCreated);
-        assertNotNull(geographicalValueDtoCreated.getUuid());
-        assertNotNull(geographicalValueDtoCreated.getOptimisticLockingVersion());
-
-        IndicatorsAsserts.assertEqualsCreatedGeographicalValueDto(geographicalValueDto, geographicalValueDtoCreated);
-
-        // Audit validations
-        assertNotNull(geographicalValueDtoCreated.getCreatedBy());
-        assertNotNull(geographicalValueDtoCreated.getCreatedDate());
-        assertNotNull(geographicalValueDtoCreated.getLastUpdated());
-        assertNotNull(geographicalValueDtoCreated.getLastUpdatedBy());
-        assertEquals(getServiceContextAdministrador().getUserId(), geographicalValueDtoCreated.getCreatedBy());
-        assertTrue(DateUtils.isSameDay(new Date(), geographicalValueDtoCreated.getCreatedDate()));
-        assertTrue(DateUtils.isSameDay(new Date(), geographicalValueDtoCreated.getLastUpdated()));
-        assertEquals(getServiceContextAdministrador().getUserId(), geographicalValueDtoCreated.getLastUpdatedBy());
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorGeographicalValueRequired() throws Exception {
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), null);
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorCodeRequired() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(null, "CANARIAS", GEOGRAPHICAL_GRANULARITY_2);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorCodeRequiredEmpty() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(StringUtils.EMPTY, "CANARIAS", GEOGRAPHICAL_GRANULARITY_2);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorOrderRequired() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("CANARIAS", null, GEOGRAPHICAL_GRANULARITY_2);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_ORDER, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorOrderRequiredEmpty() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("CANARIAS", StringUtils.EMPTY, GEOGRAPHICAL_GRANULARITY_2);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_ORDER, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorGranularityRequired() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("CANARIAS", "CANARIAS", null);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorGranularityRequiredEmpty() throws Exception {
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("CANARIAS", "CANARIAS", StringUtils.EMPTY);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("metadata required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorCodeDuplicated() throws Exception {
-        String code = "ES";
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(code, "SPAIN", GEOGRAPHICAL_GRANULARITY_1);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("code duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorCodeDuplicatedInsensitive() throws Exception {
-        String code = "es";
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(code, "SPAIN", GEOGRAPHICAL_GRANULARITY_1);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("code duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorOrderDuplicated() throws Exception {
-        String order = "ES";
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("SPAIN", order, GEOGRAPHICAL_GRANULARITY_1);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("oder duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(order, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testCreateGeographicalValueErrorOrderDuplicatedInsensitive() throws Exception {
-        String order = "es";
-        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue("SPAIN", order, GEOGRAPHICAL_GRANULARITY_1);
-        try {
-            indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("oder duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(order, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testUpdateGeographicalValue() throws Exception {
-        String uuid = GEOGRAPHICAL_VALUE_1;
-
-        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), uuid);
-
-        geographicalValueDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        geographicalValueDto.setCode(IndicatorsMocks.mockString(5));
-        GeographicalGranularityDto geographicalGranularityDto = new GeographicalGranularityDto();
-        geographicalGranularityDto.setUuid(GEOGRAPHICAL_GRANULARITY_4);
-        geographicalValueDto.setGranularity(geographicalGranularityDto);
-        geographicalValueDto.setLatitude(22.232511);
-        geographicalValueDto.setLongitude(41232.254112);
-        geographicalValueDto.setOrder(IndicatorsMocks.mockString(5));
-
-        // Update
-        GeographicalValueDto geographicalValueDtoUpdated = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-
-        // Validations
-        IndicatorsAsserts.assertEqualsGeographicalValueDto(geographicalValueDto, geographicalValueDtoUpdated);
-        assertTrue(geographicalValueDtoUpdated.getLastUpdated().after(geographicalValueDtoUpdated.getCreatedDate()));
-        assertTrue(geographicalValueDtoUpdated.getLastUpdated().after(geographicalValueDto.getLastUpdated()));
-    }
-
-    @Test
-    @Transactional
-    public void testUpdateGeographicalValueNotExists() throws Exception {
-        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), GEOGRAPHICAL_VALUE_1);
-        geographicalValueDto.setUuid(NOT_EXISTS);
-        try {
-            indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("geographical value not exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testUpdateGeographicalValueCodeDuplicated() throws Exception {
-        String code = "FR";
-        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), GEOGRAPHICAL_VALUE_1);
-        geographicalValueDto.setCode(code);
-        try {
-            indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("geographical value code duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testUpdateGeographicalValueOrderDuplicated() throws Exception {
-        String order = "FR";
-        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), GEOGRAPHICAL_VALUE_1);
-        geographicalValueDto.setOrder(order);
-        try {
-            indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
-            fail("geographical value order duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(order, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testUpdateGeographicalValueErrorOptimisticLocking() throws Exception {
-        String uuid = GEOGRAPHICAL_VALUE_1;
-
-        GeographicalValueDto geographicalValueDtoSession1 = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), uuid);
-        assertEquals(Long.valueOf(1), geographicalValueDtoSession1.getOptimisticLockingVersion());
-
-        GeographicalValueDto geographicalValueDtoSession2 = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), uuid);
-        assertEquals(Long.valueOf(1), geographicalValueDtoSession2.getOptimisticLockingVersion());
-
-        // Update by session 1
-        geographicalValueDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        GeographicalValueDto geographicalValueDtoSession1AfterUpdate = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDtoSession1);
-        IndicatorsAsserts.assertEqualsGeographicalValueDto(geographicalValueDtoSession1, geographicalValueDtoSession1AfterUpdate);
-        assertEquals(Long.valueOf(2), geographicalValueDtoSession1AfterUpdate.getOptimisticLockingVersion());
-
-        // Fails when is updated by session 2
-        try {
-            indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDtoSession2);
-            fail("Optimistic locking");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
-            assertNull(e.getExceptionItems().get(0).getMessageParameters());
-        }
-
-        // Session 1 can modify because has last version
-        geographicalValueDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
-        GeographicalValueDto geographicalValueDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDtoSession1AfterUpdate);
-        assertEquals(Long.valueOf(3), geographicalValueDtoSession1AfterUpdate2.getOptimisticLockingVersion());
-        IndicatorsAsserts.assertEqualsGeographicalValueDto(geographicalValueDtoSession1AfterUpdate, geographicalValueDtoSession1AfterUpdate2);
-    }
-
-    @Test
-    @Transactional
-    public void testDeleteGeographicalValue() throws Exception {
-        String uuid = GEOGRAPHICAL_VALUE_2;
-
-        // Delete
-        indicatorsServiceFacade.deleteGeographicalValue(getServiceContextAdministrador(), uuid);
-
-        // Validation
-        try {
-            indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), uuid);
-            fail("Geographical value deleted");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testDeleteGeographicalValueBeingUsed() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-
-        String uuid = GEOGRAPHICAL_VALUE_1;
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-        try {
-            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextAdministrador(), uuid);
-            fail("Geographical value being used");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    @Transactional
-    public void testDeleteGeographicalValueNotExists() throws Exception {
-        String uuid = NOT_EXISTS;
-
-        try {
-            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextAdministrador(), uuid);
-            fail("Geographical value not exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getCode());
+            assertEquals("FR_VARIABLE_ELEMENT", geographicalValues.get(1).getOrder());
         }
     }
 

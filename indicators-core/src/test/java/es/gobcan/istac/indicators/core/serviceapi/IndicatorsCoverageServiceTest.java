@@ -5,7 +5,9 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
@@ -29,13 +31,16 @@ import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
@@ -96,6 +101,8 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
     private static final String              INDICATORS_SYSTEM_2_CODE                    = "IndSys-CODE-2";
 
+    List<GeographicalValue>                  geographicalValues                          = new ArrayList<GeographicalValue>();
+
     @Autowired
     protected IndicatorsCoverageService      indicatorsCoverageService;
 
@@ -111,6 +118,12 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsService                indicatorsService;
 
+    @Autowired
+    private IndicatorsSystemsService         indicatorsSystemsService;
+
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
     /* GEOGRAPHICAL GRANULARITIES */
 
     @Before
@@ -122,6 +135,10 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
+
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
     }
 
     @Test
@@ -254,19 +271,20 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValue> geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
                 GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
                 GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesCodes(geoValues);
-        String[] expectedCommunityCodes = new String[]{"ES61"};
+        String[] expectedCommunityCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
                 GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
-        String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
+        String[] expectedProvinceCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
     }
 
@@ -278,7 +296,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValue> geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
                 GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
@@ -301,19 +319,20 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1,
                 GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1,
                 GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCommunityCodes = new String[]{"ES61"};
+        String[] expectedCommunityCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1,
                 GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
+        String[] expectedProvinceCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
     }
 
@@ -332,13 +351,13 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3,
                 GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCommunityCodes = new String[]{"ES61"};
+        String[] expectedCommunityCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
         geoValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3,
                 GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedProvinceCodes = new String[]{"ES611"};
+        String[] expectedProvinceCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
     }
 
@@ -352,7 +371,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
                     INDICATORS_SYSTEM_2_CODE, GEO_GRANULARITY_COUNTRIES_UUID);
             assertNotNull(geoValues);
             List<String> countryCodes = getGeographicalValuesVOCodes(geoValues);
-            String[] expectedCountryCodes = new String[]{"ES"};
+            String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
             checkElementsOrder(expectedCountryCodes, countryCodes);
         }
         {
@@ -360,7 +379,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
                     INDICATORS_SYSTEM_2_CODE, GEO_GRANULARITY_COMMUNITIES_UUID);
             assertNotNull(geoValues);
             List<String> communityCodes = getGeographicalValuesVOCodes(geoValues);
-            String[] expectedCommunityCodes = new String[]{"ES61"};
+            String[] expectedCommunityCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61};
             checkElementsOrder(expectedCommunityCodes, communityCodes);
         }
         {
@@ -368,7 +387,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
                     INDICATORS_SYSTEM_2_CODE, GEO_GRANULARITY_PROVINCES_UUID);
             assertNotNull(geoValues);
             List<String> provinceCodes = getGeographicalValuesVOCodes(geoValues);
-            String[] expectedProvinceCodes = new String[]{"ES611"};
+            String[] expectedProvinceCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611};
             checkElementsOrder(expectedProvinceCodes, provinceCodes);
         }
     }
@@ -385,7 +404,8 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorVersion(getServiceContextAdministrador(), indicatorVersion);
 
         List<String> countryCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedCountryCodes, countryCodes);
     }
 
@@ -398,7 +418,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorVersion(getServiceContextAdministrador(), indicatorVersion);
         List<String> countryCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
         checkElementsOrder(expectedCountryCodes, countryCodes);
     }
 
@@ -410,7 +430,8 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorVersion(getServiceContextAdministrador(), indicatorVersion);
         List<String> countryCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCountryCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
+        String[] expectedCountryCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedCountryCodes, countryCodes);
     }
 
@@ -422,7 +443,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(getServiceContextAdministrador(),
                 INDICATOR_INSTANCE_11_UUID);
         List<String> geoCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCodes = new String[]{"ES611", "ES612", "ES613"};
+        String[] expectedCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedCodes, geoCodes);
     }
 
@@ -434,7 +455,7 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(getServiceContextAdministrador(),
                 INDICATOR_INSTANCE_13_UUID);
         List<String> geoCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCodes = new String[]{"ES"};
+        String[] expectedCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES};
         checkElementsOrder(expectedCodes, geoCodes);
     }
 
@@ -446,7 +467,8 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         List<GeographicalValueVO> geoValues = indicatorsCoverageService.retrieveGeographicalValuesInIndicatorInstanceWithPublishedIndicator(getServiceContextAdministrador(),
                 INDICATOR_INSTANCE_12_UUID);
         List<String> geoCodes = getGeographicalValuesVOCodes(geoValues);
-        String[] expectedCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
+        String[] expectedCodes = new String[]{SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611,
+                SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613};
         checkElementsOrder(expectedCodes, geoCodes);
     }
 

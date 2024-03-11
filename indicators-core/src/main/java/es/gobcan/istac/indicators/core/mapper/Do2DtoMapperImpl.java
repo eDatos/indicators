@@ -57,9 +57,11 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
@@ -267,7 +269,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
-        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
+        target.setGeographicalValue(geographicalValueDoToRelatedResourceDto(source.getGeographicalValue()));
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setSourceSurveyCode(source.getSourceSurveyCode());
@@ -275,6 +277,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSourceSurveyAcronym(internationalStringToDto(source.getSourceSurveyAcronym()));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.doString2DtoList(source.getPublishers()));
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
 
         target.setAnnualPuntualRate(rateDerivationDoToDto(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDoToDto(source.getAnnualPercentageRate()));
@@ -287,6 +290,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 
@@ -318,6 +322,23 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setOptimisticLockingVersion(source.getVersion());
 
+        return target;
+    }
+
+    @Override
+    public RelatedResourceDto geographicalValueDoToRelatedResourceDto(GeographicalValue source) {
+
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setId(source.getId()); // Database id. Only to efficient save operations
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        target.setUuid(source.getUuid());
+        target.setGranularityCode(source.getGranularity().getCode());
+        target.setGranularityUuid(source.getGranularity().getUuid());
         return target;
     }
 
@@ -385,7 +406,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(DataStructure source) {
+    public DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
@@ -403,6 +424,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setSpatialVariables(source.getSpatialVariables());
 
+        if (source.getSpatialVariables() != null && !source.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
+
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
             target.setValueCodes(source.getValueCodes());
@@ -417,7 +442,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
+    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
 
         // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
@@ -443,6 +468,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         // GPE: spatials -> JSON-stat: role - geo (primer elemento)
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
+        if (target.getSpatialVariables() != null && !target.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
 
         // GPE: categories - variable -> JSON-stat: dimension - label
         target.setVariables(jsonStatData.getVariables());
@@ -607,7 +636,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setPercentageOf(internationalStringToDto(source.getPercentageOf()));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
-        target.setBaseLocationUuid(source.getBaseLocation() != null ? source.getBaseLocation().getUuid() : null);
+        target.setBaseLocation(geographicalValueDoToRelatedResourceDto(source.getBaseLocation()));
         target.setBaseQuantityIndicatorUuid(source.getBaseQuantity() != null ? source.getBaseQuantity().getUuid() : null);
 
         return target;

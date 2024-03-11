@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import static org.siemac.edatos.core.common.util.GeneratorUrnUtils.generateSdmxCodelistUrn;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +15,14 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ComponentType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
@@ -27,6 +32,8 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensio
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValue;
@@ -40,10 +47,19 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public class QueryMetamacUtils {
 
-    public static es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query) throws IOException, MetamacException {
+    private Map<String, String>    variableElementsByCode = new HashMap<String, String>();
+
+    private SrmRestInternalService srmRestInternalService;
+
+    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService) {
+        this.srmRestInternalService = srmRestInternalService;
+    }
+
+    public es.gobcan.istac.indicators.core.domain.Data queryMetamacToData(Query query) throws IOException, MetamacException {
         if (query == null) {
             return null;
         }
@@ -109,15 +125,15 @@ public class QueryMetamacUtils {
         }
 
         // Data
-        target.processData(extractData(query));
+        target.processData(extractData(query, target.getSpatialVariables()));
 
         // VariablesInOrder
-        target.setVariablesInOrder(QueryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
+        target.setVariablesInOrder(extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         return target;
     }
 
-    private static List<String> extractHeading(QueryMetadataBase metadata) {
+    private List<String> extractHeading(QueryMetadataBase metadata) {
         List<String> result = new LinkedList<String>();
 
         for (String dimensionId : metadata.getRelatedDsd().getHeading().getDimensionIds()) {
@@ -127,7 +143,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static List<String> extractStub(QueryMetadataBase metadata) {
+    private List<String> extractStub(QueryMetadataBase metadata) {
         List<String> result = new LinkedList<String>();
 
         for (String dimensionId : metadata.getRelatedDsd().getStub().getDimensionIds()) {
@@ -137,15 +153,15 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    public static String extractTemporalVariable(QueryMetadataBase metadata) {
+    public String extractTemporalVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.TIME_DIMENSION);
     }
 
-    public static String extractTemporalValue(Query query) {
+    public String extractTemporalValue(Query query) {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.TEMPORAL);
     }
 
-    public static List<String> extractSpatialVariableList(QueryMetadataBase metadata) {
+    public List<String> extractSpatialVariableList(QueryMetadataBase metadata) {
         List<String> result = new ArrayList<>(1);
         String extractSpatialVariable = extractSpatialVariable(metadata);
         if (!StringUtils.isEmpty(extractSpatialVariable)) {
@@ -154,34 +170,53 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static String extractSpatialVariable(QueryMetadataBase metadata) {
+    private String extractSpatialVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.GEOGRAPHIC_DIMENSION);
     }
 
-    private static String extractSpatialValue(Query query) {
+    private String extractSpatialValue(Query query) {
         return extractSpecificAttributeValuesByType(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
     }
 
-    public static GeographicalValueDto extractGeographicalValueDto(Query query) throws MetamacException {
+    private String getVariableElementByCodeUrn(Query query, String spatialValue) throws MetamacException {
+        List<String> spatialAttributeCodeUrn = extractCodeUrnOfSpecificTypeAttribute(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
+
+        if (spatialAttributeCodeUrn.isEmpty()) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, spatialValue);
+        }
+
+        Code code = srmRestInternalService.retrieveCodeOfCodelist(spatialAttributeCodeUrn.get(0));
+
+        if (code != null && code.getVariableElement() != null && code.getVariableElement().getId() != null) {
+            return code.getVariableElement().getId();
+        } else {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, spatialValue);
+        }
+
+    }
+
+    public GeographicalValueDto extractGeographicalValueDto(Query query) throws MetamacException {
         String extractSpatialValue = extractSpatialValue(query);
         if (StringUtils.isEmpty(extractSpatialValue)) {
             return null;
         }
 
+        String variableElementCode = getVariableElementByCodeUrn(query, extractSpatialValue);
+
         // Retrieve
-        GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(extractSpatialValue);
+        GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(variableElementCode);
         if (geographicalValue == null) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, extractSpatialValue);
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, variableElementCode);
         }
 
         return getDo2DtoMapper().geographicalValueDoToDto(geographicalValue);
     }
 
-    public static String extractContVariable(QueryMetadataBase metadata) {
+    public String extractContVariable(QueryMetadataBase metadata) {
         return extractSpecificDimensionFromDimensions(metadata.getDimensions(), DimensionType.MEASURE_DIMENSION);
     }
 
-    public static String extractValueForDefaultLanguage(InternationalString internationalString) {
+    public String extractValueForDefaultLanguage(InternationalString internationalString) {
         // Find in Dimensions or Attributes
         if (internationalString != null && !internationalString.getTexts().isEmpty()) {
             // Only one locale was received in the API, the default locale. Therefore, this code is valid.
@@ -191,7 +226,7 @@ public class QueryMetamacUtils {
         return null;
     }
 
-    public static List<String> extractVariablesFromDimensions(Dimensions dimensions) {
+    public List<String> extractVariablesFromDimensions(Dimensions dimensions) {
         List<String> result = new ArrayList<String>();
         for (Dimension dimension : dimensions.getDimensions()) {
             result.add(dimension.getId());
@@ -200,7 +235,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static String extractSpecificDimensionFromDimensions(Dimensions dimensions, DimensionType dimensionType) {
+    private String extractSpecificDimensionFromDimensions(Dimensions dimensions, DimensionType dimensionType) {
         for (Dimension dimension : dimensions.getDimensions()) {
             if (dimensionType.equals(dimension.getType())) {
                 return dimension.getId();
@@ -210,7 +245,29 @@ public class QueryMetamacUtils {
         return null;
     }
 
-    public static String extractSpecificAttributeValuesByType(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
+    private List<String> extractCodeUrnOfSpecificTypeAttribute(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
+        List<String> spatialValues = new ArrayList<String>();
+        if (attributes == null || dataAttributes == null) {
+            return spatialValues;
+        }
+
+        for (Attribute attribute : attributes.getAttributes()) {
+            if (componentType.equals(attribute.getType())) {
+                AttributeValues attributeValues = attribute.getAttributeValues();
+                if (attributeValues instanceof EnumeratedAttributeValues) {
+
+                    for (EnumeratedAttributeValue value : ((EnumeratedAttributeValues) attributeValues).getValues()) {
+                        spatialValues.add(value.getUrn());
+                    }
+
+                }
+            }
+        }
+
+        return spatialValues;
+    }
+
+    public String extractSpecificAttributeValuesByType(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
         if (attributes == null || dataAttributes == null) {
             return null;
         }
@@ -228,17 +285,61 @@ public class QueryMetamacUtils {
         return null;
     }
 
-    public static Map<String, List<String>> extractCodesCoverages(QueryMetadataBase metadata) {
+    public String extractGeographicalCodelistUrn(Query query) {
+
+        // first try dimension
+        Dimensions dimensions = query.getMetadata().getDimensions();
+
+        if (dimensions == null) {
+            return null;
+        }
+
+        for (Dimension dimension : dimensions.getDimensions()) {
+            if (DimensionType.GEOGRAPHIC_DIMENSION.equals(dimension.getType())) {
+
+                DimensionValues dimensionValues = dimension.getDimensionValues();
+
+                if (dimensionValues instanceof EnumeratedDimensionValues) {
+                    List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
+
+                    if (values != null && !values.isEmpty()) {
+                        EnumeratedDimensionValue firstValue = values.get(0);
+                        return extractUrnCodelistFromUrnCode(firstValue.getUrn());
+                    }
+                }
+            }
+        }
+
+        // spatial attribute
+        List<String> extractSpatialValues = extractCodeUrnOfSpecificTypeAttribute(query.getMetadata().getAttributes(), query.getData().getAttributes(), ComponentType.SPATIAL);
+        if (extractSpatialValues != null && !extractSpatialValues.isEmpty()) {
+            return extractUrnCodelistFromUrnCode(extractSpatialValues.get(0));
+        }
+
+        return null;
+    }
+
+    private String extractUrnCodelistFromUrnCode(String urnCode) {
+        String[] params = UrnUtils.splitUrnItem(urnCode);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+
+        String[] agenciesID = agencyId.contains(".") ? agencyId.split(".") : new String[]{agencyId};
+        return generateSdmxCodelistUrn(agenciesID, resourceId, version);
+    }
+
+    public Map<String, List<String>> extractCodesCoverages(QueryMetadataBase metadata) {
         return extractCoverages(metadata, false);
 
     }
 
-    public static Map<String, List<String>> extractValuesCoverages(QueryMetadataBase metadata) {
+    public Map<String, List<String>> extractValuesCoverages(QueryMetadataBase metadata) {
         return extractCoverages(metadata, true);
 
     }
 
-    private static Map<String, List<String>> extractCoverages(QueryMetadataBase metadata, boolean trylabels) {
+    private Map<String, List<String>> extractCoverages(QueryMetadataBase metadata, boolean trylabels) {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         Dimensions dimensions = metadata.getDimensions();
@@ -267,10 +368,24 @@ public class QueryMetamacUtils {
                 List<EnumeratedDimensionValue> values = ((EnumeratedDimensionValues) dimensionValues).getValues();
                 for (EnumeratedDimensionValue enumeratedDimensionValue : values) {
                     String extractValue;
-                    if (trylabels) {
-                        extractValue = extractValueForDefaultLanguage(enumeratedDimensionValue.getName());
+                    InternationalString name;
+                    String valueId;
+
+                    if (DimensionType.GEOGRAPHIC_DIMENSION.equals(dimension.getType())) {
+                        name = enumeratedDimensionValue.getVariableElement().getName();
+                        valueId = enumeratedDimensionValue.getVariableElement().getId();
+                        if (variableElementsByCode.get(enumeratedDimensionValue.getId()) == null) {
+                            variableElementsByCode.put(enumeratedDimensionValue.getId(), valueId);
+                        }
                     } else {
-                        extractValue = enumeratedDimensionValue.getId();
+                        name = enumeratedDimensionValue.getName();
+                        valueId = enumeratedDimensionValue.getId();
+                    }
+
+                    if (trylabels) {
+                        extractValue = extractValueForDefaultLanguage(name);
+                    } else {
+                        extractValue = valueId;
                     }
                     valuesResult.add(extractValue);
                 }
@@ -282,7 +397,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private static List<DataContent> extractData(Query query) throws MetamacException {
+    private List<DataContent> extractData(Query query, List<String> geographicalDimensionsId) throws MetamacException {
         List<DataContent> result = new LinkedList<DataContent>();
 
         Data data = query.getData();
@@ -292,7 +407,7 @@ public class QueryMetamacUtils {
         }
 
         int numDimensions = data.getDimensions().getDimensions().size();
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query);
+        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
@@ -326,12 +441,11 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    public static GeographicalValueRepository getGeographicalValueRepository() {
+    public GeographicalValueRepository getGeographicalValueRepository() {
         return ApplicationContextProvider.getApplicationContext().getBean(GeographicalValueRepository.class);
     }
 
-    public static Do2DtoMapper getDo2DtoMapper() {
+    public Do2DtoMapper getDo2DtoMapper() {
         return ApplicationContextProvider.getApplicationContext().getBean(Do2DtoMapper.class);
     }
-
 }
