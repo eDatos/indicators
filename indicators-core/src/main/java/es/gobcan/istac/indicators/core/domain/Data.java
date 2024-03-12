@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.domain;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -13,18 +14,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.siemac.metamac.core.common.exception.MetamacException;
+
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+
 /**
  * Data, contains values
  */
 public class Data extends DataStructure {
 
-    private QueryEnvironmentEnum queryEnvironmentEnum = null;
-    private String temporalValue = null;
-    private GeographicalValueDto geographicalValueDto = null;
+    private QueryEnvironmentEnum     queryEnvironmentEnum = null;
+    private String                   temporalValue        = null;
+    private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
     private List<String> dataMapAttributes;
     private List<String> variablesInOrder = new ArrayList<String>();
+
+    public Map<String, DataContent> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, DataContent> data) {
+        this.data = data;
+    }
 
     @JsonProperty("data")
     public void processData(List<DataContent> dataList) {
@@ -79,7 +95,6 @@ public class Data extends DataStructure {
     public void setQueryEnvironmentEnum(QueryEnvironmentEnum queryEnvironmentEnum) {
         this.queryEnvironmentEnum = queryEnvironmentEnum;
     }
-
 
     public QueryEnvironmentEnum getQueryEnvironmentEnum() {
         return queryEnvironmentEnum;

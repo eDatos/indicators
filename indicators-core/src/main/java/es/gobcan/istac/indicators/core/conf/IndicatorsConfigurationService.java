@@ -31,9 +31,19 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveKafkaQueryGroup() throws MetamacException;
 
+    String retrieveKafkaVariableElementGroup() throws MetamacException;
+
+    String retrieveKafkaCodelistGroup() throws MetamacException;
+
     String retrieveDefaultCategoryScheme() throws MetamacException;
+
+    String retrieveDefaultTerritoryVariable() throws MetamacException;
+
+    String retrieveDefaultTerritoryCodelistForGpeJsonStat() throws MetamacException;
 
     String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException;
 
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;
+
+    String retrieveCronExpressionGeographicalValuesMigrationTemporalTask() throws MetamacException;
 }

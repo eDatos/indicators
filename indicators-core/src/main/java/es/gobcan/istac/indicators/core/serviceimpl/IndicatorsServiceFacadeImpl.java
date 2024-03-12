@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -20,6 +21,7 @@ import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,10 +55,12 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorsSystemResultDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageCodelistActionEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -903,6 +907,53 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        // Service call
+        try {
+            this.getIndicatorsSystemsService().updateGeopgraphicalValuesFromSrmVariableElements(ctx, message);
+        } catch (PersistenceException e) {
+            String uuid = StringUtils.EMPTY;
+            if (message != null) {
+                VariableElementAvro variableElementAvro = (VariableElementAvro) message;
+                uuid = variableElementAvro.getCode();
+
+            }
+            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
+        }
+    }
+
+    @Override
+    public void processCodelistKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        StreamMessageCodelistActionEnum streamMessageCodelistActionEnum = getIndicatorsService().getCodelistAction(ctx, message);
+
+        if (streamMessageCodelistActionEnum == null) {
+            return;
+        }
+
+        if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES.equals(streamMessageCodelistActionEnum)) {
+            populateIndicatorsDataFromGeographicalCodelist(ctx, message);
+        } else if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES.equals(streamMessageCodelistActionEnum)) {
+            updateGeopgraphicalGranularities(ctx, message);
+        }
+    }
+
+    private void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+
+        List<IndicatorVersion> indicatorsVersionToPopulate = this.getIndicatorsService().retrieveIndicatorsByGeographicalCodelist(ctx, message);
+
+        this.getIndicatorsDataService().populateIndicatorsDataFromGeographicalCodelist(ctx, indicatorsVersionToPopulate);
+    }
+
+    private void updateGeopgraphicalGranularities(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        this.getIndicatorsSystemsService().updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(ctx, message);
+    }
+
+    @Override
     public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);
@@ -953,52 +1004,21 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
-        // Transform
+        // Transform - return all elements. There is not limit of 1000 elements.
         return sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
     }
 
     @Override
-    public GeographicalValueDto createGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
+    public MetamacCriteriaResult<RelatedResourceDto> findGeographicalValuesForIndicatorByCondition(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
         // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        // Transform to entity
-        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
 
-        // Service call
-        geographicalValue = getIndicatorsSystemsService().createGeographicalValue(ctx, geographicalValue);
+        PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
-        // Transform to Dto
-        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-    }
-
-    @Override
-    public GeographicalValueDto updateGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
-
-        // Service call
-        geographicalValue = getIndicatorsSystemsService().updateGeographicalValue(ctx, geographicalValue);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-    }
-
-    @Override
-    public void deleteGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Service call
-        try {
-            getIndicatorsSystemsService().deleteGeographicalValue(ctx, uuid);
-        } catch (PersistenceException e) {
-            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
-        }
-
+        // Transform - return all elements. There is not limit of 1000 elements.
+        return sculptorCriteria2MetamacCriteriaMapper.pageResultVariableElementToMetamacCriteriaResultRelatedResource(result, sculptorCriteria.getPageSize());
     }
 
     // -------------------------------------------------------------------------------------------
@@ -1049,49 +1069,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
 
         return geographicalGranularitysDto;
-    }
-
-    @Override
-    public GeographicalGranularityDto createGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
-
-        // Service call
-        geographicalGranularity = getIndicatorsSystemsService().createGeographicalGranularity(ctx, geographicalGranularity);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-    }
-
-    @Override
-    public GeographicalGranularityDto updateGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Transform to entity
-        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
-
-        // Service call
-        geographicalGranularity = getIndicatorsSystemsService().updateGeographicalGranularity(ctx, geographicalGranularity);
-
-        // Transform to Dto
-        return do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-    }
-
-    @Override
-    public void deleteGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
-
-        // Service call
-        try {
-            getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
-        } catch (PersistenceException e) {
-            throw new MetamacException(e, ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
-        }
     }
 
     // -------------------------------------------------------------------------------------------

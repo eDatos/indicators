@@ -71,4 +71,14 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     public void markTaskAsFailed(ServiceContext ctx, String jobKey, MetamacException exception) throws MetamacException {
         taskService.markTaskAsFailed(ctx, jobKey, exception);
     }
+
+    @Override
+    public void scheduleGeographicalValuesMigrationTemporalTask(ServiceContext ctx) {
+        taskService.scheduleGeographicalValuesMigrationTemporalTask(ctx);
+    }
+
+    @Override
+    public void executeGeographicalValuesMigrationTemporalTask(ServiceContext ctx) throws MetamacException {
+        taskService.processGeographicalValuesMigrationTemporalTask(ctx);
+    }
 }

@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.StatOperationsSearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -24,6 +25,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextIt
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavigationClickHandler;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -47,11 +49,13 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
@@ -65,42 +69,48 @@ import es.gobcan.istac.indicators.web.client.widgets.DataDefinitionsSearchWindow
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.RelatedResourceLinkItem;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class DataSourcePanel extends VLayout {
 
     // View Form
-    private ViewDataSourceGeneralForm                generalForm;
-    private GroupDynamicForm                         dataForm;
-    private ViewRateDerivationForm                   interperiodPuntualRateForm;
-    private ViewRateDerivationForm                   annualPuntualRateForm;
-    private ViewRateDerivationForm                   interperiodPercentageRateForm;
-    private ViewRateDerivationForm                   annualPercentageRateForm;
+    private ViewDataSourceGeneralForm   generalForm;
+    private GroupDynamicForm            dataForm;
+    private ViewRateDerivationForm      interperiodPuntualRateForm;
+    private ViewRateDerivationForm      annualPuntualRateForm;
+    private ViewRateDerivationForm      interperiodPercentageRateForm;
+    private ViewRateDerivationForm      annualPercentageRateForm;
 
     // Edition Form
-    private GroupDynamicForm                         generalEditionForm;
-    private ViewDataSourceGeneralForm                generalStaticEditionForm;
-    private GroupDynamicForm                         dataEditionForm;
-    private RateDerivationForm                       interperiodPuntualRateEditionForm;
-    private RateDerivationForm                       annualPuntualRateEditionForm;
-    private RateDerivationForm                       interperiodPercentageRateEditionForm;
-    private RateDerivationForm                       annualPercentageRateEditionForm;
+    private GroupDynamicForm            generalEditionForm;
+    private ViewDataSourceGeneralForm   generalStaticEditionForm;
+    private GroupDynamicForm            dataEditionForm;
+    private RateDerivationForm          interperiodPuntualRateEditionForm;
+    private RateDerivationForm          annualPuntualRateEditionForm;
+    private RateDerivationForm          interperiodPercentageRateEditionForm;
+    private RateDerivationForm          annualPercentageRateEditionForm;
 
-    private DataDefinitionsSearchWindow              dataDefinitionsSearchWindow;
+    private DataDefinitionsSearchWindow dataDefinitionsSearchWindow;
 
-    private JsonStatSearchWindow                     jsonStatSearchWindow;
-    private DataSourceMainFormLayout                 mainFormLayout;
+    private JsonStatSearchWindow        jsonStatSearchWindow;
+    private DataSourceMainFormLayout    mainFormLayout;
 
     // When we are editing the form, but query dependent fields are in view mode
-    private boolean                                  queryEditionViewMode;
+    private boolean                     queryEditionViewMode;
 
-    private DataSourceDto                            dataSourceDto;
-    private DataStructureDto                         dataStructureDtoEdition;
-    private IndicatorDto                             indicatorDto;
-    private IndicatorUiHandler                       uiHandlers;
+    private DataSourceDto               dataSourceDto;
+    private DataStructureDto            dataStructureDtoEdition;
+    private IndicatorDto                indicatorDto;
+    private IndicatorUiHandler          uiHandlers;
+
+    public IndicatorUiHandler getUiHandlers() {
+        return uiHandlers;
+    }
 
     private StatOperationsSearchExternalItemLinkItem searchQueryMetamacWindow;
     private List<String>                             editionLanguages;
@@ -194,13 +204,8 @@ public class DataSourcePanel extends VLayout {
         addMember(mainFormLayout);
     }
 
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
-        generalStaticEditionForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
-    }
-
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).setGeoValuesValueMap(result);
     }
 
     public void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
@@ -273,6 +278,8 @@ public class DataSourcePanel extends VLayout {
 
         dataSourceDto.setPublishers(dataStructureDtoEdition.getPublishers());
 
+        dataSourceDto.setGeographicalCodelistUrn(dataStructureDtoEdition.getGeographicalCodelistUrn());
+
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setAbsoluteMethod(dataEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
         }
@@ -293,16 +300,16 @@ public class DataSourcePanel extends VLayout {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_METAMAC) : null);
 
-                dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC).isVisible()
-                        ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE_UUID_METAMAC))
-                        : null);
+                RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC);
+                geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
 
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
 
-                dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible()
-                        ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).getSelectedGeoValue())
+                dataSourceDto.setGeographicalValue(generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM).isVisible()
+                        ? (((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).getSelectedGeoValue())
                         : null);
+
             }
         }
 
@@ -360,8 +367,8 @@ public class DataSourcePanel extends VLayout {
 
         // Spatial Value (metamac)
         if (dataStructureDto.getGeographicalValueDto() != null) {
-            generalEditionForm.setValue(DataSourceDS.GEO_VALUE_TEXT_METAMAC, InternationalStringUtils.getLocalisedString(dataStructureDto.getGeographicalValueDto().getTitle()));
-            generalEditionForm.setValue(DataSourceDS.GEO_VALUE_UUID_METAMAC, dataStructureDto.getGeographicalValueDto().getUuid());
+            RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC);
+            geoValue.setRelatedResource(geographicalValueDtoToRelatedResourceDto(dataStructureDto.getGeographicalValueDto()));
         }
 
         // Spatial variable
@@ -420,6 +427,20 @@ public class DataSourcePanel extends VLayout {
             ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).restartVisibility(dataStructureDto.getSpatialVariables().get(0));
         }
         redrawForms();
+    }
+
+    public RelatedResourceDto geographicalValueDtoToRelatedResourceDto(GeographicalValueDto source) {
+
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setCode(source.getCode());
+        target.setTitle(source.getTitle());
+        target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        target.setUuid(source.getUuid());
+        target.setGranularityCode(source.getGranularity().getCode());
+        return target;
     }
 
     public void setDataStructureView(DataStructureDto dataStructureDto) {
@@ -501,6 +522,13 @@ public class DataSourcePanel extends VLayout {
         annualPuntualRateEditionForm.setUiHandlers(uiHandlers);
         annualPercentageRateForm.setUiHandlers(uiHandlers);
         annualPercentageRateEditionForm.setUiHandlers(uiHandlers);
+
+        GeographicalSelectItem geographicalSelectItem = ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM));
+
+        if (geographicalSelectItem != null) {
+            geographicalSelectItem.setUiHandlers(uiHandlers);
+        }
+
     }
 
     public void setIndicator(IndicatorDto indicatorDto) {
@@ -657,7 +685,7 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        final GeographicalSelectItem geographicalValueMulti = new GeographicalSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        final GeographicalSelectItem geographicalValueMulti = new GeographicalSelectItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue(), this.uiHandlers);
         geographicalValueMulti.setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(IndicatorsValues.getGeographicalGranularities()));
         geographicalValueMulti.setRequired(true);
         geographicalValueMulti.setShowIfCondition(new FormItemIfFunction() {
@@ -667,21 +695,19 @@ public class DataSourcePanel extends VLayout {
                 return (isEnvironmentSelected(form, QueryEnvironmentEnum.GPE) || isEnvironmentSelected(form, QueryEnvironmentEnum.JSON_STAT)) && dataStructureHasGeoValue();
             }
         });
+
         geographicalValueMulti.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
 
             @Override
             public void onChanged(ChangedEvent event) {
-                // Clear geographical value
-                geographicalValueMulti.setGeoValuesValueMap(new LinkedHashMap<String, String>());
-                geographicalValueMulti.setGeoValue(new String());
-                // Set values with selected granularity
-                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    uiHandlers.retrieveGeographicalValuesByGranularity(event.getValue().toString());
-                }
+                geographicalValueMulti.clearGeographicalValue();
             }
         });
 
-        ViewTextItem geographicalValueMetamac = new ViewTextItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC, getConstants().dataSourceGeographicalValue());
+        RelatedResourceLinkItem geographicalValueMetamac = new RelatedResourceLinkItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC, getConstants().dataSourceGeographicalValue(),
+                getCustomLinkItemNavigationClickHandler());
+
+        // ViewTextItem geographicalValueMetamac = new ViewTextItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC, getConstants().dataSourceGeographicalValue());
         geographicalValueMetamac.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -1012,6 +1038,15 @@ public class DataSourcePanel extends VLayout {
         generalStaticEditionForm.setValue(dataSourceDto);
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
+        GeographicalSelectItem geoValue = (GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM);
+        if (dataSourceDto.getGeographicalValue() != null) {
+            geoValue.setGeoGranularity(dataSourceDto.getGeographicalValue().getGranularityUuid());
+            geoValue.setGeoValue(dataSourceDto.getGeographicalValue());
+        } else {
+            geoValue.setGeoGranularity(null);
+            geoValue.setGeoValue(null);
+        }
+
         // Some rates may not exist
 
         if (dataSourceDto.getInterperiodPuntualRate() != null) {
@@ -1063,7 +1098,7 @@ public class DataSourcePanel extends VLayout {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
         ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).setValueMap();
-        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC)).clearValue();
         ((HiddenItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_UUID_METAMAC)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();
@@ -1199,5 +1234,15 @@ public class DataSourcePanel extends VLayout {
                 quantityUnitSchemeExternalItem.size(), totalResults);
         ((SearchSrmItemLinkItemWithSchemeFilterItem) annualPercentageRateEditionForm.getItem(formItemName)).setResources(quantityUnitSchemeExternalItem, firstResult,
                 quantityUnitSchemeExternalItem.size(), totalResults);
+    }
+
+    protected CustomLinkItemNavigationClickHandler getCustomLinkItemNavigationClickHandler() {
+        return new CustomLinkItemNavigationClickHandler() {
+
+            @Override
+            public BaseUiHandlers getBaseUiHandlers() {
+                return getUiHandlers();
+            }
+        };
     }
 }

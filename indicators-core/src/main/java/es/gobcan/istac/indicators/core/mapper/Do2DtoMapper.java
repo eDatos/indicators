@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -65,6 +66,9 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     // Geographical value
     GeographicalValueDto geographicalValueDoToDto(GeographicalValue source);
 
+    // Geographical value
+    RelatedResourceDto geographicalValueDoToRelatedResourceDto(GeographicalValue source);
+
     // Geographical value Base
     GeographicalValueBaseDto geographicalValueDoToBaseDto(GeographicalValue source);
 
@@ -81,8 +85,8 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
 
     // DataStructure
-    DataStructureDto dataStructureDoToDto(DataStructure source);
-    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure);
+    DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException;
+    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure) throws MetamacException;
 
     // Data
     DataDto dataDoToDto(Data source);

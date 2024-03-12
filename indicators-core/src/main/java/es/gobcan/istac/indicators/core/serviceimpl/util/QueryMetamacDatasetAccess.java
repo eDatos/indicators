@@ -1,8 +1,15 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
+
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
@@ -10,18 +17,19 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
 import java.util.*;
 
 public class QueryMetamacDatasetAccess {
-    public static String DATA_SEPARATOR = " | ";
-    private String[] observations;
-    private List<DataAttribute> observationsAttributes;
-    private List<String> dimensionsOrderedForData;
-    private Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
-    private List<String> attributesMetadataMap;
 
+    public static String                    DATA_SEPARATOR = " | ";
+    private       String[]                  observations;
+    private       List<DataAttribute>       observationsAttributes;
+    private       List<String>              dimensionsOrderedForData;
+    private       Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
+    private       List<String>              attributesMetadataMap;
 
-    public QueryMetamacDatasetAccess(Query query) throws MetamacException {
+    public QueryMetamacDatasetAccess(Query query, Map<String, String> variableElementsByCode, List<String> geographicalDimensionsId) throws MetamacException {
+
         initializeObservations(query);
         initializeObservationsAttributes(query);
-        initializeDimensionsForData(query);
+        initializeDimensionsForData(query, variableElementsByCode, geographicalDimensionsId);
     }
 
     public List<String> getDimensionsOrderedForData() {
@@ -58,7 +66,10 @@ public class QueryMetamacDatasetAccess {
     /**
      * Init dimensions and dimensions values. Builds a map with dimensions values to get order provided in DATA, because observations are retrieved in API with this order
      */
-    private void initializeDimensionsForData(Query query) throws MetamacException {
+    private void initializeDimensionsForData(Query query, Map<String, String> variableElementsByCode, List<String> geographicalDimensionsId) throws MetamacException {
+        if (geographicalDimensionsId == null) {
+            geographicalDimensionsId = new ArrayList<String>();
+        }
         List<DimensionRepresentation> dimensionRepresentations = query.getData().getDimensions().getDimensions();
         this.dimensionsOrderedForData = new ArrayList<String>(dimensionRepresentations.size());
         this.dimensionValuesOrderedForDataByDimensionId = new HashMap<String, List<String>>(dimensionRepresentations.size());
@@ -69,7 +80,17 @@ public class QueryMetamacDatasetAccess {
             List<CodeRepresentation> codesRepresentations = dimensionRepresentation.getRepresentations().getRepresentations();
             this.dimensionValuesOrderedForDataByDimensionId.put(dimensionId, new ArrayList<String>(codesRepresentations.size()));
             for (CodeRepresentation codeRepresentation : codesRepresentations) {
-                this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(codeRepresentation.getCode());
+                if (geographicalDimensionsId.contains(dimensionId)) {
+                    String variableElement = variableElementsByCode.get(codeRepresentation.getCode());
+
+                    if (variableElement != null) {
+                        this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(variableElement);
+                    } else {
+                        throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, codeRepresentation.getCode());
+                    }
+                } else {
+                    this.dimensionValuesOrderedForDataByDimensionId.get(dimensionId).add(codeRepresentation.getCode());
+                }
             }
         }
     }
@@ -97,22 +118,18 @@ public class QueryMetamacDatasetAccess {
         }
         for (DataAttribute dataAttributeDef : dataAttributesDef) {
             this.attributesMetadataMap.add(dataAttributeDef.getId());
-            dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(),dataAttributeDef.getId()));
+            dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()));
         }
-
-
 
         this.observationsAttributes = dataAttributesDef;
     }
 
-
-
     /**
      * Gets observation attributes' data values based on attribute IDs and a string of attribute values.
      *
-     * @param query            The Query object containing the metadata.
+     * @param query The Query object containing the metadata.
      * @param attributesString A string of attribute values.
-     * @param attributeId      The ID of the attribute to process.
+     * @param attributeId The ID of the attribute to process.
      * @return An array of observation attributes' data values.
      */
     private String getObservationsAttributesDataValue(Query query, String attributesString, String attributeId) {
@@ -124,9 +141,9 @@ public class QueryMetamacDatasetAccess {
     /**
      * Processes a specific attribute, updating dataArrayAttributes based on attribute values.
      *
-     * @param query               The Query object containing the metadata.
+     * @param query The Query object containing the metadata.
      * @param dataArrayAttributes An array of attribute values to be updated.
-     * @param attributeId         The ID of the attribute to process.
+     * @param attributeId The ID of the attribute to process.
      */
     private void processAttribute(Query query, String[] dataArrayAttributes, String attributeId) {
         for (Attribute attribute : query.getMetadata().getAttributes().getAttributes()) {
@@ -139,7 +156,7 @@ public class QueryMetamacDatasetAccess {
     /**
      * Update dataArrayAttributes based on enumerated attribute values.
      *
-     * @param attribute           The Attribute object containing enumerated values.
+     * @param attribute The Attribute object containing enumerated values.
      * @param dataArrayAttributes An array of attribute values to be updated.
      */
     private void updateDataArrayAttributes(Attribute attribute, String[] dataArrayAttributes) {
@@ -158,8 +175,7 @@ public class QueryMetamacDatasetAccess {
      * Retrieves the localized value from an EnumeratedAttributeValue.
      *
      * @param attributeValue The EnumeratedAttributeValue object containing localized values.
-     * @return String The localized value corresponding to the DATASET_REPOSITORY_LOCALE.
-     * Returns null if the specified locale is not found.
+     * @return String The localized value corresponding to the DATASET_REPOSITORY_LOCALE. Returns null if the specified locale is not found.
      */
     private String getLocalizedValue(EnumeratedAttributeValue attributeValue) {
         List<LocalisedString> texts = attributeValue.getName().getTexts();

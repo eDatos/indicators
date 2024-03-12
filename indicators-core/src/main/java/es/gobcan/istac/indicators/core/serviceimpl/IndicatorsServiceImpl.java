@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,9 +9,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -27,6 +30,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +56,15 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageCodelistActionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -64,8 +72,9 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
-import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;;
 
 /**
  * Implementation of IndicatorsService
@@ -91,6 +100,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private PlatformTransactionManager                      platformTransactionManager;
 
     private static final Logger                             LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+
+    @Autowired
+    private StatisticalResoucesRestExternalService          statisticalResoucesRestExternalService;
 
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -1395,6 +1407,145 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
 
         return getIndicatorVersionRepository().findCategoryElementsInIndicators();
+
+    }
+
+    @Override
+    public List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return Collections.emptyList();
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            if (checkIsDefaultCodelistForGpeJsonStat(codelistAvro.getUrn())) {
+                return retrieveIndicatorsGpeOrJsonStatEnvironment();
+            } else {
+                return retrieveIndicatorsByGeographicalCodelist(codelistAvro.getUrn());
+            }
+        }
+        return Collections.emptyList();
+
+    }
+
+    @Override
+    public StreamMessageCodelistActionEnum getCodelistAction(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return null;
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES;
+        } else if (checkIsLastNumberVersionDefaultGranularityCodelist(codelistAvro)) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES;
+        }
+        return null;
+
+    }
+
+    private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
+        String territoryVariableUrnDefault = indicatorsConfigurationService.retrieveDefaultTerritoryVariable();
+
+        return territoryVariableUrnDefault.equals(variableUrn);
+    }
+
+    private boolean checkIsLastNumberVersionDefaultGranularityCodelist(CodelistAvro codelistAvro) throws MetamacException {
+
+        if (!Boolean.TRUE.equals(codelistAvro.getLatestVersionNumberPublic())) {
+            return false;
+        }
+
+        String geographicalGranularityCodelistUrnDefault = indicatorsConfigurationService.retrieveDefaultCodelistGeographicalGranularityUrn();
+
+        String[] paramsDefaultGranularityCodelist = splitUrnItemScheme(geographicalGranularityCodelistUrnDefault);
+        String agencyIdDefault = paramsDefaultGranularityCodelist[0];
+        String resourceIdDefault = paramsDefaultGranularityCodelist[1];
+
+        String[] paramsCodelistAvro = splitUrnItemScheme(codelistAvro.getUrn());
+        String agencyId = paramsCodelistAvro[0];
+        String resourceId = paramsCodelistAvro[1];
+
+        return agencyIdDefault.equals(agencyId) && resourceIdDefault.equals(resourceId);
+
+    }
+
+    private boolean checkIsDefaultCodelistForGpeJsonStat(String codelistUrn) throws MetamacException {
+        String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat();
+
+        String[] defaultParams = splitUrnItemScheme(codelistDefault);
+        String defaultAgencyId = defaultParams[0];
+        String defaultResourceId = defaultParams[1];
+
+        String[] params = splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+
+        return defaultAgencyId.equals(agencyId) && defaultResourceId.equals(resourceId);
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(String codelistUrn) throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsGpeOrJsonStatEnvironment() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE.getValue()).or()
+                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT.getValue());
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    @Override
+    public void updateDatasourceCodelistForGeographicalValuesMigration(ServiceContext ctx) throws MetamacException {
+
+        List<IndicatorVersion> queryBasedIndicators = retrieveIndicatorsEdatos();
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null);
+        for (IndicatorVersion indicatorVersion : queryBasedIndicators) {
+            for (DataSource dataSource : indicatorVersion.getDataSources()) {
+                Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                        es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn(query);
+                dataSource.setGeographicalCodelistUrn(codelistUrn);
+                getDataSourceRepository().save(dataSource);
+            }
+        }
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsEdatos() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.METAMAC);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
 
     }
 

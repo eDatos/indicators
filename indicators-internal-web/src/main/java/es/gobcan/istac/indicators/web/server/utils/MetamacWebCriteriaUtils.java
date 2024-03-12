@@ -101,6 +101,16 @@ public class MetamacWebCriteriaUtils {
                 conjunctionRestriction.getRestrictions()
                         .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), criteria.getGranularityCode(), OperationType.EQ));
             }
+
+            if (StringUtils.isNotBlank(criteria.getGeographicalGranularityUuid())) {
+                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(),
+                        criteria.getGeographicalGranularityUuid(), OperationType.EQ));
+            }
+
+            if (StringUtils.isNotBlank(criteria.getGeographicalValueCode())) {
+                conjunctionRestriction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.CODE.name(), criteria.getGeographicalValueCode(), OperationType.EQ));
+            }
         }
 
         return conjunctionRestriction;

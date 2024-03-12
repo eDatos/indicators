@@ -14,6 +14,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
+import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabView;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter.AdminGeoValuesTabView;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
@@ -101,4 +102,13 @@ public class AdminViewImpl extends ViewWithUiHandlers<AdminUiHandlers> implement
         }
     }
 
+    @Override
+    public void selectTab(String tabName) {
+        if (NameTokens.adminGeoValuesPage.equals(tabName)) {
+            tabset.selectTab(geoValuesTab);
+
+        } else if (NameTokens.adminUnitMultipliersPage.equals(tabName)) {
+            tabset.selectTab(unitMultipliersTab);
+        }
+    }
 }

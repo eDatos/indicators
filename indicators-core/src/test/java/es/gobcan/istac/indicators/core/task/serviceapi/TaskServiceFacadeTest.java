@@ -56,4 +56,14 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     public void testScheduleCategoryCacheRefreshAutomaticJob() throws Exception {
         // Quartz jobs are not tested
     }
+
+    @Override
+    public void testExecuteGeographicalValuesMigrationTemporalTask() throws Exception {
+        // no test
+    }
+
+    @Override
+    public void testScheduleGeographicalValuesMigrationTemporalTask() throws Exception {
+        // Quartz jobs are not tested
+    }
 }

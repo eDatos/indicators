@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.siemac.edatos.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -17,10 +18,16 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
+import org.siemac.metamac.srm.core.stream.message.InternationalStringAvro;
+import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
+import org.siemac.metamac.srm.core.stream.message.RelatedResourceAvro;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 
 /**
  * Mocks
@@ -100,6 +107,21 @@ public class IndicatorsMocks extends MetamacMocks {
         return target;
     }
 
+    public static InternationalStringAvro mockInternationalStringAvro() {
+        List<LocalisedStringAvro> avroLocalisedStrings = new ArrayList<>();
+        LocalisedStringAvro es = new LocalisedStringAvro();
+        es.setLabel(mockString(10) + " en Espanol");
+        es.setLocale("es");
+
+        LocalisedStringAvro en = new LocalisedStringAvro();
+        en.setLabel(mockString(10) + " in English");
+        en.setLocale("en");
+
+        avroLocalisedStrings.add(es);
+        avroLocalisedStrings.add(en);
+        return InternationalStringAvro.newBuilder().setLocalisedStrings(avroLocalisedStrings).build();
+    }
+
     // -----------------------------------------------------------------
     // GEOGRAPHIC GRANULARITY AND VALUE
     // -----------------------------------------------------------------
@@ -130,6 +152,45 @@ public class IndicatorsMocks extends MetamacMocks {
         geographicalValueDto.setGranularity(granularity);
 
         return geographicalValueDto;
+    }
+
+    /**
+     * Mock a GeographicalValue as RelatedResourceDto
+     */
+    public static RelatedResourceDto mockRelatedResourceAsGeographicalValue(String code, String geoValueUuid, String granularityUuid, String granularityCode) {
+        RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
+        relatedResourceDto.setCode(code);
+        relatedResourceDto.setTitle(mockInternationalStringDto());
+        relatedResourceDto.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        relatedResourceDto.setUuid(geoValueUuid);
+        relatedResourceDto.setGranularityCode(granularityCode);
+        relatedResourceDto.setGranularityUuid(granularityUuid);
+        return relatedResourceDto;
+    }
+
+    /**
+     * Mock a GeographicalValue
+     */
+    public static VariableElementAvro mockVariableElementAvro(String code, String variableCode, String granularityUuid) {
+        VariableElementAvro variableElementAvro = new VariableElementAvro();
+        variableElementAvro.setCode(code);
+        variableElementAvro.setShortName(mockInternationalStringAvro());
+        variableElementAvro.setLatitud(20.0656233);
+        variableElementAvro.setLongitud(-25.454564645);
+        variableElementAvro.setGeographicGranularities(mockRelatedResourceAvro(code, mockCodeUrn(code), granularityUuid));
+        variableElementAvro.setVariable(mockRelatedResourceAvro(variableCode, GeneratorUrnUtils.generateSiemacStructuralResourcesVariableUrn(variableCode), UUID.randomUUID().toString()));
+
+        return variableElementAvro;
+    }
+
+    public static RelatedResourceAvro mockRelatedResourceAvro(String code, String urn, String granularityUuid) {
+        RelatedResourceAvro relatedResourceAvro = new RelatedResourceAvro();
+        relatedResourceAvro.setCode(code + "_" + granularityUuid);
+        relatedResourceAvro.setUuid(granularityUuid);
+        relatedResourceAvro.setTitle(mockInternationalStringAvro());
+        relatedResourceAvro.setUrn(urn);
+
+        return relatedResourceAvro;
     }
 
     // -----------------------------------------------------------------

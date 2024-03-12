@@ -119,6 +119,10 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               GEOGRAPHICAL_VALUE_7                             = "7";
     protected static String               GEOGRAPHICAL_VALUE_8                             = "8";
     protected static String               GEOGRAPHICAL_VALUE_9                             = "9";
+    protected static String               GEOGRAPHICAL_VALUE_10                            = "10";
+
+    protected static String               GEOGRAPHICAL_VALUE_CODE_1                        = "ES_VARIABLE_ELEMENT";
+    protected static String               GEOGRAPHICAL_VALUE_CODE_10                       = "LPA_VARIABLE_ELEMENT";
 
     // Geographical granularities
     protected static String               GEOGRAPHICAL_GRANULARITY_1                       = "1";
@@ -126,6 +130,8 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               GEOGRAPHICAL_GRANULARITY_3                       = "3";
     protected static String               GEOGRAPHICAL_GRANULARITY_4                       = "4";
     protected static String               GEOGRAPHICAL_GRANULARITY_5                       = "5";
+
+    protected static String               GEOGRAPHICAL_GRANULARITY_1_CODE                  = "COUNTRIES";
 
     // Indicators
     protected static final String         INDICATOR1_UUID                                  = "Indicator-1";
@@ -195,6 +201,8 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               CATEGORY_ELEMENT_6                               = "6";
     protected static String               CATEGORY_ELEMENT_7                               = "7";
     protected static String               CATEGORY_ELEMENT_8                               = "8";
+
+    protected static String               VARIABLE_TERRITORY_CODE                          = "VARIABLE_TERRITORY";
 
     // -------------------------------------------------------------------------------
     // SERVICE CONTEXT

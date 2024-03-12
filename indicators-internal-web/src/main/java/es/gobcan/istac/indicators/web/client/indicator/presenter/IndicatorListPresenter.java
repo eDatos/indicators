@@ -294,6 +294,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
     @Override
     public void goTo(List<PlaceRequest> location) {
-        // without implement
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 }

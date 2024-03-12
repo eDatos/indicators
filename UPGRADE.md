@@ -8,6 +8,33 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 9.7.0 a 9.7.1-SNAPSHOT
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/9.7.0/db/common-metadata/postgresql/*.sql
+```
+
+* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la siguiente carpeta (excepto los scripts que se encuentran dentro de las carpetas "migrar-valores-geograficos" y "20240202_migrar_granularidades_geograficas" que se ejecutarán en el siguiente paso:
+
+```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/*.sql
+```
+
+* Paso 1 migración. Se ha realizado un proceso de migración de las granularidades cuya gestión desaparece de indicators y se usará, en su lugar los códigos de la clasificación CL_GEO_GRANULARITIES del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de granularidades de indicators. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
+
+```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/20240202_migrar_granularidades_geograficas/*.sql
+```
+
+* Paso 2 migración. Se ha realizado un proceso de migración de los valores geográficos cuya gestión desaparece de indicators y se usará, en su lugar los elementos de variable que proceden del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de los valores geográficos como de los valores que se encuentran en las diferentes tablas que la referencian. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
+
+```
+etc/changes-from-release/9.6.0/db/indicators/postgresql/20240116_migrar-valores-geograficos/*.sql
+```
+
+* Paso 3 migración. A REALIZAR EN APP SRM! Una vez se termine el proceso de migración será necesario reenviar el mensaje de kafka de la clasificación de granularidades del srm establecida por defecto. Para saber la clasificación establecida por defecto en cada entorno mirar la propiedad del common-metadata "metamac.default.codelist.geographical_granularity.urn". Ir a esa clasificación en el srm y pulsar botón "Reenviar mensaje de publicación"
+
 ## 9.5.0 a 9.6.0
 * Es necesario en srm haber creado un tipo de anotación denominada "SYMBOL_POSITION" desde el menú "Administración" en el srm. Descripción "Posición del símbolo en las unidades de medida"
 * Es necesario ejecutar el script "20231001_create_constant_properties_in_common_metadata.sql" que se encuentra en el srm y que crea el metadato "metamac.srm.codelist.annotation.type.position_unit" en common-metadata

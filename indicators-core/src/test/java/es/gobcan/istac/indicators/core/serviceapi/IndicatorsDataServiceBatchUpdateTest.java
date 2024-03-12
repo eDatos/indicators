@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,18 +30,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest {
@@ -101,6 +107,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static final List<String>        INDICATORS_GROUP1         = Arrays.asList(INDICATOR1_UUID, INDICATOR3_UUID, INDICATOR4_UUID, INDICATOR5_UUID, INDICATOR6_UUID, INDICATOR7_UUID,
             INDICATOR8_UUID, INDICATOR9_UUID);
     private static final List<String>        INDICATORS_GROUP2         = Arrays.asList(INDICATOR2_UUID);
+    List<GeographicalValue>                  geographicalValues        = new ArrayList<GeographicalValue>();
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -124,7 +131,20 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private IndicatorVersionRepository       indicatorVersionRepository;
 
     @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
+    @Autowired
     private JpaTransactionManager            txManager;
+
+    @Autowired
+    private IndicatorsSystemsService         indicatorsSystemsService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+    }
 
     /*
      * Indicator with a single datasource
@@ -132,6 +152,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     @Test
     public void testUpdateIndicatorsDataSingleDatasource() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList(INDICATOR1_DS_GPE_UUID);
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
@@ -295,7 +316,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     @Test
     public void testUpdateIndicatorsDataDiffusionProductionVersionMatch() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA);
-
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class)))
+                .thenReturn(SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(new ArrayList<GeographicalValue>()));
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList(INDICATOR8_DS_GPE_UUID);
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
@@ -403,12 +425,12 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         if (INDICATORS_GROUP1.contains(indicatorUuid)) {
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011-01", "2010", "2010-12", "2010-11", "2010-10", "2010-09"));
-            dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+            dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         } else if (INDICATORS_GROUP2.contains(indicatorUuid)) {
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010-12", "2010-11", "2010-10", "2009", "2009-12", "2009-11", "2009-10"));
-            dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+            dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61));
             dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                     MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         }
