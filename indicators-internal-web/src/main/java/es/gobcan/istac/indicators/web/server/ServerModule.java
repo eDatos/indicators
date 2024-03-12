@@ -22,7 +22,6 @@ import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteGeoGranularitiesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
@@ -76,7 +75,6 @@ import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorProductionV
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveDataSourceActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.SaveGeoGranularityActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveUnitMultiplierActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
@@ -97,7 +95,6 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
@@ -152,7 +149,6 @@ import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidation
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
-import es.gobcan.istac.indicators.web.shared.SaveGeoGranularityAction;
 import es.gobcan.istac.indicators.web.shared.SaveUnitMultiplierAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
@@ -177,9 +173,6 @@ public class ServerModule extends HandlerModule {
         // App management
         bindHandler(GetValuesListsAction.class, GetValuesListsActionHandler.class);
 
-        // Admin - Geo granularities
-        bindHandler(SaveGeoGranularityAction.class, SaveGeoGranularityActionHandler.class);
-        bindHandler(DeleteGeoGranularitiesAction.class, DeleteGeoGranularitiesActionHandler.class);
         bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
         bindHandler(GetGeographicalGranularitiesPaginatedListAction.class, GetGeographicalGranularitiesPaginatedListActionHandler.class);
 

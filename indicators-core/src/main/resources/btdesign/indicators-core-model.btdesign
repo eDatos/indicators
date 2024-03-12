@@ -83,7 +83,8 @@ Application Indicators {
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
 	    	"Update geographical values table from srm"
-	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
+	    	updateGeopgraphicalValuesFromSrmVariableElements(SpecificRecordBase message) throws MetamacException;
+	    	updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(SpecificRecordBase message) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -148,7 +149,9 @@ Application Indicators {
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
 	    	"Get indicator versions where geographical codelist match with the changed codelist" 
-	    	List<@IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
+	    	List<@IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(SpecificRecordBase message) throws MetamacException;
+	    	"Get action to do when a codelist is caught from  the consumer of codelist kafka topic"
+	    	@StreamMessageCodelistActionEnum getCodelistAction(SpecificRecordBase message) throws MetamacException;
 	    	"update new datasource metadata -codelistUrn- in initial migration of geographical values to variable elements values" 
 	    	updateDatasourceCodelistForGeographicalValuesMigration() throws MetamacException;
 	    	
@@ -453,7 +456,7 @@ Application Indicators {
 	    	"Update geographical values table from srm"
 	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
 	    	"Update indicators when geographical codelist changes" 
-	    	populateIndicatorsDataFromGeographicalCodelist(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
+	    	processCodelistKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
@@ -464,12 +467,6 @@ Application Indicators {
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Create a geographical granularity"
-	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Update a geographical granularity"
-	    	@GeographicalGranularityDto updateGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Delete a geographical granularity"
-	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
 	    	"Retrieves time granularities in the indicator"
@@ -2185,5 +2182,11 @@ Application Indicators {
        enum TypeRelatedResourceEnum {
     		GEOGRAPHICAL_VALUE
     	}
+    	
+    	"Used when a kafka message is received from CODELIST_PUBLICATION topic to determine the action must be done depending on codelist urn"
+    	 enum StreamMessageCodelistActionEnum {
+           GEOGRAPHICAL_VALUES,
+           GEOGRAPHICAL_GRANURALITIES
+       }
 	}
 }

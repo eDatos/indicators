@@ -28,6 +28,9 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,7 +63,9 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.mapper.VariableElementAvro2DoMapper;
+import es.gobcan.istac.indicators.core.service.SrmRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
 import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
@@ -87,6 +92,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Autowired
     VariableElementAvro2DoMapper                                   variableElementAvro2DoMapper;
+
+    @Autowired
+    private SrmRestExternalService                                 srmRestExternalService;
+
+    @Autowired
+    InternationalString2InternationalStringMapper                  internationalString2InternationalStringMapper;
 
     // --------------------------------------------------------------------------------------------
     // INDICATOR SYSTEM
@@ -1647,6 +1658,29 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 updateGeopgraphicalValue(ctx, geographicalValue, variableElementAvro);
             }
         }
+    }
+
+    @Override
+    public void updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return;
+        }
+
+        Codes granularityCodes = srmRestExternalService.retrieveCodesFromCodelist(codelistAvro.getUrn(), true);
+
+        for (CodeResource granularityCode : granularityCodes.getCodes()) {
+            GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().findGeographicalGranularityByCode(granularityCode.getId());
+
+            if (geographicalGranularity != null) {
+                geographicalGranularity.setTitle(internationalString2InternationalStringMapper.internationalString2InternationalString((granularityCode.getName())));
+                updateGeographicalGranularity(ctx, geographicalGranularity);
+            }
+
+        }
+
     }
 
     private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
