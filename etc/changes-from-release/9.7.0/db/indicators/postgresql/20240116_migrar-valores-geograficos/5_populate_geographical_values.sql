@@ -4,7 +4,41 @@
 -- Script para rellenar la tabla maestra de valores geográficos "tb_lis_geogr_values"
 -- --------------------------------------------------------------------------------------------------
 
--- 1 Ejecutar la siguiente consulta en la bd del INDICATORS
+--1. Hacer copia de seguridad de tabla "tb_lis_geogr_values"
+-- indicators_bd.tb_lis_geogr_values definition
+
+--1.1) Crear copia de tabla
+CREATE TABLE tb_lis_geogr_values_copy (
+	id int8 NOT NULL,
+	code varchar(255) NOT NULL,
+	latitude float8,
+	longitude float8,
+	global_order varchar(255) NOT NULL,
+	update_date_tz varchar(50),
+	update_date timestamp,
+	uuid varchar(36) NOT NULL,
+	created_date_tz varchar(50),
+	created_date timestamp,
+	created_by varchar(50),
+	last_updated_tz varchar(50),
+	last_updated timestamp,
+	last_updated_by varchar(50),
+	"version" int8 NOT NULL,
+	title_fk int8,
+	granularity_fk int8 NOT NULL,
+	CONSTRAINT pk_tb_lis_geogr_values_copy PRIMARY KEY (id)
+);
+
+--1.2) Copiar los datos a la tabla de copia
+INSERT INTO indicators_bd.tb_lis_geogr_values_copy
+(id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk)
+ SELECT id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk
+FROM tb_lis_geogr_values;
+
+--1.3) Borrar datos de la tabla  "tb_lis_geogr_values"
+delete  from tb_lis_geogr_values;
+
+-- 2 Ejecutar la siguiente consulta en la bd del INDICATORS
 --¡¡¡¡¡¡Atención!!!!!! puede dar problemas en dbeaver porque son muchas entradas. Lo que se puede hacer es volcarlo en un fichero (en sublime por ejemplo)
 -- y ejecutarlo como script en dbeaver
 
@@ -39,7 +73,7 @@ INSERT INTO tb_lis_geogr_values(id, code, latitude, longitude, global_order, upd
 
 from  temp_mig_geo_values t;
 
---2. Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
+--3. Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
 -- 1. Seleccionar la  consulta en dbeaver
 -- 2. desplegar menú Ejecutar (Execute)
 -- 3. Seleccionar submenú Ejecutar desde consulta (Execute from query)
@@ -54,48 +88,7 @@ from  temp_mig_geo_values t;
 ----8.4 Ir a consola de comandos y ejecutar la siguiente sentencia (donde estén los comandos para el dump. Por eje. en local hay que situarse en carpeta  con dump si no está mapeado ej: E:\program files\PostgreSQL\14\bin )
 psql -U "indicators_bd" -W -h localhost indicators_bd < E:\mig\<NOMBRE_FICHERO_CREADO>
 --EJ:  psql -U "indicators_bd" -W -h localhost -p 5433 indicators_bd < E:\mig\temp_mig_geo_values_202401101144.txt
-
---3. Hacer copia de seguridad de tabla "tb_lis_geogr_values"
--- indicators_bd.tb_lis_geogr_values definition
-
---3.1) Crear copia de tabla
-CREATE TABLE tb_lis_geogr_values_copy (
-	id int8 NOT NULL,
-	code varchar(255) NOT NULL,
-	latitude float8,
-	longitude float8,
-	global_order varchar(255) NOT NULL,
-	update_date_tz varchar(50),
-	update_date timestamp,
-	uuid varchar(36) NOT NULL,
-	created_date_tz varchar(50),
-	created_date timestamp,
-	created_by varchar(50),
-	last_updated_tz varchar(50),
-	last_updated timestamp,
-	last_updated_by varchar(50),
-	"version" int8 NOT NULL,
-	title_fk int8,
-	granularity_fk int8 NOT NULL,
-	CONSTRAINT pk_tb_lis_geogr_values_copy PRIMARY KEY (id)
-);
-
---3.2) Copiar los datos a la tabla de copia
-INSERT INTO indicators_bd.tb_lis_geogr_values_copy
-(id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk)
- SELECT id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk
-FROM tb_lis_geogr_values;
-
---3.3) Borrar datos de la tabla  "tb_lis_geogr_values"
-delete  from tb_lis_geogr_values;
-
-
---4) Exportar la tabla creada en pasos anteriores "temp_mig_codes_with_var_element" en la base de datos "indicators" en formato CSV
- -- Botón derecho sobre la tabla y pulsar "Export Data" elegir formato "CSV".
---4.1  Importar la tabla anterior en la base de datos indicators_data"
- -- Botón derecho sobre la tabla "temp_mig_codes_with_var_element" en la base de datos "indicators_data". Seleccionar "Import data".  Seleccionar fichero CSV creado en la exportación anterior.
-
-
+-- tiempo estimado: en desarrollo tardó 8 minutos con un fichero con 2159 entradas
 
 --5) Crear nuevos campos en tablas relacionadas y deprecar antiguos
  ----5.1 tabla tb_data_sources
@@ -138,6 +131,40 @@ ALTER TABLE tb_quantities ADD CONSTRAINT fk_tb_quantities_base_location_fk FOREI
  --PENDIENTE!!!!!!! VER LO QUE NO TIENE TRADUCCIÓN ACTULAMENTE
  select t.code from tb_lis_geogr_values_copy t where t.code not in(select code from temp_mig_codes_with_var_element);
  
+ --nota. En desarrollo se encuentran las siguientes:
+ /*
+  select t.code, t.title_fk, tls.* from tb_lis_geogr_values_copy t, tb_localised_strings tls 
+where t.code not in(select code from temp_mig_codes_with_var_element)
+and tls.international_string_fk = t.title_fk
+and tls.locale ='es';
+ 
+ 
+ 09	1204	1404	Canarias	es		0	1204
+05	1205	1405	El Hierro	es		1	1205
+01	1206	1406	Fuerteventura	es		0	1206
+03	1207	1407	Gran Canaria	es		0	1207
+04	1208	1408	La Gomera	es		0	1208
+06	1209	1409	La Palma	es		0	1209
+02	1210	1410	Lanzarote	es		0	1210
+07	1211	1411	Tenerife	es		0	1211
+08	1212	1412	CAC	es		0	1212
+
+Se soluciona añadiendo a mano
+insert into temp_mig_codes_with_var_element values('MANUAL', '09', 'CANARIAS');
+insert into temp_mig_codes_with_var_element values('MANUAL', '05', 'EL_HIERRO');
+insert into temp_mig_codes_with_var_element values('MANUAL', '01', 'FUERTEVENTURA');
+insert into temp_mig_codes_with_var_element values('MANUAL', '03', 'GRAN_CANARIA');
+insert into temp_mig_codes_with_var_element values('MANUAL', '04', 'LA_GOMERA');
+insert into temp_mig_codes_with_var_element values('MANUAL', '06', 'LA_PALMA');
+insert into temp_mig_codes_with_var_element values('MANUAL', '02', 'LANZAROTE');
+insert into temp_mig_codes_with_var_element values('MANUAL', '07', 'TENERIFE');
+insert into temp_mig_codes_with_var_element values('MANUAL', '08', 'GEO_OTROS');
+ */
+ 
+ 
+ -- En principio no debería ocurrir pero si pasa añadir a la no normalizada. Se añaden a la clasificación no normalizada. Hablar con Vicky para asociar.
+ 
+ 
  -- Si son de GPE Y JSONSTAT ASOCIARLOS A LA NUEVA CLASIFICACIÓN QUE SE CREARÁ.
   select t.code from tb_lis_geogr_values_copy t where t.code not in(select code from temp_mig_codes_with_var_element)
 and t.id in(select a.geographical_value_fk  from tb_ind_version_geo_cov a, tb_indicators_versions b,  tb_data_sources d
@@ -152,6 +179,7 @@ where a.indicator_version_fk = b.id
 and d.indicator_version_fk = b.id 
 and d.query_environment = 'METAMAC');
  
+ --A ejecutar en bd INDICATORS_BD:
  
  ----6.1) tabla tb_data_sources Se debe rellenar a partir de la tabla antigua guardada en tb_lis_geogr_values_copy 
 update tb_data_sources d
@@ -213,7 +241,8 @@ set base_location_fk  = (
 where deprecated_base_location_fk is not null and base_location_fk  is null;
  
  --6.6. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
- ----6.6.1) select 'tb_indic_inst_last_value', deprecated_geographical_code, geographical_code from tb_indic_inst_last_value where deprecated_geographical_code is not null and geographical_code is null;
+ ----6.6.1) 
+ select 'tb_indic_inst_last_value', deprecated_geographical_code, geographical_code from tb_indic_inst_last_value where deprecated_geographical_code is not null and geographical_code is null;
  ----6.6.2)
  select 'tb_data_sources', deprecated_geographical_value_fk, geographical_value_fk from tb_data_sources where deprecated_geographical_value_fk is not null and geographical_value_fk is null
  union all
@@ -231,6 +260,15 @@ where deprecated_base_location_fk is not null and base_location_fk  is null;
  select 'tb_ind_version_geo_cov', deprecated_geographical_value_fk, geographical_value_fk, b.code, t.variable_element_code from tb_ind_version_geo_cov, tb_lis_geogr_values_copy b, temp_mig_codes_with_var_element t where b.code = t.code and deprecated_geographical_value_fk = b.id and deprecated_geographical_value_fk is not null and geographical_value_fk is null
  union all
  select 'tb_quantities', deprecated_base_location_fk, base_location_fk, b.code, t.variable_element_code from tb_quantities, tb_lis_geogr_values_copy b, temp_mig_codes_with_var_element t where b.code = t.code and deprecated_base_location_fk = b.id and deprecated_base_location_fk is not null and base_location_fk is null;
+ 
+ 
+ --6.7. Si durante el paso 6 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
+ --ATENCIÓN!!! sólo si en indicators_bd se ha cambiado la tabla migrada inicialmente desde srm hacer lo siguiente si no, obviar este paso
+ -- 6.7.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
+ -- 6.7.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
+ -- 6.7.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
+ 
+ 
  
  
 --7) Añadir primary keys eliminadas

@@ -18,9 +18,9 @@ where conf_key = 'indicators.geographical_values_migration.cron_expression';
 select * from tb_data_sources tds where query_environment = 'METAMAC' and geographical_codelist_urn  is  null;
 
  ----1.2) actualizar codelist para  datos que proceden de GPE y JSON_STAT
-   -- Obtener urn de codelist no normalizada. Lo tiene que dar Vicky. En local será ( 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISTAC:CL_AREA_GPE_JSONSTAT_ISTAC(01.001)')
+   -- Obtener urn de codelist no normalizada. Lo tiene que dar Vicky. Se ha decidido que sea CL_NN_VALORES_GEOGRAFICOS
    -- Actualizar metadato geographical_codelist_urn
-   update tb_data_sources set geographical_codelist_urn = 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISTAC:CL_AREA_GPE_JSONSTAT_ISTAC(01.001)'  where query_environment  in ('GPE', 'JSON_STAT');
+   update tb_data_sources set geographical_codelist_urn = 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISTAC:CL_NN_VALORES_GEOGRAFICOS(XXX)'  where query_environment  in ('GPE', 'JSON_STAT');
 
 -- 2 Obtener la información de todos los elementos de variable asociados del tipo geográfico. Ejecutar la siguiente consulta en la bd del SRM para los codelists indicados. 
 --2.1 Habilitar extensión uuid-ossp ejecutando:
@@ -45,7 +45,7 @@ ve.longitude,
  where
  v.nameable_artefact_fk = t_v.id
  and v.variable_type = 'GEOGRAPHICAL'
- and t_v.code = 'VR_TERRITORIO'
+ and t_v.code = 'TERRITORIO'
  and ve.variable_fk = v.id 
 and ve.identifiable_artefact_fk = t_ve.id 
 and ve.geographical_granularity_fk = granularity.id 
@@ -56,12 +56,20 @@ and granularity.nameable_artefact_fk  = t_granularity.id;
 drop table temp_mig_geo_values;
 
 --3) Obtener la asociación de granularity_code con su id en la tabla "tb_lis_geogr_granularities" de tb_indicators
+-- 3.1 Comprobar que se encuentran las siguientes granularidades
+---- DISTRITOS
+---- SECCIONES
+----_O
+----GEOGRAPHICAL_ZONES
+-- Si no están, añadirlas desde administración
+--3.2 asociación de granularidades. Ejecutar la siguiente sentencia:
 update temp_mig_geo_values mig
 set granularity_fk = (select g.id from tb_lis_geogr_granularities g where g.code = mig.granularity_code);
 
--- 3.1 Comprobar la correcta asociación de granularities
+-- 3.3 Comprobar la correcta asociación de granularities
 select case when (select count(*) from temp_mig_geo_values where granularity_fk is null) = 0 then 'PROCESO CORRECTO' else 'ERROR. HAY GRANULARIDADES QUE NO SE HAN ENCONTRADO EN tb_lis_geogr_granularities' end; 
 
 --Si sale algún valor hay que hablar con equipo de auditoría para solucionarlo y darle valor en administración de indicadores (actualmente las granularidades no están migradas aunque se espera que estén en el futuro)
+----Se detecta que faltan DISTRITOS Y SECCIONES POR SEPARADO.
 
  
