@@ -24,7 +24,7 @@ etc/changes-from-release/9.7.0/db/indicators/postgresql/*.sql
 * Paso 1 migración. Se ha realizado un proceso de migración de las granularidades cuya gestión desaparece de indicators y se usará, en su lugar los códigos de la clasificación CL_GEO_GRANULARITIES del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de granularidades de indicators. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
 
 ```
-etc/changes-from-release/9.7.0/db/indicators/postgresql/migrar-valores-geograficos/*.sql
+etc/changes-from-release/9.7.0/db/indicators/postgresql/20240202_migrar_granularidades_geograficas/*.sql
 ```
 
 * Paso 2 migración. Se ha realizado un proceso de migración de los valores geográficos cuya gestión desaparece de indicators y se usará, en su lugar los elementos de variable que proceden del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de los valores geográficos como de los valores que se encuentran en las diferentes tablas que la referencian. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
