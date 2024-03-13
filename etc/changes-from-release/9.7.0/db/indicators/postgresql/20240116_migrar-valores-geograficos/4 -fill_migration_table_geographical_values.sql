@@ -45,7 +45,7 @@ ve.longitude,
  where
  v.nameable_artefact_fk = t_v.id
  and v.variable_type = 'GEOGRAPHICAL'
- and t_v.code = 'TERRITORIO'
+ and t_v.code = 'VR_TERRITORIO'
  and ve.variable_fk = v.id 
 and ve.identifiable_artefact_fk = t_ve.id 
 and ve.geographical_granularity_fk = granularity.id 
