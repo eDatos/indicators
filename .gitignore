@@ -151,3 +151,4 @@ indicators-web/src/main/webapp/theme/js/vendor.min.js
 indicators-web/.vscode
 indicators-web/node
 /bin/
+/indicators-parent/.idea
