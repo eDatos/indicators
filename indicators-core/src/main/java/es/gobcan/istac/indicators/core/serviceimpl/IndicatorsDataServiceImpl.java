@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static es.gobcan.istac.indicators.core.constants.IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -135,21 +137,20 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
 
     @Autowired
-    private SrmRestInternalService                        srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static       String DATASET_REPOSITORY_LOCALE = IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
-    public static final Double ZERO_RANGE                = 1E-6;
-    public static final int    MAX_MEASURE_LENGTH        = 50;
+    public static final String GEO_DIMENSION      = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String TIME_DIMENSION     = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String MEASURE_DIMENSION  = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String CODE_ATTRIBUTE     = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final Double ZERO_RANGE         = 1E-6;
+    public static final int    MAX_MEASURE_LENGTH = 50;
 
     private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
@@ -427,10 +428,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     public List<String> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
         if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
-            return dataCache.get(dataOps.get(0).getDataGpeUuid()).getDataMapAttributes();
-        } else {
-            return null;
+            Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
+            if (data != null && data.getDataMapAttributes() != null) {
+                return data.getDataMapAttributes();
+            }
         }
+        return new ArrayList<>(); // Devuelve una lista vacía si no se cumple la condición
     }
 
     @Override
@@ -1753,14 +1756,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         //acciones sobre el map de atributos
         // Recorrer el mapa y obtener solo el valor del key
-        if (observationsMapAttributes != null) {
-            for (String key : observationsMapAttributes) {
-                AttributeDto obsConfAux = new AttributeDto();
-                obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-                obsConfAux.setAttributeId(key);
-                datasetRepoDto.getAttributes().add(obsConfAux);
-            }
+
+        for (String key : observationsMapAttributes) {
+            AttributeDto obsConfAux = new AttributeDto();
+            obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConfAux.setAttributeId(key);
+            datasetRepoDto.getAttributes().add(obsConfAux);
         }
+
         List<String> languages = new ArrayList<String>();
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
@@ -1777,10 +1780,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Retrieves observation values based on the provided data, data operation, variable codes, geographical information, and time value. Constructs an ObservationExtendedDto object with dimensions
      * and attributes, handling special string cases and other values using helper methods.
      *
-     * @param dataOperation     An object representing a data operation.
-     * @param data              An object representing data.
-     * @param varCodes          A map containing variable codes.
-     * @param geoValue          A string representing geographical information.
+     * @param dataOperation An object representing a data operation.
+     * @param data An object representing data.
+     * @param varCodes A map containing variable codes.
+     * @param geoValue A string representing geographical information.
      * @param originalTimeValue A string representing the original time value.
      * @return ObservationExtendedDto The constructed ObservationExtendedDto object.
      * @throws MetamacException If there is an error populating the observation.
@@ -1803,24 +1806,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         if (isSpecialString(value)) {
             handleSpecialString(observation, value);
-        } else {
-            if (data.getDataMapAttributes() != null) {
-                List<String> observationKeys = data.getDataMapAttributes();
-                for (int i = 0; i < observationKeys.size(); i++) {
-                    String observationKey = observationKeys.get(i);
-                    handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
-                }
-            } else {
-                Double numValue = null;
-                try {
-                    numValue = Double.parseDouble(value);
-                } catch (NumberFormatException e) {
-                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
-                }
-                String formattedValue = formatValue(numValue, dataOperation);
-                observation.setPrimaryMeasure(formattedValue);
+        } else if (data.getDataMapAttributes() != null) {
+            List<String> observationKeys = data.getDataMapAttributes();
+            for (int i = 0; i < observationKeys.size(); i++) {
+                String observationKey = observationKeys.get(i);
+                handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
             }
-
+        } else {
+            Double numValue = null;
+            try {
+                numValue = Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
+            }
+            String formattedValue = formatValue(numValue, dataOperation);
+            observation.setPrimaryMeasure(formattedValue);
         }
 
         return observation;
