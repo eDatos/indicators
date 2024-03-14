@@ -301,7 +301,7 @@ public class DataSourcePanel extends VLayout {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE_METAMAC).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE_METAMAC) : null);
 
                 RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_TEXT_METAMAC);
-                geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
+                dataSourceDto.setGeographicalValue(geoValue.getRelatedResourceDto());
 
             } else {
                 dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
