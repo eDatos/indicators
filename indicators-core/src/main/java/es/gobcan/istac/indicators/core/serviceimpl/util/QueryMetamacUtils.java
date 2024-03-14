@@ -124,7 +124,7 @@ public class QueryMetamacUtils {
             target.setPublishers(Arrays.asList(extractValueForDefaultLanguage));
         }
 
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query);
+        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, null);
         // Data
         target.processData(extractData(query, target.getSpatialVariables(), queryMetamacDatasetAccess));
 
@@ -400,7 +400,7 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private List<DataContent> extractData(Query query,, List<String> geographicalDimensionsId, QueryMetamacDatasetAccess queryMetamacDatasetAccess) throws MetamacException {
+    private List<DataContent> extractData(Query query, List<String> geographicalDimensionsId, QueryMetamacDatasetAccess queryMetamacDatasetAccess) throws MetamacException {
 
         List<DataContent> result = new LinkedList<DataContent>();
 
@@ -411,7 +411,7 @@ public class QueryMetamacUtils {
         }
 
         int numDimensions = data.getDimensions().getDimensions().size();
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
+        queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));

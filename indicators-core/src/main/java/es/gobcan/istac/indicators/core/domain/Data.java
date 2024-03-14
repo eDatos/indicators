@@ -1,13 +1,5 @@
 package es.gobcan.istac.indicators.core.domain;
 
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
-
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
