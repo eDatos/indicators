@@ -23,8 +23,8 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String> dataMapAttributes;
-    private List<String> variablesInOrder = new ArrayList<String>();
+    private List<String> dataMapAttributes = new ArrayList<String>();
+    private List<String> variablesInOrder  = new ArrayList<String>();
 
     public Map<String, DataContent> getData() {
         return data;

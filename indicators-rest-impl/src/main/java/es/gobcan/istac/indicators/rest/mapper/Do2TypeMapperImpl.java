@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
@@ -706,8 +705,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         metadataAttributeUnit.setCode(attribute.getId());
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(attribute.getId()).toString();
         Translation translation = translationRepository.findTranslationByCode(translationCode);
-        Object title = (translation != null) ? translation.getTitle() : attribute.getName();
-        Map<String, String> localisedLabel = MapperUtil.getLocalisedLabel((InternationalString) title, metadataProperties.getDefaultInternationalizationLanguage());
+        Map<String, String> localisedLabel = (translation != null)
+                ? MapperUtil.getLocalisedLabel(translation.getTitle(), metadataProperties.getDefaultInternationalizationLanguage())
+                : MapperUtil.getLocalisedLabel(attribute.getName(), metadataProperties.getDefaultInternationalizationLanguage());
         metadataAttributeUnit.setTitle(localisedLabel);
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;

@@ -429,7 +429,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public List<String> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
         if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
             Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
-            if (data != null && data.getDataMapAttributes() != null) {
+            if (data != null) {
                 return data.getDataMapAttributes();
             }
         }
@@ -1806,7 +1806,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         if (isSpecialString(value)) {
             handleSpecialString(observation, value);
-        } else if (data.getDataMapAttributes() != null) {
+        } else if (!data.getDataMapAttributes().isEmpty()) {
             List<String> observationKeys = data.getDataMapAttributes();
             for (int i = 0; i < observationKeys.size(); i++) {
                 String observationKey = observationKeys.get(i);
