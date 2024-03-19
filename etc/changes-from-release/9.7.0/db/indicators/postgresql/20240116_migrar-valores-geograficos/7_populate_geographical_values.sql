@@ -74,9 +74,10 @@ delete  from tb_lis_geogr_values;
   --El día de despliegue se deberá exportar a CSV la tabla "temp_tb_lis_geogr_values". y luego importar a tb_lis_geogr_values. Para ello:
 -- 0.6.1) Exportar tabla temp_tb_lis_geogr_values a CSV (incrementar elementos a 300000) si es menor el número.
 -- 0.6.2) Importar a tb_lis_geogr_values que está vacía en estos momentos.
--- 0.6.3) Obtener el último valor select max(id) from tb_lis_geogr_values 
--- 0.6.4) con el valor dado anteriormente
-ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR;
+-- 0.6.3) Obtener el último valor 
+select max(id) from tb_lis_geogr_values ;
+-- 0.6.4) con el valor dado anteriormente, cambiar la secuencia para poner el valor anterior mas uno que será el siguiente valor de la secuencia. 
+ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR + 1;
  
  --4 Rellenar nuevos campos creados
 --4.1) Comprobaciones previas
@@ -109,21 +110,27 @@ and tlg.code not in(select tempc.code  from temp_mig_codes_with_var_element temp
 
 */
  
- --nota. En desarrollo se encuentran las siguientes sin traducción:
+ --nota. En demo se encuentran las siguientes sin traducción:
  /*
-TENERIFE
-CANARIAS
-ESPANA
-  
-Lo ideal es buscar en "temp_mig_codes_with_var_element" una asociación con la siguiente select:
- select * from temp_mig_codes_with_var_element where variable_element_code  like '%ESPA%'
- select * from temp_mig_codes_with_var_element where variable_element_code  like '%TENERIFE%'
+1. Código geográfico: Gran Canaria - Área Metropolitana   ES705A11   Comarcas
 
+1.1) Se busca con la siguiente query una equivalencia select * from temp_mig_geo_values tmgv where upper(label_es) like '%GRAN CANARIA%'
+se encuentra: COM_GRAN_CANARIA_AREA_METROPOLITANA   granuralidad: COUNTIES
+se busca la equivalencia con select * from temp_mig_codes_with_var_element tmcwve where variable_element_code in('COM_GRAN_CANARIA_AREA_METROPOLITANA')
+y se encuentra el código ES705A10
 
-y luego se crea  a mano
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'TENERIFE', 'ISLA_TENERIFE');
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'CANARIAS', 'CCAA_CANARIAS');
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ESPANA', '2016_ESPANIA');
+1.2) Se crea  a mano una equivalencia similar para el código geográfico inexistente
+insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ES705A11', 'COM_GRAN_CANARIA_AREA_METROPOLITANA');
+
+2. Código geográfico: Tenerife - Área Metropolitana ES709A11 Comarcas
+2.1) Se busca con la siguiente query una equivalencia select * from temp_mig_geo_values tmgv where upper(label_es) like '%TENERIFE%'
+se encuentra: COM_TENERIFE_AREA_METROPOLITANA   granuralidad: COUNTIES
+se busca la equivalencia con select * from temp_mig_codes_with_var_element tmcwve where variable_element_code in('COM_TENERIFE_AREA_METROPOLITANA')
+y se encuentra el código ES709A10
+
+2.2) Se crea  a mano una equivalencia similar para el código geográfico inexistente
+insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ES709A11', 'COM_TENERIFE_AREA_METROPOLITANA');
+
 Si hay dudas pregunta a equipo consultoría para asociar.
 
  */
@@ -142,8 +149,9 @@ where a.indicator_version_fk = b.id
 and d.indicator_version_fk = b.id 
 and d.query_environment = 'METAMAC');
  
+ --4 Rellenar los datos de las distintas tablas sustituyendo el valor geográfico por el elemento de variable asociado.
  --A ejecutar en bd INDICATORS_BD:
- 
+  
  ----4.2) tabla tb_data_sources Se debe rellenar a partir de la tabla antigua guardada en tb_lis_geogr_values_copy 
 update tb_data_sources d
 set geographical_value_fk = (
@@ -159,11 +167,8 @@ where deprecated_geographical_value_fk is not null and geographical_value_fk  is
  update tb_indic_inst_geo_values d
 set geographical_value_fk = (
                select newG.id  
-                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG, tb_indicators_instances ii, tb_indicators i, tb_indicators_versions iv
-                where d.indicator_instance_fk = ii.id 
-                  and ii.indicator_fk = i.id
-                  and iv.indicator_fk = i.id 
-                  and d.deprecated_geographical_value_fk = l.id  
+                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG
+                where d.deprecated_geographical_value_fk = l.id  
                   and l.code = t.code 
                   and t.variable_element_code = newG.code limit 1  )
 where deprecated_geographical_value_fk is not null and geographical_value_fk  is null;
@@ -172,11 +177,8 @@ where deprecated_geographical_value_fk is not null and geographical_value_fk  is
  update tb_indic_inst_last_value d
 set geographical_code = (
                select newG.code  
-                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG, tb_indicators_instances ii, tb_indicators i, tb_indicators_versions iv
-                where d.indicator_instance_fk = ii.id 
-                  and ii.indicator_fk = i.id
-                  and iv.indicator_fk = i.id 
-                  and d.deprecated_geographical_code = l.code  
+                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG
+                where d.deprecated_geographical_code = l.code  
                   and l.code = t.code 
                   and t.variable_element_code = newG.code limit 1  )
 where deprecated_geographical_code is not null and geographical_code  is null;

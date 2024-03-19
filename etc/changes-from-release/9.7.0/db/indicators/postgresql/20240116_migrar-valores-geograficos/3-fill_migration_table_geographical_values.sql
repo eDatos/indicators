@@ -51,7 +51,13 @@ set granularity_fk = (select g.id from tb_lis_geogr_granularities g where g.code
 -- 2.3 Comprobar la correcta asociación de granularities
 select case when (select count(*) from temp_mig_geo_values where granularity_fk is null) = 0 then 'PROCESO CORRECTO' else 'ERROR. HAY GRANULARIDADES QUE NO SE HAN ENCONTRADO EN tb_lis_geogr_granularities' end; 
 
+--Anexo. Posibles errores en el paso 2.
 --Si sale algún valor hay que hablar con equipo de auditoría para solucionarlo y darle valor en administración de indicadores (actualmente las granularidades no están migradas aunque se espera que estén en el futuro)
 ----Se detecta que faltan DISTRITOS Y SECCIONES POR SEPARADO.
+-- En demo se detecta que se usa una versión de granularidad antigua y no la última en la asociación con elementos de variable. Se cambia el código antiguo por el nuevo:
+ update temp_mig_geo_values
+set granularity_code = 'POPULATION_CENTRES'
+where granularity_code = 'POPULATION_CENTERS'
+
 
  

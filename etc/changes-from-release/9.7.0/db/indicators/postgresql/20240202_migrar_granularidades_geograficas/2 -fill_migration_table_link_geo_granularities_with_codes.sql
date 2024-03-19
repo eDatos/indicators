@@ -2,11 +2,19 @@
 -- EDATOS-4376 - Integración con granularidades de e-Semántica
 -- 
 -- Script con tabla temporal para migración de datos de códigos de granularidad de la última versión de granularidades.
+
+ --!!!!!!!Es necesario tener instalado la extensión uuid-ossp para la generación de los uuids de los elementos insertados 
+-- Para ello es necesario ejecutar la siguiente sentencia como administrador de la bbdd CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- --------------------------------------------------------------------------------------------------
 
 -- PRECONDICIÓN: Asegurarse de que la tabla de migración está creada en las bases de datos indicadas en el script: 1-create_migration_table_geographical_granularities.sql 
 
 -- 1 Ejecutar la siguiente consulta en la bd del SRM para obtener los códigos de granularidades de la versión de codelist indicada.
+--1.1 Habilitar extensión uuid-ossp ejecutando:
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- 1.2 Se debe añadir al campo code el valor del código de la clasificación de granularidades que se usa por defecto y que se encuentra en la propiedad
+-- del common-metadata "metamac.default.codelist.geographical_granularity.urn"
+-- Ej: CL_GRANULARIDADES_GEOGRAFICAS
 insert into  temp_mig_geo_granularities(uuid, created_date_tz, created_date, created_by, "version", granularity_code, label_es, label_ca, label_en) 
 select uuid_generate_v4(),
  'Europe/London', 
@@ -20,8 +28,8 @@ select uuid_generate_v4(),
  from tb_item_schemes_versions a, tb_annotable_artefacts c, 
  tb_codes codeGranul, tb_annotable_artefacts a_codeGranul
  where  a.maintainable_artefact_fk = c.id
-and c.code  = 'CL_GEO_GRANULARITIES'
-and c.latest_version_number_public = true
+and c.code  = <CODIGO DE metamac.default.codelist.geographical_granularity.urn> -- ej: 'CL_GRANULARIDADES_GEOGRAFICAS'
+and c.latest_version_number_public = true   -- Última versión publicada externamente.
 and codeGranul.item_scheme_version_fk = a.id
 and codeGranul.nameable_artefact_fk  = a_codeGranul.id;
 
