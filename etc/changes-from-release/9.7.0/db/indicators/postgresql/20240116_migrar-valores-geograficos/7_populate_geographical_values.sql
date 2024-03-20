@@ -259,22 +259,30 @@ ALTER TABLE tb_ind_version_geo_cov alter COLUMN geographical_value_fk  set not n
  CREATE UNIQUE INDEX uq_tb_ind_version_geo_cov ON tb_ind_version_geo_cov (geographical_value_fk,indicator_version_fk);
  
  --6) Actualizar valores geográficos con los códigos de elementos de variable en la bd indicators para cada tabla "..data" de cada fuente de datos.
+ --Crear índice en tabla temporal "temp_mig_codes_with_var_element" para acelerar búsquedas. En bd indicators_data_bd:
+ CREATE INDEX IX_temp_mig_codes_with_var_element ON temp_mig_codes_with_var_element(code);
+
  --6.0) Asegurarse de que hay relación con su elemento de variable para todos los códigos:
  -- 6.0.1) Ejecutar esta consulta:
-select ' SELECT ''' || a.table_name || ''', t.' || b.column_name || ' FROM ' || a.table_name  || ' t  where t.' || b.column_name  || ' not in(select code from temp_mig_codes_with_var_element) ' || ' union all' 
+select ' select code from (SELECT distinct(t.' || b.column_name || ') as code FROM ' || a.table_name  || ' t) as d  where code not in(select code from temp_mig_codes_with_var_element) ' || ' union all' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';  
+ and dimension_id = 'GEOGRAPHICAL'
+  and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
+ 
   --6.0.2) Quitar el último "union all" generado en el paso anterior y sustituirlo por ";"
  --6.0.3) Ejecutar las consultas generadas en el paso anterior. Se puede dar la  circunstancia que alguna tabla de datos no exista. En este caso, quitar la que da error y ejecutar de nuevo la consulta.
  --6.0.4) Si la consulta no da resultados todo ok y se puede continuar.
  --6.0.5) Si la consulta devuelve algún dato es que alguna entrada no tiene elemento de variable asociado. Hay que hablar con equipo de consultoría para buscar la relación.
+ --PRUEBAS EN DEMO:
+ ----tiempo que tardó la consulta: 751 tablas de datos y la consulta tardó  52 segundos
  --6.1) renombrar columna con valores geográficos de cada tabla
  ----6.1.1 obtener alter table para renombrar
 select ' ALTER TABLE ' || a.table_name  || ' RENAME COLUMN ' || b.column_name  || ' TO deprecated_'  ||  b.column_name || ';' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
  ----6.1.2 Ejecutar resultados anteriores en la bd indicators_data
  --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
   --6.2) crear columna con valores geográficos de cada tabla
@@ -282,7 +290,8 @@ select ' ALTER TABLE ' || a.table_name  || ' RENAME COLUMN ' || b.column_name  |
 select ' ALTER TABLE ' || a.table_name  || ' ADD COLUMN ' || b.column_name  || ' varchar(100)' || ';' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
   ----6.2.2 Ejecutar resultados anteriores en la bd indicators_data
  --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
 
@@ -290,14 +299,18 @@ select ' ALTER TABLE ' || a.table_name  || ' ADD COLUMN ' || b.column_name  || '
 select ' UPDATE ' || a.table_name  || ' tn set ' || b.column_name  || ' = (select variable_element_code from temp_mig_codes_with_var_element t where t.code = tn.deprecated_' || b.column_name || ' limit 1)' || ';' 
  from tb_datasets a, tb_dataset_dimensions b
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
   --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
+  
+  -- !!Estimación de tiempo dado en demo: 8 minutos.
   
  --6.4 comprobar que todos los valores tienen correspondencia. No deben salir entradas. En caso contrario hay que estudiar los casos para asociar los códigos a elementos de variable.
 select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_'  || b.column_name ||  ' from ' || a.table_name  || ' where ' || b.column_name || ' is null union all ' 
  from tb_datasets a, tb_dataset_dimensions b
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+  and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
  
  --6.5 Para todo el resultado obtenido, quitar el último UNION ALL y sustituirlo por ";"
  --6.6 Ejecutar el resultado anterior.
@@ -327,7 +340,8 @@ select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_
  select ' ALTER TABLE ' || a.table_name  || ' DROP COLUMN deprecated_'  ||  b.column_name || ';' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL'; 
+ and dimension_id = 'GEOGRAPHICAL'
+   and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
  
  --7.2 . Ejecutar los scripts obtenidos en el apartado anterior que borrará todas las columnas deprecadas.
  
