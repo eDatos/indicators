@@ -70,79 +70,67 @@ FROM tb_lis_geogr_values;
 --2.3) Borrar datos de la tabla  "tb_lis_geogr_values"
 delete  from tb_lis_geogr_values;
 
--- 3 Ejecutar la siguiente consulta en la bd del INDICATORS
---¡¡¡¡¡¡Atención!!!!!! puede dar problemas en dbeaver porque son muchas entradas. Lo que se puede hacer es volcarlo en un fichero (en sublime por ejemplo)
--- y ejecutarlo como script en dbeaver
-
-select
-'
-INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval(''SEQ_I18NSTRS''), 1);' ||
-case when t.label_es is not null then '  
-INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || replace(t.label_es, '''', '''''') || ''', ''es'', currval(''SEQ_I18NSTRS''), 1);' else '' end ||
-case when t.label_ca is not null then '
-INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || replace(t.label_ca, '''', '''''') || ''', ''ca'', currval(''SEQ_I18NSTRS''), 1);' else '' end || 
-case when t.label_en is not null then '
-INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION) values (nextval(''SEQ_L10NSTRS''), ''' || replace(t.label_en, '''', '''''') || ''', ''en'', currval(''SEQ_I18NSTRS''), 1);' else '' end || '
-INSERT INTO tb_lis_geogr_values(id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk)
- values (nextval(''SEQ_GEOGR_VALUES''),'
-|| '''' || t.code || ''', '
-|| coalesce('''' || t.latitude || '''', 'null') || ', '
-|| coalesce('''' || t.longitude || '''', 'null') || ', ' 
-|| '''' || t.code || ''', '
-|| 'null, '
-|| 'null, '
-|| '''' || t.uuid || ''', '
-|| '''' || t.created_date_tz || ''', '
-|| '''' || t.created_date || ''', '
-|| '''' || t.created_by || ''', '
-|| '''' || t.created_date_tz || ''', '
-|| '''' || t.created_date || ''', '
-|| '''' || t.created_by || ''', '
-|| '''' || t.version || ''', '
-|| 'currval(''SEQ_I18NSTRS'')' || ', '
-|| t.granularity_fk
-|| ');'
-
-from  temp_mig_geo_values t;
-
---3. Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
--- 1. Seleccionar la  consulta en dbeaver
--- 2. desplegar menú Ejecutar (Execute)
--- 3. Seleccionar submenú Ejecutar desde consulta (Execute from query)
--- 4. Seleccionar como tipo de salida "TXT"
--- 5. Ampliar el fetch size a 300000 que por defecto está en 10000
--- 6. Seleccionar directorio de salida
--- 7. Exportar y generará un fichero con las inserciones en el directorio de  salida.
--- 8. Genera la salida pero con un delimitador entre INSERT.
-----8.1 Quitar la primera línea "|?column?    ".  
-----8.2 Quitar el delimitador "|" sustituyéndolo por "" en un editor de textos (sublime, visual studio code)
-----8.3 Quitar el delimitador "¶" sustituyéndolo por "" en un editor de textos (sublime, visual studio code)
-----8.4 Ir a consola de comandos y ejecutar la siguiente sentencia (donde estén los comandos para el dump. Por eje. en local hay que situarse en carpeta  con dump si no está mapeado ej: E:\program files\PostgreSQL\14\bin )
-psql -U "indicators_bd" -W -h localhost indicators_bd < E:\mig\<NOMBRE_FICHERO_CREADO>
---EJ:  psql -U "indicators_bd" -W -h localhost -p 5433 indicators_bd < E:\mig\temp_mig_geo_values_202401101144.txt
--- tiempo estimado: en desarrollo tardó 8 minutos con un fichero con 134159 entradas
-  
-  
+--3) Continuación del paso 0 hecho días antes para volvar en tabla tb_lis_geogr_values los valores finales
+  --El día de despliegue se deberá exportar a CSV la tabla "temp_tb_lis_geogr_values". y luego importar a tb_lis_geogr_values. Para ello:
+-- 0.6.1) Exportar tabla temp_tb_lis_geogr_values a CSV (incrementar elementos a 300000) si es menor el número.
+-- 0.6.2) Importar a tb_lis_geogr_values que está vacía en estos momentos.
+-- 0.6.3) Obtener el último valor 
+select max(id) from tb_lis_geogr_values ;
+-- 0.6.4) con el valor dado anteriormente, cambiar la secuencia para poner el valor anterior mas uno que será el siguiente valor de la secuencia. 
+ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR + 1;
  
  --4 Rellenar nuevos campos creados
- --PENDIENTE!!!!!!! VER LO QUE NO TIENE TRADUCCIÓN ACTULAMENTE
+--4.1) Comprobaciones previas
+--4.1.1) Comprobar que todos los valores que estaban antes tienen traducción en la nueva tabla de valores.
  select t.code from tb_lis_geogr_values_copy t where t.code not in(select code from temp_mig_codes_with_var_element);
  
- --nota. En desarrollo se encuentran las siguientes:
+ -- Si sale algún valor en la consulta anterior, buscar el elemento de variable asociado y añadir entrada a  temp_mig_codes_with_var_element con la información. Ej: insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'TENERIFE', 'ISLA_TENERIFE');
+
+/* Consultas más específicas para ver donde se usan. Las siguientes consultas no deben retornar valores.
+-- la siguiente consulta no debe retornar valores.
+select * from tb_data_sources tds, tb_lis_geogr_values_copy tlg 
+where  tds.deprecated_geographical_value_fk = tlg.id and tlg.code  not in(select tempc.code  from temp_mig_codes_with_var_element tempc);
+
+-- la siguiente consulta no debe retornar valores
+select * from tb_indic_inst_geo_values gv, tb_lis_geogr_values_copy tlg where gv.deprecated_geographical_value_fk = tlg.id 
+and tlg.code not in(select tempc.code  from temp_mig_codes_with_var_element tempc);
+
+-- la siguiente consulta no debe retornar valores
+select * from tb_indic_inst_last_value lv, tb_lis_geogr_values_copy tlg where lv.deprecated_geographical_code  = tlg.code 
+ and tlg.code not in(select tempc.code  from temp_mig_codes_with_var_element tempc);
+
+-- la siguiente consulta no debe retornar valores
+select * from tb_ind_version_geo_cov gc, tb_lis_geogr_values_copy tlg where gc.deprecated_geographical_value_fk = tlg.id 
+and tlg.code not in(select tempc.code  from temp_mig_codes_with_var_element tempc);
+
+-- la siguiente consulta no debe retornar valores
+select * from tb_quantities q, tb_lis_geogr_values_copy tlg where q.base_location_fk = tlg.id 
+and tlg.code not in(select tempc.code  from temp_mig_codes_with_var_element tempc);
+
+
+*/
+ 
+ --nota. En demo se encuentran las siguientes sin traducción:
  /*
-TENERIFE
-CANARIAS
-ESPANA
-  
-Lo ideal es buscar en "temp_mig_codes_with_var_element" una asociación con la siguiente select:
- select * from temp_mig_codes_with_var_element where variable_element_code  like '%ESPA%'
- select * from temp_mig_codes_with_var_element where variable_element_code  like '%TENERIFE%'
+1. Código geográfico: Gran Canaria - Área Metropolitana   ES705A11   Comarcas
 
+1.1) Se busca con la siguiente query una equivalencia select * from temp_mig_geo_values tmgv where upper(label_es) like '%GRAN CANARIA%'
+se encuentra: COM_GRAN_CANARIA_AREA_METROPOLITANA   granuralidad: COUNTIES
+se busca la equivalencia con select * from temp_mig_codes_with_var_element tmcwve where variable_element_code in('COM_GRAN_CANARIA_AREA_METROPOLITANA')
+y se encuentra el código ES705A10
 
-y luego se crea  a mano
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'TENERIFE', 'ISLA_TENERIFE');
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'CANARIAS', 'CCAA_CANARIAS');
-insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ESPANA', '2016_ESPANIA');
+1.2) Se crea  a mano una equivalencia similar para el código geográfico inexistente
+insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ES705A11', 'COM_GRAN_CANARIA_AREA_METROPOLITANA');
+
+2. Código geográfico: Tenerife - Área Metropolitana ES709A11 Comarcas
+2.1) Se busca con la siguiente query una equivalencia select * from temp_mig_geo_values tmgv where upper(label_es) like '%TENERIFE%'
+se encuentra: COM_TENERIFE_AREA_METROPOLITANA   granuralidad: COUNTIES
+se busca la equivalencia con select * from temp_mig_codes_with_var_element tmcwve where variable_element_code in('COM_TENERIFE_AREA_METROPOLITANA')
+y se encuentra el código ES709A10
+
+2.2) Se crea  a mano una equivalencia similar para el código geográfico inexistente
+insert into temp_mig_codes_with_var_element(urn_codelist, code, variable_element_code) values('', 'ES709A11', 'COM_TENERIFE_AREA_METROPOLITANA');
+
 Si hay dudas pregunta a equipo consultoría para asociar.
 
  */
@@ -161,9 +149,10 @@ where a.indicator_version_fk = b.id
 and d.indicator_version_fk = b.id 
 and d.query_environment = 'METAMAC');
  
+ --4 Rellenar los datos de las distintas tablas sustituyendo el valor geográfico por el elemento de variable asociado.
  --A ejecutar en bd INDICATORS_BD:
- 
- ----4.1) tabla tb_data_sources Se debe rellenar a partir de la tabla antigua guardada en tb_lis_geogr_values_copy 
+  
+ ----4.2) tabla tb_data_sources Se debe rellenar a partir de la tabla antigua guardada en tb_lis_geogr_values_copy 
 update tb_data_sources d
 set geographical_value_fk = (
                select newG.id  
@@ -174,34 +163,28 @@ set geographical_value_fk = (
 where deprecated_geographical_value_fk is not null and geographical_value_fk  is null;
  
  
- ----4.2) tabla tb_indic_inst_geo_values
+ ----4.3) tabla tb_indic_inst_geo_values
  update tb_indic_inst_geo_values d
 set geographical_value_fk = (
                select newG.id  
-                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG, tb_indicators_instances ii, tb_indicators i, tb_indicators_versions iv
-                where d.indicator_instance_fk = ii.id 
-                  and ii.indicator_fk = i.id
-                  and iv.indicator_fk = i.id 
-                  and d.deprecated_geographical_value_fk = l.id  
+                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG
+                where d.deprecated_geographical_value_fk = l.id  
                   and l.code = t.code 
                   and t.variable_element_code = newG.code limit 1  )
 where deprecated_geographical_value_fk is not null and geographical_value_fk  is null;
 
- ----4.3) tabla tb_indic_inst_last_value
+ ----4.4) tabla tb_indic_inst_last_value
  update tb_indic_inst_last_value d
 set geographical_code = (
                select newG.code  
-                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG, tb_indicators_instances ii, tb_indicators i, tb_indicators_versions iv
-                where d.indicator_instance_fk = ii.id 
-                  and ii.indicator_fk = i.id
-                  and iv.indicator_fk = i.id 
-                  and d.deprecated_geographical_code = l.code  
+                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG
+                where d.deprecated_geographical_code = l.code  
                   and l.code = t.code 
                   and t.variable_element_code = newG.code limit 1  )
 where deprecated_geographical_code is not null and geographical_code  is null;
  
  
- ----4.4) tabla tb_ind_version_geo_cov
+ ----4.5) tabla tb_ind_version_geo_cov
  
  update tb_ind_version_geo_cov d
 set geographical_value_fk = (
@@ -212,7 +195,7 @@ set geographical_value_fk = (
                   and t.variable_element_code = newG.code limit 1 )
 where deprecated_geographical_value_fk is not null and geographical_value_fk  is null;
  
- ----4.5) tabla tb_quantities
+ ----4.6) tabla tb_quantities
   update tb_quantities d
 set base_location_fk  = (
                select newG.id  
@@ -222,10 +205,10 @@ set base_location_fk  = (
                   and t.variable_element_code = newG.code limit 1 )
 where deprecated_base_location_fk is not null and base_location_fk  is null;
  
- --4.6. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
- ----4.6.1) 
+ --4.7. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
+ ----4.7.1) 
  select 'tb_indic_inst_last_value', deprecated_geographical_code, geographical_code from tb_indic_inst_last_value where deprecated_geographical_code is not null and geographical_code is null;
- ----4.6.2)
+ ----4.7.2)
  select 'tb_data_sources', deprecated_geographical_value_fk, geographical_value_fk from tb_data_sources where deprecated_geographical_value_fk is not null and geographical_value_fk is null
  union all
  select 'tb_indic_inst_geo_values', deprecated_geographical_value_fk, geographical_value_fk from tb_indic_inst_geo_values where deprecated_geographical_value_fk is not null and geographical_value_fk is null
@@ -244,11 +227,11 @@ where deprecated_base_location_fk is not null and base_location_fk  is null;
  select 'tb_quantities', deprecated_base_location_fk, base_location_fk, b.code, t.variable_element_code from tb_quantities, tb_lis_geogr_values_copy b, temp_mig_codes_with_var_element t where b.code = t.code and deprecated_base_location_fk = b.id and deprecated_base_location_fk is not null and base_location_fk is null;
  
  
- --4.7. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
+ --4.8. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
  --ATENCIÓN!!! sólo si en indicators_bd se ha cambiado la tabla migrada inicialmente desde srm hacer lo siguiente si no, obviar este paso
- -- 4.7.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
- -- 4.7.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
- -- 4.7.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
+ -- 4.8.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
+ -- 4.8.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
+ -- 4.8.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
  
  
  
@@ -276,22 +259,30 @@ ALTER TABLE tb_ind_version_geo_cov alter COLUMN geographical_value_fk  set not n
  CREATE UNIQUE INDEX uq_tb_ind_version_geo_cov ON tb_ind_version_geo_cov (geographical_value_fk,indicator_version_fk);
  
  --6) Actualizar valores geográficos con los códigos de elementos de variable en la bd indicators para cada tabla "..data" de cada fuente de datos.
+ --Crear índice en tabla temporal "temp_mig_codes_with_var_element" para acelerar búsquedas. En bd indicators_data_bd:
+ CREATE INDEX IX_temp_mig_codes_with_var_element ON temp_mig_codes_with_var_element(code);
+
  --6.0) Asegurarse de que hay relación con su elemento de variable para todos los códigos:
  -- 6.0.1) Ejecutar esta consulta:
-select ' SELECT ''' || a.table_name || ''', t.' || b.column_name || ' FROM ' || a.table_name  || ' t  where t.' || b.column_name  || ' not in(select code from temp_mig_codes_with_var_element) ' || ' union all' 
+select ' select code from (SELECT distinct(t.' || b.column_name || ') as code FROM ' || a.table_name  || ' t) as d  where code not in(select code from temp_mig_codes_with_var_element) ' || ' union all' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';  
+ and dimension_id = 'GEOGRAPHICAL'
+  and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
+ 
   --6.0.2) Quitar el último "union all" generado en el paso anterior y sustituirlo por ";"
  --6.0.3) Ejecutar las consultas generadas en el paso anterior. Se puede dar la  circunstancia que alguna tabla de datos no exista. En este caso, quitar la que da error y ejecutar de nuevo la consulta.
  --6.0.4) Si la consulta no da resultados todo ok y se puede continuar.
  --6.0.5) Si la consulta devuelve algún dato es que alguna entrada no tiene elemento de variable asociado. Hay que hablar con equipo de consultoría para buscar la relación.
+ --PRUEBAS EN DEMO:
+ ----tiempo que tardó la consulta: 751 tablas de datos y la consulta tardó  52 segundos
  --6.1) renombrar columna con valores geográficos de cada tabla
  ----6.1.1 obtener alter table para renombrar
 select ' ALTER TABLE ' || a.table_name  || ' RENAME COLUMN ' || b.column_name  || ' TO deprecated_'  ||  b.column_name || ';' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
  ----6.1.2 Ejecutar resultados anteriores en la bd indicators_data
  --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
   --6.2) crear columna con valores geográficos de cada tabla
@@ -299,7 +290,8 @@ select ' ALTER TABLE ' || a.table_name  || ' RENAME COLUMN ' || b.column_name  |
 select ' ALTER TABLE ' || a.table_name  || ' ADD COLUMN ' || b.column_name  || ' varchar(100)' || ';' 
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS);
   ----6.2.2 Ejecutar resultados anteriores en la bd indicators_data
  --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
 
@@ -307,14 +299,18 @@ select ' ALTER TABLE ' || a.table_name  || ' ADD COLUMN ' || b.column_name  || '
 select ' UPDATE ' || a.table_name  || ' tn set ' || b.column_name  || ' = (select variable_element_code from temp_mig_codes_with_var_element t where t.code = tn.deprecated_' || b.column_name || ' limit 1)' || ';' 
  from tb_datasets a, tb_dataset_dimensions b
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+ and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
   --!! ATENCIÓN!! se han detectado que alguna tabla de datos luego no existe. En este caso habrá que eliminar esa línea de los resultados anteriores y volver a lanzar el script. Las entradas antes del fallo se habrán ejecutado por lo que quitar y seguir a partir de ahí.
+  
+  -- !!Estimación de tiempo dado en demo: 8 minutos.
   
  --6.4 comprobar que todos los valores tienen correspondencia. No deben salir entradas. En caso contrario hay que estudiar los casos para asociar los códigos a elementos de variable.
 select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_'  || b.column_name ||  ' from ' || a.table_name  || ' where ' || b.column_name || ' is null union all ' 
  from tb_datasets a, tb_dataset_dimensions b
  where a.id = b.dataset_fk 
- and dimension_id = 'GEOGRAPHICAL';
+ and dimension_id = 'GEOGRAPHICAL'
+  and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
  
  --6.5 Para todo el resultado obtenido, quitar el último UNION ALL y sustituirlo por ";"
  --6.6 Ejecutar el resultado anterior.
@@ -336,4 +332,28 @@ select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_
  
  -- Si todo va bien se obtienen los códigos de clasificación para los cuales no se encontró asociación con un código de elemento de variable. Hay que resolverlo con Vicky.
   
+  
+ --7) Eliminación de columna deprecated del data.
+ -- Si el paso 6 fue bien, se deberá borrar la columna deprecated del data. Ésto es debido a que el data tiene una vista asociada. Y ciertas operaciones en la aplicación la modifican quedando con este campo deprecado.
+ --Para ello, 
+ --7.1 Obtener script de borrado de la columna de cada tabla
+ select ' ALTER TABLE ' || a.table_name  || ' DROP COLUMN deprecated_'  ||  b.column_name || ';' 
+ from tb_datasets a, tb_dataset_dimensions b 
+ where a.id = b.dataset_fk 
+ and dimension_id = 'GEOGRAPHICAL'
+   and table_name in (select upper(table_name) from INFORMATION_SCHEMA.COLUMNS); 
+ 
+ --7.2 . Ejecutar los scripts obtenidos en el apartado anterior que borrará todas las columnas deprecadas.
+ 
+ -- Anexo paso 7.  No necesario este paso si el paso 7 fue bien. 
+ --Todas deberían tener el campo deprecado. Pero si en el algún entorno se necesita recuperar tablas específicas con este campo por lo que sea
+  select '''' || upper(table_name) || ''','
+from INFORMATION_SCHEMA.COLUMNS where column_name like '%deprecated%'
+
+-- Luego habría que obtener el script de esas tablas únicamente
+ select ' ALTER TABLE ' || a.table_name  || ' DROP COLUMN deprecated_'  ||  b.column_name || ';' 
+ from tb_datasets a, tb_dataset_dimensions b 
+ where a.id = b.dataset_fk 
+ and dimension_id = 'GEOGRAPHICAL'
+ and a.table_name in(<poner aquí el resultado de la select anterior> ); 
   
