@@ -51,7 +51,7 @@ import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public class QueryMetamacUtils {
 
-    private Map<String, String>    variableElementsByCode = new HashMap<String, String>();
+    private Map<String, String> variableElementsByCode = new HashMap<String, String>();
 
     private SrmRestInternalService srmRestInternalService;
 
@@ -124,8 +124,11 @@ public class QueryMetamacUtils {
             target.setPublishers(Arrays.asList(extractValueForDefaultLanguage));
         }
 
+        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, null);
         // Data
-        target.processData(extractData(query, target.getSpatialVariables()));
+        target.processData(extractData(query, target.getSpatialVariables(), queryMetamacDatasetAccess));
+
+        target.processObservationsAttributesMap(queryMetamacDatasetAccess.getAttributesMetadataMap());
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(query.getMetadata().getDimensions()));
@@ -397,7 +400,8 @@ public class QueryMetamacUtils {
         return result;
     }
 
-    private List<DataContent> extractData(Query query, List<String> geographicalDimensionsId) throws MetamacException {
+    private List<DataContent> extractData(Query query, List<String> geographicalDimensionsId, QueryMetamacDatasetAccess queryMetamacDatasetAccess) throws MetamacException {
+
         List<DataContent> result = new LinkedList<DataContent>();
 
         Data data = query.getData();
@@ -407,7 +411,7 @@ public class QueryMetamacUtils {
         }
 
         int numDimensions = data.getDimensions().getDimensions().size();
-        QueryMetamacDatasetAccess queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
+        queryMetamacDatasetAccess = new QueryMetamacDatasetAccess(query, variableElementsByCode, geographicalDimensionsId);
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
@@ -420,10 +424,12 @@ public class QueryMetamacUtils {
             List<String> dimCodes = elem.getDimCodes();
 
             if (dimCodes.size() == numDimensions) {
+                int index = observationIndex++;
                 // We have all dimensions here
                 DataContent dataContent = new DataContent();
                 dataContent.setDimCodes(dimCodes);
-                dataContent.setValue(queryMetamacDatasetAccess.getObservations()[observationIndex++]);
+                dataContent.setValue(queryMetamacDatasetAccess.getObservations()[index]);
+                dataContent.setAttributesObservations(queryMetamacDatasetAccess.getObservationsAttributes(index));
                 result.add(dataContent);
             } else {
                 String dimensionId = queryMetamacDatasetAccess.getDimensionsOrderedForData().get(dimensionPosition + 1);
@@ -448,4 +454,5 @@ public class QueryMetamacUtils {
     public Do2DtoMapper getDo2DtoMapper() {
         return ApplicationContextProvider.getApplicationContext().getBean(Do2DtoMapper.class);
     }
+
 }

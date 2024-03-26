@@ -23,6 +23,9 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
+    private List<String> dataMapAttributes = new ArrayList<String>();
+    private List<String> variablesInOrder  = new ArrayList<String>();
+
     public Map<String, DataContent> getData() {
         return data;
     }
@@ -31,8 +34,6 @@ public class Data extends DataStructure {
         this.data = data;
     }
 
-    private List<String> variablesInOrder = new ArrayList<String>();
-
     @JsonProperty("data")
     public void processData(List<DataContent> dataList) {
         data = new HashMap<String, DataContent>();
@@ -40,6 +41,10 @@ public class Data extends DataStructure {
             String key = StringUtils.join(content.getDimCodes(), "#");
             data.put(key, content);
         }
+    }
+
+    public void processObservationsAttributesMap(List<String> observationsMapAttributes) {
+        dataMapAttributes = observationsMapAttributes;
     }
 
     /*
@@ -101,5 +106,9 @@ public class Data extends DataStructure {
 
     public void setGeographicalValueDto(GeographicalValueDto geographicalValueDto) {
         this.geographicalValueDto = geographicalValueDto;
+    }
+
+    public List<String> getDataMapAttributes() {
+        return dataMapAttributes;
     }
 }

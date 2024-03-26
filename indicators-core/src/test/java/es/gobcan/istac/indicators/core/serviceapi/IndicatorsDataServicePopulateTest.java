@@ -1,11 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static es.gobcan.istac.indicators.core.constants.IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -45,7 +41,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
@@ -531,28 +526,27 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por secreto estadístico"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato oculto por secreto estadístico"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613, "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato incluido en otra categoría"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato incluido en otra categoría"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key,
-                    createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible por vacaciones o festivos"));
         }
 
         checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
@@ -581,7 +575,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             for (String timeValue : dimensionCodes.get(IndicatorDataDimensionTypeEnum.TIME.name())) {
                 for (String measureValue : dimensionCodes.get(IndicatorDataDimensionTypeEnum.MEASURE.name())) {
                     String key = generateObservationUniqueKey(geoValue, timeValue, measureValue);
-                    mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.CODE.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, INDICATOR3_DS_UUID));
+                    mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.CODE.name(), DATASET_REPOSITORY_LOCALE, INDICATOR3_DS_UUID));
                 }
             }
         }
@@ -714,45 +708,44 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         Map<String, AttributeInstanceObservationDto> mapAttributes = new HashMap<String, AttributeInstanceObservationDto>();
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
 
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key,
-                    createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad, No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato oculto por impreciso o baja calidad, No procede"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "No procede"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2010-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, "2009-10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), DATASET_REPOSITORY_LOCALE, "Dato no disponible"));
         }
         checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
     }

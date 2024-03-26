@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static es.gobcan.istac.indicators.core.constants.IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -126,33 +128,31 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService                configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     @Autowired
-    private DsplExporterService                           dsplExporterService;
+    private DsplExporterService dsplExporterService;
 
     @Autowired
-    private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
+    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
 
     @Autowired
-    private SrmRestInternalService                        srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    private static final Logger                           LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String                            GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String                            TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
+    public static final String GEO_DIMENSION      = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String TIME_DIMENSION     = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String MEASURE_DIMENSION  = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String CODE_ATTRIBUTE     = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final Double ZERO_RANGE         = 1E-6;
+    public static final int    MAX_MEASURE_LENGTH = 50;
 
-    public static final Double                            ZERO_RANGE                = 1E-6;
-    public static final int                               MAX_MEASURE_LENGTH        = 50;
-
-    private static final Map<String, String>              SPECIAL_STRING_MAPPING;
+    private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -169,7 +169,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper               mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -399,14 +399,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber);
+            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber, getObservationsMapAttributes(dataCache, dataOps));
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
-                LOG.info("DataOperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
+                LOG.info("dataoperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
@@ -424,6 +424,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
             }
         }
+    }
+
+    public List<String> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+        if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
+            Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
+            if (data != null) {
+                return data.getDataMapAttributes();
+            }
+        }
+        return new ArrayList<>(); // Devuelve una lista vacía si no se cumple la condición
     }
 
     @Override
@@ -457,8 +467,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
-            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
-                    + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
+            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator()
+                    .getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName() + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
         }
     }
 
@@ -1536,6 +1546,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private List<ObservationExtendedDto> createObservationsFromDataOperationJson(DataOperation dataOperation, Data data, List<String> geoValues, List<String> timeValues) throws MetamacException {
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+
         for (String geoVal : geoValues) {
             for (String timeVal : timeValues) {
                 // Map for querying the data from the json
@@ -1553,10 +1564,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
 
                 ObservationExtendedDto observation = getObservationValue(dataOperation, data, varCodesForQueryJson, geoVal, timeVal);
-
                 checkMaxObservationValueLength(dataOperation, observation);
-
                 observations.add(observation);
+
             }
         }
         return observations;
@@ -1726,9 +1736,62 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, List<String> observationsMapAttributes) throws MetamacException {
+        DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
+        datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
+        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
+        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+
+        AttributeDto code = new AttributeDto();
+        code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        code.setAttributeId(CODE_ATTRIBUTE);
+
+        AttributeDto obsConf = new AttributeDto();
+        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+
+        datasetRepoDto.getAttributes().add(code);
+        datasetRepoDto.getAttributes().add(obsConf);
+
+        //acciones sobre el map de atributos
+        // Recorrer el mapa y obtener solo el valor del key
+
+        for (String key : observationsMapAttributes) {
+            AttributeDto obsConfAux = new AttributeDto();
+            obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConfAux.setAttributeId(key);
+            datasetRepoDto.getAttributes().add(obsConfAux);
+        }
+
+        List<String> languages = new ArrayList<String>();
+        languages.add(DATASET_REPOSITORY_LOCALE);
+        datasetRepoDto.setLanguages(languages);
+
+        try {
+            datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
+        }
+        return datasetRepoDto;
+    }
+
+    /**
+     * Retrieves observation values based on the provided data, data operation, variable codes, geographical information, and time value. Constructs an ObservationExtendedDto object with dimensions
+     * and attributes, handling special string cases and other values using helper methods.
+     *
+     * @param dataOperation An object representing a data operation.
+     * @param data An object representing data.
+     * @param varCodes A map containing variable codes.
+     * @param geoValue A string representing geographical information.
+     * @param originalTimeValue A string representing the original time value.
+     * @return ObservationExtendedDto The constructed ObservationExtendedDto object.
+     * @throws MetamacException If there is an error populating the observation.
+     */
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
+        //Atributo de la observacion
         String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
@@ -1741,14 +1804,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             value = "..";
         }
 
-        // Check for dotted notation
         if (isSpecialString(value)) {
-            String text = getSpecialStringMeaning(value);
-            // Some Special Strings may not need to create an attribute
-            if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(value)));
+            handleSpecialString(observation, value);
+        } else if (!data.getDataMapAttributes().isEmpty()) {
+            List<String> observationKeys = data.getDataMapAttributes();
+            for (int i = 0; i < observationKeys.size(); i++) {
+                String observationKey = observationKeys.get(i);
+                handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
             }
-            observation.setPrimaryMeasure(null);
         } else {
             Double numValue = null;
             try {
@@ -1761,6 +1824,27 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         return observation;
+    }
+
+    private void handleSpecialString(ObservationExtendedDto observation, String value) {
+        String text = getSpecialStringMeaning(value);
+        if (!StringUtils.isEmpty(text)) {
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
+        }
+        observation.setPrimaryMeasure(null);
+    }
+
+    private void handleNonSpecialString(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition)
+            throws MetamacException {
+        try {
+            String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
+            observation.setPrimaryMeasure(formattedValue);
+            String observationEntry = content.getAttributesObservations().get(observationPosition);
+            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+
+        } catch (NumberFormatException e) {
+            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
+        }
     }
 
     /*
