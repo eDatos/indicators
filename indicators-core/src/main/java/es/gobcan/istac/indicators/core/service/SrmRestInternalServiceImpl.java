@@ -5,10 +5,12 @@ import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldCompariso
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.exception.RestException;
+import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
@@ -99,7 +101,8 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     private RestException toRestException(Exception e) {
-        throw toRestException(e);
+        logger.error("Error", e);
+        return RestExceptionUtils.toRestException(e, WebClient.client(restApiLocator.getSrmRestInternalFacadeV10()));
     }
 
     @Override
