@@ -5,11 +5,13 @@ import static org.siemac.edatos.core.common.constants.shared.UrnConstants.COLON;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
+import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 import org.slf4j.Logger;
@@ -77,6 +79,8 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
     }
 
     private RestException toRestException(Exception e) {
-        throw toRestException(e);
+        logger.error("Error", e);
+        return RestExceptionUtils.toRestException(e, WebClient.client(restApiLocator.getStatisticalResourcesRestExternalFacacadeV10()));
+
     }
 }
