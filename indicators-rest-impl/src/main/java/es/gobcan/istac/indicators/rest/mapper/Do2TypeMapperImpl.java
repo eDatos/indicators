@@ -51,6 +51,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEn
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
@@ -674,15 +675,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
-        Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
-                Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+        if (source.getDataSources().get(0).getQueryEnvironment() == QueryEnvironmentEnum.METAMAC) {
 
-        Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
-        for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-            if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
-                target.setAttribute(metadataAttributes);
+            Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
+                    Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+
+            Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+            for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+                if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                    MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                    metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                    target.setAttribute(metadataAttributes);
+                }
             }
         }
 
