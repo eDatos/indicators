@@ -26,10 +26,10 @@ public class QueryMetamacDatasetAccess {
 
     public static String                    DATA_SEPARATOR = " | ";
     private       String[]                  observations;
+    private List<String[]> observationsAttributes;
     private       List<String>              dimensionsOrderedForData;
     private       Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     private       List<String>              attributesMetadataMap;
-    private Map<String, String[]> splitObservationsAttributesCache;
 
     public QueryMetamacDatasetAccess(Query query, Map<String, String> variableElementsByCode, List<String> geographicalDimensionsId) throws MetamacException {
 
@@ -53,8 +53,8 @@ public class QueryMetamacDatasetAccess {
     public List<String> getObservationsAttributes(int index) {
         List<String> attributeValues = new ArrayList<>();
 
-        for (String attributeId : splitObservationsAttributesCache.keySet()) {
-            attributeValues.add(splitObservationsAttributesCache.get(attributeId)[index]);
+        for (String[] observationsAttribute : observationsAttributes) {
+            attributeValues.add(observationsAttribute[index]);
         }
 
         return attributeValues;
@@ -124,16 +124,15 @@ public class QueryMetamacDatasetAccess {
                 }
             }
         }
-        this.splitObservationsAttributesCache = new HashMap<>();
+
+        this.observationsAttributes = new ArrayList<>();
 
         for (DataAttribute dataAttributeDef : dataAttributesDef) {
             this.attributesMetadataMap.add(dataAttributeDef.getId());
             dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()));
 
-            String[] splitValues;
-            String value = dataAttributeDef.getValue();
-            splitValues = StringUtils.splitByWholeSeparatorPreserveAllTokens(value, DATA_SEPARATOR);
-            this.splitObservationsAttributesCache.put(dataAttributeDef.getId(), splitValues);
+            String[] splitValues = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttributeDef.getValue(), DATA_SEPARATOR);
+            this.observationsAttributes.add(splitValues);
         }
     }
 
