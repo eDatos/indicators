@@ -26,7 +26,6 @@ public class QueryMetamacDatasetAccess {
 
     public static String                    DATA_SEPARATOR = " | ";
     private       String[]                  observations;
-    private       List<DataAttribute>       observationsAttributes;
     private       List<String>              dimensionsOrderedForData;
     private       Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     private       List<String>              attributesMetadataMap;
@@ -54,20 +53,8 @@ public class QueryMetamacDatasetAccess {
     public List<String> getObservationsAttributes(int index) {
         List<String> attributeValues = new ArrayList<>();
 
-        for (DataAttribute attribute : observationsAttributes) {
-            String[] splitValues;
-            String value = attribute.getValue();
-
-            // Verificar si ya tenemos el valor dividido en  la variable  splitObservationsAttributesCache
-            if (splitObservationsAttributesCache.containsKey(attribute.getId())) {
-                splitValues = splitObservationsAttributesCache.get(attribute.getId());
-            } else {
-                splitValues = StringUtils.splitByWholeSeparatorPreserveAllTokens(value, DATA_SEPARATOR);
-                splitObservationsAttributesCache.put(attribute.getId(), splitValues);
-            }
-
-            attributeValues.add(splitValues[index]);
-
+        for (String attributeId : splitObservationsAttributesCache.keySet()) {
+            attributeValues.add(splitObservationsAttributesCache.get(attributeId)[index]);
         }
 
         return attributeValues;
@@ -148,9 +135,6 @@ public class QueryMetamacDatasetAccess {
             splitValues = StringUtils.splitByWholeSeparatorPreserveAllTokens(value, DATA_SEPARATOR);
             this.splitObservationsAttributesCache.put(dataAttributeDef.getId(), splitValues);
         }
-
-        this.observationsAttributes = dataAttributesDef;
-
     }
 
     /**
