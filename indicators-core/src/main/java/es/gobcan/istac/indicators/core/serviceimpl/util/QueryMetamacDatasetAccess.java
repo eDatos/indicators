@@ -26,7 +26,7 @@ public class QueryMetamacDatasetAccess {
 
     public static String                    DATA_SEPARATOR = " | ";
     private       String[]                  observations;
-    private List<String[]> observationsAttributes;
+    private       List<String[]>            observationsAttributes;
     private       List<String>              dimensionsOrderedForData;
     private       Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     private       List<String>              attributesMetadataMap;
@@ -125,14 +125,12 @@ public class QueryMetamacDatasetAccess {
             }
         }
 
-        this.observationsAttributes = new ArrayList<>();
+        this.observationsAttributes = new ArrayList<>(dataAttributesDef.size());
 
         for (DataAttribute dataAttributeDef : dataAttributesDef) {
             this.attributesMetadataMap.add(dataAttributeDef.getId());
-            dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()));
-
-            String[] splitValues = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttributeDef.getValue(), DATA_SEPARATOR);
-            this.observationsAttributes.add(splitValues);
+            this.observationsAttributes.add(
+                    StringUtils.splitByWholeSeparatorPreserveAllTokens(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()), DATA_SEPARATOR));
         }
     }
 
