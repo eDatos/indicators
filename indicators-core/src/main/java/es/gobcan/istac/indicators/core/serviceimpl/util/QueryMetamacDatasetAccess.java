@@ -1,26 +1,32 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
-
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.*;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 
-import java.util.*;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class QueryMetamacDatasetAccess {
 
     public static String                    DATA_SEPARATOR = " | ";
     private       String[]                  observations;
-    private       List<DataAttribute>       observationsAttributes;
+    private       List<String[]>            observationsAttributes;
     private       List<String>              dimensionsOrderedForData;
     private       Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     private       List<String>              attributesMetadataMap;
@@ -46,9 +52,11 @@ public class QueryMetamacDatasetAccess {
 
     public List<String> getObservationsAttributes(int index) {
         List<String> attributeValues = new ArrayList<>();
-        for (DataAttribute attribute : observationsAttributes) {
-            attributeValues.add(StringUtils.splitByWholeSeparatorPreserveAllTokens(attribute.getValue(), DATA_SEPARATOR)[index]);
+
+        for (String[] observationsAttribute : observationsAttributes) {
+            attributeValues.add(observationsAttribute[index]);
         }
+
         return attributeValues;
     }
 
@@ -116,12 +124,14 @@ public class QueryMetamacDatasetAccess {
                 }
             }
         }
+
+        this.observationsAttributes = new ArrayList<>(dataAttributesDef.size());
+
         for (DataAttribute dataAttributeDef : dataAttributesDef) {
             this.attributesMetadataMap.add(dataAttributeDef.getId());
-            dataAttributeDef.setValue(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()));
+            this.observationsAttributes.add(
+                    StringUtils.splitByWholeSeparatorPreserveAllTokens(getObservationsAttributesDataValue(query, dataAttributeDef.getValue(), dataAttributeDef.getId()), DATA_SEPARATOR));
         }
-
-        this.observationsAttributes = dataAttributesDef;
     }
 
     /**
