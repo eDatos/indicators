@@ -675,7 +675,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
-        if (source.getDataSources().get(0).getQueryEnvironment() != QueryEnvironmentEnum.GPE) {
+        if (!source.getDataSources().isEmpty() && QueryEnvironmentEnum.METAMAC.equals(source.getDataSources().get(0).getQueryEnvironment())) {
 
             Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
                     Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
