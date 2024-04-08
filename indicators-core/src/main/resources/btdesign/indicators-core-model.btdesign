@@ -78,9 +78,13 @@ Application Indicators {
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	@GeographicalValue retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	List<@GeographicalValue> findAllGeographicalValues() throws MetamacException;
 	    	@GeographicalValue createGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(SpecificRecordBase message) throws MetamacException;
+	    	updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(SpecificRecordBase message) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -145,6 +149,12 @@ Application Indicators {
             "Mark indicator for notify population errors"
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
+	    	"Get indicator versions where geographical codelist match with the changed codelist" 
+	    	List<@IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(SpecificRecordBase message) throws MetamacException;
+	    	"Get action to do when a codelist is caught from  the consumer of codelist kafka topic"
+	    	@StreamMessageCodelistActionEnum getCodelistAction(SpecificRecordBase message) throws MetamacException;
+	    	"update new datasource metadata -codelistUrn- in initial migration of geographical values to variable elements values" 
+	    	updateDatasourceCodelistForGeographicalValuesMigration() throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -211,6 +221,8 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators when geographical codelist changes" 
+	    	populateIndicatorsDataFromGeographicalCodelist(List<@IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException;
 	    	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
@@ -439,14 +451,13 @@ Application Indicators {
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@RelatedResourceDto> findGeographicalValuesForIndicatorByCondition(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Create a geographical value"
-	    	@GeographicalValueDto createGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Update a geographical value"
-	    	@GeographicalValueDto updateGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Delete a geographical value"
-	    	deleteGeographicalValue(String uuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
+	    	"Update indicators when geographical codelist changes" 
+	    	processCodelistKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
@@ -457,12 +468,6 @@ Application Indicators {
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Create a geographical granularity"
-	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Update a geographical granularity"
-	    	@GeographicalGranularityDto updateGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Delete a geographical granularity"
-	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
 	    	"Retrieves time granularities in the indicator"
@@ -1013,6 +1018,8 @@ Application Indicators {
             - @QueryEnvironmentEnum queryEnvironment not nullable;
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
+            "Geographical codelist urn" 
+            String geographicalCodelistUrn nullable databaseColumn="GEOGRAPHICAL_CODELIST_URN";
              		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
@@ -1398,6 +1405,10 @@ Application Indicators {
 			executeCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
 			"execute category element refresh job automatically execution"
 			executeCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			"Schedule geographical values migration job"
+			scheduleGeographicalValuesMigrationTemporalTask();	
+			"execute geographical values migration job automatically execution"
+			executeGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
     	}
     	
@@ -1446,6 +1457,11 @@ Application Indicators {
 			processCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
 			"Process category cache refresh job automatically with cron expression"			
 			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			"Schedule geographical values migration job"
+			scheduleGeographicalValuesMigrationTemporalTask();	
+			"Process geographical values migration job automatically with cron expression"			
+			processGeographicalValuesMigrationTemporalTask() throws MetamacException;
+			
 	
     	}
     	
@@ -1765,7 +1781,7 @@ Application Indicators {
 			"Geographical variable"
 			String geographicalVariable;
 			"Geographical value, if geographical variable is not provided"
-			String geographicalValueUuid;
+			- @RelatedResourceDto geographicalValue nullable;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
 			"Absolute method. Must be OBS_VALUE or a variable value"
@@ -1790,6 +1806,8 @@ Application Indicators {
 			List<String> publishers;	
 			"Version to optimistic locking"
 			Long versionOptimisticLocking;		
+			"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
 	    }
 	    
 	    "Dto for variables and categories"
@@ -1891,7 +1909,7 @@ Application Indicators {
 			"Time value base"
 			String baseTime;
 			"Geographical value base"
-			String baseLocationUuid;
+			- @RelatedResourceDto baseLocation nullable;			
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
 			
@@ -2007,6 +2025,8 @@ Application Indicators {
     		MapList valueLabels;
     		"Codes for every value in every variable"
     		MapList valueCodes;
+    		"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
     	}
     	
     	"Dto for data"
@@ -2046,6 +2066,12 @@ Application Indicators {
        		
        		Long optimisticLockingVersion;	
     	}
+    	
+    	DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
+			- @TypeRelatedResourceEnum type required;
+			String granularityCode;
+			String granularityUuid;
+		}
 	}
 	
 	// ----------------------------------------------------------------
@@ -2154,6 +2180,16 @@ Application Indicators {
            PENDING,
            SENT,
            FAILED
+       }
+       
+       enum TypeRelatedResourceEnum {
+    		GEOGRAPHICAL_VALUE
+    	}
+    	
+    	"Used when a kafka message is received from CODELIST_PUBLICATION topic to determine the action must be done depending on codelist urn"
+    	 enum StreamMessageCodelistActionEnum {
+           GEOGRAPHICAL_VALUES,
+           GEOGRAPHICAL_GRANURALITIES
        }
 	}
 }

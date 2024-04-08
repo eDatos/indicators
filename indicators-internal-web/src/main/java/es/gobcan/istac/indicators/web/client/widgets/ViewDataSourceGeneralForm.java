@@ -4,10 +4,12 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavigationClickHandler;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -22,6 +24,10 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
     protected IndicatorUiHandler uiHandlers;
+
+    public IndicatorUiHandler getUiHandlers() {
+        return uiHandlers;
+    }
 
     public ViewDataSourceGeneralForm(String groupTitle) {
         super(groupTitle);
@@ -113,7 +119,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             }
         });
 
-        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        RelatedResourceLinkItem geographicalValue = new RelatedResourceLinkItem(DataSourceDS.GEO_VALUE_ITEM, getConstants().dataSourceGeographicalValue(), getCustomLinkItemNavigationClickHandler());
         geographicalValue.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -158,28 +164,29 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
         setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
 
-        // ABSOLUTE_METHOD set in setDataStructure method in DataSourcesPanel
-        // if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
-        // setValue(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceObsValue());
-        // } else {
-        // setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
-        // }
-
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
-        setValue(DataSourceDS.GEO_VALUE, ""); // Set in method setGeographicalValue
-        if (dataSourceDto.getGeographicalValueUuid() != null && !dataSourceDto.getGeographicalValueUuid().isEmpty()) {
-            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
-        }
+
+        RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) getItem(DataSourceDS.GEO_VALUE_ITEM);
+        geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
+
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
-        // OTHER_VARIABLES set in setVariablesAndCategories method in ViewVariableCanvasItem
-        // ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+
+    protected CustomLinkItemNavigationClickHandler getCustomLinkItemNavigationClickHandler() {
+        return new CustomLinkItemNavigationClickHandler() {
+
+            @Override
+            public BaseUiHandlers getBaseUiHandlers() {
+                return getUiHandlers();
+            }
+        };
     }
 
 }

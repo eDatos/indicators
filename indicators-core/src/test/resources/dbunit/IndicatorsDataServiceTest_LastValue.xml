@@ -80,7 +80,7 @@
     <!-- ************************************************************************************ -->
     <TB_LIS_GEOGR_VALUES 
         ID="1" 
-        CODE="ES" 
+        CODE="ES_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1"
@@ -98,12 +98,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="2" 
-        CODE="ES61" 
+        CODE="ES61_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="2"
         TITLE_FK="5"
-        GLOBAL_ORDER="ES01" 
+        GLOBAL_ORDER="ES01_VE" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -116,12 +116,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="3" 
-        CODE="ES611" 
+        CODE="ES611_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="3"
         TITLE_FK="5" 
-        GLOBAL_ORDER="ES0101"
+        GLOBAL_ORDER="ES0101_VE"
         GRANULARITY_FK="3"
         
         VERSION="1"
@@ -134,12 +134,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="4" 
-        CODE="ES612" 
+        CODE="ES612_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="4"
         TITLE_FK="5" 
-        GLOBAL_ORDER="ES0102"
+        GLOBAL_ORDER="ES0102_VE"
         GRANULARITY_FK="3"
         
         VERSION="1"
@@ -152,12 +152,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="5" 
-        CODE="ES613" 
+        CODE="ES613_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="5"
         TITLE_FK="5" 
-        GLOBAL_ORDER="ES0103"
+        GLOBAL_ORDER="ES0103_VE"
         GRANULARITY_FK="3"
         
         VERSION="1"
@@ -170,12 +170,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="6" 
-        CODE="ES614" 
+        CODE="ES614_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="6"
         TITLE_FK="5"
-        GLOBAL_ORDER="ES0104" 
+        GLOBAL_ORDER="ES0104_VE" 
         GRANULARITY_FK="3"
         
         VERSION="1"
@@ -1472,7 +1472,7 @@
   
     <TB_LOCALISED_STRINGS 
         ID="5"
-        LABEL="Spain" 
+        LABEL="Spain_variable_element" 
         LOCALE="en"
         INTERNATIONAL_STRING_FK="5"
         VERSION="1"

@@ -15,6 +15,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;
@@ -47,6 +48,7 @@ import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
+import es.gobcan.istac.indicators.core.job.GeographicalValuesMigrationTemporalJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
 import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
@@ -62,14 +64,15 @@ import es.gobcan.istac.indicators.core.task.exception.TaskNotFoundException;
 @Service("taskService")
 public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
-    public static final String             PREFIX_JOB_POPULATE_DATA         = "job_populatedata_";
-    public static final String             PREFIX_JOB_EXPORTS_DSPL          = "exports_dspl_job_";
-    public static final String             PREFIX_JOB_UPDATE_CATEGORY_CACHE = "update_category_cache_from_srm";
-    public static final String             GROUP_EXTERNAL_CATEGORY_CACHE    = "externalCategoryCacheUpdate";
+    public static final String             PREFIX_JOB_POPULATE_DATA                       = "job_populatedata_";
+    public static final String             PREFIX_JOB_EXPORTS_DSPL                        = "exports_dspl_job_";
+    public static final String             PREFIX_JOB_UPDATE_CATEGORY_CACHE               = "update_category_cache_from_srm";
+    public static final String             GROUP_EXTERNAL_CATEGORY_CACHE                  = "externalCategoryCacheUpdate";
+    public static final String             PREFIX_TEMPORAL_JOB_UPDATE_GEOGRAPHICAL_VALUES = "update_geographical_values";
 
-    protected final Logger                 logger                           = LoggerFactory.getLogger(getClass());
+    protected final Logger                 logger                                         = LoggerFactory.getLogger(getClass());
 
-    private SchedulerFactory               schedulerFactory                 = null;
+    private SchedulerFactory               schedulerFactory                               = null;
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -370,6 +373,14 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         return TaskServiceImpl.PREFIX_JOB_UPDATE_CATEGORY_CACHE;
     }
 
+    public JobKey createTemporalJobKeyForUpdateGeographicalValues() {
+        return new JobKey(createTaskNameForUpdateCategoryCache());
+    }
+
+    public String createTemporalTaskNameForUpdateGeographicalValues() {
+        return TaskServiceImpl.PREFIX_TEMPORAL_JOB_UPDATE_GEOGRAPHICAL_VALUES;
+    }
+
     private TriggerKey createTriggerKeyForUpdateCategoryCach() {
         return new TriggerKey(createTaskNameForUpdateCategoryCache(), GROUP_EXTERNAL_CATEGORY_CACHE);
     }
@@ -499,6 +510,52 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
         logger.info("Execution end - update category cache in background at : {} ", executionDate);
 
+    }
+
+    @Override
+    public void scheduleGeographicalValuesMigrationTemporalTask(ServiceContext ctx) {
+
+        try {
+
+            JobDetail job = newJob(GeographicalValuesMigrationTemporalJob.class).usingJobData(GeographicalValuesMigrationTemporalJob.TASK_NAME, "automaticJob").build();
+
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionGeographicalValuesMigrationTemporalTask()).withMisfireHandlingInstructionDoNothing())
+                    .build();
+
+            CronExpression cronEx = new CronExpression(cronTrigger.getCronExpression());
+
+            if (cronEx.getNextValidTimeAfter(new Date()) == null) {
+                logger.info(
+                        "ATENTION!! Cron scheduler for temporal job for  migration geographical values  is before actual date. For this reason the job has been aborted and it will not never executed ");
+                return;
+            }
+
+            Scheduler sched = schedulerFactory.getScheduler();
+            sched.scheduleJob(job, cronTrigger);
+
+            logger.info("geographical values migration temporal job successfully scheduled at {} ", new Date());
+
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred scheduling geographical values migration temporal job", e);
+        }
+    }
+
+    @Override
+    public void processGeographicalValuesMigrationTemporalTask(ServiceContext ctx) throws MetamacException {
+        try {
+            DateTime executionDate = new DateTime();
+
+            logger.info("Execution start - update geographical values migration in background at : {} ", executionDate);
+
+            getIndicatorsService().updateDatasourceCodelistForGeographicalValuesMigration(ctx);
+
+            executionDate = new DateTime();
+
+            logger.info("Execution end - update geographical values migration in background at : {} ", executionDate);
+        } catch (Exception e) {
+            logger.error("Execution end with errors - update geographical values migration in background", e);
+        }
     }
 
     private void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {

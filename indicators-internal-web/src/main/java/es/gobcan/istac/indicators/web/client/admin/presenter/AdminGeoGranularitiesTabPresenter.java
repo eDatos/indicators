@@ -20,18 +20,11 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
-import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminGeoGranularitiesUiHandlers;
 import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesAction;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
-import es.gobcan.istac.indicators.web.shared.SaveGeoGranularityAction;
-import es.gobcan.istac.indicators.web.shared.SaveGeoGranularityResult;
 
 public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabView, AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabProxy>
         implements
@@ -41,8 +34,6 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
 
     public interface AdminGeoGranularitiesTabView extends View, HasUiHandlers<AdminGeoGranularitiesUiHandlers> {
 
-        void onGeoGranularityCreated(GeographicalGranularityDto dto);
-        void onGeoGranularityUpdated(GeographicalGranularityDto dto);
         void setGeoGranularities(int firstResult, List<GeographicalGranularityDto> geographicalGranularityDtos, int maxResults);
     }
 
@@ -79,24 +70,6 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
     // ACTIONS
 
     @Override
-    public void deleteGeoGranularities(List<String> uuids, final int firstResult) {
-        dispatcher.execute(new DeleteGeoGranularitiesAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteGeoGranularitiesResult>(this) {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
-                reloadGeoGranularities(firstResult);
-            }
-
-            @Override
-            public void onWaitSuccess(DeleteGeoGranularitiesResult result) {
-                reloadGeoGranularities(firstResult);
-                reloadGeoGranularitiesCache();
-            }
-        });
-    }
-
-    @Override
     public void retrieveGeoGranularities(final int firstResult) {
         retrieveGeoGranularitiesWithAction(firstResult, null);
     }
@@ -115,42 +88,8 @@ public class AdminGeoGranularitiesTabPresenter extends Presenter<AdminGeoGranula
                 });
     }
 
-    @Override
-    public void saveGeoGranularity(final int currentPage, GeographicalGranularityDto dto) {
-        final boolean creation = dto.getUuid() == null;
-        dispatcher.execute(new SaveGeoGranularityAction(dto), new WaitingAsyncCallbackHandlingError<SaveGeoGranularityResult>(this) {
-
-            @Override
-            public void onWaitSuccess(final SaveGeoGranularityResult result) {
-                retrieveGeoGranularitiesWithAction(currentPage, new Action() {
-
-                    @Override
-                    public void run() {
-                        if (creation) {
-                            getView().onGeoGranularityCreated(result.getOutputDto());
-                        } else {
-                            getView().onGeoGranularityUpdated(result.getOutputDto());
-                        }
-                    }
-                });
-                reloadGeoGranularitiesCache();
-            }
-        });
-
-    }
-
     private void reloadGeoGranularities(int firstResult) {
         retrieveGeoGranularities(firstResult);
-    }
-
-    private void reloadGeoGranularitiesCache() {
-        dispatcher.execute(new GetGeographicalGranularitiesAction(), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalGranularitiesResult result) {
-                IndicatorsValues.setGeographicalGranularities(result.getGeographicalGranularityDtos());
-            }
-        });
     }
 
     private static interface Action {

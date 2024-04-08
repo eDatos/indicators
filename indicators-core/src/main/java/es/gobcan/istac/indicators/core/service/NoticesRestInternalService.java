@@ -28,4 +28,5 @@ public interface NoticesRestInternalService {
     void createExportDSPLErrorNotification(String user, String code,  MetamacException exception);
     void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception);
     void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception);
+    void updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(String actionCode, String messageParams, MetamacException exception);
 }

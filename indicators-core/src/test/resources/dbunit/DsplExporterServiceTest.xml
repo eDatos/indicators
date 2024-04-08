@@ -66,7 +66,7 @@
     <!-- ************************************************************************************ -->
     <TB_LIS_GEOGR_VALUES 
         ID="11" 
-        CODE="GB" 
+        CODE="GB_VARIABLE_ELEMENT" 
         LATITUDE="55.378051" 
         LONGITUDE="-3.435973" 
         UUID="11"
@@ -84,7 +84,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="12" 
-        CODE="FR" 
+        CODE="FR_VARIABLE_ELEMENT" 
         LATITUDE="46.227638" 
         LONGITUDE="2.213749" 
         UUID="12"
@@ -102,12 +102,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="13" 
-        CODE="ES" 
+        CODE="ES_VARIABLE_ELEMENT" 
         LATITUDE="40.463667" 
         LONGITUDE="-3.74922" 
         UUID="13"
         TITLE_FK="11" 
-        GLOBAL_ORDER="ES"
+        GLOBAL_ORDER="ES_VARIABLE_ELEMENT"
         GRANULARITY_FK="1"
         
         VERSION="1"
@@ -120,12 +120,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="131" 
-        CODE="ES61" 
+        CODE="ES61_VARIABLE_ELEMENT" 
         LATITUDE="12.0656233" 
         LONGITUDE="-22.454564645" 
         UUID="131"
         TITLE_FK="12"
-        GLOBAL_ORDER="ES61" 
+        GLOBAL_ORDER="ES61_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -138,12 +138,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="132" 
-        CODE="ES42" 
+        CODE="ES42_VARIABLE_ELEMENT" 
         LATITUDE="16.0656233" 
         LONGITUDE="-23.454564645" 
         UUID="132"
         TITLE_FK="23"
-        GLOBAL_ORDER="ES42" 
+        GLOBAL_ORDER="ES42_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -156,7 +156,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="133" 
-        CODE="ES41" 
+        CODE="ES41_VARIABLE_ELEMENT" 
         LATITUDE="18.0656233" 
         LONGITUDE="-29.454564645" 
         UUID="133"
@@ -174,12 +174,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="134" 
-        CODE="ES43" 
+        CODE="ES43_VARIABLE_ELEMENT" 
         LATITUDE="28.0656233" 
         LONGITUDE="-19.454564645" 
         UUID="134"
         TITLE_FK="25"
-        GLOBAL_ORDER="ES43" 
+        GLOBAL_ORDER="ES43_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -192,7 +192,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1311" 
-        CODE="ES611" 
+        CODE="ES611_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1311"
@@ -210,7 +210,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1312" 
-        CODE="ES612" 
+        CODE="ES612_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1312"
@@ -228,7 +228,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1313" 
-        CODE="ES613" 
+        CODE="ES613_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1313"
@@ -246,7 +246,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1314" 
-        CODE="ES614" 
+        CODE="ES614_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1314"

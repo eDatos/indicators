@@ -19,6 +19,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 @Component
@@ -62,6 +63,19 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
             target.setResults(new ArrayList<GeographicalValueDto>());
             for (GeographicalValue geographicalValue : source.getValues()) {
                 target.getResults().add(do2DtoMapper.geographicalValueDoToDto(geographicalValue));
+            }
+        }
+        return target;
+    }
+
+    @Override
+    public MetamacCriteriaResult<RelatedResourceDto> pageResultVariableElementToMetamacCriteriaResultRelatedResource(PagedResult<GeographicalValue> source, Integer pageSize) {
+        MetamacCriteriaResult<RelatedResourceDto> target = new MetamacCriteriaResult<RelatedResourceDto>();
+        target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
+        if (source.getValues() != null) {
+            target.setResults(new ArrayList<RelatedResourceDto>());
+            for (GeographicalValue geographicalValue : source.getValues()) {
+                target.getResults().add(do2DtoMapper.geographicalValueDoToRelatedResourceDto(geographicalValue));
             }
         }
         return target;

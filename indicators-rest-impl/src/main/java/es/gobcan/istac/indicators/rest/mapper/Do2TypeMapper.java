@@ -14,7 +14,6 @@ import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
-import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
@@ -33,23 +32,32 @@ public interface Do2TypeMapper {
 
     // Indicators systems
     IndicatorsSystemType indicatorsSystemDoToType(final IndicatorsSystemVersion source);
+
     IndicatorsSystemBaseType indicatorsSystemDoToBaseType(final IndicatorsSystemVersion source);
+
     List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(final List<IndicatorsSystemVersion> sources);
+
     IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory systemHistory);
 
     // Indicators Instance
     IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source);
+
     List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources);
+
     JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations);
 
     // Indicator
-    IndicatorType indicatorDoToType(final IndicatorVersion sources, SrmRestInternalFacade srmRestInternalFacade);
+    IndicatorType indicatorDoToType(final IndicatorVersion sources);
+
     JsonStatDataType indicatorDoToJsonStatType(final IndicatorVersion source, IndicatorObservationsExtendedVO dataTypeRequest);
+
     List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources);
 
     // Granularities
     MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity);
+
     List<MetadataGranularityType> geographicalGranularityDoToType(List<GeographicalGranularity> geographicalGranularities);
+
     List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
 
     // Subjects

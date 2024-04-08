@@ -5,12 +5,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -29,89 +31,100 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceLastValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValue;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCacheRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.domain.LastValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
-    private static final String                      SUBJECT_CODE_EDUCACION            = "EDUCACION";
-    private static final String                      SUBJECT_CODE_POLITICA_ECON        = "POLITICA_ECON";
+    private static final String              SUBJECT_CODE_EDUCACION            = "EDUCACION";
+    private static final String              SUBJECT_CODE_POLITICA_ECON        = "POLITICA_ECON";
 
     /* Has geographic and time variables */
-    private static final String                      INDICATOR1_UUID                   = "Indicator-1";
-    private static final String                      INDICATOR1_CODE                   = "Indicator-1-CODE";
-    private static final String                      INDICATOR1_V1_DS_GPE_UUID         = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR1_V2_DS_GPE_UUID         = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR1_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR1_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
-    private static final String                      INDICATOR1_VERSION_DIFFUSION      = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
-    private static final String                      INDICATOR1_VERSION_PRODUCTION     = IndicatorsDataBaseTest.SECOND_VERSION;
-    private static final String                      INDICATOR1_INSTANCE_111_UUID      = "IndSys-1-v1-IInstance-1";
-    private static final String                      INDICATOR1_INSTANCE_111_CODE      = "IndSys-1-v1-IInstance-1-CODE";
+    private static final String              INDICATOR1_UUID                   = "Indicator-1";
+    private static final String              INDICATOR1_CODE                   = "Indicator-1-CODE";
+    private static final String              INDICATOR1_V1_DS_GPE_UUID         = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR1_V2_DS_GPE_UUID         = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR1_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR1_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
+    private static final String              INDICATOR1_VERSION_DIFFUSION      = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    private static final String              INDICATOR1_VERSION_PRODUCTION     = IndicatorsDataBaseTest.SECOND_VERSION;
+    private static final String              INDICATOR1_INSTANCE_111_UUID      = "IndSys-1-v1-IInstance-1";
+    private static final String              INDICATOR1_INSTANCE_111_CODE      = "IndSys-1-v1-IInstance-1-CODE";
 
-    private static final String                      INDICATOR2_UUID                   = "Indicator-2";
-    private static final String                      INDICATOR2_CODE                   = "Indicator-2-CODE";
-    private static final String                      INDICATOR2_DS_GPE_UUID            = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR2_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR2_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String                      INDICATOR2_INSTANCE_112_UUID      = "IndSys-1-v1-IInstance-2";
-    private static final String                      INDICATOR2_INSTANCE_112_CODE      = "IndSys-1-v1-IInstance-2-CODE";
+    private static final String              INDICATOR2_UUID                   = "Indicator-2";
+    private static final String              INDICATOR2_CODE                   = "Indicator-2-CODE";
+    private static final String              INDICATOR2_DS_GPE_UUID            = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR2_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR2_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR2_INSTANCE_112_UUID      = "IndSys-1-v1-IInstance-2";
+    private static final String              INDICATOR2_INSTANCE_112_CODE      = "IndSys-1-v1-IInstance-2-CODE";
 
-    private static final String                      INDICATOR3_UUID                   = "Indicator-3";
+    private static final String              INDICATOR3_UUID                   = "Indicator-3";
 
-    private static final String                      INDICATOR3_DS_GPE_UUID            = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR3_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR3_DS_GPE_UUID            = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR3_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
 
-    private static final String                      INDICATOR4_UUID                   = "Indicator-4";
-    private static final String                      INDICATOR4_DS_GPE_UUID            = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR4_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR4_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String                      INDICATOR4_INSTANCE_211_UUID      = "IndSys-2-v1-IInstance-1";
+    private static final String              INDICATOR4_UUID                   = "Indicator-4";
+    private static final String              INDICATOR4_DS_GPE_UUID            = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR4_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR4_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR4_INSTANCE_211_UUID      = "IndSys-2-v1-IInstance-1";
 
-    private static final String                      INDICATOR5_UUID                   = "Indicator-5";
-    private static final String                      INDICATOR5_DS_GPE_UUID            = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String                      INDICATOR5_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String                      INDICATOR5_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String                      INDICATOR5_INSTANCE_311_UUID      = "IndSys-1-v1-IInstance-3";
-    private static final String                      INDICATOR5_INSTANCE_311_CODE      = "IndSys-1-v1-IInstance-3-CODE";
+    private static final String              INDICATOR5_UUID                   = "Indicator-5";
+    private static final String              INDICATOR5_DS_GPE_UUID            = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR5_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR5_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String              INDICATOR5_INSTANCE_311_UUID      = "IndSys-1-v1-IInstance-3";
+    private static final String              INDICATOR5_INSTANCE_311_CODE      = "IndSys-1-v1-IInstance-3-CODE";
 
-    private static final String                      INDICATORS_SYSTEM1_UUID           = "IndSys-1";
-    private static final String                      INDICATORS_SYSTEM1_CODE           = "CODE-1";
-    private static final String                      INDICATORS_SYSTEM2_UUID           = "IndSys-2";
-    private static final String                      INDICATORS_SYSTEM2_CODE           = "CODE-2";
-
-    @Autowired
-    protected IndicatorsDataService                  indicatorsDataService;
+    private static final String              INDICATORS_SYSTEM1_UUID           = "IndSys-1";
+    private static final String              INDICATORS_SYSTEM1_CODE           = "CODE-1";
+    private static final String              INDICATORS_SYSTEM2_UUID           = "IndSys-2";
+    private static final String              INDICATORS_SYSTEM2_CODE           = "CODE-2";
+    List<GeographicalValue>                  geographicalValues                = new ArrayList<GeographicalValue>();
 
     @Autowired
-    private IndicatorsDataProviderService            indicatorsDataProviderService;
+    protected IndicatorsDataService          indicatorsDataService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade         datasetRepositoriesServiceFacade;
+    private IndicatorsDataProviderService    indicatorsDataProviderService;
 
     @Autowired
-    private IndicatorsService                        indicatorsService;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private IndicatorsSystemsService                 indicatorsSystemsService;
+    private IndicatorsService                indicatorsService;
 
     @Autowired
-    private IndicatorVersionRepository               indicatorVersionRepository;
+    private IndicatorsSystemsService         indicatorsSystemsService;
 
     @Autowired
-    private IndicatorVersionLastValueCacheRepository indicatorVersionLastValueCacheRepository;
+    private IndicatorVersionRepository       indicatorVersionRepository;
+
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
 
     /*** Indicator Version ***/
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+    }
 
     @Test
     public void testFindLastValueIndicatorsVersionWithGeoValueAndSubjectCodeOrderedByLastUpdate() throws Exception {
@@ -125,7 +138,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx,
                     SUBJECT_CODE_EDUCACION, GEO_CODE, measures, 2);
 
@@ -144,7 +157,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-02", obs);
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx,
                     SUBJECT_CODE_EDUCACION, GEO_CODE, measures, 2);
 
@@ -163,7 +176,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-02", obs);
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx,
                     SUBJECT_CODE_EDUCACION, GEO_CODE, measures, 2);
 
@@ -196,7 +209,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
         List<String> indicatorsCodes = Arrays.asList(INDICATOR1_CODE, INDICATOR2_CODE);
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(ctx, indicatorsCodes, GEO_CODE,
                     measures);
 
@@ -215,7 +228,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-02", obs);
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx,
                     SUBJECT_CODE_EDUCACION, GEO_CODE, measures, 2);
 
@@ -234,7 +247,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(indicatorsVersionsLatestValues.get(1), INDICATOR1_UUID, geoValue, "2011-02", obs);
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             List<IndicatorVersionLastValue> indicatorsVersionsLatestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx,
                     SUBJECT_CODE_EDUCACION, GEO_CODE, measures, 2);
 
@@ -266,7 +279,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, INDICATOR2_VERSION); // most recent
 
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorVersion> indicatorsVersions = indicatorsDataService.findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, GEO_CODE);
 
             assertNotNull(indicatorsVersions);
@@ -277,7 +290,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(INDICATOR1_UUID, indicatorsVersions.get(2).getIndicator().getUuid());
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             List<IndicatorVersion> indicatorsVersions = indicatorsDataService.findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, GEO_CODE);
 
             assertNotNull(indicatorsVersions);
@@ -288,7 +301,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(INDICATOR1_UUID, indicatorsVersions.get(2).getIndicator().getUuid());
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             List<IndicatorVersion> indicatorsVersions = indicatorsDataService.findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, GEO_CODE);
 
             assertNotNull(indicatorsVersions);
@@ -310,7 +323,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, INDICATOR2_VERSION); // most recent
 
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorVersion> indicatorsVersions = indicatorsDataService.findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, GEO_CODE);
 
             assertNotNull(indicatorsVersions);
@@ -335,7 +348,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR2_UUID, indicator2VersionNumber);
             indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR1_UUID, indicator1VersionNumber); // most recent
 
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorVersion> indicatorsVersions = indicatorsDataService.findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_EDUCACION, GEO_CODE);
 
             assertNotNull(indicatorsVersions);
@@ -355,19 +368,20 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
         {
-            for (String geoCode : Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613")) {
+            for (String geoCode : Arrays.asList(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611,
+                    SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612, SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613)) {
                 List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
                         geoCode, measures, 1);
                 assertNotNull(latestValues);
                 assertEquals(0, latestValues.size());
             }
         }
-
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+
         indicatorsService.publishIndicator(ctx, indicatorUuid);
 
         {
-            String geoCode = "ES";
+            String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
@@ -380,7 +394,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-01", obs);
         }
         {
-            String geoCode = "ES61";
+            String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES61;
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
@@ -393,7 +407,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-01", obs);
         }
         {
-            String geoCode = "ES611";
+            String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
@@ -406,7 +420,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-01", obs);
         }
         {
-            String geoCode = "ES612";
+            String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
@@ -419,7 +433,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorVersionLastValue(latestValues.get(0), indicatorUuid, geoValue, "2011-01", obs);
         }
         {
-            String geoCode = "ES613";
+            String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
 
             List<IndicatorVersionLastValue> latestValues = indicatorsDataService.findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ctx, SUBJECT_CODE_POLITICA_ECON,
@@ -437,7 +451,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     @Test
     public void testCreateCacheForNotPublishedIndicatorVersion() throws Exception {
         String indicatorUuid = INDICATOR1_UUID;
-        String geoCode = "ES";
+        String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
         ServiceContext ctx = getServiceContextAdministrador();
 
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
@@ -460,7 +474,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     public void testReloadCacheAfterPopulateIndicatorVersion() throws Exception {
         ServiceContext ctx = getServiceContextAdministrador();
         String indicatorUuid = INDICATOR1_UUID;
-        String geoCode = "ES";
+        String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
         GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
@@ -510,7 +524,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     public void testDeleteIndicatorVersionLastValueCacheAfterArchive() throws MetamacException {
         ServiceContext ctx = getServiceContextAdministrador();
         String indicatorUuid = INDICATOR4_UUID;
-        String geoCode = "ES";
+        String geoCode = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES;
         GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, geoCode);
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
@@ -562,7 +576,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx,
                     INDICATORS_SYSTEM1_CODE, GEO_CODE, measures, Integer.MAX_VALUE);
 
@@ -585,7 +599,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorInstanceLastValue(indicatorsInstancesLatestValues.get(2), INDICATOR5_INSTANCE_311_UUID, geoValue, "2010", obs);
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx,
                     INDICATORS_SYSTEM1_CODE, GEO_CODE, measures, Integer.MAX_VALUE);
 
@@ -608,7 +622,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorInstanceLastValue(indicatorsInstancesLatestValues.get(2), INDICATOR5_INSTANCE_311_UUID, geoValue, "2010", obs);
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx,
                     INDICATORS_SYSTEM1_CODE, GEO_CODE, measures, Integer.MAX_VALUE);
 
@@ -635,7 +649,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     @Test
     public void testFindLastValueIndicatorsInstancesInIndicatorsSystemWithGeoValueOrderedByLastUpdateLimitResults() throws Exception {
         ServiceContext ctx = getServiceContextAdministrador();
-        String GEO_CODE = "ES611";
+        String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_V2_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
@@ -710,7 +724,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     @Test
     public void testFindLastValueIndicatorsInstancesOrder() throws Exception {
         ServiceContext ctx = getServiceContextAdministrador();
-        String GEO_CODE = "ES611";
+        String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_V2_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
@@ -807,7 +821,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
         List<String> indicatorsInstancesCodes = Arrays.asList(INDICATOR1_INSTANCE_111_CODE, INDICATOR2_INSTANCE_112_CODE, INDICATOR5_INSTANCE_311_CODE);
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     indicatorsInstancesCodes, GEO_CODE, measures);
 
@@ -830,7 +844,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorInstanceLastValue(indicatorsInstancesLatestValues.get(2), INDICATOR5_INSTANCE_311_UUID, geoValue, "2010", obs);
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     indicatorsInstancesCodes, GEO_CODE, measures);
 
@@ -853,7 +867,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             checkIndicatorInstanceLastValue(indicatorsInstancesLatestValues.get(2), INDICATOR5_INSTANCE_311_UUID, geoValue, "2010", obs);
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
             List<IndicatorInstanceLastValue> indicatorsInstancesLatestValues = indicatorsDataService.findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     indicatorsInstancesCodes, GEO_CODE, measures);
 
@@ -889,7 +903,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorVersionData(ctx, INDICATOR5_UUID, INDICATOR5_VERSION); // most recent
 
         {
-            String GEO_CODE = "ES611";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
 
             List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     GEO_CODE);
@@ -902,7 +916,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(INDICATOR1_INSTANCE_111_UUID, indicatorsInstances.get(2).getUuid());
         }
         {
-            String GEO_CODE = "ES612";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES612;
 
             List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     GEO_CODE);
@@ -915,7 +929,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
             assertEquals(INDICATOR1_INSTANCE_111_UUID, indicatorsInstances.get(2).getUuid());
         }
         {
-            String GEO_CODE = "ES613";
+            String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
 
             List<IndicatorInstance> indicatorsInstances = indicatorsDataService.findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(ctx, INDICATORS_SYSTEM1_CODE,
                     GEO_CODE);
@@ -933,7 +947,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     @Test
     public void testCreateIndicatorInstanceLastValueCacheAfterPublishSystem() throws Exception {
         ServiceContext ctx = getServiceContextAdministrador();
-        String GEO_CODE = "ES613";
+        String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES613;
         GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValueByCode(ctx, GEO_CODE);
         List<MeasureDimensionTypeEnum> measures = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE);
 
@@ -965,7 +979,7 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
     @Test
     public void testDeleteIndicatorInstanceLastValueCacheAfterArchiveSystem() throws MetamacException {
         ServiceContext ctx = getServiceContextAdministrador();
-        String GEO_CODE = "ES611";
+        String GEO_CODE = SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611;
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_V2_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
 
