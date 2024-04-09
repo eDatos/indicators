@@ -306,7 +306,9 @@ Application Indicators {
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic codes in the indicator instance with published indicator filtered by granularity"
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesByGranularityInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
-	    	
+
+	    	"Retrieves geographic values in all indicators by granularity"
+	    	List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInAllIndicatorPublished(String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic granularities in all indicators with a subject Code "
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode) throws MetamacException;
 	    	"Retrieves geographic values in all indicators with a subject Code by granularity"
