@@ -677,18 +677,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
 
         List<DataSource> dataSources = source.getDataSources();
-        if (!dataSources.isEmpty()) {
-            for (DataSource dataSource : dataSources) {
-                if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
-                    String queryUrn = dataSource.getQueryUrn();
-                    Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn,
-                            Collections.singletonList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
-                    Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
-                    for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-                        if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                            metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                            metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
-                        }
+        
+        for (DataSource dataSource : dataSources) {
+            if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
+                String queryUrn = dataSource.getQueryUrn();
+                Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn, Collections.singletonList(this.metadataProperties.getDefaultInternationalizationLanguage()),
+                        StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+                for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+                    if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                        metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                        metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
                     }
                 }
             }
