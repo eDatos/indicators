@@ -674,24 +674,27 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
+        MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
 
-        if (!source.getDataSources().isEmpty() && QueryEnvironmentEnum.METAMAC.equals(source.getDataSources().get(0).getQueryEnvironment())) {
-
-            Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
-                    Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
-
-            Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
-            for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-                if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                    MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                    metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
-                    target.setAttribute(metadataAttributes);
+        List<DataSource> dataSources = source.getDataSources();
+        if (!dataSources.isEmpty()) {
+            for (DataSource dataSource : dataSources) {
+                if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
+                    String queryUrn = dataSource.getQueryUrn();
+                    Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn,
+                            Collections.singletonList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                    Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+                    for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+                        if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                            metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                            metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                        }
+                    }
                 }
             }
         }
 
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF);
-        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
+        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
         target.setAttribute(metadataAttributes);
 
         // CHILD LINK
