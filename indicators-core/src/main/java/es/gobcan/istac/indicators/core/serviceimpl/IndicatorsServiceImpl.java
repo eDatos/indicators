@@ -8,6 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.security.AccessController;
+import sun.security.action.GetPropertyAction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -458,6 +466,25 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } finally {
             IOUtils.closeQuietly(outputStream);
             IOUtils.closeQuietly(writer);
+        }
+    }
+
+
+    @Override
+    public void deleteTemporalFile(ServiceContext ctx, String temporalFile) throws MetamacException {
+        FileSystem fileSystem = FileSystems.getDefault();
+        File tmpdir = new File(AccessController.doPrivileged(new GetPropertyAction("java.io.tmpdir")));
+        Path path = fileSystem.getPath(tmpdir.getPath() + "\\" + temporalFile);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            try {
+                Thread.sleep(5000);
+                Files.delete(path);
+            } catch (InterruptedException | IOException ex) {
+                LOG.error("Could not delete temporal file: " + temporalFile);
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -1409,7 +1436,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return getIndicatorVersionRepository().findCategoryElementsInIndicators();
 
     }
-
     @Override
     public List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         CodelistAvro codelistAvro = null;
