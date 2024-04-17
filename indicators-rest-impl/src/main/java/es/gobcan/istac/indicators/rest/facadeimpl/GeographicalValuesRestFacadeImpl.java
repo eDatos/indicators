@@ -111,4 +111,26 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
         return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
+    @Override
+    public GeographicalValue findGeographicalValuesByCode(String code) throws MetamacException {
+
+        MetamacCriteria criteria = new MetamacCriteria();
+        criteria.setPaginator(new MetamacCriteriaPaginator());
+        criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+        criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
+
+        criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.CODE.name(), code, OperationType.EQ));
+
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(),
+                sculptorCriteria.getPagingParameter());
+        if (result.getValues() != null && !result.getValues().isEmpty()) {
+            return result.getValues().get(0);
+        } else {
+            return null;
+        }
+    }
+
 }
