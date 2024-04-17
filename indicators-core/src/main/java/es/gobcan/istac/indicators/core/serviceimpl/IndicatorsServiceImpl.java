@@ -474,7 +474,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public void deleteTemporalFile(ServiceContext ctx, String temporalFile) throws MetamacException {
         FileSystem fileSystem = FileSystems.getDefault();
         File tmpdir = new File(AccessController.doPrivileged(new GetPropertyAction("java.io.tmpdir")));
-        Path path = fileSystem.getPath(tmpdir.getPath() + "\\" + temporalFile);
+        Path path = fileSystem.getPath(tmpdir.getPath() + "/" + temporalFile);
         try {
             Files.delete(path);
         } catch (IOException e) {
