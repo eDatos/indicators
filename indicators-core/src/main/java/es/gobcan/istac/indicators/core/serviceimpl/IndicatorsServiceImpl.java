@@ -483,6 +483,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 Files.delete(path);
             } catch (InterruptedException | IOException ex) {
                 LOG.error("Could not delete temporal file: " + temporalFile);
+                LOG.error(ex.getMessage(), ex);
                 Thread.currentThread().interrupt();
             }
         }
