@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -185,6 +186,14 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
             valueMap.put(environment.toString(), environment.getValue());
+        }
+        return valueMap;
+    }
+
+    public static LinkedHashMap<String, String> getMetamacSelectionTypeMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (MetamacSelectionEnum selection : MetamacSelectionEnum.values()) {
+            valueMap.put(selection.toString(), selection.getValue());
         }
         return valueMap;
     }
