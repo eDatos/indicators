@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.rest.clients;
 
+import java.util.Map;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
@@ -34,5 +36,10 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     @Override
     public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException {
         return srmRestInternalService.retrieveCodeOfCodelist(codeUrn);
+    }
+
+    @Override
+    public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(codelistUrn);
     }
 }
