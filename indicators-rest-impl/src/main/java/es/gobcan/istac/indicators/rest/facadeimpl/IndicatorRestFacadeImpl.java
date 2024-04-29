@@ -1,16 +1,9 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.vo.*;
-import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
-import es.gobcan.istac.indicators.rest.clients.RestApiLocatorExternal;
-import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
-import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
-import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
-import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
-import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
-import es.gobcan.istac.indicators.rest.types.*;
-import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -21,24 +14,50 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
+import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
+import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
+import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
+import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
+import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
+import es.gobcan.istac.indicators.rest.types.MetadataType;
+import es.gobcan.istac.indicators.rest.types.PagedResultType;
+import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
+    protected Logger                logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper do2TypeMapper;
+    private Do2TypeMapper           do2TypeMapper;
 
     @Autowired
-    protected IndicatorsApiService indicatorsApiService;
+    protected IndicatorsApiService  indicatorsApiService;
 
     @Autowired
     private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
 
+    @Autowired
+    private SrmRestInternalFacade   srmRestInternalFacade = null;
+
+    @Autowired
+    GeographicalValuesRestFacade    geographicalValuesRestFacade;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -96,7 +115,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         return indicatorsApiService.retrieveIndicatorByCode(indicatorCode);
     }
 
-
     @Override
     public IndicatorType retrieveIndicator(String indicatorCode) throws MetamacException {
         IndicatorVersion indicatorsVersion = retrieveIndicatorByCode(indicatorCode);
@@ -116,6 +134,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
             throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
+
+        GeographicalValuesOldVersionCompatibilityUtils.setGeographicalRepresentationByVariableElements(geographicalValuesRestFacade, srmRestInternalFacade, indicatorVersion, selectedRepresentations);
         IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
 
         DataType dataType;

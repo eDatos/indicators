@@ -233,7 +233,7 @@ where deprecated_base_location_fk is not null and base_location_fk  is null;
  -- 4.8.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
  -- 4.8.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
  
- 
+ --4.9 exportar la tabla temp_mig_codes_with_var_element e importarla en la base de datos metamac_portal_bd
  
  
 --5) Añadir primary keys eliminadas y foreign keys
