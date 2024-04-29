@@ -974,12 +974,13 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
-                uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
+                //                uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
+                uiHandlers.retrieveQueriesForRelatedDataset(firstResult, maxResults, criteria);
             }
 
             @Override
             protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
-                uiHandlers.retrieveStatisticalOperationsForQuerySelection(firstResult, maxResults, criteria);
+                uiHandlers.retrieveStatisticalOperationsForDatasetSelection(firstResult, maxResults, criteria);
             }
 
             @Override
@@ -1225,6 +1226,18 @@ public class DataSourcePanel extends VLayout {
     public void setQueries(List<ExternalItemDto> queriesDtos, int firstResult, int elementsInPage, int totalResults) {
         if (searchQueryMetamacWindow != null) {
             searchQueryMetamacWindow.setResources(queriesDtos, firstResult, elementsInPage, totalResults);
+        }
+    }
+
+    public void setDatasets(List<ExternalItemDto> queriesDtos, int firstResult, int elementsInPage, int totalResults) {
+        if (searchDatasetMetamacWindow != null) {
+            searchDatasetMetamacWindow.setResources(queriesDtos, firstResult, elementsInPage, totalResults);
+        }
+    }
+
+    public void setStatisticalDatasetOperations(List<ExternalItemDto> statisticalOperations, int firstResult, int totalResults) {
+        if (searchDatasetMetamacWindow != null) {
+            searchDatasetMetamacWindow.setFilterResources(statisticalOperations, firstResult, statisticalOperations.size(), totalResults);
         }
     }
 

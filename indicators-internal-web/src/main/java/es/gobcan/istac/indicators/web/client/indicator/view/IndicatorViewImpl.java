@@ -228,10 +228,19 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setDatasetsForRelatedQuery(GetQueriesPaginatedListResult result) {
+        dataSourcesPanel.setDatasets(result);
+    }
+
+    @Override
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
         dataSourcesPanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        dataSourcesPanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
     @Override
     public void showInformationMessage(String title, String message) {
         InformationWindow informationWindow = new InformationWindow(title, message);
