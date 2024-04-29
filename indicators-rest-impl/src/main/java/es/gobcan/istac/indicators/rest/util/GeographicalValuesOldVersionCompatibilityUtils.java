@@ -43,7 +43,7 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
     public static void setGeographicalRepresentationByVariableElements(GeographicalValuesRestFacade geographicalValuesRestFacade, SrmRestInternalFacade srmRestInternalFacade,
             IndicatorVersion indicatorVersion, Map<String, List<String>> selectedRepresentations) {
         List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        if (geographicalSelectedValues.isEmpty()) {
+        if (geographicalSelectedValues == null || geographicalSelectedValues.isEmpty()) {
             return;
         }
 
