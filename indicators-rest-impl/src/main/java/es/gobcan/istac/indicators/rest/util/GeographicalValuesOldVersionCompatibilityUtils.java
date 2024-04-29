@@ -23,11 +23,8 @@ import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
  */
 public class GeographicalValuesOldVersionCompatibilityUtils {
 
-    protected static Logger logger = LoggerFactory.getLogger(GeographicalValuesOldVersionCompatibilityUtils.class);
-
-    private GeographicalValuesOldVersionCompatibilityUtils() {
-        // without implementation
-    }
+    protected static Logger logger                             = LoggerFactory.getLogger(GeographicalValuesOldVersionCompatibilityUtils.class);
+    Map<String, String>     variableElementsByGeographicalCode = new HashMap<>();
 
     /**
      * if geographical representations exist, it must be checked that are variable element values. If the first value is not a variable element, the system supposes that is a geographical code and the
@@ -40,10 +37,18 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
      *            values are change to variable elements.
      */
 
-    public static void setGeographicalRepresentationByVariableElements(GeographicalValuesRestFacade geographicalValuesRestFacade, SrmRestInternalFacade srmRestInternalFacade,
+    public GeographicalValuesOldVersionCompatibilityUtils() {
+        // without impl.
+    }
+
+    public Map<String, String> getVariableElementsByGeographicalCode() {
+        return variableElementsByGeographicalCode;
+    }
+
+    public void setGeographicalRepresentationByVariableElements(GeographicalValuesRestFacade geographicalValuesRestFacade, SrmRestInternalFacade srmRestInternalFacade,
             IndicatorVersion indicatorVersion, Map<String, List<String>> selectedRepresentations) {
         List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        if (geographicalSelectedValues.isEmpty()) {
+        if (geographicalSelectedValues == null || geographicalSelectedValues.isEmpty()) {
             return;
         }
 
@@ -64,25 +69,26 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
 
     }
 
-    private static Map<Long, Map<String, String>> getGeographicalValuesByDataSource(SrmRestInternalFacade srmRestInternalFacade, IndicatorVersion indicatorVersion) throws MetamacException {
-        Map<Long, Map<String, String>> geographicalValuesByDataSource = new HashMap<Long, Map<String, String>>();
+    private Map<Long, Map<String, String>> getGeographicalValuesByDataSource(SrmRestInternalFacade srmRestInternalFacade, IndicatorVersion indicatorVersion) throws MetamacException {
+        Map<Long, Map<String, String>> geographicalValuesByDataSource = new HashMap<>();
         for (DataSource dataSource : indicatorVersion.getDataSources()) {
             if (dataSource.getGeographicalCodelistUrn() != null) {
-                Map<String, String> variableElementsByGeographicalCode = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(dataSource.getGeographicalCodelistUrn());
-                geographicalValuesByDataSource.put(dataSource.getId(), variableElementsByGeographicalCode);
+                Map<String, String> variableElementsByDatasourceByGeographicalCode = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(dataSource.getGeographicalCodelistUrn());
+                geographicalValuesByDataSource.put(dataSource.getId(), variableElementsByDatasourceByGeographicalCode);
             }
         }
         return geographicalValuesByDataSource;
     }
 
-    private static List<String> getVariableElementsByGeographicalCodes(List<String> geographicalSelectedValues, Map<Long, Map<String, String>> geographicalValuesByDataSource) {
-        List<String> geographicalSelectedValuesTarget = new ArrayList<String>();
+    private List<String> getVariableElementsByGeographicalCodes(List<String> geographicalSelectedValues, Map<Long, Map<String, String>> geographicalValuesByDataSource) {
+        List<String> geographicalSelectedValuesTarget = new ArrayList<>();
         for (String geographicalCode : geographicalSelectedValues) {
             boolean existCode = false;
             for (Map.Entry<Long, Map<String, String>> geoValuesByCode : geographicalValuesByDataSource.entrySet()) {
                 String variableElement = geoValuesByCode.getValue().get(geographicalCode);
                 if (variableElement != null) {
                     geographicalSelectedValuesTarget.add(variableElement);
+                    variableElementsByGeographicalCode.put(geographicalCode, variableElement);
                     existCode = true;
                     break;
                 }

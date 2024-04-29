@@ -95,38 +95,39 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks uriLinks;
+    UriLinks                                                                                     uriLinks;
 
     @Autowired
-    private TranslationRepository translationRepository;
+    private TranslationRepository                                                                translationRepository;
 
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache         = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>>                                 requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-        @Override
-        protected java.util.Map<String, Map<String, Object>> initialValue() {
-            return new HashMap<String, Map<String, Object>>();
-        }
-    };
+                                                                                                                                           @Override
+                                                                                                                                           protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                                                               return new HashMap<String, Map<String, Object>>();
+                                                                                                                                           }
+                                                                                                                                       };
     @Autowired
-    private final  IndicatorsApiService                          indicatorsApiService = null;
-
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade statisticalOperations = null;
+    private final IndicatorsApiService                                                           indicatorsApiService                  = null;
 
     @Autowired
-    private final SrmRestInternalFacade srmRestInternalFacade = null;
+    private final StatisticalOperationsRestInternalFacade                                        statisticalOperations                 = null;
 
     @Autowired
-    private final MetadataProperties metadataProperties = null;
+    private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
+    private final MetadataProperties                                                             metadataProperties                    = null;
 
     @Autowired
-    private final StatisticalResourceRestExternalFacade statisticalResourceRestExternalFacade = null;
+    private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
 
-    private static final List<String> measuresOrder = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
-            MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private final StatisticalResourceRestExternalFacade                                          statisticalResourceRestExternalFacade = null;
+
+    private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+            MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+            MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     private static final EnumMap<QuantityUnitSymbolPositionEnum, QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(QuantityUnitSymbolPositionEnum.class);
 
@@ -398,7 +399,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // Remove All Cache
         requestCache.remove();
         try {
-            List<String> geographicalCodes = dataTypeRequest.getGeographicalCodes();
+            List<String> geographicalCodes = new ArrayList<String>();
+
+            // EDATOS-3827 TODO
+            for (String code : dataTypeRequest.getGeographicalCodes()) {
+                if ("MUN_SAN_BARTOLOME_TIRAJANA".equals(code)) {
+                    geographicalCodes.add("35019");
+                } else {
+                    geographicalCodes.add(code);
+                }
+
+            }
+
+            // FIN EDATOS-3827
+
             List<String> timeValues = dataTypeRequest.getTimeCodes();
             List<String> measureValues = dataTypeRequest.getMeasureCodes();
             Map<String, ? extends ObservationDto> observationMap = dataTypeRequest.getObservationMap();
@@ -447,9 +461,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
                         // Observation ID: Be careful!!! don't change order of ids
                         String geographicalValueCode = geographicalCode;
-                        String id = geographicalValueCode + "#" + timeValueCode + "#" + measureValueCode;
+                        String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
 
-                        ObservationDto observationDto = observationMap.get(id);
+                        ObservationDto observationDto = observationMap.get(newId);
                         if (observationDto == null) {
                             observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
                         } else if (observationDto.getPrimaryMeasure() == null) {
@@ -504,6 +518,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalValueCode);
         CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValueCode);
         CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValueCode);
+
         observationDto.getCodesDimension().add(geoCodeDimDto);
         observationDto.getCodesDimension().add(timeCodeDimDto);
         observationDto.getCodesDimension().add(measureCodeDimDto);
@@ -677,7 +692,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
 
         List<DataSource> dataSources = source.getDataSources();
-        
+
         for (DataSource dataSource : dataSources) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
                 String queryUrn = dataSource.getQueryUrn();
@@ -723,8 +738,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit.setTitle(
-                MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit
+                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
