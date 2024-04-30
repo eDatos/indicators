@@ -90,6 +90,7 @@ import es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 import es.gobcan.istac.indicators.rest.types.SubjectType;
 import es.gobcan.istac.indicators.rest.types.TitleLinkType;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -399,19 +400,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // Remove All Cache
         requestCache.remove();
         try {
-            List<String> geographicalCodes = new ArrayList<String>();
-
-            // EDATOS-3827 TODO
-            for (String code : dataTypeRequest.getGeographicalCodes()) {
-                if ("MUN_SAN_BARTOLOME_TIRAJANA".equals(code)) {
-                    geographicalCodes.add("35019");
-                } else {
-                    geographicalCodes.add(code);
-                }
-
-            }
-
-            // FIN EDATOS-3827
+            List<String> geographicalCodes = setGeographicalCodesCompatibility(dataTypeRequest);
 
             List<String> timeValues = dataTypeRequest.getTimeCodes();
             List<String> measureValues = dataTypeRequest.getMeasureCodes();
@@ -509,6 +498,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // Remove All Cache
             requestCache.remove();
         }
+    }
+
+    private List<String> setGeographicalCodesCompatibility(DataTypeRequest dataTypeRequest) {
+        List<String> geographicalCodes;
+        if (dataTypeRequest.geoValuesOldVersionCompatibilityUtils != null && dataTypeRequest.geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
+            geographicalCodes = dataTypeRequest.geoValuesOldVersionCompatibilityUtils.getOriginalSelectedGeographicalRepresentations();
+        } else {
+            geographicalCodes = dataTypeRequest.getGeographicalCodes();
+        }
+        return geographicalCodes;
     }
 
     private ObservationDto createObservationExtendedDto(String geographicalValueCode, String timeValueCode, String measureValueCode, String primaryMeasure) {
@@ -633,11 +632,34 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Override
     public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+    }
+
+    @Override
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        if (!geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
+            indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+            return;
+        }
+
+        for (GeographicalValueVO geoValue : geographicalValues) {
+            String variableElement = geoValuesOldVersionCompatibilityUtils.getGeographicalCodeByVariableElement(geoValue.getCode());
+            if (variableElement != null) {
+                geoValue.setCode(variableElement);
+            }
+        }
+
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+
+    }
+
+    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues) throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
-        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
 
         MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
