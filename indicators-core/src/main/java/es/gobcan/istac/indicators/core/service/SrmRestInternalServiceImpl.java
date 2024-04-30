@@ -28,10 +28,13 @@ import org.springframework.stereotype.Component;
 @Component(SrmRestInternalService.BEAN_ID)
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
-    private static Logger  logger = LoggerFactory.getLogger(SrmRestInternalServiceImpl.class);
+    public static final String SPACE             = " ";
+    public static final String DOUBLE_QUOTE      = "\"";
+    public static final String ID_CODES_CODELIST = "ID";
+    private static Logger      logger            = LoggerFactory.getLogger(SrmRestInternalServiceImpl.class);
 
     @Autowired
-    private RestApiLocator restApiLocator;
+    private RestApiLocator     restApiLocator;
 
     @Override
     public CategoryElements findCategoryElements(String query, String orderBy, String limit, String offset) {
@@ -126,6 +129,17 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             variableElementsByCodesOfCodelist.put(code.getId(), code.getVariableElement().getId());
         }
         return variableElementsByCodesOfCodelist;
+    }
+
+    @Override
+    public Codes retrieveCodelistCodesByCode(String code) throws MetamacException {
+        String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+
+        StringBuilder queryBuilder = new StringBuilder(ID_CODES_CODELIST);
+        queryBuilder.append(SPACE).append(ComparisonOperator.EQ).append(SPACE).append(DOUBLE_QUOTE).append(code).append(DOUBLE_QUOTE);
+
+        return restApiLocator.getSrmRestInternalFacadeV10().findCodes("~all", "~all", "~latest", queryBuilder.toString(), null, null, null, null, null, null, null, fields);
+
     }
 
     private Codes retrieveCodesOfCodelist(String codelistUrn) {

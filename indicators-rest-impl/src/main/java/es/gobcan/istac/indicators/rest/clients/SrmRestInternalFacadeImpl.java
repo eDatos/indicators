@@ -7,6 +7,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,5 +42,10 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     @Override
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
         return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(codelistUrn);
+    }
+
+    @Override
+    public Codes retrieveCodelistCodesByCode(String code) throws MetamacException {
+        return srmRestInternalService.retrieveCodelistCodesByCode(code);
     }
 }

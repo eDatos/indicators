@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 public interface Do2TypeMapper {
 
@@ -72,6 +73,8 @@ public interface Do2TypeMapper {
     List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues);
 
     void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException;
+
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException;
 
     void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target);
 }

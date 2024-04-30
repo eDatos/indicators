@@ -5,18 +5,19 @@ import java.util.Map;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
-
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 public class DataTypeRequest {
 
-    private IndicatorInstance                     indicatorInstance = null;
-    private IndicatorVersion                      indicatorVersion  = null;
-    private List<String>                          geographicalCodes = null;
-    private List<String>                          timeCodes         = null;
-    private List<String>                          measureCodes      = null;
-    private Map<String, ? extends ObservationDto> observationMap    = null;
+    private IndicatorInstance                      indicatorInstance                     = null;
+    private IndicatorVersion                       indicatorVersion                      = null;
+    private List<String>                           geographicalCodes                     = null;
+    private List<String>                           timeCodes                             = null;
+    private List<String>                           measureCodes                          = null;
+    private Map<String, ? extends ObservationDto>  observationMap                        = null;
+    GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = null;
 
     public DataTypeRequest(IndicatorInstance indicatorInstance, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues,
             Map<String, ? extends ObservationDto> observationMap) {
@@ -28,7 +29,8 @@ public class DataTypeRequest {
         this.observationMap = observationMap;
     }
 
-    public DataTypeRequest(IndicatorVersion indicatorVersion, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues, Map<String, ? extends ObservationDto> observationMap) {
+    public DataTypeRequest(IndicatorVersion indicatorVersion, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues,
+            Map<String, ? extends ObservationDto> observationMap) {
         super();
         this.indicatorVersion = indicatorVersion;
         this.geographicalCodes = geographicalCodes;
@@ -83,6 +85,17 @@ public class DataTypeRequest {
 
     public void setObservationMap(Map<String, ObservationExtendedDto> observationMap) {
         this.observationMap = observationMap;
+    }
+
+    public GeographicalValuesOldVersionCompatibilityUtils getGeoValuesOldVersionCompatibilityUtils() {
+        return geoValuesOldVersionCompatibilityUtils;
+    }
+
+    public void setGeoValuesOldVersionCompatibilityUtils(GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) {
+        if (this.geographicalCodes != null && this.geographicalCodes.size() > 1 && geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
+            geoValuesOldVersionCompatibilityUtils.sortOriginalGeographicalValues(this.geographicalCodes);
+        }
+        this.geoValuesOldVersionCompatibilityUtils = geoValuesOldVersionCompatibilityUtils;
     }
 
 }

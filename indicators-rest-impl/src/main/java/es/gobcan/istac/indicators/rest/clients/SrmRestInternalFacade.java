@@ -7,6 +7,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 
 public interface SrmRestInternalFacade {
 
@@ -17,5 +18,6 @@ public interface SrmRestInternalFacade {
     CategoryResourceInternal retrieveCategoryByCategoryElement(String categorySchemeUrn, String categoryElementCode) throws MetamacException;
     public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException;
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
+    public Codes retrieveCodelistCodesByCode(String code) throws MetamacException;
 
 }
