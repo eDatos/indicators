@@ -45,7 +45,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public Codes retrieveCodelistCodesByCode(String code) throws MetamacException {
-        return srmRestInternalService.retrieveCodelistCodesByCode(code);
+    public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException {
+        return srmRestInternalService.retrieveCodelistCodesByCode(code, defaultTerritoryVariableUrn, numResults);
     }
 }
