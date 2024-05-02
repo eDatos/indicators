@@ -48,6 +48,10 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
 
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
 
+    void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
+
+    void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
+
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);
 

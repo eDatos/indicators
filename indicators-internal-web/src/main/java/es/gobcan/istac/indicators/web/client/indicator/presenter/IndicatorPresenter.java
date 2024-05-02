@@ -187,7 +187,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
+        void setDatasetsForRelatedQuery(GetQueriesPaginatedListResult result);
+
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
+
+        void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
         void showInformationMessage(String title, String message);
 
@@ -492,6 +496,29 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setQueriesForRelatedQuery(result);
             }
         });
+    }
+
+    @Override
+    public void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetQueriesPaginatedListResult result) {
+                getView().setDatasetsForRelatedQuery(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForDatasetSelection(result.getOperationsList(), result.getFirstResultOut(), result.getTotalResults());
+                    }
+                });
     }
 
     @Override

@@ -251,6 +251,14 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setQueries(queriesList, result.getFirstResultOut(), queriesList.size(), result.getTotalResults());
     }
 
+    public void setStatisticalDatasetOperations(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        datasourcePanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
+    public void setDatasets(GetQueriesPaginatedListResult result) {
+        List<ExternalItemDto> datasetsList = result.getQueriesList();
+        datasourcePanel.setDatasets(datasetsList, result.getFirstResultOut(), datasetsList.size(), result.getTotalResults());
+    }
+
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
         datasourcePanel.setUnitMultipliers(unitMultiplierDtos);
     }

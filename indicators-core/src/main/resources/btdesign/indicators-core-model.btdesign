@@ -2168,6 +2168,12 @@ Application Indicators {
             GPE("GPE"),
             JSON_STAT("JSON-stat")
         }
+
+        enum MetamacSelectionEnum {
+            String value
+            CONSULTA("Consulta"),
+            DATASET("Dataset")
+        }
         
         "Task Status Type Enumerated"
     	enum TaskStatusTypeEnum {
