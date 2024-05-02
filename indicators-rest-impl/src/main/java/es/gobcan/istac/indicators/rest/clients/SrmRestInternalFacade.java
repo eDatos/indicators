@@ -18,6 +18,6 @@ public interface SrmRestInternalFacade {
     CategoryResourceInternal retrieveCategoryByCategoryElement(String categorySchemeUrn, String categoryElementCode) throws MetamacException;
     public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException;
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
-    public Codes retrieveCodelistCodesByCode(String code) throws MetamacException;
+    public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException;
 
 }

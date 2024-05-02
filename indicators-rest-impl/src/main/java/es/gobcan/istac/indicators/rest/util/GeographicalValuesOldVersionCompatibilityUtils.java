@@ -158,16 +158,16 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
             }
 
             String[] paramsTerritoryVariable = UrnUtils.splitUrnItemScheme(defaultTerritoryVariableUrn);
-
+            String variableCode = paramsTerritoryVariable[0];
             // search codes with contain this code
-            Codes codes = srmRestInternalFacade.retrieveCodelistCodesByCode(geographicalValue);
+            Codes codes = srmRestInternalFacade.retrieveCodelistCodesByCode(geographicalValue, variableCode, 1);
             for (CodeResourceInternal code : codes.getCodes()) {
                 // get the first code in a codelist with a Territory variable
                 if (code.getVariableElement() != null) {
                     String[] params = UrnUtils.splitUrnItemScheme(code.getVariableElement().getUrn());
                     String[] nestedId = UrnUtils.splitUrnByDots(params[0]);
 
-                    if (paramsTerritoryVariable[0].equals(nestedId[0])) {
+                    if (variableCode.equals(nestedId[0])) {
                         return code.getVariableElement().getId();
                     }
                 }
