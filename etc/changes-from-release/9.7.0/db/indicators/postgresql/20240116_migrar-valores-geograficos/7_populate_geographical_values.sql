@@ -79,6 +79,9 @@ select max(id) from tb_lis_geogr_values ;
 -- 0.6.4) con el valor dado anteriormente, cambiar la secuencia para poner el valor anterior mas uno que será el siguiente valor de la secuencia. 
 ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR + 1;
  
+ --3.1 Con la importación anterior se comprueba que el campo update_date_tz que estaba a nulo originalmente, se ha migrado con un espacio en blanco. Hay que poner a nulo para evitar error en la aplicación con las fechas. Para ello ejecutar:
+ update tb_lis_geogr_values set update_date_tz = null where update_date_tz = '';
+ 
  --4 Rellenar nuevos campos creados
 --4.1) Comprobaciones previas
 --4.1.1) Comprobar que todos los valores que estaban antes tienen traducción en la nueva tabla de valores.
@@ -333,6 +336,24 @@ select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_
  -- Si todo va bien se obtienen los códigos de clasificación para los cuales no se encontró asociación con un código de elemento de variable. Hay que resolverlo con Vicky.
   
   
+  --6.7. Se detecta que al renombrar el campo en cada tabla data, la vista asociada a cada tabla se modifica automáticamente poniendo un alias al nuevo campo deprecado. Se añade una consulta de 
+  --este estilo: -----data_y67chqktpnp0cnnpdkdciz6.deprecated_dimension_00 AS dimension_00,------
+  --Hay que reestablecer todas las vistas afectadas para que consulten el campo dimension_00 directamente.
+  --6.7.1. Obtener las vistas afectadas con la siguiente consulta 
+  select 'CREATE OR REPLACE VIEW ' || table_name || ' AS' || view_definition,
+       table_schema as schema_name, table_name as view_name, view_definition
+    from information_schema.views
+   where table_schema not in ('information_schema', 'pg_catalog')
+     and view_definition like '%deprecated_%'
+order by schema_name, view_name;
+    --6.7.2  Coger todos los resultados de la primera columna de la consulta anterior y ponerlo en un editor de texto.
+    --6.7.3  Sustituir la siguiente cadena
+           -- deprecated_dimension_00 AS dimension_00,
+           -- por
+           -- dimension_00,
+    --6.7.4 Ejecutar la recreación de las vistas con la modificación realizada en el paso anterior. Con todo ésto las vistas ya se quedan adecuadamente creadas y se puede avanzar al siguiente paso.  
+         
+         
  --7) Eliminación de columna deprecated del data.
  -- Si el paso 6 fue bien, se deberá borrar la columna deprecated del data. Ésto es debido a que el data tiene una vista asociada. Y ciertas operaciones en la aplicación la modifican quedando con este campo deprecado.
  --Para ello, 
