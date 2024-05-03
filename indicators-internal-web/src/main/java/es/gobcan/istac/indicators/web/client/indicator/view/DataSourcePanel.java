@@ -363,16 +363,6 @@ public class DataSourcePanel extends VLayout {
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
         dataStructureDtoEdition = dataStructureDto;
 
-        /*
-         * if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
-         * generalEditionForm.setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? dataSourceDto.getMetamacType().name() : StringUtils.EMPTY);
-         * if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
-         * generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
-         * } else {
-         * generalEditionForm.setValue(DataSourceDS.DATASET_METAMAC, dataSourceDto.getStatResource());
-         * }
-         * }
-         */
         // Source survey code
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
 
