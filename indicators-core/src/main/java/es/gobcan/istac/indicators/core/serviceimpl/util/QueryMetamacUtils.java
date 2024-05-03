@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.GeographicalValueRepository;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -51,7 +52,7 @@ import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public class QueryMetamacUtils {
 
-    private Map<String, String> variableElementsByCode = new HashMap<String, String>();
+    private Map<String, String>    variableElementsByCode = new HashMap<String, String>();
 
     private SrmRestInternalService srmRestInternalService;
 
@@ -68,6 +69,8 @@ public class QueryMetamacUtils {
 
         // Metamac
         target.setQueryEnvironmentEnum(QueryEnvironmentEnum.METAMAC);
+
+        target.setMetamacResourceType(MetamacSelectionEnum.CONSULTA);
 
         // UUid
         target.setUuid(query.getUrn());

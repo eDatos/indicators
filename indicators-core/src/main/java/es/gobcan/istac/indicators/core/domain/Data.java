@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 
 /**
@@ -19,12 +20,13 @@ import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 public class Data extends DataStructure {
 
     private QueryEnvironmentEnum     queryEnvironmentEnum = null;
+    private MetamacSelectionEnum     metamacResourceType  = null;
     private String                   temporalValue        = null;
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String> dataMapAttributes = new ArrayList<String>();
-    private List<String> variablesInOrder  = new ArrayList<String>();
+    private List<String>             dataMapAttributes    = new ArrayList<String>();
+    private List<String>             variablesInOrder     = new ArrayList<String>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -110,5 +112,13 @@ public class Data extends DataStructure {
 
     public List<String> getDataMapAttributes() {
         return dataMapAttributes;
+    }
+
+    public MetamacSelectionEnum getMetamacResourceType() {
+        return metamacResourceType;
+    }
+
+    public void setMetamacResourceType(MetamacSelectionEnum metamacResourceType) {
+        this.metamacResourceType = metamacResourceType;
     }
 }
