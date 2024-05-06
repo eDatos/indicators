@@ -259,6 +259,17 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setStatResource(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.QUERY_METAMAC));
+
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+            String metamacTypeAsString = generalEditionForm.getValueAsString(DataSourceDS.METAMAC_TYPE);
+            if (!StringUtils.isEmpty(metamacTypeAsString)) {
+                dataSourceDto.setMetamacType(MetamacSelectionEnum.valueOf(metamacTypeAsString));
+                if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
+                    dataSourceDto.setStatResource(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.DATASET_METAMAC));
+                }
+            }
+        }
+
         dataSourceDto.setQueryUrn(dataStructureDtoEdition.getQueryUrn());
 
         if (generalEditionForm.isVisible()) {
@@ -608,10 +619,11 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public void onChanged(ChangedEvent event) {
-                clearAllMetamacValues(); //TODO: revisar si es necesario
+                clearAllMetamacValues(); // TODO: revisar si es necesario
                 generalEditionForm.markForRedraw();
             }
         });
+
         metamacSelectType.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
@@ -623,6 +635,7 @@ public class DataSourcePanel extends VLayout {
         // Query from METAMAC
         searchQueryMetamacWindow = getQueryMetamacItem();
         searchQueryMetamacWindow.setShowIfCondition(new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 return isMetamacTypeSelected(form, MetamacSelectionEnum.CONSULTA);
@@ -774,9 +787,8 @@ public class DataSourcePanel extends VLayout {
         });
 
         generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, metamacSelectType, query, searchQueryMetamacWindow, searchDatasetMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem,
-                surveyCode, surveyTitle, surveyAcronym,
-                surveyUrl, publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
-                variables);
+                surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac,
+                geographicalValueUUIDMetamac, measureVariable, variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -968,13 +980,13 @@ public class DataSourcePanel extends VLayout {
         };
     }
 
-    //TODO: que lanze los datasets
+    // TODO: que lanze los datasets
     private StatOperationsSearchExternalItemLinkItem getDatasetMetamacItem() {
         return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.DATASET_METAMAC, getConstants().dataSourceDatasetSelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
-                //                uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
+                // uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
                 uiHandlers.retrieveQueriesForRelatedDataset(firstResult, maxResults, criteria);
             }
 
@@ -986,7 +998,7 @@ public class DataSourcePanel extends VLayout {
             @Override
             protected void retrieveQueryForRelatedQuery(ExternalItemDto selectedResource) {
                 uiHandlers.retrieveDataStructureEdition(selectedResource.getUrn());
-                setSelectedRelatedQueryInEditionForm(selectedResource);
+                setSelectedRelatedDatasetInEditionForm(selectedResource);
                 generalForm.validate(false);
             }
         };
@@ -994,6 +1006,10 @@ public class DataSourcePanel extends VLayout {
 
     private void setSelectedRelatedQueryInEditionForm(ExternalItemDto selectedResource) {
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, selectedResource);
+    }
+
+    private void setSelectedRelatedDatasetInEditionForm(ExternalItemDto selectedResource) {
+        generalEditionForm.setValue(DataSourceDS.DATASET_METAMAC, selectedResource);
     }
 
     private SearchViewTextItem getQueryJsonStatItem() {
@@ -1093,7 +1109,17 @@ public class DataSourcePanel extends VLayout {
         dataStructureDtoEdition = null;
 
         generalStaticEditionForm.setValue(dataSourceDto);
+
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
+
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+            generalEditionForm.setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? dataSourceDto.getMetamacType().name() : StringUtils.EMPTY);
+
+            if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
+                generalEditionForm.setValue(DataSourceDS.DATASET_METAMAC, dataSourceDto.getStatResource());
+                generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, new ExternalItemDto());
+            }
+        }
 
         GeographicalSelectItem geoValue = (GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM);
         if (dataSourceDto.getGeographicalValue() != null) {

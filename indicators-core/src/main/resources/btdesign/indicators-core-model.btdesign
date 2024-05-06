@@ -1018,6 +1018,8 @@ Application Indicators {
 			String publishers not nullable length="4000";
 			"Query Environment"
             - @QueryEnvironmentEnum queryEnvironment not nullable;
+            "metamac resource type"
+            - @MetamacSelectionEnum metamacType nullable databaseColumn="METAMAC_TYPE";
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
             "Geographical codelist urn" 
@@ -1772,6 +1774,8 @@ Application Indicators {
 			String queryUrn;
 			"QueryText"
 			String queryText;
+			"Metamac resource type"
+            - @MetamacSelectionEnum metamacType;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"

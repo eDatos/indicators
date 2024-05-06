@@ -2002,6 +2002,7 @@ public class InvocationValidator {
 
         if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
             IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getMetamacType(), ServiceExceptionParameters.DATA_SOURCE_DATA_METAMAC_TYPE, exceptions);
         }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
