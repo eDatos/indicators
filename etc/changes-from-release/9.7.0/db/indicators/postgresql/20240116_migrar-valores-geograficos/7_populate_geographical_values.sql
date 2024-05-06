@@ -224,11 +224,11 @@ set geographical_code = (
                   and t.variable_element_code = newG.code limit 1  )
 where deprecated_geographical_code is not null and geographical_code  is null;
  
- --4.7. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
- ----4.7.1) 
+ --4.8. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
+ ----4.8.1) 
  select 'tb_indic_inst_last_value', deprecated_geographical_code, geographical_code from tb_indic_inst_last_value where deprecated_geographical_code is not null and geographical_code is null;
  select 'tb_indic_version_last_value', deprecated_geographical_code, geographical_code from tb_indic_version_last_value where deprecated_geographical_code is not null and geographical_code is null;
- ----4.7.2)
+ ----4.8.2)
  select 'tb_data_sources', deprecated_geographical_value_fk, geographical_value_fk from tb_data_sources where deprecated_geographical_value_fk is not null and geographical_value_fk is null
  union all
  select 'tb_indic_inst_geo_values', deprecated_geographical_value_fk, geographical_value_fk from tb_indic_inst_geo_values where deprecated_geographical_value_fk is not null and geographical_value_fk is null
@@ -247,13 +247,13 @@ where deprecated_geographical_code is not null and geographical_code  is null;
  select 'tb_quantities', deprecated_base_location_fk, base_location_fk, b.code, t.variable_element_code from tb_quantities, tb_lis_geogr_values_copy b, temp_mig_codes_with_var_element t where b.code = t.code and deprecated_base_location_fk = b.id and deprecated_base_location_fk is not null and base_location_fk is null;
  
  
- --4.8. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
+ --4.9. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
  --ATENCIÓN!!! sólo si en indicators_bd se ha cambiado la tabla migrada inicialmente desde srm hacer lo siguiente si no, obviar este paso
- -- 4.8.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
- -- 4.8.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
- -- 4.8.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
+ -- 4.9.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
+ -- 4.9.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
+ -- 4.9.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
  
- --4.9 exportar la tabla temp_mig_codes_with_var_element e importarla en la base de datos metamac_portal_bd
+ --4.10 exportar la tabla temp_mig_codes_with_var_element e importarla en la base de datos metamac_portal_bd
  
  
 --5) Añadir primary keys eliminadas y foreign keys
