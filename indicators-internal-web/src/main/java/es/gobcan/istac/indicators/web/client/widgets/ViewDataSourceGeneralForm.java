@@ -202,6 +202,8 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         ExternalItemLinkItem queryMetamac = (ExternalItemLinkItem) this.getField(DataSourceDS.QUERY_METAMAC);
         if (isDataset) {
             queryMetamac.setTitle(getConstants().dataSourceDataset());
+        } else {
+            queryMetamac.setTitle(getConstants().dataSourceQuery());
         }
 
     }
