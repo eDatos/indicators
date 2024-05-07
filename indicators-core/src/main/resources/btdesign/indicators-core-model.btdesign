@@ -890,6 +890,8 @@ Application Indicators {
 			- Set<@IndicatorVersionLastValueCache> lastValuesCache cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;
 			"Geo coverage"
 			- Set<@IndicatorVersionGeoCoverage> geoCoverages cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;
+            "Temporal coverage"
+            - Set<@IndicatorVersionTimeCoverage> timeCoverages cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;			
 			"Indicator"
 			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
 			"Quantity"
@@ -1323,7 +1325,7 @@ Application Indicators {
         	!optimisticLocking
         	
 			"Indicator Version"
-			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK" <-> timeCoverages;
         	"Geographical value"
 			String timeValue not nullable key;
 			String timeGranularity not nullable;
