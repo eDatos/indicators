@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestOrder;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestQueryPropertyRestriction;
 import org.siemac.metamac.rest.exception.RestCommonServiceExceptionType;
@@ -82,7 +83,7 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
                 }
                 case TEMPORALGRANULARITY: {
                     // TODO EDATOS-4482 this won't work properly because it will search on the informed value and not on the real granularity
-                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.timeGranularity(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.timeGranularity(), IstacTimeGranularityEnum.valueOf(value), propertyRestriction.getOperationType());
                 }
 
             }
