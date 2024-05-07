@@ -2,8 +2,8 @@ package es.gobcan.istac.indicators.core.service;
 
 import java.util.List;
 
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 
 public interface StatisticalResoucesRestExternalService {
 

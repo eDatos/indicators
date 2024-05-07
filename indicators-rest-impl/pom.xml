@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.gobcan.istac.indicators</groupId>
 		<artifactId>indicators-parent</artifactId>
-		<version>9.3.1-SNAPSHOT</version>
+		<version>9.7.1-SNAPSHOT</version>
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
 
@@ -38,6 +38,18 @@
 			<groupId>org.siemac.metamac.metamac-sso</groupId>
 			<artifactId>metamac-sso-client</artifactId>
 		</dependency>
+
+		<dependency>
+            <groupId>org.siemac.metamac.metamac-srm</groupId>
+            <artifactId>metamac-srm-rest-internal-api</artifactId>
+            <version>${metamac-srm-rest-internal-api.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.siemac.metamac.metamac-srm</groupId>
+            <artifactId>metamac-srm-rest-external-api</artifactId>
+            <version>${metamac-srm-rest-external-api.version}</version>
+        </dependency>
 
 		<!-- WEB -->
 		<dependency>

@@ -15,4 +15,8 @@
 		<constructor-arg value="es.gobcan.istac.indicators.core.domain.DataGpeRepository" />
 	</bean>
 
+<bean id="srmRestInternalService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="es.gobcan.istac.indicators.core.service.SrmRestInternalService" />
+	</bean>
+
 </beans>

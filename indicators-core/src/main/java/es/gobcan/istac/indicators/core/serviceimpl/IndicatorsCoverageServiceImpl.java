@@ -2,13 +2,21 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -27,11 +35,15 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+
 /**
  * Implementation of IndicatorsCoverageService.
  */
 @Service("indicatorsCoverageService")
 public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImplBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(IndicatorsCoverageServiceImpl.class);
 
     public IndicatorsCoverageServiceImpl() {
     }
@@ -168,6 +180,28 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
             geoValues.addAll(retrieveGeoVOCoverageByGranularityInIndicatorVersionFromCache(granularityUuid, indicatorVersion));
         }
         List<GeographicalValueVO> geoValuesList = new ArrayList<GeographicalValueVO>(geoValues);
+        ServiceUtils.sortGeographicalValuesVOList(geoValuesList);
+        return geoValuesList;
+    }
+
+    @Override
+    public List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInAllIndicatorPublished(ServiceContext ctx, String granularityUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalValuesByGranularityInAllIndicatorPublished(granularityUuid, null);
+
+        // @formatter:off
+        List<ConditionalCriteria> criteria = criteriaFor(IndicatorVersion.class)
+                .withProperty(IndicatorVersionProperties.procStatus()).eq(IndicatorProcStatusEnum.PUBLISHED)
+                .build();
+        // @formatter:on
+
+        List<IndicatorVersion> indicatorVersions = getIndicatorVersionRepository().findByCondition(criteria, PagingParameter.noLimits()).getValues();
+
+        Set<GeographicalValueVO> geoValues = new HashSet<GeographicalValueVO>();
+        for (IndicatorVersion indicatorVersion : indicatorVersions) {
+            geoValues.addAll(retrieveGeoVOCoverageByGranularityInIndicatorVersionFromCache(granularityUuid, indicatorVersion));
+        }
+        List<GeographicalValueVO> geoValuesList = new ArrayList<>(geoValues);
         ServiceUtils.sortGeographicalValuesVOList(geoValuesList);
         return geoValuesList;
     }
@@ -313,16 +347,21 @@ public class IndicatorsCoverageServiceImpl extends IndicatorsCoverageServiceImpl
 
     private List<GeographicalCodeVO> calculateGeoCodeCoverageInIndicatorInstance(IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         checkIndicatorVersionHasDataPopulated(indicatorVersion);
-
-        if (indInstance.isFilteredByGeographicalValues()) {
-            // Fixed values
-            return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByInstanceGeoValues(indicatorVersion, indInstance.getUuid());
-        } else if (indInstance.isFilteredByGeographicalGranularity()) {
-            // fixed granularity
-            return retrieveGeoCodeCoverageByGranularityInIndicatorVersionFromCache(indInstance.getGeographicalGranularity().getUuid(), indicatorVersion);
-        } else {
-            // nothing is fixed
-            return retrieveGeoCodeCoverageFromCache(indicatorVersion);
+        try {
+            if (indInstance.isFilteredByGeographicalValues()) {
+                // Fixed values
+                return getIndicatorVersionGeoCoverageRepository().retrieveCodeCoverageFilteredByInstanceGeoValues(indicatorVersion, indInstance.getUuid());
+            } else if (indInstance.isFilteredByGeographicalGranularity()) {
+                // fixed granularity
+                return retrieveGeoCodeCoverageByGranularityInIndicatorVersionFromCache(indInstance.getGeographicalGranularity().getUuid(), indicatorVersion);
+            } else {
+                // nothing is fixed
+                return retrieveGeoCodeCoverageFromCache(indicatorVersion);
+            }
+        } catch (Exception e) {
+            logger.error("Unexpected error occurred retrieving code coverage filtering by instance. uuid indicator version: " + indicatorVersion.getUuid() + " " + indicatorVersion.getVersionNumber()
+                    + " uuid indicator instance: " + indInstance.getUuid());
+            throw e;
         }
     }
 

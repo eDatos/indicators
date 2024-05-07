@@ -18,8 +18,6 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -38,12 +36,10 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 public interface Do2DtoMapper extends CommonDo2DtoMapper {
 
@@ -67,11 +63,11 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     // Elements levels
     List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
 
-    // Quantity unit
-    QuantityUnitDto quantityUnitDoToDto(QuantityUnit source);
-
     // Geographical value
     GeographicalValueDto geographicalValueDoToDto(GeographicalValue source);
+
+    // Geographical value
+    RelatedResourceDto geographicalValueDoToRelatedResourceDto(GeographicalValue source);
 
     // Geographical value Base
     GeographicalValueBaseDto geographicalValueDoToBaseDto(GeographicalValue source);
@@ -85,16 +81,12 @@ public interface Do2DtoMapper extends CommonDo2DtoMapper {
     // Time granularity
     TimeValueDto timeValueDoToTimeValueDto(TimeValue source);
 
-    // Subject
-    SubjectDto subjectDoToDto(Subject source) throws MetamacException;
-    SubjectDto subjectDoToDto(SubjectIndicatorResult source);
-
     // DataDefinition
     DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
 
     // DataStructure
-    DataStructureDto dataStructureDoToDto(DataStructure source);
-    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure);
+    DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException;
+    DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatDataStructure) throws MetamacException;
 
     // Data
     DataDto dataDoToDto(Data source);

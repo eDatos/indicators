@@ -5,8 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
@@ -23,16 +25,20 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class DsplTransformerTest extends IndicatorsDataBaseTest {
@@ -57,6 +63,12 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
+
+    @Autowired
+    SrmRestInternalService                                                      srmRestInternalFacade;
+
+    @Autowired
+    private SrmRestInternalService                                              srmRestInternalService;
 
     private DsplTransformer                                                     dsplTransformer;
 
@@ -103,10 +115,14 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     private static final String                                                 INDICATOR8_UUID           = "Indicator-8";
     private static final String                                                 INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
     private static final String                                                 INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    List<GeographicalValue>                                                     geographicalValues        = new ArrayList<GeographicalValue>();
 
     @Before
-    public void createTransformer() {
-        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService);
+    public void createTransformer() throws MetamacException {
+        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsCoverageService, indicatorsService, configurationService, srmRestInternalFacade);
+        geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
     }
 
     @Test
@@ -122,8 +138,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
             assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("Sistema de indicadores 2", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
 
@@ -134,6 +151,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
         List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+
         assertNotNull(datasets);
         assertEquals(1, datasets.size());
 
@@ -147,7 +165,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         assertNotNull(dataset.getConcepts());
         assertEquals(3, dataset.getConcepts().size());
         assertNotNull(findNode(getGeoConceptId("countries"), dataset.getConcepts()));
-        assertNotNull(findNode(getUnitConceptId("unit-2"), dataset.getConcepts()));
+        assertNotNull(findNode(getUnitConceptId("unit_m"), dataset.getConcepts(), false));
         assertNotNull(findNode(getIndicatorConceptId(INDICATOR2_UUID), dataset.getConcepts()));
 
         // Slices
@@ -159,7 +177,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         assertNotNull(dataset.getTables());
         assertEquals(3, dataset.getTables().size());
         assertNotNull(findNode(getGeoTableId("countries"), dataset.getTables()));
-        assertNotNull(findNode(getUnitTableId("unit-2"), dataset.getTables()));
+        assertNotNull(findNode("unit_m", dataset.getTables(), false));
         assertNotNull(findNode(getSliceTableId("countries", "monthly"), dataset.getTables()));
 
     }
@@ -249,12 +267,24 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         return null;
     }
 
+    private <T extends DsplNode> T findNode(String id, Collection<T> nodes, boolean isEqual) {
+        if (isEqual) {
+            return findNode(id, nodes);
+        }
+        for (T node : nodes) {
+            if (node.getId().startsWith(id)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     private String getGeoConceptId(String geoGranularity) {
         return "geo_" + geoGranularity;
     }
 
     private String getUnitConceptId(String unitUuid) {
-        return "unit_" + unitUuid;
+        return unitUuid;
     }
 
     private String getIndicatorConceptId(String indicatorUuid) {

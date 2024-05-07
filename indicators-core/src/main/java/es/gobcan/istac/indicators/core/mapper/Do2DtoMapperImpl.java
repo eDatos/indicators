@@ -33,9 +33,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -58,13 +56,12 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
@@ -196,8 +193,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setViewCode(source.getIndicator().getViewCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
+        target.setCategoryElement(externalItemDoToDto(source.getCategoryElement()));
         target.setQuantity(quantityDoToDto(source.getQuantity()));
         target.setConceptDescription(internationalStringToDto(source.getConceptDescription()));
         target.setComments(internationalStringToDto(source.getComments()));
@@ -266,6 +262,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setUuid(source.getUuid());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());
         target.setStatResource(externalItemDoToDto(source.getStatResource()));
@@ -273,7 +270,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
-        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
+        target.setGeographicalValue(geographicalValueDoToRelatedResourceDto(source.getGeographicalValue()));
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setSourceSurveyCode(source.getSourceSurveyCode());
@@ -281,6 +278,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSourceSurveyAcronym(internationalStringToDto(source.getSourceSurveyAcronym()));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.doString2DtoList(source.getPublishers()));
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
 
         target.setAnnualPuntualRate(rateDerivationDoToDto(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDoToDto(source.getAnnualPercentageRate()));
@@ -293,6 +291,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 
@@ -304,52 +303,6 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
             targets.add(target);
         }
         return targets;
-    }
-
-    @Override
-    public QuantityUnitDto quantityUnitDoToDto(QuantityUnit source) {
-
-        QuantityUnitDto target = new QuantityUnitDto();
-        target.setUuid(source.getUuid());
-        target.setSymbol(source.getSymbol());
-        target.setSymbolPosition(source.getSymbolPosition());
-        target.setTitle(internationalStringToDto(source.getTitle()));
-
-        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
-        target.setCreatedBy(source.getCreatedBy());
-        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
-        target.setLastUpdatedBy(source.getLastUpdatedBy());
-
-        target.setOptimisticLockingVersion(source.getVersion());
-
-        return target;
-    }
-
-    @Override
-    public SubjectDto subjectDoToDto(Subject source) throws MetamacException {
-
-        SubjectDto target = new SubjectDto();
-        target.setCode(source.getId());
-
-        InternationalStringDto title = new InternationalStringDto();
-        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-        localisedStringDto.setLabel(source.getTitle());
-        // subjects are not localised. We show them only on the default language
-        localisedStringDto.setLocale(configurationService.retrieveLanguageDefault());
-        title.addText(localisedStringDto);
-        target.setTitle(title);
-
-        return target;
-    }
-
-    @Override
-    public SubjectDto subjectDoToDto(SubjectIndicatorResult source) {
-
-        SubjectDto target = new SubjectDto();
-        target.setCode(source.getId());
-        target.setTitle(internationalStringToDto(source.getTitle()));
-
-        return target;
     }
 
     @Override
@@ -370,6 +323,23 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setOptimisticLockingVersion(source.getVersion());
 
+        return target;
+    }
+
+    @Override
+    public RelatedResourceDto geographicalValueDoToRelatedResourceDto(GeographicalValue source) {
+
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setId(source.getId()); // Database id. Only to efficient save operations
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setType(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE);
+        target.setUuid(source.getUuid());
+        target.setGranularityCode(source.getGranularity().getCode());
+        target.setGranularityUuid(source.getGranularity().getUuid());
         return target;
     }
 
@@ -437,7 +407,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(DataStructure source) {
+    public DataStructureDto dataStructureDoToDto(DataStructure source) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
@@ -455,6 +425,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setSpatialVariables(source.getSpatialVariables());
 
+        if (source.getSpatialVariables() != null && !source.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
+
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
             target.setValueCodes(source.getValueCodes());
@@ -469,7 +443,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
     }
 
     @Override
-    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) {
+    public DataStructureDto dataStructureDoToDto(String uuid, JsonStatData jsonStatData) throws MetamacException {
         DataStructureDto target = new DataStructureDto();
 
         // GPE: uuid -> JSON-stat: URL completa del fichero JSON-stat
@@ -495,6 +469,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         // GPE: spatials -> JSON-stat: role - geo (primer elemento)
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
+        if (target.getSpatialVariables() != null && !target.getSpatialVariables().isEmpty()) {
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        }
 
         // GPE: categories - variable -> JSON-stat: dimension - label
         target.setVariables(jsonStatData.getVariables());
@@ -565,8 +543,13 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setProcStatus(source.getProcStatus());
         target.setStreamMessageStatus(source.getStreamMessageStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
+        if (source.getCategoryElement() != null) {
+            target.setCategoryElementCode(source.getCategoryElement().getCode());
+            target.setCategoryElementTitle(internationalStringToDto(source.getCategoryElement().getTitle()));
+        } else {
+            target.setCategoryElementCode(null);
+            target.setCategoryElementTitle(null);
+        }
         target.setNeedsUpdate(source.getNeedsUpdate());
 
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
@@ -629,14 +612,16 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
     // Note: transforms all metadata regardless of the type
     // InvocationValidation checks metadata unexpected for each type
-    private QuantityDto quantityDoToDto(Quantity source) {
+    private QuantityDto quantityDoToDto(Quantity source) throws MetamacException {
         if (source == null) {
             return null;
         }
 
         QuantityDto target = new QuantityDto();
         target.setType(source.getQuantityType());
-        target.setUnitUuid(source.getUnit() != null ? source.getUnit().getUuid() : null);
+
+        target.setUnit(externalItemDoToDto(source.getUnit()));
+
         UnitMultiplier unitMultiplier = source.getUnitMultiplier();
         if (unitMultiplier != null) {
             target.setUnitMultiplier(unitMultiplier.getUnitMultiplier());
@@ -652,13 +637,13 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setPercentageOf(internationalStringToDto(source.getPercentageOf()));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
-        target.setBaseLocationUuid(source.getBaseLocation() != null ? source.getBaseLocation().getUuid() : null);
+        target.setBaseLocation(geographicalValueDoToRelatedResourceDto(source.getBaseLocation()));
         target.setBaseQuantityIndicatorUuid(source.getBaseQuantity() != null ? source.getBaseQuantity().getUuid() : null);
 
         return target;
     }
 
-    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
+    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) throws MetamacException {
         if (source == null) {
             return null;
         }

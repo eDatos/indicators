@@ -33,12 +33,14 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED        = create("exception.indicators.geographical_value.already_exists.code_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED       = create("exception.indicators.geographical_value.already_exists.order_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED                    = create("exception.indicators.geographical_value.can_not_be_removed");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE        = create("exception.indicators.geographical_variable_element.not_found_code");
 
     // Geographical granularities
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND                       = create("exception.indicators.geographical_granularity.not_found");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND_WITH_CODE             = create("exception.indicators.geographical_granularity.not_found_code");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED  = create("exception.indicators.geographical_granularity.already_exists.order_duplicated");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED              = create("exception.indicators.geographical_granularity.can_not_be_removed");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED              = create("exception.indicators.geographical_granularity_time.not_supported");
 
     // Quantity units
     public static final CommonServiceExceptionType QUANTITY_UNIT_NOT_FOUND                                  = create("exception.indicators.quantity_unit.not_found");
@@ -142,7 +144,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_ERROR                                              = create("exception.indicators.task.error");
     public static final CommonServiceExceptionType TASKS_ERROR_MAX_CURRENT_JOBS                             = create("exception.indicators.task.error.max_current_jobs");
     public static final CommonServiceExceptionType TASKS_JOB_NOT_FOUND                                      = create("exception.indicators.task.error.not_found");
-
+    public static final CommonServiceExceptionType TASKS_JOB_UPDATE_CATEGORY_CACHE_ERROR                    = create("exception.indicators.task.error.update_category_cache");
+    public static final CommonServiceExceptionType UPDATE_CATEGORY_CACHE_JOB_ERROR_AND_CANT_MARK_AS_ERROR   = create("exception.indicators.task.error.update_category_cache_and_cant_mark_as_error");
+    public static final CommonServiceExceptionType UPDATE_CATEGORY_CACHE_JOB_DUPLICATE_CAT_ELEMENT_ERROR    = create(
+            "exception.indicators.task.error.update_category_cache_duplicate_category_element");
+    public static final CommonServiceExceptionType TASKS_JOB_UPDATE_CATEGORY_CACHE_IN_PROCESS               = create("exception.indicators.task.error.update_category_cache_in_progress");
     // Kafka
     public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGE_TO_STREAM_MESSAGING_SERVER = create("exception.indicators.stream_message.send_message.error");
     public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS              = create("exception.indicators.stream_message.missing_settings.error");

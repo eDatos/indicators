@@ -8,31 +8,49 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.PersistenceException;
+
+import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.hibernate.exception.ConstraintViolationException;
+import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.srm.core.stream.message.DatetimeAvro;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.GeographicalValueRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 
 /**
  * Test to IndicatorsSystemService. Testing: indicators systems, dimensions, indicators instances
@@ -40,20 +58,39 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-data-service-mockito.xml",
-        "classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-notices-service-mockito.xml", "classpath:spring/include/indicators-srm-service-mockito.xml",
+        "classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
-    @Autowired
-    protected IndicatorsSystemsService    indicatorsSystemService;
+    List<GeographicalValue>                                                       geographicalValues = new ArrayList<GeographicalValue>();
 
     @Autowired
-    private IndicatorsDataService         indicatorsDataService;
+    protected IndicatorsSystemsService                                            indicatorsSystemService;
 
     @Autowired
-    private IndicatorsDataProviderService indicatorsDataProviderService;
+    private IndicatorsDataService                                                 indicatorsDataService;
+
+    @Autowired
+    private IndicatorsDataProviderService                                         indicatorsDataProviderService;
+
+    @Autowired
+    private SrmRestInternalService                                                srmRestInternalService;
+
+    @Autowired
+    private GeographicalValueRepository                                           geographicalValueRepository;
+
+    @Autowired
+    protected es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
+
+    @Before
+    public void setUp() throws MetamacException {
+        geographicalValues = indicatorsSystemService.findAllGeographicalValues(getServiceContextAdministrador());
+        Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
+        when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+    }
 
     @Test
     public void testCreateIndicatorsSystem() throws Exception {
@@ -220,7 +257,8 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystems() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorInstanceProperties.uuid())
+                    .ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -237,7 +275,8 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES611").orderBy(IndicatorInstanceProperties.uuid()).ascending().build();
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES611).orderBy(IndicatorInstanceProperties.uuid())
+                    .ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -254,7 +293,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     public void testFindIndicatorsInstancesInPublishedIndicatorsSystemsFilteredBySystem() throws Exception {
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_1).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -268,7 +307,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_3).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -283,7 +322,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
-                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq("ES")
+                    .withProperty(IndicatorInstanceProperties.lastValuesCache().geographicalCode()).eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES)
                     .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_10).orderBy(IndicatorInstanceProperties.uuid())
                     .ascending().build();
 
@@ -364,6 +403,183 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             assertEquals(uuid, history.get(2).getIndicatorsSystem().getUuid());
             assertEquals(IndicatorsDataBaseTest.INIT_VERSION, history.get(2).getVersionNumber());
         }
+    }
+
+    @Test
+    @Transactional
+    public void testCreateGeographicalValue() throws Exception {
+        String code = "CANARIAS";
+        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(code, "VARIABLE_TERRITORY", GEOGRAPHICAL_GRANULARITY_2);
+        SpecificRecordBase message = variableElementAvro;
+
+        // Create
+        indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+        GeographicalValue geographicalValueCreated = geographicalValueRepository.findGeographicalValueByCode(variableElementAvro.getCode());
+        // Validate
+        IndicatorsAsserts.assertEqualsGeographicalValue(variableElementAvro, geographicalValueCreated);
+
+        // Audit validations
+        assertNotNull(geographicalValueCreated.getCreatedBy());
+        assertNotNull(geographicalValueCreated.getCreatedDate());
+        assertNotNull(geographicalValueCreated.getLastUpdated());
+        assertNotNull(geographicalValueCreated.getLastUpdatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), geographicalValueCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), geographicalValueCreated.getLastUpdatedBy());
+    }
+
+    @Test
+    @Transactional
+    public void testCreateGeographicalValueErrorGeographicalValueRequired() throws Exception {
+        try {
+            VariableElementAvro variableElementAvro = null;
+            SpecificRecordBase message = variableElementAvro;
+
+            // Create
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testCreateGeographicalValueErrorGeographicalValueCodeRequired() throws Exception {
+        try {
+            String code = "CANARIAS";
+            VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(code, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_2);
+            variableElementAvro.setCode(null);
+            SpecificRecordBase message = variableElementAvro;
+
+            // Create
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testCreateGeographicalValueErrorGranularityRequired() throws Exception {
+        try {
+            String code = "CANARIAS";
+            VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(code, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_2);
+            variableElementAvro.setGeographicGranularities(null);
+            SpecificRecordBase message = variableElementAvro;
+
+            // Create
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testCreateGeographicalValueErrorGranularityRequiredEmpty() throws Exception {
+        try {
+            String code = "CANARIAS";
+            VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(code, VARIABLE_TERRITORY_CODE, StringUtils.EMPTY);
+            variableElementAvro.setGeographicGranularities(null);
+            SpecificRecordBase message = variableElementAvro;
+
+            // Create
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateGeographicalValue() throws Exception {
+        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(GEOGRAPHICAL_VALUE_CODE_1, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_4);
+        variableElementAvro.setLatitud(22.232511);
+        variableElementAvro.setLongitud(41232.254112);
+
+        SpecificRecordBase message = variableElementAvro;
+
+        // update
+        indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+
+        GeographicalValue geographicalValueUpdated = geographicalValueRepository.findGeographicalValueByCode(variableElementAvro.getCode());
+
+        // Validate
+        IndicatorsAsserts.assertEqualsGeographicalValue(variableElementAvro, geographicalValueUpdated);
+        assertTrue(geographicalValueUpdated.getLastUpdated().isAfter(geographicalValueUpdated.getCreatedDate()));
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateGeographicalGranularityNotExists() throws Exception {
+        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(GEOGRAPHICAL_VALUE_CODE_1, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_VALUE_1);
+        variableElementAvro.setGeographicGranularities(null);
+        SpecificRecordBase message = variableElementAvro;
+
+        try {
+            // update
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("geographical value not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteGeographicalValue() throws Exception {
+        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(GEOGRAPHICAL_VALUE_CODE_10, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_4);
+        variableElementAvro.setValidTo(DatetimeAvro.newBuilder().setInstant((new DateTime()).getMillis()).build());
+
+        SpecificRecordBase message = variableElementAvro;
+
+        // delete
+        indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+
+        GeographicalValue geoValue = geographicalValueRepository.findGeographicalValueByCode(variableElementAvro.getCode());
+        assertNull(geoValue);
+
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteGeographicalValueBeingUsed() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
+
+        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(GEOGRAPHICAL_VALUE_CODE_1, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_1);
+        variableElementAvro.setValidTo(DatetimeAvro.newBuilder().setInstant((new DateTime()).getMillis()).build());
+
+        SpecificRecordBase message = variableElementAvro;
+
+        try {
+            // delete
+            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
+            fail("delete geographical value is being Used");
+        } catch (PersistenceException e) {
+            ConstraintViolationException exception = (ConstraintViolationException) e.getCause();
+            assertEquals("fk_tb_ind_version_geo_cov_geographical_value_fk", exception.getConstraintName());
+        }
+
     }
 
     @Override

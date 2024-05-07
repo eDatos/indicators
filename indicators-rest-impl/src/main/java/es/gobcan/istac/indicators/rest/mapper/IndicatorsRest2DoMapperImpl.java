@@ -16,13 +16,32 @@ import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Component
 public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
+
+    private static final Logger                                   log = LoggerFactory.getLogger(IndicatorsRest2DoMapperImpl.class);
+
+    @Autowired
+    private SrmRestInternalFacade                                 srmRestInternalFacade;
+
+    @Autowired
+    private IndicatorsConfigurationService                        configurationService;
+
+    @Autowired
+    GeographicalValuesRestFacade                                  geographicalValuesRestFacade;
 
     private final RestCriteria2SculptorCriteria<IndicatorVersion> parser;
 
@@ -57,13 +76,40 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
             return new RestException(exception, Response.Status.INTERNAL_SERVER_ERROR);
         }
 
+        private String getCategoryElementFromSubjectCode(String subjectCode) throws RestException {
+            try {
+                Category category = srmRestInternalFacade.retrieveCategoryByCode(configurationService.retrieveDefaultCategoryScheme(), subjectCode);
+
+                if (category != null && category.getCategoryElement() != null) {
+                    return category.getCategoryElement().getId();
+                }
+            } catch (Exception e) {
+                log.error("category element linked to category (subjectCode) not found in srm resource", e);
+                throw createInvalidParameterException("q->SUBJECT_CODE->CATEGORY_ELEMENT");
+            }
+            return null;
+        }
+
+        private String getGeographicalValue(String geographicalValue) throws RestException {
+            try {
+                GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils();
+
+                return geoValuesOldVersionCompatibilityUtils.setGeographicalValue(geographicalValuesRestFacade, srmRestInternalFacade, geographicalValue,
+                        configurationService.retrieveDefaultTerritoryVariable());
+
+            } catch (Exception e) {
+                log.error("An unexpected error ocurred searching geographical value. ", e);
+            }
+            return geographicalValue;
+        }
+
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacRestQueryPropertyRestriction propertyRestriction) throws RestException {
             IndicatorsPropertyRestriction propertyNameCriteria = IndicatorsPropertyRestriction.valueOf(propertyRestriction.getPropertyName());
             String value = propertyRestriction.getValue();
             switch (propertyNameCriteria) {
                 case SUBJECTCODE: {
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.categoryElement().code(), getCategoryElementFromSubjectCode(value), propertyRestriction.getOperationType());
                 }
                 case ID: {
                     if (propertyRestriction.getValue() != null) {
@@ -77,7 +123,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                 case GEOGRAPHICALVALUE: {
                     // We can use "lastValuesCache" because this cache have all the geographicalValues of the indicator with the lastData for each value.
                     // The lastValue for geocode01 and geocode02 can be different points of time.
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.lastValuesCache().geographicalCode(), getGeographicalValue(value), propertyRestriction.getOperationType());
                 }
                 case GEOGRAPHICALGRANULARITY: {
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.geoCoverages().geographicalValue().granularity().code(), value, propertyRestriction.getOperationType());

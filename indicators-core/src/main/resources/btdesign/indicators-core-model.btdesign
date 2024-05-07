@@ -78,9 +78,13 @@ Application Indicators {
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	@GeographicalValue retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	List<@GeographicalValue> findAllGeographicalValues() throws MetamacException;
 	    	@GeographicalValue createGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
 	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(SpecificRecordBase message) throws MetamacException;
+	    	updateGeopgraphicalGranularitiesFromSrmGranularityCodelist(SpecificRecordBase message) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -111,12 +115,12 @@ Application Indicators {
     		> @IndicatorVersionTimeCoverageRepository
     		> @IndicatorVersionMeasureCoverageRepository
     		> @DataSourceRepository
-    		> @QuantityUnitRepository
     		> @IndicatorInstanceRepository
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
     		> @UnitMultiplierRepository
     		> @TaskService
+    		> @CategoryCacheService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -130,6 +134,7 @@ Application Indicators {
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	String exportIndicatorsTsv(List<ConditionalCriteria> conditions) throws MetamacException;
+	    	deleteTemporalFile(String temporalFile) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
@@ -143,6 +148,13 @@ Application Indicators {
             disableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
             "Mark indicator for notify population errors"
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
+	    	List<String> retrieveCategoryElementsInIndicators() throws MetamacException;
+	    	"Get indicator versions where geographical codelist match with the changed codelist" 
+	    	List<@IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(SpecificRecordBase message) throws MetamacException;
+	    	"Get action to do when a codelist is caught from  the consumer of codelist kafka topic"
+	    	@StreamMessageCodelistActionEnum getCodelistAction(SpecificRecordBase message) throws MetamacException;
+	    	"update new datasource metadata -codelistUrn- in initial migration of geographical values to variable elements values" 
+	    	updateDatasourceCodelistForGeographicalValuesMigration() throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -150,21 +162,7 @@ Application Indicators {
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
 	    	List<@DataSource> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	
-	    	// Quantity units
-	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
-	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
-	    	PagedResult<@QuantityUnit> findQuantityUnits(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
-	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
-	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
-	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
-	    	
-	    	// Subjects
-	    	Subject retrieveSubject(String code) throws MetamacException;
-	    	List<Subject> retrieveSubjects() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
-	    	List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators() throws MetamacException;
-	    	
+	       	    	
 	    	// Units multipliers
 	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
@@ -173,6 +171,9 @@ Application Indicators {
 	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	
+	    	updateCategoryCacheAll() throws MetamacException;
+	    	
     	}
     	
     	"Provides access to indicators data"
@@ -220,6 +221,9 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
+	    	"Update indicators when geographical codelist changes" 
+	    	populateIndicatorsDataFromGeographicalCodelist(List<@IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException;
+	    	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Updates data for all published JSON-stat indicators"
@@ -303,7 +307,9 @@ Application Indicators {
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic codes in the indicator instance with published indicator filtered by granularity"
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesByGranularityInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
-	    	
+
+	    	"Retrieves geographic values in all indicators by granularity"
+	    	List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInAllIndicatorPublished(String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic granularities in all indicators with a subject Code "
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode) throws MetamacException;
 	    	"Retrieves geographic values in all indicators with a subject Code by granularity"
@@ -447,14 +453,13 @@ Application Indicators {
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@RelatedResourceDto> findGeographicalValuesForIndicatorByCondition(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Create a geographical value"
-	    	@GeographicalValueDto createGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Update a geographical value"
-	    	@GeographicalValueDto updateGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
-	    	"Delete a geographical value"
-	    	deleteGeographicalValue(String uuid) throws MetamacException;
+	    	"Update geographical values table from srm"
+	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
+	    	"Update indicators when geographical codelist changes" 
+	    	processCodelistKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
@@ -465,12 +470,6 @@ Application Indicators {
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Create a geographical granularity"
-	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Update a geographical granularity"
-	    	@GeographicalGranularityDto updateGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
-	    	"Delete a geographical granularity"
-	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
 	    	"Retrieves time granularities in the indicator"
@@ -517,6 +516,8 @@ Application Indicators {
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	"Export indicators list in TSV format"
 	    	String exportIndicatorsTsv(MetamacCriteria criteria) throws MetamacException;
+	    	"Delete temporal file"
+	    	deleteTemporalFile(String temporalFile) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
@@ -530,22 +531,7 @@ Application Indicators {
 	    	"Retrieves all data sources of indicator"
 	    	List<@DataSourceDto> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
-	    	// QUANTITY UNITS
-	    	"Find quantity units by criteria"
-	    	MetamacCriteriaResult<@QuantityUnitDto> findQuantityUnits(MetamacCriteria criteria) throws MetamacException;
-	    	"Retrieve all quantity units"
-	    	List<@QuantityUnitDto> retrieveQuantityUnits() throws MetamacException;
-	    	"Create a quantity unit"
-	    	@QuantityUnitDto createQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
-	    	"Update a quantity unit"
-	    	@QuantityUnitDto updateQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
-	    	"Delete a quantity unit"
-	    	deleteQuantityUnit(String uuid) throws MetamacException;
-	    	
-			// SUBJECTS
-	    	"Retrieves all subjects. Important! Do not invoke this operation from public web application"
-	    	List<@SubjectDto> retrieveSubjects() throws MetamacException;
-	    	
+	
 	    	// DATA
 	    	"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -563,8 +549,6 @@ Application Indicators {
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
-	    	"Exports dspl"
-	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Update indicators data JSON-stat"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Update indicators data METAMAC"
@@ -582,7 +566,11 @@ Application Indicators {
 	    	"Delete a unit multiplier"
 	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	
+	    	// CACHE
+	    	updateCategoryCacheAll() throws MetamacException;
+	    	
 	    }
+	    
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
@@ -857,11 +845,7 @@ Application Indicators {
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
        		"Acronym"
        		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
-       		"Subject code"
-			String subjectCode not nullable;
-       		"Subject title"
-       		- @InternationalString subjectTitle cascade="all" not nullable databaseColumn="SUBJECT_TITLE_FK";
-       		"Concept associated with the indicator"
+        	"Concept associated with the indicator"
        		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
 			"Comments"
        		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
@@ -916,6 +900,8 @@ Application Indicators {
 			"Stream message status"
             - @StreamMessageStatusEnum streamMessageStatus;
 		
+			- @ExternalItem categoryElement nullable cascade="all" databaseColumn="CATEGORY_ELEMENT_FK";
+		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				delete;
@@ -928,10 +914,9 @@ Application Indicators {
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
-            	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
-            	List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException;
-            	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
+            	List<String> findCategoryElementsInIndicators() throws MetamacException;
+
 			}
 		}     	
 		
@@ -943,6 +928,8 @@ Application Indicators {
 
 	    	"Type"
 			- @QuantityTypeEnum quantityType nullable;
+			"Unit"
+			- @ExternalItem unit nullable cascade="all" databaseColumn="unit_fk";
 			"Multiplier of percentage"
 			- @UnitMultiplier unitMultiplier required cascade="none" databaseColumn="UNIT_MULTIPLIER_FK";
 			"Number of significant digits to use when displaying the values of a metric concept"
@@ -963,8 +950,6 @@ Application Indicators {
 			String baseTime nullable;
 			
 			// Relations
-			"Unit"
-			- @QuantityUnit unit nullable cascade="none" databaseColumn="UNIT_FK";
 			"Numerator of the fraction"
 			- @Indicator numerator nullable cascade="none" databaseColumn="NUMERATOR_FK";
 			"Denominator of the fraction"
@@ -973,6 +958,7 @@ Application Indicators {
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
             "Geographical value base"
 			- @GeographicalValue baseLocation nullable cascade="none" databaseColumn="BASE_LOCATION_FK";
+			
 	    }
 	    
 	    "Metric characteristics of a data source of indicator"
@@ -1034,8 +1020,12 @@ Application Indicators {
 			String publishers not nullable length="4000";
 			"Query Environment"
             - @QueryEnvironmentEnum queryEnvironment not nullable;
+            "metamac resource type"
+            - @MetamacSelectionEnum metamacType nullable databaseColumn="METAMAC_TYPE";
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
+            "Geographical codelist urn" 
+            String geographicalCodelistUrn nullable databaseColumn="GEOGRAPHICAL_CODELIST_URN";
              		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
@@ -1075,33 +1065,7 @@ Application Indicators {
 			"Category"
 			String category not nullable;
         }
-        
-        "Table values for quantity units"
-	    Entity QuantityUnit {
-        	databaseTable = "TB_LIS_QUANTITIES_UNITS"
-        	hint="idSequence=QUANTITIES_UNITS"
-			
-			"Symbol of unit (example: km)"
-			String symbol nullable;
-			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition nullable;
-       		"Title of unit"
-       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
-       		
-       		"Last update to optimistic locking"
-			DateTimeTZ updateDate nullable;
-       		
-       		Repository QuantityUnitRepository {
-       			findAll;
-            	protected List<@QuantityUnit> findByQuery;
-            	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@QuantityUnit retrieveQuantityUnit(String uuid);
-            	findByCondition(PagingParameter pagingParameter);
-            	save;
-            	delete;
-			}
-        }
-        
+         
         "Table values for geographical values"
 	    Entity GeographicalValue {
         	databaseTable = "TB_LIS_GEOGR_VALUES"
@@ -1432,17 +1396,34 @@ Application Indicators {
     		"Send error notification for de populate indicator data job"
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
+	    	"Perform the exports dspl task"
+	    	executeExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	
     		markAllInProgressTaskToFailed();
+    		markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
     		
     		"Schedule database dataset polling job"
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job"
+			scheduleCategoryCacheRefreshAutomaticJob();	
+			"execute category element refresh job manually from indicators app"
+			executeCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"execute category element refresh job automatically execution"
+			executeCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			"Schedule geographical values migration job"
+			scheduleGeographicalValuesMigrationTemporalTask();	
+			"execute geographical values migration job automatically execution"
+			executeGeographicalValuesMigrationTemporalTask() throws MetamacException;
+			
     	}
     	
     	"Provides access to background data operations"
     	Service TaskService {
     		> @TaskRepository
     		> @IndicatorsDataService
-    		> @IndicatorsService  		
+    		> @IndicatorsService  	
+    		> @CategoryCacheService	
     		
 			"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
@@ -1457,6 +1438,9 @@ Application Indicators {
     		"Send error notification for de populate indicator data job"
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
+			"Perform the export dspl task"
+			processExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+			
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;
 			"Updates a task"
@@ -1467,8 +1451,24 @@ Application Indicators {
 			markTaskAsFinished(String jobKey) throws MetamacException;	
 			"Mark task as failed on application startup"
 			markAllInProgressTaskToFailed();
+			markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
 			
 			scheduleIndicatorsUpdateJob();
+			
+			"Schedule category element refresh job manually from indicators app"
+			scheduleCategoryCacheRefreshManualJob() throws MetamacException;
+			"Schedule category element refresh job automatically with cron expression"
+			scheduleCategoryCacheRefreshAutomaticJob();
+			"Process category cache refresh job manually from indicators app"	
+			processCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
+			"Process category cache refresh job automatically with cron expression"			
+			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
+			"Schedule geographical values migration job"
+			scheduleGeographicalValuesMigrationTemporalTask();	
+			"Process geographical values migration job automatically with cron expression"			
+			processGeographicalValuesMigrationTemporalTask() throws MetamacException;
+			
+	
     	}
     	
     	// ----------------------------------------------------------------
@@ -1493,7 +1493,54 @@ Application Indicators {
 				deleteAndFlush(@Task task);
 			}
 	    }
+	    
+	   
 	}
+	
+	Module externalItemsCaches {
+		basePackage=es.gobcan.istac.indicators.core.externalitemscache
+		
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ---------------------------------------------------------------- 
+		
+		"Provides access to category cache elements"
+    	Service CategoryCacheService {
+    		> @CategoryCacheRepository
+		    @CategoryCache retrieveCategoryCacheByCategoryCode(String categoryCode) throws MetamacException;
+		    @CategoryCache retrieveCategoryCacheByCategoryElementCode(String categoryElementCode) throws MetamacException;
+		    updateCategoryCacheAll(List<String> categoryElementsInIndicators)  throws MetamacException;
+		    List<@CategoryCache> retrieveAllCategories() throws MetamacException;
+		    createCategoryCacheByCategoryElement(@ExternalItem categoryElement) throws MetamacException;
+
+		    
+    	}
+		
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+		
+		 Entity CategoryCache {
+			databaseTable = "TB_CATEGORY_CACHE"
+			hint = "idSequence=CATEGORY_CACHE"
+        	!optimisticLocking
+        	
+        	gap
+
+			String categoryCode databaseColumn="Category_Code" not nullable;
+			- @InternationalString title cascade="all-delete-orphan" fetch="eager" databaseColumn="title_fk" nullable;
+			String categoryElementCode databaseColumn="Category_Element_Code" not nullable;
+			
+			Repository CategoryCacheRepository {
+				save;
+				delete;	
+				findAll;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+
+			}
+		}
+	}   	
 	
 	// ----------------------------------------------------------------
 	// 							ENUMS
@@ -1588,10 +1635,6 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Acronym"
        		- @InternationalStringDto acronym;
-       		"Subject code"
-			String subjectCode;
-			"Subject title"
-			- @InternationalStringDto subjectTitle;
 			"Concept"
        		- @InternationalStringDto conceptDescription;
 			"Comments"
@@ -1646,6 +1689,8 @@ Application Indicators {
             
             "True if a task related with the indicator is being executed in background"
 			Boolean isTaskInBackground;
+			
+			- @ExternalItemDto categoryElement;
 	    }
 	    
 	    "Dto for indicator. Summary information"
@@ -1675,10 +1720,10 @@ Application Indicators {
             - @StreamMessageStatusEnum streamMessageStatus;
        		"Title"
        		- @InternationalStringDto title;
-       		"Subject code"
-			String subjectCode;       		
-       		"Subject title"
-       		- @InternationalStringDto subjectTitle;
+       		"Category element code"
+			String categoryElementCode;      
+			"Category element title"
+			- @InternationalStringDto categoryElementTitle;       		
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
 
@@ -1731,6 +1776,8 @@ Application Indicators {
 			String queryUrn;
 			"QueryText"
 			String queryText;
+			"Metamac resource type"
+            - @MetamacSelectionEnum metamacType;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"
@@ -1742,7 +1789,7 @@ Application Indicators {
 			"Geographical variable"
 			String geographicalVariable;
 			"Geographical value, if geographical variable is not provided"
-			String geographicalValueUuid;
+			- @RelatedResourceDto geographicalValue nullable;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
 			"Absolute method. Must be OBS_VALUE or a variable value"
@@ -1767,6 +1814,8 @@ Application Indicators {
 			List<String> publishers;	
 			"Version to optimistic locking"
 			Long versionOptimisticLocking;		
+			"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
 	    }
 	    
 	    "Dto for variables and categories"
@@ -1842,7 +1891,7 @@ Application Indicators {
 			"Type"
 			- @QuantityTypeEnum type;
 			"Unit"
-			String unitUuid;
+			-@ExternalItemDto unit;
 			"Multiplier of percentage. Default must be 1"
 			Integer unitMultiplier;
 			"Unit multiplier label"
@@ -1868,9 +1917,10 @@ Application Indicators {
 			"Time value base"
 			String baseTime;
 			"Geographical value base"
-			String baseLocationUuid;
+			- @RelatedResourceDto baseLocation nullable;			
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
+			
 		}
 
 	    "Dto for rate derivation"
@@ -1884,20 +1934,6 @@ Application Indicators {
        		"Rounding"
 			- @RateDerivationRoundingEnum rounding;
 	    }
-	    
-	   	"Dto for units of quantities"
-    	DataTransferObject QuantityUnitDto extends @AuditDto {
-	   		"Uuid"
-	   		String uuid;
-			"Symbol of unit (example: km)"
-			String symbol;
-			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition;
-       		"Title of unit"
-       		- @InternationalStringDto title;
-       		
-       		Long optimisticLockingVersion;	
-    	}
     	
     	"Base Dto for geographical values"
     	DataTransferObject GeographicalValueBaseDto extends @AuditDto {
@@ -1957,14 +1993,6 @@ Application Indicators {
        		- @InternationalStringDto titleSummary;
     	}
     	
-    	"Dto for subjects"
-    	DataTransferObject SubjectDto {
-	   		"Code"
-	   		String code;
-			"Title"
-			- @InternationalStringDto title;
-    	}
-    	
     	"Dto for data basic definition"
     	DataTransferObject DataDefinitionDto {
 	   		"Uuid"
@@ -2005,6 +2033,8 @@ Application Indicators {
     		MapList valueLabels;
     		"Codes for every value in every variable"
     		MapList valueCodes;
+    		"Geographical codelist urn"
+    		String geographicalCodelistUrn; 
     	}
     	
     	"Dto for data"
@@ -2044,6 +2074,12 @@ Application Indicators {
        		
        		Long optimisticLockingVersion;	
     	}
+    	
+    	DataTransferObject RelatedResourceDto extends @RelatedResourceBaseDto {
+			- @TypeRelatedResourceEnum type required;
+			String granularityCode;
+			String granularityUuid;
+		}
 	}
 	
 	// ----------------------------------------------------------------
@@ -2084,12 +2120,6 @@ Application Indicators {
     		INDEX,
     		CHANGE_RATE
     	}
-    	
-    	"Type of symbol position of quantity unit"
-    	enum QuantityUnitSymbolPositionEnum {
-    		START,
-    		END
-    	}	
 
 	   	"Type of rate derivation"
     	enum RateDerivationMethodTypeEnum {
@@ -2144,6 +2174,12 @@ Application Indicators {
             GPE("GPE"),
             JSON_STAT("JSON-stat")
         }
+
+        enum MetamacSelectionEnum {
+            String value
+            CONSULTA("Consulta"),
+            DATASET("Dataset")
+        }
         
         "Task Status Type Enumerated"
     	enum TaskStatusTypeEnum {
@@ -2158,6 +2194,16 @@ Application Indicators {
            PENDING,
            SENT,
            FAILED
+       }
+       
+       enum TypeRelatedResourceEnum {
+    		GEOGRAPHICAL_VALUE
+    	}
+    	
+    	"Used when a kafka message is received from CODELIST_PUBLICATION topic to determine the action must be done depending on codelist urn"
+    	 enum StreamMessageCodelistActionEnum {
+           GEOGRAPHICAL_VALUES,
+           GEOGRAPHICAL_GRANURALITIES
        }
 	}
 }

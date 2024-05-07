@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
@@ -35,9 +34,6 @@ public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
     @Autowired
     protected IndicatorsService           indicatorService;
-
-    @Autowired
-    protected QuantityUnitRepository      quantityUnitRepository;
 
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;

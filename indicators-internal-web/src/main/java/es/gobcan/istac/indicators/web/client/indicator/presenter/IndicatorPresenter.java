@@ -9,11 +9,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -28,6 +32,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
@@ -36,12 +41,11 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TypeRelatedResourceEnum;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -70,11 +74,6 @@ import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
@@ -85,10 +84,10 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlRes
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesAction;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.PlanifyPopulateIndicatorDataAction;
@@ -111,13 +110,18 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesResult;
+import es.gobcan.istac.indicators.web.shared.external.RestWebCriteriaUtils;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 
     private Logger                   logger = Logger.getLogger(IndicatorPresenter.class.getName());
 
     private DispatchAsync            dispatcher;
+    private final PlaceManager       placeManager;
     private String                   indicatorCode;
     private IndicatorDto             indicatorDto;
     private List<DataSourceDto>      datasourcesDtos;
@@ -157,11 +161,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
-        void setSubjectsList(List<SubjectDto> subjectDtos);
-
-        void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
-
-        void setGeographicalValue(GeographicalValueDto geographicalValueDto);
+        void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result);
 
         // Data source
 
@@ -172,10 +172,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setDataStructure(DataStructureDto dataStructureDto);
 
         void setDataStructureForEdition(DataStructureDto dataStructureDto);
-
-        void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
-
-        void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
 
         void onDataSourceSaved(DataSourceDto dataSourceDto);
 
@@ -191,18 +187,27 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
+        void setDatasetsForRelatedQuery(GetQueriesPaginatedListResult result);
+
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
+
+        void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
         void showInformationMessage(String title, String message);
 
         void setEditionLanguages(List<String> languages);
+
+        // external items
+        void setItemSchemes(String formItemName, ExternalItemsResult result);
+        void setItems(String formItemName, ExternalItemsResult result);
     }
 
     @Inject
-    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher, ToolStripPresenterWidget toolStripPresenterWidget) {
+    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, ToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
+        this.placeManager = placeManager;
         this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
@@ -269,38 +274,23 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveSubjects() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
+    public void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, final String geographicalGranularityUuid) {
+        GeoValueCriteria geoValueWebCriteria = new GeoValueCriteria();
+        geoValueWebCriteria.setCriteria(criteria);
+        geoValueWebCriteria.setGeographicalGranularityUuid(geographicalGranularityUuid);
+        dispatcher.execute(new GetRelatedResourcesAction(TypeRelatedResourceEnum.GEOGRAPHICAL_VALUE, firstResult, maxResults, geoValueWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetRelatedResourcesResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetSubjectsListResult result) {
-                getView().setSubjectsList(result.getSubjectDtos());
-            }
-        });
-    }
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fireErrorMessage(IndicatorPresenter.this, caught);
+                    }
+                    @Override
+                    public void onWaitSuccess(GetRelatedResourcesResult result) {
+                        getView().setGeographicalValuesAsRelatedResource(result);
+                    }
+                });
 
-    @Override
-    public void retrieveGeographicalValuesByGranularity(final String geographicalGranularityUuid) {
-        Builder builder = new Builder();
-        GetGeographicalValuesAction action = builder.geographicalGranularityUuid(geographicalGranularityUuid).build();
-        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValues(result.getGeographicalValueDtos());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveGeographicalValue(final String geographicalValueUuid) {
-        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValue(result.getGeographicalValueDto());
-            }
-        });
     }
 
     @Override
@@ -509,14 +499,26 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveGeographicalValueDS(final String uuid) {
-        dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
+    public void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValueDS(result.getGeographicalValueDto());
+            public void onWaitSuccess(GetQueriesPaginatedListResult result) {
+                getView().setDatasetsForRelatedQuery(result);
             }
         });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForDatasetSelection(result.getOperationsList(), result.getFirstResultOut(), result.getTotalResults());
+                    }
+                });
     }
 
     @Override
@@ -763,6 +765,55 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setEditionLanguages(result.getLanguages());
             }
         });
+    }
+
+    //
+    // EXTERNAL RESOURCES
+    //
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        srmItemSchemeRestCriteria = RestWebCriteriaUtils.buildItemSchemeWebCriteria(srmItemSchemeRestCriteria, types);
+        retrieveItemSchemes(formItemName, srmItemSchemeRestCriteria, firstResult, maxResults);
+    }
+
+    @Override
+    public void retrieveItemSchemes(final String formItemName, SrmExternalResourceRestCriteria srmItemSchemeRestCriteria, int firstResult, int maxResults) {
+        dispatcher.execute(new GetExternalResourcesAction(srmItemSchemeRestCriteria, firstResult, maxResults), new WaitingAsyncCallbackHandlingError<GetExternalResourcesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetExternalResourcesResult result) {
+                getView().setItemSchemes(formItemName, result.getExternalItemsResult());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, TypeExternalArtefactsEnum[] types, int firstResult, int maxResults) {
+        itemWebCriteria = RestWebCriteriaUtils.buildItemWebCriteria(itemWebCriteria, types);
+        retrieveItems(formItemName, itemWebCriteria, firstResult, maxResults);
+    }
+
+    @Override
+    public void retrieveItems(final String formItemName, SrmItemRestCriteria itemWebCriteria, int firstResult, int maxResults) {
+        dispatcher.execute(new GetExternalResourcesAction(itemWebCriteria, firstResult, maxResults), new WaitingAsyncCallbackHandlingError<GetExternalResourcesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetExternalResourcesResult result) {
+                getView().setItems(formItemName, result.getExternalItemsResult());
+            }
+        });
+    }
+
+    //
+    // NAVIGATION
+    //
+
+    @Override
+    public void goTo(List<PlaceRequest> location) {
+        if (location != null && !location.isEmpty()) {
+            placeManager.revealPlaceHierarchy(location);
+        }
     }
 
 }

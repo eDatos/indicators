@@ -1,56 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <dataset>
-
-    <!-- ************************************************************************************ -->
-    <!--                                 SUBJECT CODES                                        -->
-    <!-- ************************************************************************************ -->
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="EDUCACION"
-        DESCRIPCION="Educación"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="POLITICA_ECON"
-        DESCRIPCION="Política económica"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="SALUD"
-        DESCRIPCION="Salud"
-    />
-    <TV_AREAS_TEMATICAS
-        ID_AREA_TEMATICA="MEDIO_AMBIENTE"
-        DESCRIPCION="Medio ambiente"
-    />
-
-    <!-- ************************************************************************************ -->
-    <!--                                 QUANTITIES UNITS                                     -->
-    <!-- ************************************************************************************ -->
-    <TB_LIS_QUANTITIES_UNITS 
-        ID="1" 
-        UUID="unit-1"
-        SYMBOL="km"
-        SYMBOL_POSITION="END" 
-        TITLE_FK="5"
-        VERSION="0"
-    />
-    
-    <TB_LIS_QUANTITIES_UNITS 
-        ID="2" 
-        UUID="unit-2"
-        SYMBOL="m"
-        SYMBOL_POSITION="END" 
-        TITLE_FK="43"
-        VERSION="0"
-    />
-    
-    <TB_LIS_QUANTITIES_UNITS 
-        ID="3" 
-        UUID="unit-3"
-        SYMBOL="£"
-        SYMBOL_POSITION="START" 
-        TITLE_FK="44"
-        VERSION="0"
-    />
     
     <!-- ************************************************************************************ -->
     <!--                                 UNITS MULTIPLIERS                                    -->
@@ -116,7 +66,7 @@
     <!-- ************************************************************************************ -->
     <TB_LIS_GEOGR_VALUES 
         ID="11" 
-        CODE="GB" 
+        CODE="GB_VARIABLE_ELEMENT" 
         LATITUDE="55.378051" 
         LONGITUDE="-3.435973" 
         UUID="11"
@@ -134,7 +84,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="12" 
-        CODE="FR" 
+        CODE="FR_VARIABLE_ELEMENT" 
         LATITUDE="46.227638" 
         LONGITUDE="2.213749" 
         UUID="12"
@@ -152,12 +102,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="13" 
-        CODE="ES" 
+        CODE="ES_VARIABLE_ELEMENT" 
         LATITUDE="40.463667" 
         LONGITUDE="-3.74922" 
         UUID="13"
         TITLE_FK="11" 
-        GLOBAL_ORDER="ES"
+        GLOBAL_ORDER="ES_VARIABLE_ELEMENT"
         GRANULARITY_FK="1"
         
         VERSION="1"
@@ -170,12 +120,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="131" 
-        CODE="ES61" 
+        CODE="ES61_VARIABLE_ELEMENT" 
         LATITUDE="12.0656233" 
         LONGITUDE="-22.454564645" 
         UUID="131"
         TITLE_FK="12"
-        GLOBAL_ORDER="ES61" 
+        GLOBAL_ORDER="ES61_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -188,12 +138,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="132" 
-        CODE="ES42" 
+        CODE="ES42_VARIABLE_ELEMENT" 
         LATITUDE="16.0656233" 
         LONGITUDE="-23.454564645" 
         UUID="132"
         TITLE_FK="23"
-        GLOBAL_ORDER="ES42" 
+        GLOBAL_ORDER="ES42_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -206,7 +156,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="133" 
-        CODE="ES41" 
+        CODE="ES41_VARIABLE_ELEMENT" 
         LATITUDE="18.0656233" 
         LONGITUDE="-29.454564645" 
         UUID="133"
@@ -224,12 +174,12 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="134" 
-        CODE="ES43" 
+        CODE="ES43_VARIABLE_ELEMENT" 
         LATITUDE="28.0656233" 
         LONGITUDE="-19.454564645" 
         UUID="134"
         TITLE_FK="25"
-        GLOBAL_ORDER="ES43" 
+        GLOBAL_ORDER="ES43_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -242,7 +192,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1311" 
-        CODE="ES611" 
+        CODE="ES611_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1311"
@@ -260,7 +210,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1312" 
-        CODE="ES612" 
+        CODE="ES612_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1312"
@@ -278,7 +228,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1313" 
-        CODE="ES613" 
+        CODE="ES613_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1313"
@@ -296,7 +246,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="1314" 
-        CODE="ES614" 
+        CODE="ES614_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="1314"
@@ -348,8 +298,7 @@
                 INDICATOR_FK="1"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="2"
                 QUANTITY_FK="111"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -388,7 +337,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="2"
                     DECIMAL_PLACES="2"
-                    UNIT_FK="1"
+                    UNIT_FK="11"
                     NUMERATOR_FK="[null]"
                     DENOMINATOR_FK="[null]"
                     IS_PERCENTAGE="[null]"
@@ -503,8 +452,7 @@
                 INDICATOR_FK="2"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="4"
                 QUANTITY_FK="211"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -543,7 +491,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
-                    UNIT_FK="2"
+                    UNIT_FK="12"
                     NUMERATOR_FK="[null]"
                     DENOMINATOR_FK="[null]"
                     IS_PERCENTAGE="[null]"
@@ -657,8 +605,7 @@
                 INDICATOR_FK="3"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="5"
                 QUANTITY_FK="311"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -697,7 +644,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
-                    UNIT_FK="1"
+                    UNIT_FK="14"
                     NUMERATOR_FK="[null]"
                     DENOMINATOR_FK="[null]"
                     IS_PERCENTAGE="[null]"
@@ -811,8 +758,7 @@
                 INDICATOR_FK="4"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="6"
                 QUANTITY_FK="411"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -851,7 +797,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
-                    UNIT_FK="1"
+                    UNIT_FK="15"
                     NUMERATOR_FK="1"
                     DENOMINATOR_FK="2"
                     IS_PERCENTAGE="[null]"
@@ -967,8 +913,7 @@
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="7"
                 QUANTITY_FK="511"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -1007,7 +952,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="3"
                     DECIMAL_PLACES="2"
-                    UNIT_FK="1"
+                    UNIT_FK="16"
                     NUMERATOR_FK="1"
                     DENOMINATOR_FK="2"
                     IS_PERCENTAGE="1"
@@ -1247,8 +1192,7 @@
                 INDICATOR_FK="6"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="8"
                 QUANTITY_FK="611"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -1287,7 +1231,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="3"
                     DECIMAL_PLACES="2"
-                    UNIT_FK="2"
+                    UNIT_FK="19"
                     NUMERATOR_FK="1"
                     DENOMINATOR_FK="2"
                     IS_PERCENTAGE="1"
@@ -1525,8 +1469,7 @@
                 INDICATOR_FK="7"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="9"
                 QUANTITY_FK="711"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -1565,7 +1508,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
-                    UNIT_FK="1"
+                    UNIT_FK="17"
                     NUMERATOR_FK="1"
                     DENOMINATOR_FK="2"
                     IS_PERCENTAGE="1"
@@ -1680,8 +1623,7 @@
                 INDICATOR_FK="8"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="EDUCACION"
-                SUBJECT_TITLE_FK="1"
+                CATEGORY_ELEMENT_FK="10"
                 QUANTITY_FK="811"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="1"
@@ -1720,7 +1662,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="0"
-                    UNIT_FK="1"
+                    UNIT_FK="18"
                     NUMERATOR_FK="1"
                     DENOMINATOR_FK="2"
                     IS_PERCENTAGE="1"
@@ -2617,7 +2559,219 @@
         PUBLICATION_DATE="2011-01-05 01:02:04"
         PUBLICATION_DATE_TZ="Europe/London"
     />
-   
+
+
+    <!-- ************************************************************************************ -->
+    <!--                                 CATEGORY ELEMENTS AS EXTERNAL ITEMS                  -->
+    <!-- ************************************************************************************ -->
+     <TB_EXTERNAL_ITEMS
+       ID="1"
+       CODE="ECONOMIA"
+       URI="/latest/categoryelements/ECONOMIA"
+       URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=ECONOMIA"
+       MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=ECONOMIA"
+       TITLE_FK = "60"
+       TYPE = "structuralResources#categoryElement"
+       VERSION="1"
+    />
+                    
+    <TB_EXTERNAL_ITEMS
+      ID="2"
+      CODE="EDUCACION"
+      URI="/latest/categoryelements/EDUCACION"
+      URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+      MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+      TITLE_FK = "61"
+      TYPE = "structuralResources#categoryElement"
+      VERSION="1"
+   />
+                    
+  <TB_EXTERNAL_ITEMS
+     ID="3"
+     CODE="SALUD"
+     URI="/latest/categoryelements/SALUD"
+     URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=SALUD"
+     MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=SALUD"
+     TITLE_FK = "62"
+     TYPE = "structuralResources#categoryElement"
+     VERSION="1"
+   />
+                    
+   <TB_EXTERNAL_ITEMS
+     ID="4"
+     CODE="EDUCACION"
+     URI="/latest/categoryelements/EDUCACION"
+     URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+     MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+     TITLE_FK = "63"
+     TYPE = "structuralResources#categoryElement"
+     VERSION="1"
+   />
+                    
+   <TB_EXTERNAL_ITEMS
+    ID="5"
+    CODE="EDUCACION"
+    URI="/latest/categoryelements/EDUCACION"
+    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+    TITLE_FK = "64"
+    TYPE = "structuralResources#categoryElement"
+    VERSION="1"
+  />
+                    
+  <TB_EXTERNAL_ITEMS
+    ID="6"
+    CODE="EDUCACION"
+    URI="/latest/categoryelements/EDUCACION"
+    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+    TITLE_FK = "65"
+    TYPE = "structuralResources#categoryElement"
+    VERSION="1"
+  />
+                    
+  <TB_EXTERNAL_ITEMS
+    ID="7"
+    CODE="EDUCACION"
+    URI="/latest/categoryelements/EDUCACION"
+    URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+    MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+    TITLE_FK = "66"
+    TYPE = "structuralResources#categoryElement"
+    VERSION="1"
+  />
+                    
+  <TB_EXTERNAL_ITEMS
+   ID="8"
+   CODE="EDUCACION"
+   URI="/latest/categoryelements/EDUCACION"
+   URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+   MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+   TITLE_FK = "67"
+   TYPE = "structuralResources#categoryElement"
+   VERSION="1"
+ />   
+ <TB_EXTERNAL_ITEMS
+   ID="9"
+   CODE="EDUCACION"
+   URI="/latest/categoryelements/EDUCACION"
+   URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+   MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+   TITLE_FK = "68"
+   TYPE = "structuralResources#categoryElement"
+   VERSION="1"
+ />   
+ <TB_EXTERNAL_ITEMS
+   ID="10"
+   CODE="EDUCACION"
+   URI="/latest/categoryelements/EDUCACION"
+   URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=EDUCACION"
+   MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=EDUCACION"
+   TITLE_FK = "69"
+   TYPE = "structuralResources#categoryElement"
+   VERSION="1"
+ />   
+
+    <!-- ************************************************************************************ -->
+    <!--                                 QUANTITIES UNITS AS EXTERNAL ITEMS                   -->
+    <!-- ************************************************************************************ -->
+<TB_EXTERNAL_ITEMS
+   ID="11"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "70"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />   
+
+<TB_EXTERNAL_ITEMS
+   ID="12"
+   CODE="M"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/M"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).M"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=M"
+   TITLE_FK = "71"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+<TB_EXTERNAL_ITEMS
+   ID="13"
+   CODE="KG"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KG"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KG"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KG"
+   TITLE_FK = "72"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+ 
+ <TB_EXTERNAL_ITEMS
+   ID="14"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "73"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+ 
+ <TB_EXTERNAL_ITEMS
+   ID="15"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "74"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+ 
+ <TB_EXTERNAL_ITEMS
+   ID="16"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "75"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+ 
+ <TB_EXTERNAL_ITEMS
+   ID="17"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "76"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+ 
+ <TB_EXTERNAL_ITEMS
+   ID="18"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "77"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+
+<TB_EXTERNAL_ITEMS
+   ID="19"
+   CODE="M"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/M"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).M"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=M"
+   TITLE_FK = "78"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
 
     <!-- ************************************************************************************ -->
     <!--                                 INTERNATIONAL STRINGS                                -->
@@ -3454,7 +3608,350 @@
         INTERNATIONAL_STRING_FK="59"
         VERSION="1"
     />
-        
+    
+       <TB_INTERNATIONAL_STRINGS
+        ID="60"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="80"
+        LABEL="Economía" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="60"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="81"
+        LABEL="Economy" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="60"
+        VERSION="1"
+    />
+      <TB_INTERNATIONAL_STRINGS
+        ID="61"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="82"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="61"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="83"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="61"
+        VERSION="1"
+    />
+      <TB_INTERNATIONAL_STRINGS
+        ID="62"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="84"
+        LABEL="Salud" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="62"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="85"
+        LABEL="Health" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="62"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="63"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="86"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="63"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="87"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="63"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="64"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="88"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="64"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="89"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="64"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="65"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="90"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="65"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="91"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="65"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="66"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="92"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="66"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="93"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="66"
+        VERSION="1"
+    />
+        <TB_INTERNATIONAL_STRINGS
+        ID="67"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="94"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="67"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="95"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="67"
+        VERSION="1"
+    />
+     <TB_INTERNATIONAL_STRINGS
+        ID="68"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="96"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="68"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="97"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="68"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="69"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="98"
+        LABEL="Educación" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="69"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="99"
+        LABEL="Education" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="69"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="70"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="100"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="70"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="101"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="70"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="71"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="102"
+        LABEL="Metros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="71"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="103"
+        LABEL="Meters" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="71"
+        VERSION="1"
+    />    
+     <TB_INTERNATIONAL_STRINGS
+        ID="72"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="104"
+        LABEL="Kilogramos" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="72"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="105"
+        LABEL="Kilograms" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="72"
+        VERSION="1"
+    />    
+    
+     <TB_INTERNATIONAL_STRINGS
+        ID="73"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="106"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="73"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="107"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="73"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="74"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="108"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="74"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="109"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="74"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="75"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="110"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="75"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="111"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="75"
+        VERSION="1"
+    />    
+         <TB_INTERNATIONAL_STRINGS
+        ID="76"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="112"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="76"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="113"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="76"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="77"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="114"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="77"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="115"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="77"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="78"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="116"
+        LABEL="Metros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="78"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="117"
+        LABEL="Meters" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="78"
+        VERSION="1"
+    />    
 </dataset>
 
     

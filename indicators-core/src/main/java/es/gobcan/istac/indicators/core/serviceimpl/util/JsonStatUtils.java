@@ -5,8 +5,10 @@ import static org.siemac.edatos.core.common.constants.shared.RegularExpressionCo
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.jsonstat.JsonStatData;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class JsonStatUtils {
 
@@ -24,7 +27,7 @@ public class JsonStatUtils {
     private JsonStatUtils() {
     }
 
-    public static Data jsonStatDataToData(String uuid, JsonStatData jsonStatData) {
+    public static Data jsonStatDataToData(String uuid, JsonStatData jsonStatData, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
         if (jsonStatData == null) {
             return null;
         }
@@ -52,17 +55,17 @@ public class JsonStatUtils {
         // Value Labels
         target.setValueLabels(jsonStatData.getValueLabels());
 
+        // Spatial Variables spatialVariables
+        target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
+
         // Value Codes
-        target.setValueCodes(jsonStatData.getValueCodes());
+        target.setValueCodes(convertValueCodesToVariableElementCodes(jsonStatData.getValueCodes(), target.getSpatialVariables(), variableElementsByCodesOfCodelist));
 
         // Temporal Variables
         target.setTemporalVariable(jsonStatData.getTemporalVariable());
 
         // Temporal Value: Not necessary in JSON-stat
         // target.setTemporalValue(temporalValue);
-
-        // Spatial Variables spatialVariables
-        target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
 
         // Spatial Variables geographicalValueDto: Not necessary in JSON-stat
         // target.setGeographicalValueDto(geographicalValueDto);
@@ -84,12 +87,22 @@ public class JsonStatUtils {
         target.setPublishers(JsonStatUtils.toList(jsonStatData.getSource()));
 
         // Data
-        target.processData(jsonStatDataValuesToDataContent(jsonStatData));
+        target.processData(jsonStatDataValuesToDataContent(jsonStatData, target.getSpatialVariables(), variableElementsByCodesOfCodelist));
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(jsonStatData));
 
         return target;
+    }
+
+    public static void jsonStatDataToGeographicVariableElements(String uuid, JsonStatData jsonStatData, Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
+        if (jsonStatData == null) {
+            return;
+        }
+
+        // Value Codes
+        jsonStatData.setValueCodes(convertValueCodesToVariableElementCodes(jsonStatData.getValueCodes(), JsonStatUtils.toList(jsonStatData.getSpatialVariable()), variableElementsByCodesOfCodelist));
+
     }
 
     private static List<String> extractVariablesFromDimensions(JsonStatData jsonStatData) {
@@ -101,7 +114,30 @@ public class JsonStatUtils {
         return result;
     }
 
-    public static List<DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData) {
+    private static Map<String, List<String>> convertValueCodesToVariableElementCodes(Map<String, List<String>> valueCodes, List<String> geographicalDimensionsId,
+            Map<String, String> variableElementsByCodesOfCodelist) throws MetamacException {
+
+        for (Map.Entry<String, List<String>> codes : valueCodes.entrySet()) {
+            if (geographicalDimensionsId.contains(codes.getKey())) {
+                List<String> geographicalVariableElementsCode = new ArrayList<String>();
+                for (String value : codes.getValue()) {
+                    String variableElement = variableElementsByCodesOfCodelist.get(value);
+                    if (variableElement != null) {
+                        geographicalVariableElementsCode.add(variableElement);
+                    } else {
+                        throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, value);
+                    }
+
+                }
+                codes.setValue(geographicalVariableElementsCode);
+            }
+        }
+
+        return valueCodes;
+    }
+
+    public static List<DataContent> jsonStatDataValuesToDataContent(JsonStatData jsonStatData, List<String> geographicalDimensionsId, Map<String, String> variableElementsByCodesOfCodelist)
+            throws MetamacException {
         List<DataContent> result = new LinkedList<DataContent>();
 
         int numDimensions = jsonStatData.getId().size();
@@ -109,7 +145,7 @@ public class JsonStatUtils {
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
         stack.push(new DataOrderingStackElement(null, -1, null, new LinkedList<>()));
 
-        JsonStatDatasetAccess jsonStatDatasetAccess = new JsonStatDatasetAccess(jsonStatData);
+        JsonStatDatasetAccess jsonStatDatasetAccess = new JsonStatDatasetAccess(jsonStatData, geographicalDimensionsId, variableElementsByCodesOfCodelist);
 
         int observationIndex = 0;
         while (stack.size() > 0) {

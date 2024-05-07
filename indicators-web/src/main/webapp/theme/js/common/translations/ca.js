@@ -16,6 +16,7 @@
                 'SYSTEM': 'Sistema',
                 'SYSTEM_OR_SUBJECT': 'Sistema o Tema',
                 'SUBJECT': 'Tema',
+                'ALL_SUBJECT': 'Tots els temes',
                 'INDICATORS': 'Indicadors',
                 'GEOGRAPHICAL_VALUES': 'Valors espacials',
                 'TIME_GRANULARITIES': 'Granularitat temporal',
@@ -130,7 +131,8 @@
             'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         },
         'CONNECTOR': {
-            'OF': ' de '
+            'OF': ' de ',
+            'CONTRACTED_OF': ' d\''
         }
     };
 }());

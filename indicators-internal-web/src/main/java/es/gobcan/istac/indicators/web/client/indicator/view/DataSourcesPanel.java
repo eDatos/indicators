@@ -10,7 +10,6 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 
-import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -22,7 +21,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -38,6 +36,7 @@ import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class DataSourcesPanel extends VLayout {
 
@@ -224,7 +223,6 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void setCanEdit(IndicatorDto indicatorDto) {
-        toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource(indicatorDto) ? Visibility.VISIBLE : Visibility.HIDDEN);
         toolStrip.markForRedraw();
     }
 
@@ -253,6 +251,14 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setQueries(queriesList, result.getFirstResultOut(), queriesList.size(), result.getTotalResults());
     }
 
+    public void setStatisticalDatasetOperations(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        datasourcePanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
+    public void setDatasets(GetQueriesPaginatedListResult result) {
+        List<ExternalItemDto> datasetsList = result.getQueriesList();
+        datasourcePanel.setDatasets(datasetsList, result.getFirstResultOut(), datasetsList.size(), result.getTotalResults());
+    }
+
     public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
         datasourcePanel.setUnitMultipliers(unitMultiplierDtos);
     }
@@ -266,12 +272,8 @@ public class DataSourcesPanel extends VLayout {
         datasourcePanel.setDataStructureForEdition(dataStructureDto);
     }
 
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        datasourcePanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        datasourcePanel.setGeographicalValue(geographicalValueDto);
+    public void setGeographicalValuesAsRelatedResources(GetRelatedResourcesResult result) {
+        datasourcePanel.setGeographicalValuesAsRelatedResources(result);
     }
 
     public DataSourceDto getDataSourceDto() {
@@ -288,5 +290,14 @@ public class DataSourcesPanel extends VLayout {
 
     public void setEditionLanguages(List<String> languages) {
         datasourcePanel.setEditionLanguages(languages);
+    }
+
+    public void setQuantityUnitFilterExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        datasourcePanel.setQuantityUnitFilterExternalItem(quantityUnitSchemeExternalItem, formItemName, firstResult, totalResults);
+
+    }
+
+    public void setQuantityUnitExternalItem(List<ExternalItemDto> quantityUnitSchemeExternalItem, String formItemName, int firstResult, int totalResults) {
+        datasourcePanel.setQuantityUnitExternalItem(quantityUnitSchemeExternalItem, formItemName, firstResult, totalResults);
     }
 }

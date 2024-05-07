@@ -422,7 +422,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="1121"
         INDICATOR_INSTANCE_FK="112"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2012"
         LAST_DATA_UPDATED="2011-03-08 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -430,7 +430,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="1122"
         INDICATOR_INSTANCE_FK="112"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2012"
         LAST_DATA_UPDATED="2011-03-08 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -663,7 +663,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="31111"
         INDICATOR_INSTANCE_FK="3111"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -671,7 +671,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="31112"
         INDICATOR_INSTANCE_FK="3111"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -679,7 +679,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="3121"
         INDICATOR_INSTANCE_FK="312"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -687,7 +687,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="3122"
         INDICATOR_INSTANCE_FK="312"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1071,7 +1071,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6111"
         INDICATOR_INSTANCE_FK="611"
-        GEOGRAPHICAL_CODE="ES611"
+        GEOGRAPHICAL_CODE="ES611_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-12 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1079,7 +1079,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6112"
         INDICATOR_INSTANCE_FK="611"
-        GEOGRAPHICAL_CODE="ES612"
+        GEOGRAPHICAL_CODE="ES612_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-12 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1087,7 +1087,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6113"
         INDICATOR_INSTANCE_FK="611"
-        GEOGRAPHICAL_CODE="ES613"
+        GEOGRAPHICAL_CODE="ES613_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-12 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1095,7 +1095,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6114"
         INDICATOR_INSTANCE_FK="611"
-        GEOGRAPHICAL_CODE="ES614"
+        GEOGRAPHICAL_CODE="ES614_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-12 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1103,7 +1103,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6121"
         INDICATOR_INSTANCE_FK="612"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2009"
         LAST_DATA_UPDATED="2011-03-02 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1111,7 +1111,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="6122"
         INDICATOR_INSTANCE_FK="612"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2009"
         LAST_DATA_UPDATED="2011-03-02 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1592,7 +1592,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10111"
         INDICATOR_INSTANCE_FK="1011"
-        GEOGRAPHICAL_CODE="ES611"
+        GEOGRAPHICAL_CODE="ES611_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2008"
         LAST_DATA_UPDATED="2011-03-24 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1600,7 +1600,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10112"
         INDICATOR_INSTANCE_FK="1011"
-        GEOGRAPHICAL_CODE="ES612"
+        GEOGRAPHICAL_CODE="ES612_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2008"
         LAST_DATA_UPDATED="2011-03-24 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1608,7 +1608,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10113"
         INDICATOR_INSTANCE_FK="1011"
-        GEOGRAPHICAL_CODE="ES613"
+        GEOGRAPHICAL_CODE="ES613_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2008"
         LAST_DATA_UPDATED="2011-03-24 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1616,7 +1616,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10114"
         INDICATOR_INSTANCE_FK="1011"
-        GEOGRAPHICAL_CODE="ES614"
+        GEOGRAPHICAL_CODE="ES614_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2008"
         LAST_DATA_UPDATED="2011-03-24 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1624,7 +1624,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10121"
         INDICATOR_INSTANCE_FK="1012"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2004"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1632,7 +1632,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10122"
         INDICATOR_INSTANCE_FK="1012"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2004"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1640,7 +1640,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10131"
         INDICATOR_INSTANCE_FK="1013"
-        GEOGRAPHICAL_CODE="ES"
+        GEOGRAPHICAL_CODE="ES_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-25 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1648,7 +1648,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="10132"
         INDICATOR_INSTANCE_FK="1013"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-25 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1826,7 +1826,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="111111"
         INDICATOR_INSTANCE_FK="11111"
-        GEOGRAPHICAL_CODE="UK"
+        GEOGRAPHICAL_CODE="UK_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1834,7 +1834,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="111112"
         INDICATOR_INSTANCE_FK="11111"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1842,7 +1842,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="11121"
         INDICATOR_INSTANCE_FK="1112"
-        GEOGRAPHICAL_CODE="UK"
+        GEOGRAPHICAL_CODE="UK_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -1850,7 +1850,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="11122"
         INDICATOR_INSTANCE_FK="1112"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -2028,7 +2028,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="121111"
         INDICATOR_INSTANCE_FK="12111"
-        GEOGRAPHICAL_CODE="UK"
+        GEOGRAPHICAL_CODE="UK_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -2036,7 +2036,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="121112"
         INDICATOR_INSTANCE_FK="12111"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2010"
         LAST_DATA_UPDATED="2011-03-04 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -2044,7 +2044,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="12121"
         INDICATOR_INSTANCE_FK="1212"
-        GEOGRAPHICAL_CODE="UK"
+        GEOGRAPHICAL_CODE="UK_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -2052,7 +2052,7 @@
     <TB_INDIC_INST_LAST_VALUE
         ID="12122"
         INDICATOR_INSTANCE_FK="1212"
-        GEOGRAPHICAL_CODE="FR"
+        GEOGRAPHICAL_CODE="FR_VARIABLE_ELEMENT"
         LAST_TIME_VALUE="2011"
         LAST_DATA_UPDATED="2011-03-06 05:06:07"
         LAST_DATA_UPDATED_TZ="Europe/London" 
@@ -2092,8 +2092,7 @@
 	  			
 				NOTES_FK="[null]"
 	  			
-				SUBJECT_CODE="1"
-				SUBJECT_TITLE_FK="42"
+				CATEGORY_ELEMENT_FK="1"
 				QUANTITY_FK="111"
 				DATA_REPOSITORY_ID="[null]"
   				DATA_REPOSITORY_TABLE_NAME="[null]"
@@ -2137,7 +2136,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"                    
-					UNIT_FK="1"
+					UNIT_FK="8"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2246,8 +2245,7 @@
 				INDICATOR_FK="2"
 	  			PROC_STATUS="DRAFT"
 				
-				SUBJECT_CODE="2"
-				SUBJECT_TITLE_FK="43"
+				CATEGORY_ELEMENT_FK="2"
 				QUANTITY_FK="211"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -2288,7 +2286,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"
-					UNIT_FK="1"
+					UNIT_FK="9"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2336,8 +2334,7 @@
 				INDICATOR_FK="3"
 	  			PROC_STATUS="DRAFT"
 				
-				SUBJECT_CODE="1"
-				SUBJECT_TITLE_FK="44"
+				CATEGORY_ELEMENT_FK="3"
 				QUANTITY_FK="311"
 				IS_LAST_VERSION="1"
 				NEEDS_UPDATE="0"
@@ -2378,7 +2375,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"
-					UNIT_FK="1"
+					UNIT_FK="10"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2485,8 +2482,7 @@
                 INDICATOR_FK="4"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="3"
-                SUBJECT_TITLE_FK="44"
+				CATEGORY_ELEMENT_FK="4"
                 QUANTITY_FK="411"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="0"
@@ -2527,7 +2523,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"
-                    UNIT_FK="1"
+                    UNIT_FK="11"
 
                     VERSION="1"
                     CREATED_BY="user1"
@@ -2634,8 +2630,7 @@
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
                 
-                SUBJECT_CODE="4"
-                SUBJECT_TITLE_FK="43"
+				CATEGORY_ELEMENT_FK="5"
                 QUANTITY_FK="511"
                 IS_LAST_VERSION="1"
                 NEEDS_UPDATE="0"
@@ -2676,7 +2671,7 @@
                     UNIT_MULTIPLIER_FK="2"
                     SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"
-                    UNIT_FK="1"
+                    UNIT_FK="12"
 
                     VERSION="1"
                     CREATED_BY="user1"
@@ -2783,8 +2778,7 @@
 	  			
 				NOTES_FK="[null]"
 	  			
-				SUBJECT_CODE="1"
-				SUBJECT_TITLE_FK="42"
+				CATEGORY_ELEMENT_FK="6"
 				QUANTITY_FK="6111"
 				DATA_REPOSITORY_ID="[null]"
   				DATA_REPOSITORY_TABLE_NAME="[null]"
@@ -2828,7 +2822,7 @@
   					UNIT_MULTIPLIER_FK="2"
   					SIGNIFICANT_DIGITS="[null]"
                     DECIMAL_PLACES="3"                    
-					UNIT_FK="1"
+					UNIT_FK="13"
 
 					VERSION="1"
 					CREATED_BY="user1"
@@ -2897,42 +2891,8 @@
                         LAST_UPDATED_BY="user2"
                         LAST_UPDATED="2011-03-04 05:06:07"
                         LAST_UPDATED_TZ="Europe/London"
-                    />				
-			  
-	<!-- ************************************************************************************ -->
-	<!--                                 QUANTITIES UNITS		                              -->
-	<!-- ************************************************************************************ -->
-	<TB_LIS_QUANTITIES_UNITS
-		ID="1"
- 		UUID="1"
-  		SYMBOL="km"
-  		TITLE_FK="33"
-  		SYMBOL_POSITION="END"
-        
-        VERSION="1"
-        CREATED_BY="user1"
-        CREATED_DATE="2011-01-01 01:02:04"
-        CREATED_DATE_TZ="Europe/London"
-        LAST_UPDATED_BY="user2"
-        LAST_UPDATED="2011-01-22 01:02:04"
-        LAST_UPDATED_TZ="Europe/London"
-	/>
-    
-	<TB_LIS_QUANTITIES_UNITS
-		ID="2"
- 		UUID="2"
-  		SYMBOL="[null]"
-  		TITLE_FK="34"
-  		SYMBOL_POSITION="START"
-        
-        VERSION="1"
-        CREATED_BY="user1"
-        CREATED_DATE="2011-01-01 01:02:04"
-        CREATED_DATE_TZ="Europe/London"
-        LAST_UPDATED_BY="user2"
-        LAST_UPDATED="2011-01-22 01:02:04"
-        LAST_UPDATED_TZ="Europe/London"
-	/>
+                    />						  
+	
   		  
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL VALUES	                              -->
@@ -2940,11 +2900,11 @@
 	<TB_LIS_GEOGR_VALUES
 		ID="1"
  		UUID="1"
- 		CODE="ES"
+ 		CODE="ES_VARIABLE_ELEMENT"
  		LATITUDE="-40.689061"
  		LONGITUDE="368987.22"
   		TITLE_FK="47"
-        GLOBAL_ORDER="ES"
+        GLOBAL_ORDER="ES_VARIABLE_ELEMENT"
   		GRANULARITY_FK="1"
         
         VERSION="1"
@@ -2959,7 +2919,7 @@
 	<TB_LIS_GEOGR_VALUES
 		ID="2"
  		UUID="2"
- 		CODE="EN-LN"
+ 		CODE="EN-LN_VARIABLE_ELEMENT"
  		LATITUDE="12.232511"
  		LONGITUDE="51232.254112"
   		TITLE_FK="48"
@@ -2978,11 +2938,11 @@
 	<TB_LIS_GEOGR_VALUES
 		ID="3"
  		UUID="3"
- 		CODE="FR"
+ 		CODE="FR_VARIABLE_ELEMENT"
  		LATITUDE="898612325.5656233"
  		LONGITUDE="-25632112156.45456464565"
   		TITLE_FK="[null]"
-        GLOBAL_ORDER="FR"
+        GLOBAL_ORDER="FR_VARIABLE_ELEMENT"
   		GRANULARITY_FK="1"
         
         VERSION="1"
@@ -2997,7 +2957,7 @@
 	<TB_LIS_GEOGR_VALUES
 		ID="4"
  		UUID="4"
- 		CODE="ES-MD"
+ 		CODE="ES-MD_VARIABLE_ELEMENT"
  		LATITUDE="22.232511"
  		LONGITUDE="41232.254112"
   		TITLE_FK="[null]"
@@ -3015,12 +2975,12 @@
     
     <TB_LIS_GEOGR_VALUES 
         ID="5" 
-        CODE="ES61" 
+        CODE="ES61_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="5"
         TITLE_FK="[null]"
-        GLOBAL_ORDER="ES01" 
+        GLOBAL_ORDER="ES01_VARIABLE_ELEMENT" 
         GRANULARITY_FK="2"
         
         VERSION="1"
@@ -3033,7 +2993,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="6" 
-        CODE="ES611" 
+        CODE="ES611_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="6"
@@ -3051,7 +3011,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="7" 
-        CODE="ES612" 
+        CODE="ES612_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="7"
@@ -3069,7 +3029,7 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="8" 
-        CODE="ES613" 
+        CODE="ES613_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="8"
@@ -3087,12 +3047,31 @@
     />
     <TB_LIS_GEOGR_VALUES 
         ID="9" 
-        CODE="ES614" 
+        CODE="ES614_VARIABLE_ELEMENT" 
         LATITUDE="20.0656233" 
         LONGITUDE="-25.454564645" 
         UUID="9"
         TITLE_FK="[null]"
         GLOBAL_ORDER="ES0104" 
+        GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
+    
+     <TB_LIS_GEOGR_VALUES 
+        ID="10" 
+        CODE="LPA_VARIABLE_ELEMENT" 
+        LATITUDE="20.0656233" 
+        LONGITUDE="-25.454564645" 
+        UUID="10"
+        TITLE_FK="[null]"
+        GLOBAL_ORDER="ES0105" 
         GRANULARITY_FK="3"
         
         VERSION="1"
@@ -3182,28 +3161,134 @@
     />  		  
 	
 	<!-- ************************************************************************************ -->
-	<!--                                 SUBJECTS				                              -->
+	<!--                                 CATEGORY ELEMENTS	EXTERNAL ITEMS                    -->
 	<!-- ************************************************************************************ -->
-	<TV_AREAS_TEMATICAS
-		ID_AREA_TEMATICA="1"
-		DESCRIPCION="Área temática 1"
-	/>
-	
-	<TV_AREAS_TEMATICAS
-		ID_AREA_TEMATICA="2"
-		DESCRIPCION="Área temática 2"
-	/>
-	
-	<TV_AREAS_TEMATICAS
-		ID_AREA_TEMATICA="3"
-		DESCRIPCION="Área temática 3"
-	/>
+
+   <TB_EXTERNAL_ITEMS
+         ID="1"
+         CODE="1"
+         URI="/latest/categoryelements/1"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
+         TITLE_FK = "122"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />
+    <TB_EXTERNAL_ITEMS
+         ID="2"
+         CODE="2"
+         URI="/latest/categoryelements/2"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=2"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=2"
+         TITLE_FK = "123"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />
+    <TB_EXTERNAL_ITEMS
+         ID="3"
+         CODE="1"
+         URI="/latest/categoryelements/1"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
+         TITLE_FK = "124"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />                                   
+    <TB_EXTERNAL_ITEMS
+         ID="4"
+         CODE="3"
+         URI="/latest/categoryelements/3"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=3"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=3"
+         TITLE_FK = "125"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />
+    <TB_EXTERNAL_ITEMS
+         ID="5"
+         CODE="4"
+         URI="/latest/categoryelements/4"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=4"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=4"
+         TITLE_FK = "126"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />                   			
+    <TB_EXTERNAL_ITEMS
+         ID="6"
+         CODE="1"
+         URI="/latest/categoryelements/1"
+         URN="urn:siemac:org.siemac.metamac.infomodel.structuralresources.CategoryElement=1"
+         MANAGEMENT_APP_URL="/#structuralResources/categoryElement;id=1"
+         TITLE_FK = "127"
+         TYPE = "structuralResources#categoryElement"
+         VERSION="1"
+    />	
+ 
+    <TB_EXTERNAL_ITEMS
+   ID="8"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "128"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+ <TB_EXTERNAL_ITEMS
+   ID="9"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "129"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+<TB_EXTERNAL_ITEMS
+   ID="10"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "130"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+<TB_EXTERNAL_ITEMS
+   ID="11"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "131"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+ <TB_EXTERNAL_ITEMS
+   ID="12"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "132"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ />  
+<TB_EXTERNAL_ITEMS
+   ID="13"
+   CODE="KM"
+   URI="/latest/codelists/ISTAC/CL_UNIDADES_MEDIDA/01.001/codes/KM"
+   URN="urn:sdmx:org.sdmx.infomodel.codelist.Code=ISTAC:CL_UNIDADES_MEDIDA(01.001).KM"
+   MANAGEMENT_APP_URL="/#structuralResources/codelists/codelist;id=ISTAC:CL_UNIDADES_MEDIDA(01.001)/code;id=KM"
+   TITLE_FK = "133"
+   TYPE = "structuralResources#code"
+   VERSION="1"
+ /> 
+        
     
-	<TV_AREAS_TEMATICAS
-		ID_AREA_TEMATICA="4"
-		DESCRIPCION="Área temática 4"
-	/>
-	
+    
+         	
 	<!-- ************************************************************************************ -->
 	<!--                                 TRANSLATIONS			                              -->
 	<!-- ************************************************************************************ -->
@@ -5295,5 +5380,180 @@
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="121"
 	/>	
-		
+    <TB_INTERNATIONAL_STRINGS
+        ID="122"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1258"
+        LABEL="Área temática 1"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="122"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="123"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1259"
+        LABEL="Área temática 2"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="123"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="124"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1260"
+        LABEL="Área temática 1"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="124"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="125"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1261"
+        LABEL="Área temática 3"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="125"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="126"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1262"
+        LABEL="Área temática 4"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="126"
+        VERSION="1"
+    />    
+    <TB_INTERNATIONAL_STRINGS
+        ID="127"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1263"
+        LABEL="Área temática 1"
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="127"
+        VERSION="1"
+    /> 
+     <TB_INTERNATIONAL_STRINGS
+        ID="128"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1264"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="128"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1265"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="128"
+        VERSION="1"
+    />        
+     <TB_INTERNATIONAL_STRINGS
+        ID="129"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1266"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="129"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1267"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="129"
+        VERSION="1"
+    />        
+     <TB_INTERNATIONAL_STRINGS
+        ID="130"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1268"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="130"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1269"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="130"
+        VERSION="1"
+    />        
+    <TB_INTERNATIONAL_STRINGS
+        ID="131"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1270"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="131"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1271"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="131"
+        VERSION="1"
+    />        
+     <TB_INTERNATIONAL_STRINGS
+        ID="132"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1272"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="132"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1273"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="132"
+        VERSION="1"
+    />        
+    <TB_INTERNATIONAL_STRINGS
+        ID="133"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1274"
+        LABEL="Kilómetros" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="133"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="1275"
+        LABEL="Kilometers" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="133"
+        VERSION="1"
+    />        
+        
+      
 </dataset>

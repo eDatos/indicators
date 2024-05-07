@@ -1,10 +1,8 @@
 package es.gobcan.istac.indicators.web.client.admin.view.handlers;
 
-import com.gwtplatform.mvp.client.UiHandlers;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
-public interface AdminUiHandlers extends UiHandlers {
-
-    void goToQuantityUnitsTab();
+public interface AdminUiHandlers extends BaseUiHandlers {
 
     void goToGeoGranularitiesTab();
 

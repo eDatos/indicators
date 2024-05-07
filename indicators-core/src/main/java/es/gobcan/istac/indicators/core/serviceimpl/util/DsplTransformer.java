@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import static es.gobcan.istac.indicators.core.constants.IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,15 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +39,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dspl.DsplConcept;
@@ -53,6 +58,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsCoverageService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -71,6 +77,7 @@ public class DsplTransformer {
     protected IndicatorsCoverageService      indicatorsCoverageService;
     protected IndicatorsService              indicatorsService;
     protected IndicatorsConfigurationService configurationService;
+    protected SrmRestInternalService         srmRestInternalFacade;
 
     private static final String              GEO_CONCEPT_BASE                  = "geo:location";
     private static final String              UNIT_CONCEPT_BASE                 = "unit:unit";
@@ -85,19 +92,22 @@ public class DsplTransformer {
     private static final String              QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
 
     public DsplTransformer(IndicatorsSystemsService indicatorsSystemsService, IndicatorsDataService indicatorsDataService, IndicatorsCoverageService indicatorsCoverageService,
-            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService) {
+            IndicatorsService indicatorsService, IndicatorsConfigurationService configurationService, SrmRestInternalService srmRestInternalFacade) {
         this.indicatorsSystemsService = indicatorsSystemsService;
         this.indicatorsDataService = indicatorsDataService;
         this.indicatorsCoverageService = indicatorsCoverageService;
         this.indicatorsService = indicatorsService;
         this.configurationService = configurationService;
+        this.srmRestInternalFacade = srmRestInternalFacade;
     }
 
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
+        Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
+        IndicatorsSystemVersion indicatorsSystemVersion;
         try {
             LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
 
-            IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
+            indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
             List<ElementLevel> structure = indicatorsSystemsService.retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsSystemVersion.getVersionNumber());
 
@@ -126,7 +136,7 @@ public class DsplTransformer {
 
                 // slides
                 LOG.info("Computing slices with granularity " + timeGranularity + " ...");
-                Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
+                Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity, exceptions);
 
                 if (slices.size() > 0) {
                     LOG.info("Building slices with granularity " + timeGranularity + " ...");
@@ -144,9 +154,10 @@ public class DsplTransformer {
                 }
             }
             LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
+            ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
             return datasets;
         } catch (MetamacException e) {
-            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
         }
     }
 
@@ -344,12 +355,12 @@ public class DsplTransformer {
         String idColumnName = getIdForGeoConcept(granularity);
         for (GeographicalValue geoValue : geoValues) {
             Row row = new Row();
-            row.addColumn(new TextColumn(idColumnName), geoValue.getCode().toUpperCase());
+            row.addColumn(new TextColumn(idColumnName), StringEscapeUtils.escapeCsv(geoValue.getCode().toUpperCase()));
             for (LocalisedString localisedStr : geoValue.getTitle().getTexts()) {
-                row.addColumn(new TextColumn("name", localisedStr.getLocale()), localisedStr.getLabel());
+                row.addColumn(new TextColumn("name", localisedStr.getLocale()), StringEscapeUtils.escapeCsv(localisedStr.getLabel()));
             }
-            row.addColumn(new FloatColumn("latitude"), String.valueOf(geoValue.getLatitude()));
-            row.addColumn(new FloatColumn("longitude"), String.valueOf(geoValue.getLongitude()));
+            row.addColumn(new FloatColumn("latitude"), StringEscapeUtils.escapeCsv(String.valueOf(geoValue.getLatitude())));
+            row.addColumn(new FloatColumn("longitude"), StringEscapeUtils.escapeCsv(String.valueOf(geoValue.getLongitude())));
             data.setRows(Arrays.asList(row));
         }
         // Sort by col id
@@ -408,17 +419,17 @@ public class DsplTransformer {
     }
 
     private Set<DsplConcept> createConceptsForUsedUnits(Set<IndicatorVersion> usedIndicators) {
-        Set<QuantityUnit> units = calculateUsedQuantityUnits(usedIndicators);
+        Set<ExternalItem> units = calculateUsedQuantityUnits(usedIndicators);
 
         Set<DsplConcept> concepts = new HashSet<DsplConcept>();
-        for (QuantityUnit unit : units) {
+        for (ExternalItem unit : units) {
             concepts.add(createConceptForUnit(unit));
         }
         return concepts;
     }
 
-    private Set<QuantityUnit> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
-        Set<QuantityUnit> units = new HashSet<QuantityUnit>();
+    private Set<ExternalItem> calculateUsedQuantityUnits(Set<IndicatorVersion> indicators) {
+        Set<ExternalItem> units = new HashSet<ExternalItem>();
 
         for (IndicatorVersion indicatorVersion : indicators) {
             units.add(indicatorVersion.getQuantity().getUnit());
@@ -426,7 +437,7 @@ public class DsplTransformer {
         return units;
     }
 
-    private DsplConcept createConceptForUnit(QuantityUnit unit) {
+    private DsplConcept createConceptForUnit(ExternalItem unit) {
         DsplInfo info = new DsplInfo();
         populateDsplLocalisedTextForInternString(info.getName(), unit.getTitle());
 
@@ -438,7 +449,7 @@ public class DsplTransformer {
         return concept;
     }
 
-    private DsplTable createTableForUnit(QuantityUnit unit) {
+    private DsplTable createTableForUnit(ExternalItem unit) {
         DsplTable table = new DsplTable(getTableIdForUnitConcept(unit));
 
         DsplData data = createTableDataForUnit(unit);
@@ -447,20 +458,18 @@ public class DsplTransformer {
         return table;
     }
 
-    private DsplData createTableDataForUnit(QuantityUnit unit) {
+    private DsplData createTableDataForUnit(ExternalItem unit) {
         DsplData data = new DsplData();
 
         String idColumnName = getIdForUnitConcept(unit);
 
         Row row = new Row();
-        row.addColumn(new TextColumn(idColumnName), unit.getUuid());
+        row.addColumn(new TextColumn(idColumnName), StringEscapeUtils.escapeCsv(getUUIDExternalItemUnit(unit)));
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
-            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
+            row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), StringEscapeUtils.escapeCsv(localisedStr.getLabel()));
         }
-        if (unit.getSymbol() != null) {
-            row.addColumn(new TextColumn("symbol"), unit.getSymbol());
-            row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
-        }
+
+        UnitUtils.setQuantityUnitMetadata(unit.getUrn(), row, configurationService, srmRestInternalFacade);
 
         data.setRows(Arrays.asList(row));
 
@@ -468,6 +477,10 @@ public class DsplTransformer {
         data.setColumnsToOrder(Arrays.asList(idColumnName));
 
         return data;
+    }
+
+    private String getUUIDExternalItemUnit(ExternalItem unit) {
+        return unit.getCode().toLowerCase();
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances() {
@@ -605,7 +618,8 @@ public class DsplTransformer {
 
     private void applyConceptAttributesForQuantity(DsplConcept concept, Quantity quantity) {
         if (quantity.getUnit() != null) {
-            String unitValue = quantity.getUnit().getUuid();
+            String unitValue = getUUIDExternalItemUnit(quantity.getUnit());
+
             DsplConceptAttribute attribute = new DsplConceptAttribute("unit", getIdForUnitConcept(quantity.getUnit()), unitValue);
             concept.addAttribute(attribute);
         }
@@ -636,7 +650,8 @@ public class DsplTransformer {
         }
     }
 
-    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+    protected Set<DsplSlice> createSlicesForInstancesWithTimeGranularity(ServiceContext ctx, List<IndicatorInstance> instances, IstacTimeGranularityEnum timeGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         Set<DsplSlice> slices = new HashSet<DsplSlice>();
 
         Set<GeographicalGranularity> granularitiesUsed = calculateGeoGranularitiesUsedInInstances(ctx, instances);
@@ -648,7 +663,7 @@ public class DsplTransformer {
                     instancesUsingGeoGranularity.add(instance);
                 }
             }
-            DsplSlice slice = createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+            DsplSlice slice = createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
             if (slice != null) {
                 slices.add(slice);
             }
@@ -661,9 +676,9 @@ public class DsplTransformer {
         return granularities.contains(geoGranularity);
     }
 
-    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
-            throws MetamacException {
-        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+    private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
+        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
 
         // No data
         if (table.getData().getColumnNames().size() == 0) {
@@ -686,22 +701,22 @@ public class DsplTransformer {
         return slice;
     }
 
-    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
-            throws MetamacException {
+    private DsplTable createTableForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         String sliceId = getIdForSlice(geoGranularity, timeGranularity);
         DsplTable table = new DsplTable(getTableIdForSlice(sliceId));
 
-        DsplData data = createTableDataForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+        DsplData data = createTableDataForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity, exceptions);
         table.setData(data);
 
         return table;
     }
 
-    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances)
-            throws MetamacException {
+    private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, IstacTimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances,
+            Set<MetamacExceptionItem> exceptions) throws MetamacException {
         DsplData data = new DsplData();
 
-        Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity);
+        Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity, exceptions);
         data.setRows(rows);
 
         // Set data order, first geo dim then time
@@ -713,17 +728,21 @@ public class DsplTransformer {
         return data;
     }
     private Set<Row> createTableDataRowsForSliceInIndicatorsInstances(ServiceContext ctx, Set<IndicatorInstance> instances, GeographicalGranularity geoGranularity,
-            IstacTimeGranularityEnum timeGranularity) throws MetamacException {
+            IstacTimeGranularityEnum timeGranularity, Set<MetamacExceptionItem> exceptions) throws MetamacException {
         Set<String> geoCodes = new HashSet<String>();
         Set<String> timeCodes = new HashSet<String>();
 
         Map<String, DsplInstanceData> dataByInstanceUuid = new HashMap<String, DsplInstanceData>();
 
         for (IndicatorInstance instance : instances) {
-            DsplInstanceData data = buildInstanceData(ctx, instance, geoGranularity, timeGranularity);
-            dataByInstanceUuid.put(instance.getUuid(), data);
-            geoCodes.addAll(data.getGeoCodes());
-            timeCodes.addAll(data.getTimeCodes());
+            try {
+                DsplInstanceData data = buildInstanceData(ctx, instance, geoGranularity, timeGranularity);
+                dataByInstanceUuid.put(instance.getUuid(), data);
+                geoCodes.addAll(data.getGeoCodes());
+                timeCodes.addAll(data.getTimeCodes());
+            } catch (MetamacException e) {
+                exceptions.addAll(e.getExceptionItems());
+            }
         }
 
         Set<Row> rows = new HashSet<DsplData.Row>();
@@ -734,13 +753,13 @@ public class DsplTransformer {
                 String dsplTimeCode = transformTimeCodeToDataExplorerCompatible(timeCode);
 
                 Row row = new Row();
-                row.addColumn(getColumnForGeo(geoGranularity), geoCode);
-                row.addColumn(getColumnForTime(timeGranularity), dsplTimeCode);
+                row.addColumn(getColumnForGeo(geoGranularity), StringEscapeUtils.escapeCsv(geoCode));
+                row.addColumn(getColumnForTime(timeGranularity), StringEscapeUtils.escapeCsv(dsplTimeCode));
 
                 for (IndicatorInstance instance : instances) {
                     DsplInstanceData data = dataByInstanceUuid.get(instance.getUuid());
                     String value = data.get(geoCode, timeCode);
-                    row.addColumn(getColumnForInstanceMetric(instance), value);
+                    row.addColumn(getColumnForInstanceMetric(instance), StringEscapeUtils.escapeCsv(value));
                 }
                 rows.add(row);
             }
@@ -808,7 +827,7 @@ public class DsplTransformer {
             case DAILY:
                 return new DateColumn("day", "yyyyMMdd");
             default: // Hourly value is not supported by DSLP
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED, timeGranularity);
         }
     }
 
@@ -835,7 +854,7 @@ public class DsplTransformer {
             case DAILY:
                 return "time:day";
             default: // Hourly value is not supported by DSLP
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined timeGranularity: " + timeGranularity);
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_TIME_NOT_SUPPORTED, timeGranularity);
         }
     }
 
@@ -855,15 +874,15 @@ public class DsplTransformer {
         return idSlice + "_table";
     }
 
-    private String getIdForUnitConcept(QuantityUnit unit) {
-        return "unit_" + unit.getUuid();
+    private String getIdForUnitConcept(ExternalItem unit) {
+        return "unit_" + getUUIDExternalItemUnit(unit);
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {
         return "quantity_" + indicatorQuantity.getUuid();
     }
 
-    private String getTableIdForUnitConcept(QuantityUnit unit) {
+    private String getTableIdForUnitConcept(ExternalItem unit) {
         return getIdForUnitConcept(unit) + "_table";
     }
 

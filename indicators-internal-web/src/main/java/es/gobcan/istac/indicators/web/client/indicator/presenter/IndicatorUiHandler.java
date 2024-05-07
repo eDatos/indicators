@@ -3,9 +3,8 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.web.common.client.view.handlers.SrmExternalResourcesUiHandlers;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
-
-import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
@@ -14,15 +13,12 @@ import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
-public interface IndicatorUiHandler extends UiHandlers {
+public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
 
     void retrieveDiffusionIndicator(String code, String versionNumber);
     void saveIndicator(IndicatorDto indicator);
 
-    void retrieveSubjects();
-    void retrieveGeographicalValuesByGranularity(String geographicalGranularityUuid);
-    void retrieveGeographicalValue(String geographicalValueUuid);
-
+    void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, String geographicalGranularityUuid);
     void sendToProductionValidation(String uuid);
     void sendToDiffusionValidation(String uuid);
     void rejectValidation(IndicatorDto indicatorDto);
@@ -52,7 +48,9 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
 
-    void retrieveGeographicalValueDS(String uuid);
+    void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
+
+    void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);

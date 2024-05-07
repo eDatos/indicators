@@ -4,37 +4,45 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 
 import java.util.LinkedHashMap;
 
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.handlers.CustomLinkItemNavigationClickHandler;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
-import com.gwtplatform.mvp.client.UiHandlers;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.util.shared.IndicatorUtils;
-import es.gobcan.istac.indicators.web.client.IndicatorsValues;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants;
 
 public class BaseQuantityForm extends GroupDynamicForm {
 
-    protected UiHandlers uiHandlers;
+    protected IndicatorUiHandler uiHandlers;
+
+    public IndicatorUiHandler getUiHandlers() {
+        return uiHandlers;
+    }
 
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
     }
 
-    public void setUiHandlers(UiHandlers uiHandlers) {
+    public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
 
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {
         String baseTime = quantityDto.getBaseTime();
-        String baseLocation = quantityDto.getBaseLocationUuid();
+        String baseLocation = quantityDto.getBaseLocation() != null ? quantityDto.getBaseLocation().getUuid() : null;
         if (baseTime != null && !baseTime.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_TIME;
         } else if (baseLocation != null && !baseLocation.isEmpty()) {
@@ -273,15 +281,34 @@ public class BaseQuantityForm extends GroupDynamicForm {
         };
     }
 
-    protected String getQuantityUnitTitle(String unitUuid) {
-        if (unitUuid != null) {
-            for (QuantityUnitDto unit : IndicatorsValues.getQuantityUnits()) {
-                if (unitUuid.equals(unit.getUuid())) {
-                    return InternationalStringUtils.getLocalisedString(unit.getTitle());
-                }
+    // ------------------------------------------------------------------------------------------------------------
+    // EXTERNAL RESOURCES ITEMS
+    // ------------------------------------------------------------------------------------------------------------
+
+    protected SearchSrmItemLinkItemWithSchemeFilterItem createExternalItemFromCodeList(final String name, String title) {
+        return new SearchSrmItemLinkItemWithSchemeFilterItem(name, title, IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
+                webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODE);
+                getUiHandlers().retrieveItems(name, webCriteria, firstResult, maxResults);
             }
-        }
-        return new String();
+
+            @Override
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
+                webCriteria.setExternalArtifactType(TypeExternalArtefactsEnum.CODELIST);
+                getUiHandlers().retrieveItemSchemes(name, webCriteria, firstResult, maxResults);
+            }
+        };
     }
 
+    protected CustomLinkItemNavigationClickHandler getCustomLinkItemNavigationClickHandler() {
+        return new CustomLinkItemNavigationClickHandler() {
+
+            @Override
+            public BaseUiHandlers getBaseUiHandlers() {
+                return getUiHandlers();
+            }
+        };
+    }
 }

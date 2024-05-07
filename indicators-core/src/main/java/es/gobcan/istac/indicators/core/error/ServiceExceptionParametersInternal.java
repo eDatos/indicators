@@ -8,6 +8,7 @@ public class ServiceExceptionParametersInternal {
     // Quantities
     public static final String QUANTITY                              = ".quantity";
     public static final String QUANTITY_TYPE                         = ".quantity.type";
+    public static final String QUANTITY_UNIT                         = ".quantity.unit";
     public static final String QUANTITY_UNIT_UUID                    = ".quantity.unit_uuid";
     public static final String QUANTITY_UNIT_MULTIPLIER              = ".quantity.unit_multiplier";
     public static final String QUANTITY_DECIMAL_PLACES               = ".quantity.decimal_places";

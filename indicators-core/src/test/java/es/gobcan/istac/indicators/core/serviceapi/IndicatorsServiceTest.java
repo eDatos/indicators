@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -34,17 +35,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceapi.utils.TaskMockUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 
@@ -62,9 +62,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsService        indicatorService;
-
-    @Autowired
-    protected QuantityUnitRepository   quantityUnitRepository;
 
     @Autowired
     protected UnitMultiplierRepository unitMultiplierRepository;
@@ -89,11 +86,10 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode("MYCODE");
         indicatorVersion.getIndicator().setViewCode("MYVIEWCODE");
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
-        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
 
         // Create
@@ -118,11 +114,10 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
-        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
 
         // Create
@@ -148,11 +143,10 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
-        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
 
         // Create
@@ -322,23 +316,6 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testPublishIndicatorSubjectTitleChange() throws Exception {
-
-        String uuid = INDICATOR_13;
-        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
-
-        String subjectTitleOld = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber).getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH);
-        // Publish
-        indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
-
-        // Validate properties are not in Dto
-        IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
-        assertTrue(indicatorCreated.getIndicator().getIsPublished());
-        assertFalse(subjectTitleOld.equals(indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)));
-        assertEquals("Área temática 5", indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH));
-    }
-
-    @Test
     public void testArchiveIndicator() throws Exception {
 
         String uuid = INDICATOR_3;
@@ -368,8 +345,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsByCriteria() throws Exception {
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -382,8 +359,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_3, indicatorsVersion.getValues().get(2).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("FR")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_FR).orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -396,7 +373,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES-MD").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+                    .eq("ES-MD_VARIABLE_ELEMENT").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -412,8 +389,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testExportIndicatorsTsv() throws Exception {
 
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             String fileName = indicatorService.exportIndicatorsTsv(getServiceContextAdministrador(), conditions);
             assertNotNull(fileName);

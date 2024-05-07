@@ -49,6 +49,7 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_VIEW_CODE                                                           = "parameter.indicators.indicator.view_code";
     public static final String INDICATOR_SUBJECT_CODE                                                        = "parameter.indicators.indicator.subject_code";
     public static final String INDICATOR_SUBJECT_TITLE                                                       = "parameter.indicators.indicator.subject_title";
+    public static final String INDICATOR_CATEGORY_ELEMENT                                                    = "parameter.indicators.indicator.category_element";
     public static final String INDICATOR_TITLE                                                               = "parameter.indicators.indicator.title";
     public static final String INDICATOR_ACRONYM                                                             = "parameter.indicators.indicator.acronym";
     public static final String INDICATOR_COMMENTS                                                            = "parameter.indicators.indicator.comments";
@@ -67,7 +68,7 @@ public class ServiceExceptionParameters {
     // Indicator quantities
     public static final String INDICATOR_QUANTITY                                                            = "parameter.indicators.indicator.quantity";
     public static final String INDICATOR_QUANTITY_TYPE                                                       = "parameter.indicators.indicator.quantity.type";
-    public static final String INDICATOR_QUANTITY_UNIT_UUID                                                  = "parameter.indicators.indicator.quantity.unit_uuid";
+    public static final String INDICATOR_QUANTITY_UNIT                                                       = "parameter.indicators.indicator.quantity.unit";
     public static final String INDICATOR_QUANTITY_UNIT_MULTIPLIER                                            = "parameter.indicators.indicator.quantity.unit_multiplier";
     public static final String INDICATOR_QUANTITY_DECIMAL_PLACES                                             = "parameter.indicators.indicator.quantity.decimal_places";
     public static final String INDICATOR_QUANTITY_IS_PERCENTAGE                                              = "parameter.indicators.indicator.quantity.is_percentage";
@@ -90,6 +91,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE                                                                   = "parameter.indicators.data_source";
     public static final String DATA_SOURCE_UUID                                                              = "parameter.indicators.data_source.uuid";
     public static final String DATA_SOURCE_DATA_QUERY_ENVIRONMENT                                            = "parameter.indicators.data_source.data_query_environment";
+    public static final String DATA_SOURCE_DATA_METAMAC_TYPE                                                 = "parameter.indicators.data_source.metamac_type";
     public static final String DATA_SOURCE_DATA_QUERY_ARTEFACT                                               = "parameter.indicators.data_source.query_arefact";
     public static final String DATA_SOURCE_DATA_GPE_UUID                                                     = "parameter.indicators.data_source.data_gpe_uuid";
     public static final String DATA_SOURCE_PX_URI                                                            = "parameter.indicators.data_source.px_uri";
@@ -113,7 +115,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_ROUNDING                                      = "parameter.indicators.data_source.annual_puntual_rate.rounding";
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY                                      = "parameter.indicators.data_source.annual_puntual_rate.quantity";
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_TYPE                                 = "parameter.indicators.data_source.annual_puntual_rate.quantity.type";
-    public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_UNIT_UUID                            = "parameter.indicators.data_source.annual_puntual_rate.quantity.unit_uuid";
+    public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_UNIT                                 = "parameter.indicators.data_source.annual_puntual_rate.quantity.unit";
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_UNIT_MULTIPLIER                      = "parameter.indicators.data_source.annual_puntual_rate.quantity.unit_multiplier";
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_DECIMAL_PLACES                       = "parameter.indicators.data_source.annual_puntual_rate.quantity.decimal_places";
     public static final String DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_IS_PERCENTAGE                        = "parameter.indicators.data_source.annual_puntual_rate.quantity.is_percentage";
@@ -133,7 +135,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_ROUNDING                                   = "parameter.indicators.data_source.annual_percentage_rate.rounding";
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY                                   = "parameter.indicators.data_source.annual_percentage_rate.quantity";
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_TYPE                              = "parameter.indicators.data_source.annual_percentage_rate.quantity.type";
-    public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT_UUID                         = "parameter.indicators.data_source.annual_percentage_rate.quantity.unit_uuid";
+    public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT                              = "parameter.indicators.data_source.annual_percentage_rate.quantity.unit";
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT_MULTIPLIER                   = "parameter.indicators.data_source.annual_percentage_rate.quantity.unit_multiplier";
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_DECIMAL_PLACES                    = "parameter.indicators.data_source.annual_percentage_rate.quantity.decimal_places";
     public static final String DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_IS_PERCENTAGE                     = "parameter.indicators.data_source.annual_percentage_rate.quantity.is_percentage";
@@ -153,7 +155,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_ROUNDING                                 = "parameter.indicators.data_source.interperiod_puntual_rate.rounding";
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY                                 = "parameter.indicators.data_source.interperiod_puntual_rate.quantity";
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_TYPE                            = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.type";
-    public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_UNIT_UUID                       = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.unit_uuid";
+    public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_UNIT                            = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.unit";
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_UNIT_MULTIPLIER                 = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.unit_multiplier";
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_DECIMAL_PLACES                  = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.decimal_places";
     public static final String DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_IS_PERCENTAGE                   = "parameter.indicators.data_source.interperiod_puntual_rate.quantity.is_percentage";
@@ -173,7 +175,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_ROUNDING                              = "parameter.indicators.data_source.interperiod_percentage_rate.rounding";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY                              = "parameter.indicators.data_source.interperiod_percentage_rate.quantity";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_TYPE                         = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.type";
-    public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_UNIT_UUID                    = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.unit_uuid";
+    public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_UNIT                         = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.unit";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_UNIT_MULTIPLIER              = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.unit_multiplier";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_DECIMAL_PLACES               = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.decimal_places";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_IS_PERCENTAGE                = "parameter.indicators.data_source.interperiod_percentage_rate.quantity.is_percentage";
@@ -203,7 +205,6 @@ public class ServiceExceptionParameters {
     public static final String UNIT_MULTIPLIER_UUID                                                          = "parameter.indicators.unitMultiplier.uuid";
 
     public static final String QUANTITY_UNIT                                                                 = "parameter.indicators.quantityUnit";
-    public static final String QUANTITY_UNIT_UUID                                                            = "parameter.indicators.quantityUnit.uuid";
     public static final String QUANTITY_UNIT_TITLE                                                           = "parameter.indicators.quantityUnit.title";
 
     public static final String TIME_VALUE                                                                    = "parameter.indicators.time_value";

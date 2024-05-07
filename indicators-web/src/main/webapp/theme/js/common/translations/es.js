@@ -16,6 +16,7 @@
                 'SYSTEM': 'Sistema',
                 'SYSTEM_OR_SUBJECT': 'Sistema o Tema',
                 'SUBJECT': 'Tema',
+                'ALL_SUBJECT': 'Todos los temas',
                 'INDICATORS': 'Indicadores',
                 'GEOGRAPHICAL_VALUES': 'Valores espaciales',
                 'TIME_GRANULARITIES': 'Granularidad temporal',
@@ -130,7 +131,8 @@
             'LABEL': "Escriba el valor de la imagen mostrada encima"
         },
         'CONNECTOR': {
-            'OF': ' de '
+            'OF': ' de ',
+            'CONTRACTED_OF': ' de '
         }
     };
 }());

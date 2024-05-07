@@ -4,7 +4,6 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -13,6 +12,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
@@ -40,7 +40,7 @@ public class IndicatorRecord extends ListGridRecord {
 
         if (visibleProductionVersion != null) {
             setName(getLocalisedString(visibleProductionVersion.getTitle()));
-            setSubject(getLocalisedString(visibleProductionVersion.getSubjectTitle()));
+            setCategoryElement(getLocalisedString(visibleProductionVersion.getCategoryElementTitle()));
         }
 
         setProductionIndicatorVersionSummary(visibleProductionVersion);
@@ -103,8 +103,8 @@ public class IndicatorRecord extends ListGridRecord {
         setAttribute(IndicatorDS.CODE, code);
     }
 
-    public void setSubject(String subject) {
-        setAttribute(IndicatorDS.SUBJECT_TITLE, subject);
+    public void setCategoryElement(String categoryElement) {
+        setAttribute(IndicatorDS.CATEGORY_ELEMENT, categoryElement);
     }
 
     private void setNotifyPopulationErrors(Boolean value) {

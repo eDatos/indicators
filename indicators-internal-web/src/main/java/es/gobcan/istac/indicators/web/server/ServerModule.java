@@ -22,12 +22,10 @@ import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteGeoGranularitiesActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteGeoValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteQuantityUnitsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteTemporalFileActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteUnitMultipliersActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DisableNotifyPopulationErrorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.EnableNotifyPopulationErrorsActionHandler;
@@ -46,7 +44,6 @@ import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranulariti
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularityActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetHelpUrlActionHandler;
@@ -61,11 +58,9 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewProduct
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQueriesPaginatedListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetRelatedResourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetStatisticalOperationsPaginatedListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesByGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHandler;
@@ -81,20 +76,19 @@ import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorProductionV
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveDataSourceActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.SaveGeoGranularityActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.SaveGeoValueActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.SaveQuantityUnitActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveUnitMultiplierActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToProductionValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateCategoryCacheActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ValidateTicketActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.external.GetExternalResourcesActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -102,12 +96,10 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoGranularitiesAction;
-import es.gobcan.istac.indicators.web.shared.DeleteGeoValuesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
-import es.gobcan.istac.indicators.web.shared.DeleteQuantityUnitsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteTemporalFileAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
 import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
@@ -126,7 +118,6 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndic
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularityAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
@@ -141,11 +132,9 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewProductionUrlAct
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
-import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
-import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesAction;
 import es.gobcan.istac.indicators.web.shared.GetStatisticalOperationsPaginatedListAction;
-import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
@@ -162,19 +151,18 @@ import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidation
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
-import es.gobcan.istac.indicators.web.shared.SaveGeoGranularityAction;
-import es.gobcan.istac.indicators.web.shared.SaveGeoValueAction;
-import es.gobcan.istac.indicators.web.shared.SaveQuantityUnitAction;
 import es.gobcan.istac.indicators.web.shared.SaveUnitMultiplierAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.UpdateCategoryCacheAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
 
 @Component
 public class ServerModule extends HandlerModule {
@@ -187,21 +175,10 @@ public class ServerModule extends HandlerModule {
         // App management
         bindHandler(GetValuesListsAction.class, GetValuesListsActionHandler.class);
 
-        // Admin - Quantity units
-        bindHandler(SaveQuantityUnitAction.class, SaveQuantityUnitActionHandler.class);
-        bindHandler(DeleteQuantityUnitsAction.class, DeleteQuantityUnitsActionHandler.class);
-        bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
-        bindHandler(GetQuantityUnitsPaginatedListAction.class, GetQuantityUnitsPaginatedListActionHandler.class);
-
-        // Admin - Geo granularities
-        bindHandler(SaveGeoGranularityAction.class, SaveGeoGranularityActionHandler.class);
-        bindHandler(DeleteGeoGranularitiesAction.class, DeleteGeoGranularitiesActionHandler.class);
         bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
         bindHandler(GetGeographicalGranularitiesPaginatedListAction.class, GetGeographicalGranularitiesPaginatedListActionHandler.class);
 
         // Admin - Geo values
-        bindHandler(SaveGeoValueAction.class, SaveGeoValueActionHandler.class);
-        bindHandler(DeleteGeoValuesAction.class, DeleteGeoValuesActionHandler.class);
         bindHandler(GetGeographicalValuesPaginatedListAction.class, GetGeographicalValuesPaginatedListActionHandler.class);
 
         // Admin - unit multipliers
@@ -249,6 +226,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(FindIndicatorsAction.class, FindIndicatorsActionHandler.class);
         bindHandler(ExportIndicatorsAction.class, ExportIndicatorsActionHandler.class);
         bindHandler(ReSendIndicatorStreamMessageAction.class, ReSendIndicatorStreamMessageActionHandler.class);
+        bindHandler(DeleteTemporalFileAction.class, DeleteTemporalFileActionHandler.class);
 
         // Indicators life cycle
         bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);
@@ -265,10 +243,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
         bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
 
-        bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
-        bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
-
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
 
@@ -303,5 +278,13 @@ public class ServerModule extends HandlerModule {
 
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);
+
+        // external items
+        bindHandler(GetExternalResourcesAction.class, GetExternalResourcesActionHandler.class);
+
+        bindHandler(UpdateCategoryCacheAction.class, UpdateCategoryCacheActionHandler.class);
+
+        bindHandler(GetRelatedResourcesAction.class, GetRelatedResourcesActionHandler.class);
+
     }
 }

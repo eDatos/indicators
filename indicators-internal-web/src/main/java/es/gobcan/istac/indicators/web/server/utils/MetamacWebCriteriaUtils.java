@@ -15,7 +15,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaRestriction;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.QueryCriteriaPropertyRestriction;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.StatisticalOperationsExternalResourceWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
@@ -41,7 +41,7 @@ public class MetamacWebCriteriaUtils {
                 indicatorCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
                 indicatorCriteriaDisjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), criteria.getCriteria(), OperationType.ILIKE));
                 indicatorCriteriaDisjuction.getRestrictions()
-                        .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
+                        .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
             }
             conjunctionRestriction.getRestrictions().add(indicatorCriteriaDisjuction);
 
@@ -61,8 +61,9 @@ public class MetamacWebCriteriaUtils {
                         .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.DIFFUSION_PROC_STATUS.name(), criteria.getDiffusionVersionProcStatus(), OperationType.EQ));
             }
 
-            if (!StringUtils.isBlank(criteria.getSubjectCode())) {
-                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), criteria.getSubjectCode(), OperationType.EQ));
+            if (!StringUtils.isBlank(criteria.getCategoryElementCode())) {
+                conjunctionRestriction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), criteria.getCategoryElementCode(), OperationType.EQ));
             }
 
             if (criteria.getNotifyPopulationErrors() != null) {
@@ -99,6 +100,16 @@ public class MetamacWebCriteriaUtils {
             if (StringUtils.isNotBlank(criteria.getGranularityCode())) {
                 conjunctionRestriction.getRestrictions()
                         .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), criteria.getGranularityCode(), OperationType.EQ));
+            }
+
+            if (StringUtils.isNotBlank(criteria.getGeographicalGranularityUuid())) {
+                conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(),
+                        criteria.getGeographicalGranularityUuid(), OperationType.EQ));
+            }
+
+            if (StringUtils.isNotBlank(criteria.getGeographicalValueCode())) {
+                conjunctionRestriction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.CODE.name(), criteria.getGeographicalValueCode(), OperationType.EQ));
             }
         }
 

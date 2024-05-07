@@ -29,7 +29,7 @@ public class SubjectsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/subjects", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ListResultType<SubjectBaseType>> findSubjects() throws MetamacException {
-        List<SubjectBaseType> subjectTypes = subjectsRestFacade.retrieveSubjects();
+        List<SubjectBaseType> subjectTypes = subjectsRestFacade.retrieveCategoriesMarkAsSubjects();
 
         String selfLink = uriLinks.getSubjectsLink();
         ListResultType<SubjectBaseType> itemsResultType = new ListResultType<SubjectBaseType>(IndicatorsRestConstants.KIND_SUBJECTS, selfLink, subjectTypes);

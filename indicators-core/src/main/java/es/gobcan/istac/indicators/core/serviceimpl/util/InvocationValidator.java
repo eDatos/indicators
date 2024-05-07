@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.edatos.dataset.repository.util.ValidationUtils;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -27,7 +28,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -48,7 +48,6 @@ public class InvocationValidator {
     // INDICATOR SYSTEM
     // --------------------------------------------------------------------------------------------
 
-    
     public static void checkCreateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -963,6 +962,26 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkCreateGeographicalValue(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkGeographicalValue(variableElementAvro, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkVariableElementAvro(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(variableElementAvro, ServiceExceptionParameters.GEOGRAPHICAL_VALUE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkDeleteGeographicalValue(List<MetamacExceptionItem> exceptions, String geographicalValueUuid) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -983,6 +1002,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkUpdateGeographicalValue(List<MetamacExceptionItem> exceptions, VariableElementAvro variableElementAvro) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkGeographicalValue(variableElementAvro, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     private static void checkGeographicalValue(GeographicalValue geographicalValue, List<MetamacExceptionItem> exceptions) {
         IndicatorsValidationUtils.checkParameterRequired(geographicalValue, ServiceExceptionParameters.GEOGRAPHICAL_VALUE, exceptions);
         if (geographicalValue == null) {
@@ -991,6 +1020,15 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getCode(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getGranularity(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(geographicalValue.getOrder(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_ORDER, exceptions);
+    }
+
+    private static void checkGeographicalValue(VariableElementAvro variableElementAvro, List<MetamacExceptionItem> exceptions) {
+
+        if (variableElementAvro == null) {
+            return;
+        }
+        IndicatorsValidationUtils.checkMetadataRequired(variableElementAvro.getCode(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_CODE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(variableElementAvro.getGeographicGranularities(), ServiceExceptionParameters.GEOGRAPHICAL_VALUE_GRANULARITY, exceptions);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1196,44 +1234,6 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkCreateQuantityUnit(List<MetamacExceptionItem> exceptions, QuantityUnit quantityUnits) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        checkQuantityUnit(quantityUnits, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    public static void checkDeleteQuantityUnit(List<MetamacExceptionItem> exceptions, String quantityUnitsUuid) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        IndicatorsValidationUtils.checkParameterRequired(quantityUnitsUuid, ServiceExceptionParameters.QUANTITY_UNIT_UUID, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    public static void checkUpdateQuantityUnit(List<MetamacExceptionItem> exceptions, QuantityUnit quantityUnits) throws MetamacException {
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        checkQuantityUnit(quantityUnits, exceptions);
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    private static void checkQuantityUnit(QuantityUnit quantityUnits, List<MetamacExceptionItem> exceptions) {
-        IndicatorsValidationUtils.checkParameterRequired(quantityUnits, ServiceExceptionParameters.QUANTITY_UNIT, exceptions);
-        if (quantityUnits == null) {
-            return;
-        }
-        IndicatorsValidationUtils.checkMetadataRequired(quantityUnits.getTitle(), ServiceExceptionParameters.QUANTITY_UNIT_TITLE, exceptions);
-    }
-
     // --------------------------------------------------------------------------------------------
     // DATA DEFINITIONS
     // --------------------------------------------------------------------------------------------
@@ -1395,6 +1395,16 @@ public class InvocationValidator {
         }
 
         IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(granularityUuid, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkRetrieveGeographicalValuesByGranularityInAllIndicatorPublished(String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
         IndicatorsValidationUtils.checkParameterRequired(granularityUuid, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -1878,12 +1888,11 @@ public class InvocationValidator {
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getViewCode(), ServiceExceptionParameters.INDICATOR_VIEW_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
-        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
-        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getCategoryElement(), ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT, exceptions);
         if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
         }
-        
+
         if (indicatorVersion.getIndicator().getViewCode() != null && !ValidationUtils.matchPosgresqlObjectIdentifier(indicatorVersion.getIndicator().getViewCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_VIEW_CODE));
         }
@@ -1910,7 +1919,7 @@ public class InvocationValidator {
         // checks required
         if (checksRequired) {
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ServiceExceptionParametersInternal.QUANTITY_TYPE, exceptions);
-            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_UUID, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_MULTIPLIER, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(quantity.getDecimalPlaces(), parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES, exceptions);
             if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
@@ -1993,6 +2002,7 @@ public class InvocationValidator {
 
         if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
             IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getMetamacType(), ServiceExceptionParameters.DATA_SOURCE_DATA_METAMAC_TYPE, exceptions);
         }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
@@ -2133,6 +2143,48 @@ public class InvocationValidator {
         }
 
         IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Schedule category cache refresh cron job
+     */
+    public static void checkScheduleCategoryCacheRefreshCronJob(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshCronJob(exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Planify category cache refresh manual job
+     */
+    public static void checkScheduleCategoryCacheRefreshManualJob(ServiceContext ctx, String taskName) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkScheduleCategoryCacheRefreshManualJob(taskName, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkRetrieveIndicatorsWithCategoryElement(ServiceContext ctx) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // nothing
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Check if exists a update category cache job task
+     */
+    public static void checkExistUpdateCategoryCacheTaskInResource(ServiceContext ctx) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        IndicatorsValidationUtils.checkExistUpdateCategoryCacheTaskInResource(exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

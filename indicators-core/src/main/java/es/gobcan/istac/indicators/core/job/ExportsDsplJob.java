@@ -13,18 +13,18 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskServiceFacade;
 
 public class ExportsDsplJob implements Job {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger     logger                   = LoggerFactory.getLogger(getClass());
 
-    public static final String INDICATOR_UUID = "indicatorUuid";
-    public static final String CODE = "code";
-    public static final String USER = "user";
+    public static final String INDICATOR_UUID           = "indicatorUuid";
+    public static final String CODE                     = "code";
+    public static final String USER                     = "user";
     public static final String MERGE_TIME_GRANULARITIES = "mergeTimeGranularities";
 
-    private IndicatorsServiceFacade indicatorsServiceFacade = null;
+    private TaskServiceFacade  taskServiceFacade        = null;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -41,7 +41,7 @@ public class ExportsDsplJob implements Job {
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "metamac-core");
 
         try {
-            getIndicatorsServiceFacade().executeExportDSPL(serviceContext, indicatorUuid, code, mergeTimeGranularities);
+            getTaskServiceFacade().executeExportDSPLTask(serviceContext, jobKey.getName(), indicatorUuid, code, mergeTimeGranularities);
         } catch (MetamacException e) {
             logger.error("Error en exports dspl job");
             throw new JobExecutionException(e);
@@ -50,10 +50,11 @@ public class ExportsDsplJob implements Job {
         logger.info("Exports DSPL Job: {} finished at {}", jobKey, new Date());
     }
 
-    private IndicatorsServiceFacade getIndicatorsServiceFacade() {
-        if (indicatorsServiceFacade == null) {
-            indicatorsServiceFacade = ApplicationContextProvider.getApplicationContext().getBean(IndicatorsServiceFacade.class);
+    private TaskServiceFacade getTaskServiceFacade() {
+        if (taskServiceFacade == null) {
+            taskServiceFacade = (TaskServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(TaskServiceFacade.BEAN_ID);
         }
-        return indicatorsServiceFacade;
+
+        return taskServiceFacade;
     }
 }

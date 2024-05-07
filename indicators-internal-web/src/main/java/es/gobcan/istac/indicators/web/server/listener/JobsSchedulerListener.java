@@ -27,12 +27,24 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
         if (SCHEDULED_JOBS_APPLICATION_CONTEXT_NAME.equals(event.getApplicationContext().getDisplayName())) {
             logger.debug("Scheduling jobs...");
             schedulingIndicatorsUpdateJob();
+            schedulingCategoryCacheRefreshJob();
+            schedulingGeographicalValuesMigrationTemporalJob();
         }
     }
 
     private void schedulingIndicatorsUpdateJob() {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
         taskServiceFacade.scheduleIndicatorsUpdateJob(ctx);
+    }
+
+    private void schedulingCategoryCacheRefreshJob() {
+        ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
+        taskServiceFacade.scheduleCategoryCacheRefreshAutomaticJob(ctx);
+    }
+
+    private void schedulingGeographicalValuesMigrationTemporalJob() {
+        ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
+        taskServiceFacade.scheduleGeographicalValuesMigrationTemporalTask(ctx);
     }
 
 }

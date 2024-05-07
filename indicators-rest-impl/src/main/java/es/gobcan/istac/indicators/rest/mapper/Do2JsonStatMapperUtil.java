@@ -1,5 +1,11 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PUNTUAL_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PUNTUAL_RATE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -25,34 +32,36 @@ import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.i18n.Translations;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.JsonStatCategoryType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
 import es.gobcan.istac.indicators.rest.types.JsonStatExtensionType;
 import es.gobcan.istac.indicators.rest.types.JsonStatUnitType;
-
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PERCENTAGE_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PUNTUAL_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PERCENTAGE_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PUNTUAL_RATE;
+import es.gobcan.istac.indicators.rest.types.QuantityType;
+import es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum;
 
 @Component
 public class Do2JsonStatMapperUtil {
 
-    public static final String GEO_ROLE = "geo";
-    public static final String TIME_ROLE = "time";
-    public static final String METRIC_ROLE = "metric";
+    public static final String          GEO_ROLE              = "geo";
+    public static final String          TIME_ROLE             = "time";
+    public static final String          METRIC_ROLE           = "metric";
 
     @Autowired
-    private IndicatorsApiService indicatorsApiService;
+    private IndicatorsApiService        indicatorsApiService;
 
     @Autowired
-    private Translations translations;
+    private Translations                translations;
+
+    @Autowired
+    private MetadataProperties          metadataProperties;
+
+    @Autowired
+    private final SrmRestInternalFacade srmRestInternalFacade = null;
 
     public List<String> createJsonStatId() {
         List<String> format = new ArrayList<>();
@@ -77,8 +86,7 @@ public class Do2JsonStatMapperUtil {
     }
 
     public Map<String, JsonStatDimensionType> toJsonStatDimensions(List<GeographicalValueVO> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues, IndicatorVersion source,
-        IndicatorObservationsExtendedVO observations)
-    throws MetamacException {
+            IndicatorObservationsExtendedVO observations) throws MetamacException {
         Map<String, JsonStatDimensionType> jsonStatDimensionsMap = new HashMap<>();
 
         // Geographical
@@ -114,7 +122,7 @@ public class Do2JsonStatMapperUtil {
             String categoryCode = geographicalValue.getCode();
             if (filterGeographicalCodes.contains(categoryCode)) {
                 category.getIndex().put(categoryCode, (long) i);
-                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle()));
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
                 i++;
             }
         }
@@ -139,7 +147,7 @@ public class Do2JsonStatMapperUtil {
             String categoryCode = timeValue.getTimeValue();
             if (filterTimeCodes.contains(categoryCode)) {
                 category.getIndex().put(categoryCode, (long) i);
-                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle()));
+                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(timeValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
                 i++;
             }
         }
@@ -154,7 +162,8 @@ public class Do2JsonStatMapperUtil {
         return measureDimension;
     }
 
-    private JsonStatCategoryType measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, List<String> filterMeasureCodes) throws MetamacException {
+    private JsonStatCategoryType measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, List<String> filterMeasureCodes)
+            throws MetamacException {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
@@ -191,19 +200,24 @@ public class Do2JsonStatMapperUtil {
         }
     }
 
-    private JsonStatUnitType toJsonStatUnit(Quantity quantity) {
+    private JsonStatUnitType toJsonStatUnit(Quantity quantity) throws MetamacException {
         if (quantity == null) {
             return null;
         }
         JsonStatUnitType unit = new JsonStatUnitType();
         unit.setDecimals(quantity.getDecimalPlaces());
         unit.setMultiplier(quantity.getUnitMultiplier().getUnitMultiplier());
-        unit.setSymbol(quantity.getUnit().getSymbol());
-        QuantityUnitSymbolPositionEnum symbolPosition = quantity.getUnit().getSymbolPosition();
+
+        QuantityType quantityType = new QuantityType();
+        MapperUtil.setQuantityUnitMetadata(quantity, quantityType, metadataProperties, srmRestInternalFacade);
+
+        unit.setSymbol(quantityType.getUnitSymbol());
+        QuantityUnitSymbolPositionEnum symbolPosition = quantityType.getUnitSymbolPosition();
         if (symbolPosition != null) {
             unit.setPosition(symbolPosition.toString());
         }
-        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle()));
+
+        unit.setLabel(MapperUtil.getDefaultValue(quantity.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         unit.setType(quantity.getQuantityType().toString());
         return unit;
     }

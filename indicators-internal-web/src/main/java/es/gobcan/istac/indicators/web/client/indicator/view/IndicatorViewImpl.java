@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -23,16 +24,16 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
@@ -130,19 +131,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setSubjectsList(List<SubjectDto> subjectDtos) {
-        generalPanel.setSubjectsList(subjectDtos);
-    }
-
-    @Override
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        generalPanel.setGeographicalValues(geographicalValueDtos);
-        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalPanel.setGeographicalValue(geographicalValueDto);
+    public void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result) {
+        generalPanel.setGeographicalValuesAsRelatedResources(result);
+        dataSourcesPanel.setGeographicalValuesAsRelatedResources(result);
     }
 
     @Override
@@ -168,16 +159,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
         dataSourcesPanel.setDataStructureForEdition(dataStructureDto);
-    }
-
-    @Override
-    public void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos) {
-        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValueDS(GeographicalValueDto geographicalValueDto) {
-        dataSourcesPanel.setGeographicalValue(geographicalValueDto);
     }
 
     @Override
@@ -247,10 +228,19 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setDatasetsForRelatedQuery(GetQueriesPaginatedListResult result) {
+        dataSourcesPanel.setDatasets(result);
+    }
+
+    @Override
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
         dataSourcesPanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        dataSourcesPanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
     @Override
     public void showInformationMessage(String title, String message) {
         InformationWindow informationWindow = new InformationWindow(title, message);
@@ -260,6 +250,29 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setEditionLanguages(List<String> languages) {
         dataSourcesPanel.setEditionLanguages(languages);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // EXTERNAL RESOURCES DATA SETTERS
+    // ------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void setItemSchemes(String formItemName, ExternalItemsResult result) {
+        if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitFilterExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
+    }
+
+    @Override
+    public void setItems(String formItemName, ExternalItemsResult result) {
+
+        if (StringUtils.equals(IndicatorDS.CATEGORY_ELEMENT, formItemName)) {
+            generalPanel.setCategoryElementExternalItem(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
+        } else if (StringUtils.equals(IndicatorDS.QUANTITY_UNIT, formItemName)) {
+            generalPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+            dataSourcesPanel.setQuantityUnitExternalItem(result.getExternalItemDtos(), formItemName, result.getFirstResult(), result.getTotalResults());
+        }
     }
 
 }

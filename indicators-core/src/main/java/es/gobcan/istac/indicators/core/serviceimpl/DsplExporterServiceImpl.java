@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -31,6 +34,7 @@ import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -43,9 +47,13 @@ import freemarker.template.TemplateException;
  */
 @Service("dsplExporterService")
 public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
+    private static Logger LOGGER = LoggerFactory.getLogger(DsplExporterServiceImpl.class);
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
+
+    @Autowired
+    SrmRestInternalService                 srmRestInternalFacade;
 
     @Override
     public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description,
@@ -56,9 +64,11 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
         DsplTransformer transformer = null;
         if (mergeTimeGranularities) {
-            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService,
+                    srmRestInternalFacade);
         } else {
-            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService);
+            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsCoverageService(), getIndicatorsService(), configurationService,
+                    srmRestInternalFacade);
         }
 
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
@@ -108,6 +118,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                     while ((len = in.read(buffer)) > 0) {
                         zos.write(buffer, 0, len);
                     }
+                    in.close();
                 }
             }
         } finally {
@@ -119,7 +130,30 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 zos.close();
             }
         }
+        deleteTemporal(dirToZip.getPath());
         return zipFile.getName();
+    }
+
+    private void deleteTemporal(String temporalFile) {
+        
+        File dirToZip = new File(temporalFile);
+
+        if (dirToZip.isDirectory()) {
+            File[] files = dirToZip.listFiles();
+
+            if (files != null && files.length > 0) {
+                for (File file : files) {
+                    if (!file.delete()) {
+                        LOGGER.error("Could not delete temp file " + file.getPath());
+                    }
+                }
+            }
+        }
+        try {
+            Files.delete(dirToZip.toPath());
+        } catch (Exception e) {
+            LOGGER.error("Could not delete temp file " + dirToZip.getPath());
+        }
     }
 
     private File createTempDirectory() throws IOException {

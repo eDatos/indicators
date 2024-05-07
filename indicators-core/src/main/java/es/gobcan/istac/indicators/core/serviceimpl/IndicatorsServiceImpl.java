@@ -1,20 +1,27 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.security.AccessController;
+import sun.security.action.GetPropertyAction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
-import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
-import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -26,18 +33,24 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
@@ -48,22 +61,28 @@ import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.QuantityUnit;
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageCodelistActionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
+import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
+import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
-import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
+import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;;
 
 /**
  * Implementation of IndicatorsService
@@ -71,20 +90,27 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
-    @Autowired(required = false)
-    private SubjectRepository              subjectRepository;
+    @Autowired
+    private IndicatorsConfigurationService                  indicatorsConfigurationService;
 
     @Autowired
-    private IndicatorsConfigurationService indicatorsConfigurationService;
+    private StreamMessagingService                          streamMessagingService;
 
     @Autowired
-    private StreamMessagingService         streamMessagingService;
+    private TaskService                                     taskService;
 
     @Autowired
     @Qualifier("indicatorStreamMessagingCallback")
     private StreamMessagingCallback<IndicatorVersion, ?, ?> streamMessagingCallback;
 
-    private static final Logger            LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+    @Autowired
+    @Qualifier("txManager")
+    private PlatformTransactionManager                      platformTransactionManager;
+
+    private static final Logger                             LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+
+    @Autowired
+    private StatisticalResoucesRestExternalService          statisticalResoucesRestExternalService;
 
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -121,7 +147,52 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.getVersions().add(indicatorVersion);
         getIndicatorRepository().save(indicator);
 
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
+    }
+
+    private TransactionTemplate getTransactionTemplate() {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionTemplate;
+    }
+
+    private void updateCategoryCache(ServiceContext ctx, IndicatorVersion indicatorVersion) {
+
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
+
+            @Override
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+
+                try {
+                    if (indicatorVersion.getCategoryElement() != null) {
+                        CategoryCache categoryCache = getCategoryCacheService().retrieveCategoryCacheByCategoryElementCode(ctx, indicatorVersion.getCategoryElement().getCode());
+                        if (categoryCache == null) {
+                            getCategoryCacheService().createCategoryCacheByCategoryElement(ctx, indicatorVersion.getCategoryElement());
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error("Unable to update category cache in indicator creation/update for indicator code {}", indicatorVersion.getCode(), e);
+                }
+
+                return null;
+            }
+        });
+
+    }
+
+    abstract class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
+
+        public final T doInTransaction(TransactionStatus status) {
+            try {
+                return doInMetamacTransaction(status);
+            } catch (MetamacException e) {
+                throw new RuntimeException("Error in transactional method", e);
+            }
+        }
+
+        protected abstract T doInMetamacTransaction(TransactionStatus status) throws MetamacException;
     }
 
     @Override
@@ -255,6 +326,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
+
+        updateCategoryCache(ctx, indicatorVersion);
+
         return indicatorVersion;
     }
 
@@ -395,6 +469,26 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
     }
 
+
+    @Override
+    public void deleteTemporalFile(ServiceContext ctx, String temporalFile) throws MetamacException {
+        FileSystem fileSystem = FileSystems.getDefault();
+        File tmpdir = new File(AccessController.doPrivileged(new GetPropertyAction("java.io.tmpdir")));
+        Path path = fileSystem.getPath(tmpdir.getPath() + "/" + temporalFile);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            try {
+                Thread.sleep(5000);
+                Files.delete(path);
+            } catch (InterruptedException | IOException ex) {
+                LOG.error("Could not delete temporal file: " + temporalFile);
+                LOG.error(ex.getMessage(), ex);
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
     @Override
     public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -532,8 +626,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             return new PublishIndicatorResult(indicatorInProduction, TranslateExceptionUtils.translateMetamacException(ctx, e));
         }
 
-        tryRefreshSubjectTitle(indicatorInProduction);
-
         // Update indicator version metadata
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
@@ -568,22 +660,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getIndicatorRepository().save(indicator);
 
         return new PublishIndicatorResult(indicatorInProduction);
-    }
-
-    private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {
-        try {
-            Subject subject = subjectRepository.retrieveSubject(indicatorVersion.getSubjectCode());
-            InternationalString title = new InternationalString();
-            LocalisedString localised = new LocalisedString();
-            localised.setLabel(subject.getTitle());
-            localised.setLocale(indicatorsConfigurationService.retrieveLanguageDefault());
-            title.addText(localised);
-            indicatorVersion.setSubjectTitle(title);
-            LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());
-        } catch (Exception e) {
-            LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
-                    + indicatorVersion.getVersionNumber(), e);
-        }
     }
 
     @Override
@@ -825,130 +901,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
-    }
-
-    /**
-     * This operation retrieve subject from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public Subject retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubject(code, null);
-
-        // Retrieve
-        Subject subject = subjectRepository.retrieveSubject(code);
-        if (subject == null) {
-            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, code);
-        }
-        return subject;
-    }
-
-    /**
-     * This operation retrieves subjects from table view. Won't be accesible in public web application.
-     */
-    @Override
-    public List<Subject> retrieveSubjects(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjects(null);
-
-        // Find
-        List<Subject> subjects = subjectRepository.findSubjects();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInPublishedIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
-        return subjects;
-    }
-
-    /**
-     * This operation retrieves subjects from indicators table
-     */
-    @Override
-    public List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveSubjectsInLastVersionIndicators(null);
-
-        // Find
-        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInLastVersionIndicators();
-        return subjects;
-    }
-
-    // --------------------------------------------------------------------------------------------
-    // QUANTITY UNITS
-    // --------------------------------------------------------------------------------------------
-
-    @Override
-    public PagedResult<QuantityUnit> findQuantityUnits(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkFindQuantityUnits(null, conditions, pagingParameter);
-
-        // Find
-        PagedResult<QuantityUnit> result = getQuantityUnitRepository().findByCondition(conditions, pagingParameter);
-        return result;
-    }
-
-    @Override
-    public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
-
-        // Retrieve
-        QuantityUnit quantityUnit = getQuantityUnitRepository().retrieveQuantityUnit(uuid);
-        if (quantityUnit == null) {
-            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND, uuid);
-        }
-        return quantityUnit;
-    }
-
-    @Override
-    public List<QuantityUnit> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnits(null);
-
-        // Find
-        List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
-        return quantityUnits;
-    }
-
-    @Override
-    public QuantityUnit createQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkCreateQuantityUnit(null, quantityUnit);
-
-        // Repository operation
-        return getQuantityUnitRepository().save(quantityUnit);
-    }
-
-    @Override
-    public QuantityUnit updateQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkUpdateQuantityUnit(null, quantityUnit);
-
-        // Repository operation
-        return getQuantityUnitRepository().save(quantityUnit);
-    }
-
-    @Override
-    public void deleteQuantityUnit(ServiceContext ctx, String quantityUnitUuid) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkDeleteQuantityUnit(null, quantityUnitUuid);
-
-        // Repository operation
-        QuantityUnit quantityUnit = retrieveQuantityUnit(ctx, quantityUnitUuid);
-        getQuantityUnitRepository().delete(quantityUnit);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1427,7 +1379,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void writeIndicatorVersion(OutputStreamWriter writer, IndicatorVersion indicatorVersion, List<String> languages) throws IOException {
         if (indicatorVersion != null) {
             writeInternationalString(writer, indicatorVersion.getTitle(), languages);
-            writeInternationalString(writer, indicatorVersion.getSubjectTitle(), languages);
+            writeInternationalString(writer, indicatorVersion.getCategoryElement().getTitle(), languages);
             writeCell(writer, indicatorVersion.getVersionNumber());
             writeCell(writer, indicatorVersion.getProcStatus());
             writeCell(writer, indicatorVersion.getNeedsUpdate());
@@ -1470,4 +1422,158 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             writer.write(cell.toString());
         }
     }
+
+    @Override
+    public void updateCategoryCacheAll(ServiceContext ctx) throws MetamacException {
+        taskService.scheduleCategoryCacheRefreshManualJob(ctx);
+    }
+
+    @Override
+    public List<String> retrieveCategoryElementsInIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsWithCategoryElement(ctx);
+
+        return getIndicatorVersionRepository().findCategoryElementsInIndicators();
+
+    }
+    @Override
+    public List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return Collections.emptyList();
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            if (checkIsDefaultCodelistForGpeJsonStat(codelistAvro.getUrn())) {
+                return retrieveIndicatorsGpeOrJsonStatEnvironment();
+            } else {
+                return retrieveIndicatorsByGeographicalCodelist(codelistAvro.getUrn());
+            }
+        }
+        return Collections.emptyList();
+
+    }
+
+    @Override
+    public StreamMessageCodelistActionEnum getCodelistAction(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+
+        CodelistAvro codelistAvro = null;
+        if (message instanceof CodelistAvro) {
+            codelistAvro = (CodelistAvro) message;
+        } else {
+            return null;
+        }
+
+        if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES;
+        } else if (checkIsLastNumberVersionDefaultGranularityCodelist(codelistAvro)) {
+            return StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES;
+        }
+        return null;
+
+    }
+
+    private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {
+        String territoryVariableUrnDefault = indicatorsConfigurationService.retrieveDefaultTerritoryVariable();
+
+        return territoryVariableUrnDefault.equals(variableUrn);
+    }
+
+    private boolean checkIsLastNumberVersionDefaultGranularityCodelist(CodelistAvro codelistAvro) throws MetamacException {
+
+        if (!Boolean.TRUE.equals(codelistAvro.getLatestVersionNumberPublic())) {
+            return false;
+        }
+
+        String geographicalGranularityCodelistUrnDefault = indicatorsConfigurationService.retrieveDefaultCodelistGeographicalGranularityUrn();
+
+        String[] paramsDefaultGranularityCodelist = splitUrnItemScheme(geographicalGranularityCodelistUrnDefault);
+        String agencyIdDefault = paramsDefaultGranularityCodelist[0];
+        String resourceIdDefault = paramsDefaultGranularityCodelist[1];
+
+        String[] paramsCodelistAvro = splitUrnItemScheme(codelistAvro.getUrn());
+        String agencyId = paramsCodelistAvro[0];
+        String resourceId = paramsCodelistAvro[1];
+
+        return agencyIdDefault.equals(agencyId) && resourceIdDefault.equals(resourceId);
+
+    }
+
+    private boolean checkIsDefaultCodelistForGpeJsonStat(String codelistUrn) throws MetamacException {
+        String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat();
+
+        String[] defaultParams = splitUrnItemScheme(codelistDefault);
+        String defaultAgencyId = defaultParams[0];
+        String defaultResourceId = defaultParams[1];
+
+        String[] params = splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+
+        return defaultAgencyId.equals(agencyId) && defaultResourceId.equals(resourceId);
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsByGeographicalCodelist(String codelistUrn) throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsGpeOrJsonStatEnvironment() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE.getValue()).or()
+                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT.getValue());
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
+    @Override
+    public void updateDatasourceCodelistForGeographicalValuesMigration(ServiceContext ctx) throws MetamacException {
+
+        List<IndicatorVersion> queryBasedIndicators = retrieveIndicatorsEdatos();
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null);
+        for (IndicatorVersion indicatorVersion : queryBasedIndicators) {
+            for (DataSource dataSource : indicatorVersion.getDataSources()) {
+                Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                        es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn(query);
+                dataSource.setGeographicalCodelistUrn(codelistUrn);
+                getDataSourceRepository().save(dataSource);
+            }
+        }
+
+    }
+
+    private List<IndicatorVersion> retrieveIndicatorsEdatos() throws MetamacException {
+
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.METAMAC);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        return result.getValues();
+
+    }
+
 }

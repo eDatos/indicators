@@ -45,8 +45,7 @@ public class DoCopyUtils {
         IndicatorVersion target = new IndicatorVersion();
         target.setTitle(copy(source.getTitle()));
         target.setAcronym(copy(source.getAcronym()));
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(copy(source.getSubjectTitle()));
+        target.setCategoryElement(copy(source.getCategoryElement()));
         target.setNotes(copy(source.getNotes()));
         target.setConceptDescription(copy(source.getConceptDescription()));
         target.setComments(copy(source.getComments()));
@@ -59,7 +58,7 @@ public class DoCopyUtils {
     private static Quantity copy(Quantity source) {
         Quantity target = new Quantity();
         target.setQuantityType(source.getQuantityType());
-        target.setUnit(source.getUnit());
+        target.setUnit(copy(source.getUnit()));
         target.setUnitMultiplier(source.getUnitMultiplier());
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());
@@ -172,6 +171,7 @@ public class DoCopyUtils {
     private static DataSource copy(DataSource source) {
         DataSource target = new DataSource();
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());

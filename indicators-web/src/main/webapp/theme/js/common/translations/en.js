@@ -16,6 +16,7 @@
                 'SYSTEM': 'System',
                 'SYSTEM_OR_SUBJECT': 'System or subject',
                 'SUBJECT': 'Subject',
+                'ALL_SUBJECT': 'All subjects',
                 'INDICATORS': 'Indicators',
                 'GEOGRAPHICAL_VALUES': 'Geographical values',
                 'TIME_GRANULARITIES': 'Time granularities',
@@ -130,7 +131,8 @@
             'LABEL': "Write the value of the image shown above"
         },
         'CONNECTOR': {
-            'OF': ' of '
+            'OF': ' of ',
+            'CONTRACTED_OF': ' of '
         }
     };
 }());

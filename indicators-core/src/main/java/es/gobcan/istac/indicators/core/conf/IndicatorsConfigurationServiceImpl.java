@@ -7,7 +7,9 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstant
 
 public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl implements IndicatorsConfigurationService {
 
-    final String INDICATOR_QUERY_GROUP = "INDICATOR_QUERY_GROUP";
+    final String INDICATOR_QUERY_GROUP            = "INDICATOR_QUERY_GROUP";
+    final String INDICATOR_VARIABLE_ELEMENT_GROUP = "INDICATOR_VARIABLE_ELEMENT_GROUP";
+    final String INDICATOR_CODELIST_GROUP         = "INDICATOR_CODELIST_GROUP";
 
     @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
@@ -55,21 +57,6 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveDbSubjectsColumnCode() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsColumnTitle() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
-    }
-
-    @Override
-    public String retrieveDbSubjectsTable() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
-    }
-
-    @Override
     public String retrieveJaxiLocalUrl() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
     }
@@ -85,8 +72,47 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultCategoryScheme() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_CATEGORY_SCHEME);
+    }
+
+    @Override
+    public String retrieveDefaultTerritoryVariable() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_TERRITORY_VARIABLE);
+    }
+
+    @Override
+    public String retrieveDefaultTerritoryCodelistForGpeJsonStat() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_TERRITORY_CODELIST_GPE_JSONSTAT);
+    }
+
+    @Override
+    public String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CODELIST_ANNOTATION_TYPE_POSITION_UNIT_MEASURE);
+    }
+
+    @Override
     public String retrieveKafkaQueryGroup() throws MetamacException {
         return INDICATOR_QUERY_GROUP; // Hard coded for evit manual edition
     }
 
+    @Override
+    public String retrieveKafkaVariableElementGroup() throws MetamacException {
+        return INDICATOR_VARIABLE_ELEMENT_GROUP;
+    }
+
+    @Override
+    public String retrieveKafkaCodelistGroup() throws MetamacException {
+        return INDICATOR_CODELIST_GROUP;
+    }
+
+    @Override
+    public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
+    }
+
+    @Override
+    public String retrieveCronExpressionGeographicalValuesMigrationTemporalTask() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_GEOGRAPHICAL_VALUES_MIGRATION);
+    }
 }

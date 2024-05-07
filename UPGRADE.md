@@ -8,7 +8,81 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 9.3.0 a 9.3.1-SNAPSHOT
+## 9.7.0 a 9.7.1-SNAPSHOT
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/9.7.0/db/common-metadata/postgresql/*.sql
+```
+
+* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la siguiente carpeta (excepto los scripts que se encuentran dentro de las carpetas "migrar-valores-geograficos" y "20240202_migrar_granularidades_geograficas" que se ejecutarán en el siguiente paso:
+
+```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/*.sql
+```
+
+* ATENCIÓN! Se ha detectado bajo rendimiento en la migración de los elementos de variable ya que hay muchas entradas. Por tanto parte del proceso se realizará días antes para tenerlo
+preparado. El proceso previo será:
+* PRE-MIGRACIÓN a ejecutar días antes de despliegue
+** Paso 1. Se ha realizado un proceso de migración de las granularidades cuya gestión desaparece de indicators y se usará, en su lugar los códigos de la clasificación CL_GEO_GRANULARITIES del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de granularidades de indicators. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
+
+```
+etc/changes-from-release/9.7.0/db/indicators/postgresql/20240202_migrar_granularidades_geograficas/*.sql
+```
+
+** Paso 2. Obtener los elemntos de variable del srm y volcarlos en una tabla temporal en indicadores. Se generarán en este momento los international strings finales asociados a los títulos. 
+Para ello, ejecutar los pasos 1 al 4 de los scripts que se encuentran en
+
+```
+etc/changes-from-release/9.6.0/db/indicators/postgresql/20240116_migrar-valores-geograficos/*.sql
+```
+
+* MIGRACIÓN. Pasos a realizar el día del despliegue
+** Paso 1. Se ha realizado un proceso de migración de los valores geográficos cuya gestión desaparece de indicators y se usará, en su lugar los elementos de variable que proceden del srm. Por tanto, será necesario realizar un proceso de migración tanto de la tabla maestra de los valores geográficos como de los valores que se encuentran en las diferentes tablas que la referencian. Para dicha migración será necesario ejecutar los scripts que se encuentran en la carpeta siguiendo los pasos que se indican en cada fichero.
+Para ello ejecutar los pasos del 5 en adelante que se encuentran dentro de la carpeta "20240116_migrar-valores-geograficos"
+
+```
+etc/changes-from-release/9.6.0/db/indicators/postgresql/20240116_migrar-valores-geograficos/*.sql
+```
+
+** Paso 2 migración. A REALIZAR EN APP SRM! Una vez se termine el proceso de migración será necesario reenviar el mensaje de kafka de la clasificación de granularidades del srm establecida por defecto. Para saber la clasificación establecida por defecto en cada entorno mirar la propiedad del common-metadata "metamac.default.codelist.geographical_granularity.urn". Ir a esa clasificación en el srm y pulsar botón "Reenviar mensaje de publicación"
+
+## 9.5.0 a 9.6.0
+* Es necesario en srm haber creado un tipo de anotación denominada "SYMBOL_POSITION" desde el menú "Administración" en el srm. Descripción "Posición del símbolo en las unidades de medida"
+* Es necesario ejecutar el script "20231001_create_constant_properties_in_common_metadata.sql" que se encuentra en el srm y que crea el metadato "metamac.srm.codelist.annotation.type.position_unit" en common-metadata
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta.
+
+```
+etc/changes-from-release/9.5.0/db/*.sql
+
+```
+* Los scripts de la carpeta "migrar-areas-tematicas" y "migrar-unidades-medida" deben ser los últimos en ejecutarse.
+    * Para el caso de la carpeta "migrar-areas-tematicas" ejecutar el siguiente script que indicará, para cada entorno el script que se debe ejecutar: "20231129_COMUN_script_1_convert_subject_code_to_category_element_external_item.sql"
+        * Para esta migración, en la carpeta "/indicators/etc/helpers/migrar-areas-tematicas" se pueden encontrar, en diversas subcarpetas, los scripts necesarios por entorno para la migración de áreas temáticas a elementos de tema. Se debe ejecutar en cada entorno el script correspondiente.
+    * Para el caso de la carpeta "migrar-unidades-medida" deben ejecutarse los scripts en el orden numerado de cada uno. El script 2, además, hace uso de un script de ayuda que precarga todos los datos necesarios para la migración en una tabla temporal temp_mig_units. Previamente se debe ejecutar este script que se encuentra en "/indicators/etc/helpers/migrar-unidades-medidas/20231005_2_precarga_demo_get_srm_codelist_units_data.sql". En este script se debe cambiar la consulta que se ejecutará en el srm en cada entorno como se indica en el propio script ya que la clasificación usada en cada entorno es diferente.
+* Una terminado todo el despliegue para tener actualizada la caché de temas, ir a la aplicación de indicators y, en la vista principal, pulsar el botón "Actualizar caché de temas"*
+
+## 9.4.0 a 9.5.0
+* Es necesario ejecutar los scripts SQL contenidos en la carpeta
+
+```
+etc/changes-from-release/9.4.0/db/common-metadata/postgresql/*.sql
+```
+
+* Ejecutar los scripts contenidos en la carepeta
+
+```
+etc/changes-from-release/9.4.0/db/indicators/postgresql/*.sql
+```
+
+* En EDATOS-4185 se elimna la tabla tv_areas_tematicas y ahora usará un esquema de temas del srm. Es necesario una migración de valores. Esta migración es diferente por cada entorno. Hay que ejecutar en cada entorno los scripts indicados en cada una de las carpetas que cuelgan de la siguiente raíz:
+
+```
+etc/changes-from-release/9.4.0/db/migrar-datos
+```
+
+
+## 9.3.0 a 9.4.0
 * Es necesario ejecutar los scripts SQL contenidos en la carpeta
 
 ```

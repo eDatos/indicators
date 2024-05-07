@@ -11,7 +11,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.externalitemscache.domain.CategoryCache;
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.rest.types.DataType;
@@ -27,34 +27,42 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
-import es.gobcan.istac.indicators.rest.types.SubjectType;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 public interface Do2TypeMapper {
 
     // Indicators systems
     IndicatorsSystemType indicatorsSystemDoToType(final IndicatorsSystemVersion source);
+
     IndicatorsSystemBaseType indicatorsSystemDoToBaseType(final IndicatorsSystemVersion source);
+
     List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(final List<IndicatorsSystemVersion> sources);
+
     IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory systemHistory);
 
     // Indicators Instance
     IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source);
+
     List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(final List<IndicatorInstance> sources);
+
     JsonStatDataType indicatorsInstanceDoToJsonStatType(IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion, IndicatorObservationsExtendedVO observations);
 
     // Indicator
     IndicatorType indicatorDoToType(final IndicatorVersion sources);
+
     JsonStatDataType indicatorDoToJsonStatType(final IndicatorVersion source, IndicatorObservationsExtendedVO dataTypeRequest);
+
     List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources);
 
     // Granularities
     MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity);
+
     List<MetadataGranularityType> geographicalGranularityDoToType(List<GeographicalGranularity> geographicalGranularities);
+
     List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
 
     // Subjects
-    SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators);
-    List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects);
+    List<SubjectBaseType> subjectDoToBaseType(List<CategoryCache> categoryCacheEntries);
 
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
@@ -65,6 +73,8 @@ public interface Do2TypeMapper {
     List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues);
 
     void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException;
+
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException;
 
     void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target);
 }
