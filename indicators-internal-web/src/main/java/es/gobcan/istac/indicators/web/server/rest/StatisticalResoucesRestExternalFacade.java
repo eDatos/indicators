@@ -27,5 +27,15 @@ public interface StatisticalResoucesRestExternalFacade {
      * @return
      * @throws MetamacWebException
      */
-    public DataStructureDto retrieveDataDefinitionFromQuery(ServiceContext jserviceContext, String queryUrn) throws MetamacWebException; 
+    public DataStructureDto retrieveDataDefinitionFromQuery(ServiceContext jserviceContext, String queryUrn) throws MetamacWebException;
+
+    /**
+     * @param serviceContext
+     * @param firstResult
+     * @param maxResult
+     * @param criteria
+     * @return
+     * @throws MetamacWebException
+     */
+    public ExternalItemsResult findDatasets(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException;
 }

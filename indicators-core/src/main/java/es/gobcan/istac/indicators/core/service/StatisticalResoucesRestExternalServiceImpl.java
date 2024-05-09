@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,16 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
     public Queries findQueries(String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
             return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findQueries(query, orderBy, limit, offset, lang, null);
+        } catch (Exception e) {
+            logger.error("Unable to find Queries", e);
+            throw toRestException(e);
+        }
+    }
+
+    @Override
+    public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
+        try {
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findDatasets(query, orderBy, limit, offset, lang, null);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);

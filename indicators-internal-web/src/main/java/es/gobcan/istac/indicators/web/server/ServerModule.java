@@ -37,6 +37,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsOperatio
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetDatasetsPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetEditionLanguagesActionHandlers;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
@@ -111,6 +112,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAc
 import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
@@ -245,6 +247,7 @@ public class ServerModule extends HandlerModule {
 
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
         bindHandler(GetQueriesPaginatedListAction.class, GetQueriesPaginatedListActionHandler.class);
+        bindHandler(GetDatasetsPaginatedListAction.class, GetDatasetsPaginatedListActionHandler.class);
         bindHandler(GetStatisticalOperationsPaginatedListAction.class, GetStatisticalOperationsPaginatedListActionHandler.class);
 
         bindHandler(PlanifyPopulateIndicatorDataAction.class, PlanifyPopulateIndicatorDataActionHandler.class);

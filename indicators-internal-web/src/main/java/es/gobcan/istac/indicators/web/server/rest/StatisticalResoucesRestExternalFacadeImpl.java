@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ResourceWithStatisticalOperation;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
@@ -103,6 +104,25 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
         externalItemDto.setType(type);
         externalItemDto.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
         return externalItemDto;
+    }
+
+    @Override
+    public ExternalItemsResult findDatasets(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
+        try {
+            String query = buildQueryForQueryVersion(criteria);
+            String limit = String.valueOf(maxResult);
+            String offset = String.valueOf(firstResult);
+            String orderBy = null;
+
+            Datasets findaDatasetsResult = statisticalResoucesRestExternalService.findDatasets(query, orderBy, limit, offset, null);
+
+            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findaDatasetsResult.getDatasets(), TypeExternalArtefactsEnum.QUERY);
+
+            ExternalItemsResult result = ExternalItemWebUtils.createExternalItemsResultFromListBase(findaDatasetsResult, externalItemDtos);
+            return result;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(serviceContext, e);
+        }
     }
 
 }
