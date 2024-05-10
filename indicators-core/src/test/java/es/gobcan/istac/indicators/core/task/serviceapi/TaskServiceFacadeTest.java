@@ -61,9 +61,4 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     public void testExecuteGeographicalValuesMigrationTemporalTask() throws Exception {
         // no test
     }
-
-    @Override
-    public void testScheduleGeographicalValuesMigrationTemporalTask() throws Exception {
-        // Quartz jobs are not tested
-    }
 }

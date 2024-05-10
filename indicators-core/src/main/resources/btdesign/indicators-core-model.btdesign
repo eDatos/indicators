@@ -1410,8 +1410,6 @@ Application Indicators {
 			executeCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
 			"execute category element refresh job automatically execution"
 			executeCategoryCacheRefreshAutomaticTask() throws MetamacException;
-			"Schedule geographical values migration job"
-			scheduleGeographicalValuesMigrationTemporalTask();	
 			"execute geographical values migration job automatically execution"
 			executeGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
@@ -1462,8 +1460,6 @@ Application Indicators {
 			processCategoryCacheRefreshManualTask(String taskName) throws MetamacException;
 			"Process category cache refresh job automatically with cron expression"			
 			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
-			"Schedule geographical values migration job"
-			scheduleGeographicalValuesMigrationTemporalTask();	
 			"Process geographical values migration job automatically with cron expression"			
 			processGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
