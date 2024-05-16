@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.service;
 
 import static org.siemac.edatos.core.common.constants.shared.UrnConstants.COLON;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
@@ -64,6 +66,18 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
     }
 
     @Override
+    public Dataset retrieveDatasetByUrnInDefaultLang(String queryUrn, QueryFetchEnum onlyMetadata) {
+        String languageDefault;
+        try {
+            languageDefault = configurationService.retrieveLanguageDefault();
+            return retrieveDatasetByUrn(queryUrn, Arrays.asList(languageDefault), onlyMetadata);
+        } catch (MetamacException e) {
+            logger.error("Unable to find Datasets", e);
+            throw toRestException(e);
+        }
+    }
+
+    @Override
     public Query retrieveQueryByUrn(String queryUrn, List<String> lang, QueryFetchEnum onlyMetadata) {
         try {
             String universalIdentifier = UrnUtils.removePrefix(queryUrn);
@@ -85,6 +99,33 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
             return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields, null, null);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
+            throw toRestException(e);
+        }
+    }
+
+    @Override
+    public Dataset retrieveDatasetByUrn(String datasetUrn, List<String> lang, QueryFetchEnum onlyMetadata) {
+        try {
+            String[] params = splitUrnItemScheme(datasetUrn);
+            String agencyId = params[0];
+            String resourceId = params[1];
+            String version = params[2];
+
+            String fields = null;
+            switch (onlyMetadata) {
+                case ONLY_DATA:
+                    fields = "-metadata";
+                    break;
+                case ONLY_METADATA:
+                    fields = "-data";
+                    break;
+                default:
+                    break;
+            }
+
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveDataset(agencyId, resourceId, version, lang, fields, null, null);
+        } catch (Exception e) {
+            logger.error("Unable to find Datasets", e);
             throw toRestException(e);
         }
     }

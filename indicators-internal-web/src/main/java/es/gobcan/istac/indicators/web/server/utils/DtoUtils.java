@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ProcStatus;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
@@ -16,6 +17,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
@@ -24,7 +26,7 @@ public class DtoUtils {
 
     /**
      * Updates {@link IndicatorsSystemDtoWeb}
-     * 
+     *
      * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
      * @return
@@ -35,7 +37,7 @@ public class DtoUtils {
 
     /**
      * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link Operation}
-     * 
+     *
      * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
      * @param operation
@@ -77,7 +79,7 @@ public class DtoUtils {
 
     /**
      * Fills an {@link IndicatorsSystemSummaryDtoWeb} from {@link IndicatorsSystemSummaryDto} and {@link Resource}
-     * 
+     *
      * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
      * @param operation
@@ -100,7 +102,7 @@ public class DtoUtils {
 
     /**
      * Create an {@link IndicatorsSystemDtoWeb} from a {@link Operation}
-     * 
+     *
      * @param operation
      * @return
      */
@@ -112,7 +114,7 @@ public class DtoUtils {
 
     /**
      * Create an {@link IndicatorsSystemSummaryDtoWeb} from a {@link Resource}
-     * 
+     *
      * @param operation
      * @return
      */
@@ -126,7 +128,7 @@ public class DtoUtils {
 
     /**
      * Create a {@link DataStructureDto} from a {@link Query}
-     * 
+     *
      * @param query
      * @return
      * @throws MetamacException
@@ -190,6 +192,69 @@ public class DtoUtils {
 
         // Geographical codelist urn
         dataStructureDto.setGeographicalCodelistUrn(queryMetamacUtils.extractGeographicalCodelistUrn(query));
+
+        return dataStructureDto;
+    }
+
+    public static DataStructureDto createDataStructureDatasetDto(Dataset dataset, SrmRestInternalService srmRestInternalService) throws MetamacException {
+        if (dataset == null) {
+            return null;
+        }
+        DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService);
+        DataStructureDto dataStructureDto = new DataStructureDto();
+
+        // UUid
+        dataStructureDto.setUuid(dataset.getUrn());
+
+        // Title
+        dataStructureDto.setTitle(datasetMetamacUtils.extractValueForDefaultLanguage(dataset.getName()));
+
+        // PX Uri
+        dataStructureDto.setQueryUrn(dataset.getUrn());
+
+        Resource statisticalOperation = dataset.getMetadata().getStatisticalOperation();
+
+        // Survey Code
+        dataStructureDto.setSurveyCode(statisticalOperation.getId());
+
+        // Survey Title
+        dataStructureDto.setSurveyTitle(datasetMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+
+        // Maintainer
+        Resource maintainer = dataset.getMetadata().getMaintainer();
+        String extractValueForDefaultLanguage = datasetMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
+            dataStructureDto.setPublishers(Collections.emptyList());
+        } else {
+            dataStructureDto.setPublishers(Arrays.asList(extractValueForDefaultLanguage));
+        }
+
+        // Variables
+        dataStructureDto.setVariables(datasetMetamacUtils.extractVariablesFromDimensions(dataset.getMetadata().getDimensions()));
+
+        // Temporal Variables
+        dataStructureDto.setTemporalVariable(datasetMetamacUtils.extractTemporalVariable(dataset.getMetadata()));
+
+        // Temporal Value
+        dataStructureDto.setTemporalValue(datasetMetamacUtils.extractTemporalValue(dataset));
+
+        // Spatial Variables
+        dataStructureDto.setSpatialVariables(datasetMetamacUtils.extractSpatialVariableList(dataset.getMetadata()));
+
+        // Spatial Value
+        dataStructureDto.setGeographicalValueDto(datasetMetamacUtils.extractGeographicalValueDto(dataset));
+
+        // Cont Variable
+        dataStructureDto.setContVariable(datasetMetamacUtils.extractContVariable(dataset.getMetadata()));
+
+        // Value Labels
+        dataStructureDto.setValueLabels(datasetMetamacUtils.extractValuesCoverages(dataset.getMetadata()));
+
+        // Value Codes
+        dataStructureDto.setValueCodes(datasetMetamacUtils.extractCodesCoverages(dataset.getMetadata()));
+
+        // Geographical codelist urn
+        dataStructureDto.setGeographicalCodelistUrn(datasetMetamacUtils.extractGeographicalCodelistUrn(dataset));
 
         return dataStructureDto;
     }

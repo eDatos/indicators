@@ -38,6 +38,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
@@ -103,6 +104,7 @@ import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalSe
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.GpeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
@@ -1607,11 +1609,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 // Recalculate
                 if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                    // Metamac
+                    // Metamac QUERY
                     Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                     QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
                     data = queryMetamacUtils.queryMetamacToData(query);
+
+                } else if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+                    // Metamac DATASET
+                    Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrnInDefaultLang(dataSource.getQueryUuid(),
+                            es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService);
+                    data = datasetMetamacUtils.datasetMetamacToData(dataset);
 
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                     String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());

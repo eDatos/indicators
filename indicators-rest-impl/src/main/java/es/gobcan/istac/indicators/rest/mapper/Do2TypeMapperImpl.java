@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
@@ -96,39 +99,38 @@ import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatib
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks                                                                                     uriLinks;
+    UriLinks uriLinks;
 
     @Autowired
-    private TranslationRepository                                                                translationRepository;
+    private TranslationRepository translationRepository;
 
-    private static ThreadLocal<Map<String, Map<String, Object>>>                                 requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache         = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                                                           @Override
-                                                                                                                                           protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                                                               return new HashMap<String, Map<String, Object>>();
-                                                                                                                                           }
-                                                                                                                                       };
+        @Override
+        protected java.util.Map<String, Map<String, Object>> initialValue() {
+            return new HashMap<String, Map<String, Object>>();
+        }
+    };
     @Autowired
-    private final IndicatorsApiService                                                           indicatorsApiService                  = null;
-
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade                                        statisticalOperations                 = null;
+    private final  IndicatorsApiService                          indicatorsApiService = null;
 
     @Autowired
-    private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
+    private final StatisticalOperationsRestInternalFacade statisticalOperations = null;
 
     @Autowired
-    private final MetadataProperties                                                             metadataProperties                    = null;
+    private final SrmRestInternalFacade srmRestInternalFacade = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
+    private final MetadataProperties metadataProperties = null;
 
     @Autowired
-    private final StatisticalResourceRestExternalFacade                                          statisticalResourceRestExternalFacade = null;
+    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
 
-    private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
-            MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
-            MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private final StatisticalResourceRestExternalFacade statisticalResourceRestExternalFacade = null;
+
+    private static final List<String> measuresOrder = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+            MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     private static final EnumMap<QuantityUnitSymbolPositionEnum, QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(QuantityUnitSymbolPositionEnum.class);
 
@@ -717,14 +719,27 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         for (DataSource dataSource : dataSources) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
-                String queryUrn = dataSource.getQueryUrn();
-                Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn, Collections.singletonList(this.metadataProperties.getDefaultInternationalizationLanguage()),
-                        StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
-                Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
-                for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-                    if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                        metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                        metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                String queryUuid = dataSource.getQueryUuid();
+                String defaultLang = this.metadataProperties.getDefaultInternationalizationLanguage();
+                Attributes metadataAttributesAux = null;
+
+                if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    String queryUrn = dataSource.getQueryUrn();
+                    Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn, Collections.singletonList(defaultLang),
+                            StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                    metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+                } else if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+                    Dataset datasetMetadata = statisticalResourceRestExternalFacade.retrieveDatasetByUrn(queryUuid, Collections.singletonList(defaultLang),
+                            StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                    metadataAttributesAux = datasetMetadata.getMetadata().getAttributes();
+                }
+
+                if (metadataAttributesAux != null) {
+                    for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+                        if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                            metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                            metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                        }
                     }
                 }
             }
@@ -760,8 +775,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit
-                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit.setTitle(
+                MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }

@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.service;
 
 import java.util.List;
 
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
@@ -20,6 +21,10 @@ public interface StatisticalResoucesRestExternalService {
 
     public Query retrieveQueryByUrn(String queryUrn, List<String> lang, QueryFetchEnum onlyMetadata);
 
+    public Dataset retrieveDatasetByUrn(String datasetUrn, List<String> lang, QueryFetchEnum onlyMetadata);
+
     public Query retrieveQueryByUrnInDefaultLang(String queryUrn, QueryFetchEnum onlyMetadata);
+
+    public Dataset retrieveDatasetByUrnInDefaultLang(String queryUrn, QueryFetchEnum onlyMetadata);
 
 }

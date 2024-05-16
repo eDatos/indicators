@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
@@ -73,6 +74,18 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
             Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
 
             DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query, srmRestInternalService);
+            return dataStructureDto;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(serviceContext, e);
+        }
+    }
+
+    @Override
+    public DataStructureDto retrieveDataDefinitionFromDataset(ServiceContext serviceContext, String datasetUrn) throws MetamacWebException {
+        try {
+            String languageDefault = configurationService.retrieveLanguageDefault();
+            Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrn(datasetUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDatasetDto(dataset, srmRestInternalService);
             return dataStructureDto;
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);
