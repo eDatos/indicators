@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceimpl.util.CommonMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -144,7 +145,7 @@ public class DtoUtils {
         dataStructureDto.setUuid(query.getUrn());
 
         // Title
-        dataStructureDto.setTitle(queryMetamacUtils.extractValueForDefaultLanguage(query.getName()));
+        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(query.getName()));
 
         // PX Uri
         dataStructureDto.setQueryUrn(query.getUrn());
@@ -155,11 +156,11 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(queryMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Maintainer
         Resource maintainer = query.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = queryMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
         } else {
@@ -167,7 +168,7 @@ public class DtoUtils {
         }
 
         // Variables
-        dataStructureDto.setVariables(queryMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
+        dataStructureDto.setVariables(CommonMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         // Temporal Variables
         dataStructureDto.setTemporalVariable(queryMetamacUtils.extractTemporalVariable(query.getMetadata()));
@@ -207,7 +208,7 @@ public class DtoUtils {
         dataStructureDto.setUuid(dataset.getUrn());
 
         // Title
-        dataStructureDto.setTitle(datasetMetamacUtils.extractValueForDefaultLanguage(dataset.getName()));
+        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(dataset.getName()));
 
         // PX Uri
         dataStructureDto.setQueryUrn(dataset.getUrn());
@@ -218,11 +219,11 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(datasetMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
 
         // Maintainer
         Resource maintainer = dataset.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = datasetMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
         } else {
@@ -230,7 +231,7 @@ public class DtoUtils {
         }
 
         // Variables
-        dataStructureDto.setVariables(datasetMetamacUtils.extractVariablesFromDimensions(dataset.getMetadata().getDimensions()));
+        dataStructureDto.setVariables(CommonMetamacUtils.extractVariablesFromDimensions(dataset.getMetadata().getDimensions()));
 
         // Temporal Variables
         dataStructureDto.setTemporalVariable(datasetMetamacUtils.extractTemporalVariable(dataset.getMetadata()));
