@@ -138,7 +138,7 @@ public class DtoUtils {
         if (query == null) {
             return null;
         }
-        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         // UUid
@@ -171,28 +171,28 @@ public class DtoUtils {
         dataStructureDto.setVariables(CommonMetamacUtils.extractVariablesFromDimensions(query.getMetadata().getDimensions()));
 
         // Temporal Variables
-        dataStructureDto.setTemporalVariable(queryMetamacUtils.extractTemporalVariable(query.getMetadata()));
+        dataStructureDto.setTemporalVariable(queryMetamacUtils.extractTemporalVariable());
 
         // Temporal Value
-        dataStructureDto.setTemporalValue(queryMetamacUtils.extractTemporalValue(query));
+        dataStructureDto.setTemporalValue(queryMetamacUtils.extractTemporalValue());
 
         // Spatial Variables
-        dataStructureDto.setSpatialVariables(queryMetamacUtils.extractSpatialVariableList(query.getMetadata()));
+        dataStructureDto.setSpatialVariables(queryMetamacUtils.extractSpatialVariableList());
 
         // Spatial Value
-        dataStructureDto.setGeographicalValueDto(queryMetamacUtils.extractGeographicalValueDto(query));
+        dataStructureDto.setGeographicalValueDto(queryMetamacUtils.extractGeographicalValueDto());
 
         // Cont Variable
-        dataStructureDto.setContVariable(queryMetamacUtils.extractContVariable(query.getMetadata()));
+        dataStructureDto.setContVariable(queryMetamacUtils.extractContVariable());
 
         // Value Labels
-        dataStructureDto.setValueLabels(queryMetamacUtils.extractValuesCoverages(query.getMetadata()));
+        dataStructureDto.setValueLabels(queryMetamacUtils.extractValuesCoverages());
 
         // Value Codes
-        dataStructureDto.setValueCodes(queryMetamacUtils.extractCodesCoverages(query.getMetadata()));
+        dataStructureDto.setValueCodes(queryMetamacUtils.extractCodesCoverages());
 
         // Geographical codelist urn
-        dataStructureDto.setGeographicalCodelistUrn(queryMetamacUtils.extractGeographicalCodelistUrn(query));
+        dataStructureDto.setGeographicalCodelistUrn(queryMetamacUtils.extractGeographicalCodelistUrn());
 
         return dataStructureDto;
     }
@@ -201,7 +201,7 @@ public class DtoUtils {
         if (dataset == null) {
             return null;
         }
-        DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService);
+        DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         // UUid
@@ -234,28 +234,28 @@ public class DtoUtils {
         dataStructureDto.setVariables(CommonMetamacUtils.extractVariablesFromDimensions(dataset.getMetadata().getDimensions()));
 
         // Temporal Variables
-        dataStructureDto.setTemporalVariable(datasetMetamacUtils.extractTemporalVariable(dataset.getMetadata()));
+        dataStructureDto.setTemporalVariable(datasetMetamacUtils.extractTemporalVariable());
 
         // Temporal Value
-        dataStructureDto.setTemporalValue(datasetMetamacUtils.extractTemporalValue(dataset));
+        dataStructureDto.setTemporalValue(datasetMetamacUtils.extractTemporalValue());
 
         // Spatial Variables
-        dataStructureDto.setSpatialVariables(datasetMetamacUtils.extractSpatialVariableList(dataset.getMetadata()));
+        dataStructureDto.setSpatialVariables(datasetMetamacUtils.extractSpatialVariableList());
 
         // Spatial Value
-        dataStructureDto.setGeographicalValueDto(datasetMetamacUtils.extractGeographicalValueDto(dataset));
+        dataStructureDto.setGeographicalValueDto(datasetMetamacUtils.extractGeographicalValueDto());
 
         // Cont Variable
-        dataStructureDto.setContVariable(datasetMetamacUtils.extractContVariable(dataset.getMetadata()));
+        dataStructureDto.setContVariable(datasetMetamacUtils.extractContVariable());
 
         // Value Labels
-        dataStructureDto.setValueLabels(datasetMetamacUtils.extractValuesCoverages(dataset.getMetadata()));
+        dataStructureDto.setValueLabels(datasetMetamacUtils.extractValuesCoverages());
 
         // Value Codes
-        dataStructureDto.setValueCodes(datasetMetamacUtils.extractCodesCoverages(dataset.getMetadata()));
+        dataStructureDto.setValueCodes(datasetMetamacUtils.extractCodesCoverages());
 
         // Geographical codelist urn
-        dataStructureDto.setGeographicalCodelistUrn(datasetMetamacUtils.extractGeographicalCodelistUrn(dataset));
+        dataStructureDto.setGeographicalCodelistUrn(datasetMetamacUtils.extractGeographicalCodelistUrn());
 
         return dataStructureDto;
     }

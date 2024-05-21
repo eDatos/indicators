@@ -48,7 +48,7 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
         try {
             return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().findDatasets(query, orderBy, limit, offset, lang, null);
         } catch (Exception e) {
-            logger.error("Unable to find Queries", e);
+            logger.error("Unable to find Datasets", e);
             throw toRestException(e);
         }
     }

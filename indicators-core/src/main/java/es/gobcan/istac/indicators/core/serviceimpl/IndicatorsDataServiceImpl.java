@@ -1612,15 +1612,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     // Metamac QUERY
                     Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService);
-                    data = queryMetamacUtils.queryMetamacToData(query);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
+                    data = queryMetamacUtils.queryMetamacToData();
 
                 } else if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
                     // Metamac DATASET
                     Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrnInDefaultLang(dataSource.getQueryUuid(),
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService);
-                    data = datasetMetamacUtils.datasetMetamacToData(dataset);
+                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
+                    data = datasetMetamacUtils.datasetMetamacToData();
 
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
                     String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
@@ -1765,12 +1765,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         //acciones sobre el map de atributos
         // Recorrer el mapa y obtener solo el valor del key
-
         for (String key : observationsMapAttributes) {
             AttributeDto obsConfAux = new AttributeDto();
             obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
             obsConfAux.setAttributeId(key);
             datasetRepoDto.getAttributes().add(obsConfAux);
+
         }
 
         List<String> languages = new ArrayList<String>();

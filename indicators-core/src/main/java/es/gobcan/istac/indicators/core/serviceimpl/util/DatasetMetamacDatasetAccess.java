@@ -107,7 +107,7 @@ public class DatasetMetamacDatasetAccess {
         return StringUtils.splitByWholeSeparatorPreserveAllTokens(data, DATA_SEPARATOR);
     }
 
-    private void initializeObservationsAttributes(Dataset dataset) {//TODO: comprobar qeu los getattributes no vengan vacios
+    private void initializeObservationsAttributes(Dataset dataset) {
         List<DataAttribute> dataAttributes = dataset.getData().getAttributes().getAttributes();
         Attributes metadataAttributes = dataset.getMetadata().getAttributes();
 
