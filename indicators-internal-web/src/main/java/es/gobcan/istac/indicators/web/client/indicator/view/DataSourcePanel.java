@@ -619,7 +619,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public void onChanged(ChangedEvent event) {
-                clearAllMetamacValues(); // TODO: revisar si es necesario
+                clearAllMetamacValues();
                 generalEditionForm.markForRedraw();
             }
         });
@@ -980,13 +980,11 @@ public class DataSourcePanel extends VLayout {
         };
     }
 
-    // TODO: que lanze los datasets
     private StatOperationsSearchExternalItemLinkItem getDatasetMetamacItem() {
         return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.DATASET_METAMAC, getConstants().dataSourceDatasetSelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
-                // uiHandlers.retrieveQueriesForRelatedQuery(firstResult, maxResults, criteria);
                 uiHandlers.retrieveQueriesForRelatedDataset(firstResult, maxResults, criteria);
             }
 

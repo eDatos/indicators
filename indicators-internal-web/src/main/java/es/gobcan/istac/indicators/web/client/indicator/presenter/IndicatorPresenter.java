@@ -72,6 +72,8 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
@@ -187,7 +189,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
-        void setDatasetsForRelatedQuery(GetQueriesPaginatedListResult result);
+        void setDatasetsForRelatedQuery(GetDatasetsPaginatedListResult result);
 
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
@@ -500,10 +502,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
-        dispatcher.execute(new GetQueriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesPaginatedListResult>(this) {
+        dispatcher.execute(new GetDatasetsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsPaginatedListResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetQueriesPaginatedListResult result) {
+            public void onWaitSuccess(GetDatasetsPaginatedListResult result) {
                 getView().setDatasetsForRelatedQuery(result);
             }
         });
