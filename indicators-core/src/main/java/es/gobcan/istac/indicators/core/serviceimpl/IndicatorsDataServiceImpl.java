@@ -1771,6 +1771,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
 
+        //Comprobar si existe un OBS_CONF
+
+        boolean obsConfExists = false;
+        for (AttributeDto attribute : datasetRepoDto.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attribute.getAttributeId())) {
+                obsConfExists = true;
+                break;
+            }
+        }
+
+        if (!obsConfExists) {
+            AttributeDto obsConf = new AttributeDto();
+            obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+            datasetRepoDto.getAttributes().add(obsConf);
+        }
+
         try {
             datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
         } catch (ApplicationException e) {
@@ -1813,6 +1830,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 String observationKey = observationKeys.get(i);
                 handleObservation(observation, value, dataOperation, content, observationKey, i);
             }
+        } else if (data.getDataMapAttributes().isEmpty() && isSpecialString(value)) {
+            handleSpecialObservation(observation, value, OBS_CONF_ATTRIBUTE, content, 0);
+
         } else {
             Double numValue = null;
             try {
