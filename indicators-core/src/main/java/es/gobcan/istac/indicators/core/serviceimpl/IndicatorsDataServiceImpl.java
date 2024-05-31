@@ -1756,12 +1756,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
         code.setAttributeId(CODE_ATTRIBUTE);
 
-        AttributeDto obsConf = new AttributeDto();
-        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
-
         datasetRepoDto.getAttributes().add(code);
-        datasetRepoDto.getAttributes().add(obsConf);
 
         //acciones sobre el map de atributos
         // Recorrer el mapa y obtener solo el valor del key
@@ -1770,12 +1765,28 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
             obsConfAux.setAttributeId(key);
             datasetRepoDto.getAttributes().add(obsConfAux);
-
         }
 
         List<String> languages = new ArrayList<String>();
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
+
+        //Comprobar si existe un OBS_CONF
+
+        boolean obsConfExists = false;
+        for (AttributeDto attribute : datasetRepoDto.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attribute.getAttributeId())) {
+                obsConfExists = true;
+                break;
+            }
+        }
+
+        if (!obsConfExists) {
+            AttributeDto obsConf = new AttributeDto();
+            obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+            datasetRepoDto.getAttributes().add(obsConf);
+        }
 
         try {
             datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
@@ -1813,14 +1824,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             value = "..";
         }
 
-        if (isSpecialString(value)) {
-            handleSpecialString(observation, value);
-        } else if (!data.getDataMapAttributes().isEmpty()) {
+        if (!data.getDataMapAttributes().isEmpty()) {
             List<String> observationKeys = data.getDataMapAttributes();
             for (int i = 0; i < observationKeys.size(); i++) {
                 String observationKey = observationKeys.get(i);
-                handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
+                handleObservation(observation, value, dataOperation, content, observationKey, i);
             }
+        } else if (data.getDataMapAttributes().isEmpty() && isSpecialString(value)) {
+            handleSpecialObservation(observation, value, OBS_CONF_ATTRIBUTE, content, 0);
+
         } else {
             Double numValue = null;
             try {
@@ -1835,25 +1847,38 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return observation;
     }
 
-    private void handleSpecialString(ObservationExtendedDto observation, String value) {
-        String text = getSpecialStringMeaning(value);
-        if (!StringUtils.isEmpty(text)) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
-        }
-        observation.setPrimaryMeasure(null);
-    }
-
-    private void handleNonSpecialString(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition)
+    private void handleObservation(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition)
             throws MetamacException {
         try {
-            String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
-            observation.setPrimaryMeasure(formattedValue);
-            String observationEntry = content.getAttributesObservations().get(observationPosition);
-            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
-
+            if (isSpecialString(value)) {
+                handleSpecialObservation(observation, value, observationKey, content, observationPosition);
+            } else {
+                handleNormalObservation(observation, value, dataOperation, content, observationKey, observationPosition);
+            }
         } catch (NumberFormatException e) {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
         }
+    }
+    private void handleSpecialObservation(ObservationExtendedDto observation, String value, String observationKey, DataContent content, int observationPosition) {
+        observation.setPrimaryMeasure(null);
+        if (OBS_CONF_ATTRIBUTE.equals(observationKey)) {
+            String text = getSpecialStringMeaning(value);
+            if (!StringUtils.isEmpty(text)) {
+                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
+            }
+        } else {
+            String observationEntry = content.getAttributesObservations().get(observationPosition);
+            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+        }
+    }
+
+    private void handleNormalObservation(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition)
+            throws NumberFormatException {
+        String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
+        observation.setPrimaryMeasure(formattedValue);
+
+        String observationEntry = content.getAttributesObservations().get(observationPosition);
+        observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
     }
 
     /*
