@@ -67,34 +67,10 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
 
     @Override
     public List<GeographicalValueType> findGeographicalValuesByGranularity(String granularityCode) throws MetamacException {
-        String granularityUuid = null;
-        if (granularityCode != null) {
-            granularityUuid = getGranularityUuidByCode(granularityCode);
-        }
-
-        MetamacCriteria criteria = new MetamacCriteria();
-        criteria.setPaginator(new MetamacCriteriaPaginator());
-        criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
-        criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
-
-        if (granularityUuid != null) {
-            criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), granularityUuid, OperationType.EQ));
-        }
-
-        // order
-        MetamacCriteriaOrder globalOrder = new MetamacCriteriaOrder();
-        globalOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
-        globalOrder.setType(OrderTypeEnum.ASC);
-        criteria.getOrdersBy().add(globalOrder);
-
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
-
-        // Find
-        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(),
-                sculptorCriteria.getPagingParameter());
-
-        List<GeographicalValue> geographicalValues = result.getValues();
-        return mapper.geographicalValuesDoToType(geographicalValues);
+        String granularityUuid = getGranularityUuidByCode(granularityCode);
+        List<GeographicalValueVO> geographicalValues = indicatorsCoverageService.retrieveGeographicalValuesByGranularityInAllIndicatorPublished(IndicatorsRestConstants.SERVICE_CONTEXT,
+                                                                                                                                                granularityUuid);
+        return mapper.geographicalValuesVOToType(geographicalValues);
     }
 
     @Override
@@ -109,6 +85,28 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
                     category.getCategoryElement().getId(), granularityUuid);
         }
         return mapper.geographicalValuesVOToType(geographicalValues);
+    }
+
+    @Override
+    public GeographicalValue findGeographicalValuesByCode(String code) throws MetamacException {
+
+        MetamacCriteria criteria = new MetamacCriteria();
+        criteria.setPaginator(new MetamacCriteriaPaginator());
+        criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+        criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
+
+        criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.CODE.name(), code, OperationType.EQ));
+
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(IndicatorsRestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(),
+                sculptorCriteria.getPagingParameter());
+        if (result.getValues() != null && !result.getValues().isEmpty()) {
+            return result.getValues().get(0);
+        } else {
+            return null;
+        }
     }
 
 }

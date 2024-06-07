@@ -1400,6 +1400,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveGeographicalValuesByGranularityInAllIndicatorPublished(String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        IndicatorsValidationUtils.checkParameterRequired(granularityUuid, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY_UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid, List<MetamacExceptionItem> exceptions)
             throws MetamacException {
         if (exceptions == null) {
@@ -1992,6 +2002,7 @@ public class InvocationValidator {
 
         if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
             IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(dataSource.getMetamacType(), ServiceExceptionParameters.DATA_SOURCE_DATA_METAMAC_TYPE, exceptions);
         }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {

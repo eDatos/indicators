@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
@@ -228,10 +229,19 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setDatasetsForRelatedQuery(GetDatasetsPaginatedListResult result) {
+        dataSourcesPanel.setDatasets(result);
+    }
+
+    @Override
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
         dataSourcesPanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        dataSourcesPanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
     @Override
     public void showInformationMessage(String title, String message) {
         InformationWindow informationWindow = new InformationWindow(title, message);

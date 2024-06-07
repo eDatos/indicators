@@ -74,7 +74,10 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
-import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;;
+import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
+import sun.security.action.GetPropertyAction;
+
+;
 
 /**
  * Implementation of IndicatorsService
@@ -1522,12 +1525,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public void updateDatasourceCodelistForGeographicalValuesMigration(ServiceContext ctx) throws MetamacException {
 
         List<IndicatorVersion> queryBasedIndicators = retrieveIndicatorsEdatos();
-        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null);
         for (IndicatorVersion indicatorVersion : queryBasedIndicators) {
             for (DataSource dataSource : indicatorVersion.getDataSources()) {
                 Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                         es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn(query);
+                QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null, query);
+                String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn();
                 dataSource.setGeographicalCodelistUrn(codelistUrn);
                 getDataSourceRepository().save(dataSource);
             }

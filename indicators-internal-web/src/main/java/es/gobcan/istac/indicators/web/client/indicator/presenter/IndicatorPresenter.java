@@ -72,6 +72,8 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
@@ -187,7 +189,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setQueriesForRelatedQuery(GetQueriesPaginatedListResult result);
 
+        void setDatasetsForRelatedQuery(GetDatasetsPaginatedListResult result);
+
         void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
+
+        void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults);
 
         void showInformationMessage(String title, String message);
 
@@ -492,6 +498,29 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setQueriesForRelatedQuery(result);
             }
         });
+    }
+
+    @Override
+    public void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetDatasetsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetsPaginatedListResult result) {
+                getView().setDatasetsForRelatedQuery(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria) {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, webCriteria),
+                new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                        getView().setStatisticalOperationsForDatasetSelection(result.getOperationsList(), result.getFirstResultOut(), result.getTotalResults());
+                    }
+                });
     }
 
     @Override

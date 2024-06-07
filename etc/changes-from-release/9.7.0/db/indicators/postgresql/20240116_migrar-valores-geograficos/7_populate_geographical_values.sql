@@ -36,6 +36,12 @@ ALTER TABLE tb_ind_version_geo_cov alter COLUMN deprecated_geographical_value_fk
 ALTER TABLE tb_quantities DROP CONSTRAINT fk_tb_quantities_base_location_fk;
  ALTER TABLE tb_quantities ADD COLUMN base_location_fk BIGINT;
 
+ ----1.6 tabla tb_indic_version_last_value
+ ALTER TABLE tb_indic_version_last_value RENAME COLUMN geographical_code TO deprecated_geographical_code;
+ALTER TABLE tb_indic_version_last_value drop constraint uq_tb_indic_version_last_value;
+ALTER TABLE tb_indic_version_last_value alter COLUMN deprecated_geographical_code  drop not null;
+ ALTER TABLE tb_indic_version_last_value ADD COLUMN geographical_code varchar(255);
+
   --2. Hacer copia de seguridad de tabla "tb_lis_geogr_values"
 -- indicators_bd.tb_lis_geogr_values definition
 
@@ -78,6 +84,9 @@ delete  from tb_lis_geogr_values;
 select max(id) from tb_lis_geogr_values ;
 -- 0.6.4) con el valor dado anteriormente, cambiar la secuencia para poner el valor anterior mas uno que será el siguiente valor de la secuencia. 
 ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR + 1;
+ 
+ --3.1 Con la importación anterior se comprueba que el campo update_date_tz que estaba a nulo originalmente, se ha migrado con un espacio en blanco. Hay que poner a nulo para evitar error en la aplicación con las fechas. Para ello ejecutar:
+ update tb_lis_geogr_values set update_date_tz = null where update_date_tz = '';
  
  --4 Rellenar nuevos campos creados
 --4.1) Comprobaciones previas
@@ -205,10 +214,21 @@ set base_location_fk  = (
                   and t.variable_element_code = newG.code limit 1 )
 where deprecated_base_location_fk is not null and base_location_fk  is null;
  
- --4.7. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
- ----4.7.1) 
+  ----4.7) tabla tb_indic_version_last_value
+ update tb_indic_version_last_value d
+set geographical_code = (
+               select newG.code  
+                 from tb_lis_geogr_values_copy l, temp_mig_codes_with_var_element t, tb_lis_geogr_values newG
+                where d.deprecated_geographical_code = l.code  
+                  and l.code = t.code 
+                  and t.variable_element_code = newG.code limit 1  )
+where deprecated_geographical_code is not null and geographical_code  is null;
+ 
+ --4.8. Comprobar que  se han migrado todos los valores para cada una de la tablas anteriores.
+ ----4.8.1) 
  select 'tb_indic_inst_last_value', deprecated_geographical_code, geographical_code from tb_indic_inst_last_value where deprecated_geographical_code is not null and geographical_code is null;
- ----4.7.2)
+ select 'tb_indic_version_last_value', deprecated_geographical_code, geographical_code from tb_indic_version_last_value where deprecated_geographical_code is not null and geographical_code is null;
+ ----4.8.2)
  select 'tb_data_sources', deprecated_geographical_value_fk, geographical_value_fk from tb_data_sources where deprecated_geographical_value_fk is not null and geographical_value_fk is null
  union all
  select 'tb_indic_inst_geo_values', deprecated_geographical_value_fk, geographical_value_fk from tb_indic_inst_geo_values where deprecated_geographical_value_fk is not null and geographical_value_fk is null
@@ -227,13 +247,13 @@ where deprecated_base_location_fk is not null and base_location_fk  is null;
  select 'tb_quantities', deprecated_base_location_fk, base_location_fk, b.code, t.variable_element_code from tb_quantities, tb_lis_geogr_values_copy b, temp_mig_codes_with_var_element t where b.code = t.code and deprecated_base_location_fk = b.id and deprecated_base_location_fk is not null and base_location_fk is null;
  
  
- --4.8. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
+ --4.9. Si durante el paso 4 se ha tenido que modificar la tabla temp_mig_codes_with_var_element porque se detectaron códigos sin asignación, habrá que replicar esta table en la base de datos indicators_data
  --ATENCIÓN!!! sólo si en indicators_bd se ha cambiado la tabla migrada inicialmente desde srm hacer lo siguiente si no, obviar este paso
- -- 4.8.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
- -- 4.8.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
- -- 4.8.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
+ -- 4.9.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
+ -- 4.9.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
+ -- 4.9.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
  
- 
+ --4.10 exportar la tabla temp_mig_codes_with_var_element e importarla en la base de datos metamac_portal_bd
  
  
 --5) Añadir primary keys eliminadas y foreign keys
@@ -257,6 +277,10 @@ CREATE UNIQUE INDEX uq_tb_indic_inst_last_value ON tb_indic_inst_last_value (geo
 --5.3) tabla tb_ind_version_geo_cov 
 ALTER TABLE tb_ind_version_geo_cov alter COLUMN geographical_value_fk  set not null;
  CREATE UNIQUE INDEX uq_tb_ind_version_geo_cov ON tb_ind_version_geo_cov (geographical_value_fk,indicator_version_fk);
+--5.4) tabla tb_indic_version_last_value
+ALTER TABLE tb_indic_version_last_value alter COLUMN geographical_code  set not null;
+CREATE UNIQUE INDEX uq_tb_indic_version_last_value ON tb_indic_version_last_value (geographical_code, indicator_version_fk);
+
  
  --6) Actualizar valores geográficos con los códigos de elementos de variable en la bd indicators para cada tabla "..data" de cada fuente de datos.
  --Crear índice en tabla temporal "temp_mig_codes_with_var_element" para acelerar búsquedas. En bd indicators_data_bd:
@@ -333,6 +357,24 @@ select ' SELECT ''' ||  a.table_name || ''',' || b.column_name || ', deprecated_
  -- Si todo va bien se obtienen los códigos de clasificación para los cuales no se encontró asociación con un código de elemento de variable. Hay que resolverlo con Vicky.
   
   
+  --6.7. Se detecta que al renombrar el campo en cada tabla data, la vista asociada a cada tabla se modifica automáticamente poniendo un alias al nuevo campo deprecado. Se añade una consulta de 
+  --este estilo: -----data_y67chqktpnp0cnnpdkdciz6.deprecated_dimension_00 AS dimension_00,------
+  --Hay que reestablecer todas las vistas afectadas para que consulten el campo dimension_00 directamente.
+  --6.7.1. Obtener las vistas afectadas con la siguiente consulta 
+  select 'CREATE OR REPLACE VIEW ' || table_name || ' AS' || view_definition,
+       table_schema as schema_name, table_name as view_name, view_definition
+    from information_schema.views
+   where table_schema not in ('information_schema', 'pg_catalog')
+     and view_definition like '%deprecated_%'
+order by schema_name, view_name;
+    --6.7.2  Coger todos los resultados de la primera columna de la consulta anterior y ponerlo en un editor de texto.
+    --6.7.3  Sustituir la siguiente cadena
+           -- deprecated_dimension_00 AS dimension_00,
+           -- por
+           -- dimension_00,
+    --6.7.4 Ejecutar la recreación de las vistas con la modificación realizada en el paso anterior. Con todo ésto las vistas ya se quedan adecuadamente creadas y se puede avanzar al siguiente paso.  
+         
+         
  --7) Eliminación de columna deprecated del data.
  -- Si el paso 6 fue bien, se deberá borrar la columna deprecated del data. Ésto es debido a que el data tiene una vista asociada. Y ciertas operaciones en la aplicación la modifican quedando con este campo deprecado.
  --Para ello, 

@@ -171,6 +171,7 @@ public class DoCopyUtils {
     private static DataSource copy(DataSource source) {
         DataSource target = new DataSource();
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());

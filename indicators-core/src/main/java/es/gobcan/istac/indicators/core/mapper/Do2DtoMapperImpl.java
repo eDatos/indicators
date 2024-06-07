@@ -262,6 +262,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setUuid(source.getUuid());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());
         target.setStatResource(externalItemDoToDto(source.getStatResource()));

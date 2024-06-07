@@ -306,7 +306,9 @@ Application Indicators {
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesInIndicatorInstanceWithIndicatorVersion(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
 	    	"Retrieves geographic codes in the indicator instance with published indicator filtered by granularity"
 	    	List<GeographicalCodeVO> retrieveGeographicalCodesByGranularityInIndicatorInstanceWithPublishedIndicator(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
-	    	
+
+	    	"Retrieves geographic values in all indicators by granularity"
+	    	List<GeographicalValueVO> retrieveGeographicalValuesByGranularityInAllIndicatorPublished(String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic granularities in all indicators with a subject Code "
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode) throws MetamacException;
 	    	"Retrieves geographic values in all indicators with a subject Code by granularity"
@@ -883,6 +885,10 @@ Application Indicators {
 			// Relations
 			"Last value cache"
 			- Set<@IndicatorVersionLastValueCache> lastValuesCache cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;
+			"Geo coverage"
+			- Set<@IndicatorVersionGeoCoverage> geoCoverages cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;
+            "Temporal coverage"
+            - Set<@IndicatorVersionTimeCoverage> timeCoverages cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;			
 			"Indicator"
 			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
 			"Quantity"
@@ -1013,6 +1019,8 @@ Application Indicators {
 			String publishers not nullable length="4000";
 			"Query Environment"
             - @QueryEnvironmentEnum queryEnvironment not nullable;
+            "metamac resource type"
+            - @MetamacSelectionEnum metamacType nullable databaseColumn="METAMAC_TYPE";
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
             "Geographical codelist urn" 
@@ -1260,7 +1268,7 @@ Application Indicators {
         	"Geographical value"
 			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
 			"Indicator Version"
-			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK" <-> geoCoverages;
 			
 			Repository IndicatorVersionGeoCoverageRepository {
 				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
@@ -1314,7 +1322,7 @@ Application Indicators {
         	!optimisticLocking
         	
 			"Indicator Version"
-			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK";
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK" <-> timeCoverages;
         	"Geographical value"
 			String timeValue not nullable key;
 			String timeGranularity not nullable;
@@ -1767,6 +1775,8 @@ Application Indicators {
 			String queryUrn;
 			"QueryText"
 			String queryText;
+			"Metamac resource type"
+            - @MetamacSelectionEnum metamacType;
 		    "Query Environment"
             - @QueryEnvironmentEnum queryEnvironment;
             "Statistical Resource Query (Metamac) related with the data source"
@@ -2162,6 +2172,12 @@ Application Indicators {
             METAMAC("eDatos"),
             GPE("GPE"),
             JSON_STAT("JSON-stat")
+        }
+
+        enum MetamacSelectionEnum {
+            String value
+            CONSULTA("Consulta"),
+            DATASET("Dataset")
         }
         
         "Task Status Type Enumerated"

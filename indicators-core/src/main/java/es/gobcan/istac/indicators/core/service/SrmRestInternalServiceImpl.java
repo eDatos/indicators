@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.core.service;
 
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.BLANK;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.QUOTE;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.WILDCARD_ALL;
+import static org.siemac.metamac.rest.api.constants.RestApiConstants.WILDCARD_LATEST;
 import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
 
 import java.util.HashMap;
@@ -9,6 +13,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
+import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
@@ -28,10 +33,13 @@ import org.springframework.stereotype.Component;
 @Component(SrmRestInternalService.BEAN_ID)
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
-    private static Logger  logger = LoggerFactory.getLogger(SrmRestInternalServiceImpl.class);
+    public static final String AND                       = "AND";
+    public static final String ID_CODES_CODELIST         = "ID";
+    public static final String VARIABLE_ELEMENT_URN_CODE = "VARIABLE_ELEMENT_URN";
+    private static Logger      logger                    = LoggerFactory.getLogger(SrmRestInternalServiceImpl.class);
 
     @Autowired
-    private RestApiLocator restApiLocator;
+    private RestApiLocator     restApiLocator;
 
     @Override
     public CategoryElements findCategoryElements(String query, String orderBy, String limit, String offset) {
@@ -126,6 +134,21 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             variableElementsByCodesOfCodelist.put(code.getId(), code.getVariableElement().getId());
         }
         return variableElementsByCodesOfCodelist;
+    }
+
+    @Override
+    public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException {
+        // Calls like this: /codelists/~all/~all/~latest/codes?query=id EQ '35003' AND VARIABLE_ELEMENT_URN LIKE 'VR_TERRITORIO'&fields=+variableElement
+
+        String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+
+        StringBuilder queryBuilder = new StringBuilder(ID_CODES_CODELIST);
+        queryBuilder.append(BLANK).append(ComparisonOperator.EQ).append(BLANK).append(QUOTE).append(code).append(QUOTE).append(BLANK).append(LogicalOperator.AND).append(BLANK)
+                .append(VARIABLE_ELEMENT_URN_CODE).append(BLANK).append(ComparisonOperator.LIKE).append(BLANK).append(QUOTE).append(defaultTerritoryVariableUrn).append(QUOTE);
+
+        return restApiLocator.getSrmRestInternalFacadeV10().findCodes(WILDCARD_ALL, WILDCARD_ALL, WILDCARD_LATEST, queryBuilder.toString(), null, String.valueOf(numResults), null, null, null, null,
+                null, fields);
+
     }
 
     private Codes retrieveCodesOfCodelist(String codelistUrn) {

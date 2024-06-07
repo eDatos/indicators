@@ -52,6 +52,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.RelatedResourceDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -113,6 +114,9 @@ public class DataSourcePanel extends VLayout {
     }
 
     private StatOperationsSearchExternalItemLinkItem searchQueryMetamacWindow;
+
+    private StatOperationsSearchExternalItemLinkItem searchDatasetMetamacWindow;
+
     private List<String>                             editionLanguages;
 
     public DataSourcePanel() {
@@ -255,6 +259,17 @@ public class DataSourcePanel extends VLayout {
         }
 
         dataSourceDto.setStatResource(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.QUERY_METAMAC));
+
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+            String metamacTypeAsString = generalEditionForm.getValueAsString(DataSourceDS.METAMAC_TYPE);
+            if (!StringUtils.isEmpty(metamacTypeAsString)) {
+                dataSourceDto.setMetamacType(MetamacSelectionEnum.valueOf(metamacTypeAsString));
+                if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
+                    dataSourceDto.setStatResource(generalEditionForm.getValueAsExternalItemDto(DataSourceDS.DATASET_METAMAC));
+                }
+            }
+        }
+
         dataSourceDto.setQueryUrn(dataStructureDtoEdition.getQueryUrn());
 
         if (generalEditionForm.isVisible()) {
@@ -597,13 +612,43 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
+        // Search tipe of metamac(query or dataset)
+        RequiredSelectItem metamacSelectType = new RequiredSelectItem(DataSourceDS.METAMAC_TYPE, getConstants().metamacSelectType());
+        metamacSelectType.setValueMap(CommonUtils.getMetamacSelectionTypeMap());
+        metamacSelectType.addChangedHandler(new ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                clearAllMetamacValues();
+                generalEditionForm.markForRedraw();
+            }
+        });
+
+        metamacSelectType.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return isEnvironmentSelected(form, QueryEnvironmentEnum.METAMAC);
+            }
+        });
+
         // Query from METAMAC
         searchQueryMetamacWindow = getQueryMetamacItem();
         searchQueryMetamacWindow.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isEnvironmentSelected(form, QueryEnvironmentEnum.METAMAC);
+                return isMetamacTypeSelected(form, MetamacSelectionEnum.CONSULTA);
+            }
+        });
+
+        // Dataset from METAMAC
+        searchDatasetMetamacWindow = getDatasetMetamacItem();
+        searchDatasetMetamacWindow.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return isMetamacTypeSelected(form, MetamacSelectionEnum.DATASET);
             }
         });
 
@@ -741,9 +786,9 @@ public class DataSourcePanel extends VLayout {
             }
         });
 
-        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, query, searchQueryMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem, surveyCode, surveyTitle, surveyAcronym,
-                surveyUrl, publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac, geographicalValueUUIDMetamac, measureVariable,
-                variables);
+        generalEditionForm.setFields(queryUuid, dataSourceQueryEnvironment, metamacSelectType, query, searchQueryMetamacWindow, searchDatasetMetamacWindow, jsonStatRequiredTextItem, queryJsonStatItem,
+                surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, timeValueMetamac, geographicalVariable, geographicalValueMulti, geographicalValueMetamac,
+                geographicalValueUUIDMetamac, measureVariable, variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
@@ -935,8 +980,34 @@ public class DataSourcePanel extends VLayout {
         };
     }
 
+    private StatOperationsSearchExternalItemLinkItem getDatasetMetamacItem() {
+        return new StatOperationsSearchExternalItemLinkItem(DataSourceDS.DATASET_METAMAC, getConstants().dataSourceDatasetSelection(), IndicatorsWebConstants.FORM_LIST_MAX_RESULTS) {
+
+            @Override
+            protected void retrieveResultSetQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
+                uiHandlers.retrieveQueriesForRelatedDataset(firstResult, maxResults, criteria);
+            }
+
+            @Override
+            protected void retrieveStatisticalOperationsForQuerySelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria) {
+                uiHandlers.retrieveStatisticalOperationsForDatasetSelection(firstResult, maxResults, criteria);
+            }
+
+            @Override
+            protected void retrieveQueryForRelatedQuery(ExternalItemDto selectedResource) {
+                uiHandlers.retrieveDataStructureEdition(selectedResource.getUrn());
+                setSelectedRelatedDatasetInEditionForm(selectedResource);
+                generalForm.validate(false);
+            }
+        };
+    }
+
     private void setSelectedRelatedQueryInEditionForm(ExternalItemDto selectedResource) {
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, selectedResource);
+    }
+
+    private void setSelectedRelatedDatasetInEditionForm(ExternalItemDto selectedResource) {
+        generalEditionForm.setValue(DataSourceDS.DATASET_METAMAC, selectedResource);
     }
 
     private SearchViewTextItem getQueryJsonStatItem() {
@@ -1036,7 +1107,17 @@ public class DataSourcePanel extends VLayout {
         dataStructureDtoEdition = null;
 
         generalStaticEditionForm.setValue(dataSourceDto);
+
         generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
+
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+            generalEditionForm.setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? dataSourceDto.getMetamacType().name() : StringUtils.EMPTY);
+
+            if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
+                generalEditionForm.setValue(DataSourceDS.DATASET_METAMAC, dataSourceDto.getStatResource());
+                generalEditionForm.setValue(DataSourceDS.QUERY_METAMAC, new ExternalItemDto());
+            }
+        }
 
         GeographicalSelectItem geoValue = (GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE_ITEM);
         if (dataSourceDto.getGeographicalValue() != null) {
@@ -1081,7 +1162,17 @@ public class DataSourcePanel extends VLayout {
     void clearAllQueryValues() {
         ((RequiredTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_UUID)).clearValue();
         ((SearchViewTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_TEXT)).clearValue();
+        ((SelectItem) generalEditionForm.getItem(DataSourceDS.METAMAC_TYPE)).clearValue();
         ((StatOperationsSearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.QUERY_METAMAC)).clearValue();
+        ((StatOperationsSearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.DATASET_METAMAC)).clearValue();
+        clearQueryDependentFields();
+    }
+
+    void clearAllMetamacValues() {
+        ((RequiredTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_UUID)).clearValue();
+        ((SearchViewTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_TEXT)).clearValue();
+        ((StatOperationsSearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.QUERY_METAMAC)).clearValue();
+        ((StatOperationsSearchExternalItemLinkItem) generalEditionForm.getItem(DataSourceDS.DATASET_METAMAC)).clearValue();
         clearQueryDependentFields();
     }
 
@@ -1162,6 +1253,18 @@ public class DataSourcePanel extends VLayout {
         }
     }
 
+    public void setDatasets(List<ExternalItemDto> queriesDtos, int firstResult, int elementsInPage, int totalResults) {
+        if (searchDatasetMetamacWindow != null) {
+            searchDatasetMetamacWindow.setResources(queriesDtos, firstResult, elementsInPage, totalResults);
+        }
+    }
+
+    public void setStatisticalDatasetOperations(List<ExternalItemDto> statisticalOperations, int firstResult, int totalResults) {
+        if (searchDatasetMetamacWindow != null) {
+            searchDatasetMetamacWindow.setFilterResources(statisticalOperations, firstResult, statisticalOperations.size(), totalResults);
+        }
+    }
+
     // UTILS
     private boolean dataStructureHasGeoVariable() {
         if (dataStructureDtoEdition != null) {
@@ -1205,6 +1308,15 @@ public class DataSourcePanel extends VLayout {
             if (environment.equals(queryEnvironmentEnum)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private boolean isMetamacTypeSelected(DynamicForm form, MetamacSelectionEnum selectedType) {
+        String valueAsString = form.getValueAsString(DataSourceDS.METAMAC_TYPE);
+        if (!StringUtils.isEmpty(valueAsString)) {
+            MetamacSelectionEnum metamacSelectionEnum = MetamacSelectionEnum.valueOf(valueAsString);
+            return selectedType.equals(metamacSelectionEnum);
         }
         return false;
     }

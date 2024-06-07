@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
@@ -31,8 +32,23 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
     public ViewDataSourceGeneralForm(String groupTitle) {
         super(groupTitle);
-
         ViewTextItem dataSourceQueryEnvironment = new ViewTextItem(DataSourceDS.QUERY_ENVIRONMENT, getConstants().dataSourceQueryEnvironment());
+
+        ViewTextItem metamacSelectType = new ViewTextItem(DataSourceDS.METAMAC_TYPE, getConstants().metamacSelectType());
+        metamacSelectType.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String valueAsString = form.getValueAsString(DataSourceDS.QUERY_ENVIRONMENT);
+                if (!StringUtils.isEmpty(valueAsString)) {
+                    QueryEnvironmentEnum queryEnvironmentEnum = CommonUtils.getQueryEnvironmentEnumValue(valueAsString);
+                    if (QueryEnvironmentEnum.METAMAC.equals(queryEnvironmentEnum)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuery());
         query.setShowIfCondition(new FormItemIfFunction() {
@@ -139,13 +155,25 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
         ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        setFields(dataSourceQueryEnvironment, query, queryMetamac, queryJsonStat, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable,
-                geographicalValue, measureVariable, variables);
+        setFields(dataSourceQueryEnvironment, metamacSelectType, query, queryMetamac, queryJsonStat, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue,
+                geographicalVariable, geographicalValue, measureVariable, variables);
 
     }
 
     public void setValue(DataSourceDto dataSourceDto) {
+        boolean isDataset = false;
         setValue(DataSourceDS.QUERY_ENVIRONMENT, (dataSourceDto.getQueryEnvironment() != null) ? dataSourceDto.getQueryEnvironment().getValue() : StringUtils.EMPTY);
+
+        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
+
+        if (QueryEnvironmentEnum.METAMAC.equals(dataSourceDto.getQueryEnvironment())) {
+            if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
+                isDataset = true;
+            }
+            setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? dataSourceDto.getMetamacType().getValue() : StringUtils.EMPTY);
+        }
+
+        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
         setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
         if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.GPE.equals(dataSourceDto.getQueryEnvironment())) {
@@ -155,8 +183,6 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         if (!StringUtils.isBlank(dataSourceDto.getQueryUuid()) && QueryEnvironmentEnum.JSON_STAT.equals(dataSourceDto.getQueryEnvironment())) {
             setValue(DataSourceDS.QUERY_UUID, dataSourceDto.getQueryUuid());
         }
-
-        setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());
 
         setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
         setValue(DataSourceDS.SOURCE_SURVEY_TITLE, dataSourceDto.getSourceSurveyTitle());
@@ -172,6 +198,13 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         geoValue.setRelatedResource(dataSourceDto.getGeographicalValue());
 
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
+
+        ExternalItemLinkItem queryMetamac = (ExternalItemLinkItem) this.getField(DataSourceDS.QUERY_METAMAC);
+        if (isDataset) {
+            queryMetamac.setTitle(getConstants().dataSourceDataset());
+        } else {
+            queryMetamac.setTitle(getConstants().dataSourceQuery());
+        }
 
     }
 

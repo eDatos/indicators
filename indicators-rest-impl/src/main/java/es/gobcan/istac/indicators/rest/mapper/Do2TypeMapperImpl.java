@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
@@ -90,6 +93,7 @@ import es.gobcan.istac.indicators.rest.types.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 import es.gobcan.istac.indicators.rest.types.SubjectType;
 import es.gobcan.istac.indicators.rest.types.TitleLinkType;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -398,7 +402,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // Remove All Cache
         requestCache.remove();
         try {
-            List<String> geographicalCodes = dataTypeRequest.getGeographicalCodes();
+            List<String> geographicalCodes = setGeographicalCodesCompatibility(dataTypeRequest);
+
             List<String> timeValues = dataTypeRequest.getTimeCodes();
             List<String> measureValues = dataTypeRequest.getMeasureCodes();
             Map<String, ? extends ObservationDto> observationMap = dataTypeRequest.getObservationMap();
@@ -447,9 +452,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
                         // Observation ID: Be careful!!! don't change order of ids
                         String geographicalValueCode = geographicalCode;
-                        String id = geographicalValueCode + "#" + timeValueCode + "#" + measureValueCode;
+                        String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
 
-                        ObservationDto observationDto = observationMap.get(id);
+                        ObservationDto observationDto = observationMap.get(newId);
                         if (observationDto == null) {
                             observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
                         } else if (observationDto.getPrimaryMeasure() == null) {
@@ -497,6 +502,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
+    private List<String> setGeographicalCodesCompatibility(DataTypeRequest dataTypeRequest) {
+        List<String> geographicalCodes;
+        if (dataTypeRequest.geoValuesOldVersionCompatibilityUtils != null && dataTypeRequest.geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
+            geographicalCodes = dataTypeRequest.geoValuesOldVersionCompatibilityUtils.getOriginalSelectedGeographicalRepresentations();
+        } else {
+            geographicalCodes = dataTypeRequest.getGeographicalCodes();
+        }
+        return geographicalCodes;
+    }
+
     private ObservationDto createObservationExtendedDto(String geographicalValueCode, String timeValueCode, String measureValueCode, String primaryMeasure) {
         ObservationDto observationDto;
         observationDto = new ObservationExtendedDto();
@@ -504,6 +519,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalValueCode);
         CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValueCode);
         CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValueCode);
+
         observationDto.getCodesDimension().add(geoCodeDimDto);
         observationDto.getCodesDimension().add(timeCodeDimDto);
         observationDto.getCodesDimension().add(measureCodeDimDto);
@@ -526,6 +542,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private boolean isAttributeValid(AttributeInstanceObservationDto attributeDto) {
         String attributeId = attributeDto.getAttributeId();
         String valueLabel = attributeDto.getValue().getLocalisedLabel(metadataProperties.getDefaultInternationalizationLanguage());
+        if (attributeId == null || valueLabel == null) {
+            return false;
+        }
+
         return !attributeId.equals(IndicatorDataAttributeTypeEnum.CODE.getName()) && !valueLabel.isEmpty();
     }
 
@@ -618,11 +638,34 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Override
     public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+    }
+
+    @Override
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException {
+        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
+        if (!geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
+            indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+            return;
+        }
+
+        for (GeographicalValueVO geoValue : geographicalValues) {
+            String variableElement = geoValuesOldVersionCompatibilityUtils.getGeographicalCodeByVariableElement(geoValue.getCode());
+            if (variableElement != null) {
+                geoValue.setCode(variableElement);
+            }
+        }
+
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+
+    }
+
+    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues) throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
-        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
 
         MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
@@ -674,24 +717,39 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
+        MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
 
-        if (!source.getDataSources().isEmpty() && QueryEnvironmentEnum.METAMAC.equals(source.getDataSources().get(0).getQueryEnvironment())) {
+        List<DataSource> dataSources = source.getDataSources();
 
-            Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(source.getDataSources().get(0).getQueryUrn(),
-                    Arrays.asList(this.metadataProperties.getDefaultInternationalizationLanguage()), StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+        for (DataSource dataSource : dataSources) {
+            if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
+                String queryUuid = dataSource.getQueryUuid();
+                String defaultLang = this.metadataProperties.getDefaultInternationalizationLanguage();
+                Attributes metadataAttributesAux = null;
 
-            Attributes metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
-            for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-                if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                    MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                    metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
-                    target.setAttribute(metadataAttributes);
+                if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    String queryUrn = dataSource.getQueryUrn();
+                    Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn, Collections.singletonList(defaultLang),
+                            StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                    metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+                } else if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+                    Dataset datasetMetadata = statisticalResourceRestExternalFacade.retrieveDatasetByUrn(queryUuid, Collections.singletonList(defaultLang),
+                            StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+                    metadataAttributesAux = datasetMetadata.getMetadata().getAttributes();
+                }
+
+                if (metadataAttributesAux != null) {
+                    for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
+                        if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
+                            metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                            metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
+                        }
+                    }
                 }
             }
         }
 
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF);
-        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
+        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
         target.setAttribute(metadataAttributes);
 
         // CHILD LINK

@@ -23,7 +23,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 public class GetDataStructureActionHandler extends SecurityActionHandler<GetDataStructureAction, GetDataStructureResult> {
 
     @Autowired
-    private IndicatorsServiceFacade               indicatorsServiceFacade;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
 
     @Autowired
     private StatisticalResoucesRestExternalFacade statisticalResoucesRestExternalFacade;
@@ -38,6 +38,8 @@ public class GetDataStructureActionHandler extends SecurityActionHandler<GetData
             DataStructureDto dataStructureDto = null;
             if (StringUtils.startsWithIgnoreCase(action.getUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                 dataStructureDto = statisticalResoucesRestExternalFacade.retrieveDataDefinitionFromQuery(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
+            } else if (StringUtils.startsWithIgnoreCase(action.getUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+                dataStructureDto = statisticalResoucesRestExternalFacade.retrieveDataDefinitionFromDataset(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             } else if (CommonWebUtils.isValidUrl(action.getUuid())) {
                 dataStructureDto = indicatorsServiceFacade.retrieveJsonStatData(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             } else {
