@@ -15,7 +15,6 @@ import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
-import es.gobcan.istac.indicators.web.shared.DeleteTemporalFileAction;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -48,7 +47,6 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
-import es.gobcan.istac.indicators.web.shared.DeleteTemporalFileResult;
 import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
 import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsResult;
 import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
@@ -189,7 +187,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
             @Override
             public void onWaitSuccess(ExportIndicatorsResult result) {
                 CommonUtils.downloadFile(result.getFileName());
-                deleteTemporalFile(result.getFileName());
             }
 
             @Override
@@ -197,18 +194,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
             }
 
-        });
-    }
-
-    private void deleteTemporalFile(String fileName) {
-        dispatcher.execute(new DeleteTemporalFileAction(fileName), new WaitingAsyncCallbackHandlingError<DeleteTemporalFileResult>(this) {
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(IndicatorListPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(DeleteTemporalFileResult result) {
-            }
         });
     }
 

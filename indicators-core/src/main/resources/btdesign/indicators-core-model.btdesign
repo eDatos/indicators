@@ -134,7 +134,6 @@ Application Indicators {
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	String exportIndicatorsTsv(List<ConditionalCriteria> conditions) throws MetamacException;
-	    	deleteTemporalFile(String temporalFile) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
@@ -516,8 +515,6 @@ Application Indicators {
             enableNotifyPopulationErrors(String indicatorUuid) throws MetamacException;
 	    	"Export indicators list in TSV format"
 	    	String exportIndicatorsTsv(MetamacCriteria criteria) throws MetamacException;
-	    	"Delete temporal file"
-	    	deleteTemporalFile(String temporalFile) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
