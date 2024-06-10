@@ -19,7 +19,6 @@ import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -410,8 +409,15 @@ public class CommonUtils {
         StringBuffer url = new StringBuffer();
         url.append(URL.encode(IndicatorsWeb.getRelativeURL(IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH)));
         url.append("?").append(URL.encode(IndicatorsConstants.PARAM_FILE_NAME)).append("=").append(URL.encode(fileName));
-        Window.open(url.toString(), "_blank", "");
+        downloadUrl(url.toString());
     }
+
+    // @formatter:off
+    private static native void downloadUrl(String url) /*-{
+        $wnd.location = url;
+    }-*/;
+    // @formatter:on
+
 
     public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
         if (status == null) {
