@@ -1763,15 +1763,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         datasetRepoDto.getAttributes().add(code);
         datasetRepoDto.getAttributes().add(obsConf);
 
-        //acciones sobre el map de atributos
-        // Recorrer el mapa y obtener solo el valor del key
         if (observationsMapAttributes != null) {
             for (String key : observationsMapAttributes) {
                 AttributeDto obsConfAux = new AttributeDto();
                 obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
                 obsConfAux.setAttributeId(key);
                 datasetRepoDto.getAttributes().add(obsConfAux);
-
             }
         }
 
@@ -1802,7 +1799,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
-        //Atributo de la observacion
         String timeValue = MetamacTimeUtils.normalizeToMetamacTimeValue(originalTimeValue);
 
         ObservationExtendedDto observation = new ObservationExtendedDto();

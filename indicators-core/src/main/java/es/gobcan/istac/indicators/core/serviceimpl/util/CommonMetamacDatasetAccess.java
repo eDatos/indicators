@@ -122,7 +122,6 @@ public abstract class CommonMetamacDatasetAccess {
     }
 
     protected void initializeObservationsAttributes() {
-        // Verificar si getData() y getData().getAttributes() no son null
         if (getData() == null || getData().getAttributes() == null) {
             return;
         }
@@ -200,9 +199,8 @@ public abstract class CommonMetamacDatasetAccess {
      */
     private void updateDataArrayAttributes(Attribute attribute, String[] dataArrayAttributes) {
         EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
-        // Verificar si attributeValues es nulo antes de continuar
         if (attributeValues == null) {
-            return; // No hacer nada si attributeValues es nulo
+            return;
         }
         for (int i = 0; i < attributeValues.getValues().size(); i++) {
             for (int j = 0; j < dataArrayAttributes.length; j++) {
@@ -222,14 +220,11 @@ public abstract class CommonMetamacDatasetAccess {
      */
     private String getLocalizedValue(EnumeratedAttributeValue attributeValue) {
         List<LocalisedString> texts = attributeValue.getName().getTexts();
-        // Recorre todos los LocalisedString en el ArrayList
         for (LocalisedString localisedString : texts) {
             if (localisedString.getLang() != null && localisedString.getLang().equals(IndicatorsConstants.DATASET_REPOSITORY_LOCALE)) {
-                // Si la propiedad 'lang' es igual a DATASET_REPOSITORY_LOCALE, devuelve el valor
                 return localisedString.getValue();
             }
         }
-        // Si no se encuentra DATASET_REPOSITORY_LOCALE, devuelve null
         return null;
     }
 }
