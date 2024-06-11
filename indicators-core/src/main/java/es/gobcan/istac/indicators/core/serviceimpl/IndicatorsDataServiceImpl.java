@@ -1765,12 +1765,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         //acciones sobre el map de atributos
         // Recorrer el mapa y obtener solo el valor del key
-        for (String key : observationsMapAttributes) {
-            AttributeDto obsConfAux = new AttributeDto();
-            obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-            obsConfAux.setAttributeId(key);
-            datasetRepoDto.getAttributes().add(obsConfAux);
+        if (observationsMapAttributes != null) {
+            for (String key : observationsMapAttributes) {
+                AttributeDto obsConfAux = new AttributeDto();
+                obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+                obsConfAux.setAttributeId(key);
+                datasetRepoDto.getAttributes().add(obsConfAux);
 
+            }
         }
 
         List<String> languages = new ArrayList<String>();
@@ -1815,21 +1817,20 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         if (isSpecialString(value)) {
             handleSpecialString(observation, value);
-        } else if (!data.getDataMapAttributes().isEmpty()) {
+        } else if (data.getDataMapAttributes() != null && !data.getDataMapAttributes().isEmpty()) {
             List<String> observationKeys = data.getDataMapAttributes();
             for (int i = 0; i < observationKeys.size(); i++) {
                 String observationKey = observationKeys.get(i);
                 handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
             }
         } else {
-            Double numValue = null;
             try {
-                numValue = Double.parseDouble(value);
+                Double numValue = Double.parseDouble(value);
+                String formattedValue = formatValue(numValue, dataOperation);
+                observation.setPrimaryMeasure(formattedValue);
             } catch (NumberFormatException e) {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
             }
-            String formattedValue = formatValue(numValue, dataOperation);
-            observation.setPrimaryMeasure(formattedValue);
         }
 
         return observation;
