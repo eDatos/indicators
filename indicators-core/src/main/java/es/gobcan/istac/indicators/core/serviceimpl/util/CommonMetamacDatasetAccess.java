@@ -65,9 +65,10 @@ public abstract class CommonMetamacDatasetAccess {
 
     public List<String> getObservationsAttributes(int index) {
         List<String> attributeValues = new ArrayList<>();
-
-        for (String[] observationsAttribute : observationsAttributes) {
-            attributeValues.add(observationsAttribute[index]);
+        if (observationsAttributes != null) {
+            for (String[] observationsAttribute : observationsAttributes) {
+                attributeValues.add(observationsAttribute[index]);
+            }
         }
 
         return attributeValues;
@@ -121,6 +122,10 @@ public abstract class CommonMetamacDatasetAccess {
     }
 
     protected void initializeObservationsAttributes() {
+        // Verificar si getData() y getData().getAttributes() no son null
+        if (getData() == null || getData().getAttributes() == null) {
+            return;
+        }
         List<DataAttribute> dataAttributes = getData().getAttributes().getAttributes();
         Attributes metadataAttributes = getMetadataAttributes();
 
