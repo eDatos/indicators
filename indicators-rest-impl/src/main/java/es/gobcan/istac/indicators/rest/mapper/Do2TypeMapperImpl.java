@@ -542,6 +542,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private boolean isAttributeValid(AttributeInstanceObservationDto attributeDto) {
         String attributeId = attributeDto.getAttributeId();
         String valueLabel = attributeDto.getValue().getLocalisedLabel(metadataProperties.getDefaultInternationalizationLanguage());
+        if (attributeId == null || valueLabel == null) {
+            return false;
+        }
+
         return !attributeId.equals(IndicatorDataAttributeTypeEnum.CODE.getName()) && !valueLabel.isEmpty();
     }
 

@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Enumerat
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public abstract class CommonMetamacDatasetAccess {
@@ -31,6 +32,8 @@ public abstract class CommonMetamacDatasetAccess {
     protected     List<String>              dimensionsOrderedForData;
     protected     Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     protected     List<String>              attributesMetadataMap;
+
+    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
 
     protected abstract DimensionRepresentations getDimensions();
 
@@ -141,10 +144,24 @@ public abstract class CommonMetamacDatasetAccess {
 
         this.observationsAttributes = new ArrayList<>(dataAttributesDef.size());
 
+        boolean foundObs = false;
+        String valueObsAux = "";
+
         for (DataAttribute dataAttributeDef : dataAttributesDef) {
+            if (OBS_CONF_ATTRIBUTE.equals(dataAttributeDef.getId())) {
+                foundObs = true;
+            } else {
+                valueObsAux = dataAttributeDef.getValue();
+            }
             this.attributesMetadataMap.add(dataAttributeDef.getId());
             this.observationsAttributes.add(
                     StringUtils.splitByWholeSeparatorPreserveAllTokens(getObservationsAttributesDataValue(dataAttributeDef.getValue(), dataAttributeDef.getId()), DATA_SEPARATOR));
+        }
+
+        if (!foundObs) {
+            this.attributesMetadataMap.add(OBS_CONF_ATTRIBUTE);
+            String[] dataObs = new String[StringUtils.splitByWholeSeparatorPreserveAllTokens(valueObsAux, DATA_SEPARATOR).length];
+            this.observationsAttributes.add(dataObs);
         }
     }
 

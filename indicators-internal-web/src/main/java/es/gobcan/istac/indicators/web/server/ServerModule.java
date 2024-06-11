@@ -25,7 +25,6 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteTemporalFileActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteUnitMultipliersActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DisableNotifyPopulationErrorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.EnableNotifyPopulationErrorsActionHandler;
@@ -100,7 +99,6 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
-import es.gobcan.istac.indicators.web.shared.DeleteTemporalFileAction;
 import es.gobcan.istac.indicators.web.shared.DeleteUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction;
 import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
@@ -228,7 +226,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(FindIndicatorsAction.class, FindIndicatorsActionHandler.class);
         bindHandler(ExportIndicatorsAction.class, ExportIndicatorsActionHandler.class);
         bindHandler(ReSendIndicatorStreamMessageAction.class, ReSendIndicatorStreamMessageActionHandler.class);
-        bindHandler(DeleteTemporalFileAction.class, DeleteTemporalFileActionHandler.class);
 
         // Indicators life cycle
         bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);
