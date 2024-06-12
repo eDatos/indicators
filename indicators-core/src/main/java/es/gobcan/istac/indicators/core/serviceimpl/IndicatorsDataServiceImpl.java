@@ -1756,12 +1756,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
         code.setAttributeId(CODE_ATTRIBUTE);
 
-        AttributeDto obsConf = new AttributeDto();
-        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
-
         datasetRepoDto.getAttributes().add(code);
-        datasetRepoDto.getAttributes().add(obsConf);
 
         if (observationsMapAttributes != null) {
             for (String key : observationsMapAttributes) {
@@ -1771,10 +1766,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepoDto.getAttributes().add(obsConfAux);
             }
         }
-
         List<String> languages = new ArrayList<String>();
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
+
+        ensureObsConfAttributeExists(datasetRepoDto);
 
         try {
             datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
@@ -1782,6 +1778,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
         }
         return datasetRepoDto;
+    }
+
+    private void ensureObsConfAttributeExists(DatasetRepositoryDto datasetRepoDto) {
+        boolean obsConfExists = false;
+        for (AttributeDto attribute : datasetRepoDto.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attribute.getAttributeId())) {
+                obsConfExists = true;
+                break;
+            }
+        }
+
+        if (!obsConfExists) {
+            AttributeDto obsConf = new AttributeDto();
+            obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+            datasetRepoDto.getAttributes().add(obsConf);
+        }
     }
 
     /**
