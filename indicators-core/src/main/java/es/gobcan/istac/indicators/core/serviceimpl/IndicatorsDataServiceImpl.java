@@ -1756,12 +1756,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
         code.setAttributeId(CODE_ATTRIBUTE);
 
-        AttributeDto obsConf = new AttributeDto();
-        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
-        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
-
         datasetRepoDto.getAttributes().add(code);
-        datasetRepoDto.getAttributes().add(obsConf);
 
         if (observationsMapAttributes != null) {
             for (String key : observationsMapAttributes) {
@@ -1771,10 +1766,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepoDto.getAttributes().add(obsConfAux);
             }
         }
-
         List<String> languages = new ArrayList<String>();
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
+
+        boolean obsConfExists = false;
+        for (AttributeDto attribute : datasetRepoDto.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attribute.getAttributeId())) {
+                obsConfExists = true;
+                break;
+            }
+        }
+
+        if (!obsConfExists) {
+            AttributeDto obsConf = new AttributeDto();
+            obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+            datasetRepoDto.getAttributes().add(obsConf);
+        }
 
         try {
             datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
