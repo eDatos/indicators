@@ -1326,7 +1326,7 @@ Application Indicators {
         	"Geographical value"
 			String timeValue not nullable key;
 			String timeGranularity not nullable;
-			- @Translation translation nullable; // not null?
+			- @Translation translation nullable cascade="none"; // not null?
 			- @Translation granularityTranslation nullable cascade="none"; // not null?
 			
 			Repository IndicatorVersionTimeCoverageRepository {
