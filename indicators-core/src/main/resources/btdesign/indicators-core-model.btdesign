@@ -1327,7 +1327,7 @@ Application Indicators {
 			String timeValue not nullable key;
 			String timeGranularity not nullable;
 			- @Translation translation nullable; // not null?
-			- @Translation granularityTranslation nullable; // not null?
+			- @Translation granularityTranslation nullable cascade="none"; // not null?
 			
 			Repository IndicatorVersionTimeCoverageRepository {
 				deleteCoverageForIndicatorVersion(@IndicatorVersion indicatorVersion);
