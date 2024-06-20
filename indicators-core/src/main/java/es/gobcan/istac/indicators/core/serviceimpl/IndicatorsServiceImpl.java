@@ -75,7 +75,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
-import sun.security.action.GetPropertyAction;
 
 ;
 
@@ -1510,8 +1509,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         PagingParameter pagingParameter = PagingParameter.noLimits();
         ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
-        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE.getValue()).or()
-                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT.getValue());
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE).or()
+                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT);
         List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
