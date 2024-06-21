@@ -22,6 +22,8 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
  */
 @Service("indicatorsServiceFacade")
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
+
+    private static Logger                          LOG = LoggerFactory.getLogger(IndicatorsServiceFacadeImpl.class);
 
     @Autowired
     private Do2DtoMapper                           do2DtoMapper;
@@ -946,7 +950,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         List<IndicatorVersion> indicatorsVersionToPopulate = this.getIndicatorsService().retrieveIndicatorsByGeographicalCodelist(ctx, message);
 
-        this.getIndicatorsDataService().populateIndicatorsDataFromGeographicalCodelist(ctx, indicatorsVersionToPopulate);
+        populateIndicatorsDataFromGeographicalCodelist(ctx, indicatorsVersionToPopulate);
+    }
+
+    private void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, List<IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException {
+
+        LOG.info("Starting populate indicators because changes in geographical codelist. Number of affected indicators {} indicatores", indicatorsVersionToPopulate.size());
+
+        for (IndicatorVersion indicatorVersion : indicatorsVersionToPopulate) {
+            try {
+                getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+            } catch (MetamacException e) {
+                LOG.error(String.format("Error updating indicator %s after receiving geographical codelist update ", indicatorVersion.getCode()));
+            }
+        }
+
+        LOG.info("Finished populate indicators because changes in geographical codelist");
     }
 
     private void updateGeopgraphicalGranularities(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {

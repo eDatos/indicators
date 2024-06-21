@@ -158,9 +158,9 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
     }
 
     private ServiceContext createServiceContext(String logMessage) {
-        ServiceContext serviceContext = new ServiceContext("kafka-query-received", logMessage.toString(), "indicators-core");
+        ServiceContext serviceContext = new ServiceContext("kafka-query-received", logMessage, "indicators-core");
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
-        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.setUserId("admin");
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         return serviceContext;
