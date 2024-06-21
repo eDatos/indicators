@@ -220,9 +220,7 @@ Application Indicators {
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
-	    	"Update indicators when geographical codelist changes" 
-	    	populateIndicatorsDataFromGeographicalCodelist(List<@IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException;
-	    	
+   	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
 	    	"Updates data for all published JSON-stat indicators"

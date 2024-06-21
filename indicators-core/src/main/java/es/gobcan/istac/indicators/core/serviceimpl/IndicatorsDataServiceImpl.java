@@ -130,31 +130,31 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
-    private IndicatorsConfigurationService configurationService;
+    private IndicatorsConfigurationService                configurationService;
 
     @Autowired
-    private DsplExporterService dsplExporterService;
+    private DsplExporterService                           dsplExporterService;
 
     @Autowired
-    private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
+    private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private SrmRestInternalService                        srmRestInternalService;
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger                           LOG                = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String GEO_DIMENSION      = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String TIME_DIMENSION     = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String MEASURE_DIMENSION  = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String CODE_ATTRIBUTE     = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final Double ZERO_RANGE         = 1E-6;
-    public static final int    MAX_MEASURE_LENGTH = 50;
+    public static final String                            GEO_DIMENSION      = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String                            TIME_DIMENSION     = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String                            MEASURE_DIMENSION  = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String                            CODE_ATTRIBUTE     = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String                            OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final Double                            ZERO_RANGE         = 1E-6;
+    public static final int                               MAX_MEASURE_LENGTH = 50;
 
-    private static final Map<String, String> SPECIAL_STRING_MAPPING;
+    private static final Map<String, String>              SPECIAL_STRING_MAPPING;
 
     static {
         SPECIAL_STRING_MAPPING = new HashMap<String, String>();
@@ -171,7 +171,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper               mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -469,8 +469,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
-            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator()
-                    .getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName() + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
+            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
+                    + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
         }
     }
 
@@ -2198,15 +2198,4 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
     }
 
-    @Override
-    public void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, List<IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException {
-
-        LOG.info("Starting populate indicators because changes in geographical codelist. Number of affected indicators {} indicatores", indicatorsVersionToPopulate.size());
-
-        for (IndicatorVersion indicatorVersion : indicatorsVersionToPopulate) {
-            planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
-        }
-
-        LOG.info("Finished populate indicators because changes in geographical codelist");
-    }
 }
