@@ -2174,9 +2174,10 @@ Application Indicators {
             JSON_STAT("JSON-stat")
         }
 
+    	"Type of metamac datasource"
         enum MetamacSelectionEnum {
             String value
-            CONSULTA("Consulta"),
+            QUERY("Consulta"),
             DATASET("Dataset")
         }
         

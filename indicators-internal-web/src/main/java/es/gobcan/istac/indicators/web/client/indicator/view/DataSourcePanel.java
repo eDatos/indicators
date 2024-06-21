@@ -638,7 +638,7 @@ public class DataSourcePanel extends VLayout {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return isMetamacTypeSelected(form, MetamacSelectionEnum.CONSULTA);
+                return isMetamacTypeSelected(form, MetamacSelectionEnum.QUERY);
             }
         });
 

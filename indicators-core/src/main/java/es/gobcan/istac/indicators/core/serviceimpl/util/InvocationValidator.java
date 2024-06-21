@@ -2064,7 +2064,7 @@ public class InvocationValidator {
                 case DATASET:
                     checkMetamacDatasourceType(dataSource, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX, exceptions);
                     break;
-                case CONSULTA:
+                case QUERY:
                     checkMetamacDatasourceType(dataSource, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX, exceptions);
                     break;
                 default:
