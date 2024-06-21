@@ -75,6 +75,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                    = create("exception.indicators.data_source.not_found");
+    public static final CommonServiceExceptionType DATA_SOURCE_METAMAC_TYPE_WRONG_CONFIGURATION             = create("exception.indicators.data_source.metamac_type_wrong_configuration");
 
     // Subjects
     public static final CommonServiceExceptionType SUBJECT_NOT_FOUND                                        = create("exception.indicators.subject.not_found");
