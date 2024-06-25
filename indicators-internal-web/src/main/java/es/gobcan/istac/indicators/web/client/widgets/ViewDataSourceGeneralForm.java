@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import java.util.LinkedHashMap;
+
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
@@ -170,7 +172,11 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             if (MetamacSelectionEnum.DATASET.equals(dataSourceDto.getMetamacType())) {
                 isDataset = true;
             }
-            setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? dataSourceDto.getMetamacType().getValue() : StringUtils.EMPTY);
+            LinkedHashMap<String, String> metamacSelectionTypeMap = CommonUtils.getMetamacSelectionTypeMap();
+
+            String metamacSelectionValue = metamacSelectionTypeMap.get(dataSourceDto.getMetamacType().getName());
+
+            setValue(DataSourceDS.METAMAC_TYPE, (dataSourceDto.getMetamacType() != null) ? metamacSelectionValue : StringUtils.EMPTY);
         }
 
         setValue(DataSourceDS.QUERY_METAMAC, dataSourceDto.getStatResource());

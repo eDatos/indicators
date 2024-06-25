@@ -2176,9 +2176,8 @@ Application Indicators {
 
     	"Type of metamac datasource"
         enum MetamacSelectionEnum {
-            String value
-            QUERY("Consulta"),
-            DATASET("Dataset")
+            QUERY,
+            DATASET
         }
         
         "Task Status Type Enumerated"
