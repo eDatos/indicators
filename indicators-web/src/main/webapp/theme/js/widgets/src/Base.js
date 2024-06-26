@@ -107,7 +107,8 @@
                 languages: this.options.languages ? this.options.languages.map(function (language) {
                     return { lang: language, selected: self.locale === language }
                 }) : [],
-                languageSelectorId: this.getLanguageSelectorId()
+                languageSelectorId: this.getLanguageSelectorId(),
+                analyticsUrl: Istac.widget.configuration['"metamac.analytics.url"']
             };
 
             if (this.options.uwa) {

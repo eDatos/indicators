@@ -1,3 +1,14 @@
+<script>
+    function loadPage(href) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", href + '?appId=indicators-widget', false);
+        xmlhttp.send();
+        return xmlhttp.responseText;
+    };
+
+    document.getElementById('analytics-content').innerHTML =
+        loadPage({{ analyticsUrl }});
+</script>
 <div class="istac-widget-title">
     <span class="istac-widget-title-text">
         <a href="#" target="_blank"></a>
@@ -31,3 +42,4 @@
             {{organisation}}</a></p>
     </div>
 </div>
+<div id="analytics-content"></div>
