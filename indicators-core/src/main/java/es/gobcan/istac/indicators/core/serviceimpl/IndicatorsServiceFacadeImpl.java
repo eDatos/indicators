@@ -961,7 +961,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             try {
                 getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
             } catch (MetamacException e) {
-                LOG.error(String.format("Error updating indicator %s after receiving geographical codelist update ", indicatorVersion.getCode()));
+                LOG.error(String.format("Error updating indicator %s after receiving geographical codelist update ", indicatorVersion.getCode()), e);
             }
         }
 
