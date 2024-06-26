@@ -192,7 +192,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getMetamacSelectionTypeMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (MetamacSelectionEnum selection : MetamacSelectionEnum.values()) {
-            valueMap.put(selection.toString(), selection.getValue());
+            valueMap.put(selection.toString(), getCoreMessages().getString(getCoreMessages().metamacSelectionEnum() + selection.getName()));
         }
         return valueMap;
     }

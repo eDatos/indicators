@@ -40,7 +40,7 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         // Metamac
         target.setQueryEnvironmentEnum(QueryEnvironmentEnum.METAMAC);
 
-        target.setMetamacResourceType(MetamacSelectionEnum.CONSULTA);
+        target.setMetamacResourceType(MetamacSelectionEnum.QUERY);
 
         // UUid
         target.setUuid(query.getUrn());

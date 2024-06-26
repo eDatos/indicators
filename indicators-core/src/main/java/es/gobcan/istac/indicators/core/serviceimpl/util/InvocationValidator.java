@@ -5,6 +5,7 @@ import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.v
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -15,6 +16,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 
 import es.gobcan.istac.edatos.dataset.repository.util.ValidationUtils;
@@ -2003,6 +2005,7 @@ public class InvocationValidator {
         if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
             IndicatorsValidationUtils.checkMetadataRequired(dataSource.getStatResource(), ServiceExceptionParameters.DATA_SOURCE_DATA_QUERY_ARTEFACT, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(dataSource.getMetamacType(), ServiceExceptionParameters.DATA_SOURCE_DATA_METAMAC_TYPE, exceptions);
+            checkMetamacDatasourceType(dataSource, exceptions);
         }
 
         if (IndicatorsValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
@@ -2052,6 +2055,28 @@ public class InvocationValidator {
                 IndicatorsValidationUtils.checkMetadataRequired(dataSourceVariable.getVariable(), ServiceExceptionParameters.DATA_SOURCE_OTHER_VARIABLE_VARIABLE, exceptions);
                 IndicatorsValidationUtils.checkMetadataRequired(dataSourceVariable.getCategory(), ServiceExceptionParameters.DATA_SOURCE_OTHER_VARIABLE_CATEGORY, exceptions);
             }
+        }
+    }
+
+    private static void checkMetamacDatasourceType(DataSource dataSource, List<MetamacExceptionItem> exceptions) {
+        if (!IndicatorsValidationUtils.isEmpty(dataSource.getMetamacType())) {
+            switch (dataSource.getMetamacType()) {
+                case DATASET:
+                    checkMetamacDatasourceType(dataSource, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX, exceptions);
+                    break;
+                case QUERY:
+                    checkMetamacDatasourceType(dataSource, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX, exceptions);
+                    break;
+                default:
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.DATA_SOURCE_DATA_METAMAC_TYPE));
+                    break;
+            }
+        }
+    }
+
+    private static void checkMetamacDatasourceType(DataSource dataSource, String urnSiemacClassDatasetPrefix, List<MetamacExceptionItem> exceptions) {
+        if (!StringUtils.startsWithIgnoreCase(dataSource.getQueryUrn(), urnSiemacClassDatasetPrefix) || !StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), urnSiemacClassDatasetPrefix)) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.DATA_SOURCE_METAMAC_TYPE_WRONG_CONFIGURATION));
         }
     }
 

@@ -2172,10 +2172,10 @@ Application Indicators {
             JSON_STAT("JSON-stat")
         }
 
+    	"Type of metamac datasource"
         enum MetamacSelectionEnum {
-            String value
-            CONSULTA("Consulta"),
-            DATASET("Dataset")
+            QUERY,
+            DATASET
         }
         
         "Task Status Type Enumerated"
