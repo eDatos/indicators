@@ -20,4 +20,14 @@ i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
     function buildExampleUrl(options) {
         return options.url + '/widgets/example?options=' + JSON.stringify(options);
     }
+
+    function loadAnalyticsPage(href) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", href + '?appId=indicators-widget', false);
+        xmlhttp.send();
+        return xmlhttp.responseText;
+    }
+
+    document.getElementById('edatos-analytics-content').innerHTML = loadAnalyticsPage(Istac.widget.configuration['metamac.analytics.script.url']);
+
 }());

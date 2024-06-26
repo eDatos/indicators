@@ -108,7 +108,6 @@
                     return { lang: language, selected: self.locale === language }
                 }) : [],
                 languageSelectorId: this.getLanguageSelectorId(),
-                analyticsUrl: Istac.widget.configuration['metamac.analytics.script.url']
             };
 
             if (this.options.uwa) {
