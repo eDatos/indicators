@@ -1,7 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
@@ -956,10 +958,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, List<IndicatorVersion> indicatorsVersionToPopulate) throws MetamacException {
 
         LOG.info("Starting populate indicators because changes in geographical codelist. Number of affected indicators {} indicatores", indicatorsVersionToPopulate.size());
-
+        Set<String> indicatorsByIndicatorsVersion = new HashSet<>();
         for (IndicatorVersion indicatorVersion : indicatorsVersionToPopulate) {
             try {
-                getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+                if (!indicatorsByIndicatorsVersion.contains(indicatorVersion.getIndicator().getCode())) {
+                    indicatorsByIndicatorsVersion.add(indicatorVersion.getIndicator().getCode());
+                    getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+                }
             } catch (MetamacException e) {
                 LOG.error(String.format("Error updating indicator %s after receiving geographical codelist update ", indicatorVersion.getCode()), e);
             }
