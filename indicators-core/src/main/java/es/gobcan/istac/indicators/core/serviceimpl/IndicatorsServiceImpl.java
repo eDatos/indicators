@@ -1495,7 +1495,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         PagingParameter pagingParameter = PagingParameter.noLimits();
         ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
-        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn);
+        conditionRoot.withProperty(IndicatorVersionProperties.dataSources().geographicalCodelistUrn()).eq(codelistUrn).orderBy(IndicatorVersionProperties.indicator().code())
+                .orderBy(IndicatorVersionProperties.versionNumber()).descending();
         List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
@@ -1510,7 +1511,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         PagingParameter pagingParameter = PagingParameter.noLimits();
         ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
         conditionRoot.withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.GPE).or()
-                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT);
+                .withProperty(IndicatorVersionProperties.dataSources().queryEnvironment()).eq(QueryEnvironmentEnum.JSON_STAT).orderBy(IndicatorVersionProperties.indicator().code())
+                .orderBy(IndicatorVersionProperties.versionNumber()).descending();
         List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
