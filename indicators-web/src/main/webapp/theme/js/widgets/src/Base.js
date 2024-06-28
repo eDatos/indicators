@@ -107,7 +107,7 @@
                 languages: this.options.languages ? this.options.languages.map(function (language) {
                     return { lang: language, selected: self.locale === language }
                 }) : [],
-                languageSelectorId: this.getLanguageSelectorId(),
+                languageSelectorId: this.getLanguageSelectorId()
             };
 
             if (this.options.uwa) {

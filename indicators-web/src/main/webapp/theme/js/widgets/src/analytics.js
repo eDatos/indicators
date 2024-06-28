@@ -20,5 +20,4 @@ i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
     function buildExampleUrl(options) {
         return options.url + '/widgets/example?options=' + JSON.stringify(options);
     }
-
 }());
