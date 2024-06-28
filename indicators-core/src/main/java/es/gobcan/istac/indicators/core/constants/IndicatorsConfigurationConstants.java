@@ -42,4 +42,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH    = "indicators.category_cache_refresh.cron_expression";
 
     public static final String CRON_EXPRESSION_GEOGRAPHICAL_VALUES_MIGRATION = "indicators.geographical_values_migration.cron_expression";
+
+    public static final String ANALYTICS_SCRIPT_URL = "metamac.analytics.script.url";
 }
