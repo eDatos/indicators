@@ -1,10 +1,6 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PERCENTAGE_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PUNTUAL_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PERCENTAGE_RATE;
-import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PUNTUAL_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -277,14 +273,15 @@ public class Do2JsonStatMapperUtil {
         Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservations();
 
         List<String> observations = new ArrayList<>();
-
-        for (String geographicalCode : geographicalCodes) {
-            for (String timeValueCode : timeValues) {
-                for (String measureValueCode : measureValues) {
-                    // Observation ID: Be careful!!! don't change order of ids
-                    String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
-                    ObservationExtendedDto observationDto = observationMap.get(id);
-                    observations.add(observationDto.getPrimaryMeasure());
+        if (!observationMap.isEmpty()) {
+            for (String geographicalCode : geographicalCodes) {
+                for (String timeValueCode : timeValues) {
+                    for (String measureValueCode : measureValues) {
+                        // Observation ID: Be careful!!! don't change order of ids
+                        String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
+                        ObservationExtendedDto observationDto = observationMap.get(id);
+                        observations.add(observationDto.getPrimaryMeasure());
+                    }
                 }
             }
         }
