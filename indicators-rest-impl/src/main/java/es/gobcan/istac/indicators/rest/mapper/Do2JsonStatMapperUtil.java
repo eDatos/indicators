@@ -1,6 +1,10 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import static es.gobcan.istac.indicators.rest.i18n.Translations.*;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ABSOLUTE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_ANNUAL_PUNTUAL_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PERCENTAGE_RATE;
+import static es.gobcan.istac.indicators.rest.i18n.Translations.MEASURE_INTERPERIOD_PUNTUAL_RATE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
