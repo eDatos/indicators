@@ -20,10 +20,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import es.gobcan.istac.indicators.core.dto.stream.AvroMessage;
 import es.gobcan.istac.indicators.core.dto.stream.MessageBase;
@@ -37,8 +35,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.result.SendStreamMessageResul
 @Service("streamMessagingService")
 public class StreamMessagingServiceImpl implements StreamMessagingService, ApplicationListener<ContextClosedEvent> {
 
-    private static final Logger                      LOGGER                = LoggerFactory.getLogger(StreamMessagingServiceImpl.class);
-    private static final String                      CONSUMER_QUERY_1_NAME = "structural_resources_producer";
+    private static final Logger                      LOGGER                    = LoggerFactory.getLogger(StreamMessagingServiceImpl.class);
+    private static final String                      PRODUCER_INDICATOR_1_NAME = "indicators_producer";
 
     @Autowired
     private ConfigurationService                     configurationService;
@@ -128,7 +126,7 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
         String bootstrapServers = configurationService.retrieveProperty(KAFKA_BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, CONSUMER_QUERY_1_NAME);
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, PRODUCER_INDICATOR_1_NAME);
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
         props.put(ProducerConfig.RETRIES_CONFIG, 10);
@@ -146,12 +144,6 @@ public class StreamMessagingServiceImpl implements StreamMessagingService, Appli
             producer.close();
             producer = null;
         }
-    }
-
-    private TransactionTemplate getTransactionTemplate() {
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        return transactionTemplate;
     }
 
     abstract static class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
