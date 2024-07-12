@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,14 +68,32 @@ public class IndicatorsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
     @ResponseBody
     // @formatter:off
-    public ResponseEntity<JsonStatDataType> retrieveIndicatorJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
+    public ResponseEntity<Object> retrieveIndicatorJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
                                                                       @RequestParam(required = false, value = "representation") String representation,
                                                                       @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         // @formatter:on
-        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
-        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-        JsonStatDataType jsonStatIndicator = indicatorRestFacade.retrieveJsonStatIndicator(indicatorCode, selectedRepresentations, selectedGranularities);
-        return new ResponseEntity<>(jsonStatIndicator, null, HttpStatus.OK);
+        try {
+            Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+            Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+            JsonStatDataType jsonStatIndicator = indicatorRestFacade.retrieveJsonStatIndicator(indicatorCode, selectedRepresentations, selectedGranularities);
+            return new ResponseEntity<>(jsonStatIndicator, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return handleGenericException(e);
+        }
+    }
+
+    private ResponseEntity<Object> handleGenericException(Exception e) {
+        if (e instanceof MetamacException) {
+            return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ((MetamacException) e).getExceptionItems().get(0).getMessage());
+        } else {
+            return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    private ResponseEntity<Object> createErrorResponse(HttpStatus status, String errorMessage) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", errorMessage);
+        return new ResponseEntity<>(errorResponse, status);
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET)
