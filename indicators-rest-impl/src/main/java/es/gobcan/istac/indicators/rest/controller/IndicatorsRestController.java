@@ -78,12 +78,12 @@ public class IndicatorsRestController extends AbstractRestController {
             JsonStatDataType jsonStatIndicator = indicatorRestFacade.retrieveJsonStatIndicator(indicatorCode, selectedRepresentations, selectedGranularities);
             return new ResponseEntity<>(jsonStatIndicator, null, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Error", e);
             return handleGenericException(e);
         }
     }
 
     private ResponseEntity<Object> handleGenericException(Exception e) {
+        logger.error("Error", e);
         if (e instanceof MetamacException) {
             return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ((MetamacException) e).getExceptionItems().get(0).getMessage());
         } else {
