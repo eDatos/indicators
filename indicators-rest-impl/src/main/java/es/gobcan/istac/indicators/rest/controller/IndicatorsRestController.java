@@ -78,6 +78,7 @@ public class IndicatorsRestController extends AbstractRestController {
             JsonStatDataType jsonStatIndicator = indicatorRestFacade.retrieveJsonStatIndicator(indicatorCode, selectedRepresentations, selectedGranularities);
             return new ResponseEntity<>(jsonStatIndicator, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.error("Error", e);
             return handleGenericException(e);
         }
     }
