@@ -284,7 +284,11 @@ public class Do2JsonStatMapperUtil {
                         // Observation ID: Be careful!!! don't change order of ids
                         String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
                         ObservationExtendedDto observationDto = observationMap.get(id);
-                        observations.add(observationDto.getPrimaryMeasure());
+                        if (observationDto == null) {
+                            observations.add(null);
+                        } else {
+                            observations.add(observationDto.getPrimaryMeasure());
+                        }
                     }
                 }
             }
