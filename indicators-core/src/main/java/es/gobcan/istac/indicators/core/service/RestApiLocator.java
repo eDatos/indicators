@@ -6,6 +6,7 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.siemac.edatos.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.notices.rest.internal.v1_0.service.NoticesV1_0;
@@ -33,9 +34,11 @@ public class RestApiLocator {
     private SrmRestInternalFacadeV10                   srmRestInternalFacadeV10                                 = null;
 
     private SrmRestExternalFacadeV10                   srmRestExternalFacadeV10                                 = null;
+    String                                             apiKey;
 
     @PostConstruct
     public void initService() throws MetamacException {
+        apiKey = configurationService.retrieveIndicatorsApiKey();
         String statisticalOperationsApiUrlBase = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
         statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(statisticalOperationsApiUrlBase, StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread safe
 
@@ -57,7 +60,7 @@ public class RestApiLocator {
     public StatisticalOperationsRestInternalFacadeV10 getStatisticalOperationsRestFacadeV10() {
         // reset thread context
         WebClient.client(statisticalOperationsRestInternalFacadeV10).reset();
-        WebClient.client(statisticalOperationsRestInternalFacadeV10).accept("application/xml");
+        WebClient.client(statisticalOperationsRestInternalFacadeV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return statisticalOperationsRestInternalFacadeV10;
     }
@@ -73,7 +76,7 @@ public class RestApiLocator {
     public NoticesV1_0 getNoticesRestInternalFacadeV10() {
         // reset thread context
         WebClient.client(noticesV10).reset();
-        WebClient.client(noticesV10).accept("application/xml");
+        WebClient.client(noticesV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return noticesV10;
     }
@@ -81,7 +84,7 @@ public class RestApiLocator {
     public SrmRestInternalFacadeV10 getSrmRestInternalFacadeV10() {
         // reset thread context
         WebClient.client(srmRestInternalFacadeV10).reset();
-        WebClient.client(srmRestInternalFacadeV10).accept("application/xml");
+        WebClient.client(srmRestInternalFacadeV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return srmRestInternalFacadeV10;
     }
