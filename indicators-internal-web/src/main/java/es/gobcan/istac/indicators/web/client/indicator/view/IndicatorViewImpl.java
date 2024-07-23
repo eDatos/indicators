@@ -24,7 +24,6 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
@@ -33,7 +32,9 @@ import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.shared.GetDatasetsPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetQueriesPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.GetRelatedResourcesResult;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
@@ -131,14 +132,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        generalPanel.setGeographicalValues(geographicalValueDtos);
-        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        generalPanel.setGeographicalValue(geographicalValueDto);
+    public void setGeographicalValuesAsRelatedResource(GetRelatedResourcesResult result) {
+        generalPanel.setGeographicalValuesAsRelatedResources(result);
+        dataSourcesPanel.setGeographicalValuesAsRelatedResources(result);
     }
 
     @Override
@@ -164,16 +160,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setDataStructureForEdition(DataStructureDto dataStructureDto) {
         dataSourcesPanel.setDataStructureForEdition(dataStructureDto);
-    }
-
-    @Override
-    public void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos) {
-        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValueDS(GeographicalValueDto geographicalValueDto) {
-        dataSourcesPanel.setGeographicalValue(geographicalValueDto);
     }
 
     @Override
@@ -243,10 +229,19 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setDatasetsForRelatedQuery(GetDatasetsPaginatedListResult result) {
+        dataSourcesPanel.setDatasets(result);
+    }
+
+    @Override
     public void setStatisticalOperationsForQuerySelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
         dataSourcesPanel.setStatisticalOperations(operationsList, firstResult, totalResults);
     }
 
+    @Override
+    public void setStatisticalOperationsForDatasetSelection(List<ExternalItemDto> operationsList, int firstResult, int totalResults) {
+        dataSourcesPanel.setStatisticalDatasetOperations(operationsList, firstResult, totalResults);
+    }
     @Override
     public void showInformationMessage(String title, String message) {
         InformationWindow informationWindow = new InformationWindow(title, message);

@@ -67,7 +67,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseTime = new ViewTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
 
-        ViewTextItem baseLocation = new ViewTextItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
+        RelatedResourceLinkItem baseLocation = new RelatedResourceLinkItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM, getConstants().indicQuantityBaseLocation(),
+                getCustomLinkItemNavigationClickHandler());
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
 
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
@@ -112,12 +113,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, ""); // Base location set in setGeographicalValue method
-            if (!StringUtils.isBlank(quantityDto.getBaseLocationUuid())) {
-                if (uiHandlers instanceof IndicatorUiHandler) {
-                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
-                }
-            }
+            RelatedResourceLinkItem geoValue = (RelatedResourceLinkItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION_ITEM);
+            geoValue.setRelatedResource(quantityDto.getBaseLocation());
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, ""); // Value set in setIndicatorQuantityIndicatorBase method
             if (!StringUtils.isBlank(quantityDto.getBaseQuantityIndicatorUuid())) {

@@ -28,6 +28,7 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
             logger.debug("Scheduling jobs...");
             schedulingIndicatorsUpdateJob();
             schedulingCategoryCacheRefreshJob();
+            schedulingGeographicalValuesMigrationTemporalJob();
         }
     }
 
@@ -39,6 +40,11 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
     private void schedulingCategoryCacheRefreshJob() {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
         taskServiceFacade.scheduleCategoryCacheRefreshAutomaticJob(ctx);
+    }
+
+    private void schedulingGeographicalValuesMigrationTemporalJob() {
+        ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
+        taskServiceFacade.scheduleGeographicalValuesMigrationTemporalTask(ctx);
     }
 
 }

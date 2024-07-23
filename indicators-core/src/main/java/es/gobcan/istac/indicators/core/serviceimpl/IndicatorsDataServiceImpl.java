@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static es.gobcan.istac.indicators.core.constants.IndicatorsConstants.DATASET_REPOSITORY_LOCALE;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -36,6 +38,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
@@ -62,6 +65,7 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
+import es.gobcan.istac.indicators.core.domain.DataGpe;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -95,11 +99,14 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DimensionFilterUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.GpeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorsServicesUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.JsonStatUtils;
@@ -132,19 +139,20 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private StatisticalResoucesRestExternalService        statisticalResoucesRestExternalService;
 
     @Autowired
+    private SrmRestInternalService                        srmRestInternalService;
+
+    @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
 
-    private static final Logger                           LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private static final Logger                           LOG                = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String                            GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String                            TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String                            MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String                            CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String                            OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String                            DATASET_REPOSITORY_LOCALE = "es";
-
-    public static final Double                            ZERO_RANGE                = 1E-6;
-    public static final int                               MAX_MEASURE_LENGTH        = 50;
+    public static final String                            GEO_DIMENSION      = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String                            TIME_DIMENSION     = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String                            MEASURE_DIMENSION  = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String                            CODE_ATTRIBUTE     = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String                            OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final Double                            ZERO_RANGE         = 1E-6;
+    public static final int                               MAX_MEASURE_LENGTH = 50;
 
     private static final Map<String, String>              SPECIAL_STRING_MAPPING;
 
@@ -193,9 +201,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             // Call jaxi for query structure
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
-            return jsonToDataStructure(json);
+            DataStructure dataStructure = jsonToDataStructure(json);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            return GpeUtils.gpeDataStructureToDataStructure(dataStructure, variableElementsByCodesOfCodelist);
+
         } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -203,15 +219,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public JsonStatData retrieveJsonStatData(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveJsonStatData(uuid, null);
-
         try {
             String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, uuid);
             JsonStatData jsonStatData = jsonToJsonStatData(json);
             LOG.debug("Retrieved JSON-stat object: {} ", jsonStatData);
+
+            Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+            JsonStatUtils.jsonStatDataToGeographicVariableElements(uuid, jsonStatData, variableElementsByCodesOfCodelist);
+
             return jsonStatData;
+
         } catch (Exception e) {
             LOG.error("Unexpected error occurred retrieving JSON-stat file {} : ", uuid, e);
-            throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.JSON_STAT_RETRIEVE_ERROR, uuid);
+            }
         }
     }
 
@@ -377,14 +401,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber);
+            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber, getObservationsMapAttributes(dataCache, dataOps));
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
-                LOG.info("DataOperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
+                LOG.info("dataoperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
@@ -402,6 +426,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
             }
         }
+    }
+
+    public List<String> getObservationsMapAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+        if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
+            Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
+            if (data != null) {
+                return data.getDataMapAttributes();
+            }
+        }
+        return new ArrayList<>(); // Devuelve una lista vacía si no se cumple la condición
     }
 
     @Override
@@ -1514,6 +1548,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private List<ObservationExtendedDto> createObservationsFromDataOperationJson(DataOperation dataOperation, Data data, List<String> geoValues, List<String> timeValues) throws MetamacException {
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+
         for (String geoVal : geoValues) {
             for (String timeVal : timeValues) {
                 // Map for querying the data from the json
@@ -1531,10 +1566,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
 
                 ObservationExtendedDto observation = getObservationValue(dataOperation, data, varCodesForQueryJson, geoVal, timeVal);
-
                 checkMaxObservationValueLength(dataOperation, observation);
-
                 observations.add(observation);
+
             }
         }
         return observations;
@@ -1563,32 +1597,48 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      */
     private Map<String, Data> retrieveDatasFromProvider(ServiceContext ctx, List<DataSource> dataSources) throws MetamacException {
         Map<String, Data> dataCache = new HashMap<String, Data>();
+
         for (DataSource dataSource : dataSources) {
             try {
 
                 Data data = dataCache.get(dataSource.getQueryUuid());
-                if (data == null) {
-                    // Recalculate
-                    if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                        // Metamac
-                        Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
-                                es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                        data = QueryMetamacUtils.queryMetamacToData(query);
-                    } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
-                        String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
-                        JsonStatData jsonStatData = jsonToJsonStatData(json);
-                        data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData);
-                    } else {
-                        // GPE-JAXI
-                        String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
-                        if (json == null) {
-                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
-                        }
-                        data = jsonToData(json);
 
-                    }
-                    dataCache.put(dataSource.getQueryUuid(), data);
+                if (data != null) {
+                    return dataCache;
                 }
+
+                // Recalculate
+                if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+                    // Metamac QUERY
+                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                            es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
+                    data = queryMetamacUtils.queryMetamacToData();
+
+                } else if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+                    // Metamac DATASET
+                    Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrnInDefaultLang(dataSource.getQueryUuid(),
+                            es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
+                    data = datasetMetamacUtils.datasetMetamacToData();
+
+                } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {
+                    String json = getIndicatorsDataProviderService().retrieveJsonStat(ctx, dataSource.getQueryUuid());
+                    JsonStatData jsonStatData = jsonToJsonStatData(json);
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+                    data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
+                } else {
+
+                    // GPE-JAXI
+                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
+                    if (json == null) {
+                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
+                    }
+                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
+                    DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
+                    data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
+                }
+                dataCache.put(dataSource.getQueryUuid(), data);
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
@@ -1695,6 +1745,70 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, List<String> observationsMapAttributes) throws MetamacException {
+        DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
+        datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
+        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
+        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+
+        AttributeDto code = new AttributeDto();
+        code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        code.setAttributeId(CODE_ATTRIBUTE);
+
+        datasetRepoDto.getAttributes().add(code);
+
+        if (observationsMapAttributes != null) {
+            for (String key : observationsMapAttributes) {
+                AttributeDto obsConfAux = new AttributeDto();
+                obsConfAux.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+                obsConfAux.setAttributeId(key);
+                datasetRepoDto.getAttributes().add(obsConfAux);
+            }
+        }
+        List<String> languages = new ArrayList<String>();
+        languages.add(DATASET_REPOSITORY_LOCALE);
+        datasetRepoDto.setLanguages(languages);
+
+        ensureObsConfAttributeExists(datasetRepoDto);
+
+        try {
+            datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
+        }
+        return datasetRepoDto;
+    }
+
+    private void ensureObsConfAttributeExists(DatasetRepositoryDto datasetRepoDto) {
+        boolean obsConfExists = false;
+        for (AttributeDto attribute : datasetRepoDto.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attribute.getAttributeId())) {
+                obsConfExists = true;
+                break;
+            }
+        }
+
+        if (!obsConfExists) {
+            AttributeDto obsConf = new AttributeDto();
+            obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+            datasetRepoDto.getAttributes().add(obsConf);
+        }
+    }
+
+    /**
+     * Retrieves observation values based on the provided data, data operation, variable codes, geographical information, and time value. Constructs an ObservationExtendedDto object with dimensions
+     * and attributes, handling special string cases and other values using helper methods.
+     *
+     * @param dataOperation An object representing a data operation.
+     * @param data An object representing data.
+     * @param varCodes A map containing variable codes.
+     * @param geoValue A string representing geographical information.
+     * @param originalTimeValue A string representing the original time value.
+     * @return ObservationExtendedDto The constructed ObservationExtendedDto object.
+     * @throws MetamacException If there is an error populating the observation.
+     */
     private ObservationExtendedDto getObservationValue(DataOperation dataOperation, Data data, Map<String, String> varCodes, String geoValue, String originalTimeValue) throws MetamacException {
         DataContent content = getValue(dataOperation, data, varCodes);
         String value = content.getValue();
@@ -1710,26 +1824,46 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             value = "..";
         }
 
-        // Check for dotted notation
         if (isSpecialString(value)) {
-            String text = getSpecialStringMeaning(value);
-            // Some Special Strings may not need to create an attribute
-            if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(value)));
+            handleSpecialString(observation, value);
+        } else if (data.getDataMapAttributes() != null && !data.getDataMapAttributes().isEmpty()) {
+            List<String> observationKeys = data.getDataMapAttributes();
+            for (int i = 0; i < observationKeys.size(); i++) {
+                String observationKey = observationKeys.get(i);
+                handleNonSpecialString(observation, value, dataOperation, content, observationKey, i);
             }
-            observation.setPrimaryMeasure(null);
         } else {
-            Double numValue = null;
             try {
-                numValue = Double.parseDouble(value);
+                Double numValue = Double.parseDouble(value);
+                String formattedValue = formatValue(numValue, dataOperation);
+                observation.setPrimaryMeasure(formattedValue);
             } catch (NumberFormatException e) {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
             }
-            String formattedValue = formatValue(numValue, dataOperation);
-            observation.setPrimaryMeasure(formattedValue);
         }
 
         return observation;
+    }
+
+    private void handleSpecialString(ObservationExtendedDto observation, String value) {
+        String text = getSpecialStringMeaning(value);
+        if (!StringUtils.isEmpty(text)) {
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, text));
+        }
+        observation.setPrimaryMeasure(null);
+    }
+
+    private void handleNonSpecialString(ObservationExtendedDto observation, String value, DataOperation dataOperation, DataContent content, String observationKey, int observationPosition)
+            throws MetamacException {
+        try {
+            String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
+            observation.setPrimaryMeasure(formattedValue);
+            String observationEntry = content.getAttributesObservations().get(observationPosition);
+            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+
+        } catch (NumberFormatException e) {
+            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
+        }
     }
 
     /*
@@ -2013,15 +2147,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return mapper.readValue(json, JsonStatData.class);
     }
 
-    /*
-     * Private methods that get data from jaxi
-     */
-    private Data jsonToData(String json) throws IOException {
-        Data target = new Data();
-        target = mapper.readValue(json, Data.class);
-        return target;
-    }
-
     private String getDataViewsRole() throws MetamacException {
         return configurationService.retrieveDbDataViewsRole();
     }
@@ -2067,6 +2192,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         LOG.info("Finished execute export DSPL process");
+    }
+
+    private Map<String, String> getVariableElementsIdByCodeOfCodelist() throws MetamacException {
+        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
     }
 
 }

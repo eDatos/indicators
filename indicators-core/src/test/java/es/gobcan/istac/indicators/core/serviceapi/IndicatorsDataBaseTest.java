@@ -20,7 +20,6 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.dbunit.DataSourceDatabaseTester;
-import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -351,7 +350,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     public JdbcTemplate getDatasourceDSRepository() {
         return this.jdbcTemplate;
     }
- 
+
     @Override
     public void specificSetUpDatabaseTester() throws Exception {
         setUpDatabaseTester(getClass(), jdbcTemplate.getDataSource(), getDataSetDSRepoFile());
@@ -359,7 +358,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
     private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String datasetFileName) throws Exception {
         // Setup database tester
-      
+
         if (databaseTester == null) {
             Connection connection = dataSource.getConnection();
             try {
@@ -368,7 +367,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
                 connection.close();
             }
         }
-        
+
         IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
         try {
             // Create dataset
@@ -397,7 +396,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             dbUnitConnection.close();
         }
     }
-    
+
     private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
         // Remove tables content
         List<String> tableNamesToDelete = getDSRepoTablesToDelete(dbUnitConnection);
@@ -485,6 +484,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     }
 
 }
+
 class HasVersionNumberMock implements HasVersionNumber {
 
     private String code;

@@ -20,7 +20,6 @@ import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
@@ -60,16 +59,13 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
-    private IndicatorsSystemsService       indicatorsSystemsService;
+    private IndicatorsSystemsService indicatorsSystemsService;
 
     @Autowired
-    private IndicatorsService              indicatorsService;
+    private IndicatorsService        indicatorsService;
 
     @Autowired
-    private RateDerivationRepository       rateDerivationRepository;
-
-    @Autowired
-    private IndicatorsConfigurationService configurationService;
+    private RateDerivationRepository rateDerivationRepository;
 
     @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
@@ -278,6 +274,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
         // Metadata modifiable
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());
@@ -287,8 +284,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
-        if (source.getGeographicalValueUuid() != null) {
-            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValueUuid()));
+        if (source.getGeographicalValue() != null) {
+            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValue().getUuid()));
         } else {
             target.setGeographicalValue(null);
         }
@@ -298,6 +295,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setSourceSurveyAcronym(internationalStringDtoToDo(source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.dtoList2DtoString(source.getPublishers()));
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
 
         // Related entities
         target.setAnnualPuntualRate(rateDerivationDtoToDo(ctx, source.getAnnualPuntualRate(), target.getAnnualPuntualRate()));
@@ -430,8 +428,8 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
 
-        if (source.getBaseLocationUuid() != null) {
-            target.setBaseLocation(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getBaseLocationUuid()));
+        if (source.getBaseLocation() != null) {
+            target.setBaseLocation(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getBaseLocation().getUuid()));
         } else {
             target.setBaseLocation(null);
         }

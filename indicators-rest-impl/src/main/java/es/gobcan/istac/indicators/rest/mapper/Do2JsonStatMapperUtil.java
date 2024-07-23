@@ -277,14 +277,19 @@ public class Do2JsonStatMapperUtil {
         Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservations();
 
         List<String> observations = new ArrayList<>();
-
-        for (String geographicalCode : geographicalCodes) {
-            for (String timeValueCode : timeValues) {
-                for (String measureValueCode : measureValues) {
-                    // Observation ID: Be careful!!! don't change order of ids
-                    String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
-                    ObservationExtendedDto observationDto = observationMap.get(id);
-                    observations.add(observationDto.getPrimaryMeasure());
+        if (!observationMap.isEmpty()) {
+            for (String geographicalCode : geographicalCodes) {
+                for (String timeValueCode : timeValues) {
+                    for (String measureValueCode : measureValues) {
+                        // Observation ID: Be careful!!! don't change order of ids
+                        String id = geographicalCode + "#" + timeValueCode + "#" + measureValueCode;
+                        ObservationExtendedDto observationDto = observationMap.get(id);
+                        if (observationDto == null) {
+                            observations.add(null);
+                        } else {
+                            observations.add(observationDto.getPrimaryMeasure());
+                        }
+                    }
                 }
             }
         }

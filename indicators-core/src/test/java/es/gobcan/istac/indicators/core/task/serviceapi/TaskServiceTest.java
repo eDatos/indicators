@@ -96,4 +96,14 @@ public class TaskServiceTest implements TaskServiceTestBase {
     public void testProcessCategoryCacheRefreshManualTask() throws Exception {
         // no test
     }
+
+    @Override
+    public void testScheduleGeographicalValuesMigrationTemporalTask() throws Exception {
+        // Quartz jobs are not tested
+    }
+
+    @Override
+    public void testProcessGeographicalValuesMigrationTemporalTask() throws Exception {
+        // no test
+    }
 }

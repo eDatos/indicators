@@ -19,7 +19,6 @@ import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -39,6 +38,7 @@ import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -185,6 +185,14 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QueryEnvironmentEnum environment : QueryEnvironmentEnum.values()) {
             valueMap.put(environment.toString(), environment.getValue());
+        }
+        return valueMap;
+    }
+
+    public static LinkedHashMap<String, String> getMetamacSelectionTypeMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (MetamacSelectionEnum selection : MetamacSelectionEnum.values()) {
+            valueMap.put(selection.toString(), getCoreMessages().getString(getCoreMessages().metamacSelectionEnum() + selection.getName()));
         }
         return valueMap;
     }
@@ -401,8 +409,15 @@ public class CommonUtils {
         StringBuffer url = new StringBuffer();
         url.append(URL.encode(IndicatorsWeb.getRelativeURL(IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH)));
         url.append("?").append(URL.encode(IndicatorsConstants.PARAM_FILE_NAME)).append("=").append(URL.encode(fileName));
-        Window.open(url.toString(), "_blank", "");
+        downloadUrl(url.toString());
     }
+
+    // @formatter:off
+    private static native void downloadUrl(String url) /*-{
+        $wnd.location = url;
+    }-*/;
+    // @formatter:on
+
 
     public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
         if (status == null) {

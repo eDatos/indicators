@@ -91,6 +91,7 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE                                                                   = "parameter.indicators.data_source";
     public static final String DATA_SOURCE_UUID                                                              = "parameter.indicators.data_source.uuid";
     public static final String DATA_SOURCE_DATA_QUERY_ENVIRONMENT                                            = "parameter.indicators.data_source.data_query_environment";
+    public static final String DATA_SOURCE_DATA_METAMAC_TYPE                                                 = "parameter.indicators.data_source.metamac_type";
     public static final String DATA_SOURCE_DATA_QUERY_ARTEFACT                                               = "parameter.indicators.data_source.query_arefact";
     public static final String DATA_SOURCE_DATA_GPE_UUID                                                     = "parameter.indicators.data_source.data_gpe_uuid";
     public static final String DATA_SOURCE_PX_URI                                                            = "parameter.indicators.data_source.px_uri";

@@ -16,10 +16,13 @@
             }
         },
 
-        js : function (condition, url) {
+        js : function (condition, url, options) {
             if (condition) {
-                var head = document.getElementsByTagName('head')[0],
-                    script = document.createElement('script');
+                var head = document.getElementsByTagName('head')[0];
+                var script = document.createElement('script');
+                Object.keys(options).forEach(function(key) {
+                    script.setAttribute(key, options[key]);
+                });
                 script.src = url;
                 head.appendChild(script);
             }

@@ -61,6 +61,7 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_BASE_VALUE                   = "q-value";
     public static String QUANTITY_BASE_TIME                    = "q-time";
     public static String QUANTITY_BASE_LOCATION                = "q-loc";
+    public static String QUANTITY_BASE_LOCATION_ITEM           = "q-loc-item";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_UUID = "q-ind-uuid";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext";             // Not mapped in DTO
     public static String QUANTITY_TYPE                         = "q-type";

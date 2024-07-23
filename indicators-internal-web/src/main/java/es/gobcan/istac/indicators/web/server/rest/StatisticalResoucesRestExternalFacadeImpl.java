@@ -12,9 +12,11 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionParameters;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Datasets;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Queries;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ResourceWithStatisticalOperation;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
@@ -38,6 +41,9 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
 
     @Autowired
     private StatisticalResoucesRestExternalService statisticalResoucesRestExternalService;
+
+    @Autowired
+    private SrmRestInternalService                 srmRestInternalService;
 
     @Autowired
     private ConfigurationService                   configurationService;
@@ -67,7 +73,19 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
             String languageDefault = configurationService.retrieveLanguageDefault();
             Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(queryUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
 
-            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query);
+            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDto(query, srmRestInternalService);
+            return dataStructureDto;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(serviceContext, e);
+        }
+    }
+
+    @Override
+    public DataStructureDto retrieveDataDefinitionFromDataset(ServiceContext serviceContext, String datasetUrn) throws MetamacWebException {
+        try {
+            String languageDefault = configurationService.retrieveLanguageDefault();
+            Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrn(datasetUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDatasetDto(dataset, srmRestInternalService);
             return dataStructureDto;
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);
@@ -99,6 +117,25 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
         externalItemDto.setType(type);
         externalItemDto.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
         return externalItemDto;
+    }
+
+    @Override
+    public ExternalItemsResult findDatasets(ServiceContext serviceContext, int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
+        try {
+            String query = buildQueryForQueryVersion(criteria);
+            String limit = String.valueOf(maxResult);
+            String offset = String.valueOf(firstResult);
+            String orderBy = null;
+
+            Datasets findaDatasetsResult = statisticalResoucesRestExternalService.findDatasets(query, orderBy, limit, offset, null);
+
+            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findaDatasetsResult.getDatasets(), TypeExternalArtefactsEnum.QUERY);
+
+            ExternalItemsResult result = ExternalItemWebUtils.createExternalItemsResultFromListBase(findaDatasetsResult, externalItemDtos);
+            return result;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(serviceContext, e);
+        }
     }
 
 }

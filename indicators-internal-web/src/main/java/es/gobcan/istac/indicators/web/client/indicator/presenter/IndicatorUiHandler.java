@@ -18,9 +18,7 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
     void retrieveDiffusionIndicator(String code, String versionNumber);
     void saveIndicator(IndicatorDto indicator);
 
-    void retrieveGeographicalValuesByGranularity(String geographicalGranularityUuid);
-    void retrieveGeographicalValue(String geographicalValueUuid);
-
+    void retrieveGeographicalValuesByGranularity(int firstResult, int maxResults, String criteria, String geographicalGranularityUuid);
     void sendToProductionValidation(String uuid);
     void sendToDiffusionValidation(String uuid);
     void rejectValidation(IndicatorDto indicatorDto);
@@ -50,7 +48,9 @@ public interface IndicatorUiHandler extends SrmExternalResourcesUiHandlers {
 
     void retrieveQueriesForRelatedQuery(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
 
-    void retrieveGeographicalValueDS(String uuid);
+    void retrieveQueriesForRelatedDataset(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria criteria);
+
+    void retrieveStatisticalOperationsForDatasetSelection(int firstResult, int maxResults, StatisticalOperationsExternalResourceWebCriteria webCriteria);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);

@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.serviceapi.utils.TaskMockUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 
@@ -344,8 +345,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsByCriteria() throws Exception {
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -358,8 +359,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_3, indicatorsVersion.getValues().get(2).getIndicator().getUuid());
         }
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("FR")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_FR).orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -372,7 +373,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         }
         {
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
-                    .eq("ES-MD").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+                    .eq("ES-MD_VARIABLE_ELEMENT").orderBy(IndicatorVersionProperties.indicator().uuid()).build();
 
             PagingParameter paging = PagingParameter.pageAccess(10);
 
@@ -388,8 +389,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     public void testExportIndicatorsTsv() throws Exception {
 
         {
-            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode()).eq("ES")
-                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class).withProperty(IndicatorVersionProperties.lastValuesCache().geographicalCode())
+                    .eq(SrmResourcesMocks.GEOGRAPHICAL_CODE_VALUE_ES).orderBy(IndicatorVersionProperties.indicator().uuid()).ascending().build();
 
             String fileName = indicatorService.exportIndicatorsTsv(getServiceContextAdministrador(), conditions);
             assertNotNull(fileName);

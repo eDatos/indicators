@@ -1,17 +1,11 @@
 package es.gobcan.istac.indicators.web.client.admin.view.handlers;
 
-import java.util.List;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
-import com.gwtplatform.mvp.client.UiHandlers;
-
-import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 
-public interface AdminGeoValuesUiHandlers extends UiHandlers {
-
-    void deleteGeoValues(List<String> uuids, int firstResult);
-
-    void saveGeoValue(int currentPage, GeographicalValueDto dto);
+public interface AdminGeoValuesUiHandlers extends BaseUiHandlers {
 
     void retrieveGeoValues(GeoValueCriteria criteria);
+    void goToGeoValue(String code);
 }

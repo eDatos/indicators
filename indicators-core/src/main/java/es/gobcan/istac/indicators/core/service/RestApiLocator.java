@@ -9,6 +9,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.notices.rest.internal.v1_0.service.NoticesV1_0;
+import org.siemac.metamac.srm.rest.external.v1_0.service.SrmRestExternalFacadeV10;
 import org.siemac.metamac.srm.rest.internal.v1_0.service.SrmRestInternalFacadeV10;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
@@ -31,6 +32,8 @@ public class RestApiLocator {
 
     private SrmRestInternalFacadeV10                   srmRestInternalFacadeV10                                 = null;
 
+    private SrmRestExternalFacadeV10                   srmRestExternalFacadeV10                                 = null;
+
     @PostConstruct
     public void initService() throws MetamacException {
         String statisticalOperationsApiUrlBase = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
@@ -45,6 +48,9 @@ public class RestApiLocator {
 
         String srmBaseApi = configurationService.retrieveSrmInternalApiUrlBase();
         srmRestInternalFacadeV10 = JAXRSClientFactory.create(srmBaseApi, SrmRestInternalFacadeV10.class, null, true);
+
+        srmBaseApi = configurationService.retrieveSrmExternalApiUrlBase();
+        srmRestExternalFacadeV10 = JAXRSClientFactory.create(srmBaseApi, SrmRestExternalFacadeV10.class, null, true);
 
     }
 
@@ -78,6 +84,14 @@ public class RestApiLocator {
         WebClient.client(srmRestInternalFacadeV10).accept("application/xml");
 
         return srmRestInternalFacadeV10;
+    }
+
+    public SrmRestExternalFacadeV10 getSrmRestExternalFacadeV10() {
+        // reset thread context
+        WebClient.client(srmRestExternalFacadeV10).reset();
+        WebClient.client(srmRestExternalFacadeV10).accept("application/xml");
+
+        return srmRestExternalFacadeV10;
     }
 
     private void setReceiveTimeout(Object client, long receiveTimeoutValue) {

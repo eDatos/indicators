@@ -171,6 +171,7 @@ public class DoCopyUtils {
     private static DataSource copy(DataSource source) {
         DataSource target = new DataSource();
         target.setQueryEnvironment(source.getQueryEnvironment());
+        target.setMetamacType(source.getMetamacType());
         target.setQueryUuid(source.getQueryUuid());
         target.setQueryUrn(source.getQueryUrn());
         target.setQueryText(source.getQueryText());
@@ -187,6 +188,8 @@ public class DoCopyUtils {
         target.setSourceSurveyAcronym(copy(source.getSourceSurveyAcronym()));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(source.getPublishers());
+        target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
+
         target.setAnnualPuntualRate(copyRateDerivation(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(copyRateDerivation(source.getAnnualPercentageRate()));
         target.setInterperiodPuntualRate(copyRateDerivation(source.getInterperiodPuntualRate()));

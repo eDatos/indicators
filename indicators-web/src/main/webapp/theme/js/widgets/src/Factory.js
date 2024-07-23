@@ -28,6 +28,9 @@
 
                 options.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
 
+                Istac.widget.loader.js(true, Istac.widget.configuration['metamac.analytics.script.url'],
+                    { type: 'application/javascript', appId : 'indicators-widget' });
+
                 if (!options.uwa) {
                     Istac.widget.loader.all(options.url);
                 }

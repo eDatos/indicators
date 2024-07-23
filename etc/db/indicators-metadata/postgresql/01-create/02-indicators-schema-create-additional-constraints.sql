@@ -11,9 +11,15 @@ ALTER TABLE TB_LIS_GEOGR_GRANULARITIES ADD CONSTRAINT GEOGR_GRANULARITIES_CODE U
 ALTER TABLE TB_LIS_UNITS_MULTIPLIERS ADD CONSTRAINT UNIT_MULTIPLIER UNIQUE(UNIT_MULTIPLIER);
 ALTER TABLE TB_TRANSLATIONS ADD CONSTRAINT TRANSLATIONS_CODE UNIQUE(CODE);
 
+-- EDATOS-3046: Se ha detectado que esta constraint, tras la relación introducida en el fichero indicators-core-model.btdesign línea 888 aprox ("Geo coverage"), 
+-- puede ser redundante ya que el borrado se realizará mediante JPA/Hibernate aplicando los borrados en cascada definidos en dicho fichero. De momento se mantiene para
+-- evitar discrepancias con la contraint de tabla TB_IND_VERSION_MEAS_COV y porque su existencia no supone un problema más allá de una muy mínima perdida de rendimiento.
 ALTER TABLE TB_IND_VERSION_GEO_COV DROP CONSTRAINT FK_TB_IND_VERSION_GEO_COV_INDICATOR_VERSION_FK;
 ALTER TABLE TB_IND_VERSION_GEO_COV ADD CONSTRAINT FK_TB_IND_VERSION_GEO_COV_INDICATOR_VERSION_FK FOREIGN KEY (INDICATOR_VERSION_FK) REFERENCES TB_INDICATORS_VERSIONS (ID) ON DELETE CASCADE;
-	
+
+-- EDATOS-3046: Se ha detectado que esta constraint, tras la relación introducida en el fichero indicators-core-model.btdesign línea 890 aprox ("Temporal coverage"), 
+-- puede ser redundante ya que el borrado se realizará mediante JPA/Hibernate aplicando los borrados en cascada definidos en dicho fichero. De momento se mantiene para
+-- evitar discrepancias con la contraint de tabla TB_IND_VERSION_MEAS_COV y porque su existencia no supone un problema más allá de una muy mínima perdida de rendimiento. 
 ALTER TABLE TB_IND_VERSION_TIME_COV DROP CONSTRAINT FK_TB_IND_VERSION_TIME_COV_INDICATOR_VERSION_FK;
 ALTER TABLE TB_IND_VERSION_TIME_COV ADD CONSTRAINT FK_TB_IND_VERSION_TIME_COV_INDICATOR_VERSION_FK FOREIGN KEY (INDICATOR_VERSION_FK) REFERENCES TB_INDICATORS_VERSIONS (ID) ON DELETE CASCADE;
 
