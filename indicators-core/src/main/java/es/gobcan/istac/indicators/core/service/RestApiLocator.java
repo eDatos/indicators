@@ -68,7 +68,7 @@ public class RestApiLocator {
     public StatisticalResourcesV1_0 getStatisticalResourcesRestExternalFacacadeV10() {
         // reset thread context
         WebClient.client(statisticalResourcesRestExternalFacacadeV10).reset();
-        WebClient.client(statisticalResourcesRestExternalFacacadeV10).accept("application/xml");
+        WebClient.client(statisticalResourcesRestExternalFacacadeV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return statisticalResourcesRestExternalFacacadeV10;
     }
@@ -92,7 +92,7 @@ public class RestApiLocator {
     public SrmRestExternalFacadeV10 getSrmRestExternalFacadeV10() {
         // reset thread context
         WebClient.client(srmRestExternalFacadeV10).reset();
-        WebClient.client(srmRestExternalFacadeV10).accept("application/xml");
+        WebClient.client(srmRestExternalFacadeV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return srmRestExternalFacadeV10;
     }
