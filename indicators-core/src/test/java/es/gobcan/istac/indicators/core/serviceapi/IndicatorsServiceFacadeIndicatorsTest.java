@@ -771,8 +771,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testCreateIndicatorErrorCategoryElementCodeNotExits() throws Exception {
 
-        // TODO EDATOS-4185 VER ESTE TEST
-
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
         indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
@@ -2767,7 +2765,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         {
             // Retrieve with subject x
-            // TODO EDATOS-4185 CAMBIAR
             MetamacCriteria criteria = new MetamacCriteria();
             criteria.setRestriction(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ));
 
@@ -2811,7 +2808,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Retrieve with subject x and code = y or z
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            // TODO EDATOS-4185 CAMBIAR
+
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ)); //
 
             MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
@@ -2949,7 +2946,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Retrieve with subject x
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            // TODO EDATOS-4185 CAMBIAR
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CATEGORY_ELEMENT_CODE.name(), CATEGORY_ELEMENT_3, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
