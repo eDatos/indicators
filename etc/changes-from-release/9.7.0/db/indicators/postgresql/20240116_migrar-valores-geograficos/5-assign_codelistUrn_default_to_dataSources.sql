@@ -19,4 +19,11 @@ select * from tb_data_sources tds where query_environment = 'METAMAC' and geogra
  ----1.2) actualizar codelist para  datos que proceden de GPE y JSON_STAT
    -- Obtener urn de codelist no normalizada. Lo tiene que dar Vicky. Se ha decidido que sea CL_NN_VALORES_GEOGRAFICOS
    -- Actualizar metadato geographical_codelist_urn
-   update tb_data_sources set geographical_codelist_urn = 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISTAC:CL_NN_VALORES_GEOGRAFICOS(XXX)'  where query_environment  in ('GPE', 'JSON_STAT');
+   -- ATENCIÓN se ha detectado que en IBESTAT la agencia cambia y la urn es del tipo urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IBESTAT:CL_NN_VALORES_GEOGRAFICOS(XXX)
+   -- Para evitar problemas, el valor debería ser el mismo que el indicado en la variable de entorno metamac.srm.default.gpe.jsonstat.codelist.urn asociada al srm.
+   update tb_data_sources set geographical_codelist_urn = FILL_ME  where query_environment  in ('GPE', 'JSON_STAT');
+   --Ejemplos:
+   -- Para istac: update tb_data_sources set geographical_codelist_urn = 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISTAC:CL_NN_VALORES_GEOGRAFICOS(XXX)'  where query_environment  in ('GPE', 'JSON_STAT');
+   -- Para ibestat:  update tb_data_sources set geographical_codelist_urn = 'urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IBESTAT:CL_NN_VALORES_GEOGRAFICOS(XXX)'  where query_environment  in ('GPE', 'JSON_STAT');
+  
+   
