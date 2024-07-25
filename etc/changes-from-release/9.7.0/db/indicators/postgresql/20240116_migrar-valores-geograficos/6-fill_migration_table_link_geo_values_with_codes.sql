@@ -34,7 +34,16 @@ and c.urn IN
  )*/ 
  
  --1.2 Exportar la tabla a CSV.
+ --ATENCIÓN!! Al exportar si hay valores nulos los convierte a vacío. Lo que puede dar problemas en pasos posteriores. 
+--Es por eso que hay que indicar en la exportación que convierta los valores nulos al valor "null" Para ello:
+--  Exportar a CSV
+--  En la última pantalla de exportación, en "Exporting settings" al valor "NULL String" asignarle el valor null
+ 
 --1.3 Importar la tabla anterior a la tabla "temp_mig_codes_with_var_element" en indicators.
+--ATENCIÓN!! Al importar si hay valores nulos los convierte a vacío. En la exportación se ha puesto "null" como valor asociado a nulo hay que asociarlo a las opciones de importación 
+--Es por eso que hay que indicar en la importación que convierta los valores con el valor "null" a NULO Para ello:
+--  Importar a CSV
+--  En la última pantalla de importación, en "Importing settings" al valor "NULL value mark" asignarle el valor null
 --1.4 Importar la tabla anterior a la tabla "temp_mig_codes_with_var_element" en indicators_data.
 --1.5 Borrar tabla temp_mig_codes_with_var_element de la base de datos del srm. Situarse en la base de datos metamac_structural_resources y hacer:
 drop table temp_mig_codes_with_var_element;

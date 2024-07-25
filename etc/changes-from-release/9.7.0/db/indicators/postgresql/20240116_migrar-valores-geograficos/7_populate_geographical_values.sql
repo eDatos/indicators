@@ -79,14 +79,28 @@ delete  from tb_lis_geogr_values;
 --3) Continuación del paso 0 hecho días antes para volvar en tabla tb_lis_geogr_values los valores finales
   --El día de despliegue se deberá exportar a CSV la tabla "temp_tb_lis_geogr_values". y luego importar a tb_lis_geogr_values. Para ello:
 -- 0.6.1) Exportar tabla temp_tb_lis_geogr_values a CSV (incrementar elementos a 300000) si es menor el número.
+--ATENCIÓN!! Al exportar si hay valores nulos los convierte a vacío. Lo que puede dar problemas en pasos posteriores. 
+--Es por eso que hay que indicar en la exportación que convierta los valores nulos al valor "null" Para ello:
+--  Exportar a CSV
+--  En la última pantalla de exportación, en "Exporting settings" al valor "NULL String" asignarle el valor null
+
 -- 0.6.2) Importar a tb_lis_geogr_values que está vacía en estos momentos.
+--ATENCIÓN!! Al importar si hay valores nulos los convierte a vacío. En la exportación se ha puesto "null" como valor asociado a nulo hay que asociarlo a las opciones de importación 
+--Es por eso que hay que indicar en la importación que convierta los valores con el valor "null" a NULO Para ello:
+-- Importar a CSV
+--  En la última pantalla de importación, en "Importing settings" al valor "NULL value mark" asignarle el valor null
+
 -- 0.6.3) Obtener el último valor 
 select max(id) from tb_lis_geogr_values ;
 -- 0.6.4) con el valor dado anteriormente, cambiar la secuencia para poner el valor anterior mas uno que será el siguiente valor de la secuencia. 
 ALTER SEQUENCE SEQ_GEOGR_VALUES RESTART WITH PONER_AQUI_VALOR_DE_PASO_ANTERIOR + 1;
  
  --3.1 Con la importación anterior se comprueba que el campo update_date_tz que estaba a nulo originalmente, se ha migrado con un espacio en blanco. Hay que poner a nulo para evitar error en la aplicación con las fechas. Para ello ejecutar:
- update tb_lis_geogr_values set update_date_tz = null where update_date_tz = '';
+ 
+ --Atención!! se ha detectado que al realizar en la exportación la conversión de valores vacíos a nulos, no es necesario este paso. Comprobar así:
+ select * from  tb_lis_geogr_values where update_date_tz = '';
+ --Si da 0 la select anterior no hacer nada. Si da algún valor realizar lo siguiente:
+  update tb_lis_geogr_values set update_date_tz = null where update_date_tz = '';
  
  --4 Rellenar nuevos campos creados
 --4.1) Comprobaciones previas
@@ -251,7 +265,16 @@ where deprecated_geographical_code is not null and geographical_code  is null;
  --ATENCIÓN!!! sólo si en indicators_bd se ha cambiado la tabla migrada inicialmente desde srm hacer lo siguiente si no, obviar este paso
  -- 4.9.1. Ir a la bd indicators_data y borrar el contenido de la tabla temp_mig_codes_with_var_element
  -- 4.9.2 Exportar la tabla temp_mig_codes_with_var_element de la bd INDICATORS_BD a CSV
+ --ATENCIÓN!! Al exportar si hay valores nulos los convierte a vacío. Lo que puede dar problemas en pasos posteriores. 
+--Es por eso que hay que indicar en la exportación que convierta los valores nulos al valor "null" Para ello:
+--  Exportar a CSV
+--  En la última pantalla de exportación, en "Exporting settings" al valor "NULL String" asignarle el valor null
+ 
  -- 4.9.3 Importar en la tabla temp_mig_codes_with_var_element de INDICATORS_DATA el fichero CSV obtenido en el paso anterior.
+ --ATENCIÓN!! Al importar si hay valores nulos los convierte a vacío. En la exportación se ha puesto "null" como valor asociado a nulo hay que asociarlo a las opciones de importación 
+--Es por eso que hay que indicar en la importación que convierta los valores con el valor "null" a NULO Para ello:
+--  Importar a CSV
+--  En la última pantalla de importación, en "Importing settings" al valor "NULL value mark" asignarle el valor null
  
  --4.10 exportar la tabla temp_mig_codes_with_var_element e importarla en la base de datos metamac_portal_bd
  
