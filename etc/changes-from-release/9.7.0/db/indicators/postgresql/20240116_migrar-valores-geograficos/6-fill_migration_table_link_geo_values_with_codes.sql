@@ -47,5 +47,40 @@ and c.urn IN
 --1.4 Importar la tabla anterior a la tabla "temp_mig_codes_with_var_element" en indicators_data.
 --1.5 Borrar tabla temp_mig_codes_with_var_element de la base de datos del srm. Situarse en la base de datos metamac_structural_resources y hacer:
 drop table temp_mig_codes_with_var_element;
+
+
+-- 2 Comprobación de duplicados. 
+/*
+En migración de pre-ibestat se comprobó que la clasificación para gpe y jsonstat tenía códigos que apuntaban al mismo elemento de variable. 
+Y luego había indicadores que utilizaban ambos códigos que apuntaban al mismo elemento de variable. ésto da error porque se queda el indicador con dos elementos iguales.
+Al recuperar el índice único al final del proceso realizado en el fichero 7_populate_geographical_values.sql no se pueden volver a poner los índices de clave única por este motivo
+
+Aunque es más probable que el error se de con la clasificación del gpe y jsonstat CL_NN_VALORES_GEOGRAFICOS al ser códigos no normalizados, la siguiente consulta comprueba cualquier indicador.
+
+Es por ello que se debe lanzar la siguiente consulta, para averiguar si van a haber duplicados. Esta consulta no debe devolver valores. Si los devuelve hay que resolver los conflictos.
+
+*/
+select i1.indicator_version_fk, ti.code as indicator_code, tls."label" as indicator_title , c1.code as duplicateCode1, c2.code as duplicateCode2, 
+       (select variable_element_code from temp_mig_codes_with_var_element m where m.code = c1.code limit 1) 
+from tb_ind_version_geo_cov i1, tb_ind_version_geo_cov i2, tb_lis_geogr_values c1,  tb_lis_geogr_values c2, tb_indicators_versions tiv, tb_indicators ti, tb_localised_strings tls 
+where i1.indicator_version_fk = i2.indicator_version_fk 
+  and i1.id != i2.id 
+  and i1.deprecated_geographical_value_fk != i2.deprecated_geographical_value_fk   
+  and c1.id = i1.deprecated_geographical_value_fk
+  and c2.id = i2.deprecated_geographical_value_fk
+  and i1.indicator_version_fk = tiv.id
+  and tls.international_string_fk = tiv.title_fk 
+    and tls.locale = 'es'
+  and ti.id = tiv.indicator_fk 
+  and (select variable_element_code from temp_mig_codes_with_var_element m where m.code = c1.code limit 1) =
+  (select variable_element_code from temp_mig_codes_with_var_element m2 where m2.code = c2.code  limit 1)
+  order by indicator_version_fk; 
+    
+  
+  
+
+
+
+
  
  
