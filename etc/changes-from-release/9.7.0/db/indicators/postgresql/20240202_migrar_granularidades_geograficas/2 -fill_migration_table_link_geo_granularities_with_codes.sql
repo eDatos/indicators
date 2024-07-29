@@ -73,7 +73,6 @@ INSERT INTO tb_lis_geogr_granularities(id, code, update_date_tz, update_date, uu
 || '''' || t.version || ''', '
 || 'currval(''SEQ_I18NSTRS'')' 
 || ');'
-
 from  temp_mig_geo_granularities t
 where t.granularity_code not in(select code from tb_lis_geogr_granularities tlgg)
 ;

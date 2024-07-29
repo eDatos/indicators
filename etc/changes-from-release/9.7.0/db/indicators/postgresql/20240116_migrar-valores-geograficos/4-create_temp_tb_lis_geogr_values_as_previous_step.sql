@@ -66,13 +66,12 @@ INSERT INTO temp_tb_lis_geogr_values(id, code, latitude, longitude, global_order
 || 'currval(''SEQ_I18NSTRS'')' || ', '
 || t.granularity_fk
 || ');'
-
 from  temp_mig_geo_values t;
 
 --0.4. Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
 -- 1. Seleccionar la  consulta en dbeaver
 -- 2. desplegar menú Ejecutar (Execute)
--- 3. Seleccionar submenú Ejecutar desde consulta (Execute from query)
+-- 3. Seleccionar submenú Exportar desde consulta (Execute from query)
 -- 4. Seleccionar como tipo de salida "TXT"
 -- 5. Ampliar el fetch size a 300000 que por defecto está en 10000
 -- 6. Seleccionar directorio de salida

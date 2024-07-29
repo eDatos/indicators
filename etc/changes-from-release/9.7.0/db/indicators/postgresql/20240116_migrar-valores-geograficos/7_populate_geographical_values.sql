@@ -8,14 +8,14 @@
  ----1.1 tabla tb_data_sources
  ALTER TABLE tb_data_sources RENAME COLUMN geographical_value_fk TO deprecated_geographical_value_fk;
  ALTER TABLE tb_data_sources alter COLUMN deprecated_geographical_value_fk  drop not null;
- ALTER TABLE indicators_bd.tb_data_sources DROP CONSTRAINT fk_tb_data_sources_geographical_value_fk;
+ ALTER TABLE tb_data_sources DROP CONSTRAINT fk_tb_data_sources_geographical_value_fk;
  ALTER TABLE tb_data_sources ADD COLUMN geographical_value_fk BIGINT;
 
  ----1.2 tabla tb_indic_inst_geo_values
 ALTER TABLE tb_indic_inst_geo_values RENAME COLUMN geographical_value_fk TO deprecated_geographical_value_fk;
 ALTER TABLE tb_indic_inst_geo_values DROP	CONSTRAINT pk_tb_indic_inst_geo_values;
 ALTER TABLE tb_indic_inst_geo_values alter COLUMN deprecated_geographical_value_fk  drop not null;
-ALTER TABLE indicators_bd.tb_indic_inst_geo_values DROP CONSTRAINT fk_tb_indic_inst_geo_values_geographical_value_fk;
+ALTER TABLE tb_indic_inst_geo_values DROP CONSTRAINT fk_tb_indic_inst_geo_values_geographical_value_fk;
  ALTER TABLE tb_indic_inst_geo_values ADD COLUMN geographical_value_fk BIGINT;
 
  ----1.3 tabla tb_indic_inst_last_value
@@ -68,7 +68,7 @@ CREATE TABLE tb_lis_geogr_values_copy (
 );
 
 --2.2) Copiar los datos a la tabla de copia
-INSERT INTO indicators_bd.tb_lis_geogr_values_copy
+INSERT INTO tb_lis_geogr_values_copy
 (id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk)
  SELECT id, code, latitude, longitude, global_order, update_date_tz, update_date, uuid, created_date_tz, created_date, created_by, last_updated_tz, last_updated, last_updated_by, "version", title_fk, granularity_fk
 FROM tb_lis_geogr_values;
@@ -282,9 +282,9 @@ where deprecated_geographical_code is not null and geographical_code  is null;
 --5) Añadir primary keys eliminadas y foreign keys
 --5.0) añadir foreign keys
  ----5.0.1 tabla tb_data_sources
-  ALTER TABLE indicators_bd.tb_data_sources ADD CONSTRAINT fk_tb_data_sources_geographical_value_fk FOREIGN KEY (geographical_value_fk) REFERENCES indicators_bd.tb_lis_geogr_values(id);
+  ALTER TABLE tb_data_sources ADD CONSTRAINT fk_tb_data_sources_geographical_value_fk FOREIGN KEY (geographical_value_fk) REFERENCES indicators_bd.tb_lis_geogr_values(id);
  ----5.0.2 tabla tb_indic_inst_geo_values
-ALTER TABLE indicators_bd.tb_indic_inst_geo_values ADD CONSTRAINT fk_tb_indic_inst_geo_values_geographical_value_fk FOREIGN KEY (geographical_value_fk) REFERENCES indicators_bd.tb_lis_geogr_values(id);
+ALTER TABLE tb_indic_inst_geo_values ADD CONSTRAINT fk_tb_indic_inst_geo_values_geographical_value_fk FOREIGN KEY (geographical_value_fk) REFERENCES indicators_bd.tb_lis_geogr_values(id);
   ----5.0.4 tabla tb_ind_version_geo_cov
 ALTER TABLE tb_ind_version_geo_cov ADD CONSTRAINT fk_tb_ind_version_geo_cov_geographical_value_fk FOREIGN KEY (geographical_value_fk) REFERENCES indicators_bd.tb_lis_geogr_values(id); 
  ----5.0.5 tabla tb_quantities
@@ -413,7 +413,7 @@ order by schema_name, view_name;
  -- Anexo paso 7.  No necesario este paso si el paso 7 fue bien. 
  --Todas deberían tener el campo deprecado. Pero si en el algún entorno se necesita recuperar tablas específicas con este campo por lo que sea
   select '''' || upper(table_name) || ''','
-from INFORMATION_SCHEMA.COLUMNS where column_name like '%deprecated%'
+from INFORMATION_SCHEMA.COLUMNS where column_name like '%deprecated%';
 
 -- Luego habría que obtener el script de esas tablas únicamente
  select ' ALTER TABLE ' || a.table_name  || ' DROP COLUMN deprecated_'  ||  b.column_name || ';' 
