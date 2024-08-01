@@ -59,14 +59,14 @@ public class WebUtils {
     }
 
     private static String buildAppNameQueryParam(String appName) {
-        return getParam(PARAM_APP_NAME, appName);
+        return buildParam(PARAM_APP_NAME, appName);
     }
 
     private static String buildLocaleQueryParam(String internationalizationUrlParamId, Locale locale) {
         if (StringUtils.isBlank(internationalizationUrlParamId)) {
             return "";
         }
-        return getParam(internationalizationUrlParamId, locale.getLanguage());
+        return buildParam(internationalizationUrlParamId, locale.getLanguage());
     }
 
     private static String buildQuery(String... params) {
@@ -79,7 +79,7 @@ public class WebUtils {
         return joiner.length() > 0 ? "?" + joiner.toString() : "";
     }
 
-    private static String getParam(String param, String value) {
+    private static String buildParam(String param, String value) {
         if (value == null) {
             return "";
         }
