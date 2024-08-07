@@ -618,6 +618,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
         }
 
+        target.setMainIndicator(source.getIsMainIndicator());
+
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
             List<LinkType> surveyLinks = new ArrayList<LinkType>();
