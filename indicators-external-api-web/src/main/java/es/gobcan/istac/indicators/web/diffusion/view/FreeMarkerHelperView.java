@@ -38,23 +38,12 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("locale", currentLocale);
         fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
         fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
-        fillOptionalApiStyleCssUrl(model);
 
         super.doRender(model, request, response);
     }
 
     private String getCurrentLocale(HttpServletRequest request) {
         return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
-    }
-
-    private void fillOptionalApiStyleCssUrl(Map<String, Object> model) {
-        try {
-            model.put("apiStyleCssUrl", getConfigurationService().retrieveApiStyleCssUrl());
-        } catch (MetamacException e) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(e.getHumanReadableMessage());
-            }
-        }
     }
 
     private void fillOptionalApiStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
