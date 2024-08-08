@@ -23,7 +23,7 @@
 	   
 	   <div class="version-list">
     	   <h1>[@messageEscape 'api.doc.title'/]</h1>
-    	   <h2>[@messageEscape 'api.doc.versiones'/]</h2>
+    	   <h2>[@messageEscape 'api.doc.versions'/]</h2>
     	   <ul>
     	       <li>
     	           <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/latest">/latest</a></h3>
