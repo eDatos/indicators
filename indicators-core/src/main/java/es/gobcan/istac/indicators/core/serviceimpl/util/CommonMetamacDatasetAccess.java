@@ -26,14 +26,14 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public abstract class CommonMetamacDatasetAccess {
 
-    public static String                    DATA_SEPARATOR = " | ";
-    protected     String[]                  observations;
-    protected     List<String[]>            observationsAttributes;
-    protected     List<String>              dimensionsOrderedForData;
-    protected     Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
-    protected     List<String>              attributesMetadataMap;
+    public static String                DATA_SEPARATOR     = " | ";
+    protected String[]                  observations;
+    protected List<String[]>            observationsAttributes;
+    protected List<String>              dimensionsOrderedForData;
+    protected Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
+    protected List<String>              attributesMetadataMap;
 
-    public static final String OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String          OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
 
     protected abstract DimensionRepresentations getDimensions();
 
@@ -65,9 +65,11 @@ public abstract class CommonMetamacDatasetAccess {
 
     public List<String> getObservationsAttributes(int index) {
         List<String> attributeValues = new ArrayList<>();
-        if (observationsAttributes != null) {
+        if (observationsAttributes != null && !observationsAttributes.isEmpty()) {
             for (String[] observationsAttribute : observationsAttributes) {
-                attributeValues.add(observationsAttribute[index]);
+                if (observationsAttribute != null && observationsAttribute.length > 0) {
+                    attributeValues.add(observationsAttribute[index]);
+                }
             }
         }
 
@@ -153,8 +155,8 @@ public abstract class CommonMetamacDatasetAccess {
                 valueObsAux = dataAttributeDef.getValue();
             }
             this.attributesMetadataMap.add(dataAttributeDef.getId());
-            this.observationsAttributes.add(
-                    StringUtils.splitByWholeSeparatorPreserveAllTokens(getObservationsAttributesDataValue(dataAttributeDef.getValue(), dataAttributeDef.getId()), DATA_SEPARATOR));
+            this.observationsAttributes
+                    .add(StringUtils.splitByWholeSeparatorPreserveAllTokens(getObservationsAttributesDataValue(dataAttributeDef.getValue(), dataAttributeDef.getId()), DATA_SEPARATOR));
         }
 
         if (!foundObs) {
