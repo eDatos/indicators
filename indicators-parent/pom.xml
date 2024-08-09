@@ -7,7 +7,7 @@
 	<name>INDICATORS :: PARENT</name>
 	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
-	<version>9.7.1-SNAPSHOT</version>
+	<version>10.0.1-SNAPSHOT</version>
 
     <organization>
         <name>Arte Consultores, S.L.</name>
@@ -143,7 +143,7 @@
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>7.9.0</metamac-core-common.version>
-		<metamac-web-common.version>5.6.2-SNAPSHOT</metamac-web-common.version>
+		<metamac-web-common.version>5.7.0</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.5.0</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.5.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>8.3.0</metamac-statistical-resources-rest-external-api.version>
@@ -153,7 +153,7 @@
 		<metamac-rest-common.version>2.4.1</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.6.0</metamac-notifications-rest-internal-api.version>
         <metamac-statistical-resources-kafka.version>6.0.0</metamac-statistical-resources-kafka.version>
-         <metamac-srm-kafka.version>6.4.2-SNAPSHOT</metamac-srm-kafka.version>
+        <metamac-srm-kafka.version>7.0.0</metamac-srm-kafka.version>
 	</properties>
 
 	<dependencyManagement>
