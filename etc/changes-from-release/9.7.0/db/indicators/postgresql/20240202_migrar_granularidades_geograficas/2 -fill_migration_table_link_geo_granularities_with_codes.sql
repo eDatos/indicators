@@ -34,7 +34,17 @@ and codeGranul.item_scheme_version_fk = a.id
 and codeGranul.nameable_artefact_fk  = a_codeGranul.id;
 
 --1.2 Exportar la tabla a CSV.
+--ATENCIÓN!! Al exportar si hay valores nulos los convierte a vacío. Lo que puede dar problemas en pasos posteriores. 
+--Es por eso que hay que indicar en la exportación que convierta los valores nulos al valor "null" Para ello:
+-- 1.2.1 Exportar a CSV
+-- 1.2.2 En la última pantalla de exportación, en "Exporting settings" al valor "NULL String" asignarle el valor null
+
 --1.3 Importar la tabla anterior a la tabla "temp_mig_geo_granularities" en indicators.
+--ATENCIÓN!! Al importar si hay valores nulos los convierte a vacío. En la exportación se ha puesto "null" como valor asociado a nulo hay que asociarlo a las opciones de importación 
+--Es por eso que hay que indicar en la importación que convierta los valores con el valor "null" a NULO Para ello:
+-- 1.2.1 Importar a CSV
+-- 1.2.2 En la última pantalla de importación, en "Importing settings" al valor "NULL value mark" asignarle el valor null
+
 --1.4 Borrar tabla temp_mig_geo_granularities de la base de datos del srm. Situarse en la base de datos metamac_structural_resources y hacer:
 drop table temp_mig_geo_granularities;
  
@@ -63,12 +73,20 @@ INSERT INTO tb_lis_geogr_granularities(id, code, update_date_tz, update_date, uu
 || '''' || t.version || ''', '
 || 'currval(''SEQ_I18NSTRS'')' 
 || ');'
-
 from  temp_mig_geo_granularities t
 where t.granularity_code not in(select code from tb_lis_geogr_granularities tlgg)
 ;
 
 --3 Ejecutar los scripts generados en el paso anterior en la bd indicators.
+--ATENCIÓN El editor de dbeaver parece que pone doble comillas en su configuración por defecto a los inserts y puede eliminar campos entrecomillados como "version"
+--Por ello comprobar la confiugración de dbeaver que esté así:
+-- En la parte en la que se han obtenido los resultados de la select anterior pulsar botón derecho y seleccionar "Advanced copy" -> "Advanced copy" Asegurarse que las siguientes opciones están desmarcadas:
+---- Copy header
+---- Copy row Numbers
+---- Quote cell values
+---- Always quote values
+---- Copy as HTML
+
 /*
  *Ejemplo
  INSERT INTO TB_INTERNATIONAL_STRINGS (ID, VERSION) VALUES (nextval('SEQ_I18NSTRS'), 1);  
