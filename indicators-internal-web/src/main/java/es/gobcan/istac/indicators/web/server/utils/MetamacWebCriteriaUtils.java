@@ -70,6 +70,10 @@ public class MetamacWebCriteriaUtils {
                 conjunctionRestriction.getRestrictions()
                         .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.NOTIFY_POPULATION_ERRORS.name(), criteria.getNotifyPopulationErrors(), OperationType.EQ));
             }
+            if (criteria.getIsMainIndicator() != null) {
+                conjunctionRestriction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.IS_MAIN_INDICATOR.name(), criteria.getIsMainIndicator(), OperationType.EQ));
+            }
         }
 
         return conjunctionRestriction;

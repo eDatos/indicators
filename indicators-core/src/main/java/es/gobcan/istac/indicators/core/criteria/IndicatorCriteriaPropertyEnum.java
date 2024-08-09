@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum IndicatorCriteriaPropertyEnum implements Serializable {
 
-    CODE, CATEGORY_ELEMENT_CODE, NOTIFY_POPULATION_ERRORS, TITLE, PRODUCTION_PROC_STATUS, DIFFUSION_PROC_STATUS;
+    CODE, CATEGORY_ELEMENT_CODE, NOTIFY_POPULATION_ERRORS, TITLE, PRODUCTION_PROC_STATUS, DIFFUSION_PROC_STATUS, IS_MAIN_INDICATOR;
 
     private IndicatorCriteriaPropertyEnum() {
     }
