@@ -66,7 +66,6 @@ import es.gobcan.istac.indicators.rest.clients.StatisticalResourceRestExternalFa
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
-import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
@@ -120,9 +119,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
     private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
-
-    @Autowired
-    GeographicalValuesRestFacade                                                                 geographicalValuesRestFacade;
 
     @Autowired
     private final MetadataProperties                                                             metadataProperties                    = null;
