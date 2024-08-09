@@ -17,16 +17,34 @@ import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Component
 public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRest2DoMapper {
 
+    private static final Logger                                    log = LoggerFactory.getLogger(IndicatorInstancesRest2DoMapperImpl.class);
+
     private final RestCriteria2SculptorCriteria<IndicatorInstance> parser;
+
+    @Autowired
+    private SrmRestInternalFacade                                  srmRestInternalFacade;
+
+    @Autowired
+    private IndicatorsConfigurationService                         configurationService;
+
+    @Autowired
+    GeographicalValuesRestFacade                                   geographicalValuesRestFacade;
 
     public IndicatorInstancesRest2DoMapperImpl() {
         parser = new RestCriteria2SculptorCriteria<IndicatorInstance>(IndicatorInstance.class, IndicatorInstancesPropertyOrder.class, IndicatorInstancesPropertyRestriction.class,
@@ -58,6 +76,19 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
             return new RestException(exception, Response.Status.INTERNAL_SERVER_ERROR);
         }
 
+        private String getGeographicalValue(String geographicalValue) throws RestException {
+            try {
+                GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils();
+
+                return geoValuesOldVersionCompatibilityUtils.setGeographicalValue(geographicalValuesRestFacade, srmRestInternalFacade, geographicalValue,
+                        configurationService.retrieveDefaultTerritoryVariable());
+
+            } catch (Exception e) {
+                log.error("An unexpected error ocurred searching geographical value ind indicator instance mapper. ", e);
+            }
+            return geographicalValue;
+        }
+
         @Override
         public SculptorPropertyCriteria retrieveProperty(MetamacRestQueryPropertyRestriction propertyRestriction) throws RestException {
             IndicatorInstancesPropertyRestriction propertyNameCriteria = IndicatorInstancesPropertyRestriction.valueOf(propertyRestriction.getPropertyName());
@@ -74,7 +105,7 @@ public class IndicatorInstancesRest2DoMapperImpl implements IndicatorInstancesRe
                 }
 
                 case GEOGRAPHICALVALUE: {
-                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.lastValuesCache().geographicalCode(), value, propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(IndicatorInstanceProperties.lastValuesCache().geographicalCode(), getGeographicalValue(value), propertyRestriction.getOperationType());
                 }
 
                 case GEOGRAPHICALGRANULARITY: {
