@@ -66,6 +66,7 @@ import es.gobcan.istac.indicators.rest.clients.StatisticalResourceRestExternalFa
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.component.UriLinks;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
+import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
@@ -99,38 +100,42 @@ import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatib
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Autowired
-    UriLinks uriLinks;
+    UriLinks                                                                                     uriLinks;
 
     @Autowired
-    private TranslationRepository translationRepository;
+    private TranslationRepository                                                                translationRepository;
 
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache         = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static ThreadLocal<Map<String, Map<String, Object>>>                                 requestCache                          = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-        @Override
-        protected java.util.Map<String, Map<String, Object>> initialValue() {
-            return new HashMap<String, Map<String, Object>>();
-        }
-    };
+                                                                                                                                           @Override
+                                                                                                                                           protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                                                               return new HashMap<String, Map<String, Object>>();
+                                                                                                                                           }
+                                                                                                                                       };
     @Autowired
-    private final  IndicatorsApiService                          indicatorsApiService = null;
-
-    @Autowired
-    private final StatisticalOperationsRestInternalFacade statisticalOperations = null;
+    private final IndicatorsApiService                                                           indicatorsApiService                  = null;
 
     @Autowired
-    private final SrmRestInternalFacade srmRestInternalFacade = null;
+    private final StatisticalOperationsRestInternalFacade                                        statisticalOperations                 = null;
 
     @Autowired
-    private final MetadataProperties metadataProperties = null;
+    private final SrmRestInternalFacade                                                          srmRestInternalFacade                 = null;
 
     @Autowired
-    private Do2JsonStatMapperUtil do2JsonStatMapperUtil;
+    GeographicalValuesRestFacade                                                                 geographicalValuesRestFacade;
 
     @Autowired
-    private final StatisticalResourceRestExternalFacade statisticalResourceRestExternalFacade = null;
+    private final MetadataProperties                                                             metadataProperties                    = null;
 
-    private static final List<String> measuresOrder = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
-            MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private Do2JsonStatMapperUtil                                                                do2JsonStatMapperUtil;
+
+    @Autowired
+    private final StatisticalResourceRestExternalFacade                                          statisticalResourceRestExternalFacade = null;
+
+    private static final List<String>                                                            measuresOrder                         = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+            MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+            MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     private static final EnumMap<QuantityUnitSymbolPositionEnum, QuantityUnitSymbolPositionEnum> QUANTITY_UNIT_SYMBOL_POSITION_MAPPING = new EnumMap<>(QuantityUnitSymbolPositionEnum.class);
 
@@ -779,8 +784,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_METADATA_ATTRIBUTE).append(".").append(code).toString();
-        metadataAttributeUnit.setTitle(
-                MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        metadataAttributeUnit
+                .setTitle(MapperUtil.getLocalisedLabel(translationRepository.findTranslationByCode(translationCode).getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
         return metadataAttributeUnit;
     }
@@ -806,7 +811,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target) {
+    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) {
         try {
             IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(source.getIndicator().getCode());
 
@@ -815,6 +820,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
+
+            geoValuesOldVersionCompatibilityUtils.getGeoValuesWithOldCompatibility(geographicalValues);
 
             MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);

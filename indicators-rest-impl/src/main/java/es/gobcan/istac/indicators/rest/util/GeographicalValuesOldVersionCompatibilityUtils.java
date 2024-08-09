@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 
@@ -30,6 +31,9 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
     protected static Logger logger                                      = LoggerFactory.getLogger(GeographicalValuesOldVersionCompatibilityUtils.class);
     Map<String, String>     variableElementsByGeographicalCode          = new HashMap<>();
     List<String>            originalSelectedGeographicalRepresentations = new ArrayList<>();
+    private boolean         indicatorInstance                           = false;
+    List<String>            selectedRepresentationOldCodes              = new ArrayList<>();                                                            // only for indicator systems not for individual
+                                                                                                                                                        // indicators
 
     /**
      * if geographical representations exist, it must be checked that are variable element values. If the first value is not a variable element, the system supposes that is a geographical code and the
@@ -45,7 +49,15 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
 
     public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation) {
         List<String> geographicalSelectedValues = representation.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        this.originalSelectedGeographicalRepresentations = geographicalSelectedValues;
+        if (geographicalSelectedValues != null) {
+            this.originalSelectedGeographicalRepresentations = geographicalSelectedValues;
+        }
+    }
+
+    public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation, boolean isIndicatorInstance) {
+        this(representation);
+        indicatorInstance = isIndicatorInstance;
+        selectedRepresentationOldCodes = new ArrayList<>(originalSelectedGeographicalRepresentations);
     }
 
     public GeographicalValuesOldVersionCompatibilityUtils() {
@@ -86,6 +98,25 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
         return originalSelectedGeographicalRepresentations;
     }
 
+    public boolean checkNeedCompatibility(GeographicalValuesRestFacade geographicalValuesRestFacade, Map<String, List<String>> selectedRepresentations) {
+        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        if (geographicalSelectedValues == null || geographicalSelectedValues.isEmpty()) {
+            return false;
+        }
+
+        try {
+            // check if one code is a variable element. If the code is not variable element returns null and needs compatibility.
+            GeographicalValue geographicalValue = geographicalValuesRestFacade.findGeographicalValuesByCode(geographicalSelectedValues.get(0));
+            return geographicalValue == null;
+
+        } catch (MetamacException e) {
+            logger.error("Error in codes compatibility. it has not been possible to check selected geographical value representation. ", e);
+        }
+
+        return false;
+
+    }
+
     public void setGeographicalRepresentationByVariableElements(GeographicalValuesRestFacade geographicalValuesRestFacade, SrmRestInternalFacade srmRestInternalFacade,
             IndicatorVersion indicatorVersion, Map<String, List<String>> selectedRepresentations) {
         List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
@@ -108,6 +139,58 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
             logger.error("it has not been possible to check selected geographical value representation. ", e);
         }
 
+    }
+
+    public boolean allCodesConverted() {
+        return selectedRepresentationOldCodes == null || selectedRepresentationOldCodes.isEmpty();
+    }
+
+    public void setNewCodesForSelectedRepresentation(Map<String, List<String>> selectedRepresentations) {
+        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        List<String> geographicalSelectedValuesTarget = new ArrayList<>();
+        for (String geoOldCodeInSelectedRepresentation : geographicalSelectedValues) {
+            geographicalSelectedValuesTarget.add(variableElementsByGeographicalCode.getOrDefault(geoOldCodeInSelectedRepresentation, geoOldCodeInSelectedRepresentation));
+        }
+
+        selectedRepresentations.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalSelectedValuesTarget);
+
+    }
+
+    public void getGeoValuesWithOldCompatibility(List<GeographicalValueVO> geographicalValues) {
+        if (needsCompatibilityGeographicalCodes()) {
+            for (GeographicalValueVO geoValue : geographicalValues) {
+                String variableElement = getGeographicalCodeByVariableElement(geoValue.getCode());
+                if (variableElement != null) {
+                    geoValue.setCode(variableElement);
+                }
+            }
+        }
+    }
+
+    public void convertOldCodesForIndicatorsSystem(SrmRestInternalFacade srmRestInternalFacade, IndicatorVersion indicatorVersion) {
+        try {
+            Map<Long, Map<String, String>> geographicalValuesByDataSource = getGeographicalValuesByDataSource(srmRestInternalFacade, indicatorVersion);
+
+            getVariableElementsByGeographicalCodes(geographicalValuesByDataSource);
+        } catch (MetamacException e) {
+            logger.error("it has not been possible to check selected geographical value representation. ", e);
+        }
+
+    }
+
+    private void getVariableElementsByGeographicalCodes(Map<Long, Map<String, String>> geographicalValuesByDataSource) {
+        List<String> geographicalSelectedValues = new ArrayList<>(selectedRepresentationOldCodes);
+        for (String geographicalCode : geographicalSelectedValues) {
+            for (Map.Entry<Long, Map<String, String>> geoValuesByCode : geographicalValuesByDataSource.entrySet()) {
+                String variableElement = geoValuesByCode.getValue().get(geographicalCode);
+                if (variableElement != null) {
+                    variableElementsByGeographicalCode.put(geographicalCode, variableElement);
+                    selectedRepresentationOldCodes.remove(geographicalCode);
+                    break;
+                }
+            }
+
+        }
     }
 
     private Map<Long, Map<String, String>> getGeographicalValuesByDataSource(SrmRestInternalFacade srmRestInternalFacade, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -177,6 +260,14 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
             logger.error("it has not been possible to check selected geographical value: " + geographicalValue, e);
         }
         return geographicalValue;
+    }
+
+    public boolean isIndicatorInstance() {
+        return indicatorInstance;
+    }
+
+    public void setIndicatorInstance(boolean indicatorInstance) {
+        this.indicatorInstance = indicatorInstance;
     }
 
 }
