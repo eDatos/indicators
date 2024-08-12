@@ -81,8 +81,8 @@
                 var url = self._getHttpsUrl() + "/widgets/uwa/" + response.id;
                 window.open(url, '_new');
             };
-            if(typeof showCaptchaWithButton !== 'undefined') {
-                var request = showCaptchaWithButton(
+            if(typeof Edatos !== 'undefined' && Edatos.captcha) {
+                var request = Edatos.captcha.showCaptchaWithButton(
                     function(url) {
                         return new Promise(function(resolve, reject) {
                             $.ajax({...ajaxParameters, url: url}).fail(function(jqXHR) {
