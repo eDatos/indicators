@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 public interface IndicatorSystemRestFacade {
 
@@ -23,7 +24,8 @@ public interface IndicatorSystemRestFacade {
     PagedResultType<IndicatorInstanceBaseType> retrievePaginatedIndicatorsInstances(final String idIndicatorSystem, String q, String order, Integer limit, Integer offset, String fields,
             Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws MetamacException;
     IndicatorInstanceType retrieveIndicatorInstanceByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException;
-    JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> representation, Map<String, List<String>> granularity) throws MetamacException;
+    JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> representation,
+            Map<String, List<String>> granularity) throws MetamacException;
     DataType retrieveIndicatorInstanceDataByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
-            Map<String, List<String>> selectedGranularities, boolean includeObservations) throws MetamacException;
+            Map<String, List<String>> selectedGranularities, boolean includeObservations, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException;
 }
