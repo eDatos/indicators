@@ -1727,6 +1727,8 @@ Application Indicators {
 			- @InternationalStringDto categoryElementTitle;       		
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
+            "Indicates if is main indicator or not"
+			Boolean isMainIndicator;
 
        		"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;

@@ -28,6 +28,7 @@ public class IndicatorDS extends DataSource {
     public static String PUBLICATION_STREAM_STATUS             = "ind-publication-stream-status";
 
     public static String MAIN_INDICATOR                        = "ind-main";
+    public static String MAIN_INDICATOR_DIFF                   = "ind-main-diff";
 
     // CONTENT CLASSIFIERS
     public static String SUBJECT_TITLE                         = "ind-sub-title";

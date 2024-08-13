@@ -67,6 +67,7 @@ public class IndicatorRecord extends ListGridRecord {
             setProductionIndicatorArchivedUser(productionVersion.getArchiveUser());
             setProductionIndicatorCreationDate(productionVersion.getCreatedDate());
             setProductionIndicatorCreationUser(productionVersion.getCreatedBy());
+            setProductionIndicatorIsMainIndicator(productionVersion.getIsMainIndicator());
         }
     }
 
@@ -88,6 +89,7 @@ public class IndicatorRecord extends ListGridRecord {
             setDiffusionIndicatorArchivedUser(diffusionVersion.getArchiveUser());
             setDiffusionIndicatorCreationDate(diffusionVersion.getCreatedDate());
             setDiffusionIndicatorCreationUser(diffusionVersion.getCreatedBy());
+            setDiffusionIndicatorIsMainIndicator(diffusionVersion.getIsMainIndicator());
         }
     }
 
@@ -141,6 +143,7 @@ public class IndicatorRecord extends ListGridRecord {
         }
         setAttribute(IndicatorDS.NEEDS_UPDATE, imageURL);
     }
+
 
     public void setDiffusionIndicatorNeedsUpdate(Boolean value) {
         String imageURL = new String();
@@ -284,5 +287,18 @@ public class IndicatorRecord extends ListGridRecord {
             imageURL = GlobalResources.RESOURCE.errorSmart().getURL();
         }
         return imageURL;
+    }
+
+    public void setProductionIndicatorIsMainIndicator(Boolean value) {
+        setMainIndicator(value, IndicatorDS.MAIN_INDICATOR);
+    }
+
+    public void setDiffusionIndicatorIsMainIndicator(Boolean value) {
+        setMainIndicator(value, IndicatorDS.MAIN_INDICATOR_DIFF);
+    }
+
+    private void setMainIndicator(Boolean value, String attribute) {
+        String imageURL = (Boolean.TRUE.equals(value)) ? GlobalResources.RESOURCE.success().getURL() : GlobalResources.RESOURCE.errorSmart().getURL();
+        setAttribute(attribute, imageURL);
     }
 }
