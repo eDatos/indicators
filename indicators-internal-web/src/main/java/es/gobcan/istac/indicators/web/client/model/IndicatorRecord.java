@@ -4,6 +4,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -298,7 +299,7 @@ public class IndicatorRecord extends ListGridRecord {
     }
 
     private void setMainIndicator(Boolean value, String attribute) {
-        String imageURL = (Boolean.TRUE.equals(value)) ? GlobalResources.RESOURCE.success().getURL() : GlobalResources.RESOURCE.errorSmart().getURL();
-        setAttribute(attribute, imageURL);
+        String mainIndicatorValue = (Boolean.TRUE.equals(value)) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no();
+        setAttribute(attribute, mainIndicatorValue);
     }
 }

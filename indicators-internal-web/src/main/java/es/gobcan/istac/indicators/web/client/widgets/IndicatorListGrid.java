@@ -93,8 +93,8 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField isMainIndicator = new ListGridField(MAIN_INDICATOR, getConstants().indicatorMain());
         isMainIndicator.setHidden(true);
         isMainIndicator.setWidth(140);
-        isMainIndicator.setType(ListGridFieldType.IMAGE);
         isMainIndicator.setAlign(Alignment.CENTER);
+
         ListGridField productionValidationDate = new ListGridField(PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
         productionValidationDate.setHidden(true);
         ListGridField productionValidationUser = new ListGridField(PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
@@ -136,7 +136,6 @@ public class IndicatorListGrid extends CustomListGrid {
         ListGridField isMainIndicatorDiff = new ListGridField(MAIN_INDICATOR_DIFF, getConstants().indicatorMain());
         isMainIndicatorDiff.setHidden(true);
         isMainIndicatorDiff.setWidth(140);
-        isMainIndicatorDiff.setType(ListGridFieldType.IMAGE);
         isMainIndicatorDiff.setAlign(Alignment.CENTER);
 
         ListGridField productionValidationDateDiff = new ListGridField(PRODUCTION_VALIDATION_DATE_DIFF, getConstants().indicDetailProductionValidationDate());
