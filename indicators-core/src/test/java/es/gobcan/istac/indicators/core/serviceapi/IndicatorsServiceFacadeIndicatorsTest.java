@@ -274,7 +274,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
-        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
