@@ -68,7 +68,8 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
     private String getLocaleQueryParam(Map<String, Object> model, String locale) {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
-        return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s", internationalizationUrlParamId, locale) : "";
+        String appId = "indicators-external";
+        return StringUtils.isNotBlank(internationalizationUrlParamId) ? String.format("%s=%s&appId=%s", internationalizationUrlParamId, appId, locale) : "";
     }
 
     private static IndicatorsConfigurationService getConfigurationService() {
