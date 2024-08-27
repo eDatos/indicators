@@ -76,5 +76,5 @@ public interface Do2TypeMapper {
 
     void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException;
 
-    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target);
+    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils);
 }
