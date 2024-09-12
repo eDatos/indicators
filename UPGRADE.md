@@ -8,6 +8,15 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 10.0.2 a 10.0.3-SNAPSHOT
+
+* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la
+  siguiente carpeta:
+
+```
+etc/changes-from-release/10.0.2/db/indicators/postgresql/*.sql
+```
+
 ## 9.7.0 a 10.0.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
 

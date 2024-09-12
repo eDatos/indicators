@@ -261,6 +261,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().productionProcStatus(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case DIFFUSION_PROC_STATUS:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().diffusionProcStatus(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
+                case IS_MAIN_INDICATOR:
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.isMainIndicator(), propertyRestriction.getBooleanValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

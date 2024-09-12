@@ -64,7 +64,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
 
     // The words of a value of an enumerated should be separated by underscores. In this case, the values don't have the underscore so we don't have to change the API and associated documentation
     public enum IndicatorsPropertyRestriction {
-        GEOGRAPHICALVALUE, SUBJECTCODE, ID, GEOGRAPHICALGRANULARITY, TEMPORALGRANULARITY
+        GEOGRAPHICALVALUE, SUBJECTCODE, ID, GEOGRAPHICALGRANULARITY, TEMPORALGRANULARITY, ISMAININDICATOR
     }
 
     private class IndicatorsCriteriaCallback implements RestCriteria2SculptorCriteria.CriteriaCallback {
@@ -128,6 +128,8 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                 }
                 case TEMPORALGRANULARITY:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.timeCoverages().timeGranularity(), value, propertyRestriction.getOperationType());
+                case ISMAININDICATOR:
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.isMainIndicator(), Boolean.valueOf(value), propertyRestriction.getOperationType());
             }
             throw createInvalidParameterException("q");
         }

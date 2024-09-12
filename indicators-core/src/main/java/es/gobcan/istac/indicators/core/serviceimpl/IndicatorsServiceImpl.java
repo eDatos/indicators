@@ -705,6 +705,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         indicatorNewVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
 
+        indicatorNewVersion.setIsMainIndicator(indicatorVersionDiffusion.getIsMainIndicator());
+
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);
         getIndicatorVersionRepository().save(indicatorVersionDiffusion);

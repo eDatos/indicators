@@ -4,6 +4,7 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.Date;
 
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 
@@ -67,6 +68,7 @@ public class IndicatorRecord extends ListGridRecord {
             setProductionIndicatorArchivedUser(productionVersion.getArchiveUser());
             setProductionIndicatorCreationDate(productionVersion.getCreatedDate());
             setProductionIndicatorCreationUser(productionVersion.getCreatedBy());
+            setProductionIndicatorIsMainIndicator(productionVersion.getIsMainIndicator());
         }
     }
 
@@ -88,6 +90,7 @@ public class IndicatorRecord extends ListGridRecord {
             setDiffusionIndicatorArchivedUser(diffusionVersion.getArchiveUser());
             setDiffusionIndicatorCreationDate(diffusionVersion.getCreatedDate());
             setDiffusionIndicatorCreationUser(diffusionVersion.getCreatedBy());
+            setDiffusionIndicatorIsMainIndicator(diffusionVersion.getIsMainIndicator());
         }
     }
 
@@ -141,6 +144,7 @@ public class IndicatorRecord extends ListGridRecord {
         }
         setAttribute(IndicatorDS.NEEDS_UPDATE, imageURL);
     }
+
 
     public void setDiffusionIndicatorNeedsUpdate(Boolean value) {
         String imageURL = new String();
@@ -284,5 +288,18 @@ public class IndicatorRecord extends ListGridRecord {
             imageURL = GlobalResources.RESOURCE.errorSmart().getURL();
         }
         return imageURL;
+    }
+
+    public void setProductionIndicatorIsMainIndicator(Boolean value) {
+        setMainIndicator(value, IndicatorDS.MAIN_INDICATOR);
+    }
+
+    public void setDiffusionIndicatorIsMainIndicator(Boolean value) {
+        setMainIndicator(value, IndicatorDS.MAIN_INDICATOR_DIFF);
+    }
+
+    private void setMainIndicator(Boolean value, String attribute) {
+        String mainIndicatorValue = (Boolean.TRUE.equals(value)) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no();
+        setAttribute(attribute, mainIndicatorValue);
     }
 }

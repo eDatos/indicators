@@ -212,6 +212,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setNotifyPopulationErrors(source.getIndicator().getNotifyPopulationErrors());
 
         target.setNeedsUpdate(source.getNeedsUpdate());
+        target.setIsMainIndicator(source.getIsMainIndicator());
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
 
@@ -551,6 +552,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
             target.setCategoryElementTitle(null);
         }
         target.setNeedsUpdate(source.getNeedsUpdate());
+        target.setIsMainIndicator(source.getIsMainIndicator());
 
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());

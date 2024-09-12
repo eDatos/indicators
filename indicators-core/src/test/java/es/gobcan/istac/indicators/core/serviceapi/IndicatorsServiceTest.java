@@ -91,7 +91,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
-
+        indicatorVersion.setIsMainIndicator(Boolean.FALSE);
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
         assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getCreatedBy());
@@ -119,7 +119,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
-
+        indicatorVersion.setIsMainIndicator(Boolean.FALSE);
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
         assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getCreatedBy());
@@ -148,6 +148,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_1", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));
+        indicatorVersion.setIsMainIndicator(Boolean.FALSE);
 
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
