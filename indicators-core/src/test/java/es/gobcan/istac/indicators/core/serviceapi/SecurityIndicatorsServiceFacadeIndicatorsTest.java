@@ -93,6 +93,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));

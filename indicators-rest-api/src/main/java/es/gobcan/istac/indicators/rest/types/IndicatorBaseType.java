@@ -21,6 +21,7 @@ public class IndicatorBaseType implements Serializable {
     private Map<String, String> acronym            = null;
 
     private String              subjectCode        = null;
+    private Boolean             mainIndicator      = null;
     private Map<String, String> subjectTitle       = null;
     private List<LinkType>      systemSurveyLinks  = null;
 
@@ -96,6 +97,13 @@ public class IndicatorBaseType implements Serializable {
         this.subjectCode = subjectCode;
     }
 
+    public Boolean getMainIndicator() {
+        return mainIndicator;
+    }
+
+    public void setMainIndicator(Boolean mainIndicator) {
+        this.mainIndicator = mainIndicator;
+    }
     public Map<String, String> getSubjectTitle() {
         return subjectTitle;
     }
