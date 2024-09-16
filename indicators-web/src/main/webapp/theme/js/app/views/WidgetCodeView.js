@@ -81,25 +81,32 @@
                 var url = self._getHttpsUrl() + "/widgets/uwa/" + response.id;
                 window.open(url, '_new');
             };
-            if(typeof Edatos !== 'undefined' && Edatos.captcha) {
-                var request = Edatos.captcha.showCaptchaWithButton(
-                    function(url) {
-                        return new Promise(function(resolve, reject) {
-                            $.ajax({...ajaxParameters, url: url}).fail(function(jqXHR) {
-                                reject(jqXHR)
-                            }).done(function(val) {
-                                resolve(val)
-                            });
-                        });
-                    },
-                    permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
-                    captchaOptions
-                );
-                request.then(requestCallback);
-            } else {
+            var requestWithoutCaptcha = function () {
                 $.ajax({...ajaxParameters, url: permalinksUrlBase + "/v1.0/permalinks"}).fail(function(jqXHR) {
                     reject(jqXHR)
                 }).done(requestCallback);
+            };
+            if(typeof Edatos !== 'undefined' && Edatos.captcha) {
+                Edatos.UserManagement.getAccount().then(function () {
+                    requestWithoutCaptcha();
+                }).catch(function () {
+                    var request = Edatos.captcha.showCaptchaWithButton(
+                        function (url) {
+                            return new Promise(function (resolve, reject) {
+                                $.ajax({...ajaxParameters, url: url}).fail(function (jqXHR) {
+                                    reject(jqXHR)
+                                }).done(function (val) {
+                                    resolve(val)
+                                });
+                            });
+                        },
+                        permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
+                        captchaOptions
+                    );
+                    request.then(requestCallback);
+                });
+            } else {
+                requestWithoutCaptcha();
             }
 
         }
