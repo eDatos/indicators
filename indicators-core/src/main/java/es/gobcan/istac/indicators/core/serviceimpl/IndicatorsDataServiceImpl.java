@@ -1642,6 +1642,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             } catch (MetamacException e) {
                 throw e;
             } catch (Exception e) {
+                LOG.error("Unexpected error retrieving data for  {} : ", dataSource != null ? dataSource.getQueryUuid() : " unknown datasource ", e);
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getQueryUuid(), dataSource.getUuid());
             }
         }
@@ -1858,8 +1859,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             String formattedValue = formatValue(Double.parseDouble(value), dataOperation);
             observation.setPrimaryMeasure(formattedValue);
-            String observationEntry = content.getAttributesObservations().get(observationPosition);
-            observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+            if (content.getAttributesObservations() != null && !content.getAttributesObservations().isEmpty()) {
+                String observationEntry = content.getAttributesObservations().get(observationPosition);
+                observation.addAttribute(createAttribute(observationKey, DATASET_REPOSITORY_LOCALE, observationEntry));
+            }
 
         } catch (NumberFormatException e) {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);

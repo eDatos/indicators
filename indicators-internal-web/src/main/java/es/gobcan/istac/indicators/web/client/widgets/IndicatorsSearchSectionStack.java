@@ -82,7 +82,11 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         notifyPopulationErrors.setValueMap(CommonUtils.getIndicatorNotifyPopulationErrorsValueMap());
         notifyPopulationErrors.setWidth(200);
 
-        FormItem[] advancedSearchFormItems = new FormItem[]{title, categoryElementSelectItem.getItem(), productionVersionProcStatus, diffusionVersionProcStatus, notifyPopulationErrors, orderBy,
+        SelectItem mainIndicator = new SelectItem(IndicatorDS.MAIN_INDICATOR, getConstants().indicatorMain());
+        mainIndicator.setValueMap(CommonUtils.getYesOrNoValueMap());
+
+        FormItem[] advancedSearchFormItems = new FormItem[]{title, categoryElementSelectItem.getItem(), productionVersionProcStatus, diffusionVersionProcStatus, notifyPopulationErrors, mainIndicator,
+                orderBy,
                 orderType, searchItem};
         setFormItemsInAdvancedSearchForm(advancedSearchFormItems);
     }
@@ -109,6 +113,11 @@ public class IndicatorsSearchSectionStack extends BaseAdvancedSearchSectionStack
         String notifyPopulationErrors = advancedSearchForm.getValueAsString(IndicatorDS.NOTIFY_POPULATION_ERRORS);
         if (!StringUtils.isBlank(notifyPopulationErrors)) {
             criteria.setNotifyPopulationErrors(new Boolean(notifyPopulationErrors));
+        }
+
+        String isMainIndicator = advancedSearchForm.getValueAsString(IndicatorDS.MAIN_INDICATOR);
+        if (!StringUtils.isBlank(isMainIndicator)) {
+            criteria.setIsMainIndicator(Boolean.valueOf(isMainIndicator));
         }
 
         IndicatorCriteriaOrderEnum indicatorCriteriaOrderEnum = CommonUtils.getIndicatorCriteriaOrderEnum(advancedSearchForm.getValueAsString(IndicatorDS.ORDER_BY));

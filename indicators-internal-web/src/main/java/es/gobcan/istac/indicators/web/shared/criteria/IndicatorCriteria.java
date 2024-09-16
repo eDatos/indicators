@@ -23,6 +23,8 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     private Boolean                    notifyPopulationErrors;
 
+    private Boolean                    isMainIndicator;
+
     public IndicatorCriteria() {
         setFirstResult(0);
         setMaxResults(IndicatorsWebConstants.LISTGRID_MAX_RESULTS);
@@ -74,6 +76,14 @@ public class IndicatorCriteria extends PaginationWebCriteria {
 
     public Boolean getNotifyPopulationErrors() {
         return notifyPopulationErrors;
+    }
+
+    public void setIsMainIndicator(Boolean isMainIndicator) {
+        this.isMainIndicator = isMainIndicator;
+    }
+
+    public Boolean getIsMainIndicator() {
+        return isMainIndicator;
     }
 
     public String getCategoryElementCode() {

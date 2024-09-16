@@ -17,12 +17,14 @@ public class WebUtils {
     protected static Logger    logger         = LoggerFactory.getLogger(WebUtils.class);
 
     public static final String PARAM_APP_NAME = "appName";
+    public static final String PARAM_APP_ID   = "appId";
 
     public static String buildHeaderQuery(String appName, BreadcrumbList breadcrumbList, String internationalizationUrlParamId, Locale locale) {
         // @formatter:off
         return buildQuery(
                 buildBreadcrumbsQueryParams(breadcrumbList),
                 buildAppNameQueryParam(appName),
+                buildAppIdQueryParam(),
                 buildLocaleQueryParam(internationalizationUrlParamId, locale)
         );
         // @formatter:on
@@ -59,14 +61,18 @@ public class WebUtils {
     }
 
     private static String buildAppNameQueryParam(String appName) {
-        return getParam(PARAM_APP_NAME, appName);
+        return buildParam(PARAM_APP_NAME, appName);
+    }
+
+    private static String buildAppIdQueryParam() {
+        return buildParam(PARAM_APP_ID, "indicators-visualizations");
     }
 
     private static String buildLocaleQueryParam(String internationalizationUrlParamId, Locale locale) {
         if (StringUtils.isBlank(internationalizationUrlParamId)) {
             return "";
         }
-        return getParam(internationalizationUrlParamId, locale.getLanguage());
+        return buildParam(internationalizationUrlParamId, locale.getLanguage());
     }
 
     private static String buildQuery(String... params) {
@@ -79,7 +85,7 @@ public class WebUtils {
         return joiner.length() > 0 ? "?" + joiner.toString() : "";
     }
 
-    private static String getParam(String param, String value) {
+    private static String buildParam(String param, String value) {
         if (value == null) {
             return "";
         }

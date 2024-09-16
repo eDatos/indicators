@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.rest.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.MapUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
 
@@ -83,8 +83,8 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
         String indicatorInstancesLink = uriLinks.getIndicatorInstancesLink(idIndicatorSystem);
         String indicatorSystemLink = uriLinks.getIndicatorSystemLink(idIndicatorSystem);
-        IndicatorInstancesPaginatedResponseUtil
-                .createPaginationLinks(indicatorInstanceTypes, indicatorInstancesLink, indicatorSystemLink, q, order, limit, offset, fields, representation, granularity);
+        IndicatorInstancesPaginatedResponseUtil.createPaginationLinks(indicatorInstanceTypes, indicatorInstancesLink, indicatorSystemLink, q, order, limit, offset, fields, representation,
+                granularity);
         return new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
     }
 
@@ -111,7 +111,8 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         // @formatter:on
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
+        JsonStatDataType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceJsonStatByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations,
+                selectedGranularities);
         return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 
@@ -130,7 +131,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities,
-                includeObservationsAttributes);
+                includeObservationsAttributes, new GeographicalValuesOldVersionCompatibilityUtils(selectedRepresentations, true));
 
         String selfLink = uriLinks.getIndicatorInstanceDataSelfLink(idIndicatorSystem, idIndicatorInstance, fields, representation, granularity);
         LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR_INSTANCE, uriLinks.getIndicatorInstanceLink(idIndicatorSystem, idIndicatorInstance));
