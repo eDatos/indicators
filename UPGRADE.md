@@ -17,11 +17,7 @@
 etc/changes-from-release/10.0.2/db/indicators/postgresql/*.sql
 ```
 
-### Breaking changes
-
 * A partir de esta vesión se utiliza la nueva forma de acceder a los métodos del captcha. Por lo tanto, edatos-external-users, donde se encuentra centralizado el comportamiento del captcha, debería estar actualizado al menos a la versión 2.3.2-SNAPSHOT.
-
-  Hasta ahora se accedía con métodos globales pero ahora esos métodos se encuentran dentro del objeto `Edatos.captcha`. Más información sobre todo lo relacionado con el captcha aquí: https://confluence.arte.dev/display/ISTAC/Consumir+del+captcha .
 
 ## 9.7.0 a 10.0.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
