@@ -10,10 +10,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		
-		[#if apiStyleCssUrl?has_content]
-            <link href="${apiStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
-        [/#if]
         
         <link rel="icon" href="${faviconUrl}"/>
 	</head>
