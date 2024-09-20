@@ -390,7 +390,7 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicator.properties.version' /]",
           "type": "string"
         },
-        "mainIndicattor": {
+        "mainIndicator": {
         "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.mainindicator' /]",
         "type": "boolean"
         }
@@ -457,7 +457,7 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.version' /]",
           "type": "string"
         },
-        "mainIndicattor": {
+        "mainIndicator": {
         "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.mainindicator' /]",
         "type": "boolean"
         }
