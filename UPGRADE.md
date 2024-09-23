@@ -17,6 +17,8 @@
 etc/changes-from-release/10.0.2/db/indicators/postgresql/*.sql
 ```
 
+* A partir de esta vesión se utiliza la nueva forma de acceder a los métodos del captcha. Por lo tanto, edatos-external-users, donde se encuentra centralizado el comportamiento del captcha, debería estar actualizado al menos a la versión 2.3.2-SNAPSHOT.
+
 ## 9.7.0 a 10.0.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
 
