@@ -7,7 +7,8 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "title", "acronym", "subjectCode", "subjectTitle", "systemSurveyLinks", "quantity", "conceptDescription", "notes", "data"})
+@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "title", "acronym", "subjectCode", "subjectTitle", "systemSurveyLinks", "quantity", "conceptDescription", "notes", "data",
+        "mainIndicator"})
 public class IndicatorBaseType implements Serializable {
 
     private static final long   serialVersionUID   = 6882302798656723943L;
