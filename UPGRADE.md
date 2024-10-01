@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 10.0.2 a 10.0.3-SNAPSHOT
+## 10.0.2 a 10.1.0
 
 * Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la
   siguiente carpeta:
@@ -17,7 +17,7 @@
 etc/changes-from-release/10.0.2/db/indicators/postgresql/*.sql
 ```
 
-* A partir de esta vesión se utiliza la nueva forma de acceder a los métodos del captcha. Por lo tanto, edatos-external-users, donde se encuentra centralizado el comportamiento del captcha, debería estar actualizado al menos a la versión 2.3.2-SNAPSHOT.
+* A partir de esta vesión se utiliza la nueva forma de acceder a los métodos del captcha. Por lo tanto, edatos-external-users, donde se encuentra centralizado el comportamiento del captcha, debería estar actualizado al menos a la versión 3.0.0.
 
 ## 9.7.0 a 10.0.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
