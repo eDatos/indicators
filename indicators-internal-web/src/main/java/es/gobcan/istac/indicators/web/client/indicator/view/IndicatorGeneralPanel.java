@@ -14,6 +14,7 @@ import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.WarningWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -83,7 +84,6 @@ public class IndicatorGeneralPanel extends VLayout {
     private GroupDynamicForm                 diffusionDescriptorsEditionForm;
     private GroupDynamicForm                 publicationDescriptorsEditionForm;
     private GroupDynamicForm                 annotationsEditionForm;
-
     private SearchExternalItemSimpleItem     categoryElement;
 
     public IndicatorGeneralPanel() {
@@ -332,10 +332,12 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         needsUpdate.setWidth(20);
+        ViewTextItem mainIndicator = new ViewTextItem(IndicatorDS.MAIN_INDICATOR, getConstants().indicatorMain());
+
         ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorDS.PUBLICATION_STREAM_STATUS, getConstants().indicatorStreamMsgStatus());
         publicationStreamStatus.setWidth(20);
 
-        identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate, publicationStreamStatus);
+        identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate, publicationStreamStatus, mainIndicator);
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -409,7 +411,8 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         needsUpdate.setWidth(20);
-        diffusionIdentifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+        ViewTextItem mainIndicator = new ViewTextItem(IndicatorDS.MAIN_INDICATOR, getConstants().indicatorMain());
+        diffusionIdentifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate, mainIndicator);
 
         diffusionMainFormLayout.addViewCanvas(diffusionIdentifiersForm);
     }
@@ -428,7 +431,8 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         needsUpdate.setWidth(20);
-        identifiersEditionForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+        CustomCheckboxItem mainIndicator = new CustomCheckboxItem(IndicatorDS.MAIN_INDICATOR, getConstants().indicatorMain());
+        identifiersEditionForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate, mainIndicator);
 
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -543,6 +547,8 @@ public class IndicatorGeneralPanel extends VLayout {
         diffusionIdentifiersForm.setValue(IndicatorDS.TITLE, indicatorDto.getTitle());
         diffusionIdentifiersForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         diffusionIdentifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
+        diffusionIdentifiersForm.setValue(IndicatorDS.MAIN_INDICATOR,
+                (indicatorDto.getIsMainIndicator() != null && indicatorDto.getIsMainIndicator()) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
         diffusionIdentifiersForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
 
         diffusionMainFormLayout.show();
@@ -559,6 +565,8 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         identifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
         identifiersForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
+        identifiersForm.setValue(IndicatorDS.MAIN_INDICATOR,
+                (indicatorDto.getIsMainIndicator() != null && indicatorDto.getIsMainIndicator()) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
         identifiersForm.getItem(IndicatorDS.PUBLICATION_STREAM_STATUS)
                 .setIcons(StreamMessageStatusEnum.PENDING.equals(indicatorDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorDto.getStreamMessageStatus()));
 
@@ -609,6 +617,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.setValue(IndicatorDS.ACRONYM, indicatorDto.getAcronym());
         identifiersEditionForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
         identifiersEditionForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
+        identifiersEditionForm.setValue(IndicatorDS.MAIN_INDICATOR, indicatorDto.getIsMainIndicator() != null ? indicatorDto.getIsMainIndicator() : false);
 
         // Content Classifiers
         contentClassifiersEditionForm.setValue(IndicatorDS.CATEGORY_ELEMENT, indicatorDto.getCategoryElement());
@@ -655,6 +664,7 @@ public class IndicatorGeneralPanel extends VLayout {
             // Identifiers
             indicator.setTitle(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.TITLE));
             indicator.setAcronym(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorDS.ACRONYM));
+            indicator.setIsMainIndicator((Boolean) identifiersEditionForm.getValue(IndicatorDS.MAIN_INDICATOR));
             // Content Classifiers
             indicator.setCategoryElement(contentClassifiersEditionForm.getValueAsExternalItemDto(IndicatorDS.CATEGORY_ELEMENT));
 

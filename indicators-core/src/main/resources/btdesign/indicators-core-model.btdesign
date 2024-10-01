@@ -853,7 +853,9 @@ Application Indicators {
        		"Table name in repository of observations"
        		String dataRepositoryTableName nullable;
        		"True if indicator needs to be updated"
-            Boolean needsUpdate not nullable;  		
+            Boolean needsUpdate not nullable;
+            "True if is main indicator"
+            Boolean isMainIndicator not nullable;
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -1632,6 +1634,8 @@ Application Indicators {
        		- @InternationalStringDto title;
        		"Acronym"
        		- @InternationalStringDto acronym;
+       		"Main Indicator"
+            Boolean isMainIndicator
 			"Concept"
        		- @InternationalStringDto conceptDescription;
 			"Comments"
@@ -1723,6 +1727,8 @@ Application Indicators {
 			- @InternationalStringDto categoryElementTitle;       		
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
+            "Indicates if is main indicator or not"
+			Boolean isMainIndicator;
 
        		"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;

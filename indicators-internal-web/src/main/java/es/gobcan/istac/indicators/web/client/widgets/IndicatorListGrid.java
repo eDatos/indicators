@@ -15,6 +15,8 @@ import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.DIFFUSI
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.DIFFUSION_VALIDATION_DATE_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.DIFFUSION_VALIDATION_USER;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.DIFFUSION_VALIDATION_USER_DIFF;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.MAIN_INDICATOR;
+import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.MAIN_INDICATOR_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.NEEDS_UPDATE;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.NEEDS_UPDATE_DIFF;
 import static es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS.NOTIFY_POPULATION_ERRORS;
@@ -88,6 +90,11 @@ public class IndicatorListGrid extends CustomListGrid {
         streamStatus.setType(ListGridFieldType.IMAGE);
         streamStatus.setAlign(Alignment.CENTER);
 
+        ListGridField isMainIndicator = new ListGridField(MAIN_INDICATOR, getConstants().indicatorMain());
+        isMainIndicator.setHidden(true);
+        isMainIndicator.setWidth(140);
+        isMainIndicator.setAlign(Alignment.CENTER);
+
         ListGridField productionValidationDate = new ListGridField(PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
         productionValidationDate.setHidden(true);
         ListGridField productionValidationUser = new ListGridField(PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
@@ -126,6 +133,11 @@ public class IndicatorListGrid extends CustomListGrid {
         diffusionStreamStatus.setType(ListGridFieldType.IMAGE);
         diffusionStreamStatus.setAlign(Alignment.CENTER);
 
+        ListGridField isMainIndicatorDiff = new ListGridField(MAIN_INDICATOR_DIFF, getConstants().indicatorMain());
+        isMainIndicatorDiff.setHidden(true);
+        isMainIndicatorDiff.setWidth(140);
+        isMainIndicatorDiff.setAlign(Alignment.CENTER);
+
         ListGridField productionValidationDateDiff = new ListGridField(PRODUCTION_VALIDATION_DATE_DIFF, getConstants().indicDetailProductionValidationDate());
         productionValidationDateDiff.setHidden(true);
         ListGridField productionValidationUserDiff = new ListGridField(PRODUCTION_VALIDATION_USER_DIFF, getConstants().indicDetailProductionValidationUser());
@@ -153,9 +165,10 @@ public class IndicatorListGrid extends CustomListGrid {
 
         setFields(code, name, categoryElement, notifyPopulationErrorsImage, notifyPopulationErrors, version, status, needsUpdate, streamStatus, productionValidationDate, productionValidationUser,
                 diffusionValidationDate, diffusionValidationUser, publicationDate, publicationUser, publicationFailedDate, publicationFailedUser, archivedDate, archivedUser, creationDate,
-                creationUser, diffusionVersion, diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff, diffusionValidationDateDiff,
+                creationUser, isMainIndicator, diffusionVersion, diffusionStatus, diffusionNeedsUpdate, diffusionStreamStatus, productionValidationDateDiff, productionValidationUserDiff,
+                diffusionValidationDateDiff,
                 diffusionValidationUserDiff, publicationDateDiff, publicationUserDiff, publicationFailedDateDiff, publicationFailedUserDiff, archivedDateDiff, archivedUserDiff, creationDateDiff,
-                creationUserDiff);
+                creationUserDiff, isMainIndicatorDiff);
 
         // @formatter:off
         setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{CODE, TITLE, CATEGORY_ELEMENT, NOTIFY_POPULATION_ERRORS_IMAGE}), 
@@ -174,7 +187,8 @@ public class IndicatorListGrid extends CustomListGrid {
                                                                                             ARCHIVED_DATE,
                                                                                             ARCHIVED_USER,
                                                                                             CREATION_DATE,
-                                                                                            CREATION_USER
+                                                                                            CREATION_USER,
+                                                                                            MAIN_INDICATOR
                                                                                             }),
 
                 new HeaderSpan(getConstants().indicatorDiffusionEnvironment(), new String[]{VERSION_NUMBER_DIFF, 
@@ -192,7 +206,8 @@ public class IndicatorListGrid extends CustomListGrid {
                                                                                             ARCHIVED_DATE_DIFF,
                                                                                             ARCHIVED_USER_DIFF,
                                                                                             CREATION_DATE_DIFF,
-                                                                                            CREATION_USER_DIFF
+                                                                                            CREATION_USER_DIFF,
+                                                                                            MAIN_INDICATOR_DIFF
                                                                                             }));
         // @formatter:on
     }

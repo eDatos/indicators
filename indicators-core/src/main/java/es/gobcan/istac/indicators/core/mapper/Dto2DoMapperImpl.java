@@ -239,6 +239,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.setComments(internationalStringDtoToDo(source.getComments(), target.getComments(), ServiceExceptionParameters.INDICATOR_COMMENTS));
         target.setConceptDescription(internationalStringDtoToDo(source.getConceptDescription(), target.getConceptDescription(), ServiceExceptionParameters.INDICATOR_CONCEPT_DESCRIPTION));
         target.setNotes(internationalStringDtoToDo(source.getNotes(), target.getNotes(), ServiceExceptionParameters.INDICATOR_NOTES));
+        target.setIsMainIndicator(Boolean.TRUE.equals(source.getIsMainIndicator()));
 
         target.setCategoryElement(externalItemDtoToDo(source.getCategoryElement(), target.getCategoryElement(), ServiceExceptionParameters.INDICATOR_CATEGORY_ELEMENT));
 

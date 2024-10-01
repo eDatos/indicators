@@ -87,6 +87,7 @@ public class IndicatorVersionTimeCoverageRepositoryTest extends IndicatorsBaseTe
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorVersion.setCategoryElement(IndicatorsMocks.mockExternalItem("CATEGORY_ELEMENT_01", TypeExternalArtefactsEnum.CATEGORY_ELEMENT));
         indicatorVersion.setQuantity(new Quantity());
+        indicatorVersion.setIsMainIndicator(Boolean.FALSE);
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(IndicatorsMocks.mockExternalItem("QUANTITY_UNIT_01", TypeExternalArtefactsEnum.CODE));
         indicatorVersion.getQuantity().setUnitMultiplier(unitMultiplierRepository.retrieveUnitMultiplier(Integer.valueOf(1)));

@@ -7,7 +7,8 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "title", "acronym", "subjectCode", "subjectTitle", "systemSurveyLinks", "quantity", "conceptDescription", "notes", "data"})
+@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "title", "acronym", "subjectCode", "subjectTitle", "systemSurveyLinks", "quantity", "conceptDescription", "notes", "data",
+        "mainIndicator"})
 public class IndicatorBaseType implements Serializable {
 
     private static final long   serialVersionUID   = 6882302798656723943L;
@@ -21,6 +22,7 @@ public class IndicatorBaseType implements Serializable {
     private Map<String, String> acronym            = null;
 
     private String              subjectCode        = null;
+    private Boolean             mainIndicator      = null;
     private Map<String, String> subjectTitle       = null;
     private List<LinkType>      systemSurveyLinks  = null;
 
@@ -96,6 +98,13 @@ public class IndicatorBaseType implements Serializable {
         this.subjectCode = subjectCode;
     }
 
+    public Boolean getMainIndicator() {
+        return mainIndicator;
+    }
+
+    public void setMainIndicator(Boolean mainIndicator) {
+        this.mainIndicator = mainIndicator;
+    }
     public Map<String, String> getSubjectTitle() {
         return subjectTitle;
     }

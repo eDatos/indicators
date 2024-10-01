@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -273,6 +274,14 @@ public class CommonUtils {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public static LinkedHashMap<String, String> getYesOrNoValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        valueMap.put(Boolean.TRUE.toString(), MetamacWebCommon.getConstants().yes());
+        valueMap.put(Boolean.FALSE.toString(), MetamacWebCommon.getConstants().no());
+        return valueMap;
     }
 
     public static LinkedHashMap<String, String> getOrderTypeValueMap() {

@@ -272,6 +272,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
@@ -322,6 +323,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.getQuantity().setType(QuantityTypeEnum.MAGNITUDE);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
@@ -350,6 +352,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
@@ -380,6 +383,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.getQuantity().setType(QuantityTypeEnum.RATIO);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
@@ -411,6 +415,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
@@ -444,6 +449,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         indicatorDto.getQuantity().setUnit(IndicatorsMocks.mockQuantityUnitExternalItemDto(QUANTITY_UNIT_1));
@@ -478,6 +484,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
 
@@ -504,6 +511,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setIsMainIndicator(Boolean.FALSE);
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
 
