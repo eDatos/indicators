@@ -11,6 +11,7 @@
         [#else]
             <!-- portalStyleCssUrl is empty -->
         [/#if]
+        <link rel="icon" href="${faviconUrl}"/>
 	</head>
 	<body>
 	    
