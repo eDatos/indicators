@@ -1,25 +1,23 @@
 package es.gobcan.istac.indicators.core.domain;
 
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-
 public class DataContent {
+
     @JsonProperty("Valor")
-    private String value;
+    private String       value;
 
     @JsonProperty("Comentario")
-    private String comment;
+    private String       comment;
 
     @JsonProperty("comentarioDATANOTECELL")
-    private String commentDataNoteCell;
+    private String       commentDataNoteCell;
 
     @JsonProperty
     private List<String> dimCodes;
 
-    //todo crear variable mapa atributes
     private List<String> attributesObservations;
 
     public String getValue() {
@@ -62,6 +60,4 @@ public class DataContent {
         this.dimCodes = dimCodes;
     }
 
-
 }
-
