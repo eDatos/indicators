@@ -44,4 +44,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String CRON_EXPRESSION_GEOGRAPHICAL_VALUES_MIGRATION = "indicators.geographical_values_migration.cron_expression";
 
     public static final String ANALYTICS_SCRIPT_URL = "metamac.analytics.script.url";
+
+    public static final String DEFAULT_GEOGRAPHICAL_CODELIST_URN             = "indicators.geographical_values.code_list.urn";
 }
