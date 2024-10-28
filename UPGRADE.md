@@ -16,6 +16,12 @@
 etc/changes-from-release/10.1.0/db/indicators/postgresql/*.sql
 ```
 
+* Se crea una nueva propiedad del common-metadata relacionada con la URN de los codelist para los geographicalvalues.
+
+```
+etc/changes-from-release/10.1.0/db/common-metadata/postgresql/20241028_insert_table_tb_data_configurations.sql
+```
+
 ## 10.0.2 a 10.1.0
 
 * Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la

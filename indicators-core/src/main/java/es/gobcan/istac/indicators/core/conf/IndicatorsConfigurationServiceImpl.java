@@ -115,4 +115,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     public String retrieveCronExpressionGeographicalValuesMigrationTemporalTask() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_GEOGRAPHICAL_VALUES_MIGRATION);
     }
+
+    @Override
+    public String retrieveDefaultGeographicalCodeListUrn() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_GEOGRAPHICAL_CODELIST_URN);
+    }
 }

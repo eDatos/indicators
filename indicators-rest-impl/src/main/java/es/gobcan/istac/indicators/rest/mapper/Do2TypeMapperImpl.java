@@ -916,10 +916,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
+
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
-        for (GeographicalValueVO geographicalValue : geographicalValues) {
-            MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
-            geographicalValueTypes.add(metadataRepresentationType);
+        try {
+            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+            for (GeographicalValueVO geographicalValue : geographicalValues) {
+                String codeId = geographicalValuesCodes.get(geographicalValue.getCode());
+                if (codeId != null) {
+                    geographicalValue.setCode(codeId);
+                }
+                MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
+                geographicalValueTypes.add(metadataRepresentationType);
+            }
+        } catch (MetamacException e) {
+            throw new RuntimeException(e);
         }
         return geographicalValueTypes;
     }
