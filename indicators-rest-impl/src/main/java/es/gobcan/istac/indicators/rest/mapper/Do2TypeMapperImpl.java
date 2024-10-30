@@ -442,6 +442,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
+
             for (int i = 0; i < geographicalCodes.size(); i++) {
                 String geographicalCode = geographicalCodes.get(i);
 
@@ -474,9 +475,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
+            Map<String, String> geographicalValuesCodes = new HashMap<>();
+            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
             for (int i = 0; i < geographicalCodes.size(); i++) {
-                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
+                String geographicalCode = geographicalCodes.get(i);
+                String codeId = geographicalValuesCodes.get(geographicalCode);
+
+                if (codeId != null) {
+                    geographicalCode = codeId;
+                }
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
             }
             for (int j = 0; j < timeValues.size(); j++) {
                 dataRepresentationTypeTime.getIndex().put(timeValues.get(j), j);
