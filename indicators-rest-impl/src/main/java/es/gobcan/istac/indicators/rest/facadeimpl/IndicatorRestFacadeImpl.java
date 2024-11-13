@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
@@ -42,22 +45,25 @@ import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatib
 @Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger                logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
+    protected Logger                 logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper           do2TypeMapper;
+    private Do2TypeMapper            do2TypeMapper;
 
     @Autowired
-    protected IndicatorsApiService  indicatorsApiService;
+    protected IndicatorsApiService   indicatorsApiService;
 
     @Autowired
-    private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
+    private IndicatorsRest2DoMapper  indicatorsRest2DoMapper;
 
     @Autowired
-    private SrmRestInternalFacade   srmRestInternalFacade = null;
+    private SrmRestInternalFacade    srmRestInternalFacade = null;
 
     @Autowired
-    GeographicalValuesRestFacade    geographicalValuesRestFacade;
+    GeographicalValuesRestFacade     geographicalValuesRestFacade;
+
+    @Autowired
+    private final MetadataProperties metadataProperties    = null;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -146,7 +152,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
             throws MetamacException {
-
         DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
         return do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
     }
@@ -181,6 +186,16 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
+        Map<String, String> oldGeographicalValuesCodes = new HashMap<>();
+        oldGeographicalValuesCodes = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        if (geographicalSelectedValues != null) {
+            for (int i = 0; i < geographicalSelectedValues.size(); i++) {
+                String geographicalCode = geographicalSelectedValues.get(i);
+                String codeId = oldGeographicalValuesCodes.get(geographicalCode);
+                geographicalSelectedValues.set(i, codeId);
+            }
+        }
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
