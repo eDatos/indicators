@@ -1,8 +1,8 @@
--- --------------------------------------------------------------------------------------------------
--- EDATOS-4698 - Inclusión de metadato en indicadores para establecer si es un indicador principal
+-- ------------------------------------------------------------------------------------------------------------------------------
+-- EDATOS-4698 - Mapear los elementos de variable a códigos normalizados en e-Indicadores usando una clasificación por defecto
 -- 
 --  Crear nuevo campo en el common metadata para un indicador.
--- --------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 
 
 insert into TB_DATA_CONFIGURATIONS (ID, VERSION, SYSTEM_PROPERTY, CONF_KEY, CONF_VALUE, EXTERNALLY_PUBLISHED)
