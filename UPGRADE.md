@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 10.1.0 a 10.1.1
+## 10.1.1 a 10.1.2-SNAPSHOT
 
 * Se actualiza una propiedad del common-metadata relacionada con el número de threads que quartz puede ejecutar al mismo tiempo. Se pasa de 25 a 1 para evitar problemas de bloqueo.
 
@@ -19,7 +19,7 @@ etc/changes-from-release/10.1.0/db/indicators/postgresql/*.sql
 * Se crea una nueva propiedad del common-metadata relacionada con la URN de los codelist para los geographicalvalues.
 
 ```
-etc/changes-from-release/10.1.0/db/common-metadata/postgresql/20241028_insert_table_tb_data_configurations.sql
+etc/changes-from-release/10.1.1/db/common-metadata/postgresql/20241028_insert_table_tb_data_configurations.sql
 ```
 
 ## 10.0.2 a 10.1.0
