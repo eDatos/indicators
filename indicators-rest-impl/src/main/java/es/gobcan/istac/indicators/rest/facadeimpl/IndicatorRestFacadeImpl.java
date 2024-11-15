@@ -193,7 +193,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             for (int i = 0; i < geographicalSelectedValues.size(); i++) {
                 String geographicalCode = geographicalSelectedValues.get(i);
                 String codeId = oldGeographicalValuesCodes.get(geographicalCode);
-                geographicalSelectedValues.set(i, codeId);
+                geographicalSelectedValues.set(i, codeId != null ? codeId : geographicalCode);
             }
         }
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
