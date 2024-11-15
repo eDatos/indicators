@@ -15,6 +15,7 @@
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
+            console.log('WidgetDataOptionsLastDataView:initialize', this.systems.models, this.systems.length, this.systems.models.length);
 
             this.model.on('change:groupType', function (model, value) {
 
@@ -143,6 +144,7 @@
         },
 
         _renderSystems: function () {
+            console.log("_renderSystems", this.systems, this.systems.models, this.systems.length, this.systems.models.length);
             // Systems
             var indicatorSystemView = new App.views.Select2View({
                 el: this.$('.widget-data-system'),
@@ -211,6 +213,19 @@
             }, this);
         },
 
+        _renderGroupTypeSystem: function() {
+            var groupType = this.model.get('groupType');
+            console.log('entra1', this.systems, this.systems.length, this.systems.models);
+            //this.model.set('groupType', 'subject');
+            var renderGroupTypeSystem = true;
+            if (groupType === 'system' && this.systems.length == 0) {
+                console.log('entra2');
+                this.model.set('groupType', 'subject');
+                renderGroupTypeSystem = false;
+            }
+            return renderGroupTypeSystem;
+        },
+        
         _renderGroupType: function () {
             // Group type
             var toggleGroupType = function () {
@@ -277,8 +292,12 @@
         },
 
         render: function () {
-            this.$el.html(this.template());
+            var context = {
+                showSystemRadioButton: this._renderGroupTypeSystem()
+            };
 
+            this.$el.html(this.template(context));
+            
             // Bind radio button
             this._modelBinder.bind(this.model, this.el);
 
