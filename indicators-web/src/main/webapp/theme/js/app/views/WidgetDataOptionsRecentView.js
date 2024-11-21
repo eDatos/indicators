@@ -28,7 +28,7 @@
             this.measures = new App.collections.Measures();
             this.geographicalGranularities = new App.collections.GeographicalGranularities();
             this.geographicalValues = new App.collections.GeographicalValues();
-            this.systems = new App.collections.IndicatorSystems();
+            this.systems = this.options.model.systems;
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
@@ -196,9 +196,23 @@
             this.model.on('change:groupType', toggleGroupType);
             toggleGroupType();
         },
+        
+        _renderGroupTypeSystem: function() {
+            var groupType = this.model.get('groupType');
+            
+            var renderGroupTypeSystem = true;
+            if (groupType === 'system' && this.systems.length > 0) { //TODO: sólo para pruebas, debe ser lenght ==0
+                this.model.set('groupType', 'subject');
+                renderGroupTypeSystem = false;
+            }
+            return renderGroupTypeSystem;
+        },
 
         render : function () {
-            this.$el.html(this.template());
+            var context = {
+                showSystemRadioButton: this._renderGroupTypeSystem(),
+            };
+            this.$el.html(this.template(context));
 
             // Bind radio button and nrecent input
             var bindings = {
@@ -221,7 +235,6 @@
             this._renderGroupType();
 
             this.measures.resetDefaults();
-            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
             return this;

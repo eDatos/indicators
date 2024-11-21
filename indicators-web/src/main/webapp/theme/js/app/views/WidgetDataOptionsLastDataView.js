@@ -15,10 +15,8 @@
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
-            console.log('WidgetDataOptionsLastDataView:initialize', this.model, this.systems.length, this.systems.models.length);
 
             this.model.on('change:groupType', function (model, value) {
-                console.log('initialize-changegroupType', model, value);
 
                 this.geographicalGranularities.reset([]);
                 this.geographicalValues.reset([]);
@@ -157,10 +155,8 @@
             });
 
             indicatorSystemView.on('change', function (indicatorSystem) {
-                console.log('_renderSystems:cnage', indicatorSystem);
                 var value = indicatorSystem ? indicatorSystem.code : "";
                 this.model.set('indicatorSystem', value);
-                console.log('_renderSystems:cnage2', this.systems.length);
             }, this);
         },
 
