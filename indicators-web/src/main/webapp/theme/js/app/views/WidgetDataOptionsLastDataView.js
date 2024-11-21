@@ -11,11 +11,11 @@
             this.measures = new App.collections.Measures();
             this.geographicalGranularities = new App.collections.GeographicalGranularities();
             this.geographicalValues = new App.collections.GeographicalValues();
-            this.systems = new App.collections.IndicatorSystems();
+            this.systems = this.options.model.systems;
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
-            console.log('WidgetDataOptionsLastDataView:initialize', this.systems.models, this.systems.length, this.systems.models.length);
+            console.log('WidgetDataOptionsLastDataView:initialize', this.model, this.systems.length, this.systems.models.length);
 
             this.model.on('change:groupType', function (model, value) {
                 console.log('initialize-changegroupType', model, value);
@@ -51,11 +51,6 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
-            
-            this.fetchSystems();
-            
-            this.model.on('change:systems', this.toggleSystems, this);
-            this.showSystemRadioButton = true;
 
         },
 
@@ -63,26 +58,7 @@
             "click .widget-update-preview": "updatePreview"
         },
 
-        toggleSystems: function() {
-            console.log('toggleSystem1', this.options);
-            console.log('toggleSystem2', this.model);
-            console.log('toggleSystem3', this.systems);
-        },
-
-        fetchSystems: function() {
-            var response = new $.Deferred();
-            var req = this.systems.fetchWithoutLimit();
-            console.log('fetchSystems1', this.options);
-            var self = this;
-            $.when(req).done(function (response) {
-                console.log('fetchSystems2', response);
-                self._renderGroupTypeSystem(response);
-            });
-            return response.promise();
-        },
-
         updatePreview: function () {
-            console.log('WidgetDataOptionsLastDataView:updatePreview')
             this.trigger("updatePreviewData");
             return false;
         },
@@ -170,7 +146,6 @@
         },
 
         _renderSystems: function () {
-            console.log("_renderSystems1", this.systems, this.systems.models, this.systems.length, this.systems.models.length);
             // Systems
             var indicatorSystemView = new App.views.Select2View({
                 el: this.$('.widget-data-system'),
@@ -180,7 +155,6 @@
                 multiple: false,
                 width: "600px"
             });
-            console.log("_renderSystems2", indicatorSystemView, indicatorSystemView.collection, indicatorSystemView.collection.length);
 
             indicatorSystemView.on('change', function (indicatorSystem) {
                 console.log('_renderSystems:cnage', indicatorSystem);
@@ -242,19 +216,13 @@
             }, this);
         },
 
-        _renderGroupTypeSystem: function(response) {
+        _renderGroupTypeSystem: function() {
             var groupType = this.model.get('groupType');
-            console.log('entra1', this.systems, this.systems.length, this.systems.models);
-            //this.model.set('groupType', 'subject');
+            
             var renderGroupTypeSystem = true;
-            if (groupType === 'system' && this.systems.length > 0) {
-                console.log('entra2');
+            if (groupType === 'system' && this.systems.length > 0) { //TODO: sólo para pruebas, debe ser lenght ==0
                 this.model.set('groupType', 'subject');
-                this.showSystemRadioButton = false;
                 renderGroupTypeSystem = false;
-                /*this.$el.html({
-                    showSystemRadioButton: this.showSystemRadioButton
-                });*/
             }
             return renderGroupTypeSystem;
         },
@@ -326,7 +294,7 @@
 
         render: function () {
             var context = {
-                showSystemRadioButton: this.showSystemRadioButton,
+                showSystemRadioButton: this._renderGroupTypeSystem(),
             };
 
             this.$el.html(this.template(context));
@@ -337,9 +305,6 @@
             // Bind select elements
             this._renderMeasures();
             this._renderSystems();
-            
-            console.log('render', context, this.systems, this.systems.length);
-            
             this._renderSubjects();
             this._renderGranularities();
             this._renderGeographicalValues();
@@ -352,7 +317,6 @@
 
             this.subjects.fetch();
 
-            //this.$el.html(this.template(context));
             return this;
         }
 

@@ -40,7 +40,6 @@
 
     $(function () {
         var widgetView = new App.views.WidgetView(options);
-        widgetView.render();
     });
 
 </script>
