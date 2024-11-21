@@ -18,6 +18,7 @@
             console.log('WidgetDataOptionsLastDataView:initialize', this.systems.models, this.systems.length, this.systems.models.length);
 
             this.model.on('change:groupType', function (model, value) {
+                console.log('initialize-changegroupType', model, value);
 
                 this.geographicalGranularities.reset([]);
                 this.geographicalValues.reset([]);
@@ -50,13 +51,38 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
+            
+            this.fetchSystems();
+            
+            this.model.on('change:systems', this.toggleSystems, this);
+            this.showSystemRadioButton = true;
+
         },
 
         events: {
             "click .widget-update-preview": "updatePreview"
         },
 
+        toggleSystems: function() {
+            console.log('toggleSystem1', this.options);
+            console.log('toggleSystem2', this.model);
+            console.log('toggleSystem3', this.systems);
+        },
+
+        fetchSystems: function() {
+            var response = new $.Deferred();
+            var req = this.systems.fetchWithoutLimit();
+            console.log('fetchSystems1', this.options);
+            var self = this;
+            $.when(req).done(function (response) {
+                console.log('fetchSystems2', response);
+                self._renderGroupTypeSystem(response);
+            });
+            return response.promise();
+        },
+
         updatePreview: function () {
+            console.log('WidgetDataOptionsLastDataView:updatePreview')
             this.trigger("updatePreviewData");
             return false;
         },
@@ -144,7 +170,7 @@
         },
 
         _renderSystems: function () {
-            console.log("_renderSystems", this.systems, this.systems.models, this.systems.length, this.systems.models.length);
+            console.log("_renderSystems1", this.systems, this.systems.models, this.systems.length, this.systems.models.length);
             // Systems
             var indicatorSystemView = new App.views.Select2View({
                 el: this.$('.widget-data-system'),
@@ -154,10 +180,13 @@
                 multiple: false,
                 width: "600px"
             });
+            console.log("_renderSystems2", indicatorSystemView, indicatorSystemView.collection, indicatorSystemView.collection.length);
 
             indicatorSystemView.on('change', function (indicatorSystem) {
+                console.log('_renderSystems:cnage', indicatorSystem);
                 var value = indicatorSystem ? indicatorSystem.code : "";
                 this.model.set('indicatorSystem', value);
+                console.log('_renderSystems:cnage2', this.systems.length);
             }, this);
         },
 
@@ -213,15 +242,19 @@
             }, this);
         },
 
-        _renderGroupTypeSystem: function() {
+        _renderGroupTypeSystem: function(response) {
             var groupType = this.model.get('groupType');
             console.log('entra1', this.systems, this.systems.length, this.systems.models);
             //this.model.set('groupType', 'subject');
             var renderGroupTypeSystem = true;
-            if (groupType === 'system' && this.systems.length == 0) {
+            if (groupType === 'system' && this.systems.length > 0) {
                 console.log('entra2');
                 this.model.set('groupType', 'subject');
+                this.showSystemRadioButton = false;
                 renderGroupTypeSystem = false;
+                /*this.$el.html({
+                    showSystemRadioButton: this.showSystemRadioButton
+                });*/
             }
             return renderGroupTypeSystem;
         },
@@ -293,7 +326,7 @@
 
         render: function () {
             var context = {
-                showSystemRadioButton: this._renderGroupTypeSystem()
+                showSystemRadioButton: this.showSystemRadioButton,
             };
 
             this.$el.html(this.template(context));
@@ -304,6 +337,9 @@
             // Bind select elements
             this._renderMeasures();
             this._renderSystems();
+            
+            console.log('render', context, this.systems, this.systems.length);
+            
             this._renderSubjects();
             this._renderGranularities();
             this._renderGeographicalValues();
@@ -314,9 +350,9 @@
             // Visible zones
             this._renderGroupType();
 
-            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
+            //this.$el.html(this.template(context));
             return this;
         }
 
