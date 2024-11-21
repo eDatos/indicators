@@ -475,17 +475,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                 }
             }
-            Map<String, String> geographicalValuesCodes = new HashMap<>();
-            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
             for (int i = 0; i < geographicalCodes.size(); i++) {
-                String geographicalCode = geographicalCodes.get(i);
-                String codeId = geographicalValuesCodes.get(geographicalCode);
-
-                if (codeId != null) {
-                    geographicalCode = codeId;
-                }
-                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
             }
             for (int j = 0; j < timeValues.size(); j++) {
                 dataRepresentationTypeTime.getIndex().put(timeValues.get(j), j);
@@ -928,6 +920,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         Map<String, String> geographicalValuesCodes = new HashMap<>();
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
+
         try {
             geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
@@ -942,6 +935,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         } catch (MetamacException e) {
             throw new RuntimeException(e);
         }
+
         return geographicalValueTypes;
     }
 
