@@ -400,7 +400,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Override
     public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
-        // Remove All Cache
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, false);
+    }
+
+    @Override
+    public DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, true);
+    }
+
+    private DataType createGenericDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, boolean geographicalCodesRequired) {
         requestCache.remove();
         try {
             List<String> geographicalCodes = setGeographicalCodesCompatibility(dataTypeRequest);
@@ -442,7 +450,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
-
             for (int i = 0; i < geographicalCodes.size(); i++) {
                 String geographicalCode = geographicalCodes.get(i);
 
@@ -476,9 +483,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 }
             }
 
-            for (int i = 0; i < geographicalCodes.size(); i++) {
-                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
-            }
             for (int j = 0; j < timeValues.size(); j++) {
                 dataRepresentationTypeTime.getIndex().put(timeValues.get(j), j);
             }
@@ -486,11 +490,29 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 dataRepresentationTypeMeasure.getIndex().put(measureValues.get(k), k);
             }
 
+            if (geographicalCodesRequired) {
+                Map<String, String> geographicalValuesCodes = new HashMap<>();
+                geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+                for (int i = 0; i < geographicalCodes.size(); i++) {
+                    String geographicalCode = geographicalCodes.get(i);
+                    String codeId = geographicalValuesCodes.get(geographicalCode);
+
+                    if (codeId != null) {
+                        geographicalCode = codeId;
+                    }
+                    dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
+                }
+            } else {
+                for (int i = 0; i < geographicalCodes.size(); i++) {
+                    dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
+                }
+            }
+
             DataType dataType = new DataType();
             dataType.setFormat(format);
             dataType.setDimension(dimension);
             dataType.setObservation(observations);
-
             if (!attributes.isEmpty()) {
                 dataType.setAttribute(attributes);
             }
@@ -503,6 +525,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             requestCache.remove();
         }
     }
+
 
     private List<String> setGeographicalCodesCompatibility(DataTypeRequest dataTypeRequest) {
         List<String> geographicalCodes;
