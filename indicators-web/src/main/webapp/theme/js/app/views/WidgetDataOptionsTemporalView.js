@@ -18,7 +18,7 @@
             this._modelBinder = new Backbone.ModelBinder();
 
             this.measures = new App.collections.Measures();
-            this.systems = this.options.model.systems;
+            this.systems = new App.collections.IndicatorSystems();
             this.instances = new App.collections.IndicatorsInstances();
             this.geographicalValues = new App.collections.GeographicalValues();
             this.timeGranularities = new App.collections.TimeGranularities();
@@ -31,6 +31,7 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
+            this.systems.fetchWithoutLimit();
         },
 
         _fetchIndicatorInstances : function () {
