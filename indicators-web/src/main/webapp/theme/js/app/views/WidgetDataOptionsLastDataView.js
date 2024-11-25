@@ -11,7 +11,7 @@
             this.measures = new App.collections.Measures();
             this.geographicalGranularities = new App.collections.GeographicalGranularities();
             this.geographicalValues = new App.collections.GeographicalValues();
-            this.systems = this.options.model.systems;
+            this.systems = new App.collections.IndicatorSystems();
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
@@ -49,6 +49,7 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
+            this.fetchSystems();
 
         },
 
@@ -59,6 +60,20 @@
         updatePreview: function () {
             this.trigger("updatePreviewData");
             return false;
+        },
+
+        fetchSystems: function() {
+            var response = new $.Deferred();
+            var groupType = this.model.get('groupType');
+            var req = this.systems.fetchWithoutLimit();
+            var self = this;
+            $.when(req).done(function (response) {
+                if (groupType !== 'system' && self.systems.length > 0) {
+                    self.model.set('groupType', 'system');
+                    $("#system").show();
+                }
+            });
+            return response.promise();
         },
 
         _fetchGeographicalGranularities: function () {
@@ -211,17 +226,6 @@
                 this.model.set('geographicalValues', value);
             }, this);
         },
-
-        _renderGroupTypeSystem: function() {
-            var groupType = this.model.get('groupType');
-            
-            var renderGroupTypeSystem = true;
-            if (groupType === 'system' && this.systems.length > 0) { //TODO: sólo para pruebas, debe ser lenght ==0
-                this.model.set('groupType', 'subject');
-                renderGroupTypeSystem = false;
-            }
-            return renderGroupTypeSystem;
-        },
         
         _renderGroupType: function () {
             // Group type
@@ -289,11 +293,8 @@
         },
 
         render: function () {
-            var context = {
-                showSystemRadioButton: this._renderGroupTypeSystem(),
-            };
 
-            this.$el.html(this.template(context));
+            this.$el.html(this.template());
             
             // Bind radio button
             this._modelBinder.bind(this.model, this.el);

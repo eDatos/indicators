@@ -21,7 +21,7 @@
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
-            groupType: 'system', // or subject
+            groupType: 'subject',
             indicatorSystem: '',
             subjectCode: '',
             indicatorsSelection: 'select', // or recent

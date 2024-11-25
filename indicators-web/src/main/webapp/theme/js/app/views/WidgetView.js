@@ -12,12 +12,7 @@
             });
 
             this.widgetPreviewView = new App.views.WidgetPreviewView({el : $('#widget-preview-content'), model : this.widgetOptions});
-
-            this.widgetOptions.systems = new App.collections.IndicatorSystems();
-            this.fetchSystems();
-        },
-
-        initializeView: function() {
+            
             this.views = {};
             var type = this.widgetOptions.get('type');
             if (type === "lastData") {
@@ -36,18 +31,11 @@
             this.views.data.on('updatePreviewData', function () {
                 self.widgetPreviewView.updateData();
             });
-            this.tabView.render();
         },
 
-        fetchSystems: function() {
-            var response = new $.Deferred();
-            var req = this.widgetOptions.systems.fetchWithoutLimit();
-            var self = this;
-            $.when(req).done(function () {
-                self.initializeView();
-            });
-            return response.promise();
-        }
+        render: function() {
+            this.tabView.render();
+        },
 
     });
 }());

@@ -23,7 +23,7 @@
             subjectCode: "",
             indicators: [],
             instances: [],
-            groupType: 'system', // or subject
+            groupType: 'subject', // or system
             measures: [
                 "ABSOLUTE",
                 "ANNUAL_PERCENTAGE_RATE",
@@ -308,7 +308,6 @@
                 var systemIdStr = systemId || "";
                 url = this.url + "/indicatorsSystems/" + systemIdStr;
             }
-
 
             if (url) {
                 this.titleText.html('<a href="' + url + '" target="_blank"></a>');
