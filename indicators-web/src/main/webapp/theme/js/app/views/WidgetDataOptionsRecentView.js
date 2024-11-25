@@ -78,17 +78,13 @@
         },
 
         fetchSystems: function() {
-            var response = new $.Deferred();
-            var groupType = this.model.get('groupType');
-            var req = this.systems.fetchWithoutLimit();
             var self = this;
-            $.when(req).done(function (response) {
-                if (groupType !== 'system' && self.systems.length > 0) {
+            this.systems.fetchWithoutLimit().done(function () {
+                if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
                     self.model.set('groupType', 'system');
                     $("#system").show();
                 }
             });
-            return response.promise();
         },
 
         _fetchGeographicalValuesAndTimeGranularities : function () {
