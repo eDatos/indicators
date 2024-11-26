@@ -20,16 +20,16 @@
             return this.fetchWithoutLimit({data : data});
         },
 
-        fetchBySubjectCodeAndGeographicalValueCode : function (subjectCode, geographicalValue) {
+        fetchBySubjectCodeAndGeographicalValueCode : function (subjectCode, geographicalValue, indicatorsMain) {
             var data = {
-                q : 'subjectCode EQ "' + subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"'
+                q: 'subjectCode EQ "' + subjectCode + '" AND geographicalValue EQ "' + geographicalValue + '"' + (indicatorsMain === "onlyMain" ? 'AND isMainIndicator EQ "TRUE"' : '')
             };
             return this.fetchWithoutLimit({data : data});
         },
 
-        fetchAllByGeographicalValueCode : function ( geographicalValue) {
+        fetchAllByGeographicalValueCode : function (geographicalValue, indicatorsMain) {
             var data = {
-                q : 'geographicalValue EQ "' + geographicalValue + '"'
+                q : 'geographicalValue EQ "' + geographicalValue + '"' + (indicatorsMain === "onlyMain" ? 'AND isMainIndicator EQ "TRUE"' : '')
             };
             return this.fetchWithoutLimit({data : data});
         }

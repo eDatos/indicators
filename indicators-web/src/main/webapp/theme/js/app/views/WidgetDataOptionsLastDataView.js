@@ -34,6 +34,10 @@
                 }
 
             }, this);
+            this.model.on('change:indicatorsMain', function () {
+                this.indicators.reset([]);
+                this._fetchIndicators();
+            }, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValuesAndTimeGranularities, this);
@@ -111,13 +115,14 @@
         _fetchIndicators: function () {
             this.indicators.reset([]);
             var groupType = this.model.get('groupType');
+            var indicatorsMain = this.model.get('indicatorsMain');
             var subjectCode = this.model.get('subjectCode');
             var geographicalValues = this.model.get('geographicalValues');
             var geographicalValue = geographicalValues[0];
             if (groupType === 'subject' && subjectCode && geographicalValue) {
-                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue);
-            }else if (groupType === 'allValues' && geographicalValue){
-                this.indicators.fetchAllByGeographicalValueCode(geographicalValue);
+                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue, indicatorsMain);
+            } else if (groupType === 'allValues' && geographicalValue) {
+                this.indicators.fetchAllByGeographicalValueCode(geographicalValue, indicatorsMain);
             }
         },
 
@@ -223,6 +228,7 @@
                 this.$(".widget-data-instances").toggle(toggleSystem);
                 this.$(".widget-data-indicators").toggle(toggleSubject);
                 this.$(".widget-data-all-indicators").toggle(toggleAllValues);
+                this.$(".widget-data-main").toggle(toggleSubject || toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
