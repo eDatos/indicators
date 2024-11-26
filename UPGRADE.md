@@ -8,6 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 10.1.1 a 10.1.2-SNAPSHOT
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/10.1.1/db/common-metadata/postgresql/*.sql
+```
+
 ## 10.1.0 a 10.1.1
 
 * Se actualiza una propiedad del common-metadata relacionada con el número de threads que quartz puede ejecutar al mismo tiempo. Se pasa de 25 a 1 para evitar problemas de bloqueo.
