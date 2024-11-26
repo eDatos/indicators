@@ -35,7 +35,6 @@
 
             }, this);
             this.model.on('change:indicatorsMain', function () {
-                this.indicators.reset([]);
                 this._fetchIndicators();
             }, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
