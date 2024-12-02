@@ -15,6 +15,14 @@
 etc/changes-from-release/10.1.1/db/common-metadata/postgresql/*.sql
 ```
 
+* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la siguiente carpeta:
+
+```
+etc/changes-from-release/10.1.1/db/indicators/postgresql/*.sql
+```
+
+
+
 ## 10.1.0 a 10.1.1
 
 * Se actualiza una propiedad del common-metadata relacionada con el número de threads que quartz puede ejecutar al mismo tiempo. Se pasa de 25 a 1 para evitar problemas de bloqueo.
