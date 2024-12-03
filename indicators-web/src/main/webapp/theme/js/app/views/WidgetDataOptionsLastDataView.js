@@ -34,9 +34,6 @@
                 }
 
             }, this);
-            this.model.on('change:indicatorsMain', function () {
-                this._fetchIndicators();
-            }, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValuesAndTimeGranularities, this);
@@ -46,6 +43,7 @@
 
             this.model.on('change:subjectCode', this._fetchIndicators, this);
             this.model.on('change:geographicalValues', this._fetchIndicators, this);
+            this.model.on('change:indicatorsMain', this._fetchIndicators, this);
 
             this.model.on('change:instances', this.updatePreview, this);
             this.model.on('change:measures', this.updatePreview, this);
@@ -119,10 +117,26 @@
             var geographicalValues = this.model.get('geographicalValues');
             var geographicalValue = geographicalValues[0];
             if (groupType === 'subject' && subjectCode && geographicalValue) {
-                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue, indicatorsMain);
+                this._disableIndicatorsMainRadioButtons();
+                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue, indicatorsMain)
+                    .then(this._enableIndicatorsMainRadioButtons, this._enableIndicatorsMainRadioButtons);
             } else if (groupType === 'allValues' && geographicalValue) {
-                this.indicators.fetchAllByGeographicalValueCode(geographicalValue, indicatorsMain);
+                this._disableIndicatorsMainRadioButtons();
+                this.indicators.fetchAllByGeographicalValueCode(geographicalValue, indicatorsMain)
+                    .then(this._enableIndicatorsMainRadioButtons, this._enableIndicatorsMainRadioButtons);
             }
+        },
+
+        _enableIndicatorsMainRadioButtons: function () {
+            $(".widget-data-main input").each((i, radioButton) => {
+                radioButton.disabled = false;
+            });
+        },
+
+        _disableIndicatorsMainRadioButtons: function () {
+            $(".widget-data-main input").each((i, radioButton) => {
+                radioButton.disabled = true;
+            });
         },
 
         _renderMeasures: function () {
