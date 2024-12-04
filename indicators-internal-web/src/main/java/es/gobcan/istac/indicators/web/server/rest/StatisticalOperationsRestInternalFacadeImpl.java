@@ -54,7 +54,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
 
-            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
+            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset, null);
             return findOperationsResult;
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);
@@ -69,7 +69,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             String offset = String.valueOf(firstResult);
             String orderBy = StatisticalOperationsTypeEnum.ID.toString() + " " + OrderTypeEnum.ASC.toString();
 
-            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, orderBy, limit, offset);
+            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, orderBy, limit, offset, null);
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findOperationsResult.getOperations(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
 
