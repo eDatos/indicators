@@ -21,7 +21,9 @@
                 'GEOGRAPHICAL_VALUES': 'Valors espacials',
                 'TIME_GRANULARITIES': 'Granularitat temporal',
                 'UPDATE_PREVIEW': 'Actualitzar vista',
-                'RECENT': "Nombre d'indicadors recents"
+                'RECENT': "Nombre d'indicadors recents",
+                'ALL_INDICATORS': 'Tots els indicadors',
+                'ONLY_MAIN_INDICATORS': 'Només els principals'
             },
             'STYLE': {
                 'TITLE': 'Estil',

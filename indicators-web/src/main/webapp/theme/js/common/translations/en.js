@@ -21,7 +21,9 @@
                 'GEOGRAPHICAL_VALUES': 'Geographical values',
                 'TIME_GRANULARITIES': 'Time granularities',
                 'UPDATE_PREVIEW': 'Update preview',
-                'RECENT': 'Number of recent indicators'
+                'RECENT': 'Number of recent indicators',
+                'ALL_INDICATORS': 'All indicators',
+                'ONLY_MAIN_INDICATORS': 'Only the main ones'
             },
             'STYLE': {
                 'TITLE': 'Style',

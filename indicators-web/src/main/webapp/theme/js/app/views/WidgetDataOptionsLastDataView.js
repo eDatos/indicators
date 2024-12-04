@@ -43,6 +43,7 @@
 
             this.model.on('change:subjectCode', this._fetchIndicators, this);
             this.model.on('change:geographicalValues', this._fetchIndicators, this);
+            this.model.on('change:indicatorsMain', this._fetchIndicators, this);
 
             this.model.on('change:instances', this.updatePreview, this);
             this.model.on('change:measures', this.updatePreview, this);
@@ -111,14 +112,31 @@
         _fetchIndicators: function () {
             this.indicators.reset([]);
             var groupType = this.model.get('groupType');
+            var indicatorsMain = this.model.get('indicatorsMain');
             var subjectCode = this.model.get('subjectCode');
             var geographicalValues = this.model.get('geographicalValues');
             var geographicalValue = geographicalValues[0];
             if (groupType === 'subject' && subjectCode && geographicalValue) {
-                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue);
-            }else if (groupType === 'allValues' && geographicalValue){
-                this.indicators.fetchAllByGeographicalValueCode(geographicalValue);
+                this._disableIndicatorsMainRadioButtons();
+                this.indicators.fetchBySubjectCodeAndGeographicalValueCode(subjectCode, geographicalValue, indicatorsMain)
+                    .then(this._enableIndicatorsMainRadioButtons, this._enableIndicatorsMainRadioButtons);
+            } else if (groupType === 'allValues' && geographicalValue) {
+                this._disableIndicatorsMainRadioButtons();
+                this.indicators.fetchAllByGeographicalValueCode(geographicalValue, indicatorsMain)
+                    .then(this._enableIndicatorsMainRadioButtons, this._enableIndicatorsMainRadioButtons);
             }
+        },
+
+        _enableIndicatorsMainRadioButtons: function () {
+            $(".widget-data-main input").each((i, radioButton) => {
+                radioButton.disabled = false;
+            });
+        },
+
+        _disableIndicatorsMainRadioButtons: function () {
+            $(".widget-data-main input").each((i, radioButton) => {
+                radioButton.disabled = true;
+            });
         },
 
         _renderMeasures: function () {
@@ -223,6 +241,7 @@
                 this.$(".widget-data-instances").toggle(toggleSystem);
                 this.$(".widget-data-indicators").toggle(toggleSubject);
                 this.$(".widget-data-all-indicators").toggle(toggleAllValues);
+                this.$(".widget-data-main").toggle(toggleSubject || toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
