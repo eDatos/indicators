@@ -15,7 +15,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;
@@ -48,7 +47,6 @@ import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
-import es.gobcan.istac.indicators.core.job.GeographicalValuesMigrationTemporalJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
 import es.gobcan.istac.indicators.core.notices.ServiceNoticeAction;
@@ -510,35 +508,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
         logger.info("Execution end - update category cache in background at : {} ", executionDate);
 
-    }
-
-    @Override
-    public void scheduleGeographicalValuesMigrationTemporalTask(ServiceContext ctx) {
-
-        try {
-
-            JobDetail job = newJob(GeographicalValuesMigrationTemporalJob.class).usingJobData(GeographicalValuesMigrationTemporalJob.TASK_NAME, "automaticJob").build();
-
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionGeographicalValuesMigrationTemporalTask()).withMisfireHandlingInstructionDoNothing())
-                    .build();
-
-            CronExpression cronEx = new CronExpression(cronTrigger.getCronExpression());
-
-            if (cronEx.getNextValidTimeAfter(new Date()) == null) {
-                logger.info(
-                        "ATENTION!! Cron scheduler for temporal job for  migration geographical values  is before actual date. For this reason the job has been aborted and it will not never executed ");
-                return;
-            }
-
-            Scheduler sched = schedulerFactory.getScheduler();
-            sched.scheduleJob(job, cronTrigger);
-
-            logger.info("geographical values migration temporal job successfully scheduled at {} ", new Date());
-
-        } catch (Exception e) {
-            logger.error("An unexpected error has occurred scheduling geographical values migration temporal job", e);
-        }
     }
 
     @Override
