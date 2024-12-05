@@ -73,11 +73,6 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
-    public void scheduleGeographicalValuesMigrationTemporalTask(ServiceContext ctx) {
-        taskService.scheduleGeographicalValuesMigrationTemporalTask(ctx);
-    }
-
-    @Override
     public void executeGeographicalValuesMigrationTemporalTask(ServiceContext ctx) throws MetamacException {
         taskService.processGeographicalValuesMigrationTemporalTask(ctx);
     }

@@ -98,11 +98,6 @@ public class TaskServiceTest implements TaskServiceTestBase {
     }
 
     @Override
-    public void testScheduleGeographicalValuesMigrationTemporalTask() throws Exception {
-        // Quartz jobs are not tested
-    }
-
-    @Override
     public void testProcessGeographicalValuesMigrationTemporalTask() throws Exception {
         // no test
     }
