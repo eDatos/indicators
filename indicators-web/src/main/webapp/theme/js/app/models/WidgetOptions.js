@@ -22,6 +22,7 @@
             textColor: '#000000',
             indicatorNameColor: "#003366",
             groupType: 'system', // or subject
+            indicatorsMain: "all", // or onlyMain
             indicatorSystem: '',
             subjectCode: '',
             indicatorsSelection: 'select', // or recent
