@@ -83,11 +83,7 @@
             if (typeof Edatos !== 'undefined' && Edatos.captcha) {
                 var permalinkRequestFunction = function (url) {
                     return new Promise(function (resolve, reject) {
-                        $.ajax({...permalinkAjaxParameters, url: url}).fail(function (jqXHR) {
-                            reject(jqXHR)
-                        }).done(function (val) {
-                            resolve(val)
-                        });
+                        $.ajax({...permalinkAjaxParameters, url: url}).done(resolve).fail(reject);
                     });
                 };
 
