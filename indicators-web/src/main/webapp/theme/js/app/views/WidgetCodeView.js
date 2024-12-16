@@ -53,65 +53,60 @@
         onClickNetvibes: function (e) {
             e.preventDefault();
 
-            var code = this._getCode();
-            var uwaCode = _.extend({}, code, { uwa: true });
-
-            var permalink = {
-                content: JSON.stringify(uwaCode)
-            };
-
-            var ajaxParameters = {
+            var permalinkAjaxParameters = {
                 type: "POST",
-                data: JSON.stringify(permalink),
+                data: JSON.stringify({
+                    content: JSON.stringify(_.extend({}, this._getCode(), { uwa: true }))
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             };
 
-            var captchaOptions = {
-                captchaId: "widget-netvibes-captcha",
-                action: "indicators_permalink",
-                buttonText: EDatos.common.I18n.translate("EMBED.ADD_TO_NETVIBES"),
-                labelText:  EDatos.common.I18n.translate("CAPTCHA.LABEL")
-            };
-
             var self = this;
-            var requestCallback = function (response) {
-                // INDISTAC-945 - Using https for avoiding netvibes problems with http.
-                // Widget can´t be embeded on http because it generates mixed content errors on the https netvibes dashboard
-                var url = self._getHttpsUrl() + "/widgets/uwa/" + response.id;
-                window.open(url, '_new');
-            };
-            var requestWithoutCaptcha = function () {
-                $.ajax({...ajaxParameters, url: permalinksUrlBase + "/v1.0/permalinks"}).fail(function(jqXHR) {
-                    reject(jqXHR)
-                }).done(requestCallback);
-            };
-            if(typeof Edatos !== 'undefined' && Edatos.captcha) {
-                Edatos.UserManagement.getAccount().then(function () {
-                    requestWithoutCaptcha();
-                }).catch(function () {
-                    var request = Edatos.captcha.showCaptchaWithButton(
-                        function (url) {
-                            return new Promise(function (resolve, reject) {
-                                $.ajax({...ajaxParameters, url: url}).fail(function (jqXHR) {
-                                    reject(jqXHR)
-                                }).done(function (val) {
-                                    resolve(val)
-                                });
-                            });
-                        },
-                        permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
-                        captchaOptions
-                    );
-                    request.then(requestCallback);
+            if (typeof Edatos !== 'undefined' && Edatos.UserManagement) {
+                Edatos.UserManagement.prepareRequestWithEdatosAuthentication({...permalinkAjaxParameters, url: permalinksUrlBase + "/v1.0/permalinks"}).then(ajaxSettings => {
+                    $.ajax(ajaxSettings).done(permalink => self._openNetvibesInNewTab(permalink)).fail(() => self._requestPermalinkWithCaptcha(permalinkAjaxParameters));
                 });
             } else {
-                requestWithoutCaptcha();
+                self._requestPermalinkWithCaptcha(permalinkAjaxParameters);
             }
+        },
 
+        _openNetvibesInNewTab: function (permalink) {
+            // INDISTAC-945 - Using https for avoiding netvibes problems with http.
+            // Widget can´t be embeded on http because it generates mixed content errors on the https netvibes dashboard
+            var url = this._getHttpsUrl() + "/widgets/uwa/" + permalink.id;
+            window.open(url, '_new');
+        },
+
+        _requestPermalinkWithCaptcha: function (permalinkAjaxParameters) {
+            if (typeof Edatos !== 'undefined' && Edatos.captcha) {
+                var permalinkRequestFunction = function (url) {
+                    return new Promise(function (resolve, reject) {
+                        $.ajax({...permalinkAjaxParameters, url: url}).fail(function (jqXHR) {
+                            reject(jqXHR)
+                        }).done(function (val) {
+                            resolve(val)
+                        });
+                    });
+                };
+
+                var captchaOptions = {
+                    captchaId: "widget-netvibes-captcha",
+                    action: "indicators_permalink",
+                    buttonText: EDatos.common.I18n.translate("EMBED.ADD_TO_NETVIBES"),
+                    labelText:  EDatos.common.I18n.translate("CAPTCHA.LABEL")
+                };
+
+                Edatos.captcha.showCaptchaWithButton(
+                    permalinkRequestFunction,
+                    permalinksUrlBaseWithProtocol + "/v1.0/permalinks",
+                    captchaOptions
+                ).then(permalink => this._openNetvibesInNewTab(permalink));
+            } else {
+                console.error("Either Edatos.captcha or Edatos.UserManagement should be available to add the widget to Netvibes.");
+            }
         }
-
-
     });
 
 }(window._));
