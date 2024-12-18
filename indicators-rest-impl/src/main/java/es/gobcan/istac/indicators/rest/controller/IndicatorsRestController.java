@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,12 +67,30 @@ public class IndicatorsRestController extends AbstractRestController {
         return new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = {"application/xml", "application/json"})
+    @ResponseBody
+
+    public ResponseEntity<DataType> retrieveIndicatorData(@PathVariable("indicatorCode") final String indicatorCode,
+            @RequestParam(required = false, value = "representation") final String representation, @RequestParam(required = false, value = "granularity") final String granularity,
+            @RequestParam(required = false, value = "fields") final String fields) throws MetamacException {
+
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+
+        boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
+        DataType dataType = indicatorRestFacade.retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
+
+        String selfLink = uriLinks.getIndicatorDataSelfLink(indicatorCode, fields, representation, granularity);
+        LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR, uriLinks.getIndicatorLink(indicatorCode));
+
+        dataType.addHeader(selfLink, parentLink, IndicatorsRestConstants.KIND_INDICATOR_DATA);
+        return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/jsonstat+json")
     @ResponseBody
-    // @formatter:off
-    public ResponseEntity<Object> retrieveIndicatorJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
-                                                                      @RequestParam(required = false, value = "representation") String representation,
-                                                                      @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+    public ResponseEntity<Object> retrieveIndicatorDataJsonStat(@PathVariable("indicatorCode") final String indicatorCode,
+            @RequestParam(required = false, value = "representation") String representation, @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         // @formatter:on
         try {
             Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
@@ -80,6 +100,31 @@ public class IndicatorsRestController extends AbstractRestController {
         } catch (Exception e) {
             return handleGenericException(e);
         }
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public Response retrieveIndicatorDataXLSX(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        return indicatorRestFacade.retrieveIndicatorDataXLSX(indicatorCode, selectedRepresentations, selectedGranularities);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/csv")
+    public Response retrieveIndicatorDataCSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        return indicatorRestFacade.retrieveIndicatorDataCSV(indicatorCode, selectedRepresentations, selectedGranularities);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/tab-separated-values")
+    public Response retrieveIndicatorDataTSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        return indicatorRestFacade.retrieveIndicatorDataTSV(indicatorCode, selectedRepresentations, selectedGranularities);
+
     }
 
     private ResponseEntity<Object> handleGenericException(Exception e) {
@@ -97,25 +142,4 @@ public class IndicatorsRestController extends AbstractRestController {
         return new ResponseEntity<>(errorResponse, status);
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET)
-    @ResponseBody
-    // @formatter:off
-    public ResponseEntity<DataType> retrieveIndicatorData(@PathVariable("indicatorCode") final String indicatorCode,
-                                                          @RequestParam(required = false, value = "representation") final String representation,
-                                                          @RequestParam(required = false, value = "granularity") final String granularity,
-                                                          @RequestParam(required = false, value = "fields") final String fields) throws MetamacException {
-        // @formatter:on
-
-        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
-        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-
-        boolean includeObservationMetadata = fields != null ? !fields.contains("-observationsMetadata") : true;
-        DataType dataType = indicatorRestFacade.retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
-
-        String selfLink = uriLinks.getIndicatorDataSelfLink(indicatorCode, fields, representation, granularity);
-        LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR, uriLinks.getIndicatorLink(indicatorCode));
-
-        dataType.addHeader(selfLink, parentLink, IndicatorsRestConstants.KIND_INDICATOR_DATA);
-        return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
-    }
 }

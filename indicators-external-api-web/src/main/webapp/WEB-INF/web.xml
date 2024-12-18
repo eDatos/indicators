@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="indicators-web" version="2.5"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+		 xmlns="http://java.sun.com/xml/ns/javaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<display-name>indicators-web</display-name>
 
@@ -46,11 +46,6 @@
 	</filter>
 
 	<filter>
-		<filter-name>JsonStatFilter</filter-name>
-		<filter-class>es.gobcan.istac.indicators.rest.filter.JsonStatFilter</filter-class>
-	</filter>
-	
-	<filter>
 		<filter-name>CORSFilter</filter-name>
 		<filter-class>org.siemac.metamac.core.common.filter.CORSFilter</filter-class>
 	</filter>
@@ -59,6 +54,13 @@
 		<filter-name>UrlRewriteFilter</filter-name>
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 	</filter>
+
+
+	<filter>
+		<filter-name>HttpWrapperFilter</filter-name>
+		<filter-class>org.siemac.metamac.rest.request.filter.HttpWrapperFilter</filter-class>
+	</filter>
+
 
 	<!-- FILTERS - MAPPING -->
 	<filter-mapping>
@@ -72,7 +74,7 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>JsonStatFilter</filter-name>
+		<filter-name>HttpWrapperFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 		
