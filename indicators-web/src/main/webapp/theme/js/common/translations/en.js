@@ -135,6 +135,14 @@
         'CONNECTOR': {
             'OF': ' of ',
             'CONTRACTED_OF': ' of '
+        },
+        'MAIN_INDICATORS': {
+            'ALL': {
+                'TOOLTIP': 'All indicators, including non-main indicators.'
+            },
+            'ONLY_MAIN': {
+                'TOOLTIP': ''
+            }
         }
     };
 }());
