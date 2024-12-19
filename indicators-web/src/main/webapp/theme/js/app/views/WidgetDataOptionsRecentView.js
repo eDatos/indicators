@@ -193,7 +193,7 @@
                 var toggleAllValues = groupType === 'allValues';
                 this.$('.widget-data-system').toggle(toggleSystem);
                 this.$('.widget-data-subject').toggle(toggleSubject);
-                this.$(".widget-data-main").toggle(toggleSubject || toggleAllValues);
+                this.$(".control-group-indicators").toggle(toggleSubject || toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
