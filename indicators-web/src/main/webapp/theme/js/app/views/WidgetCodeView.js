@@ -100,7 +100,7 @@
                     captchaOptions
                 ).then(permalink => this._openNetvibesInNewTab(permalink));
             } else {
-                console.error("Either Edatos.captcha or Edatos.UserManagement should be available to add the widget to Netvibes.");
+                $.ajax({...permalinkAjaxParameters, url: permalinksUrlBase + "/v1.0/permalinks"}).done(permalink => self._openNetvibesInNewTab(permalink));
             }
         }
     });
