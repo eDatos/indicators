@@ -138,10 +138,10 @@
         },
         'MAIN_INDICATORS': {
             'ALL': {
-                'TOOLTIP': 'All indicators, including non-main indicators.'
+                'TOOLTIP': 'Set of available indicators generated from official statistical operations.'
             },
             'ONLY_MAIN': {
-                'TOOLTIP': ''
+                'TOOLTIP': 'The main indicators are a subset of the available indicators that have been preselected as being considered more relevant.'
             }
         }
     };

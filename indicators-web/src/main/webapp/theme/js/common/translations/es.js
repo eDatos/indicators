@@ -138,10 +138,10 @@
         },
         'MAIN_INDICATORS': {
             'ALL': {
-                'TOOLTIP': 'Todos los indicadores, incluyendo los que no son principales.'
+                'TOOLTIP': 'Conjunto de indicadores disponibles generados a partir de operaciones estadísticas oficiales.'
             },
             'ONLY_MAIN': {
-                'TOOLTIP': ''
+                'TOOLTIP': 'Los indicadores principales son un subconjunto de los indicadores disponibles que han sido preseleccionados por considerarse más relevantes.'
             }
         }
     };

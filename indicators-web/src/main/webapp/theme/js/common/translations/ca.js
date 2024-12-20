@@ -138,10 +138,10 @@
         },
         'MAIN_INDICATORS': {
             'ALL': {
-                'TOOLTIP': 'Tots els indicadors, incloent-hi els que no són principals.'
+                'TOOLTIP': 'Conjunt d\'indicadors disponibles generats a partir d\'operacions estadístiques oficials.'
             },
             'ONLY_MAIN': {
-                'TOOLTIP': ''
+                'TOOLTIP': 'Els indicadors principals són un subconjunt dels indicadors disponibles que han estat preseleccionats per considerar-se més rellevants.'
             }
         }
     };
