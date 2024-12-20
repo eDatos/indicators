@@ -435,10 +435,14 @@
                     jsonp: "_callback"
                 });
 
+                this.requestInProgress = req;
                 this._getTimeGranularities().success(function (response) {
                     self.timeGranularities = response.items;
 
                     req.success(function (response) {
+                        if (req !== self.requestInProgress) {
+                            return;
+                        }
                         var datasets = _.map(response.items, function (item) {
                             return Dataset.fromRequest(item, self.timeGranularities);
                         }, self);
@@ -446,7 +450,6 @@
                         self.render();
                     });
                 });
-
             } else {
                 self.datasets = [];
                 self.render();

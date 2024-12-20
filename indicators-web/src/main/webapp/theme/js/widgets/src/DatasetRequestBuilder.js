@@ -120,6 +120,9 @@
                 requestUrl += 'subjectCode EQ "' + options.subjectCode + '" AND ';
             }
             requestUrl += 'geographicalValue EQ "' + geographicalValue + '"';
+            if (options.indicatorsMain === 'onlyMain') {
+                requestUrl += ' AND isMainIndicator EQ "TRUE"';
+            }
 
             requestUrl += '&order=update DESC, id DESC' +
                 this._limit(options.nrecent) +
