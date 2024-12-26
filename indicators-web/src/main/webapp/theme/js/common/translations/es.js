@@ -21,7 +21,9 @@
                 'GEOGRAPHICAL_VALUES': 'Valores espaciales',
                 'TIME_GRANULARITIES': 'Granularidad temporal',
                 'UPDATE_PREVIEW': 'Actualizar vista',
-                'RECENT': 'Número de indicadores recientes'
+                'RECENT': 'Número de indicadores recientes',
+                'ALL_INDICATORS': 'Todos los indicadores',
+                'ONLY_MAIN_INDICATORS': 'Sólo los principales'
             },
             'STYLE': {
                 'TITLE': 'Estilo',
@@ -133,6 +135,14 @@
         'CONNECTOR': {
             'OF': ' de ',
             'CONTRACTED_OF': ' de '
+        },
+        'MAIN_INDICATORS': {
+            'ALL': {
+                'TOOLTIP': 'Conjunto de indicadores disponibles generados a partir de operaciones estadísticas oficiales.'
+            },
+            'ONLY_MAIN': {
+                'TOOLTIP': 'Los indicadores principales son un subconjunto de los indicadores disponibles que han sido preseleccionados por considerarse más relevantes.'
+            }
         }
     };
 }());

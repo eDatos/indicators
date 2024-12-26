@@ -28,9 +28,16 @@
     <div class="widget-data-geographicalValues"></div>
 </div>
 
-
 <div class="control-group">
     <div class="widget-data-title">{{ translate "OPTIONS.DATA.INDICATORS" }}</div>
+    <div class="widget-data-main">
+        <label class="radio" title='{{ translate "MAIN_INDICATORS.ALL.TOOLTIP"}}'>
+            <input type="radio" name="indicatorsMain" value="all">{{ translate "OPTIONS.DATA.ALL_INDICATORS" }}
+        </label>
+        <label class="radio" title='{{ translate "MAIN_INDICATORS.ONLY_MAIN.TOOLTIP"}}'>
+            <input type="radio" name="indicatorsMain" value="onlyMain">{{ translate "OPTIONS.DATA.ONLY_MAIN_INDICATORS" }}
+        </label>
+    </div>
     <div class="widget-data-instances"></div>
     <div class="widget-data-indicators"></div>
     <div class="widget-data-all-indicators"></div>

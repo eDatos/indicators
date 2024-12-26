@@ -719,15 +719,26 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES
-        Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
-        MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
+        Map<String, MetadataAttributeType> metadataAttributes = extractMetadataAttributes(source.getDataSources(), metadataProperties.getDefaultInternationalizationLanguage());
 
-        List<DataSource> dataSources = source.getDataSources();
+        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
+        target.setAttribute(metadataAttributes);
+
+        // CHILD LINK
+        target.setChildLink(createLinkTypeIndicatorData(source.getIndicator()));
+
+        // PARENT LINK
+        target.setParentLink(createLinkTypeIndicators());
+
+        // DECIMAL PLACES
+        target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
+    }
+    private Map<String, MetadataAttributeType> extractMetadataAttributes(List<DataSource> dataSources, String defaultLang) throws MetamacException {
+        Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<>();
 
         for (DataSource dataSource : dataSources) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
                 String queryUuid = dataSource.getQueryUuid();
-                String defaultLang = this.metadataProperties.getDefaultInternationalizationLanguage();
                 Attributes metadataAttributesAux = null;
 
                 if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
@@ -744,25 +755,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 if (metadataAttributesAux != null) {
                     for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
                         if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                            metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                            MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
                             metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
                         }
                     }
                 }
             }
         }
-
-        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
-        target.setAttribute(metadataAttributes);
-
-        // CHILD LINK
-        target.setChildLink(createLinkTypeIndicatorData(source.getIndicator()));
-
-        // PARENT LINK
-        target.setParentLink(createLinkTypeIndicators());
-
-        // DECIMAL PLACES
-        target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
+        return metadataAttributes;
     }
 
     private MetadataAttributeType createMetadataAttributeType(Attribute attribute) {
@@ -879,6 +879,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
                 target.setSubjectTitle(MapperUtil.getLocalisedLabel(category.getName(), metadataProperties.getDefaultInternationalizationLanguage()));
             }
+
+            // ATTRIBUTES
+            Map<String, MetadataAttributeType> metadataAttributes = extractMetadataAttributes(source.getIndicator().getDiffusionIndicatorVersion().getDataSources(),
+                    metadataProperties.getDefaultInternationalizationLanguage());
+
+            metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
+            target.setAttribute(metadataAttributes);
 
             // CHILD LINK
             String href = createUrlIndicatorInstanceData(indicatorsSystem, source);

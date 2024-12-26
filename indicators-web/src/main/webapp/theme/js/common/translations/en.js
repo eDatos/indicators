@@ -21,7 +21,9 @@
                 'GEOGRAPHICAL_VALUES': 'Geographical values',
                 'TIME_GRANULARITIES': 'Time granularities',
                 'UPDATE_PREVIEW': 'Update preview',
-                'RECENT': 'Number of recent indicators'
+                'RECENT': 'Number of recent indicators',
+                'ALL_INDICATORS': 'All indicators',
+                'ONLY_MAIN_INDICATORS': 'Only the main ones'
             },
             'STYLE': {
                 'TITLE': 'Style',
@@ -133,6 +135,14 @@
         'CONNECTOR': {
             'OF': ' of ',
             'CONTRACTED_OF': ' of '
+        },
+        'MAIN_INDICATORS': {
+            'ALL': {
+                'TOOLTIP': 'Set of available indicators generated from official statistical operations.'
+            },
+            'ONLY_MAIN': {
+                'TOOLTIP': 'The main indicators are a subset of the available indicators that have been preselected as being considered more relevant.'
+            }
         }
     };
 }());

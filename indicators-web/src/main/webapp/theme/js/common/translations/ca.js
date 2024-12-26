@@ -21,7 +21,9 @@
                 'GEOGRAPHICAL_VALUES': 'Valors espacials',
                 'TIME_GRANULARITIES': 'Granularitat temporal',
                 'UPDATE_PREVIEW': 'Actualitzar vista',
-                'RECENT': "Nombre d'indicadors recents"
+                'RECENT': "Nombre d'indicadors recents",
+                'ALL_INDICATORS': 'Tots els indicadors',
+                'ONLY_MAIN_INDICATORS': 'Només els principals'
             },
             'STYLE': {
                 'TITLE': 'Estil',
@@ -133,6 +135,14 @@
         'CONNECTOR': {
             'OF': ' de ',
             'CONTRACTED_OF': ' d\''
+        },
+        'MAIN_INDICATORS': {
+            'ALL': {
+                'TOOLTIP': 'Conjunt d\'indicadors disponibles generats a partir d\'operacions estadístiques oficials.'
+            },
+            'ONLY_MAIN': {
+                'TOOLTIP': 'Els indicadors principals són un subconjunt dels indicadors disponibles que han estat preseleccionats per considerar-se més rellevants.'
+            }
         }
     };
 }());
