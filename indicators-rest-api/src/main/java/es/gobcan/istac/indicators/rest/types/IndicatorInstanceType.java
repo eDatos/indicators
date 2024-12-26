@@ -11,6 +11,7 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
     private static final long                  serialVersionUID = 4307766622180932870L;
 
     private Map<String, MetadataDimensionType> dimension        = null;
+    private Map<String, MetadataAttributeType> attribute        = null;
     private Integer                            decimalPlaces    = null;
     private String                             subjectCode      = null;
     private Map<String, String>                subjectTitle     = null;
@@ -54,5 +55,13 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
 
     public void setSubjectTitle(Map<String, String> subjectTitle) {
         this.subjectTitle = subjectTitle;
+    }
+
+    public Map<String, MetadataAttributeType> getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Map<String, MetadataAttributeType> attribute) {
+        this.attribute = attribute;
     }
 }

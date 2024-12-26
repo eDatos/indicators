@@ -10,10 +10,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		
-		[#if apiStyleCssUrl?has_content]
-            <link href="${apiStyleCssUrl}" media='screen' rel='stylesheet' type='text/css' />
-        [/#if]
         
         <link rel="icon" href="${faviconUrl}"/>
 	</head>
@@ -23,7 +19,7 @@
 	   
 	   <div class="version-list">
     	   <h1>[@messageEscape 'api.doc.title'/]</h1>
-    	   <h2>[@messageEscape 'api.doc.versiones'/]</h2>
+    	   <h2>[@messageEscape 'api.doc.versions'/]</h2>
     	   <ul>
     	       <li>
     	           <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/latest">/latest</a></h3>
