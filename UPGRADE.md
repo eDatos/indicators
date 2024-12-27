@@ -8,20 +8,31 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 10.1.1 a 10.2.0
-* Se añade nueva propiedad de configuración en base de datos common-metadata. Se quita una propiedad no utilizada. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+## 10.3.0 a 10.3.1-SNAPSHOT
 
 * **BREAKING CHANGE.** Se cambia la salida de la API para los servicios "
   /api/indicators/v1.0/indicators/{indicatorCode}" y "/api/indicators/v1.0/indicators/{indicatorCode}/data" devolviendo
   en las etiquetas de las dimensiones geográficas los códigos de las mismas en lugar de la descripción.
+
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la
+  base de datos de common-metadata:
+
+```
+etc/changes-from-release/10.3.0/db/common-metadata/postgresql/*.sql
+```
+
+## 10.1.1 a 10.2.0
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Se quita una propiedad no utilizada. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/10.1.1/db/common-metadata/postgresql/*.sql
+```
 
 * Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la siguiente carpeta:
 
 ```
 etc/changes-from-release/10.1.1/db/indicators/postgresql/*.sql
 ```
-
-
 
 ## 10.1.0 a 10.1.1
 
