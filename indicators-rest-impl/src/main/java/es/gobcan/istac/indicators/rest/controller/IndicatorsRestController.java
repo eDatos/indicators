@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +101,7 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    public Response retrieveIndicatorDataXLSX(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+    public ResponseEntity<String> retrieveIndicatorDataXLSX(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
@@ -111,7 +109,7 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/csv")
-    public Response retrieveIndicatorDataCSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+    public ResponseEntity<String> retrieveIndicatorDataCSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
@@ -119,7 +117,7 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/tab-separated-values")
-    public Response retrieveIndicatorDataTSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
+    public ResponseEntity<String> retrieveIndicatorDataTSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);

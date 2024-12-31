@@ -59,6 +59,11 @@
 	<filter>
 		<filter-name>HttpWrapperFilter</filter-name>
 		<filter-class>org.siemac.metamac.rest.request.filter.HttpWrapperFilter</filter-class>
+		<init-param>
+			<param-name>url-filter-format</param-name>
+			<param-value>true
+			</param-value> <!-- true or false if param is not defined it will be considered as false by default -->
+		</init-param>
 	</filter>
 
 
@@ -76,6 +81,7 @@
 	<filter-mapping>
 		<filter-name>HttpWrapperFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+
 	</filter-mapping>
 		
 	<filter-mapping>
