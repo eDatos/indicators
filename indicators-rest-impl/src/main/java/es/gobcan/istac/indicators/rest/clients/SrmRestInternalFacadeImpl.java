@@ -45,6 +45,11 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
+    public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        return srmRestInternalService.retrieveGeographicalElementsIdByCodesOfCodelists(codelistUrn);
+    }
+
+    @Override
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException {
         return srmRestInternalService.retrieveCodelistCodesByCode(code, defaultTerritoryVariableUrn, numResults);
     }
