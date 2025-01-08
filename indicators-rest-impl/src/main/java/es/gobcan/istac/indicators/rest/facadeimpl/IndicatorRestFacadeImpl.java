@@ -340,7 +340,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private Map<String, String> createHeaderMap(List<String> headers) {
         Map<String, String> headerMap = new HashMap<>();
         for (String header : headers) {
-            // Si es necesario, asignar un valor al map, en este caso solo utilizo el mismo valor
             headerMap.put(header, header);
         }
         return headerMap;
@@ -349,7 +348,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private Map<String, String> createRowMap(List<String> rowData) {
         Map<String, String> rowMap = new HashMap<>();
         for (int i = 0; i < rowData.size(); i++) {
-            rowMap.put("Column" + i, rowData.get(i)); // Crear una clave para cada columna, por ejemplo "Column0", "Column1", etc.
+            rowMap.put("Column" + i, rowData.get(i));
         }
         return rowMap;
     }
