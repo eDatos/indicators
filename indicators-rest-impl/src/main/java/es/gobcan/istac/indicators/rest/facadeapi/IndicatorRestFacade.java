@@ -21,11 +21,11 @@ public interface IndicatorRestFacade {
             throws MetamacException;
     PagedResultType<IndicatorBaseType> findIndicators(String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation) throws MetamacException;
 
-    ResponseEntity<String> retrieveIndicatorDataXLSX(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    ResponseEntity<byte[]> retrieveIndicatorDataXLSX(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException;
-    ResponseEntity<String> retrieveIndicatorDataCSV(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    ResponseEntity<byte[]> retrieveIndicatorDataCSV(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException;
-    ResponseEntity<String> retrieveIndicatorDataTSV(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    ResponseEntity<byte[]> retrieveIndicatorDataTSV(final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException;
 
 }

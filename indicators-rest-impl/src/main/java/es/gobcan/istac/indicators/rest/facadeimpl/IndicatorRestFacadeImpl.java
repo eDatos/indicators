@@ -1,8 +1,11 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +32,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
+import es.gobcan.istac.indicators.rest.ExcelMapper;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
@@ -72,6 +76,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
     @Autowired
     IndicatorsConfigurationService  configurationService;
+
+    private ExcelMapper             excelMapper;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -158,34 +164,33 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public ResponseEntity<String> retrieveIndicatorDataXLSX(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    public ResponseEntity<byte[]> retrieveIndicatorDataXLSX(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
         return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "xlsx");
     }
     @Override
-    public ResponseEntity<String> retrieveIndicatorDataCSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    public ResponseEntity<byte[]> retrieveIndicatorDataCSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
         return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "csv");
     }
     @Override
-    public ResponseEntity<String> retrieveIndicatorDataTSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
+    public ResponseEntity<byte[]> retrieveIndicatorDataTSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
         return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "tsv");
     }
 
-    private ResponseEntity<String> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            String format)
-            throws MetamacException {
+    private ResponseEntity<byte[]> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            String format) throws MetamacException {
         try {
-            String content;
+            byte[] content;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, false);
 
             switch (format.toLowerCase()) {
                 case "csv":
-                    content = convertJsonToText(indicatorData, ",");
+                    content = convertJsonToText(indicatorData, ",").getBytes(StandardCharsets.UTF_8);
                     break;
                 case "tsv":
-                    content = convertJsonToText(indicatorData, "\t");
+                    content = convertJsonToText(indicatorData, "\t").getBytes(StandardCharsets.UTF_8);
                     break;
                 case "xlsx":
                     content = generateXlsxFromJson(indicatorData);
@@ -197,7 +202,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", getContentDisposition(indicatorCode, format));
 
-            return new ResponseEntity<String>(content, headers, HttpStatus.OK);
+            return new ResponseEntity<>(content, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorCode);
@@ -314,8 +319,39 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
         return rows;
     }
-    private String generateXlsxFromJson(DataType indicatorData) throws MetamacException {
-        return "";
+    private byte[] generateXlsxFromJson(DataType indicatorData) throws MetamacException {
+        excelMapper = new ExcelMapper();
+
+        List<String> headers = extractHeadersFromJson(indicatorData);
+        Map<String, String> headerMap = createHeaderMap(headers);
+        excelMapper.createHeaderRow(headerMap);
+
+        List<List<String>> rows = extractRowsFromJson(indicatorData);
+        for (List<String> rowData : rows) {
+            Map<String, String> rowMap = createRowMap(rowData);
+            excelMapper.addObservationRow(rowMap);
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        excelMapper.writeExcelWorkBookToOutputStream(outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private Map<String, String> createHeaderMap(List<String> headers) {
+        Map<String, String> headerMap = new HashMap<>();
+        for (String header : headers) {
+            // Si es necesario, asignar un valor al map, en este caso solo utilizo el mismo valor
+            headerMap.put(header, header);
+        }
+        return headerMap;
+    }
+
+    private Map<String, String> createRowMap(List<String> rowData) {
+        Map<String, String> rowMap = new HashMap<>();
+        for (int i = 0; i < rowData.size(); i++) {
+            rowMap.put("Column" + i, rowData.get(i)); // Crear una clave para cada columna, por ejemplo "Column0", "Column1", etc.
+        }
+        return rowMap;
     }
 
     private static String getContentDisposition(String fileNamePrefix, String format) {
