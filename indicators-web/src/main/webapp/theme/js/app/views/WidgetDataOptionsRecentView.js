@@ -83,9 +83,21 @@
             this.systems.fetchWithoutLimit().done(function () {
                 if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
                     self.model.set('groupType', 'system');
-                    $("#system").show();
+                    $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SYSTEM_OR_SUBJECT'));
+                    self.showGroupTypeRadioButton();
+                } else {
+                    $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SUBJECT'));
+                    self.showGroupTypeRadioButton("system");
                 }
             });
+        },
+
+        showGroupTypeRadioButton: function(id) {
+            $(".widget-group-type label").each((i, radioButton) => {
+                if (!id || $(radioButton).attr('id') !== id) {
+                    $(radioButton).show();
+                }
+            }); 
         },
 
         _fetchGeographicalValuesAndTimeGranularities : function () {
