@@ -135,6 +135,14 @@
         'CONNECTOR': {
             'OF': ' de ',
             'CONTRACTED_OF': ' de '
+        },
+        'MAIN_INDICATORS': {
+            'ALL': {
+                'TOOLTIP': 'Conjunto de indicadores disponibles generados a partir de operaciones estadísticas oficiales.'
+            },
+            'ONLY_MAIN': {
+                'TOOLTIP': 'Los indicadores principales son un subconjunto de los indicadores disponibles que han sido preseleccionados por considerarse más relevantes.'
+            }
         }
     };
 }());

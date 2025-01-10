@@ -137,6 +137,18 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
+    public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        Map<String, String> geographicalElementsByCodesOfCodelist = new HashMap<String, String>();
+
+        Codes codes = retrieveCodesOfCodelist(codelistUrn);
+
+        for (CodeResourceInternal code : codes.getCodes()) {
+            geographicalElementsByCodesOfCodelist.put(code.getVariableElement().getId(), code.getId());
+        }
+        return geographicalElementsByCodesOfCodelist;
+    }
+
+    @Override
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException {
         // Calls like this: /codelists/~all/~all/~latest/codes?query=id EQ '35003' AND VARIABLE_ELEMENT_URN LIKE 'VR_TERRITORIO'&fields=+variableElement
 

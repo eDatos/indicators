@@ -67,6 +67,8 @@ public interface Do2TypeMapper {
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
 
+    DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
+
     // GeographicalValues
     List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues);
 
