@@ -88,7 +88,7 @@
                     $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SUBJECT'));
                     $("#system").hide();
                 }
-                $("widget-group-type").show();
+                $(".widget-group-type").show();
             });
         },
 
