@@ -69,20 +69,16 @@
                 if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
                     self.model.set('groupType', 'system');
                     $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SYSTEM_OR_SUBJECT'));
-                    self.showGroupTypeRadioButton();
                 } else {
                     $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SUBJECT'));
-                    self.showGroupTypeRadioButton("system");
+                    self.hideGroupTypeRadioButton("#system");
                 }
+                $(".widget-group-type").show();
             });
         },
 
-        showGroupTypeRadioButton: function(id) {
-            $(".widget-group-type label").each((i, radioButton) => {
-                if (!id || $(radioButton).attr('id') !== id) {
-                    $(radioButton).show();
-                }
-            }); 
+        hideGroupTypeRadioButton: function(id) {
+            $(id).hide();
         },
 
         _fetchGeographicalGranularities: function () {
