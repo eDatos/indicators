@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 10.3.0 a 10.3.1-SNAPSHOT
+## 10.3.0 a 11.0.0
 
 * **BREAKING CHANGE.** Se cambia la salida de la API para los servicios "
   /api/indicators/v1.0/indicators/{indicatorCode}" y "/api/indicators/v1.0/indicators/{indicatorCode}/data" devolviendo
