@@ -71,14 +71,10 @@
                     $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SYSTEM_OR_SUBJECT'));
                 } else {
                     $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SUBJECT'));
-                    self.hideGroupTypeRadioButton("#system");
+                    $("#system").hide();
                 }
                 $(".widget-group-type").show();
             });
-        },
-
-        hideGroupTypeRadioButton: function(id) {
-            $(id).hide();
         },
 
         _fetchGeographicalGranularities: function () {
