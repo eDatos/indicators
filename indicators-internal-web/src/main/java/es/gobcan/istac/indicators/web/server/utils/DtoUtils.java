@@ -1,10 +1,13 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
+
 import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ProcStatus;
@@ -197,6 +200,14 @@ public class DtoUtils {
         return dataStructureDto;
     }
 
+    public static String getUrnWithoutVersion(String datasetVersionUrn) {
+        String[] params = splitUrnItemScheme(datasetVersionUrn);
+        String[] agencyId = {params[0]};
+        String resourceId = params[1];
+
+        return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(agencyId, resourceId);
+    }
+
     public static DataStructureDto createDataStructureDatasetDto(Dataset dataset, SrmRestInternalService srmRestInternalService) throws MetamacException {
         if (dataset == null) {
             return null;
@@ -204,14 +215,16 @@ public class DtoUtils {
         DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
+        String datasetUrn = getUrnWithoutVersion(dataset.getUrn());
+
         // UUid
-        dataStructureDto.setUuid(dataset.getUrn());
+        dataStructureDto.setUuid(datasetUrn);
 
         // Title
         dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(dataset.getName()));
 
         // PX Uri
-        dataStructureDto.setQueryUrn(dataset.getUrn());
+        dataStructureDto.setQueryUrn(datasetUrn);
 
         Resource statisticalOperation = dataset.getMetadata().getStatisticalOperation();
 
