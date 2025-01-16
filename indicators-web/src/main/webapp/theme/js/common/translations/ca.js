@@ -137,9 +137,6 @@
             'CONTRACTED_OF': ' d\''
         },
         'MAIN_INDICATORS': {
-            'ALL': {
-                'TOOLTIP': 'Conjunt d\'indicadors disponibles generats a partir d\'operacions estadístiques oficials.'
-            },
             'ONLY_MAIN': {
                 'TOOLTIP': 'Els indicadors principals són un subconjunt dels indicadors disponibles que han estat preseleccionats per considerar-se més rellevants.'
             }
