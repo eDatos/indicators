@@ -352,7 +352,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Starting Indicators data update process (METAMAC DATA)");
 
         markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, urn);
-        return updateIndicatorsData(ctx);
+        List<IndicatorVersion> failedPopulationIndicators = updateIndicatorsData(ctx);
+
+        createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+
+        return failedPopulationIndicators;
+
+    }
+
+    private void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
+        if (!failedPopulationIndicators.isEmpty()) {
+            getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+        }
     }
 
     private List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
