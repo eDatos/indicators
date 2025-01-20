@@ -28,6 +28,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.service.RestApiLocator;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.utils.ExternalItemWebUtils;
 
 @Component
@@ -84,7 +85,8 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
     public DataStructureDto retrieveDataDefinitionFromDataset(ServiceContext serviceContext, String datasetUrn) throws MetamacWebException {
         try {
             String languageDefault = configurationService.retrieveLanguageDefault();
-            Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrn(datasetUrn, Arrays.asList(languageDefault), StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
+            Dataset dataset = statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(datasetUrn, Arrays.asList(languageDefault),
+                    StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
             DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDatasetDto(dataset, srmRestInternalService);
             return dataStructureDto;
         } catch (Exception e) {
@@ -104,6 +106,20 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
         List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
         for (ResourceWithStatisticalOperation resource : resources) {
             results.add(buildExternalItemDtoFromResource(resource, type));
+        }
+        return results;
+    }
+
+    private List<ExternalItemDto> buildExternalItemDtosFromDataset(List<ResourceWithStatisticalOperation> resources, TypeExternalArtefactsEnum type) {
+        List<ExternalItemDto> results = new ArrayList<ExternalItemDto>();
+        for (ResourceWithStatisticalOperation resource : resources) {
+
+            ExternalItemDto datasetExternalItemDto = buildExternalItemDtoFromResource(resource, type);
+
+            datasetExternalItemDto.setUrn(DtoUtils.getUrnWithoutVersion(resource.getUrn()));
+
+            results.add(datasetExternalItemDto);
+
         }
         return results;
     }
@@ -129,7 +145,7 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
 
             Datasets findaDatasetsResult = statisticalResoucesRestExternalService.findDatasets(query, orderBy, limit, offset, null);
 
-            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findaDatasetsResult.getDatasets(), TypeExternalArtefactsEnum.QUERY);
+            List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromDataset(findaDatasetsResult.getDatasets(), TypeExternalArtefactsEnum.QUERY);
 
             ExternalItemsResult result = ExternalItemWebUtils.createExternalItemsResultFromListBase(findaDatasetsResult, externalItemDtos);
             return result;

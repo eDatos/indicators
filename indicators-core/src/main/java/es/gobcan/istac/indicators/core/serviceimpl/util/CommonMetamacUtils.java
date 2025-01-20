@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import static org.siemac.edatos.core.common.util.GeneratorUrnUtils.generateSdmxCodelistUrn;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
@@ -43,8 +45,8 @@ import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 
 public abstract class CommonMetamacUtils {
 
-    public static String              DATA_SEPARATOR         = " | ";
-    public        Map<String, String> variableElementsByCode = new HashMap<String, String>();
+    public static String          DATA_SEPARATOR         = " | ";
+    public Map<String, String>    variableElementsByCode = new HashMap<String, String>();
 
     public SrmRestInternalService srmRestInternalService;
 
@@ -327,6 +329,14 @@ public abstract class CommonMetamacUtils {
             throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VARIABLE_ELEMENT_NOT_FOUND_WITH_CODE, spatialValue);
         }
 
+    }
+
+    public static String getUrnWithoutVersion(String datasetVersionUrn) {
+        String[] params = splitUrnItemScheme(datasetVersionUrn);
+        String[] agencyId = {params[0]};
+        String resourceId = params[1];
+
+        return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(agencyId, resourceId);
     }
 
 }

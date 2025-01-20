@@ -22,6 +22,6 @@ public class StatisticalResourceRestExternalFacadeImpl implements StatisticalRes
     }
 
     public Dataset retrieveDatasetByUrn(String datasetUrn, List<String> lang, QueryFetchEnum onlyMetadata) {
-        return statisticalResoucesRestExternalService.retrieveDatasetByUrn(datasetUrn, lang, onlyMetadata);
+        return statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(datasetUrn, lang, onlyMetadata);
     }
 }
