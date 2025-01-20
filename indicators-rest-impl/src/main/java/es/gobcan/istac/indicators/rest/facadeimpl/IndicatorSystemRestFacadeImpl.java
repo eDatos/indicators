@@ -219,7 +219,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata);
         } else {
             IndicatorObservationsVO instanceObservations = indicatorsApiService.findObservationsInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
 

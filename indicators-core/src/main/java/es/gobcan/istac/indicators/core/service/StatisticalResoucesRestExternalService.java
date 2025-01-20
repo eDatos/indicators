@@ -21,7 +21,7 @@ public interface StatisticalResoucesRestExternalService {
 
     public Query retrieveQueryByUrn(String queryUrn, List<String> lang, QueryFetchEnum onlyMetadata);
 
-    public Dataset retrieveDatasetByUrn(String datasetUrn, List<String> lang, QueryFetchEnum onlyMetadata);
+    public Dataset retrieveLastVersionDatasetByUrn(String datasetUrn, List<String> lang, QueryFetchEnum onlyMetadata);
 
     public Query retrieveQueryByUrnInDefaultLang(String queryUrn, QueryFetchEnum onlyMetadata);
 
