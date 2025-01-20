@@ -8,6 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 11.0.0 a 11.0.1-SNAPSHOT
+* Se añade script de actualización de la urn de los indicadores que tienen fuente de datos con origen en un dataset de EDATOS. Se encuentra en la siguiente ruta
+
+```
+etc/changes-from-release/11.0.0/db/indicators/postgresql/20250116_update_urn_dataset.sql
+```
+
 ## 10.3.0 a 11.0.0
 
 * **BREAKING CHANGE.** Se cambia la salida de la API para los servicios "
