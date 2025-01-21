@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 11.0.0 a 11.0.1-SNAPSHOT
+## 11.0.0 a 11.1.0
 * Se añade script de actualización de la urn de los indicadores que tienen fuente de datos con origen en un dataset de EDATOS. Se encuentra en la siguiente ruta
 
 ```
