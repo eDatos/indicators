@@ -97,7 +97,7 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
     public void updateCategoryCacheAll(ServiceContext ctx, List<String> categoryElementsInIndicators) throws MetamacException {
         List<CategoryCache> categoryCacheUpdated = new ArrayList<>();
 
-        HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = getCategoriesByDefaultCategoryScheme(ctx);
+        HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = getCategoriesByDefaultCategoryScheme(ctx, true);
 
         for (String categoryElement : categoryElementsInIndicators) {
             CategoryResourceInternal category = categoriesByCategoryElement.get(categoryElement);
@@ -141,7 +141,7 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
         }
     }
 
-    private HashMap<String, CategoryResourceInternal> getCategoriesByDefaultCategoryScheme(ServiceContext ctx) throws MetamacException {
+    private HashMap<String, CategoryResourceInternal> getCategoriesByDefaultCategoryScheme(ServiceContext ctx, boolean sendNotification) throws MetamacException {
         HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = new HashMap<String, CategoryResourceInternal>();
 
         Categories categories = srmRestInternalService.retrieveCategoriesByCategoryScheme(configurationService.retrieveDefaultCategoryScheme());
@@ -151,15 +151,18 @@ public class CategoryCacheServiceImpl extends CategoryCacheServiceImplBase {
                 CategoryResourceInternal existingCategory = categoriesByCategoryElement.get(category.getCategoryElement().getId());
                 if (existingCategory == null) {
                     categoriesByCategoryElement.put(category.getCategoryElement().getId(), category);
-                } else {
-                    String codeCategory = existingCategory.getNestedId() != null ? existingCategory.getNestedId() : existingCategory.getId();
-                    MetamacException e = new MetamacException(ServiceExceptionType.UPDATE_CATEGORY_CACHE_JOB_DUPLICATE_CAT_ELEMENT_ERROR, category.getCategoryElement().getId(), codeCategory);
-                    noticesRestInternalService.createUpdateCategoryCacheErrorNotification(ctx.getUserId(), ServiceNoticeAction.UPDATE_CATEGORY_CACHE_JOB, e);
-                }
+                } else if (sendNotification)
+                    sendNotificationDuplicateCategoryElement(ctx, category, existingCategory);
             }
         }
 
         return categoriesByCategoryElement;
+    }
+
+    private void sendNotificationDuplicateCategoryElement(ServiceContext ctx, CategoryResourceInternal category, CategoryResourceInternal existingCategory) {
+        String codeCategory = existingCategory.getNestedId() != null ? existingCategory.getNestedId() : existingCategory.getId();
+        MetamacException e = new MetamacException(ServiceExceptionType.UPDATE_CATEGORY_CACHE_JOB_DUPLICATE_CAT_ELEMENT_ERROR, category.getCategoryElement().getId(), codeCategory);
+        noticesRestInternalService.createUpdateCategoryCacheErrorNotification(ctx.getUserId(), ServiceNoticeAction.UPDATE_CATEGORY_CACHE_JOB, e);
     }
 
     private CategoryCache createCategoryCacheEntry(String categoryCode, InternationalString categoryTitle, String categoryElementCode, String userId) {

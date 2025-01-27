@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -64,6 +66,9 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Autowired
     private SrmRestInternalFacade           srmRestInternalFacade = null;
+
+    @Autowired
+    private final MetadataProperties        metadataProperties    = null;
 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final RestCriteriaPaginator paginator) throws MetamacException {
@@ -181,22 +186,26 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
         GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(instances, result, representation);
 
+        Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
         if (fieldsToAdd.contains("+metadata")) {
+
             for (int i = 0; i < result.getItems().size(); i++) {
                 IndicatorInstanceBaseType baseType = result.getItems().get(i);
                 IndicatorInstance indicatorInstance = instances.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                dto2TypeMapper.indicatorsInstanceDoToMetadataType(indicatorInstance, metadataType, geoValuesOldVersionCompatibilityUtils);
+                dto2TypeMapper.indicatorsInstanceDoToMetadataType(indicatorInstance, metadataType, geoValuesOldVersionCompatibilityUtils, geographicalValuesCodes);
                 baseType.setMetadata(metadataType);
             }
         }
 
         if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
+
             for (IndicatorInstanceBaseType type : result.getItems()) {
-                DataType dataType = retrieveIndicatorInstanceDataByCode(type.getSystemCode(), type.getId(), representation, selectedGranularities, includeObservationsAttributes,
-                        geoValuesOldVersionCompatibilityUtils);
+                DataType dataType = retrieveIndicatorInstanceDataByCodeCommon(type.getSystemCode(), type.getId(), representation, selectedGranularities, includeObservationsAttributes,
+                        geoValuesOldVersionCompatibilityUtils, geographicalValuesCodes);
 
                 type.setData(dataType);
             }
@@ -204,10 +213,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return result;
     }
 
-    @Override
-    public DataType retrieveIndicatorInstanceDataByCode(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
-            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils)
-            throws MetamacException {
+    private DataType retrieveIndicatorInstanceDataByCodeCommon(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) throws MetamacException {
+
         IndicatorInstance indicatorInstance = getIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
         IndicatorsDataFilterVO dataFilter = getIndicatorDataFilter(selectedRepresentations, selectedGranularities);
@@ -219,7 +228,12 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata);
+
+            if (geographicalValuesCodes.isEmpty()) {
+                geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+            }
+
+            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, geographicalValuesCodes);
         } else {
             IndicatorObservationsVO instanceObservations = indicatorsApiService.findObservationsInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
 
@@ -230,6 +244,15 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         }
 
         return dataType;
+    }
+
+    @Override
+    public DataType retrieveIndicatorInstanceDataByCode(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils)
+            throws MetamacException {
+
+        return retrieveIndicatorInstanceDataByCodeCommon(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, includeObservationMetadata,
+                geoValuesOldVersionCompatibilityUtils, new HashMap<>());
     }
 
     private static IndicatorsDataFilterVO getIndicatorDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
