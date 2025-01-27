@@ -186,7 +186,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
         GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(instances, result, representation);
 
-        Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
+            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        }
 
         if (fieldsToAdd.contains("+metadata")) {
 
@@ -240,7 +243,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, geographicalValuesCodes);
         }
 
         return dataType;
