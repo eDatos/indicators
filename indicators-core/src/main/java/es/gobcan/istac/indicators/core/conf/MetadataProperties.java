@@ -15,12 +15,14 @@ public class MetadataProperties {
     private String                         defaultInternationalizationLanguage;
     private String                         codelistAnnotationTypePositionUnit;
     private String                         defaultCategoryScheme;
+    private String                         defaultGeographicalCodeListUrn;
 
     @PostConstruct
     public void setValues() throws MetamacException {
         defaultInternationalizationLanguage = configurationService.retrieveDefaultInternationalizationLanguage();
         codelistAnnotationTypePositionUnit = configurationService.retrieveCodelistAnnotationTypePositionUnit();
         defaultCategoryScheme = configurationService.retrieveDefaultCategoryScheme();
+        defaultGeographicalCodeListUrn = configurationService.retrieveDefaultGeographicalCodeListUrn();
     }
 
     public String getDefaultInternationalizationLanguage() {
@@ -33,5 +35,9 @@ public class MetadataProperties {
 
     public String getDefaultCategoryScheme() {
         return defaultCategoryScheme;
+    }
+
+    public String getDefaultGeographicalCodeListUrn() {
+        return defaultGeographicalCodeListUrn;
     }
 }

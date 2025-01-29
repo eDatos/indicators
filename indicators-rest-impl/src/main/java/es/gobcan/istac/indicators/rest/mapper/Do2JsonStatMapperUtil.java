@@ -116,13 +116,22 @@ public class Do2JsonStatMapperUtil {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
+
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        try {
+            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        } catch (MetamacException e) {
+            throw new RuntimeException(e);
+        }
+
         JsonStatCategoryType category = new JsonStatCategoryType();
         int i = 0;
         for (GeographicalValueVO geographicalValue : geographicalValues) {
             String categoryCode = geographicalValue.getCode();
+            String codeId = geographicalValuesCodes.get(categoryCode);
             if (filterGeographicalCodes.contains(categoryCode)) {
-                category.getIndex().put(categoryCode, (long) i);
-                category.getLabel().put(categoryCode, MapperUtil.getDefaultValue(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+                category.getIndex().put(codeId, (long) i);
+                category.getLabel().put(codeId, MapperUtil.getDefaultValue(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
                 i++;
             }
         }

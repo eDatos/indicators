@@ -22,6 +22,7 @@ import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
+import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -139,7 +140,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
     }
 
     public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) throws MetamacException {
-        if (message instanceof QueryVersionAvro) {
+        if (message instanceof QueryVersionAvro || message instanceof DatasetVersionAvro) {
             indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
         } else if (message instanceof VariableElementAvro) {
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);

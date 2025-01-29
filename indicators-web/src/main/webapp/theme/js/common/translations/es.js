@@ -135,6 +135,11 @@
         'CONNECTOR': {
             'OF': ' de ',
             'CONTRACTED_OF': ' de '
+        },
+        'MAIN_INDICATORS': {
+            'ONLY_MAIN': {
+                'TOOLTIP': 'Los indicadores principales son un subconjunto de los indicadores disponibles que han sido preseleccionados por considerarse más relevantes.'
+            }
         }
     };
 }());

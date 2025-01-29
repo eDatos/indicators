@@ -56,6 +56,7 @@
             this.model.on('change:indicators', this.updatePreview, this);
             this.model.on('change:measures', this.updatePreview, this);
             this.model.on('change:nrecent', this.updatePreview, this);
+            this.model.on('change:indicatorsMain', this.updatePreview, this);
         },
 
         _fetchGeographicalGranularities : function () {
@@ -189,8 +190,11 @@
                 var groupType = this.model.get('groupType');
                 var toggleSystem = groupType === 'system';
                 var toggleSubject = groupType === 'subject';
+                var toggleAllValues = groupType === 'allValues';
                 this.$('.widget-data-system').toggle(toggleSystem);
                 this.$('.widget-data-subject').toggle(toggleSubject);
+                this.$(".control-group-indicators").toggle(toggleSubject || toggleAllValues);
+                this.$(".main-indicators-help").toggle(toggleSubject || toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
@@ -200,13 +204,20 @@
         render : function () {
             this.$el.html(this.template());
 
-            // Bind radio button and nrecent input
+            this.$('.main-indicators-help').qtip({
+                content: EDatos.common.I18n.translate('MAIN_INDICATORS.ONLY_MAIN.TOOLTIP'),
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
+            // Bind radio button, nrecent input and indicatorsMain
             var bindings = {
                 groupType: '[name="groupType"]',
                 nrecent : {
                     selector : '[name="nrecent"]',
                     converter : integerConverter
-                }
+                },
+                indicatorsMain: '[name="indicatorsMain"]'
             };
             this._modelBinder.bind(this.model, this.el, bindings);
 

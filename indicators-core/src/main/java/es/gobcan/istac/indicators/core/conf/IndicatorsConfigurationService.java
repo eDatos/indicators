@@ -31,6 +31,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveKafkaQueryGroup() throws MetamacException;
 
+    String retrieveKafkaDatasetGroup() throws MetamacException;
+
     String retrieveKafkaVariableElementGroup() throws MetamacException;
 
     String retrieveKafkaCodelistGroup() throws MetamacException;
@@ -44,4 +46,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveCodelistAnnotationTypePositionUnit() throws MetamacException;
 
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;
+
+    String retrieveDefaultGeographicalCodeListUrn() throws MetamacException;
 }

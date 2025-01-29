@@ -40,7 +40,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.slf4j.Logger;
@@ -102,6 +102,7 @@ import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.DsplExporterService;
+import es.gobcan.istac.indicators.core.serviceimpl.util.CommonMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
@@ -335,16 +336,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<IndicatorVersion> updateIndicatorsDataFromMetamac(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
-        QueryVersionAvro queryVersionAvro = null;
+        String urn;
         if (message instanceof QueryVersionAvro) {
-            queryVersionAvro = (QueryVersionAvro) message;
+            QueryVersionAvro queryVersionAvro = (QueryVersionAvro) message;
+            urn = queryVersionAvro.getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn();
+        } else if (message instanceof DatasetVersionAvro) {
+            DatasetVersionAvro datasetVersionAvro = (DatasetVersionAvro) message;
+            urn = datasetVersionAvro.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
+                    .getIdentifiableStatisticalResource().getUrn();
+            urn = CommonMetamacUtils.getUrnWithoutVersion(urn);
         } else {
             return Collections.emptyList();
         }
 
         LOG.info("Starting Indicators data update process (METAMAC DATA)");
 
-        markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, queryVersionAvro);
+        markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, urn);
         return updateIndicatorsData(ctx);
     }
 
@@ -1453,14 +1460,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
     }
 
-    private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, QueryVersionAvro queryVersionAvro) throws MetamacException {
+    private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, String urn) throws MetamacException {
         List<String> dataDefinitionsUuids = new ArrayList<>(1);
 
-        IdentifiableStatisticalResourceAvro identifiableStatisticalResourceAvro = queryVersionAvro.getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                .getNameableStatisticalResource().getIdentifiableStatisticalResource();
-
-        if (!StringUtils.isEmpty(identifiableStatisticalResourceAvro.getUrn())) {
-            dataDefinitionsUuids.add(identifiableStatisticalResourceAvro.getUrn());
+        if (!StringUtils.isEmpty(urn)) {
+            dataDefinitionsUuids.add(urn);
         }
 
         markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);

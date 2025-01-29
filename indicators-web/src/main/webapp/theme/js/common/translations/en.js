@@ -135,6 +135,11 @@
         'CONNECTOR': {
             'OF': ' of ',
             'CONTRACTED_OF': ' of '
+        },
+        'MAIN_INDICATORS': {
+            'ONLY_MAIN': {
+                'TOOLTIP': 'The main indicators are a subset of the available indicators that have been preselected as being considered more relevant.'
+            }
         }
     };
 }());

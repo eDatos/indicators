@@ -7,6 +7,7 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstant
 
 public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl implements IndicatorsConfigurationService {
 
+    final String INDICATOR_DATASET_GROUP          = "INDICATOR_DATASET_GROUP";
     final String INDICATOR_QUERY_GROUP            = "INDICATOR_QUERY_GROUP";
     final String INDICATOR_VARIABLE_ELEMENT_GROUP = "INDICATOR_VARIABLE_ELEMENT_GROUP";
     final String INDICATOR_CODELIST_GROUP         = "INDICATOR_CODELIST_GROUP";
@@ -97,6 +98,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveKafkaDatasetGroup() throws MetamacException {
+        return INDICATOR_DATASET_GROUP; // Hard coded for evit manual edition
+    }
+
+    @Override
     public String retrieveKafkaVariableElementGroup() throws MetamacException {
         return INDICATOR_VARIABLE_ELEMENT_GROUP;
     }
@@ -109,5 +115,10 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
+    }
+
+    @Override
+    public String retrieveDefaultGeographicalCodeListUrn() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_GEOGRAPHICAL_CODELIST_URN);
     }
 }
