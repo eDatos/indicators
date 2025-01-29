@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.clients;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -16,6 +17,7 @@ public interface SrmRestInternalFacade {
     Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException;
     Categories retrieveCategoriesByCategoryScheme(String categorySchemeUrn) throws MetamacException;
     CategoryResourceInternal retrieveCategoryByCategoryElement(String categorySchemeUrn, String categoryElementCode) throws MetamacException;
+    public HashMap<String, CategoryResourceInternal> retrieveSrmCategoryResoourcesByCategoryScheme(String categorySchemeUrn) throws MetamacException;
     public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException;
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
