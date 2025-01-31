@@ -62,6 +62,7 @@
 
     //Global export
     window.IstacWidget = Istac.widget.Factory;
+    window.EdatosIndicatorsWidget = Istac.widget.Factory;
 
 }(window.jQuery));
 

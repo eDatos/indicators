@@ -409,7 +409,7 @@
             filteredOptions.width = this.options.widgetWith;
 
             code += this.openTag('script', { src: this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
-            code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
+            code += this.openTag('script') + "new EdatosIndicatorsWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
 
             this.embedContainer.find('textarea').val(code);
             this.embedContainer.show();
