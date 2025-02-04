@@ -16,7 +16,7 @@
 
             parseDataset: function (dataset, measuresLabels) {
                 var lastTimeValue = dataset.getLastTimeValue();
-                var geographicalValue = this.geographicalValues[0];
+                var geographicalValue = Object.keys(dataset.data.dimension.GEOGRAPHICAL.representation.index)[0];
 
                 var self = this;
                 var anySparkline = _.chain(this.measures).map(function (measure) {

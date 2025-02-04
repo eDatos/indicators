@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -67,16 +68,18 @@ public interface Do2TypeMapper {
     // Data
     DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
 
-    DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
+    DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, Map<String, String> geographicalValuesCodes);
 
     // GeographicalValues
     List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues);
 
     List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues);
 
-    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException;
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, Map<String, String> geographicalValuesCodes) throws MetamacException;
 
-    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException;
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) throws MetamacException;
 
-    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils);
+    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes);
 }

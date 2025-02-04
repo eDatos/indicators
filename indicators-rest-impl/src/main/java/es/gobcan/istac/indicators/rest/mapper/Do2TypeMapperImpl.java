@@ -296,9 +296,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(sources);
         try {
             List<IndicatorBaseType> targets = new ArrayList<IndicatorBaseType>(sources.size());
+            HashMap<String, CategoryResourceInternal> categories = srmRestInternalFacade.retrieveSrmCategoryResoourcesByCategoryScheme(metadataProperties.getDefaultCategoryScheme());
+
             for (IndicatorVersion source : sources) {
                 IndicatorBaseType target = new IndicatorBaseType();
-                indicatorBaseDoToType(source, target);
+                indicatorBaseDoToType(source, target, categories);
                 targets.add(target);
             }
             return targets;
@@ -400,15 +402,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Override
     public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
-        return createGenericDataType(dataTypeRequest, includeObservationMetadata, false);
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, false, new HashMap<>());
     }
 
     @Override
-    public DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
-        return createGenericDataType(dataTypeRequest, includeObservationMetadata, true);
+    public DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, Map<String, String> geographicalValuesCodes) {
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, true, geographicalValuesCodes);
     }
 
-    private DataType createGenericDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, boolean geographicalCodesRequired) {
+    private DataType createGenericDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, boolean geographicalCodesRequired, Map<String, String> geographicalValuesCodes) {
         requestCache.remove();
         try {
             List<String> geographicalCodes = setGeographicalCodesCompatibility(dataTypeRequest);
@@ -491,9 +493,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
 
             if (geographicalCodesRequired) {
-                Map<String, String> geographicalValuesCodes = new HashMap<>();
-                geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-
                 for (int i = 0; i < geographicalCodes.size(); i++) {
                     String geographicalCode = geographicalCodes.get(i);
                     String codeId = geographicalValuesCodes.get(geographicalCode);
@@ -525,7 +524,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             requestCache.remove();
         }
     }
-
 
     private List<String> setGeographicalCodesCompatibility(DataTypeRequest dataTypeRequest) {
         List<String> geographicalCodes;
@@ -628,7 +626,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return quantityType;
     }
 
-    private void indicatorBaseDoToType(IndicatorVersion source, IndicatorBaseType target) throws MetamacException {
+    private void indicatorBaseDoToType(IndicatorVersion source, IndicatorBaseType target, HashMap<String, CategoryResourceInternal> categories) throws MetamacException {
         target.setId(source.getIndicator().getCode());
         target.setKind(IndicatorsRestConstants.KIND_INDICATOR);
         target.setSelfLink(createUrlIndicator(source.getIndicator()));
@@ -636,7 +634,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setVersion(source.getVersionNumber());
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        CategoryResourceInternal category = getCategoryByCategoryElement(source.getCategoryElement().getCode());
+        CategoryResourceInternal category = categories.get(source.getCategoryElement().getCode());
 
         if (category != null) {
             target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
@@ -664,16 +662,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException {
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, Map<String, String> geographicalValuesCodes) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
-        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues, geographicalValuesCodes);
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException {
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
         if (!geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
-            indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+            indicatorDoToMetadataTypeCommon(source, target, geographicalValues, geographicalValuesCodes);
             return;
         }
 
@@ -684,17 +683,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
         }
 
-        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues, geographicalValuesCodes);
 
     }
 
-    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues) throws MetamacException {
+    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues, Map<String, String> geographicalValuesCodes)
+            throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -718,7 +718,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void indicatorDoToType(IndicatorVersion source, IndicatorType target) throws MetamacException {
-        indicatorBaseDoToType(source, target);
+        HashMap<String, CategoryResourceInternal> categories = srmRestInternalFacade.retrieveSrmCategoryResoourcesByCategoryScheme(metadataProperties.getDefaultCategoryScheme());
+
+        indicatorBaseDoToType(source, target, categories);
 
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
@@ -726,7 +728,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -833,7 +838,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) {
+    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) {
         try {
             IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(source.getIndicator().getCode());
 
@@ -845,7 +851,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             geoValuesOldVersionCompatibilityUtils.getGeoValuesWithOldCompatibility(geographicalValues);
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -878,7 +884,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+            Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -927,11 +935,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return measureDimension;
     }
 
-    private MetadataDimensionType createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues) {
+    private MetadataDimensionType createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues,
+            Map<String, String> geographicalValuesCodes) {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
-        geographicaDimension.setRepresentation(geographicalValuesDoToMetadataRepresentationType(geographicalValues));
+        geographicaDimension.setRepresentation(geographicalValuesDoToMetadataRepresentationType(geographicalValues, geographicalValuesCodes));
         return geographicaDimension;
     }
 
@@ -943,27 +952,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return timeDimension;
     }
 
-    private List<MetadataRepresentationType> geographicalValuesDoToMetadataRepresentationType(List<GeographicalValueVO> geographicalValues) {
+    private List<MetadataRepresentationType> geographicalValuesDoToMetadataRepresentationType(List<GeographicalValueVO> geographicalValues, Map<String, String> geographicalValuesCodes) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
 
-        Map<String, String> geographicalValuesCodes = new HashMap<>();
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
 
-        try {
-            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-
-            for (GeographicalValueVO geographicalValue : geographicalValues) {
-                String codeId = geographicalValuesCodes.get(geographicalValue.getCode());
-                if (codeId != null) {
-                    geographicalValue.setCode(codeId);
-                }
-                MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
-                geographicalValueTypes.add(metadataRepresentationType);
+        for (GeographicalValueVO geographicalValue : geographicalValues) {
+            String codeId = geographicalValuesCodes.get(geographicalValue.getCode());
+            if (codeId != null) {
+                geographicalValue.setCode(codeId);
             }
-        } catch (MetamacException e) {
-            throw new RuntimeException(e);
+            MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
+            geographicalValueTypes.add(metadataRepresentationType);
         }
 
         return geographicalValueTypes;

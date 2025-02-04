@@ -258,14 +258,14 @@
                 title = EDatos.common.I18n.translate("LAST_DATA.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
-                    var geographicalValue = this.options.geographicalValues[0];
+                    var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
                 title = EDatos.common.I18n.translate("RECENT.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
-                    var geographicalValue = this.options.geographicalValues[0];
+                    var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "temporal") {
