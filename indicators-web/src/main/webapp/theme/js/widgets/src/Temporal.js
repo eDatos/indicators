@@ -79,7 +79,8 @@
                 xAxis: {
                     type: 'time',
                     axisLabel: {
-                        show: this.showLabels
+                        show: this.showLabels,
+                        hideOverlap: true
                     },
                     axisTick: {
                         show: this.showLabels,
@@ -90,13 +91,35 @@
                 },
                 legend: {
                     show: this.showLegend,
+                    selectedMode: false,
+                    type: 'scroll',
+                    animationDurationUpdate: 100,
+                    left: "center",
+                    width: "80%",
+                    bottom: 10,
+                    borderWidth: 1,
+                    borderColor: "#909090",
+                    borderRadius: 5,
+                    animation: true,
+                    orient: 'horizontal',
+                    pageTextStyle: {
+                        fontWeight: 'bold'
+                    },
                     textStyle: {
                         fontSize: 10
-                    }
+                    },
+                    itemWidth: 16
                 },
                 animation: false,
                 tooltip: {
                     trigger: 'item'
+                },
+                grid: {
+                    top: 15,
+                    right: 10,
+                    bottom: this.showLegend ? 50 : 10,
+                    left: 20,
+                    containLabel: true
                 },
                 series: chartData.series
             };
