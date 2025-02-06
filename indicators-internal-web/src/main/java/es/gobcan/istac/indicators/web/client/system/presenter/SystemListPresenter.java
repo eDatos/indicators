@@ -27,11 +27,14 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
@@ -99,6 +102,19 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
             @Override
             public void onWaitSuccess(GetIndicatorsSystemPaginatedListResult result) {
                 getView().setIndSystemList(result.getIndicatorsSystemList(), result.getFirstResultOut(), result.getTotalResults());
+            }
+        });
+    }
+
+    @Override
+    public void createIndicatorsSystems(IndicatorsSystemDto indicatorsSystemDto) {
+        dispatcher.execute(new CreateIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<CreateIndicatorsSystemResult>(this) {
+
+            @Override
+            public void onWaitSuccess(CreateIndicatorsSystemResult result) {
+                fireSuccessMessage(getMessages().indicatorsSystemCreated());
+
+                retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
             }
         });
     }

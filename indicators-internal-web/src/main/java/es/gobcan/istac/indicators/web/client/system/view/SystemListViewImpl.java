@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
+import es.gobcan.istac.indicators.web.client.system.widgets.NewIndicatorsSystemWindow;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.SystemListGrid;
@@ -39,13 +40,40 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> implements SystemListPresenter.SystemListView {
 
-    private PaginatedCheckListGrid   indSystemListGrid;
+    private PaginatedCheckListGrid    indSystemListGrid;
 
-    private VLayout                  panel;
+    private VLayout                   panel;
 
-    private ToolStripButton          deleteSystemActor;
+    private ToolStripButton           newIndicatorsSystem;
 
-    private DeleteConfirmationWindow deleteConfirmationWindow;
+    private ToolStripButton           deleteSystemActor;
+
+    private DeleteConfirmationWindow  deleteConfirmationWindow;
+
+    private NewIndicatorsSystemWindow window;
+
+    private void createIndicatorsSystemButtonNew() {
+        newIndicatorsSystem = new ToolStripButton(getConstants().systemNew(), RESOURCE.newListGrid().getURL());
+        newIndicatorsSystem.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                window = new NewIndicatorsSystemWindow(getConstants().systemNewCreate());
+
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            getUiHandlers().createIndicatorsSystems(window.getNewIndicatorsSystemDto());
+                            window.destroy();
+                        }
+                    }
+                });
+            }
+        });
+
+    }
 
     @Inject
     public SystemListViewImpl() {
@@ -54,6 +82,9 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
         // ToolStrip
         ToolStrip toolStrip = new ToolStrip();
         toolStrip.setWidth100();
+
+        createIndicatorsSystemButtonNew();
+        toolStrip.addButton(newIndicatorsSystem);
 
         deleteSystemActor = new ToolStripButton(getConstants().systemDeleteRelatedData(), RESOURCE.deleteListGrid().getURL());
         deleteSystemActor.setVisibility(Visibility.HIDDEN);

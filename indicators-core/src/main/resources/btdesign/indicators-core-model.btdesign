@@ -578,6 +578,12 @@ Application Indicators {
 			
 			"Semantic identifier of statistic operation. Non modifiable"
        		String code not nullable;
+       		"title only if it is not  linked to statistic operation"
+       		 - @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		 "TITLE_ALTERNATIVE"
+       		 - @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
+       		 - @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
+       		  Boolean isOperational not nullable;
 		
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
 			"Version in production"
@@ -1555,6 +1561,14 @@ Application Indicators {
 			- @IndicatorsSystemProcStatusEnum procStatus;
 			"Semantic identifier of statistic operation"
        		String code;
+       		"Title"
+       		- @InternationalStringDto title;
+       		"Acronym"
+       		- @InternationalStringDto acronym;
+       		"Description"
+       		- @InternationalStringDto description;
+       		"True if the indicators system is linked to a statistic operation."
+       		Boolean isOperational
        		"Number of version in production"
        		String productionVersion;
        		"Number of version published"   		

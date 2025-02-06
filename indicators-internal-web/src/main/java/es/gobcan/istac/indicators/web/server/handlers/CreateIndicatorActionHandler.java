@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 
 @Component
+
 public class CreateIndicatorActionHandler extends SecurityActionHandler<CreateIndicatorAction, CreateIndicatorResult> {
 
     @Autowired

@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorsSystemAct
 import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
@@ -94,6 +95,7 @@ import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
@@ -194,6 +196,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteIndicatorsSystemsAction.class, DeleteIndicatorsSystemsActionHandler.class);
         bindHandler(ExportSystemInDsplAction.class, ExportSystemInDsplActionHandler.class);
         bindHandler(ReSendIndicatorsSystemStreamMessageAction.class, ReSendIndicatorsSystemStreamMessageActionHandler.class);
+        bindHandler(CreateIndicatorsSystemAction.class, CreateIndicatorsSystemActionHandler.class);
 
         // Indicators System Structure
         bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
