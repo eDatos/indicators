@@ -72,7 +72,6 @@
             this.el = $(options.el);
             this.type = options.type;
             this.measures = options.measures || this._defaultOptions.measures;
-            this.geographicalValues = options.geographicalValues;
 
             this.afterRenderCallback = !_.isUndefined(this.options.afterRenderCallback) ? _.debounce(this.options.afterRenderCallback, 300) : null;
 

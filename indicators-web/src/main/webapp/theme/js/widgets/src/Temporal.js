@@ -12,7 +12,7 @@
             var measureValue = this.measures[0];
             var timeValues = dataset.getTimeValues();
             var timeValuesTitles = dataset.getTimeValuesTitles(locale);
-            var geographicalValues = this.geographicalValues;
+            var geographicalValues = Object.keys(dataset.data.dimension.GEOGRAPHICAL.representation.index);
             var geographicalValuesTitles = dataset.getGeographicalValuesTitles(locale);
 
             var legend = {};
