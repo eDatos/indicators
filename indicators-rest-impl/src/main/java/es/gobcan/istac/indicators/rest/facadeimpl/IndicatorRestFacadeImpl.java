@@ -82,13 +82,14 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         // Mapping to type
         List<IndicatorBaseType> result = do2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues());
 
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(indicatorsVersions.getValues(), representation);
-
         SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
         if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
             srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
             srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
         }
+
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(indicatorsVersions.getValues(), representation,
+                srmRestObjectsMapper);
 
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
@@ -125,8 +126,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         return resultType;
     }
 
-    private GeographicalValuesOldVersionCompatibilityUtils getInformationForOldGeographicalValuesCompatibility(List<IndicatorVersion> indicatorVersions, Map<String, List<String>> representation) {
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation);
+    private GeographicalValuesOldVersionCompatibilityUtils getInformationForOldGeographicalValuesCompatibility(List<IndicatorVersion> indicatorVersions, Map<String, List<String>> representation,
+            SrmRestObjectsMapper srmRestObjectsMapper) {
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation, srmRestObjectsMapper);
         if (indicatorVersions != null && !indicatorVersions.isEmpty()) {
             geoValuesOldVersionCompatibilityUtils.setGeographicalRepresentationByVariableElements(geographicalValuesRestFacade, srmRestInternalFacade, indicatorVersions.get(0), representation);
         }
