@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.ExcelMapper;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
+import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
@@ -43,7 +45,6 @@ import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
-import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
@@ -183,10 +184,12 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             String format) throws MetamacException {
         try {
             byte[] content;
-            DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, false);
+            DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
+            ResourceAccess resourceAcces = new ResourceAccess(indicatorData);
 
             switch (format.toLowerCase()) {
                 case "csv":
+
                     content = convertJsonToText(indicatorData, ",").getBytes(StandardCharsets.UTF_8);
                     break;
                 case "tsv":
@@ -212,41 +215,48 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private String convertJsonToText(DataType indicatorData, String delimiter) {
         StringBuilder csvBuilder = new StringBuilder();
 
-        List<String> headers = extractHeadersFromJson(indicatorData);
+        List<String> headers = extractHeadersFromIndicatorData(indicatorData);
         csvBuilder.append(String.join(delimiter, headers)).append("\n");
 
-        List<List<String>> rows = extractRowsFromJson(indicatorData);
+        List<List<String>> rows = extractRowsFromIndicatorData(indicatorData, headers);
         for (List<String> row : rows) {
             csvBuilder.append(String.join(delimiter, row)).append("\n");
         }
 
         return csvBuilder.toString();
     }
-    private List<String> extractHeadersFromJson(DataType indicatorData) {
+    private List<String> extractHeadersFromIndicatorData(DataType indicatorData) {
         List<String> headers = new ArrayList<>();
 
         if (indicatorData == null) {
             return headers;
         }
 
+
         Map<String, DataDimensionType> dimensions = indicatorData.getDimension();
         if (dimensions != null) {
-            for (String dimensionKey : dimensions.keySet()) {
-                DataDimensionType dimension = dimensions.get(dimensionKey);
-                if (dimension != null && dimension.getRepresentation() != null) {
-                    headers.add(dimensionKey);
+            for (String key : dimensions.keySet()) {
+                headers.add(key);
+            }
+            DataDimensionType measureDimension = dimensions.get("MEASURE");
+            if (measureDimension != null && measureDimension.getRepresentation() != null) {
+                Map<String, Integer> measureIndexMap = measureDimension.getRepresentation().getIndex();
+                if (measureIndexMap != null) {
+                    for (String measureKey : measureIndexMap.keySet()) {
+                        headers.add(measureKey);
+                    }
                 }
             }
         }
-
-        headers.add("Observation");
 
         List<Map<String, AttributeType>> attributes = indicatorData.getAttribute();
         if (attributes != null) {
             for (Map<String, AttributeType> attributeMap : attributes) {
                 if (attributeMap != null) {
-                    for (Map.Entry<String, AttributeType> entry : attributeMap.entrySet()) {
-                        headers.add(entry.getKey());
+                    for (String attributeKey : attributeMap.keySet()) {
+                        if (!headers.contains(attributeKey)) {
+                            headers.add(attributeKey);
+                        }
                     }
                 }
             }
@@ -255,7 +265,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         return headers;
     }
 
-    private List<List<String>> extractRowsFromJson(DataType indicatorData) {
+    private List<List<String>> extractRowsFromIndicatorData(DataType indicatorData, List<String> headers) {
         List<List<String>> rows = new ArrayList<>();
 
         if (indicatorData == null) {
@@ -263,54 +273,75 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         }
 
         Map<String, DataDimensionType> dimensions = indicatorData.getDimension();
-        List<String> dimensionKeys = dimensions != null ? new ArrayList<>(dimensions.keySet()) : new ArrayList<>();
+        List<Map<String, Object>> combinations = new ArrayList<>();
 
-        List<String> observations = indicatorData.getObservation();
-
-        List<Map<String, AttributeType>> attributes = indicatorData.getAttribute();
-
-        int rowCount = observations != null ? observations.size() : 0;
-
-        for (int i = 0; i < rowCount; i++) {
-            List<String> row = new ArrayList<>();
-
-            if (dimensions != null) {
-                for (String key : dimensionKeys) {
-                    DataDimensionType dimension = dimensions.get(key);
-                    if (dimension != null) {
-                        DataRepresentationType representation = dimension.getRepresentation();
-                        if (representation != null) {
-                            String dimensionValue = "";
-                            Map<String, Integer> indexMap = representation.getIndex();
-                            if (indexMap != null) {
-                                for (Map.Entry<String, Integer> entry : indexMap.entrySet()) {
-                                    if (entry.getValue() == i) {
-                                        dimensionValue = entry.getKey();
-                                        break;
-                                    }
+        // Generar todas las combinaciones posibles de dimensiones
+        if (dimensions != null) {
+            for (String dimensionKey : dimensions.keySet()) {
+                DataDimensionType dimension = dimensions.get(dimensionKey);
+                if (dimension != null && dimension.getRepresentation() != null) {
+                    Map<String, Integer> indexMap = dimension.getRepresentation().getIndex();
+                    if (indexMap != null) {
+                        if (combinations.isEmpty()) {
+                            // Inicializar combinaciones con la primera dimensión
+                            for (String key : indexMap.keySet()) {
+                                Map<String, Object> combination = new HashMap<>();
+                                combination.put(dimensionKey, key);
+                                combinations.add(combination);
+                            }
+                        } else {
+                            // Agregar combinaciones adicionales para dimensiones subsiguientes
+                            List<Map<String, Object>> newCombinations = new ArrayList<>();
+                            for (Map<String, Object> existing : combinations) {
+                                for (String key : indexMap.keySet()) {
+                                    Map<String, Object> newCombination = new HashMap<>(existing);
+                                    newCombination.put(dimensionKey, key);
+                                    newCombinations.add(newCombination);
                                 }
                             }
-                            row.add(dimensionValue);
-                        } else {
-                            row.add("");
+                            combinations = newCombinations;
                         }
-                    } else {
-                        row.add("");
                     }
                 }
             }
+        }
 
-            row.add(observations != null ? observations.get(i) : "");
+        // Generar las filas basadas en las combinaciones
+        for (Map<String, Object> combination : combinations) {
+            List<String> row = new ArrayList<>(Collections.nCopies(headers.size(), ""));
 
-            if (attributes != null && i < attributes.size()) {
-                Map<String, AttributeType> attributeRow = attributes.get(i);
-                if (attributeRow != null) {
-                    for (AttributeType attribute : attributeRow.values()) {
-                        String attributeValue = attribute != null && attribute.getValue() != null ? attribute.getValue().toString() : "";
-                        row.add(attributeValue);
+            // Insertar valores de las combinaciones de dimensiones en las columnas correspondientes
+            for (Map.Entry<String, Object> entry : combination.entrySet()) {
+                int headerIndex = headers.indexOf(entry.getKey());
+                if (headerIndex >= 0) {
+                    row.set(headerIndex, entry.getValue().toString());
+                }
+            }
+
+            // Agregar la observación correspondiente
+            List<String> observations = indicatorData.getObservation();
+            if (observations != null) {
+                int obsIndex = headers.indexOf("OBS_VALUE");
+                if (obsIndex >= 0 && observations.size() > 0) {
+                    row.set(obsIndex, observations.get(0)); // Aquí podrías ajustar la lógica si hay múltiples observaciones
+                }
+            }
+
+            // Insertar valores de los atributos en las columnas correspondientes
+            List<Map<String, AttributeType>> attributes = indicatorData.getAttribute();
+
+            if (attributes != null) {
+                for (Map<String, AttributeType> attributeMap : attributes) {
+                    for (Map.Entry<String, AttributeType> entry : attributeMap.entrySet()) {
+                        int headerIndex = headers.indexOf(entry.getKey());
+
+                        // Validar si headerIndex y entry tienen valores válidos
+                        if (headerIndex >= 0 && entry.getValue() != null) {
+                            String attributeValue = (entry.getValue().getValue() != null) ? entry.getValue().getValue().toString() : ""; // Valor por defecto en caso de nulo
+
+                            row.set(headerIndex, attributeValue);
+                        }
                     }
-                } else {
-                    row.add("");
                 }
             }
 
@@ -322,11 +353,11 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private byte[] generateXlsxFromJson(DataType indicatorData) throws MetamacException {
         excelMapper = new ExcelMapper();
 
-        List<String> headers = extractHeadersFromJson(indicatorData);
+        List<String> headers = extractHeadersFromIndicatorData(indicatorData);
         Map<String, String> headerMap = createHeaderMap(headers);
         excelMapper.createHeaderRow(headerMap);
 
-        List<List<String>> rows = extractRowsFromJson(indicatorData);
+        List<List<String>> rows = extractRowsFromIndicatorData(indicatorData, headers);
         for (List<String> rowData : rows) {
             Map<String, String> rowMap = createRowMap(rowData);
             excelMapper.addObservationRow(rowMap);
