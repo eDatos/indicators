@@ -87,8 +87,10 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
         target.getIndicatorsSystem().setCode(source.getCode());
         target.getIndicatorsSystem().setIsOperational(source.getIsOperational());
         target.getIndicatorsSystem().setTitle(internationalStringDtoToDo(source.getTitle(), target.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
-        target.getIndicatorsSystem().setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getIndicatorsSystem().getAcronym(), ServiceExceptionParameters.INDICATOR_TITLE));
-        target.getIndicatorsSystem().setDescription(internationalStringDtoToDo(source.getDescription(), target.getIndicatorsSystem().getDescription(), ServiceExceptionParameters.INDICATOR_TITLE));
+        target.getIndicatorsSystem().setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getIndicatorsSystem().getAcronym(), ServiceExceptionParameters.INDICATOR_ACRONYM));
+        target.getIndicatorsSystem()
+                .setDescription(internationalStringDtoToDo(source.getDescription(), target.getIndicatorsSystem().getDescription(), ServiceExceptionParameters.INDICATOR_DESCRIPTION));
+        target.getIndicatorsSystem().setObjective(internationalStringDtoToDo(source.getObjective(), target.getIndicatorsSystem().getObjective(), ServiceExceptionParameters.INDICATOR_OBJECTIVE));
 
         return target;
     }

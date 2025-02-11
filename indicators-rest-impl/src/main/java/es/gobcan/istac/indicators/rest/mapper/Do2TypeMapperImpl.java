@@ -159,8 +159,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(source);
 
         try {
-            OperationIndicators sourceOperationBase = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
-            IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, sourceOperationBase);
+            IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, getOperationFromIndicatorsSystem(source));
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -172,9 +171,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(source);
 
         try {
-            OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
-
-            IndicatorsSystemType target = indicatorsSystemDoToType(source, sourceOperation);
+            IndicatorsSystemType target = indicatorsSystemDoToType(source, getOperationFromIndicatorsSystem(source));
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -187,9 +184,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
+            Map<String, OperationIndicators> operations = new HashMap<>();
             for (IndicatorsSystemVersion source : sources) {
-                OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // IDEA Make in only one invocation
-                IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, sourceOperation);
+                IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, getOperationByCode(operations, source));
                 targets.add(target);
             }
             return targets;
@@ -1167,14 +1164,24 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
         indicatorsSystemDoToBaseType(sourceIndicatorsSystem, target);
-        operationBaseDoToType(sourceOperation, target);
+
+        baseDoToTypeByIndicatorsSystemType(sourceIndicatorsSystem, target, sourceOperation);
+
         return target;
+    }
+
+    private void baseDoToTypeByIndicatorsSystemType(IndicatorsSystemVersion sourceIndicatorsSystem, IndicatorsSystemBaseType target, OperationIndicators sourceOperation) {
+        if (Boolean.TRUE.equals(sourceIndicatorsSystem.getIndicatorsSystem().getIsOperational())) {
+            operationBaseDoToType(sourceOperation, target);
+        } else {
+            nonOperationBaseDoToType(sourceIndicatorsSystem, target);
+        }
     }
 
     private IndicatorsSystemType indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation) {
         IndicatorsSystemType target = new IndicatorsSystemType();
         indicatorsSystemDoToType(sourceIndicatorsSystem, target);
-        operationBaseDoToType(sourceOperation, target);
+        baseDoToTypeByIndicatorsSystemType(sourceIndicatorsSystem, target, sourceOperation);
         elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target);
         return target;
     }
@@ -1196,6 +1203,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         String parentLink = uriLinks.getIndicatorsSystemsLink();
         target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_SYSTEMS, parentLink));
+    }
+
+    private void nonOperationBaseDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, IndicatorsSystemBaseType target) {
+        target.setId(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
+        target.setCode(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setAcronym(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setDescription(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setObjective(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getObjective(), metadataProperties.getDefaultInternationalizationLanguage()));
+
     }
 
     private void operationBaseDoToType(OperationIndicators sourceOperation, IndicatorsSystemBaseType target) {
@@ -1231,6 +1248,27 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private String createUrlIndicatorData(final Indicator indicator) {
         return uriLinks.getIndicatorDataLink(indicator.getCode());
+    }
+
+    private OperationIndicators getOperationFromIndicatorsSystem(IndicatorsSystemVersion source) throws MetamacException {
+        OperationIndicators operationIndicators = null;
+        if (Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational())) {
+            operationIndicators = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+        }
+        return operationIndicators;
+
+    }
+
+    private OperationIndicators getOperationByCode(Map<String, OperationIndicators> operations, IndicatorsSystemVersion source) throws MetamacException {
+        OperationIndicators operationIndicators = null;
+        if (Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational())) {
+            operationIndicators = operations.get(source.getIndicatorsSystem().getCode());
+            if (operationIndicators == null) {
+                operationIndicators = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+                operations.put(source.getIndicatorsSystem().getCode(), operationIndicators);
+            }
+        }
+        return operationIndicators;
     }
 
 }

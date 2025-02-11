@@ -32,16 +32,40 @@ public class GetIndicatorsSystemByCodeActionHandler extends SecurityActionHandle
 
     @Override
     public GetIndicatorsSystemByCodeResult executeSecurityAction(GetIndicatorsSystemByCodeAction action) throws ActionException {
+
+        IndicatorsSystemDto indicatorsSystemDto = getIndicatorsSystemDto(action.getCode(), action.getVersionNumber());
+
+        Boolean isOperational = indicatorsSystemDto != null && indicatorsSystemDto.getIsOperational();
+
+        if (indicatorsSystemDto == null || Boolean.TRUE.equals(isOperational)) {
+            return getOperationalIndicatorsSystemByCodeResult(action.getCode(), indicatorsSystemDto);
+        } else {
+            return new GetIndicatorsSystemByCodeResult(DtoUtils.createOrUpdateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto));
+        }
+
+    }
+
+    private GetIndicatorsSystemByCodeResult getOperationalIndicatorsSystemByCodeResult(String code, IndicatorsSystemDto indicatorsSystemDto) throws ActionException {
+
         // Retrieve operation from WS
-        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), action.getCode());
+        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), code);
         // Check if operation (indicators system) exists in the DB
+
+        if (indicatorsSystemDto != null) {
+            return new GetIndicatorsSystemByCodeResult(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operation));
+        }
+
+        return new GetIndicatorsSystemByCodeResult(DtoUtils.createIndicatorsSystemDtoWeb(operation));
+
+    }
+
+    private IndicatorsSystemDto getIndicatorsSystemDto(String code, String versionNumber) {
         try {
             // If exists, updates indicators system
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(),
-                    action.getVersionNumber());
-            return new GetIndicatorsSystemByCodeResult(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operation));
+            return indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), code, versionNumber);
+
         } catch (MetamacException e) {
-            return new GetIndicatorsSystemByCodeResult(DtoUtils.createIndicatorsSystemDtoWeb(operation));
+            return null;
         }
     }
 }

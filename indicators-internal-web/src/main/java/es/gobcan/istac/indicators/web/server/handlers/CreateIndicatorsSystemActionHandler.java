@@ -33,7 +33,7 @@ public class CreateIndicatorsSystemActionHandler extends SecurityActionHandler<C
             IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = DtoUtils.createIndicatorsSystemDtoWeb(action.getIndicatorsSystemDto());
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDtoWeb);
 
-            return new CreateIndicatorsSystemResult(DtoUtils.createIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
+            return new CreateIndicatorsSystemResult(DtoUtils.createIndicatorsSystemDtoWeb(indicatorsSystemDto));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

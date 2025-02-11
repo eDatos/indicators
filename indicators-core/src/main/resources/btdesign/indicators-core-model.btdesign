@@ -578,11 +578,13 @@ Application Indicators {
 			
 			"Semantic identifier of statistic operation. Non modifiable"
        		String code not nullable;
-       		"title only if it is not  linked to statistic operation"
+       		
+       		"fields for non operational indicators systems"
        		 - @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
        		 "TITLE_ALTERNATIVE"
        		 - @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
        		 - @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
+			 - @InternationalString objective cascade="all" nullable databaseColumn="OBJECTIVE_FK";
        		  Boolean isOperational not nullable;
 		
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
@@ -1567,6 +1569,8 @@ Application Indicators {
        		- @InternationalStringDto acronym;
        		"Description"
        		- @InternationalStringDto description;
+       		"objective of the indicators system"
+       		- @InternationalStringDto objective
        		"True if the indicators system is linked to a statistic operation."
        		Boolean isOperational
        		"Number of version in production"
@@ -1612,6 +1616,18 @@ Application Indicators {
 			String uuid;
 			"Code"
 			String code;
+			
+			"title for no operational indicators system"
+			- @InternationalStringDto title;
+			"description for no operational indicators system"
+			- @InternationalStringDto description;
+			"acronym for no operational indicators system"
+			- @InternationalStringDto acronym;
+			"objective for no operational indicators system"
+			- @InternationalStringDto objective;
+			"depends on an statistical operation or not"
+            Boolean isOperational
+			
        		"Production version: draft, in validation..."
        		- @IndicatorsSystemVersionSummaryDto productionVersion;
        		"Diffusion version: published, archived"

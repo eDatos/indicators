@@ -48,7 +48,6 @@ import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
-import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -418,7 +417,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void publish(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        if (indicatorsSystemDto.isOperationExternallyPublished()) {
+        if (!indicatorsSystemDto.getIsOperational() || indicatorsSystemDto.isOperationExternallyPublished()) {
             dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<PublishIndicatorsSystemResult>(this) {
 
                 @Override

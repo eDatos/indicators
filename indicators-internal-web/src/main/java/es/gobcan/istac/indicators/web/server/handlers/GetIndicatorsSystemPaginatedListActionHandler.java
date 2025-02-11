@@ -61,7 +61,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
         MetamacCriteria criteria = new MetamacCriteria();
         criteria.setPaginator(new MetamacCriteriaPaginator());
         criteria.getPaginator().setMaximumResultSize(1);
-        // TODO EDATOS-4833
+
         try {
             MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.IS_OPERATIONAL.name(), Boolean.FALSE, OperationType.EQ);
             criteria.setRestriction(restriction);
@@ -69,7 +69,8 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
             if (!CollectionUtils.isEmpty(systems.getResults())) {
                 // If exists, updates indicators system
                 IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = systems.getResults().get(0);
-                indicatorsSystemSummaryDtoWebs = DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource);
+                IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = DtoUtils.updateIndicatorsSystemSummaryDtoWebCommon(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto);
+                indicatorsSystemSummaryDtoWebs.add(indicatorsSystemSummaryDtoWeb);
             }
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

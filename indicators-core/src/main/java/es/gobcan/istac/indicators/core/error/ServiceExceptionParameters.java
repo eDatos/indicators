@@ -52,6 +52,8 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_CATEGORY_ELEMENT                                                    = "parameter.indicators.indicator.category_element";
     public static final String INDICATOR_TITLE                                                               = "parameter.indicators.indicator.title";
     public static final String INDICATOR_ACRONYM                                                             = "parameter.indicators.indicator.acronym";
+    public static final String INDICATOR_DESCRIPTION                                                         = "parameter.indicators.indicator.description";
+    public static final String INDICATOR_OBJECTIVE                                                           = "parameter.indicators.indicator.objective";
     public static final String INDICATOR_COMMENTS                                                            = "parameter.indicators.indicator.comments";
     public static final String INDICATOR_CONCEPT_DESCRIPTION                                                 = "parameter.indicators.indicator.concept_description";
     public static final String INDICATOR_NOTES                                                               = "parameter.indicators.indicator.notes";

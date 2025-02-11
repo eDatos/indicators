@@ -49,7 +49,7 @@ public class DtoUtils {
      * @param title
      * @return
      */
-    public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto) {
+    public static IndicatorsSystemDtoWeb createOrUpdateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto) {
 
         updateIndicatorsSystemDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
 
@@ -158,16 +158,21 @@ public class DtoUtils {
         updateIndicatorsSystemSummaryDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
         indicatorsSystemDtoWeb.setCode(code);
         indicatorsSystemDtoWeb.setTitle(title);
-
         return indicatorsSystemDtoWeb;
     }
 
-    private static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWebCommon(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto) {
+    public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWebCommon(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto) {
         if (indicatorsSystemDto != null) {
             indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
             indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
             indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
             indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
+
+            if (!Boolean.TRUE.equals(indicatorsSystemDto.getIsOperational())) {
+                indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
+                indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+                indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+            }
         }
 
         return indicatorsSystemDtoWeb;
@@ -184,7 +189,7 @@ public class DtoUtils {
     public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(IndicatorsSystemDto indicatorsSystemDto) {
         IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
         indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
-        return createIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto);
+        return createOrUpdateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto);
     }
 
     /**
