@@ -55,6 +55,7 @@ public class NewIndicatorsSystemWindow extends CustomWindow {
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(form.getValueAsString(IndicatorDS.CODE));
         indicatorsSystemDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(IndicatorDS.TITLE)));
+        indicatorsSystemDto.setIsOperational(false);
         return indicatorsSystemDto;
     }
 

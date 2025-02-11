@@ -184,7 +184,7 @@ public class DtoUtils {
     public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(IndicatorsSystemDto indicatorsSystemDto) {
         IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
         indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
-        return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto);
+        return createIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto);
     }
 
     /**

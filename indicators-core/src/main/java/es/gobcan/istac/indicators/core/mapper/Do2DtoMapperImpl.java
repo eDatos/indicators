@@ -111,6 +111,11 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setStreamMessageStatus(source.getStreamMessageStatus());
 
+        target.setIsOperational(source.getIndicatorsSystem().getIsOperational());
+        target.setTitle(internationalStringToDto(source.getIndicatorsSystem().getTitle()));
+        target.setAcronym(internationalStringToDto(source.getIndicatorsSystem().getAcronym()));
+        target.setDescription(internationalStringToDto(source.getIndicatorsSystem().getDescription()));
+
         return target;
     }
 

@@ -49,6 +49,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
 
         indicatorsSystemSummaryDtoWebs = getIndicatorsSystemSummaryDtoWebsFromOperations();
+        indicatorsSystemSummaryDtoWebs.addAll(getIndicatorsSystemSummaryDtoWebsWithoutOperations());
 
         // TODO EDATOS-4833 VER PAGINACIÓN. Ver qué hacer con action.getFirstResult y getMaxResult.
         return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, action.getFirstResult(), indicatorsSystemSummaryDtoWebs.size());
@@ -61,9 +62,18 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
         criteria.setPaginator(new MetamacCriteriaPaginator());
         criteria.getPaginator().setMaximumResultSize(1);
         // TODO EDATOS-4833
-        // MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum., resource.getId(), OperationType.EQ);
-        // criteria.setRestriction(restriction);
-
+        try {
+            MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.IS_OPERATIONAL.name(), Boolean.FALSE, OperationType.EQ);
+            criteria.setRestriction(restriction);
+            MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            if (!CollectionUtils.isEmpty(systems.getResults())) {
+                // If exists, updates indicators system
+                IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = systems.getResults().get(0);
+                indicatorsSystemSummaryDtoWebs = DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource);
+            }
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
         return indicatorsSystemSummaryDtoWebs;
     }
 
