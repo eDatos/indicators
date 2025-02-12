@@ -124,6 +124,23 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
+
+        // Security (role and access to this indicators system)
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_SISTEMA_INDICADORES);
+        checkAccessIndicatorsSystemByCode(ctx, indicatorsSystemDto.getCode(), RoleEnum.TECNICO_SISTEMA_INDICADORES);
+
+        // Transform
+        IndicatorsSystemVersion indicatorsSystemVersion = dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto);
+
+        // Create
+        IndicatorsSystemVersion indicatorsSystemVersionUpdated = getIndicatorsSystemsService().updateIndicatorsSystem(ctx, indicatorsSystemVersion);
+
+        // Transform to Dto
+        return do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionUpdated);
+    }
+
+    @Override
     public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Security

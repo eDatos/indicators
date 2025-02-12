@@ -31,6 +31,7 @@ Application Indicators {
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
+    		@IndicatorsSystemVersion updateIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
@@ -392,7 +393,7 @@ Application Indicators {
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Retrieves an indicators system by code. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
-	    	
+	    	@IndicatorsSystemDto updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	
 	    	"Deletes a version of an indicators system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
@@ -661,6 +662,9 @@ Application Indicators {
 
 			"Stream message status"
             - @StreamMessageStatusEnum streamMessageStatus;
+            
+           	"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
 
 			// Relations
 			"Indicator system"
@@ -1599,6 +1603,9 @@ Application Indicators {
 
             "Stream message status"
             - @StreamMessageStatusEnum streamMessageStatus;
+            
+            "Version to optimistic locking"
+			Long versionOptimisticLocking;
 	    }
 	    
 		"Dto for indicators system"

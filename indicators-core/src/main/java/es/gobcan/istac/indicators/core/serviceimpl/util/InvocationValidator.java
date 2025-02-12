@@ -63,6 +63,10 @@ public class InvocationValidator {
             IndicatorsValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
         }
 
+        if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
+        }
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -78,6 +82,10 @@ public class InvocationValidator {
             IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
+        }
+
+        if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);

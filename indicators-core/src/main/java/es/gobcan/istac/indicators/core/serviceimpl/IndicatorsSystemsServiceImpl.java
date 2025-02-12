@@ -134,6 +134,22 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public IndicatorsSystemVersion updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
+        IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
+
+        // Save indicator
+        indicatorsSystem.setDiffusionVersion(null);
+        indicatorsSystem.setIsPublished(Boolean.FALSE);
+        indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
+
+        return indicatorsSystemVersion;
+    }
+
+    @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
         // Validation of parameters

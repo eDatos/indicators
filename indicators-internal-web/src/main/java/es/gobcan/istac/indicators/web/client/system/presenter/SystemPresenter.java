@@ -100,6 +100,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
@@ -243,6 +245,20 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
                 getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
+            }
+        });
+    }
+
+    @Override
+    public void updateIndicatorsSystem(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new UpdateIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<UpdateIndicatorsSystemResult>(this) {
+
+            @Override
+            public void onWaitSuccess(UpdateIndicatorsSystemResult result) {
+                retrieveSystemStructure(); // Reload system structure
+                fireSuccessMessage(getMessages().systemVersioned());
+                indSystem = result.getIndicatorsSystemDtoWeb();
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }

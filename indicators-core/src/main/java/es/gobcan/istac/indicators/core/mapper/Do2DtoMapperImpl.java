@@ -117,6 +117,8 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setDescription(internationalStringToDto(source.getIndicatorsSystem().getDescription()));
         target.setObjective(internationalStringToDto(source.getIndicatorsSystem().getObjective()));
 
+        target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 

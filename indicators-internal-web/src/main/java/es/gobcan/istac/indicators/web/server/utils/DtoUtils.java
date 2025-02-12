@@ -58,6 +58,8 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
             indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
             indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+            indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
+
         }
         return indicatorsSystemDtoWeb;
     }
@@ -118,6 +120,7 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
             indicatorsSystemDtoWeb.setStreamMessageStatus(indicatorsSystemDto.getStreamMessageStatus());
             indicatorsSystemDtoWeb.setIsOperational(indicatorsSystemDto.getIsOperational());
+            indicatorsSystemDtoWeb.setVersionOptimisticLocking(indicatorsSystemDto.getVersionOptimisticLocking());
         }
 
         return indicatorsSystemDtoWeb;
@@ -172,6 +175,7 @@ public class DtoUtils {
                 indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
                 indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
                 indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+                indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
             }
         }
 

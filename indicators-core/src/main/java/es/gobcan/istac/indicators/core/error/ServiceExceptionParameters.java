@@ -14,6 +14,11 @@ public class ServiceExceptionParameters {
     public static final String INDICATORS_SYSTEM_VERSION_NUMBER                                              = "parameter.indicators.indicators_system.version_number";
     public static final String INDICATORS_SYSTEM_VERSION_TYPE                                                = "parameter.indicators.indicators_system.version_type";
     public static final String INDICATORS_SYSTEM_CODE                                                        = "parameter.indicators.indicators_system.code";
+    public static final String INDICATORS_SYSTEM_TITLE                                                       = "parameter.indicators.indicator_system.title";
+    public static final String INDICATORS_SYSTEM_ACRONYM                                                     = "parameter.indicators.indicator_system.acronym";
+    public static final String INDICATORS_SYSTEM_DESCRIPTION                                                 = "parameter.indicators.indicator_system.description";
+    public static final String INDICATORS_SYSTEM_OBJECTIVE                                                   = "parameter.indicators.indicator_system.objective";
+    public static final String INDICATORS_SYSTEM_OPERATIONAL                                                 = "parameter.indicators.indicator_system.operational";
     public static final String INDICATORS_SYSTEM_PROC_STATUS_DRAFT                                           = "parameter.indicators.indicator_system.draft";
     public static final String INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION                           = "parameter.indicators.indicator_system.production_validation";
     public static final String INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION                            = "parameter.indicators.indicator_system.diffusion_validation";
@@ -52,8 +57,6 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_CATEGORY_ELEMENT                                                    = "parameter.indicators.indicator.category_element";
     public static final String INDICATOR_TITLE                                                               = "parameter.indicators.indicator.title";
     public static final String INDICATOR_ACRONYM                                                             = "parameter.indicators.indicator.acronym";
-    public static final String INDICATOR_DESCRIPTION                                                         = "parameter.indicators.indicator.description";
-    public static final String INDICATOR_OBJECTIVE                                                           = "parameter.indicators.indicator.objective";
     public static final String INDICATOR_COMMENTS                                                            = "parameter.indicators.indicator.comments";
     public static final String INDICATOR_CONCEPT_DESCRIPTION                                                 = "parameter.indicators.indicator.concept_description";
     public static final String INDICATOR_NOTES                                                               = "parameter.indicators.indicator.notes";

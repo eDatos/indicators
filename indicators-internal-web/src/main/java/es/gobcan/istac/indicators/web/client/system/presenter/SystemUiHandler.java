@@ -57,4 +57,6 @@ public interface SystemUiHandler extends UiHandlers {
     void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid);
 
     void retrieveGeographicalGranularity(String geographicalGranularityUuid);
+
+    void updateIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto);
 }
