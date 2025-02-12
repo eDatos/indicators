@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 
 /**
  * The GeographicalValuesOldVersionCompatibilityUtils is implemented for compatibility with old indicators functionality where geographical codes were codes of codelist. Now, geographical codes are
@@ -33,7 +34,7 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
     List<String>            originalSelectedGeographicalRepresentations = new ArrayList<>();
     private boolean         indicatorInstance                           = false;
     List<String>            selectedRepresentationOldCodes              = new ArrayList<>();                                                            // only for indicator systems not for individual
-                                                                                                                                                        // indicators
+    SrmRestObjectsMapper    srmRestObjectsMapper                        = new SrmRestObjectsMapper();                                                   // indicators
 
     /**
      * if geographical representations exist, it must be checked that are variable element values. If the first value is not a variable element, the system supposes that is a geographical code and the
@@ -48,14 +49,24 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
      */
 
     public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation) {
+        init(representation);
+    }
+
+    public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation, SrmRestObjectsMapper srmRestObjectsMapper) {
+        this.srmRestObjectsMapper = srmRestObjectsMapper;
+        init(representation);
+    }
+
+    private void init(Map<String, List<String>> representation) {
         List<String> geographicalSelectedValues = representation.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         if (geographicalSelectedValues != null) {
             this.originalSelectedGeographicalRepresentations = geographicalSelectedValues;
         }
     }
 
-    public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation, boolean isIndicatorInstance) {
+    public GeographicalValuesOldVersionCompatibilityUtils(Map<String, List<String>> representation, boolean isIndicatorInstance, SrmRestObjectsMapper srmRestObjectsMapper) {
         this(representation);
+        this.srmRestObjectsMapper = srmRestObjectsMapper;
         indicatorInstance = isIndicatorInstance;
         selectedRepresentationOldCodes = new ArrayList<>(originalSelectedGeographicalRepresentations);
     }
@@ -178,19 +189,30 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
 
     }
 
-    private void getVariableElementsByGeographicalCodes(Map<Long, Map<String, String>> geographicalValuesByDataSource) {
+    private List<String> getVariableElementsByGeographicalCodes(Map<Long, Map<String, String>> geographicalValuesByDataSource) {
         List<String> geographicalSelectedValues = new ArrayList<>(selectedRepresentationOldCodes);
+        List<String> geographicalSelectedValuesTarget = new ArrayList<>();
         for (String geographicalCode : geographicalSelectedValues) {
+            boolean existCode = false;
             for (Map.Entry<Long, Map<String, String>> geoValuesByCode : geographicalValuesByDataSource.entrySet()) {
                 String variableElement = geoValuesByCode.getValue().get(geographicalCode);
                 if (variableElement != null) {
+                    geographicalSelectedValuesTarget.add(variableElement);
                     variableElementsByGeographicalCode.put(geographicalCode, variableElement);
                     selectedRepresentationOldCodes.remove(geographicalCode);
+                    existCode = true;
                     break;
+                }
+            }
+            if (!existCode) {
+                existCode = getVariableElementByDefaultCodelist(geographicalCode, geographicalSelectedValuesTarget);
+                if (existCode) {
+                    selectedRepresentationOldCodes.remove(geographicalCode);
                 }
             }
 
         }
+        return geographicalSelectedValuesTarget;
     }
 
     private Map<Long, Map<String, String>> getGeographicalValuesByDataSource(SrmRestInternalFacade srmRestInternalFacade, IndicatorVersion indicatorVersion) throws MetamacException {
@@ -198,6 +220,7 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
         for (DataSource dataSource : indicatorVersion.getDataSources()) {
             if (dataSource.getGeographicalCodelistUrn() != null) {
                 Map<String, String> variableElementsByDatasourceByGeographicalCode = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(dataSource.getGeographicalCodelistUrn());
+
                 geographicalValuesByDataSource.put(dataSource.getId(), variableElementsByDatasourceByGeographicalCode);
             }
         }
@@ -217,12 +240,26 @@ public class GeographicalValuesOldVersionCompatibilityUtils {
                     break;
                 }
             }
+
             // if it is not a geographical code, it is returned selected value and the behavior does not change respect normal functionality.
-            if (!existCode) {
+            // since EDATOS-4698 we must check in default geographical codelist because temporal widgets are created with the relation between variable element and the codes of this codelist.
+            if (!existCode && !getVariableElementByDefaultCodelist(geographicalCode, geographicalSelectedValuesTarget)) {
+
                 geographicalSelectedValuesTarget.add(geographicalCode);
             }
         }
         return geographicalSelectedValuesTarget;
+    }
+
+    private boolean getVariableElementByDefaultCodelist(String geographicalCode, List<String> geographicalSelectedValuesTarget) {
+
+        String variableElement = this.srmRestObjectsMapper.getGeographicalVariableElementsByCode().get(geographicalCode);
+        if (variableElement != null) {
+            geographicalSelectedValuesTarget.add(variableElement);
+            variableElementsByGeographicalCode.put(geographicalCode, variableElement);
+            return true;
+        }
+        return false;
     }
 
     public String setGeographicalValue(GeographicalValuesRestFacade geographicalValuesRestFacade, SrmRestInternalFacade srmRestInternalFacade, String geographicalValue,

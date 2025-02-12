@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
-import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
 
@@ -130,8 +129,9 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
+
         DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities,
-                includeObservationsAttributes, new GeographicalValuesOldVersionCompatibilityUtils(selectedRepresentations, true));
+                includeObservationsAttributes);
 
         String selfLink = uriLinks.getIndicatorInstanceDataSelfLink(idIndicatorSystem, idIndicatorInstance, fields, representation, granularity);
         LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR_INSTANCE, uriLinks.getIndicatorInstanceLink(idIndicatorSystem, idIndicatorInstance));
