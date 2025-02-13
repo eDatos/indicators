@@ -30,7 +30,7 @@
                     var value = dataset.getObservation(geoValue, timeValue, measureValue) || null;
                     var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
                     var unit = dataset.getUnit(measureValue, locale, this.options.defaultLocale);
-                    var date = Istac.widget.DateParser.parse(timeValue);
+                    var date = Istac.widget.DateParser.parse(timeValue, this.options.timeGranularities[0]);
 
                     data.push({
                         value: [date, value],
