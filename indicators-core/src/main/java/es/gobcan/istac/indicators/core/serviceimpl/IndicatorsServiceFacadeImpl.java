@@ -17,8 +17,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -460,21 +458,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform to Dto
         return do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
-    }
-
-    @Override
-    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalStringDto title, InternationalStringDto description,
-            boolean mergeTimeGranularities) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        InternationalString intTitle = dto2DoMapper.internationalStringDtoToDo(ctx, title, null);
-        InternationalString intDescription = dto2DoMapper.internationalStringDtoToDo(ctx, description, null);
-
-        // Service call
-        return getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorsSystemUuid, intTitle, intDescription, mergeTimeGranularities);
     }
 
     @Override
@@ -1231,8 +1214,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void planifyExportsDsplJob(ServiceContext ctx, String systemUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
-        getIndicatorsDataService().planifyExportsDsplJob(ctx, systemUuid, code, mergeTimeGranularities);
+    public void planifyExportsDsplJob(ServiceContext ctx, String systemUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
+        getIndicatorsDataService().planifyExportsDsplJob(ctx, systemUuid, code, mergeTimeGranularities, isOperational);
     }
 
     @Override

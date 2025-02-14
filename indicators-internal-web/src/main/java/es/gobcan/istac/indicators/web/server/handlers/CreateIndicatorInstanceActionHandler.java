@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.web.server.rest.StatisticalOperationsRestInter
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
@@ -55,7 +56,8 @@ public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<
         try {
             IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.createIndicatorInstance(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid(),
                     action.getIndicatorInstance());
-            return new CreateIndicatorInstanceResult(indicatorInstanceDto);
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystem().getCode(), null);
+            return new CreateIndicatorInstanceResult(indicatorInstanceDto, DtoUtils.createOrUpdateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

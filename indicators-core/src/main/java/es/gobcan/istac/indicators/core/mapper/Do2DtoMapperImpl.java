@@ -112,10 +112,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setStreamMessageStatus(source.getStreamMessageStatus());
 
         target.setIsOperational(source.getIndicatorsSystem().getIsOperational());
-        target.setTitle(internationalStringToDto(source.getIndicatorsSystem().getTitle()));
-        target.setAcronym(internationalStringToDto(source.getIndicatorsSystem().getAcronym()));
-        target.setDescription(internationalStringToDto(source.getIndicatorsSystem().getDescription()));
-        target.setObjective(internationalStringToDto(source.getIndicatorsSystem().getObjective()));
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setAcronym(internationalStringToDto(source.getAcronym()));
+        target.setDescription(internationalStringToDto(source.getDescription()));
+        target.setObjective(internationalStringToDto(source.getObjective()));
 
         target.setVersionOptimisticLocking(source.getVersion());
 
@@ -129,10 +129,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorsSystem indicatorsSystem = source.getIndicatorsSystem();
         target.setUuid(indicatorsSystem.getUuid());
         target.setCode(indicatorsSystem.getCode());
-        target.setTitle(internationalStringToDto(indicatorsSystem.getTitle()));
-        target.setDescription(internationalStringToDto(indicatorsSystem.getDescription()));
-        target.setAcronym(internationalStringToDto(indicatorsSystem.getAcronym()));
-        target.setObjective(internationalStringToDto(indicatorsSystem.getObjective()));
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setDescription(internationalStringToDto(source.getDescription()));
+        target.setAcronym(internationalStringToDto(source.getAcronym()));
+        target.setObjective(internationalStringToDto(source.getObjective()));
         target.setIsOperational(indicatorsSystem.getIsOperational());
 
         for (IndicatorsSystemVersion indicatorsSystemVersionInIndicatorsSystem : indicatorsSystem.getVersions()) {

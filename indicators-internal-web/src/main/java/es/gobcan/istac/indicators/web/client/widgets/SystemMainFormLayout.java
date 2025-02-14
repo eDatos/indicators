@@ -25,6 +25,7 @@ public class SystemMainFormLayout extends InternationalMainFormLayout {
     private IndicatorsSystemProcStatusEnum status;
 
     private String                         indicatorsSystemCode;
+    private Boolean                        isOperational;
 
     public SystemMainFormLayout() {
         super();
@@ -85,6 +86,10 @@ public class SystemMainFormLayout extends InternationalMainFormLayout {
 
     public void setIndicatorsSytemCode(String code) {
         this.indicatorsSystemCode = code;
+    }
+
+    public void setIsOperational(Boolean isOperational) {
+        this.isOperational = isOperational;
     }
 
     public HasClickHandlers getProductionValidation() {
@@ -186,6 +191,9 @@ public class SystemMainFormLayout extends InternationalMainFormLayout {
     public void setViewMode() {
         super.setViewMode();
         updateVisibility();
+        if (isOperational) {
+            getEditToolStripButton().hide();
+        }
     }
 
     @Override

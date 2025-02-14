@@ -175,8 +175,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public void processExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
-        getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities);
+    public void processExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
+        getIndicatorsDataService().executeExportDSPL(ctx, indicatorUuid, code, mergeTimeGranularities, isOperational);
         markTaskAsFinished(ctx, jobKey);
     }
 
@@ -388,17 +388,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
-        planifyExportsDsplJob(ctx, indicatorUuid, ctx.getUserId(), code, mergeTimeGranularities);
+    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
+        planifyExportsDsplJob(ctx, indicatorUuid, ctx.getUserId(), code, mergeTimeGranularities, isOperational);
     }
 
-    private synchronized void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String user, String code, boolean mergeTimeGranularities) throws MetamacException {
+    private synchronized void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String user, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
         String taskName = PREFIX_JOB_EXPORTS_DSPL + indicatorUuid + "_" + System.currentTimeMillis();
         JobKey jobKey = new JobKey(taskName);
         TriggerKey triggerKey = new TriggerKey(taskName);
         checkExistsGarbage(taskName);
 
-        JobDetail jobDetail = createExportsDSPLJob(ctx, indicatorUuid, code, mergeTimeGranularities, taskName, user, jobKey);
+        JobDetail jobDetail = createExportsDSPLJob(ctx, indicatorUuid, code, mergeTimeGranularities, isOperational, taskName, user, jobKey);
         SimpleTrigger trigger = createTrigger(triggerKey);
 
         Task newTask = new Task(taskName);
@@ -408,7 +408,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         scheduleJob(jobDetail, trigger);
     }
 
-    private JobDetail createExportsDSPLJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, String taskName, String user, JobKey jobKey) {
+    private JobDetail createExportsDSPLJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational, String taskName, String user, JobKey jobKey) {
         // @formatter:off
         return JobBuilder.newJob()
                 .ofType(ExportsDsplJob.class)
@@ -417,6 +417,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 .usingJobData(ExportsDsplJob.MERGE_TIME_GRANULARITIES, mergeTimeGranularities)
                 .usingJobData(ExportsDsplJob.CODE, code)
                 .usingJobData(ExportsDsplJob.USER, ctx.getUserId())
+                .usingJobData(ExportsDsplJob.IS_OPERATIONAL, isOperational)
                 .requestRecovery()
                 .build();
         // @formatter:on

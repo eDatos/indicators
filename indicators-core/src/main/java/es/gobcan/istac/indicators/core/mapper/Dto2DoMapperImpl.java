@@ -102,12 +102,10 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
     private IndicatorsSystemVersion updateIndicatorSystemVersionModifiableMetadata(IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException {
 
-        target.getIndicatorsSystem().setTitle(internationalStringDtoToDo(source.getTitle(), target.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE));
-        target.getIndicatorsSystem().setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getIndicatorsSystem().getAcronym(), ServiceExceptionParameters.INDICATORS_SYSTEM_ACRONYM));
-        target.getIndicatorsSystem()
-                .setDescription(internationalStringDtoToDo(source.getDescription(), target.getIndicatorsSystem().getDescription(), ServiceExceptionParameters.INDICATORS_SYSTEM_DESCRIPTION));
-        target.getIndicatorsSystem()
-                .setObjective(internationalStringDtoToDo(source.getObjective(), target.getIndicatorsSystem().getObjective(), ServiceExceptionParameters.INDICATORS_SYSTEM_OBJECTIVE));
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE));
+        target.setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATORS_SYSTEM_ACRONYM));
+        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), ServiceExceptionParameters.INDICATORS_SYSTEM_DESCRIPTION));
+        target.setObjective(internationalStringDtoToDo(source.getObjective(), target.getObjective(), ServiceExceptionParameters.INDICATORS_SYSTEM_OBJECTIVE));
 
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
         target.setUpdateDate(new DateTime());
@@ -116,7 +114,7 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
     }
 
     private IndicatorsSystemVersion updateIndicatorSystemVersion(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
-        IndicatorsSystemVersion target = indicatorsSystemsService.retrieveIndicatorsSystemByCode(ctx, source.getCode(), source.getVersionNumber());
+        IndicatorsSystemVersion target = indicatorsSystemsService.retrieveIndicatorsSystem(ctx, source.getUuid(), source.getVersionNumber());
 
         OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
 

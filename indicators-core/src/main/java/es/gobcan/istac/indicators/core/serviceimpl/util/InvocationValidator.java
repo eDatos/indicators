@@ -64,7 +64,7 @@ public class InvocationValidator {
         }
 
         if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
-            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);
@@ -85,7 +85,7 @@ public class InvocationValidator {
         }
 
         if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
-            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);

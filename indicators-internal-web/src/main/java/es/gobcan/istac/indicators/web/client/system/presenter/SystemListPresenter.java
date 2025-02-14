@@ -101,6 +101,11 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 
             @Override
             public void onWaitSuccess(GetIndicatorsSystemPaginatedListResult result) {
+
+                if (result.getNotificationException() != null) {
+                    fireWarningMessageWithError(getMessages().systemErrorRetrieve(), result.getNotificationException());
+                }
+
                 getView().setIndSystemList(result.getIndicatorsSystemList(), result.getFirstResultOut(), result.getTotalResults());
             }
         });

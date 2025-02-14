@@ -212,7 +212,7 @@ Application Indicators {
 	    	"Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Exports DSPL"
-	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
@@ -223,7 +223,7 @@ Application Indicators {
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
    	
 	    	"Exports dspl"
-	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	"Updates data for all published JSON-stat indicators"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
@@ -417,9 +417,6 @@ Application Indicators {
 	    	MetamacCriteriaResult<@IndicatorsSystemSummaryDto> findIndicatorsSystems(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
-	    	"Export a published Indicators System as a set of dspl zip files"
-	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description, boolean mergeTimeGranularities) throws MetamacException;
-	    	
 	    	
 	    	
 	    	// DIMENSIONS
@@ -542,7 +539,7 @@ Application Indicators {
 	        "Populates a given indicator data in background"
 	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Exports DSPL"
-	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Update indicators data JSON-stat"
@@ -580,12 +577,6 @@ Application Indicators {
 			"Semantic identifier of statistic operation. Non modifiable"
        		String code not nullable;
        		
-       		"fields for non operational indicators systems"
-       		 - @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
-       		 "TITLE_ALTERNATIVE"
-       		 - @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
-       		 - @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
-			 - @InternationalString objective cascade="all" nullable databaseColumn="OBJECTIVE_FK";
        		  Boolean isOperational not nullable;
 		
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
@@ -642,6 +633,13 @@ Application Indicators {
 			String versionNumber not nullable length="10";
        		"True if this version is the last"
        		Boolean isLastVersion not nullable;
+       		
+       		 "fields for non operational indicators systems"
+       		 - @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		 "TITLE_ALTERNATIVE"
+       		 - @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
+       		 - @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
+			 - @InternationalString objective cascade="all" nullable databaseColumn="OBJECTIVE_FK";
        		
 			"Date when the indicators system was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -1408,7 +1406,7 @@ Application Indicators {
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
 	    	"Perform the exports dspl task"
-	    	executeExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	executeExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	
     		markAllInProgressTaskToFailed();
     		markTaskAsFailed(String jobKey, MetamacException metamacException) throws MetamacException;
@@ -1439,7 +1437,7 @@ Application Indicators {
     		"Plannify a scheduled task to populate indicator's data"
     		planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Exports DSPL"
-	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 			"Perform the population task"
 			List<MetamacExceptionItem> processPopulationIndicatorDataTask(String taskName, String indicatorUuid) throws MetamacException;
 			"Send success notification for de populate indicator data job"
@@ -1448,7 +1446,7 @@ Application Indicators {
     		createPopulateIndicatorDataErrorBackgroundNotification(String user, String indicatorUuid, MetamacException metamacException);
     		
 			"Perform the export dspl task"
-			processExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException;
+			processExportDSPLTask(String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 			
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;

@@ -42,7 +42,7 @@ public class SystemGeneralPanel extends VLayout {
     private GroupDynamicForm              contentForm;
     private GroupDynamicForm              publicationForm;
 
-    /* EDITION FORM (FOR NON OPERATIONAL INDICATORS SYSTEM */
+    /* EDITION FORM (FOR NON OPERATIONAL INDICATORS SYSTEM) */
     private GroupDynamicForm              identifiersEditionForm;
     private GroupDynamicForm              productionEditionForm;
     private GroupDynamicForm              diffusionEditionForm;
@@ -131,8 +131,7 @@ public class SystemGeneralPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemDto.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(indicatorsSystemDto.getProcStatus())) {
                     // Create a new version of the indicators system
-                    final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage()); // TODO EDATOS-4833 cambiar
-                                                                                                                                                                       // mensajes
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorsSystemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                     window.show();
                 } else {
                     // Default behavior
@@ -307,7 +306,7 @@ public class SystemGeneralPanel extends VLayout {
         identifiersEditionForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
         ViewTextItem versionField = new ViewTextItem(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
         ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
-        MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailAcronym());
+        MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         title.setRequired(true);
         MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
 
@@ -386,6 +385,7 @@ public class SystemGeneralPanel extends VLayout {
         // PRODUCTION ENVIRONMENT
 
         mainFormLayout.setIndicatorsSytemCode(indicatorSystemDto.getCode());
+        mainFormLayout.setIsOperational(indicatorSystemDto.getIsOperational());
         mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
         mainFormLayout.setViewMode();
 

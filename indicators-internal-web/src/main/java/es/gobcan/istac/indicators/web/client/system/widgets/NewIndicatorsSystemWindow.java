@@ -26,7 +26,7 @@ public class NewIndicatorsSystemWindow extends CustomWindow {
 
     public NewIndicatorsSystemWindow(String title) {
         super(title);
-        setHeight(250);
+        setHeight(150);
         setWidth(450);
 
         form = new CustomDynamicForm();

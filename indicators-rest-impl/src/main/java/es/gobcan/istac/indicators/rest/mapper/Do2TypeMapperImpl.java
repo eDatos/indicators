@@ -1208,10 +1208,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private void nonOperationBaseDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, IndicatorsSystemBaseType target) {
         target.setId(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
         target.setCode(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
-        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setAcronym(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setDescription(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
-        target.setObjective(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getIndicatorsSystem().getObjective(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setAcronym(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setDescription(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setObjective(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getObjective(), metadataProperties.getDefaultInternationalizationLanguage()));
 
     }
 

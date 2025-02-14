@@ -85,6 +85,13 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatus.EXTERNALLY_PUBLISHED.equals(operation.getProcStatus()));
             indicatorsSystemDtoWeb.setIsOperational(true);
 
+        } else if (!Boolean.TRUE.equals(indicatorsSystemDto != null && indicatorsSystemDto.getIsOperational())) {
+            indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
+            indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
+            indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+            indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+            indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
+
         }
         return indicatorsSystemDtoWeb;
     }

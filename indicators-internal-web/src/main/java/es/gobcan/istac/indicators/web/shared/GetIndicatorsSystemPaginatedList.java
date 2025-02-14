@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.shared;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
@@ -25,4 +27,7 @@ public class GetIndicatorsSystemPaginatedList {
 
     @Out(3)
     Integer                             totalResults;
+
+    @Out(4)
+    MetamacWebException                 notificationException;
 }

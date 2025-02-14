@@ -18,4 +18,7 @@ public class CreateIndicatorInstance {
 
     @Out(1)
     IndicatorInstanceDto   createdIndicatorInstance;
+
+    @Out(2)
+    IndicatorsSystemDtoWeb indicatorsSystemUpdated;
 }

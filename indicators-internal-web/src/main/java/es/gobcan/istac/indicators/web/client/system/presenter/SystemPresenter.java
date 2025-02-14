@@ -256,7 +256,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(UpdateIndicatorsSystemResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                fireSuccessMessage(getMessages().systemVersioned());
+                fireSuccessMessage(getMessages().systemUpdated());
                 indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
@@ -282,6 +282,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitSuccess(CreateDimensionResult result) {
                 retrieveSystemStructure(); // Reload system structure
                 fireSuccessMessage(getMessages().systemStrucDimCreated());
+                indSystem = result.getIndicatorsSystemUpdated();
+                setIndicatorsSystem(indSystem);
                 getView().onDimensionSaved(result.getCreatedDimension());
             }
         });
@@ -301,13 +303,15 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void deleteDimension(DimensionDto dimension) {
-        dispatcher.execute(new DeleteDimensionAction(dimension.getUuid()), new WaitingAsyncCallbackHandlingError<DeleteDimensionResult>(this) {
+    public void deleteDimension(String indSystemCode, DimensionDto dimension) {
+        dispatcher.execute(new DeleteDimensionAction(dimension.getUuid(), indSystemCode), new WaitingAsyncCallbackHandlingError<DeleteDimensionResult>(this) {
 
             @Override
             public void onWaitSuccess(DeleteDimensionResult result) {
                 retrieveSystemStructure(); // Reload system structure
                 fireSuccessMessage(getMessages().systemStrucDimDeleted());
+                indSystem = result.getIndicatorsSystemUpdated();
+                setIndicatorsSystem(indSystem);
             }
         });
     }
@@ -320,6 +324,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitSuccess(CreateIndicatorInstanceResult result) {
                 retrieveSystemStructure(); // Reload system structure
                 fireSuccessMessage(getMessages().systemStrucIndInstanceCreated());
+                indSystem = result.getIndicatorsSystemUpdated();
+                setIndicatorsSystem(indSystem);
                 getView().onIndicatorInstanceSaved(result.getCreatedIndicatorInstance());
             }
         });
@@ -357,13 +363,15 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void deleteIndicatorInstance(IndicatorInstanceDto instance) {
-        dispatcher.execute(new DeleteIndicatorInstanceAction(instance.getUuid()), new WaitingAsyncCallbackHandlingError<DeleteIndicatorInstanceResult>(this) {
+    public void deleteIndicatorInstance(String indSystemCode, IndicatorInstanceDto instance) {
+        dispatcher.execute(new DeleteIndicatorInstanceAction(instance.getUuid(), indSystemCode), new WaitingAsyncCallbackHandlingError<DeleteIndicatorInstanceResult>(this) {
 
             @Override
             public void onWaitSuccess(DeleteIndicatorInstanceResult result) {
                 retrieveSystemStructure(); // Reload system structure
                 fireSuccessMessage(getMessages().systemStrucIndInstanceDeleted());
+                indSystem = result.getIndicatorsSystemUpdated();
+                setIndicatorsSystem(indSystem);
             }
         });
     }
@@ -433,7 +441,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void publish(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        if (!indicatorsSystemDto.getIsOperational() || indicatorsSystemDto.isOperationExternallyPublished()) {
+        if (!Boolean.TRUE.equals(indicatorsSystemDto.getIsOperational()) || indicatorsSystemDto.isOperationExternallyPublished()) {
             dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<PublishIndicatorsSystemResult>(this) {
 
                 @Override
@@ -588,7 +596,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto, boolean mergingTimeGranularities) {
         dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle(), indicatorsSystemDto.getDescription(), mergingTimeGranularities,
-                indicatorsSystemDto.getCode()), new WaitingAsyncCallbackHandlingError<ExportSystemInDsplResult>(this) {
+                indicatorsSystemDto.getCode(), indicatorsSystemDto.getIsOperational()), new WaitingAsyncCallbackHandlingError<ExportSystemInDsplResult>(this) {
 
                     @Override
                     public void onWaitSuccess(ExportSystemInDsplResult result) {
