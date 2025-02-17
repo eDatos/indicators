@@ -48,16 +48,17 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
         super(GetIndicatorsSystemPaginatedListAction.class);
     }
 
+    /*
+     * This list will not be paginated. Their elements come from different systems so it will not be necessary to paginate while the number of elements is small.
+     */
     @Override
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
-        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
         List<String> indicatorsSystemCodeErrors = new ArrayList<>();
-        indicatorsSystemSummaryDtoWebs = getIndicatorsSystemSummaryDtoWebsFromOperations(indicatorsSystemCodeErrors);
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = getIndicatorsSystemSummaryDtoWebsFromOperations(indicatorsSystemCodeErrors);
         indicatorsSystemSummaryDtoWebs.addAll(getIndicatorsSystemSummaryDtoWebsWithoutOperations());
 
-        // TODO EDATOS-4833 VER PAGINACIÓN. Ver qué hacer con action.getFirstResult y getMaxResul00000000000000t.
         MetamacWebException resultException = getExceptions(indicatorsSystemCodeErrors);
-        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, action.getFirstResult(), indicatorsSystemSummaryDtoWebs.size(), resultException);
+        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, 0, indicatorsSystemSummaryDtoWebs.size(), resultException);
     }
 
     private MetamacWebException getExceptions(List<String> indicatorsSystemCodeErrors) {
@@ -74,8 +75,6 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
 
     private List<IndicatorsSystemSummaryDtoWeb> getIndicatorsSystemSummaryDtoWebsWithoutOperations() throws MetamacWebException {
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
-
-        // TODO EDATOS-4833 EN PRINCIPIO SE PODRÁ BUSCAR SIN PAGINAR
 
         MetamacCriteria criteria = new MetamacCriteria();
         criteria.setPaginator(new MetamacCriteriaPaginator());
