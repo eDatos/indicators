@@ -1193,6 +1193,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setSelfLink(selfLinkURL);
         target.setVersion(source.getVersionNumber());
         target.setPublicationDate(source.getPublicationDate());
+        target.setOperational(Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational()));
     }
 
     private void indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemType target) {
