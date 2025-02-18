@@ -161,30 +161,14 @@
 
             if (_.isFinite(chartData.minValue) && _.isFinite(chartData.maxValue)) {
                 if (this.options.scale === "minmax") {
-                    echartsOptions.yAxis.tickPositioner = function () {
-                        var step = (chartData.maxValue - chartData.minValue) / 4;
-                        return _.range(chartData.minValue, chartData.maxValue + step, step);
-                    }
-                } else if (this.options.scale === "natural-lib") {
-                    var min = chartData.minValue;
-                    var max = chartData.maxValue;
-                    if (min < 0 && max > 0) {
-                        var limit = Math.max(Math.abs(min), Math.abs(max));
-                        echartsOptions.yAxis.min = -limit;
-                        echartsOptions.yAxis.max = +limit;
-                    } else if (min < 0 && max < 0) {
-                        echartsOptions.yAxis.min = min;
-                        echartsOptions.yAxis.max = 0;
-                    } else if (min > 0 && max > 0) {
-                        echartsOptions.yAxis.min = 0;
-                        echartsOptions.yAxis.max = max;
-                    }
+                    echartsOptions.yAxis.min = chartData.minValue;
+                    echartsOptions.yAxis.max = chartData.maxValue;
+                    echartsOptions.yAxis.interval = (chartData.maxValue - chartData.minValue) / 4;
                 } else if (this.options.scale === "natural") {
                     var scale = Istac.widget.NaturalScale.scale({ ymin: chartData.minValue, ymax: chartData.maxValue });
-                    echartsOptions.yAxis.tickPositioner = function () {
-                        var step = (scale.ytop - scale.ydown) / scale.ranges;
-                        return _.range(scale.ydown, scale.ytop + step, step);
-                    };
+                    echartsOptions.yAxis.min = scale.ydown;
+                    echartsOptions.yAxis.max = scale.ytop;
+                    echartsOptions.yAxis.interval = (scale.ytop - scale.ydown) / scale.ranges;
                 }
             }
 
