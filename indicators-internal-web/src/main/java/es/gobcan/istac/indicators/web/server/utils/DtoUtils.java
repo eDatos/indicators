@@ -177,6 +177,7 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
             indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
             indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
+            indicatorsSystemDtoWeb.setIsOperational(indicatorsSystemDto.getIsOperational());
 
             if (!Boolean.TRUE.equals(indicatorsSystemDto.getIsOperational())) {
                 indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
