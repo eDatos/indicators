@@ -35,22 +35,26 @@ import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandle
 import es.gobcan.istac.indicators.web.client.system.widgets.NewIndicatorsSystemWindow;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorsSystemSearchSectionStack;
 import es.gobcan.istac.indicators.web.client.widgets.SystemListGrid;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorsSystemCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> implements SystemListPresenter.SystemListView {
 
-    private PaginatedCheckListGrid    indSystemListGrid;
+    private PaginatedCheckListGrid             indSystemListGrid;
 
-    private VLayout                   panel;
+    private VLayout                            panel;
 
-    private ToolStripButton           newIndicatorsSystem;
+    private ToolStripButton                    newIndicatorsSystem;
 
-    private ToolStripButton           deleteSystemActor;
+    private ToolStripButton                    deleteSystemActor;
 
-    private DeleteConfirmationWindow  deleteConfirmationWindow;
+    private DeleteConfirmationWindow           deleteConfirmationWindow;
 
-    private NewIndicatorsSystemWindow window;
+    private NewIndicatorsSystemWindow          window;
+
+    private IndicatorsSystemSearchSectionStack searchSectionStack;
 
     private void createIndicatorsSystemButtonNew() {
         newIndicatorsSystem = new ToolStripButton(getConstants().systemNew(), RESOURCE.newListGrid().getURL());
@@ -102,7 +106,10 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
 
             @Override
             public void retrieveResultSet(int firstResult, int maxResults) {
-                getUiHandlers().retrieveSystems(firstResult, maxResults);
+                IndicatorsSystemCriteria criteria = getIndicatorsSystemCriteria();
+                criteria.setFirstResult(firstResult);
+                criteria.setMaxResults(maxResults);
+                getUiHandlers().retrieveSystems(criteria);
             }
         });
         ListGridUtils.setCheckBoxSelectionType(indSystemListGrid.getListGrid());
@@ -137,8 +144,13 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
 
         indSystemListGrid.setHeight100();
 
+        // Search
+
+        searchSectionStack = new IndicatorsSystemSearchSectionStack();
+
         panel = new VLayout();
         panel.addMember(toolStrip);
+        panel.addMember(searchSectionStack);
         panel.addMember(indSystemListGrid);
 
         // Delete confirmation window
@@ -191,5 +203,21 @@ public class SystemListViewImpl extends ViewWithUiHandlers<SystemListUiHandler> 
             }
         }
         return uuids;
+    }
+
+    @Override
+    public void setUiHandlers(SystemListUiHandler uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        searchSectionStack.setUiHandlers(uiHandlers);
+    }
+
+    @Override
+    public void clearSearchSection() {
+        searchSectionStack.clearSearchSection();
+    }
+
+    @Override
+    public IndicatorsSystemCriteria getIndicatorsSystemCriteria() {
+        return searchSectionStack.getIndicatorsSystemCriteria();
     }
 }

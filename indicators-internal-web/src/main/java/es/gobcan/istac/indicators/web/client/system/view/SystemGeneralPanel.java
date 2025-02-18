@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.web.client.system.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import org.siemac.metamac.web.common.client.utils.BooleanWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -248,6 +249,7 @@ public class SystemGeneralPanel extends VLayout {
         ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
+
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
         ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().systemStreamMsgStatus());
         publicationStreamStatus.setWidth(20);
@@ -276,7 +278,9 @@ public class SystemGeneralPanel extends VLayout {
         contentForm = new GroupDynamicForm(getConstants().systemDetailContentDescriptors());
         ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.DESCRIPTION, getConstants().systemDetailDescription());
         ViewMultiLanguageTextItem objective = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.OBJECTIVE, getConstants().systemDetailObjective());
-        contentForm.setFields(description, objective);
+        ViewTextItem operational = new ViewTextItem(IndicatorsSystemsDS.OPERATIONAL, getConstants().operational());
+
+        contentForm.setFields(description, objective, operational);
 
         // Publication Descriptors
         publicationForm = new GroupDynamicForm(getConstants().systemDetailPublicationDescriptors());
@@ -340,7 +344,9 @@ public class SystemGeneralPanel extends VLayout {
         MultiLanguageTextItem description = new MultiLanguageTextItem(IndicatorsSystemsDS.DESCRIPTION, getConstants().systemDetailDescription());
         MultiLanguageTextItem objective = new MultiLanguageTextItem(IndicatorsSystemsDS.OBJECTIVE, getConstants().systemDetailObjective());
 
-        contentEditionForm.setFields(description, objective);
+        ViewTextItem operational = new ViewTextItem(IndicatorsSystemsDS.OPERATIONAL, getConstants().operational());
+
+        contentEditionForm.setFields(description, objective, operational);
 
         // Publication Descriptors
         publicationEditionForm = new GroupDynamicForm(getConstants().systemDetailPublicationDescriptors());
@@ -423,6 +429,7 @@ public class SystemGeneralPanel extends VLayout {
         // Content Descriptors
         contentForm.setValue(IndicatorsSystemsDS.DESCRIPTION, indicatorSystemDto.getDescription());
         contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, indicatorSystemDto.getObjective());
+        contentForm.setValue(IndicatorsSystemsDS.OPERATIONAL, BooleanWebUtils.getBooleanLabel(indicatorSystemDto.getIsOperational()));
 
         // Publication Descriptors
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
@@ -461,6 +468,7 @@ public class SystemGeneralPanel extends VLayout {
         // Content Descriptors
         contentEditionForm.setValue(IndicatorsSystemsDS.DESCRIPTION, indicatorSystemDto.getDescription());
         contentEditionForm.setValue(IndicatorsSystemsDS.OBJECTIVE, indicatorSystemDto.getObjective());
+        contentEditionForm.setValue(IndicatorsSystemsDS.OPERATIONAL, BooleanWebUtils.getBooleanLabel(indicatorSystemDto.getIsOperational()));
 
         // Publication Descriptors
         publicationEditionForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());

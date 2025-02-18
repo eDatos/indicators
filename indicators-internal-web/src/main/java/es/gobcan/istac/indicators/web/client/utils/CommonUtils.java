@@ -365,6 +365,14 @@ public class CommonUtils {
         return null;
     }
 
+    public static IndicatorsSystemProcStatusEnum getIndicatorsSystemProcStatusEnum(String value) {
+        try {
+            return IndicatorsSystemProcStatusEnum.valueOf(value);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     public static FormItemIfFunction getFalseIfFunction() {
         return new FormItemIfFunction() {
 
@@ -426,7 +434,6 @@ public class CommonUtils {
         $wnd.location = url;
     }-*/;
     // @formatter:on
-
 
     public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
         if (status == null) {
