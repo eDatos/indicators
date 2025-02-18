@@ -99,7 +99,10 @@
             $chartContainer.css('width', this.width - 20);
             $chartContainer.css('height', 250);
             this.contentContainer.html($chartContainer);
-            this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas' });
+
+            echarts.registerLocale("es", EDatos.common.I18n.translate("ECHARTS", "es"));
+            echarts.registerLocale("ca", EDatos.common.I18n.translate("ECHARTS", "ca"));
+            this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
 
             var echartsOptions = {
                 xAxis: {

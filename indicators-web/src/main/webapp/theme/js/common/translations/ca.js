@@ -121,13 +121,22 @@
             'NO_MATCHES': 'No hi ha resultats',
             'LOADING': 'Carregant...'
         },
-        'HIGHCHARTS': {
-            'months': ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
-                'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'],
-            'weekdays': ['Domingo', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Sabado'],
-            'shortMonths': ['Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
-            'thousandsSep': '.',
-            'decimalPoint': ','
+        'ECHARTS': {
+            'time': {
+                'month': [
+                    'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
+                    'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'
+                ],
+                'monthAbbr': [
+                    'Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'
+                ],
+                'dayOfWeek': [
+                    'Diumenge', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte'
+                ],
+                'dayOfWeekAbbr': [
+                    'Dg', 'Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds'
+                ]
+            }
         },
         'CAPTCHA': {
             'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
