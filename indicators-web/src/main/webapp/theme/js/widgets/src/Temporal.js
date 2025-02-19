@@ -117,6 +117,9 @@
                     }
                 },
                 yAxis: {
+                    axisLabel: {
+                        formatter: this._axisLabelFormatter
+                    }
                 },
                 legend: {
                     show: this.showLegend,
@@ -203,6 +206,15 @@
 
         getChartId: function () {
             return this.options.id ? 'chart-' + this.options.id : 'chart';
+        },
+
+        _axisLabelFormatter: function (value) {
+            if (isNaN(value)) {
+                return value;
+            }
+            var axisLabel = value.toString().replace("\.", ",");
+            axisLabel = Istac.widget.helper.addThousandSeparator(axisLabel)
+            return axisLabel;
         }
     });
 
