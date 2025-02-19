@@ -189,6 +189,9 @@
         },
 
         _getClosestSeriesToMouse: function (seriesParams) {
+            if (!this.mouseCoords) {
+                return seriesParams[0];
+            }
             var mouseChartCoords = this.chart.convertFromPixel('grid', this.mouseCoords);
             return seriesParams.reduce(function(closestSerieToMouse, serie) {
                 return !!closestSerieToMouse && Math.abs(closestSerieToMouse.value[1] - mouseChartCoords[1]) < Math.abs(serie.value[1] - mouseChartCoords[1])
