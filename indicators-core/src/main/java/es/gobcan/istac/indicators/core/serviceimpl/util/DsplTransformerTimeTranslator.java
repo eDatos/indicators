@@ -62,7 +62,7 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
             throws MetamacException {
         try {
             Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
-            LOG.info("Building dspl for indicators System " + indicatorsSystemVersion.getUuid());
+            LOG.info("Building dspl for indicators System " + indicatorsSystemVersion.getIndicatorsSystem().getUuid() + " version published:" + indicatorsSystemVersion.getUuid());
 
             List<ElementLevel> structure = indicatorsSystemsService.retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsSystemVersion.getVersionNumber());
@@ -116,10 +116,11 @@ public class DsplTransformerTimeTranslator extends DsplTransformer {
 
             ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
 
-            LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemVersion.getUuid());
+            LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemVersion.getIndicatorsSystem().getUuid() + " version published:" + indicatorsSystemVersion.getUuid());
             return datasets;
         } catch (MetamacException e) {
-            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorsSystemVersion.getUuid());
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorsSystemVersion.getIndicatorsSystem().getUuid());
         }
     }
 

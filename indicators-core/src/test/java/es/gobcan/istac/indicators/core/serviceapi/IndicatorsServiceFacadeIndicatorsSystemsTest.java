@@ -226,7 +226,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-
+        indicatorsSystemDto.setIsOperational(true);
         // Create
         IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
 
@@ -267,6 +267,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(true);
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(serviceContext, indicatorsSystemDto);
@@ -286,7 +287,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(null);
-
+        indicatorsSystemDto.setIsOperational(true);
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
             fail("parameters required");
@@ -305,7 +306,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
-
+        indicatorsSystemDto.setIsOperational(true);
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
             fail("code duplicated");
@@ -323,6 +324,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
+        indicatorsSystemDto.setIsOperational(true);
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);

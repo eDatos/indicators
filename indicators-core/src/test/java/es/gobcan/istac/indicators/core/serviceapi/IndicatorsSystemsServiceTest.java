@@ -98,7 +98,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         IndicatorsSystemVersion indicatorsSystemVersion = new IndicatorsSystemVersion();
         indicatorsSystemVersion.setIndicatorsSystem(new IndicatorsSystem());
         indicatorsSystemVersion.getIndicatorsSystem().setCode(IndicatorsMocks.mockString(10));
-
+        indicatorsSystemVersion.getIndicatorsSystem().setIsOperational(true);
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion);
         assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemVersionCreated.getCreatedBy());
