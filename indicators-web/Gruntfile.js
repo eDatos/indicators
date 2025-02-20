@@ -143,23 +143,21 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetView.js'
     ]
 
-    var widgetBanner = "(function(window, _, $, jQuery, moment, Highcharts){" +
+    var widgetBanner = "(function(window, _, $, jQuery, moment, echarts){" +
         "if(!window.edatosWidgetScriptAlreadyExecuted){" +
         "   window.edatosWidgetScriptAlreadyExecuted = true;" +
         "   var old_ = _;" +
         "   var old$ = $;" +
         "   var oldJQuery = jQuery;" +
         "   var oldMoment = moment;" +
-        "   var oldHighcharts = {...Highcharts};" +
-        "   window.Highcharts = undefined;" +
-        "   Highcharts = {};";
+        "   var oldEcharts = echarts;";
 
     var widgetFooter = "window._ = old_;" +
         "   window.$ = old$;" +
         "   window.jQuery = oldJQuery;" +
         "   window.moment = oldMoment;" +
-        "   window.Highcharts = oldHighcharts;" +
-        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));";
+        "   window.echarts = oldEcharts;" +
+        "}}(window, window._, window.$, window.jQuery, window.moment, window.echarts));";
 
     grunt.initConfig({
         handlebars: {
