@@ -221,4 +221,4 @@
         }
     });
 
-}(window.jQuery, window._, echarts));
+}(window.jQuery, window._, window.echarts));
