@@ -1,8 +1,6 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -25,7 +23,6 @@ import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
-import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @Component
 public class CreateIndicatorsSystemActionHandler extends SecurityActionHandler<CreateIndicatorsSystemAction, CreateIndicatorsSystemResult> {
@@ -64,9 +61,13 @@ public class CreateIndicatorsSystemActionHandler extends SecurityActionHandler<C
      */
 
     private boolean checkExistIndicatorsSystemWithOperation(String indicatorsSytemCode) throws MetamacWebException {
+        Operation operation = null;
+        try {
+            operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), indicatorsSytemCode);
+        } catch (Exception e) {
+            return false;
+        }
 
-        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
-        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(ServiceContextHolder.getCurrentServiceContext(), indicatorsSytemCode);
         return operation != null && operation.getIndicatorSystem();
 
     }
