@@ -72,7 +72,6 @@
             this.el = $(options.el);
             this.type = options.type;
             this.measures = options.measures || this._defaultOptions.measures;
-            this.geographicalValues = options.geographicalValues;
 
             this.afterRenderCallback = !_.isUndefined(this.options.afterRenderCallback) ? _.debounce(this.options.afterRenderCallback, 300) : null;
 
@@ -409,7 +408,7 @@
             filteredOptions.width = this.options.widgetWith;
 
             code += this.openTag('script', { src: this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
-            code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
+            code += this.openTag('script') + "new EdatosIndicatorsWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
 
             this.embedContainer.find('textarea').val(code);
             this.embedContainer.show();

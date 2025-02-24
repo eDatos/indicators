@@ -115,7 +115,8 @@
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Tipus de widget no suportat',
-            'URL_NOT_PROVIDED': "Error, no s'ha especificat la url del servei web"
+            'URL_NOT_PROVIDED': "Error, no s'ha especificat la url del servei web",
+            'LEGACY_WIDGET_NAME': 'S\'ha detectat un widget que segueix fent ús del nom "IstacWidget". Si us plau, canvieu al nou nom: "EdatsIndicatorsWidget".'
         },
         'SELECT2': {
             'NO_MATCHES': 'No hi ha resultats',

@@ -60,8 +60,14 @@
 
     };
 
-    //Global export
-    window.IstacWidget = Istac.widget.Factory;
+    // Global export
+    window.EdatosIndicatorsWidget = Istac.widget.Factory;
+
+    // Legtacy global export
+    window.IstacWidget = function (options, initCallback, afterRenderCallback) {
+        console.warn(EDatos.common.I18n.translate("ERROR.LEGACY_WIDGET_NAME", navigator.language.substring(0,2)));
+        Istac.widget.Factory(options, initCallback, afterRenderCallback);
+    }
 
 }(window.jQuery));
 

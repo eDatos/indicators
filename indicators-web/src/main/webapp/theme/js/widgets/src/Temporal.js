@@ -14,14 +14,15 @@
             var measureValue = this.measures[0];
             var timeValues = dataset.getTimeValues();
             var timeValuesTitles = dataset.getTimeValuesTitles(locale);
+            var geographicalValues = Object.keys(dataset.data.dimension.GEOGRAPHICAL.representation.index);
             var geographicalValuesTitles = dataset.getGeographicalValuesTitles(locale);
 
             var values = [];
             var series = [];
-            var colors = Istac.widget.helper.colorPaletteGenerator(this.geographicalValues.length);
+            var colors = Istac.widget.helper.colorPaletteGenerator(geographicalValues.length);
 
-            for (var i = 0; i < this.geographicalValues.length; i++) {
-                var geoValue = this.geographicalValues[i];
+            for (var i = 0; i < geographicalValues.length; i++) {
+                var geoValue = geographicalValues[i];
                 var geoValueTitle = geographicalValuesTitles[geoValue];
                 if (_.isString(geoValueTitle)) {
                     geoValueTitle = geoValueTitle.trim();

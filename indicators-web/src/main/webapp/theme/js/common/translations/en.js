@@ -115,7 +115,8 @@
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Unsupported widget type',
-            'URL_NOT_PROVIDED': 'Error, web service url not provided'
+            'URL_NOT_PROVIDED': 'Error, web service url not provided',
+            'LEGACY_WIDGET_NAME': 'It has been detected that a widget is still using the name "IstacWidget". Please change it to the new name: "EdatosIndicatorsWidget".'
         },
         'SELECT2': {
             'NO_MATCHES': 'No matches',
