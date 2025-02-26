@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
-import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
@@ -11,7 +11,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEn
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
-public class SystemMainFormLayout extends InternationalViewMainFormLayout {
+public class SystemMainFormLayout extends InternationalMainFormLayout {
 
     private PublishToolStripButton         productionValidation;
     private PublishToolStripButton         diffusionValidation;
@@ -25,8 +25,18 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
     private IndicatorsSystemProcStatusEnum status;
 
     private String                         indicatorsSystemCode;
+    private Boolean                        isOperational;
 
     public SystemMainFormLayout() {
+        super();
+        common();
+    }
+
+    private void common() {
+
+        // Remove handler from edit button
+        editHandlerRegistration.removeHandler();
+
         productionValidation = new PublishToolStripButton(getConstants().indicatorSendToProductionValidation(), IndicatorsResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new PublishToolStripButton(getConstants().indicatorSendToDiffusionValidation(), IndicatorsResources.RESOURCE.validateDifussion().getURL());
         publish = new PublishToolStripButton(getConstants().indicatorPublish(), IndicatorsResources.RESOURCE.publish().getURL());
@@ -74,14 +84,12 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         }
     }
 
-    @Override
-    public void setViewMode() {
-        super.setViewMode();
-        updateVisibility();
-    }
-
     public void setIndicatorsSytemCode(String code) {
         this.indicatorsSystemCode = code;
+    }
+
+    public void setIsOperational(Boolean isOperational) {
+        this.isOperational = isOperational;
     }
 
     public HasClickHandlers getProductionValidation() {
@@ -177,6 +185,21 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
 
     private void showExportDsplButton() {
         exportDspl.show();
+    }
+
+    @Override
+    public void setViewMode() {
+        super.setViewMode();
+        updateVisibility();
+        if (isOperational) {
+            getEditToolStripButton().hide();
+        }
+    }
+
+    @Override
+    public void setEditionMode() {
+        super.setEditionMode();
+        hideAllPublishButtons();
     }
 
 }

@@ -38,6 +38,15 @@ public class DoCopyUtils {
         return target;
     }
 
+    public static void copyNonOperationalMetadata(IndicatorsSystemVersion source, IndicatorsSystemVersion target) {
+        if (!Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational())) {
+            target.setTitle(DoCopyUtils.copy(source.getTitle()));
+            target.setDescription(DoCopyUtils.copy(source.getDescription()));
+            target.setAcronym(DoCopyUtils.copy(source.getAcronym()));
+            target.setObjective(DoCopyUtils.copy(source.getObjective()));
+        }
+    }
+
     /**
      * Create a new IndicatorVersion copying values from a source
      */

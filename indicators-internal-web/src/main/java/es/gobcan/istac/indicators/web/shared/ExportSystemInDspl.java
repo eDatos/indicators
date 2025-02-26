@@ -26,6 +26,9 @@ public class ExportSystemInDspl {
     @In(5)
     String                 code;
 
+    @In(6)
+    Boolean                isOperational;
+
     @Out(1)
     List<String>           files;
 }

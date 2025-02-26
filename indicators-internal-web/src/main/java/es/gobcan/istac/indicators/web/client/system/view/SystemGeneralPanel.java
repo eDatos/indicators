@@ -1,10 +1,13 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
-import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
+import org.siemac.metamac.web.common.client.utils.BooleanWebUtils;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -14,6 +17,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.ExportDsplWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
@@ -39,6 +43,13 @@ public class SystemGeneralPanel extends VLayout {
     private GroupDynamicForm              contentForm;
     private GroupDynamicForm              publicationForm;
 
+    /* EDITION FORM (FOR NON OPERATIONAL INDICATORS SYSTEM) */
+    private GroupDynamicForm              identifiersEditionForm;
+    private GroupDynamicForm              productionEditionForm;
+    private GroupDynamicForm              diffusionEditionForm;
+    private GroupDynamicForm              contentEditionForm;
+    private GroupDynamicForm              publicationEditionForm;
+
     private IndicatorsSystemDtoWeb        indicatorsSystemDto;
     private IndicatorsSystemDtoWeb        indicatorsSystemDiffusionDto;
 
@@ -52,6 +63,54 @@ public class SystemGeneralPanel extends VLayout {
         mainFormLayout = new SystemMainFormLayout();
         mainFormLayout.setTitleLabelContents(getConstants().systemProductionEnvironment());
 
+        createViewForm();
+        createEditionForm();
+        this.addMember(mainFormLayout);
+        bindEvents();
+
+        // ......................
+        // DIFFUSION ENVIRONMENT
+        // ......................
+
+        diffusionMainFormLayout = new SystemDiffusionMainFormLayout();
+        diffusionMainFormLayout.setTitleLabelContents(getConstants().systemDiffusionEnvironment());
+        diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
+        diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
+                diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
+            }
+        });
+
+        diffusionMainFormLayout.getExportDspl().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final ExportDsplWindow window = new ExportDsplWindow(getConstants().indicatorVersionType()) {
+
+                    @Override
+                    public void exportMerging() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, true);
+                        hide();
+                    }
+
+                    @Override
+                    public void exportSimple() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, false);
+                        hide();
+                    }
+                };
+                window.show();
+            }
+        });
+
+        createDiffusionViewForm();
+        this.addMember(diffusionMainFormLayout);
+    }
+
+    private void bindEvents() {
         // Show/Hide Translations
         mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
 
@@ -60,6 +119,34 @@ public class SystemGeneralPanel extends VLayout {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                 identifiersForm.setTranslationsShowed(translationsShowed);
                 contentForm.setTranslationsShowed(translationsShowed);
+                identifiersEditionForm.setTranslationsShowed(translationsShowed);
+                contentEditionForm.setTranslationsShowed(translationsShowed);
+
+            }
+        });
+
+        // Edit: Add a custom handler to check indicators system status before start editing
+        mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemDto.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(indicatorsSystemDto.getProcStatus())) {
+                    // Create a new version of the indicators system
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorsSystemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                    window.show();
+                } else {
+                    // Default behavior
+                    setEditionMode();
+                }
+            }
+        });
+
+        // Save
+        mainFormLayout.getSave().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                saveIndicatorsSystem();
             }
         });
 
@@ -141,55 +228,12 @@ public class SystemGeneralPanel extends VLayout {
         });
 
         mainFormLayout.getReSendStreamMessage().addClickHandler(new ClickHandler() {
+
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.reSendStreamMessageIndicatorsSystem(indicatorsSystemDto);
             }
         });
-
-        createViewForm();
-        this.addMember(mainFormLayout);
-
-        // ......................
-        // DIFFUSION ENVIRONMENT
-        // ......................
-
-        diffusionMainFormLayout = new SystemDiffusionMainFormLayout();
-        diffusionMainFormLayout.setTitleLabelContents(getConstants().systemDiffusionEnvironment());
-        diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
-        diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
-                diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
-            }
-        });
-
-        diffusionMainFormLayout.getExportDspl().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                final ExportDsplWindow window = new ExportDsplWindow(getConstants().indicatorVersionType()) {
-
-                    @Override
-                    public void exportMerging() {
-                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, true);
-                        hide();
-                    }
-
-                    @Override
-                    public void exportSimple() {
-                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, false);
-                        hide();
-                    }
-                };
-                window.show();
-            }
-        });
-
-        createDiffusionViewForm();
-        this.addMember(diffusionMainFormLayout);
     }
 
     /**
@@ -205,6 +249,7 @@ public class SystemGeneralPanel extends VLayout {
         ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
+
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
         ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().systemStreamMsgStatus());
         publicationStreamStatus.setWidth(20);
@@ -233,7 +278,9 @@ public class SystemGeneralPanel extends VLayout {
         contentForm = new GroupDynamicForm(getConstants().systemDetailContentDescriptors());
         ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.DESCRIPTION, getConstants().systemDetailDescription());
         ViewMultiLanguageTextItem objective = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.OBJECTIVE, getConstants().systemDetailObjective());
-        contentForm.setFields(description, objective);
+        ViewTextItem operational = new ViewTextItem(IndicatorsSystemsDS.OPERATIONAL, getConstants().operational());
+
+        contentForm.setFields(description, objective, operational);
 
         // Publication Descriptors
         publicationForm = new GroupDynamicForm(getConstants().systemDetailPublicationDescriptors());
@@ -250,6 +297,72 @@ public class SystemGeneralPanel extends VLayout {
         mainFormLayout.addViewCanvas(diffusionForm);
         mainFormLayout.addViewCanvas(contentForm);
         mainFormLayout.addViewCanvas(publicationForm);
+    }
+
+    /**
+     * Creates and returns the view layout
+     * 
+     * @return
+     */
+    private void createEditionForm() {
+
+        // Identifiers Form
+        identifiersEditionForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
+        ViewTextItem versionField = new ViewTextItem(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
+        ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
+        MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
+        title.setRequired(true);
+        MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
+
+        ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
+        ViewTextItem publicationStreamStatus = new ViewTextItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS, getConstants().systemStreamMsgStatus());
+        publicationStreamStatus.setWidth(20);
+
+        identifiersEditionForm.setFields(codeField, versionField, title, acronym, procStatus, publicationStreamStatus);
+
+        // Production Descriptors
+        productionEditionForm = new GroupDynamicForm(getConstants().systemDetailProductionDescriptors());
+        ViewTextItem prodVersion = new ViewTextItem(IndicatorsSystemsDS.PROD_VERSION, getConstants().systemDetailProdVersion());
+        ViewTextItem prodValidDate = new ViewTextItem(IndicatorsSystemsDS.PROD_VALID_DATE, getConstants().systemDetailProdValidDate());
+        ViewTextItem prodValidUser = new ViewTextItem(IndicatorsSystemsDS.PROD_VALID_USER, getConstants().systemDetailProdValidUser());
+        ViewTextItem creationDate = new ViewTextItem(IndicatorsSystemsDS.CREATION_DATE, getConstants().systemDetailCreationDate());
+        creationDate.setStartRow(true);
+        ViewTextItem creationUser = new ViewTextItem(IndicatorsSystemsDS.CREATION_USER, getConstants().systemDetailCreationUser());
+        ViewTextItem lastUpdateDate = new ViewTextItem(IndicatorsSystemsDS.LAST_UPDATE_DATE, getConstants().systemDetailLastUpdateDate());
+        ViewTextItem lastUpdateUser = new ViewTextItem(IndicatorsSystemsDS.LAST_UPDATE_USER, getConstants().systemDetailLastUpdateUser());
+        productionEditionForm.setFields(prodVersion, prodValidDate, prodValidUser, creationDate, creationUser, lastUpdateDate, lastUpdateUser);
+
+        // Diffusion Descriptors
+        diffusionEditionForm = new GroupDynamicForm(getConstants().systemDetailDiffusionDescriptors());
+        ViewTextItem diffValidDate = new ViewTextItem(IndicatorsSystemsDS.DIFF_VALID_DATE, getConstants().systemDetailDiffValidDate());
+        ViewTextItem diffValidUser = new ViewTextItem(IndicatorsSystemsDS.DIFF_VALID_USER, getConstants().systemDetailDiffValidUser());
+        diffusionEditionForm.setFields(diffValidDate, diffValidUser);
+
+        // Content Descriptors
+        contentEditionForm = new GroupDynamicForm(getConstants().systemDetailContentDescriptors());
+
+        MultiLanguageTextItem description = new MultiLanguageTextItem(IndicatorsSystemsDS.DESCRIPTION, getConstants().systemDetailDescription());
+        MultiLanguageTextItem objective = new MultiLanguageTextItem(IndicatorsSystemsDS.OBJECTIVE, getConstants().systemDetailObjective());
+
+        ViewTextItem operational = new ViewTextItem(IndicatorsSystemsDS.OPERATIONAL, getConstants().operational());
+
+        contentEditionForm.setFields(description, objective, operational);
+
+        // Publication Descriptors
+        publicationEditionForm = new GroupDynamicForm(getConstants().systemDetailPublicationDescriptors());
+        ViewTextItem publicationVersion = new ViewTextItem(IndicatorsSystemsDS.PUBL_VERSION, getConstants().systemPublicationVersion());
+        ViewTextItem publicationDate = new ViewTextItem(IndicatorsSystemsDS.PUBL_DATE, getConstants().systemDetailPublicationDate());
+        ViewTextItem publicationUser = new ViewTextItem(IndicatorsSystemsDS.PUBL_USER, getConstants().systemDetailPublicationUser());
+        ViewTextItem archiveVersion = new ViewTextItem(IndicatorsSystemsDS.ARCH_VERSION, getConstants().systemArchivedVersion());
+        ViewTextItem archiveDate = new ViewTextItem(IndicatorsSystemsDS.ARCH_DATE, getConstants().systemDetailArchiveDate());
+        ViewTextItem archiveUser = new ViewTextItem(IndicatorsSystemsDS.ARCH_USER, getConstants().systemDetailArchiveUser());
+        publicationEditionForm.setFields(publicationVersion, publicationDate, publicationUser, archiveVersion, archiveDate, archiveUser);
+
+        mainFormLayout.addEditionCanvas(identifiersEditionForm);
+        mainFormLayout.addEditionCanvas(productionEditionForm);
+        mainFormLayout.addEditionCanvas(diffusionEditionForm);
+        mainFormLayout.addEditionCanvas(contentEditionForm);
+        mainFormLayout.addEditionCanvas(publicationEditionForm);
     }
 
     public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
@@ -278,16 +391,27 @@ public class SystemGeneralPanel extends VLayout {
         // PRODUCTION ENVIRONMENT
 
         mainFormLayout.setIndicatorsSytemCode(indicatorSystemDto.getCode());
+        mainFormLayout.setIsOperational(indicatorSystemDto.getIsOperational());
         mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
+        mainFormLayout.setViewMode();
 
+        setIndicatorsSystemViewMode(indicatorsSystemDto);
+        setIndicatorEditionMode(indicatorsSystemDto);
+
+        // Clear errors
+        identifiersEditionForm.clearErrors(true);
+
+    }
+
+    private void setIndicatorsSystemViewMode(IndicatorsSystemDtoWeb indicatorSystemDto) {
         // Identifiers
         identifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
         identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatusName(indicatorSystemDto));
-        identifiersForm.getItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS)
-                .setIcons(StreamMessageStatusEnum.PENDING.equals(indicatorSystemDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorSystemDto.getStreamMessageStatus()));
+        identifiersForm.getItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS).setIcons(
+                StreamMessageStatusEnum.PENDING.equals(indicatorSystemDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorSystemDto.getStreamMessageStatus()));
 
         // Production Descriptors
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
@@ -305,6 +429,7 @@ public class SystemGeneralPanel extends VLayout {
         // Content Descriptors
         contentForm.setValue(IndicatorsSystemsDS.DESCRIPTION, indicatorSystemDto.getDescription());
         contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, indicatorSystemDto.getObjective());
+        contentForm.setValue(IndicatorsSystemsDS.OPERATIONAL, BooleanWebUtils.getBooleanLabel(indicatorSystemDto.getIsOperational()));
 
         // Publication Descriptors
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
@@ -315,6 +440,43 @@ public class SystemGeneralPanel extends VLayout {
         publicationForm.setValue(IndicatorsSystemsDS.ARCH_USER, indicatorSystemDto.getArchiveUser());
 
         mainFormLayout.setViewMode();
+    }
+
+    private void setIndicatorEditionMode(IndicatorsSystemDtoWeb indicatorSystemDto) {
+        // Identifiers
+        identifiersEditionForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
+        identifiersEditionForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
+        identifiersEditionForm.setValue(IndicatorsSystemsDS.TITLE, indicatorSystemDto.getTitle());
+        identifiersEditionForm.setValue(IndicatorsSystemsDS.ACRONYM, indicatorSystemDto.getAcronym());
+        identifiersEditionForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatusName(indicatorSystemDto));
+        identifiersEditionForm.getItem(IndicatorsSystemsDS.PUBLICATION_STREAM_STATUS).setIcons(
+                StreamMessageStatusEnum.PENDING.equals(indicatorSystemDto.getStreamMessageStatus()) ? null : CommonUtils.getPublicationStreamStatusIcon(indicatorSystemDto.getStreamMessageStatus()));
+
+        // Production Descriptors
+        productionEditionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
+        productionEditionForm.setValue(IndicatorsSystemsDS.PROD_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getProductionValidationDate()));
+        productionEditionForm.setValue(IndicatorsSystemsDS.PROD_VALID_USER, indicatorSystemDto.getProductionValidationUser());
+        productionEditionForm.setValue(IndicatorsSystemsDS.CREATION_DATE, indicatorSystemDto.getCreatedDate());
+        productionEditionForm.setValue(IndicatorsSystemsDS.CREATION_USER, indicatorSystemDto.getCreatedBy());
+        productionEditionForm.setValue(IndicatorsSystemsDS.LAST_UPDATE_DATE, indicatorSystemDto.getLastUpdated());
+        productionEditionForm.setValue(IndicatorsSystemsDS.LAST_UPDATE_USER, indicatorSystemDto.getLastUpdatedBy());
+
+        // Diffusion Descriptors
+        diffusionEditionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getDiffusionValidationDate()));
+        diffusionEditionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_USER, indicatorSystemDto.getDiffusionValidationUser());
+
+        // Content Descriptors
+        contentEditionForm.setValue(IndicatorsSystemsDS.DESCRIPTION, indicatorSystemDto.getDescription());
+        contentEditionForm.setValue(IndicatorsSystemsDS.OBJECTIVE, indicatorSystemDto.getObjective());
+        contentEditionForm.setValue(IndicatorsSystemsDS.OPERATIONAL, BooleanWebUtils.getBooleanLabel(indicatorSystemDto.getIsOperational()));
+
+        // Publication Descriptors
+        publicationEditionForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
+        publicationEditionForm.setValue(IndicatorsSystemsDS.PUBL_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getPublicationDate()));
+        publicationEditionForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
+        publicationEditionForm.setValue(IndicatorsSystemsDS.ARCH_VERSION, indicatorSystemDto.getArchivedVersion());
+        publicationEditionForm.setValue(IndicatorsSystemsDS.ARCH_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getArchiveDate()));
+        publicationEditionForm.setValue(IndicatorsSystemsDS.ARCH_USER, indicatorSystemDto.getArchiveUser());
     }
 
     public void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
@@ -344,6 +506,24 @@ public class SystemGeneralPanel extends VLayout {
         diffusionIdentifiersForm.setFields(codeField, versionField, title, acronym, procStatus);
 
         diffusionMainFormLayout.addViewCanvas(diffusionIdentifiersForm);
+    }
+
+    private void setEditionMode() {
+        mainFormLayout.setEditionMode();
+    }
+
+    private void saveIndicatorsSystem() {
+        if (identifiersEditionForm.validate(false) && contentEditionForm.validate(false)) {
+            // Identifiers
+            indicatorsSystemDto.setTitle(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorsSystemsDS.TITLE));
+            indicatorsSystemDto.setAcronym(identifiersEditionForm.getValueAsInternationalStringDto(IndicatorsSystemsDS.ACRONYM));
+
+            // Content Descriptors
+            indicatorsSystemDto.setDescription(contentEditionForm.getValueAsInternationalStringDto(IndicatorsSystemsDS.DESCRIPTION));
+            indicatorsSystemDto.setObjective(contentEditionForm.getValueAsInternationalStringDto(IndicatorsSystemsDS.OBJECTIVE));
+
+            uiHandlers.updateIndicatorsSystem(indicatorsSystemDto);
+        }
     }
 
 }

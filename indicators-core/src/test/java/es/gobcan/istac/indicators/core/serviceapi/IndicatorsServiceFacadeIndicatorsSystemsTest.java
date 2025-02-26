@@ -35,6 +35,7 @@ import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -102,6 +103,24 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
         when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
 
+    }
+
+    @Test
+    @Transactional
+    public void testRetrieveIndicatorsSystemByCodeNonOperational() throws Exception {
+
+        String code = INDICATORS_SYSTEM_13_CODE;
+        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), code, versionNumber);
+
+        assertNotNull(indicatorsSystemDto);
+        assertNotNull(indicatorsSystemDto.getTitle());
+        assertNotNull(indicatorsSystemDto.getAcronym());
+        assertNotNull(indicatorsSystemDto.getDescription());
+        assertNotNull(indicatorsSystemDto.getObjective());
+        assertEquals(Boolean.FALSE, indicatorsSystemDto.getIsOperational());
+        assertEquals(INDICATORS_SYSTEM_13, indicatorsSystemDto.getUuid());
+        assertEquals(INDICATORS_SYSTEM_13_CODE, indicatorsSystemDto.getCode());
     }
 
     @Test
@@ -226,7 +245,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-
+        indicatorsSystemDto.setIsOperational(true);
         // Create
         IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
 
@@ -261,12 +280,71 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     @Transactional
+    public void testCreateIndicatorsSystemNonOperational() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(false);
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalStringDto("es", "title-1"));
+        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalStringDto("es", "acronym-1"));
+        indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalStringDto("es", "description-1"));
+        indicatorsSystemDto.setObjective(IndicatorsMocks.mockInternationalStringDto("es", "objective-1"));
+        // Create
+        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
+
+        // Validate
+        assertNotNull(indicatorsSystemDtoCreated);
+        assertNotNull(indicatorsSystemDtoCreated.getUuid());
+        assertNotNull(indicatorsSystemDtoCreated.getVersionNumber());
+        assertEquals(Boolean.FALSE, indicatorsSystemDtoCreated.getIsOperational());
+
+        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContextAdministrador(), indicatorsSystemDtoCreated.getCode(),
+                indicatorsSystemDtoCreated.getVersionNumber());
+
+        // non operational metadata
+        assertNotNull(indicatorsSystemDtoRetrieved.getTitle());
+        assertNotNull(indicatorsSystemDtoRetrieved.getAcronym());
+        assertNotNull(indicatorsSystemDtoRetrieved.getDescription());
+        assertNotNull(indicatorsSystemDtoRetrieved.getObjective());
+        assertEquals(Boolean.FALSE, indicatorsSystemDto.getIsOperational());
+
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoRetrieved);
+
+    }
+
+    @Test
+    @Transactional
+    public void testCreateIndicatorsSystemNonOperationalWithEmptyTitle() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(false);
+        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalStringDto("es", "acronym-1"));
+        indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalStringDto("es", "description-1"));
+        indicatorsSystemDto.setObjective(IndicatorsMocks.mockInternationalStringDto("es", "objective-1"));
+
+        try {
+            // Create
+            indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
+            fail("non operational indicators system without title");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(CommonServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+        }
+
+    }
+
+    @Test
+    @Transactional
     public void testCreateIndicatorsSystemErrorOperationNotAllowed() throws Exception {
 
         ServiceContext serviceContext = getServiceContextTecnicoProduccion();
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(true);
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(serviceContext, indicatorsSystemDto);
@@ -286,7 +364,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(null);
-
+        indicatorsSystemDto.setIsOperational(true);
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
             fail("parameters required");
@@ -305,7 +383,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
-
+        indicatorsSystemDto.setIsOperational(true);
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
             fail("code duplicated");
@@ -323,6 +401,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
+        indicatorsSystemDto.setIsOperational(true);
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemDto);
@@ -1612,7 +1691,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Retrieve last versions...
         MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContextTecnicoProduccion(), null);
-        assertEquals(10, result.getResults().size());
+        assertEquals(11, result.getResults().size());
         List<IndicatorsSystemSummaryDto> indicatorsSystemsDto = result.getResults();
 
         {
@@ -1718,6 +1797,22 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
             assertEquals(IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT, indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+        }
+
+        {
+            IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(10);
+            assertEquals(INDICATORS_SYSTEM_13, indicatorsSystemSummaryDto.getUuid());
+            assertEquals("CODE-13", indicatorsSystemSummaryDto.getCode());
+
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+
+            assertNotNull(indicatorsSystemSummaryDto.getTitle());
+            assertNotNull(indicatorsSystemSummaryDto.getAcronym());
+            assertNotNull(indicatorsSystemSummaryDto.getDescription());
+            assertNotNull(indicatorsSystemSummaryDto.getObjective());
+            assertEquals(Boolean.FALSE, indicatorsSystemSummaryDto.getIsOperational());
+
         }
     }
 

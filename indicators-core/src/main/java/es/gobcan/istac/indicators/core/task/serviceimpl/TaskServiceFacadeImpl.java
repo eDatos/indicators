@@ -37,8 +37,8 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         taskService.createPopulateIndicatorDataErrorBackgroundNotification(ctx, user, indicatorUuid, metamacException);
     }
 
-    public void executeExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
-        taskService.processExportDSPLTask(ctx, jobKey, indicatorUuid, code, mergeTimeGranularities);
+    public void executeExportDSPLTask(ServiceContext ctx, String jobKey, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
+        taskService.processExportDSPLTask(ctx, jobKey, indicatorUuid, code, mergeTimeGranularities, isOperational);
     }
 
     @Override

@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorsSystemAct
 import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
@@ -85,6 +86,7 @@ import es.gobcan.istac.indicators.web.server.handlers.UpdateCategoryCacheActionH
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ValidateTicketActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
@@ -94,6 +96,7 @@ import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
@@ -160,6 +163,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateCategoryCacheAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.external.GetExternalResourcesAction;
@@ -194,6 +198,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteIndicatorsSystemsAction.class, DeleteIndicatorsSystemsActionHandler.class);
         bindHandler(ExportSystemInDsplAction.class, ExportSystemInDsplActionHandler.class);
         bindHandler(ReSendIndicatorsSystemStreamMessageAction.class, ReSendIndicatorsSystemStreamMessageActionHandler.class);
+        bindHandler(CreateIndicatorsSystemAction.class, CreateIndicatorsSystemActionHandler.class);
+        bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
 
         // Indicators System Structure
         bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);

@@ -1058,7 +1058,7 @@
         DIFFUSION_ID="31"
         DIFFUSION_VERSION_NUMBER="1.1"
         IS_PUBLISHED="1"
-                
+        IS_OPERATIONAL="1"                
         VERSION="1"
         CREATED_BY="user1"
         CREATED_DATE="2011-01-01 01:02:03"
@@ -1203,7 +1203,7 @@
         DIFFUSION_ID="[null]"
         DIFFUSION_VERSION_NUMBER="[null]"
         IS_PUBLISHED="0"
-                
+        IS_OPERATIONAL="1"                
         VERSION="1"
         CREATED_BY="user1"
         CREATED_DATE="2011-01-01 01:02:03"

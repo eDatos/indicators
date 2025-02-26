@@ -42,13 +42,15 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems", method = RequestMethod.GET)
     @ResponseBody
     // @formatter:off
-    public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(@RequestParam(required = false, value = "limit") final Integer limit,
+    public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(@RequestParam(required = false, value = "q") final String q,
+                                                                                            @RequestParam(required = false, value = "order") final String order,
+                                                                                            @RequestParam(required = false, value = "limit") final Integer limit,
                                                                                             @RequestParam(required = false, value = "offset") final Integer offset
                                                                                           ) throws MetamacException {
         // @formatter:on
 
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
-        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(paginator);
+        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(q, order, paginator);
 
         String indicatorsSystemsLink = uriLinks.getIndicatorsSystemsLink();
         IndicatorsSystemsPaginatedResponseUtil.createPaginationLinks(indicatorsSystemBaseTypes, indicatorsSystemsLink, limit, offset);
