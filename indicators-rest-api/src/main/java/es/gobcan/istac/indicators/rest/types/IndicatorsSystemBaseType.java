@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.joda.time.DateTime;
 
-@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "publicationDate", "title", "acronym", "statisticalOperationLink", "description", "objective"})
+@JsonPropertyOrder({"id", "kind", "selfLink", "code", "version", "publicationDate", "title", "operational", "acronym", "statisticalOperationLink", "description", "objective"})
 public class IndicatorsSystemBaseType implements Serializable {
 
     private static final long   serialVersionUID         = 5785494152459693755L;
@@ -26,6 +26,7 @@ public class IndicatorsSystemBaseType implements Serializable {
     private LinkType            statisticalOperationLink = null;
     private Map<String, String> description              = null;
     private Map<String, String> objective                = null;
+    private boolean             isOperational            = false;
 
     public String getId() {
         return id;
@@ -105,6 +106,14 @@ public class IndicatorsSystemBaseType implements Serializable {
 
     public void setObjective(Map<String, String> objective) {
         this.objective = objective;
+    }
+
+    public boolean isOperational() {
+        return isOperational;
+    }
+
+    public void setOperational(boolean isOperational) {
+        this.isOperational = isOperational;
     }
 
     public LinkType getStatisticalOperationLink() {

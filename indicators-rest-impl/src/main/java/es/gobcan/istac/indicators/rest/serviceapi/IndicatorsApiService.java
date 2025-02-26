@@ -74,7 +74,7 @@ public interface IndicatorsApiService {
     IndicatorObservationsVO findObservationsInIndicator(String uuid, IndicatorsDataFilterVO dataFilter) throws MetamacException;
 
     /* INDICATORS SYSTEM */
-    PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException;
+    PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 
     IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException;
 

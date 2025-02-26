@@ -217,6 +217,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             switch (propertyNameCriteria) {
                 case CODE:
                     return new SculptorPropertyCriteria(IndicatorsSystemVersionProperties.indicatorsSystem().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                case IS_OPERATIONAL:
+                    return new SculptorPropertyCriteria(IndicatorsSystemVersionProperties.indicatorsSystem().isOperational(), propertyRestriction.getBooleanValue(),
+                            propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

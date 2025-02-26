@@ -10,9 +10,12 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class DeleteIndicatorInstanceActionHandler extends SecurityActionHandler<DeleteIndicatorInstanceAction, DeleteIndicatorInstanceResult> {
@@ -28,7 +31,8 @@ public class DeleteIndicatorInstanceActionHandler extends SecurityActionHandler<
     public DeleteIndicatorInstanceResult executeSecurityAction(DeleteIndicatorInstanceAction action) throws ActionException {
         try {
             indicatorsServiceFacade.deleteIndicatorInstance(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorInstanceUuid());
-            return new DeleteIndicatorInstanceResult();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystemCode(), null);
+            return new DeleteIndicatorInstanceResult(DtoUtils.createOrUpdateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

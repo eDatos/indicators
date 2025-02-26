@@ -30,7 +30,8 @@ public class ExportSystemInDsplActionHandler extends SecurityActionHandler<Expor
     @Override
     public ExportSystemInDsplResult executeSecurityAction(ExportSystemInDsplAction action) throws ActionException {
         try {
-            indicatorsServiceFacade.planifyExportsDsplJob(ServiceContextHolder.getCurrentServiceContext(), action.getSystemUuid(), action.getCode(), action.isMergeTimeGranularities());
+            indicatorsServiceFacade.planifyExportsDsplJob(ServiceContextHolder.getCurrentServiceContext(), action.getSystemUuid(), action.getCode(), action.isMergeTimeGranularities(),
+                    Boolean.TRUE.equals(action.getIsOperational()));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

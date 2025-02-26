@@ -10,9 +10,12 @@ import org.springframework.stereotype.Component;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class DeleteDimensionActionHandler extends SecurityActionHandler<DeleteDimensionAction, DeleteDimensionResult> {
@@ -28,7 +31,8 @@ public class DeleteDimensionActionHandler extends SecurityActionHandler<DeleteDi
     public DeleteDimensionResult executeSecurityAction(DeleteDimensionAction action) throws ActionException {
         try {
             indicatorsServiceFacade.deleteDimension(ServiceContextHolder.getCurrentServiceContext(), action.getDimensionUuid());
-            return new DeleteDimensionResult();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystemCode(), null);
+            return new DeleteDimensionResult(DtoUtils.createOrUpdateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
