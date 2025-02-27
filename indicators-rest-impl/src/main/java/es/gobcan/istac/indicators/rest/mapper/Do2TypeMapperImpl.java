@@ -494,7 +494,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 dataRepresentationTypeMeasure.getIndex().put(measureValues.get(k), k);
             }
 
-            convertVariableElementToGeopgrapicalCodes(geographicalCodesRequired, geographicalValuesCodes, geographicalCodes, dataRepresentationTypeGeographical);
+            convertVariableElementToGeographicalCodes(geographicalCodesRequired, geographicalValuesCodes, geographicalCodes, dataRepresentationTypeGeographical);
 
             DataType dataType = new DataType();
             dataType.setFormat(format);
@@ -513,7 +513,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private void convertVariableElementToGeopgrapicalCodes(boolean geographicalCodesRequired, Map<String, String> geographicalValuesCodes, List<String> geographicalCodes,
+    private void convertVariableElementToGeographicalCodes(boolean geographicalCodesRequired, Map<String, String> geographicalValuesCodes, List<String> geographicalCodes,
             DataRepresentationType dataRepresentationTypeGeographical) {
         if (geographicalCodesRequired) {
             for (int i = 0; i < geographicalCodes.size(); i++) {
