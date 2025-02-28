@@ -109,10 +109,11 @@ public class MapperUtil {
         return target;
     }
 
-    public static void setQuantityUnitMetadata(final Quantity source, QuantityType quantityType, MetadataProperties metadataProperties, SrmRestInternalFacade srmRestInternalFacade)
-            throws MetamacException {
+    public static void setQuantityUnitMetadata(final Quantity source, QuantityType quantityType, MetadataProperties metadataProperties, SrmRestInternalFacade srmRestInternalFacade,
+            SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         if (source.getUnit() != null) {
-            Code codeQuantityUnit = srmRestInternalFacade.retrieveCodeOfCodelistByUrn(source.getUnit().getUrn());
+
+            Code codeQuantityUnit = getCodeQuantityUnit(srmRestInternalFacade, srmRestObjectsMapper, source.getUnit().getUrn());
 
             String quantityUnitSymbol = UnitUtils.getQuantityUnitSymbol(codeQuantityUnit, metadataProperties, IndicatorsRestApiConstants.DEFAULT);
             quantityType.setUnitSymbol(quantityUnitSymbol);
@@ -128,5 +129,15 @@ public class MapperUtil {
             }
         }
 
+    }
+
+    private static Code getCodeQuantityUnit(SrmRestInternalFacade srmRestInternalFacade, SrmRestObjectsMapper srmRestObjectsMapper, String urnUnit) throws MetamacException {
+        Code codeQuantityUnit = srmRestObjectsMapper.getCodeOfCodelistByUrn().get(urnUnit);
+
+        if (codeQuantityUnit == null) {
+            codeQuantityUnit = srmRestInternalFacade.retrieveCodeOfCodelistByUrn(urnUnit);
+            srmRestObjectsMapper.getCodeOfCodelistByUrn().put(urnUnit, codeQuantityUnit);
+        }
+        return codeQuantityUnit;
     }
 }

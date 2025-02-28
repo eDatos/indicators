@@ -2,20 +2,20 @@ package es.gobcan.istac.indicators.web.shared;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorsSystemCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @GenDispatch(isSecure = false)
 public class GetIndicatorsSystemPaginatedList {
 
     @In(1)
-    int                                 maxResults;
-
-    @In(2)
-    int                                 firstResult;
+    IndicatorsSystemCriteria            criteria;
 
     @Out(1)
     List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemList;
@@ -25,4 +25,7 @@ public class GetIndicatorsSystemPaginatedList {
 
     @Out(3)
     Integer                             totalResults;
+
+    @Out(4)
+    MetamacWebException                 notificationException;
 }

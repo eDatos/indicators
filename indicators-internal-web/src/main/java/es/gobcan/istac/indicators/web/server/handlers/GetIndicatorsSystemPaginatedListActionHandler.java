@@ -1,20 +1,26 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.criteria.constants.CriteriaConstants;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +28,14 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.rest.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
+import es.gobcan.istac.indicators.web.server.utils.MetamacWebCriteriaUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorsSystemCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @Component
@@ -42,16 +51,74 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
         super(GetIndicatorsSystemPaginatedListAction.class);
     }
 
+    /*
+     * This list will not be paginated. Their elements come from different systems so it will not be necessary to paginate while the number of elements is small.
+     */
     @Override
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
-        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
-        int totalResults = 0;
-        int firstResult = 0;
-        Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), action.getFirstResult(), action.getMaxResults());
+        List<String> indicatorsSystemCodeErrors = new ArrayList<>();
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
+        if (action.getCriteria() != null) {
+            if (Boolean.TRUE.equals(action.getCriteria().getIsOperational()) || action.getCriteria().getIsOperational() == null) {
+                indicatorsSystemSummaryDtoWebs = getIndicatorsSystemSummaryDtoWebsFromOperations(action.getCriteria(), indicatorsSystemCodeErrors);
+            }
+
+            if (Boolean.FALSE.equals(action.getCriteria().getIsOperational()) || action.getCriteria().getIsOperational() == null) {
+                indicatorsSystemSummaryDtoWebs.addAll(getIndicatorsSystemSummaryDtoWebsWithoutOperations(action.getCriteria()));
+            }
+        }
+
+        MetamacWebException resultException = getExceptions(indicatorsSystemCodeErrors);
+        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, 0, indicatorsSystemSummaryDtoWebs.size(), resultException);
+    }
+
+    private MetamacWebException getExceptions(List<String> indicatorsSystemCodeErrors) {
+        if (!indicatorsSystemCodeErrors.isEmpty()) {
+            String codes = String.join(",", indicatorsSystemCodeErrors);
+            MetamacExceptionItem exceptionItems = new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_DUPLICATED_CODES, codes);
+
+            MetamacException exception = MetamacExceptionBuilder.builder().withExceptionItems(Arrays.asList(exceptionItems)).build();
+            return WebExceptionUtils.createMetamacWebException(exception);
+        }
+        return null;
+
+    }
+
+    private List<IndicatorsSystemSummaryDtoWeb> getIndicatorsSystemSummaryDtoWebsWithoutOperations(IndicatorsSystemCriteria indicatorsSystemCriteria) throws MetamacWebException {
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
+
+        MetamacCriteria criteria = new MetamacCriteria();
+        criteria.setPaginator(new MetamacCriteriaPaginator());
+
+        try {
+
+            // Criteria
+            MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
+            restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(new IndicatorsSystemCriteria(indicatorsSystemCriteria, false)));
+            criteria.setRestriction(restriction);
+
+            MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            for (IndicatorsSystemSummaryDto indicatorsSystemSummaryDto : systems.getResults()) {
+                IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = DtoUtils.updateIndicatorsSystemSummaryDtoWebCommon(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto);
+                indicatorsSystemSummaryDtoWebs.add(indicatorsSystemSummaryDtoWeb);
+            }
+
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+        return indicatorsSystemSummaryDtoWebs;
+    }
+
+    private List<IndicatorsSystemSummaryDtoWeb> getIndicatorsSystemSummaryDtoWebsFromOperations(IndicatorsSystemCriteria indicatorsSystemCriteria, List<String> indicatorsSystemCodeErrors)
+            throws MetamacWebException {
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<>();
+        Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), 0, CriteriaConstants.MAXIMUM_RESULT_SIZE_ALLOWED);
         if (result != null && result.getOperations() != null) {
-            firstResult = result.getOffset().intValue();
-            totalResults = result.getTotal().intValue();
+            List<String> validSystems = getCriteriaBySearch(indicatorsSystemCriteria);
             for (Resource resource : result.getOperations()) {
+                if (isSearchingByCode(indicatorsSystemCriteria) && validSystems.indexOf(resource.getId()) == -1) {
+                    continue;
+                }
                 // Check if operation (indicators system) exists in the DB
                 MetamacCriteria criteria = new MetamacCriteria();
                 criteria.setPaginator(new MetamacCriteriaPaginator());
@@ -59,22 +126,72 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
                 MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), resource.getId(), OperationType.EQ);
                 criteria.setRestriction(restriction);
                 try {
-                    IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = null;
+
                     MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
-                    if (!CollectionUtils.isEmpty(systems.getResults())) {
-                        // If exists, updates indicators system
-                        IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = systems.getResults().get(0);
-                        indicatorsSystemSummaryDtoWeb = DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource);
-                    } else {
-                        // If not, create a new indicators system
-                        indicatorsSystemSummaryDtoWeb = DtoUtils.createIndicatorsSystemSummaryDtoWeb(resource);
+
+                    IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = getIndicatorsSystemFromOperation(resource, indicatorsSystemCodeErrors, systems);
+
+                    if (indicatorsSystemSummaryDtoWeb != null) {
+                        indicatorsSystemSummaryDtoWebs.add(indicatorsSystemSummaryDtoWeb);
                     }
-                    indicatorsSystemSummaryDtoWebs.add(indicatorsSystemSummaryDtoWeb);
+
                 } catch (MetamacException e) {
                     throw WebExceptionUtils.createMetamacWebException(e);
                 }
             }
         }
-        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, firstResult, totalResults);
+        return indicatorsSystemSummaryDtoWebs;
     }
+
+    private boolean isSearchingByCode(IndicatorsSystemCriteria indicatorsSystemCriteria) {
+        return indicatorsSystemCriteria != null && indicatorsSystemCriteria.getCriteria() != null;
+    }
+
+    /*
+     * The search is manual after the statistical operation api returns the results. We search only operations that are registered in indicators bd. Operations registered only in statistical
+     * operations but without modifications in indicators bd do not appear in the search.
+     */
+    private List<String> getCriteriaBySearch(IndicatorsSystemCriteria indicatorsSystemCriteria) throws MetamacWebException {
+        List<String> searchIndicatorsSystem = new ArrayList<>();
+        if (isSearchingByCode(indicatorsSystemCriteria)) {
+
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            MetamacCriteriaConjunctionRestriction restriction = new MetamacCriteriaConjunctionRestriction();
+            restriction.getRestrictions().add(MetamacWebCriteriaUtils.buildMetamacCriteriaFromWebcriteria(new IndicatorsSystemCriteria(indicatorsSystemCriteria, true)));
+            criteria.setRestriction(restriction);
+            try {
+                MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+
+                for (IndicatorsSystemSummaryDto indicatorSystem : systems.getResults()) {
+                    searchIndicatorsSystem.add(indicatorSystem.getCode());
+                }
+            } catch (MetamacException e) {
+                throw WebExceptionUtils.createMetamacWebException(e);
+            }
+        }
+        return searchIndicatorsSystem;
+    }
+
+    private IndicatorsSystemSummaryDtoWeb getIndicatorsSystemFromOperation(Resource operation, List<String> indicatorsSystemCodeErrors,
+            MetamacCriteriaResult<IndicatorsSystemSummaryDto> indicatorsSystems) {
+        IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = null;
+
+        if (CollectionUtils.isEmpty(indicatorsSystems.getResults())) {
+            // If not, create a new indicators system
+            indicatorsSystemSummaryDtoWeb = DtoUtils.createIndicatorsSystemSummaryDtoWeb(operation);
+        } else {
+            // If exists, updates indicators system
+            IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystems.getResults().get(0);
+
+            if (Boolean.TRUE.equals(indicatorsSystemSummaryDto.getIsOperational())) {
+                indicatorsSystemSummaryDtoWeb = DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, operation);
+            } else {
+                indicatorsSystemCodeErrors.add(operation.getId());
+            }
+        }
+
+        return indicatorsSystemSummaryDtoWeb;
+    }
+
 }

@@ -101,13 +101,13 @@ public class DsplTransformer {
         this.srmRestInternalFacade = srmRestInternalFacade;
     }
 
-    public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
+    public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion, InternationalString title, InternationalString description)
+            throws MetamacException {
         Set<MetamacExceptionItem> exceptions = new HashSet<MetamacExceptionItem>();
-        IndicatorsSystemVersion indicatorsSystemVersion;
-        try {
-            LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
 
-            indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
+        try {
+            LOG.info("Building dspl for indicators System " + indicatorsSystemVersion.getIndicatorsSystem().getUuid() + " version published:" + indicatorsSystemVersion.getUuid());
+
             List<ElementLevel> structure = indicatorsSystemsService.retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsSystemVersion.getVersionNumber());
 
@@ -153,11 +153,12 @@ public class DsplTransformer {
                     LOG.info("Dataset with granularity " + timeGranularity + " has been built");
                 }
             }
-            LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
+            LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemVersion.getIndicatorsSystem().getUuid() + " version published:" + indicatorsSystemVersion.getUuid());
             ExceptionUtils.throwIfException(new ArrayList<>(exceptions));
             return datasets;
         } catch (MetamacException e) {
-            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorsSystemUuid);
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, title.getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorsSystemVersion.getIndicatorsSystem().getUuid());
         }
     }
 

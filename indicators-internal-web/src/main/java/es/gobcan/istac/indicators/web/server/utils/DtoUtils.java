@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -40,6 +41,30 @@ public class DtoUtils {
     }
 
     /**
+     * Create operationSystemDtoWeb from code and title introduced by user. This indicators system is not linked to and operation.
+     *
+     * @param indicatorsSystemDtoWeb
+     * @param indicatorsSystemDto
+     * @param code
+     * @param title
+     * @return
+     */
+    public static IndicatorsSystemDtoWeb createOrUpdateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto) {
+
+        updateIndicatorsSystemDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
+
+        if (indicatorsSystemDto != null) {
+            indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
+            indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
+            indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+            indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+            indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
+
+        }
+        return indicatorsSystemDtoWeb;
+    }
+
+    /**
      * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link Operation}
      *
      * @param indicatorsSystemDtoWeb
@@ -48,6 +73,38 @@ public class DtoUtils {
      * @return
      */
     public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto, Operation operation) {
+
+        updateIndicatorsSystemDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
+
+        if (operation != null) {
+            indicatorsSystemDtoWeb.setCode(operation.getId());
+            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
+            indicatorsSystemDtoWeb.setAcronym(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getAcronym()));
+            indicatorsSystemDtoWeb.setDescription(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getDescription()));
+            indicatorsSystemDtoWeb.setObjective(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getObjective()));
+            indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatus.EXTERNALLY_PUBLISHED.equals(operation.getProcStatus()));
+            indicatorsSystemDtoWeb.setIsOperational(true);
+
+        } else if (!Boolean.TRUE.equals(indicatorsSystemDto != null && indicatorsSystemDto.getIsOperational())) {
+            indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
+            indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
+            indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+            indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+            indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
+
+        }
+        return indicatorsSystemDtoWeb;
+    }
+
+    /**
+     * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link Operation}
+     *
+     * @param indicatorsSystemDtoWeb
+     * @param indicatorsSystemDto
+     * @param operation
+     * @return
+     */
+    public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWebCommon(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto) {
         if (indicatorsSystemDto != null) {
             indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
             indicatorsSystemDtoWeb.setVersionNumber(indicatorsSystemDto.getVersionNumber());
@@ -69,15 +126,10 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setLastUpdated(indicatorsSystemDto.getLastUpdated());
             indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
             indicatorsSystemDtoWeb.setStreamMessageStatus(indicatorsSystemDto.getStreamMessageStatus());
+            indicatorsSystemDtoWeb.setIsOperational(indicatorsSystemDto.getIsOperational());
+            indicatorsSystemDtoWeb.setVersionOptimisticLocking(indicatorsSystemDto.getVersionOptimisticLocking());
         }
-        if (operation != null) {
-            indicatorsSystemDtoWeb.setCode(operation.getId());
-            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
-            indicatorsSystemDtoWeb.setAcronym(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getAcronym()));
-            indicatorsSystemDtoWeb.setDescription(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getDescription()));
-            indicatorsSystemDtoWeb.setObjective(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getObjective()));
-            indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatus.EXTERNALLY_PUBLISHED.equals(operation.getProcStatus()));
-        }
+
         return indicatorsSystemDtoWeb;
     }
 
@@ -91,17 +143,65 @@ public class DtoUtils {
      */
     public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWeb(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto,
             Resource operation) {
+
+        updateIndicatorsSystemSummaryDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
+
+        if (operation != null) {
+            indicatorsSystemDtoWeb.setCode(operation.getId());
+            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
+
+        }
+        return indicatorsSystemDtoWeb;
+
+    }
+
+    /**
+     * Fills an {@link IndicatorsSystemSummaryDtoWeb} from {@link IndicatorsSystemSummaryDto} and {@link Resource}
+     *
+     * @param indicatorsSystemDtoWeb
+     * @param indicatorsSystemDto
+     * @param operation
+     * @return
+     */
+    public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWeb(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto, String code,
+            InternationalStringDto title) {
+        updateIndicatorsSystemSummaryDtoWebCommon(indicatorsSystemDtoWeb, indicatorsSystemDto);
+        indicatorsSystemDtoWeb.setCode(code);
+        indicatorsSystemDtoWeb.setTitle(title);
+        return indicatorsSystemDtoWeb;
+    }
+
+    public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWebCommon(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto) {
         if (indicatorsSystemDto != null) {
             indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
             indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
             indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
             indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
+            indicatorsSystemDtoWeb.setIsOperational(indicatorsSystemDto.getIsOperational());
+
+            if (!Boolean.TRUE.equals(indicatorsSystemDto.getIsOperational())) {
+                indicatorsSystemDtoWeb.setTitle(indicatorsSystemDto.getTitle());
+                indicatorsSystemDtoWeb.setDescription(indicatorsSystemDto.getDescription());
+                indicatorsSystemDtoWeb.setAcronym(indicatorsSystemDto.getAcronym());
+                indicatorsSystemDtoWeb.setObjective(indicatorsSystemDto.getObjective());
+            }
         }
-        if (operation != null) {
-            indicatorsSystemDtoWeb.setCode(operation.getId());
-            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
-        }
+
         return indicatorsSystemDtoWeb;
+
+    }
+
+    /**
+     * Create operationSystemDtoWeb from code and title introduced by user. This indicators system is not linked to and operation.
+     * 
+     * @param code
+     * @param title
+     * @return
+     */
+    public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(IndicatorsSystemDto indicatorsSystemDto) {
+        IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
+        indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
+        return createOrUpdateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto);
     }
 
     /**
@@ -128,6 +228,20 @@ public class DtoUtils {
         summaryDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemDtoWeb.setProductionVersion(summaryDto);
         return updateIndicatorsSystemSummaryDtoWeb(indicatorsSystemDtoWeb, null, operation);
+    }
+
+    /**
+     * Create an {@link IndicatorsSystemSummaryDtoWeb} from a {@link Resource}
+     *
+     * @param operation
+     * @return
+     */
+    public static IndicatorsSystemSummaryDtoWeb createIndicatorsSystemSummaryDtoWeb(String code, InternationalStringDto title) {
+        IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemSummaryDtoWeb();
+        IndicatorsSystemVersionSummaryDto summaryDto = new IndicatorsSystemVersionSummaryDto();
+        summaryDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
+        indicatorsSystemDtoWeb.setProductionVersion(summaryDto);
+        return updateIndicatorsSystemSummaryDtoWeb(indicatorsSystemDtoWeb, null, code, title);
     }
 
     /**

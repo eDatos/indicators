@@ -22,12 +22,39 @@ import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.QuantityUnitCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.GeoValueCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorsSystemCriteria;
 import es.gobcan.istac.indicators.web.shared.criteria.QuantityUnitCriteria;
 
 public class MetamacWebCriteriaUtils {
+
+    public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(IndicatorsSystemCriteria criteria) {
+        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
+
+        if (criteria != null) {
+
+            // General criteria
+
+            MetamacCriteriaDisjunctionRestriction indicatorCriteriaDisjuction = new MetamacCriteriaDisjunctionRestriction();
+            if (StringUtils.isNotBlank(criteria.getCriteria())) {
+                indicatorCriteriaDisjuction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), criteria.getCriteria(), OperationType.ILIKE));
+
+            }
+            conjunctionRestriction.getRestrictions().add(indicatorCriteriaDisjuction);
+
+            if (criteria.getIsOperational() != null) {
+                conjunctionRestriction.getRestrictions()
+                        .add(new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.IS_OPERATIONAL.name(), criteria.getIsOperational(), OperationType.EQ));
+            }
+
+        }
+
+        return conjunctionRestriction;
+    }
 
     public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(IndicatorCriteria criteria) {
         MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();

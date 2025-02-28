@@ -19,7 +19,7 @@
         indicatorsWidgetDiv.class = 'edatos-indicators';
         body.appendChild(indicatorsWidgetDiv);
 
-        var istacWidget = new IstacWidget(options);
+        var edatosIndicatorsWidget = new EdatosIndicatorsWidget(options);
     </script>
 </body>
 </html>

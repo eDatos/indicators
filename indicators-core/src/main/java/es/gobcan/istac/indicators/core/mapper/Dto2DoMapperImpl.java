@@ -76,16 +76,61 @@ public class Dto2DoMapperImpl extends CommonDto2DoMapperImpl implements Dto2DoMa
 
         // If exists, retrieves existing entity. Otherwise, creates new entity
         IndicatorsSystemVersion target = null;
-        if (source.getUuid() != null) {
+        if (Boolean.TRUE.equals(source.getIsOperational()) && source.getUuid() != null) {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Indicators system can be updated");
         }
 
-        target = new IndicatorsSystemVersion();
+        if (source.getUuid() == null) {
+            target = createIndicatorSystemVersion(source);
+        } else {
+            target = updateIndicatorSystemVersion(ctx, source);
+        }
+        updateIndicatorSystemVersionModifiableMetadata(source, target);
+        return target;
+    }
+
+    private IndicatorsSystemVersion createIndicatorSystemVersion(IndicatorsSystemDto source) throws MetamacException {
+        IndicatorsSystemVersion target = new IndicatorsSystemVersion();
         target.setIndicatorsSystem(new IndicatorsSystem());
+
         // non modifiable after creation
         target.getIndicatorsSystem().setCode(source.getCode());
+        target.getIndicatorsSystem().setIsOperational(source.getIsOperational());
 
         return target;
+    }
+
+    private IndicatorsSystemVersion updateIndicatorSystemVersionModifiableMetadata(IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException {
+
+        target.setTitle(internationalStringDtoToDo(source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE));
+        target.setAcronym(internationalStringDtoToDo(source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATORS_SYSTEM_ACRONYM));
+        target.setDescription(internationalStringDtoToDo(source.getDescription(), target.getDescription(), ServiceExceptionParameters.INDICATORS_SYSTEM_DESCRIPTION));
+        target.setObjective(internationalStringDtoToDo(source.getObjective(), target.getObjective(), ServiceExceptionParameters.INDICATORS_SYSTEM_OBJECTIVE));
+
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
+        target.setUpdateDate(new DateTime());
+
+        return target;
+    }
+
+    private IndicatorsSystemVersion updateIndicatorSystemVersion(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
+        IndicatorsSystemVersion target = indicatorsSystemsService.retrieveIndicatorsSystem(ctx, source.getUuid(), source.getVersionNumber());
+
+        OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
+
+        // Metadata unmodifiable
+        checkMetadataUnmodifiableIndicatorsSystemVersion(source, target);
+
+        return target;
+
+    }
+
+    private void checkMetadataUnmodifiableIndicatorsSystemVersion(IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException {
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+        ValidationUtils.checkMetadataUnmodifiable(target.getIndicatorsSystem().getCode(), source.getCode(), ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(target.getIndicatorsSystem().getIsOperational(), source.getIsOperational(), ServiceExceptionParameters.INDICATORS_SYSTEM_OPERATIONAL, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     @Override

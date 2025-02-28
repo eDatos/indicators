@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum IndicatorsSystemCriteriaPropertyEnum implements Serializable {
 
-    CODE;
+    CODE, IS_OPERATIONAL;
 
     private IndicatorsSystemCriteriaPropertyEnum() {
     }

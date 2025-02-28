@@ -72,7 +72,6 @@
             this.el = $(options.el);
             this.type = options.type;
             this.measures = options.measures || this._defaultOptions.measures;
-            this.geographicalValues = options.geographicalValues;
 
             this.afterRenderCallback = !_.isUndefined(this.options.afterRenderCallback) ? _.debounce(this.options.afterRenderCallback, 300) : null;
 
@@ -258,14 +257,14 @@
                 title = EDatos.common.I18n.translate("LAST_DATA.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
-                    var geographicalValue = this.options.geographicalValues[0];
+                    var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
                 title = EDatos.common.I18n.translate("RECENT.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
-                    var geographicalValue = this.options.geographicalValues[0];
+                    var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
                     title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
                 }
             } else if (this.options.type === "temporal") {
@@ -409,7 +408,7 @@
             filteredOptions.width = this.options.widgetWith;
 
             code += this.openTag('script', { src: this.url + "/theme/js/widgets/widget.min.all.js" }) + closeScript;
-            code += this.openTag('script') + "new IstacWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
+            code += this.openTag('script') + "new EdatosIndicatorsWidget(" + JSON.stringify(filteredOptions, null, 4) + ")" + closeScript;
 
             this.embedContainer.find('textarea').val(code);
             this.embedContainer.show();

@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
-import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 import es.gobcan.istac.indicators.rest.util.IndicatorInstancesPaginatedResponseUtil;
 import es.gobcan.istac.indicators.rest.util.IndicatorsSystemsPaginatedResponseUtil;
 
@@ -43,13 +42,15 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems", method = RequestMethod.GET)
     @ResponseBody
     // @formatter:off
-    public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(@RequestParam(required = false, value = "limit") final Integer limit,
+    public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(@RequestParam(required = false, value = "q") final String q,
+                                                                                            @RequestParam(required = false, value = "order") final String order,
+                                                                                            @RequestParam(required = false, value = "limit") final Integer limit,
                                                                                             @RequestParam(required = false, value = "offset") final Integer offset
                                                                                           ) throws MetamacException {
         // @formatter:on
 
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
-        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(paginator);
+        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(q, order, paginator);
 
         String indicatorsSystemsLink = uriLinks.getIndicatorsSystemsLink();
         IndicatorsSystemsPaginatedResponseUtil.createPaginationLinks(indicatorsSystemBaseTypes, indicatorsSystemsLink, limit, offset);
@@ -130,8 +131,9 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
+
         DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities,
-                includeObservationsAttributes, new GeographicalValuesOldVersionCompatibilityUtils(selectedRepresentations, true));
+                includeObservationsAttributes);
 
         String selfLink = uriLinks.getIndicatorInstanceDataSelfLink(idIndicatorSystem, idIndicatorInstance, fields, representation, granularity);
         LinkType parentLink = new LinkType(IndicatorsRestConstants.KIND_INDICATOR_INSTANCE, uriLinks.getIndicatorInstanceLink(idIndicatorSystem, idIndicatorInstance));

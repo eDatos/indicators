@@ -15,11 +15,11 @@ public interface SystemUiHandler extends UiHandlers {
 
     void createDimension(IndicatorsSystemDtoWeb system, DimensionDto dimension);
     void updateDimension(DimensionDto dimension);
-    void deleteDimension(DimensionDto dimension);
+    void deleteDimension(String indSystemCode, DimensionDto dimension);
 
     void createIndicatorInstance(IndicatorsSystemDtoWeb system, IndicatorInstanceDto instance);
     void updateIndicatorInstance(IndicatorInstanceDto instance);
-    void deleteIndicatorInstance(IndicatorInstanceDto instance);
+    void deleteIndicatorInstance(String indSystemCode, IndicatorInstanceDto instance);
     void searchIndicator(IndicatorCriteria criteria);
 
     void moveSystemStructureNodes(String systemUuid, String targetUuid, ElementLevelDto level, Long newOrder);
@@ -57,4 +57,6 @@ public interface SystemUiHandler extends UiHandlers {
     void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid);
 
     void retrieveGeographicalGranularity(String geographicalGranularityUuid);
+
+    void updateIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto);
 }

@@ -18,6 +18,7 @@ import es.gobcan.istac.indicators.web.server.rest.StatisticalOperationsRestInter
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class CreateDimensionActionHandler extends SecurityActionHandler<CreateDimensionAction, CreateDimensionResult> {
@@ -55,7 +56,8 @@ public class CreateDimensionActionHandler extends SecurityActionHandler<CreateDi
         // Create Dimension
         try {
             DimensionDto dimensionDto = indicatorsServiceFacade.createDimension(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid(), action.getDimension());
-            return new CreateDimensionResult(dimensionDto);
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystem().getCode(), null);
+            return new CreateDimensionResult(dimensionDto, DtoUtils.createOrUpdateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto));
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
