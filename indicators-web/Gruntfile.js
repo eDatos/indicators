@@ -12,6 +12,7 @@ module.exports = function (grunt) {
     var jsPath = 'src/main/webapp/theme/js';
     var widgetsPath = 'src/main/webapp/theme/js/widgets';
     var commonPath = 'src/main/webapp/theme/js/common';
+    var nodeModulesPath = 'node_modules';
 
     var vendorSrc = [
         jsPath + '/libs/indicators-utils.js',
@@ -32,10 +33,11 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/jquery.outro.js',
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
         widgetsPath + '/libs/jquery.sparkline.js',
-        widgetsPath + '/libs/highcharts.js',
         widgetsPath + '/libs/moment.js',
         widgetsPath + '/src/HandlebarsHelpers.js',
         widgetsPath + '/src/Templates.js',
+
+        nodeModulesPath + '/echarts/dist/echarts.js',
 
         commonPath + '/Common.js',
         commonPath + '/translations/es.js',
@@ -111,9 +113,10 @@ module.exports = function (grunt) {
         // Widget
         jsPath + '/widgets/libs/Class.js',
         jsPath + '/widgets/libs/raphael-min.js',
-        jsPath + '/widgets/libs/highcharts.js',
         jsPath + '/widgets/libs/jquery.sparkline.js',
         jsPath + '/widgets/libs/moment.js',
+
+        nodeModulesPath + '/echarts/dist/echarts.js',
 
 
         jsPath + '/widgets/src/HandlebarsHelpers.js',
@@ -143,23 +146,21 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetView.js'
     ]
 
-    var widgetBanner = "(function(window, _, $, jQuery, moment, Highcharts){" +
+    var widgetBanner = "(function(window, _, $, jQuery, moment, echarts){" +
         "if(!window.edatosWidgetScriptAlreadyExecuted){" +
         "   window.edatosWidgetScriptAlreadyExecuted = true;" +
         "   var old_ = _;" +
         "   var old$ = $;" +
         "   var oldJQuery = jQuery;" +
         "   var oldMoment = moment;" +
-        "   var oldHighcharts = {...Highcharts};" +
-        "   window.Highcharts = undefined;" +
-        "   Highcharts = {};";
+        "   var oldEcharts = echarts;";
 
     var widgetFooter = "window._ = old_;" +
         "   window.$ = old$;" +
         "   window.jQuery = oldJQuery;" +
         "   window.moment = oldMoment;" +
-        "   window.Highcharts = oldHighcharts;" +
-        "}}(window, window._, window.$, window.jQuery, window.moment, window.Highcharts));";
+        "   window.echarts = oldEcharts;" +
+        "}}(window, window._, window.$, window.jQuery, window.moment, window.echarts));";
 
     grunt.initConfig({
         handlebars: {
