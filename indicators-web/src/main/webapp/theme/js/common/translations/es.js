@@ -115,19 +115,29 @@
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Tipo de widget no soportado',
-            'URL_NOT_PROVIDED': 'Error, no se ha especificado la url del servicio web'
+            'URL_NOT_PROVIDED': 'Error, no se ha especificado la url del servicio web',
+            'LEGACY_WIDGET_NAME': 'Se ha detectado un widget que sigue haciendo uso del nombre "IstacWidget". Por favor, cambie al nuevo nombre: "EdatosIndicatorsWidget".'
         },
         'SELECT2': {
             'NO_MATCHES': 'No hay resultados',
             'LOADING': 'Cargando...'
         },
-        'HIGHCHARTS': {
-            'months': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            'weekdays': ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
-            'shortMonths': ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            'thousandsSep': '.',
-            'decimalPoint': ','
+        'ECHARTS': {
+            'time': {
+                'month': [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                ],
+                'monthAbbr': [
+                    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+                ],
+                'dayOfWeek': [
+                    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+                ],
+                'dayOfWeekAbbr': [
+                    'Dom', 'Lun', 'Mar', 'Miérc', 'Juev', 'Vier', 'Sáb'
+                ]
+            }
         },
         'CAPTCHA': {
             'LABEL': "Escriba el valor de la imagen mostrada encima"
@@ -137,9 +147,6 @@
             'CONTRACTED_OF': ' de '
         },
         'MAIN_INDICATORS': {
-            'ALL': {
-                'TOOLTIP': 'Conjunto de indicadores disponibles generados a partir de operaciones estadísticas oficiales.'
-            },
             'ONLY_MAIN': {
                 'TOOLTIP': 'Los indicadores principales son un subconjunto de los indicadores disponibles que han sido preseleccionados por considerarse más relevantes.'
             }

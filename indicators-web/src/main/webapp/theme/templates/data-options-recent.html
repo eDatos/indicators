@@ -28,12 +28,14 @@
 </div>
 
 <div class="control-group control-group-indicators">
-    <div class="widget-data-title">{{ translate "OPTIONS.DATA.INDICATORS" }}</div>
+    <div class="widget-data-title">
+        {{ translate "OPTIONS.DATA.INDICATORS" }} <i class="main-indicators-help icon-help"></i>
+    </div>
     <div class="widget-data-main">
-        <label class="radio" title='{{ translate "MAIN_INDICATORS.ALL.TOOLTIP"}}'>
+        <label class="radio">
             <input type="radio" name="indicatorsMain" value="all">{{ translate "OPTIONS.DATA.ALL_INDICATORS" }}
         </label>
-        <label class="radio" title='{{ translate "MAIN_INDICATORS.ONLY_MAIN.TOOLTIP"}}'>
+        <label class="radio">
             <input type="radio" name="indicatorsMain" value="onlyMain">{{ translate "OPTIONS.DATA.ONLY_MAIN_INDICATORS" }}
         </label>
     </div>

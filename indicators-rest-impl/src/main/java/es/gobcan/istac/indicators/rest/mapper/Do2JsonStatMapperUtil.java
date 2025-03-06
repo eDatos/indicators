@@ -178,6 +178,7 @@ public class Do2JsonStatMapperUtil {
         }
         JsonStatCategoryType category = new JsonStatCategoryType();
         int i = 0;
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
         for (MeasureValue measureValue : measureValues) {
             String categoryCode = measureValue.getMeasureValue().name();
             if (filterMeasureCodes.contains(categoryCode)) {
@@ -185,7 +186,7 @@ public class Do2JsonStatMapperUtil {
                 Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
                 category.getLabel().put(categoryCode, categoryLabel);
                 category.getIndex().put(categoryCode, (long) i);
-                category.getUnit().put(categoryCode, toJsonStatUnit(quantity));
+                category.getUnit().put(categoryCode, toJsonStatUnit(quantity, srmRestObjectsMapper));
                 i++;
             }
         }
@@ -209,7 +210,7 @@ public class Do2JsonStatMapperUtil {
         }
     }
 
-    private JsonStatUnitType toJsonStatUnit(Quantity quantity) throws MetamacException {
+    private JsonStatUnitType toJsonStatUnit(Quantity quantity, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         if (quantity == null) {
             return null;
         }
@@ -218,7 +219,7 @@ public class Do2JsonStatMapperUtil {
         unit.setMultiplier(quantity.getUnitMultiplier().getUnitMultiplier());
 
         QuantityType quantityType = new QuantityType();
-        MapperUtil.setQuantityUnitMetadata(quantity, quantityType, metadataProperties, srmRestInternalFacade);
+        MapperUtil.setQuantityUnitMetadata(quantity, quantityType, metadataProperties, srmRestInternalFacade, srmRestObjectsMapper);
 
         unit.setSymbol(quantityType.getUnitSymbol());
         QuantityUnitSymbolPositionEnum symbolPosition = quantityType.getUnitSymbolPosition();

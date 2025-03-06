@@ -150,7 +150,7 @@ public class SystemStructurePanel extends HLayout {
             @Override
             public void onClick(ClickEvent event) {
                 hidePanels();
-                uiHandlers.deleteDimension(selectedDimension);
+                uiHandlers.deleteDimension(system.getCode(), selectedDimension);
             }
         });
         indInstanceDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -158,7 +158,7 @@ public class SystemStructurePanel extends HLayout {
             @Override
             public void onClick(ClickEvent event) {
                 hidePanels();
-                uiHandlers.deleteIndicatorInstance(selectedIndInstance);
+                uiHandlers.deleteIndicatorInstance(system.getCode(), selectedIndInstance);
             }
         });
     }

@@ -210,6 +210,7 @@
                 this.$('.widget-data-system').toggle(toggleSystem);
                 this.$('.widget-data-subject').toggle(toggleSubject);
                 this.$(".control-group-indicators").toggle(toggleSubject || toggleAllValues);
+                this.$(".main-indicators-help").toggle(toggleSubject || toggleAllValues);
             };
             toggleGroupType = _.bind(toggleGroupType, this);
             this.model.on('change:groupType', toggleGroupType);
@@ -218,6 +219,12 @@
 
         render : function () {
             this.$el.html(this.template());
+
+            this.$('.main-indicators-help').qtip({
+                content: EDatos.common.I18n.translate('MAIN_INDICATORS.ONLY_MAIN.TOOLTIP'),
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
 
             // Bind radio button, nrecent input and indicatorsMain
             var bindings = {

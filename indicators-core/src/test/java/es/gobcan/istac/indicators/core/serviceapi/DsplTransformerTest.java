@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -131,7 +132,10 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         try {
-            dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+
+            IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(getServiceContextAdministrador(), INDICATORS_SYSTEM_2);
+
+            dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion, title, desc);
             fail("Should not allow exports with not populated instances");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -150,7 +154,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
-        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(getServiceContextAdministrador(), INDICATORS_SYSTEM_2);
+
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion, title, desc);
 
         assertNotNull(datasets);
         assertEquals(1, datasets.size());
@@ -188,7 +194,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
         InternationalString desc = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
 
-        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(getServiceContextAdministrador(), INDICATORS_SYSTEM_3);
+
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion, title, desc);
         assertNotNull(datasets);
         assertEquals(3, datasets.size());
     }
@@ -200,7 +208,9 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
         InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(getServiceContextAdministrador(), INDICATORS_SYSTEM_1);
+
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion, title, desc);
         assertNotNull(datasets);
         assertEquals(4, datasets.size());
     }

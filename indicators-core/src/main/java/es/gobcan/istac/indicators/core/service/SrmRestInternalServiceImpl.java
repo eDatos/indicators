@@ -91,6 +91,24 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
+    public HashMap<String, CategoryResourceInternal> retrieveSrmCategoryResoourcesByCategoryScheme(String categorySchemeUrn) throws MetamacException {
+        HashMap<String, CategoryResourceInternal> categoriesByCategoryElement = new HashMap<String, CategoryResourceInternal>();
+
+        Categories categories = retrieveCategoriesByCategoryScheme(categorySchemeUrn);
+
+        for (CategoryResourceInternal category : categories.getCategories()) {
+            if (category.getCategoryElement() != null) {
+                CategoryResourceInternal existingCategory = categoriesByCategoryElement.get(category.getCategoryElement().getId());
+                if (existingCategory == null) {
+                    categoriesByCategoryElement.put(category.getCategoryElement().getId(), category);
+                }
+            }
+        }
+
+        return categoriesByCategoryElement;
+    }
+
+    @Override
     public Category retrieveCategoryByCode(String categorySchemeUrn, String categoryCode) throws MetamacException {
         String fields = "+categoryElement";
 

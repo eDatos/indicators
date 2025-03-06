@@ -1,19 +1,20 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -32,6 +33,8 @@ import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorInstancesRest2DoMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorsSystemRest2DoMapper;
+import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
@@ -44,7 +47,6 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.ConditionUtil;
-import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
 import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Service
@@ -65,10 +67,19 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     @Autowired
     private SrmRestInternalFacade           srmRestInternalFacade = null;
 
+    @Autowired
+    private final MetadataProperties        metadataProperties    = null;
+
+    @Autowired
+    private IndicatorsSystemRest2DoMapper   indicatorsSystemRest2DoMapper;
+
     @Override
-    public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final RestCriteriaPaginator paginator) throws MetamacException {
-        PagingParameter pagingParameter = CriteriaUtil.createPagingParameter(paginator);
-        PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystems(pagingParameter);
+    public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(String q, String order, final RestCriteriaPaginator paginator) throws MetamacException {
+
+        // Parse Query
+        SculptorCriteria sculptorCriteria = indicatorsSystemRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
+
+        PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystems(sculptorCriteria);
 
         List<IndicatorsSystemBaseType> result = dto2TypeMapper.indicatorsSystemDoToBaseType(indicatorsSystemVersions.getValues());
 
@@ -98,8 +109,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return dto2TypeMapper.indicatorsInstanceDoToJsonStatType(indicatorInstance, indicatorVersion, instanceObservations);
     }
 
-    protected PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
-        return indicatorsApiService.findIndicatorsSystems(pagingParameter);
+    protected PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
+        return indicatorsApiService.findIndicatorsSystems(sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
     }
 
     protected IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException {
@@ -135,9 +146,9 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     private GeographicalValuesOldVersionCompatibilityUtils getInformationForOldGeographicalValuesCompatibility(PagedResult<IndicatorInstance> instances,
-            PagedResultType<IndicatorInstanceBaseType> result, Map<String, List<String>> representation) throws MetamacException {
+            PagedResultType<IndicatorInstanceBaseType> result, Map<String, List<String>> representation, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
 
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation, true);
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation, true, srmRestObjectsMapper);
 
         if (geoValuesOldVersionCompatibilityUtils.checkNeedCompatibility(geographicalValuesRestFacade, representation)) {
             for (int i = 0; i < result.getItems().size(); i++) {
@@ -179,24 +190,33 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         // Fields filter. Only support for +metadata, +data
         Set<String> fieldsToAdd = RequestUtil.parseFields(fields);
 
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(instances, result, representation);
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+        if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
+            srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+            srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        }
+
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(instances, result, representation,
+                srmRestObjectsMapper);
 
         if (fieldsToAdd.contains("+metadata")) {
+
             for (int i = 0; i < result.getItems().size(); i++) {
                 IndicatorInstanceBaseType baseType = result.getItems().get(i);
                 IndicatorInstance indicatorInstance = instances.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                dto2TypeMapper.indicatorsInstanceDoToMetadataType(indicatorInstance, metadataType, geoValuesOldVersionCompatibilityUtils);
+                dto2TypeMapper.indicatorsInstanceDoToMetadataType(indicatorInstance, metadataType, geoValuesOldVersionCompatibilityUtils, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
                 baseType.setMetadata(metadataType);
             }
         }
 
         if (fieldsToAdd.contains("+data")) {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
+
             for (IndicatorInstanceBaseType type : result.getItems()) {
-                DataType dataType = retrieveIndicatorInstanceDataByCode(type.getSystemCode(), type.getId(), representation, selectedGranularities, includeObservationsAttributes,
-                        geoValuesOldVersionCompatibilityUtils);
+                DataType dataType = retrieveIndicatorInstanceDataByCodeCommon(type.getSystemCode(), type.getId(), representation, selectedGranularities, includeObservationsAttributes,
+                        geoValuesOldVersionCompatibilityUtils, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
 
                 type.setData(dataType);
             }
@@ -204,10 +224,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return result;
     }
 
-    @Override
-    public DataType retrieveIndicatorInstanceDataByCode(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
-            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils)
-            throws MetamacException {
+    private DataType retrieveIndicatorInstanceDataByCodeCommon(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) throws MetamacException {
+
         IndicatorInstance indicatorInstance = getIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
         IndicatorsDataFilterVO dataFilter = getIndicatorDataFilter(selectedRepresentations, selectedGranularities);
@@ -219,17 +239,34 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+
+            if (geographicalValuesCodes.isEmpty()) {
+                geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+            }
+
+            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, geographicalValuesCodes);
         } else {
             IndicatorObservationsVO instanceObservations = indicatorsApiService.findObservationsInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-            dataType = dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+            dataType = dto2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, geographicalValuesCodes);
         }
 
         return dataType;
+    }
+
+    @Override
+    public DataType retrieveIndicatorInstanceDataByCode(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws MetamacException {
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+
+        GeographicalValuesOldVersionCompatibilityUtils geographicalValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(selectedRepresentations, true,
+                srmRestObjectsMapper);
+
+        return retrieveIndicatorInstanceDataByCodeCommon(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, includeObservationMetadata,
+                geographicalValuesOldVersionCompatibilityUtils, new HashMap<>());
     }
 
     private static IndicatorsDataFilterVO getIndicatorDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {

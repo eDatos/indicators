@@ -111,6 +111,14 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         target.setStreamMessageStatus(source.getStreamMessageStatus());
 
+        target.setIsOperational(source.getIndicatorsSystem().getIsOperational());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setAcronym(internationalStringToDto(source.getAcronym()));
+        target.setDescription(internationalStringToDto(source.getDescription()));
+        target.setObjective(internationalStringToDto(source.getObjective()));
+
+        target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 
@@ -121,6 +129,12 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         IndicatorsSystem indicatorsSystem = source.getIndicatorsSystem();
         target.setUuid(indicatorsSystem.getUuid());
         target.setCode(indicatorsSystem.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setDescription(internationalStringToDto(source.getDescription()));
+        target.setAcronym(internationalStringToDto(source.getAcronym()));
+        target.setObjective(internationalStringToDto(source.getObjective()));
+        target.setIsOperational(indicatorsSystem.getIsOperational());
+
         for (IndicatorsSystemVersion indicatorsSystemVersionInIndicatorsSystem : indicatorsSystem.getVersions()) {
             if (indicatorsSystem.getProductionVersion() != null
                     && IndicatorsVersionUtils.equalsVersionNumber(indicatorsSystem.getProductionVersion().getVersionNumber(), indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {

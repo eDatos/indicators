@@ -115,19 +115,12 @@
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Unsupported widget type',
-            'URL_NOT_PROVIDED': 'Error, web service url not provided'
+            'URL_NOT_PROVIDED': 'Error, web service url not provided',
+            'LEGACY_WIDGET_NAME': 'It has been detected that a widget is still using the name "IstacWidget". Please change it to the new name: "EdatosIndicatorsWidget".'
         },
         'SELECT2': {
             'NO_MATCHES': 'No matches',
             'LOADING': 'Loading...'
-        },
-        'HIGHCHARTS': {
-            'months': ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            'weekdays': ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            'shortMonths': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            // A priori no cambiamos esto para ser coherentes con ale existencia de addThousandSeparator
-            'thousandsSep': '.',
-            'decimalPoint': ','
         },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"
@@ -137,9 +130,6 @@
             'CONTRACTED_OF': ' of '
         },
         'MAIN_INDICATORS': {
-            'ALL': {
-                'TOOLTIP': 'Set of available indicators generated from official statistical operations.'
-            },
             'ONLY_MAIN': {
                 'TOOLTIP': 'The main indicators are a subset of the available indicators that have been preselected as being considered more relevant.'
             }

@@ -115,19 +115,29 @@
         },
         'ERROR': {
             'INVALID_WIDGET_TYPE': 'Tipus de widget no suportat',
-            'URL_NOT_PROVIDED': "Error, no s'ha especificat la url del servei web"
+            'URL_NOT_PROVIDED': "Error, no s'ha especificat la url del servei web",
+            'LEGACY_WIDGET_NAME': 'S\'ha detectat un widget que segueix fent ús del nom "IstacWidget". Si us plau, canvieu al nou nom: "EdatsIndicatorsWidget".'
         },
         'SELECT2': {
             'NO_MATCHES': 'No hi ha resultats',
             'LOADING': 'Carregant...'
         },
-        'HIGHCHARTS': {
-            'months': ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
-                'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'],
-            'weekdays': ['Domingo', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Sabado'],
-            'shortMonths': ['Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'],
-            'thousandsSep': '.',
-            'decimalPoint': ','
+        'ECHARTS': {
+            'time': {
+                'month': [
+                    'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
+                    'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'
+                ],
+                'monthAbbr': [
+                    'Gen', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'
+                ],
+                'dayOfWeek': [
+                    'Diumenge', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte'
+                ],
+                'dayOfWeekAbbr': [
+                    'Dg', 'Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds'
+                ]
+            }
         },
         'CAPTCHA': {
             'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
@@ -137,9 +147,6 @@
             'CONTRACTED_OF': ' d\''
         },
         'MAIN_INDICATORS': {
-            'ALL': {
-                'TOOLTIP': 'Conjunt d\'indicadors disponibles generats a partir d\'operacions estadístiques oficials.'
-            },
             'ONLY_MAIN': {
                 'TOOLTIP': 'Els indicadors principals són un subconjunt dels indicadors disponibles que han estat preseleccionats per considerar-se més rellevants.'
             }

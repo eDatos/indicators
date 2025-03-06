@@ -159,8 +159,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(source);
 
         try {
-            OperationIndicators sourceOperationBase = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
-            IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, sourceOperationBase);
+            IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, getOperationFromIndicatorsSystem(source));
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -172,9 +171,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(source);
 
         try {
-            OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
-
-            IndicatorsSystemType target = indicatorsSystemDoToType(source, sourceOperation);
+            IndicatorsSystemType target = indicatorsSystemDoToType(source, getOperationFromIndicatorsSystem(source));
             return target;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -187,9 +184,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
+            Map<String, OperationIndicators> operations = new HashMap<>();
             for (IndicatorsSystemVersion source : sources) {
-                OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // IDEA Make in only one invocation
-                IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, sourceOperation);
+                IndicatorsSystemBaseType target = indicatorsSystemDoToBaseType(source, getOperationByCode(operations, source));
                 targets.add(target);
             }
             return targets;
@@ -296,9 +293,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(sources);
         try {
             List<IndicatorBaseType> targets = new ArrayList<IndicatorBaseType>(sources.size());
+            SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+            srmRestObjectsMapper.setCategoriesByCategoryElement(srmRestInternalFacade.retrieveSrmCategoryResoourcesByCategoryScheme(metadataProperties.getDefaultCategoryScheme()));
+
             for (IndicatorVersion source : sources) {
                 IndicatorBaseType target = new IndicatorBaseType();
-                indicatorBaseDoToType(source, target);
+                indicatorBaseDoToType(source, target, srmRestObjectsMapper);
                 targets.add(target);
             }
             return targets;
@@ -400,15 +400,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     @Override
     public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
-        return createGenericDataType(dataTypeRequest, includeObservationMetadata, false);
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, false, new HashMap<>());
     }
 
     @Override
-    public DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
-        return createGenericDataType(dataTypeRequest, includeObservationMetadata, true);
+    public DataType createDataTypeWithGeographicalCodes(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, Map<String, String> geographicalValuesCodes) {
+        return createGenericDataType(dataTypeRequest, includeObservationMetadata, true, geographicalValuesCodes);
     }
 
-    private DataType createGenericDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, boolean geographicalCodesRequired) {
+    private DataType createGenericDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata, boolean geographicalCodesRequired, Map<String, String> geographicalValuesCodes) {
         requestCache.remove();
         try {
             List<String> geographicalCodes = setGeographicalCodesCompatibility(dataTypeRequest);
@@ -491,9 +491,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
 
             if (geographicalCodesRequired) {
-                Map<String, String> geographicalValuesCodes = new HashMap<>();
-                geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-
                 for (int i = 0; i < geographicalCodes.size(); i++) {
                     String geographicalCode = geographicalCodes.get(i);
                     String codeId = geographicalValuesCodes.get(geographicalCode);
@@ -525,7 +522,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             requestCache.remove();
         }
     }
-
 
     private List<String> setGeographicalCodesCompatibility(DataTypeRequest dataTypeRequest) {
         List<String> geographicalCodes;
@@ -581,7 +577,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return attributeType;
     }
 
-    private QuantityType quantityDoToBaseType(final Quantity source) throws MetamacException {
+    private QuantityType quantityDoToBaseType(final Quantity source, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         Assert.notNull(source);
 
         QuantityType quantityType = new QuantityType();
@@ -589,7 +585,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         if (source.getUnit() != null) {
             quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
-            MapperUtil.setQuantityUnitMetadata(source, quantityType, metadataProperties, srmRestInternalFacade);
+            MapperUtil.setQuantityUnitMetadata(source, quantityType, metadataProperties, srmRestInternalFacade, srmRestObjectsMapper);
         }
 
         if (source.getUnitMultiplier() != null) {
@@ -628,7 +624,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return quantityType;
     }
 
-    private void indicatorBaseDoToType(IndicatorVersion source, IndicatorBaseType target) throws MetamacException {
+    private void indicatorBaseDoToType(IndicatorVersion source, IndicatorBaseType target, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         target.setId(source.getIndicator().getCode());
         target.setKind(IndicatorsRestConstants.KIND_INDICATOR);
         target.setSelfLink(createUrlIndicator(source.getIndicator()));
@@ -636,7 +632,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setVersion(source.getVersionNumber());
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
-        CategoryResourceInternal category = getCategoryByCategoryElement(source.getCategoryElement().getCode());
+        CategoryResourceInternal category = srmRestObjectsMapper.getCategoriesByCategoryElement().get(source.getCategoryElement().getCode());
 
         if (category != null) {
             target.setSubjectCode(category.getNestedId() != null ? category.getNestedId() : category.getId());
@@ -654,7 +650,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
             target.setSystemSurveyLinks(surveyLinks);
         }
-        target.setQuantity(quantityDoToBaseType(source.getQuantity()));
+
+        target.setQuantity(quantityDoToBaseType(source.getQuantity(), srmRestObjectsMapper));
         target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
         target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage()));
     }
@@ -664,16 +661,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target) throws MetamacException {
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
-        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues, srmRestObjectsMapper);
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) throws MetamacException {
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
         if (!geoValuesOldVersionCompatibilityUtils.needsCompatibilityGeographicalCodes()) {
-            indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+            indicatorDoToMetadataTypeCommon(source, target, geographicalValues, srmRestObjectsMapper);
             return;
         }
 
@@ -684,17 +682,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
         }
 
-        indicatorDoToMetadataTypeCommon(source, target, geographicalValues);
+        indicatorDoToMetadataTypeCommon(source, target, geographicalValues, srmRestObjectsMapper);
 
     }
 
-    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues) throws MetamacException {
+    private void indicatorDoToMetadataTypeCommon(IndicatorVersion source, MetadataType target, List<GeographicalValueVO> geographicalValues, SrmRestObjectsMapper srmRestObjectsMapper)
+            throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -707,7 +706,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES
@@ -718,7 +717,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void indicatorDoToType(IndicatorVersion source, IndicatorType target) throws MetamacException {
-        indicatorBaseDoToType(source, target);
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+        srmRestObjectsMapper.setCategoriesByCategoryElement(srmRestInternalFacade.retrieveSrmCategoryResoourcesByCategoryScheme(metadataProperties.getDefaultCategoryScheme()));
+
+        indicatorBaseDoToType(source, target, srmRestObjectsMapper);
 
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
@@ -726,7 +728,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -739,7 +744,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES
@@ -833,7 +838,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils) {
+    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
+            Map<String, String> geographicalValuesCodes) {
         try {
             IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(source.getIndicator().getCode());
 
@@ -845,7 +851,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             geoValuesOldVersionCompatibilityUtils.getGeoValuesWithOldCompatibility(geographicalValues);
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -858,7 +864,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion);
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper());
             target.getDimension().put(measureDimension.getCode(), measureDimension);
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -878,7 +884,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues);
+            Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -891,7 +899,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion);
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper());
             target.getDimension().put(measureDimension.getCode(), measureDimension);
 
             // DECIMAL PLACES
@@ -920,18 +928,19 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         MetadataDimensionType measureDimension = new MetadataDimensionType();
         measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
-        measureDimension.setRepresentation(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion));
+        measureDimension.setRepresentation(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion, srmRestObjectsMapper));
         return measureDimension;
     }
 
-    private MetadataDimensionType createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues) {
+    private MetadataDimensionType createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues,
+            Map<String, String> geographicalValuesCodes) {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
-        geographicaDimension.setRepresentation(geographicalValuesDoToMetadataRepresentationType(geographicalValues));
+        geographicaDimension.setRepresentation(geographicalValuesDoToMetadataRepresentationType(geographicalValues, geographicalValuesCodes));
         return geographicaDimension;
     }
 
@@ -943,27 +952,20 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return timeDimension;
     }
 
-    private List<MetadataRepresentationType> geographicalValuesDoToMetadataRepresentationType(List<GeographicalValueVO> geographicalValues) {
+    private List<MetadataRepresentationType> geographicalValuesDoToMetadataRepresentationType(List<GeographicalValueVO> geographicalValues, Map<String, String> geographicalValuesCodes) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
 
-        Map<String, String> geographicalValuesCodes = new HashMap<>();
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
 
-        try {
-            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-
-            for (GeographicalValueVO geographicalValue : geographicalValues) {
-                String codeId = geographicalValuesCodes.get(geographicalValue.getCode());
-                if (codeId != null) {
-                    geographicalValue.setCode(codeId);
-                }
-                MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
-                geographicalValueTypes.add(metadataRepresentationType);
+        for (GeographicalValueVO geographicalValue : geographicalValues) {
+            String codeId = geographicalValuesCodes.get(geographicalValue.getCode());
+            if (codeId != null) {
+                geographicalValue.setCode(codeId);
             }
-        } catch (MetamacException e) {
-            throw new RuntimeException(e);
+            MetadataRepresentationType metadataRepresentationType = geographicalValueVOToMetadataRepresentationType(geographicalValue);
+            geographicalValueTypes.add(metadataRepresentationType);
         }
 
         return geographicalValueTypes;
@@ -1009,7 +1011,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return metadataRepresentationType;
     }
 
-    private List<MetadataRepresentationType> measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<MetadataRepresentationType> measureValueDoToMeasureRepresentationType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, SrmRestObjectsMapper srmRestObjectsMapper)
+            throws MetamacException {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
@@ -1020,7 +1023,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
             Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
             if (quantity != null) {
-                metadataRepresentationType.setQuantity(quantityDoToBaseType(quantity));
+                metadataRepresentationType.setQuantity(quantityDoToBaseType(quantity, srmRestObjectsMapper));
 
                 removeUnitMultiplierIfRate(measureValue, metadataRepresentationType);
             }
@@ -1161,14 +1164,24 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
         indicatorsSystemDoToBaseType(sourceIndicatorsSystem, target);
-        operationBaseDoToType(sourceOperation, target);
+
+        baseDoToTypeByIndicatorsSystemType(sourceIndicatorsSystem, target, sourceOperation);
+
         return target;
+    }
+
+    private void baseDoToTypeByIndicatorsSystemType(IndicatorsSystemVersion sourceIndicatorsSystem, IndicatorsSystemBaseType target, OperationIndicators sourceOperation) {
+        if (Boolean.TRUE.equals(sourceIndicatorsSystem.getIndicatorsSystem().getIsOperational())) {
+            operationBaseDoToType(sourceOperation, target);
+        } else {
+            nonOperationBaseDoToType(sourceIndicatorsSystem, target);
+        }
     }
 
     private IndicatorsSystemType indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation) {
         IndicatorsSystemType target = new IndicatorsSystemType();
         indicatorsSystemDoToType(sourceIndicatorsSystem, target);
-        operationBaseDoToType(sourceOperation, target);
+        baseDoToTypeByIndicatorsSystemType(sourceIndicatorsSystem, target, sourceOperation);
         elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target);
         return target;
     }
@@ -1180,6 +1193,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setSelfLink(selfLinkURL);
         target.setVersion(source.getVersionNumber());
         target.setPublicationDate(source.getPublicationDate());
+        target.setOperational(Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational()));
     }
 
     private void indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemType target) {
@@ -1190,6 +1204,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         String parentLink = uriLinks.getIndicatorsSystemsLink();
         target.setParentLink(new LinkType(IndicatorsRestConstants.KIND_INDICATOR_SYSTEMS, parentLink));
+    }
+
+    private void nonOperationBaseDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, IndicatorsSystemBaseType target) {
+        target.setId(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
+        target.setCode(sourceIndicatorsSystem.getIndicatorsSystem().getCode());
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setAcronym(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getAcronym(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setDescription(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getDescription(), metadataProperties.getDefaultInternationalizationLanguage()));
+        target.setObjective(MapperUtil.getLocalisedLabel(sourceIndicatorsSystem.getObjective(), metadataProperties.getDefaultInternationalizationLanguage()));
+
     }
 
     private void operationBaseDoToType(OperationIndicators sourceOperation, IndicatorsSystemBaseType target) {
@@ -1225,6 +1249,27 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private String createUrlIndicatorData(final Indicator indicator) {
         return uriLinks.getIndicatorDataLink(indicator.getCode());
+    }
+
+    private OperationIndicators getOperationFromIndicatorsSystem(IndicatorsSystemVersion source) throws MetamacException {
+        OperationIndicators operationIndicators = null;
+        if (Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational())) {
+            operationIndicators = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+        }
+        return operationIndicators;
+
+    }
+
+    private OperationIndicators getOperationByCode(Map<String, OperationIndicators> operations, IndicatorsSystemVersion source) throws MetamacException {
+        OperationIndicators operationIndicators = null;
+        if (Boolean.TRUE.equals(source.getIndicatorsSystem().getIsOperational())) {
+            operationIndicators = operations.get(source.getIndicatorsSystem().getCode());
+            if (operationIndicators == null) {
+                operationIndicators = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+                operations.put(source.getIndicatorsSystem().getCode(), operationIndicators);
+            }
+        }
+        return operationIndicators;
     }
 
 }
