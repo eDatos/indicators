@@ -47,6 +47,7 @@ import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
+import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
@@ -104,12 +105,14 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         // Mapping to type
         List<IndicatorBaseType> result = do2TypeMapper.indicatorDoToBaseType(indicatorsVersions.getValues());
 
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(indicatorsVersions.getValues(), representation);
-
-        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
         if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
-            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+            srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+            srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
         }
+
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(indicatorsVersions.getValues(), representation,
+                srmRestObjectsMapper);
 
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
@@ -119,7 +122,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 IndicatorVersion indicatorVersion = indicatorsVersions.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                do2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType, geoValuesOldVersionCompatibilityUtils, geographicalValuesCodes);
+                do2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType, geoValuesOldVersionCompatibilityUtils, srmRestObjectsMapper);
 
                 baseType.setMetadata(metadataType);
             }
@@ -129,7 +132,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
             for (IndicatorBaseType indicatorType : result) {
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorData(indicatorType.getCode(), representation, selectedGranularities, geoValuesOldVersionCompatibilityUtils, includeObservationsAttributes);
+                DataType dataType = retrieveIndicatorData(indicatorType.getCode(), representation, selectedGranularities, geoValuesOldVersionCompatibilityUtils, includeObservationsAttributes,
+                        srmRestObjectsMapper);
                 indicatorType.setData(dataType);
             }
         }
@@ -145,8 +149,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         return resultType;
     }
 
-    private GeographicalValuesOldVersionCompatibilityUtils getInformationForOldGeographicalValuesCompatibility(List<IndicatorVersion> indicatorVersions, Map<String, List<String>> representation) {
-        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation);
+    private GeographicalValuesOldVersionCompatibilityUtils getInformationForOldGeographicalValuesCompatibility(List<IndicatorVersion> indicatorVersions, Map<String, List<String>> representation,
+            SrmRestObjectsMapper srmRestObjectsMapper) {
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = new GeographicalValuesOldVersionCompatibilityUtils(representation, srmRestObjectsMapper);
         if (indicatorVersions != null && !indicatorVersions.isEmpty()) {
             geoValuesOldVersionCompatibilityUtils.setGeographicalRepresentationByVariableElements(geographicalValuesRestFacade, srmRestInternalFacade, indicatorVersions.get(0), representation);
         }
@@ -172,7 +177,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities, new HashMap<>());
         IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
         return do2TypeMapper.indicatorDoToJsonStatType(indicatorVersion, indicatorObservationsExtended);
     }
@@ -432,16 +437,20 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
             throws MetamacException {
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
 
-        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
-        return do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
+
+        return do2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
     }
 
     public DataTypeRequest retrieveIndicatorDataCommon(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            boolean includeObservationMetadata) throws MetamacException {
+            boolean includeObservationMetadata, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities, srmRestObjectsMapper.getGeographicalVariableElementsByCode());
         DataTypeRequest dataTypeRequest = null;
         if (includeObservationMetadata) {
             IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
@@ -459,14 +468,29 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     private DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils, boolean includeObservationMetadata) throws MetamacException {
-        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
+            GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils, boolean includeObservationMetadata, SrmRestObjectsMapper srmRestObjectsMapper)
+            throws MetamacException {
+        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
         dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
-        return do2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
+        return do2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
 
     }
 
-    private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
+    private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            Map<String, String> geographicalValuesCodes) throws MetamacException {
+
+        if (geographicalValuesCodes.isEmpty()) {
+            geographicalValuesCodes = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        }
+
+        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        if (geographicalSelectedValues != null) {
+            for (int i = 0; i < geographicalSelectedValues.size(); i++) {
+                String geographicalCode = geographicalSelectedValues.get(i);
+                String codeId = geographicalValuesCodes.get(geographicalCode);
+                geographicalSelectedValues.set(i, codeId != null ? codeId : geographicalCode);
+            }
+        }
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);

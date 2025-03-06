@@ -2169,10 +2169,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+    public void planifyExportsDsplJob(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
         // Validation
         InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
-        getTaskService().planifyExportsDsplJob(ctx, indicatorUuid, code, mergeTimeGranularities);
+        getTaskService().planifyExportsDsplJob(ctx, indicatorUuid, code, mergeTimeGranularities, isOperational);
     }
 
     protected DsplExporterService getDsplExporterService() {
@@ -2180,16 +2180,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities) throws MetamacException {
+    public void executeExportDSPL(ServiceContext ctx, String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException {
         LOG.info("Starting execute export DSPL process");
 
-        String statisticalOperationsApiUrlBase = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
-        StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(statisticalOperationsApiUrlBase,
-                StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread
+        InternationalString title = null;
+        InternationalString description = null;
 
-        Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
-        InternationalString title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
-        InternationalString description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
+        if (isOperational) {
+            String statisticalOperationsApiUrlBase = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
+            StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(statisticalOperationsApiUrlBase,
+                    StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread
+
+            Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
+            title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
+            description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
+
+        }
+
         try {
             List<String> files = getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorUuid, title, description, mergeTimeGranularities);
             String url = configurationService.retrieveIndicatorsInternalWebApplicationUrlBase() + IndicatorsConstants.FILE_DOWNLOAD_DIR_PATH_PARAM_FILE_NAME;

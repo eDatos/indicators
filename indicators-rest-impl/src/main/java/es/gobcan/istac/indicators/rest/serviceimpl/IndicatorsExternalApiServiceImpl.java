@@ -44,8 +44,8 @@ public class IndicatorsExternalApiServiceImpl extends IndicatorsApiServiceBaseIm
     }
 
     @Override
-    public PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsSystemsPublished(IndicatorsRestConstants.SERVICE_CONTEXT, null, pagingParameter);
+    public PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        return indicatorsSystemsService.findIndicatorsSystemsPublished(IndicatorsRestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
     }
 
     @Override

@@ -63,6 +63,10 @@ public class InvocationValidator {
             IndicatorsValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
         }
 
+        if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
+        }
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -78,6 +82,10 @@ public class InvocationValidator {
             IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
             IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
             // unmodifiable metadatas are checked in Dto2DoMapper
+        }
+
+        if (!Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational())) {
+            IndicatorsValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), ServiceExceptionParameters.INDICATORS_SYSTEM_TITLE, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);
@@ -99,7 +107,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -109,7 +117,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.CODE, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -119,7 +127,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.CODE, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -129,7 +137,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         // version is optional
 
         ExceptionUtils.throwIfException(exceptions);
@@ -141,7 +149,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -152,7 +160,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -163,7 +171,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -174,7 +182,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -185,7 +193,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -196,7 +204,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -207,7 +215,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -218,7 +226,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         IndicatorsValidationUtils.checkParameterRequired(versionType, ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_TYPE, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -244,7 +252,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.UUID, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

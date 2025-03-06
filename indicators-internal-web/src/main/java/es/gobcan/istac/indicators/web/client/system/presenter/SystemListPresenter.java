@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.client.system.presenter;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
-import static es.gobcan.istac.indicators.web.client.utils.IndicatorsWebConstants.SYSTEMS_LISTGRID_MAX_RESULTS;
 
 import java.util.List;
 
@@ -27,15 +26,19 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.core.navigation.shared.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorsSystemCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
@@ -45,6 +48,11 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
     public interface SystemListView extends View, HasUiHandlers<SystemListUiHandler> {
 
         void setIndSystemList(List<IndicatorsSystemSummaryDtoWeb> indSysList, int firstResult, int totalResults);
+
+        // Search
+        void clearSearchSection();
+
+        IndicatorsSystemCriteria getIndicatorsSystemCriteria();
     }
 
     @ProxyCodeSplit
@@ -77,7 +85,8 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         SetTitleEvent.fire(SystemListPresenter.this, getConstants().indicatorSystems());
-        retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
+        IndicatorsSystemCriteria criteria = getView().getIndicatorsSystemCriteria();
+        retrieveSystems(criteria);
     }
 
     @Override
@@ -93,12 +102,30 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
     }
 
     @Override
-    public void retrieveSystems(int firstResult, int maxResults) {
-        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(maxResults, firstResult), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemPaginatedListResult>(this) {
+    public void retrieveSystems(IndicatorsSystemCriteria criteria) {
+        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(criteria), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorsSystemPaginatedListResult result) {
+
+                if (result.getNotificationException() != null) {
+                    fireWarningMessageWithError(getMessages().systemErrorRetrieve(), result.getNotificationException());
+                }
+
                 getView().setIndSystemList(result.getIndicatorsSystemList(), result.getFirstResultOut(), result.getTotalResults());
+            }
+        });
+    }
+
+    @Override
+    public void createIndicatorsSystems(IndicatorsSystemDto indicatorsSystemDto) {
+        dispatcher.execute(new CreateIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<CreateIndicatorsSystemResult>(this) {
+
+            @Override
+            public void onWaitSuccess(CreateIndicatorsSystemResult result) {
+                fireSuccessMessage(getMessages().indicatorsSystemCreated());
+                IndicatorsSystemCriteria criteria = getView().getIndicatorsSystemCriteria();
+                retrieveSystems(criteria);
             }
         });
     }
@@ -110,12 +137,14 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
             @Override
             public void onWaitFailure(Throwable caught) {
                 super.onWaitFailure(caught);
-                retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
+                IndicatorsSystemCriteria criteria = getView().getIndicatorsSystemCriteria();
+                retrieveSystems(criteria);
             }
             @Override
             public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
                 fireSuccessMessage(getMessages().systemDeleted());
-                retrieveSystems(0, SYSTEMS_LISTGRID_MAX_RESULTS);
+                IndicatorsSystemCriteria criteria = getView().getIndicatorsSystemCriteria();
+                retrieveSystems(criteria);
             }
         });
     }

@@ -67,6 +67,8 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               INDICATORS_SYSTEM_11_VERSION                     = IndicatorsDataBaseTest.INIT_VERSION_MAXIMUM_MINOR_VERSION;
     protected static String               INDICATORS_SYSTEM_12                             = "IndSys-12";
     protected static String               INDICATORS_SYSTEM_12_VERSION                     = IndicatorsDataBaseTest.MAXIMUM_LIMIT_VERSION;
+    protected static String               INDICATORS_SYSTEM_13                             = "IndSys-13";
+    protected static String               INDICATORS_SYSTEM_13_CODE                        = "CODE-13";
 
     // Dimensions
     protected static String               DIMENSION_NOT_EXISTS                             = "Dim-not-exists";

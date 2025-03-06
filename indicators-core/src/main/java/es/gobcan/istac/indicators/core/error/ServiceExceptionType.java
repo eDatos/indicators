@@ -17,6 +17,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_WRONG_PROC_STATUS                      = create("exception.indicators.indicators_system.wrong_proc_status");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE           = create("exception.indicators.indicators_system.must_have_indicator_instance");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED     = create("exception.indicators.indicators_system.all_indicators_must_be_published");
+    public static final CommonServiceExceptionType INDICATORS_SYSTEM_DUPLICATED_CODES                       = create("exception.indicators.indicators_system.duplicated_codes");
 
     // Dimensions
     public static final CommonServiceExceptionType DIMENSION_NOT_FOUND                                      = create("exception.indicators.dimension.not_found");
