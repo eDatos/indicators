@@ -96,11 +96,5 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>edatos-core-utils</artifactId>
-            <version>1.18.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,9 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
@@ -25,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
@@ -34,6 +38,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.ExcelMapper;
+import es.gobcan.istac.indicators.rest.ExportResourceAccessToPlainText;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
@@ -58,27 +63,30 @@ import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatib
 @Service("IndicatorsRestFacade")
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger                logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
+    protected Logger                 logger                = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
 
     @Autowired
-    private Do2TypeMapper           do2TypeMapper;
+    private Do2TypeMapper            do2TypeMapper;
 
     @Autowired
-    protected IndicatorsApiService  indicatorsApiService;
+    protected IndicatorsApiService   indicatorsApiService;
 
     @Autowired
-    private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
+    private IndicatorsRest2DoMapper  indicatorsRest2DoMapper;
 
     @Autowired
-    private SrmRestInternalFacade   srmRestInternalFacade = null;
+    private SrmRestInternalFacade    srmRestInternalFacade = null;
 
     @Autowired
-    GeographicalValuesRestFacade    geographicalValuesRestFacade;
+    GeographicalValuesRestFacade     geographicalValuesRestFacade;
 
     @Autowired
-    IndicatorsConfigurationService  configurationService;
+    private final MetadataProperties metadataProperties    = null;
 
-    private ExcelMapper             excelMapper;
+    @Autowired
+    IndicatorsConfigurationService   configurationService;
+
+    private ExcelMapper              excelMapper;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -98,6 +106,11 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
         GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(indicatorsVersions.getValues(), representation);
 
+        Map<String, String> geographicalValuesCodes = new HashMap<>();
+        if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
+            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        }
+
         // Fields filter. Only support for +metadata, +data
         if (fieldsToAdd.contains("+metadata")) {
 
@@ -106,7 +119,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 IndicatorVersion indicatorVersion = indicatorsVersions.getValues().get(i);
 
                 MetadataType metadataType = new MetadataType();
-                do2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType, geoValuesOldVersionCompatibilityUtils);
+                do2TypeMapper.indicatorDoToMetadataType(indicatorVersion, metadataType, geoValuesOldVersionCompatibilityUtils, geographicalValuesCodes);
 
                 baseType.setMetadata(metadataType);
             }
@@ -181,31 +194,56 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     private ResponseEntity<byte[]> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            String format) throws MetamacException {
+            String format)
+            throws MetamacException {
         try {
-            byte[] content;
+            byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
-            ResourceAccess resourceAcces = new ResourceAccess(indicatorData);
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData);
+            ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
+            exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);
 
-            switch (format.toLowerCase()) {
-                case "csv":
+            FileOutputStream outputStreamObservations = null;
+            ByteArrayOutputStream byteArrayOutputStream = null;
+            FileInputStream inputStream = null;
+            try {
+                String fileNamePrefix = IndicatorsRestConstants.API_INDICATORS_INDICATORS_DATA + "-" + indicatorCode;
 
-                    content = convertJsonToText(indicatorData, ",").getBytes(StandardCharsets.UTF_8);
-                    break;
-                case "tsv":
-                    content = convertJsonToText(indicatorData, "\t").getBytes(StandardCharsets.UTF_8);
-                    break;
-                case "xlsx":
-                    content = generateXlsxFromJson(indicatorData);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported format: " + format);
+                final File tmpFileObservations = File.createTempFile(fileNamePrefix, format);
+                outputStreamObservations = new FileOutputStream(tmpFileObservations);
+                exportResourceAccessToPlainText.exportResourceAccessToPlainText(resourceAccess, format, outputStreamObservations);
+
+                byteArrayOutputStream = new ByteArrayOutputStream();
+                // return ResponseEntity<>.ok(new DeleteOnCloseFileInputStream(tmpFileObservations), ResourcesFormat.getMimeType(format.toUpperCase()))
+                // .header("Content-Disposition", getContentDisposition(fileNamePrefix, format)).build();
+
+                inputStream = new FileInputStream(tmpFileObservations);
+
+                IOUtils.copy(inputStream, byteArrayOutputStream);
+
+                content = byteArrayOutputStream.toByteArray();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", getContentDisposition(indicatorCode, format));
+                return new ResponseEntity<>(content, headers, HttpStatus.OK);
+
+            } finally {
+                IOUtils.closeQuietly(outputStreamObservations);
             }
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", getContentDisposition(indicatorCode, format));
-
-            return new ResponseEntity<>(content, headers, HttpStatus.OK);
+            // switch (format.toLowerCase()) {
+            // case "csv":
+            // content = convertJsonToText(indicatorData, ",").getBytes(StandardCharsets.UTF_8);
+            // break;
+            // case "tsv":
+            // content = convertJsonToText(indicatorData, "\t").getBytes(StandardCharsets.UTF_8);
+            // break;
+            // case "xlsx":
+            // content = generateXlsxFromJson(indicatorData);
+            // break;
+            // default:
+            // throw new IllegalArgumentException("Unsupported format: " + format);
+            // }
 
         } catch (Exception e) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorCode);
@@ -231,7 +269,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         if (indicatorData == null) {
             return headers;
         }
-
 
         Map<String, DataDimensionType> dimensions = indicatorData.getDimension();
         if (dimensions != null) {

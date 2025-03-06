@@ -23,7 +23,10 @@ import es.gobcan.istac.indicators.rest.types.DataType;
 
 public class ResourceAccess {
 
-    private static final int                              MAX_PX_MATRIX_LENGTH = 8;
+    public static final int                               LEFT_DIMENSIONS_START_POSITION  = 0;
+    public static final int                               TOP_DIMENSIONS_START_POSITION   = 20;
+    public static final int                               FIXED_DIMENSIONS_START_POSITION = 40;
+    private static final int                              MAX_PX_MATRIX_LENGTH            = 8;
 
     private List<String>                                  selectedLanguages;
 
@@ -33,15 +36,15 @@ public class ResourceAccess {
 
     private Map<String, Map<String, InternationalString>> attributesValuesCurrentLocaleLabels;
     private Map<String, LabelVisualisationModeEnum>       attributesLabelVisualisationMode;
-    private List<String>                                  attributeIds         = new ArrayList<String>();
+    private List<String>                                  attributeIds                    = new ArrayList<String>();
 
     // Data
     private String[]                                      observations;
-    private Map<String, String[]>                         attributesValuesByAttributeId;
+    private Map<String, Map<String, String>>              attributesValuesByAttributeId;
     private List<String>                                  dimensionsOrderedForData;
 
-    private final Map<String, Integer>                    multipliers          = new HashMap<String, Integer>();
-    private final Map<String, Map<String, Long>>          representationIndex  = new HashMap<String, Map<String, Long>>(); // Map<Dimension, Map<Code, Index>
+    private final Map<String, Integer>                    multipliers                     = new HashMap<String, Integer>();
+    private final Map<String, Map<String, Long>>          representationIndex             = new HashMap<String, Map<String, Long>>(); // Map<Dimension, Map<Code, Index>
 
     public ResourceAccess(DataType data) throws MetamacException {
 
@@ -55,7 +58,6 @@ public class ResourceAccess {
         initializeDimensions(data);
         initializeDimensionsForData(data);
         initializeAttributes(data, attributes);
-        // initializeIndex(data);
     }
 
     public List<String> getAttributeAttachmentLevelIds() {
@@ -70,8 +72,22 @@ public class ResourceAccess {
         return observations;
     }
 
-    public String[] getAttributeValues(String attributeId) {
-        return attributesValuesByAttributeId.get(attributeId);
+    /**
+     * Calculate rows
+     *
+     * @return the number of total rows in the displayed data table
+     */
+    public int getRows() {
+        return dimensionsOrderedForData.size();
+    }
+
+    /**
+     * Calculate columns
+     *
+     * @return the number of total columns in the displayed data table
+     */
+    public int getColumns() {
+        return dimensionsValuesCurrentLocaleLabels.size() + attributesValuesByAttributeId.size();
     }
 
     public List<String> getDimensionsOrderedForData() {
@@ -139,16 +155,6 @@ public class ResourceAccess {
         }
     }
 
-    public String measureAttributeValueAtPermutation(String attributeId, Map<String, String> permutation) {
-        int offset = calculateOffsetAtPermutation(permutation);
-        String[] attributeValues = getAttributeValues(attributeId);
-        String attributeValue = null;
-        if (attributeValues != null) {
-            attributeValue = attributeValues[offset];
-        }
-        return attributeValue;
-    }
-
     private void initializeMultipliers(Data data) {
         List<DimensionRepresentation> dimensionsRepresentation = data.getDimensions().getDimensions();
         ListIterator<DimensionRepresentation> dimensionsListIterator = dimensionsRepresentation.listIterator(dimensionsRepresentation.size());
@@ -212,27 +218,17 @@ public class ResourceAccess {
         }
 
         // Attribute Instances
-        attributesValuesByAttributeId = new HashMap<String, String[]>(attributesMetadata.size());
+        attributesValuesByAttributeId = new HashMap<String, Map<String, String>>(attributesMetadata.size());
         for (AttributeType attribute : attributesMetadata) {
-            // if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-            // // only observation attachment level
-            // attributeIds.add(attribute.getId());
-            // }
-
-            if (data.getAttribute() != null) {
-                // for (DataAttribute dataAttribute : data.getAttribute().g()) {
-                // if (dataAttribute.getId().equals(attribute.getId())) {
-                // attributesValuesByAttributeId.put(attribute.getId(), ExportUtils.dataToDataArray(dataAttribute.getValue()));
-                // }
-                // }
+            if (attribute == null) {
+                attributeIds.add("");
+                continue;
             }
+            attributesValuesByAttributeId.put(attribute.getCode() != null ? attribute.getCode() : "", attribute.getValue());
+            attributeIds.add(attribute.getCode() != null ? attribute.getCode() : "");
         }
-
         // attributesLabelVisualisationMode = ExportUtils.buildMapAttributesLabelVisualisationMode(attributesMetadata);
-        // attributesValuesCurrentLocaleLabels = new HashMap<String, Map<String, InternationalString>>();
-        // for (AttributeType attribute : attributesMetadata) {
-        // attributesValuesCurrentLocaleLabels.put(attribute.getId(), ExportUtils.buildMapAttributesValuesLabels(attribute));
-        // }
+
     }
 
     public List<String> getSelectedLanguages() {

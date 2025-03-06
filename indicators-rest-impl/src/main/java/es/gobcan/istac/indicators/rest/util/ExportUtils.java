@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnume
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValues;
 
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
+import es.gobcan.istac.indicators.rest.types.AttributeType;
 
 public class ExportUtils {
 
@@ -147,12 +148,12 @@ public class ExportUtils {
      * If attributes has not attributes values in metadata, returns 'only code'
      * If configuration does not exist for component, returns default configuration
      */
-    public static Map<String, LabelVisualisationModeEnum> buildMapAttributesLabelVisualisationMode(List<Attribute> attributes) {
+    public static Map<String, LabelVisualisationModeEnum> buildMapAttributesLabelVisualisationMode(List<AttributeType> attributes) {
         Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(attributes.size());
-        for (Attribute attribute : attributes) {
-            String attributeId = attribute.getId();
+        for (AttributeType attribute : attributes) {
+            String attributeId = attribute.getCode();
             LabelVisualisationModeEnum labelVisualisationMode = null;
-            if (attribute.getAttributeValues() == null) {
+            if (attribute.getValue() == null) {
                 // Attribute has not translation for the codes
                 labelVisualisationMode = LabelVisualisationModeEnum.CODE;
             } else {
