@@ -18,7 +18,7 @@ import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 public interface IndicatorSystemRestFacade {
 
     IndicatorsSystemType retrieveIndicatorsSystem(final String idIndicatorSystem) throws MetamacException;
-    PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final RestCriteriaPaginator paginator) throws MetamacException;
+    PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(String q, String order, final RestCriteriaPaginator paginator) throws MetamacException;
     List<IndicatorsSystemHistoryType> findIndicatorsSystemHistoryByCode(final String code, final int maxResults) throws MetamacException;
     PagedResultType<IndicatorInstanceBaseType> retrievePaginatedIndicatorsInstances(final String idIndicatorSystem, String q, String order, Integer limit, Integer offset, String fields,
             Map<String, List<String>> representation, Map<String, List<String>> selectedGranularities) throws MetamacException;

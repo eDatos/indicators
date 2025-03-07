@@ -481,6 +481,10 @@
           "$ref": "#/definitions/InternationalString",
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.description' /]"
         },
+        "operational": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.operational' /]",
+          "type": "boolean"
+        },
         "elements": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystem.properties.elements' /]",
           "items": {
@@ -543,6 +547,10 @@
         "id": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.id' /]",
           "type": "string"
+        },
+        "operational": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.operational' /]",
+          "type": "boolean"
         },
         "kind": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorsystembase.properties.kind' /]",
@@ -1295,6 +1303,18 @@
         "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.description' /]",
         "operationId": "findIndicatorsSystems",
         "parameters": [
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.parameters.q' /]",
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.parameters.order' /]",
+            "in": "query",
+            "name": "order",
+            "type": "string"
+          },
           {
             "description": "[@messageEscape 'api.doc.swagger.paths.indicatorssystems.get.parameters.limit' /]",
             "format": "int32",

@@ -18,4 +18,7 @@ public class CreateDimension {
 
     @Out(1)
     DimensionDto           createdDimension;
+
+    @Out(2)
+    IndicatorsSystemDtoWeb indicatorsSystemUpdated;
 }

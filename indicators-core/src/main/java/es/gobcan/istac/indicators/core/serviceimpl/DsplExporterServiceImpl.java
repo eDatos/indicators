@@ -20,17 +20,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -47,7 +48,8 @@ import freemarker.template.TemplateException;
  */
 @Service("dsplExporterService")
 public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
-    private static Logger LOGGER = LoggerFactory.getLogger(DsplExporterServiceImpl.class);
+
+    private static Logger                  LOGGER = LoggerFactory.getLogger(DsplExporterServiceImpl.class);
 
     @Autowired
     private IndicatorsConfigurationService configurationService;
@@ -58,6 +60,12 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     @Override
     public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description,
             boolean mergeTimeGranularities) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
+
+        boolean isOperational = Boolean.TRUE.equals(indicatorsSystemVersion.getIndicatorsSystem().getIsOperational());
+        title = isOperational ? title : indicatorsSystemVersion.getTitle();
+        description = isOperational ? description : indicatorsSystemVersion.getDescription();
 
         // Validator
         InvocationValidator.checkExportIndicatorsSystemPublishedToDsplFiles(indicatorsSystemUuid, title, description, null);
@@ -71,7 +79,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                     srmRestInternalFacade);
         }
 
-        List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
+        List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemVersion, title, description);
 
         List<String> datasetArchives = new ArrayList<String>();
         try {
@@ -135,7 +143,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     }
 
     private void deleteTemporal(String temporalFile) {
-        
+
         File dirToZip = new File(temporalFile);
 
         if (dirToZip.isDirectory()) {

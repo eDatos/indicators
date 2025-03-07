@@ -1,54 +1,82 @@
 (function (moment) {
     "use strict";
 
-    var YEARLY_PATTERN = /^\d{4}$/;
-    var BIYEARLY_PATTERN = /^\d{4}H\d$/;
-    var QUARTERLY_PATTERN = /^\d{4}Q\d$/;
-    var FOUR_MONTHLY_PATTERN = /^\d{4}T\d$/;
-    var MONTHLY_PATTERN = /^\d{4}M\d\d$/;
-    var WEEKLY_PATTERN = /^\d{4}W\d\d$/;
-    var DAILY_PATTERN = /^\d{8}$/;
-    var HOURLY_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
-
     Istac.widget.DateParser = {
 
-        /**
-         * @param {String} stringDate format:
-         *
-         *      - Yearly: yyyy (Example: 1999)
-         *      - Biyearly: yyyyHs (Example: 1999H1)
-         *      - Quarterly: yyyyQt (Example: 1999Q1)
-         *      - Four monthly: yyyyTt (Example: 1999T1)
-         *      - Monthly: yyyyMmm (Example: 1999M01)
-         *      - Weekly: yyyyWss (Example: 1999W51).
-         *      - Daily: yyyymmdd (Example: 19990101)
-         *      - Hourly: yyyymmddThh:mm:ss (Example: 1999-01-01T01:01:01)
-         *
-         * @return {Number} milliseconds
-         */
-        parse : function (stringDate) {
-            var date;
+        REGEXPS: {
+            BIYEARLY: /^\d{4}-S(\d{1,2})$/,
+            FOUR_MONTHLY: /^\d{4}-T(\d{1,2})$/,
+            QUARTERLY: /^\d{4}-Q(\d{1,2})$/,
+            MONTHLY: /^\d{4}-\d{2}$/,
+            DAILY: /^\d{4}-D(\d{1,3})$/
+        },
+        MONTHS: {
+            BIYEARLY: 6,
+            FOUR_MONTHLY: 4,
+            QUARTERLY: 3
+        },
 
-            if (stringDate.match(YEARLY_PATTERN)) {
-                date = moment(stringDate, "YYYY");
-            } else if (stringDate.match(BIYEARLY_PATTERN)) {
-                date = moment(stringDate, "YYYY?M");
-                date.month(((date.month() + 1) * 6) - 1);
-            } else if (stringDate.match(QUARTERLY_PATTERN)) {
-                date = moment(stringDate, "YYYY?M");
-                date.month(((date.month() + 1) * 3) - 1);
-            } else if (stringDate.match(FOUR_MONTHLY_PATTERN)) {
-            	date = moment(stringDate, "YYYY?M");
-                date.month(((date.month() + 1) * 4) - 1);
-            } else if (stringDate.match(MONTHLY_PATTERN)) {
-                date = moment(stringDate, "YYYY'M'MM");
-            } else if (stringDate.match(WEEKLY_PATTERN)) {
-                date = moment(stringDate, "YYYY'W'WW").weekday(0);
-            } else if (stringDate.match(DAILY_PATTERN)) {
-                date = moment(stringDate, "YYYYMMDD");
-            } else if (stringDate.match(HOURLY_PATTERN)) {
-            	date = moment(stringDate, "YYYY-MM-DD'T'HH:mm:ss");
+        dateParsers: {
+            YEARLY: function (stringDate) {
+                return moment(stringDate, "YYYY").endOf('year'); // parse format YYYY-A1 too
+            },
+            BIYEARLY: function (stringDate) {
+                var matchs = stringDate.match(Istac.widget.DateParser.REGEXPS.BIYEARLY);
+                if (matchs && matchs[1]) {
+                    var monthBeginNumber = (matchs[1] - 1) * Istac.widget.DateParser.MONTHS.BIYEARLY;
+
+                    var momentDate = moment(stringDate, 'YYYY');
+                    momentDate.month(monthBeginNumber + Istac.widget.DateParser.MONTHS.BIYEARLY - 1);
+
+                    return momentDate.endOf('month');
+                }
+            },
+            FOUR_MONTHLY: function (stringDate) {
+                var matchs = stringDate.match(Istac.widget.DateParser.REGEXPS.FOUR_MONTHLY);
+                if (matchs && matchs[1]) {
+                    var monthBeginNumber = (matchs[1] - 1) * Istac.widget.DateParser.MONTHS.FOUR_MONTHLY;
+
+                    var momentDate = moment(stringDate, 'YYYY');
+                    momentDate.month(monthBeginNumber + Istac.widget.DateParser.MONTHS.FOUR_MONTHLY - 1);
+
+                    return momentDate.endOf('month');
+                }
+            },
+            QUARTERLY: function (stringDate) {
+                var matchs = stringDate.match(Istac.widget.DateParser.REGEXPS.QUARTERLY);
+                if (matchs && matchs[1]) {
+                    var monthBeginNumber = (matchs[1] - 1) * Istac.widget.DateParser.MONTHS.QUARTERLY;
+
+                    var momentDate = moment(stringDate, 'YYYY');
+                    momentDate.month(monthBeginNumber + Istac.widget.DateParser.MONTHS.QUARTERLY - 1);
+
+                    return momentDate.endOf('month');
+                }
+            },
+            MONTHLY: function (stringDate) { // 2018-M10, 2018-10
+                return moment(stringDate, (Istac.widget.DateParser.REGEXPS.MONTHLY).test(stringDate) ? 'YYYY-MM' : "YYYY-'M'MM").endOf('month');
+            },
+            WEEKLY: function (stringDate) { // 2018-W10
+                return moment(stringDate, "YYYY-'W'WW").endOf('isoWeek');
+            },
+            DAILY: function (stringDate) {
+                var matchs = stringDate.match(Istac.widget.DateParser.REGEXPS.DAILY)
+                var momentDate;
+                if (matchs) {
+                    momentDate = moment(stringDate, "YYYY");
+                    momentDate.dayOfYear(matchs[1]);
+                } else {
+                    momentDate = moment(stringDate, "YYYY-MM-DD");
+                }
+                return momentDate.endOf('day');
+            },
+            HOURLY: function (stringDate) {
+                return moment(stringDate).endOf('hour');
             }
+        },
+
+        parse: function (stringDate, granularity) {
+            var date = this.dateParsers[granularity](stringDate);
 
             if (date) {
                 return date.utc().valueOf();

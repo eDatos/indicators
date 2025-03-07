@@ -122,13 +122,22 @@
             'NO_MATCHES': 'No hay resultados',
             'LOADING': 'Cargando...'
         },
-        'HIGHCHARTS': {
-            'months': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            'weekdays': ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
-            'shortMonths': ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            'thousandsSep': '.',
-            'decimalPoint': ','
+        'ECHARTS': {
+            'time': {
+                'month': [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                ],
+                'monthAbbr': [
+                    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+                ],
+                'dayOfWeek': [
+                    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+                ],
+                'dayOfWeekAbbr': [
+                    'Dom', 'Lun', 'Mar', 'Miérc', 'Juev', 'Vier', 'Sáb'
+                ]
+            }
         },
         'CAPTCHA': {
             'LABEL': "Escriba el valor de la imagen mostrada encima"

@@ -134,6 +134,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public IndicatorsSystemVersion updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
+
+        // Save indicator
+
+        return getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
+
+    }
+
+    @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -506,6 +518,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Create draft version
         indicatorsSystemNewVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemNewVersion.setStreamMessageStatus(StreamMessageStatusEnum.PENDING);
+
+        DoCopyUtils.copyNonOperationalMetadata(indicatorsSystemVersionDiffusion, indicatorsSystemNewVersion);
+
         indicatorsSystemNewVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemNewVersion);
 
         // Update indicator with draft version

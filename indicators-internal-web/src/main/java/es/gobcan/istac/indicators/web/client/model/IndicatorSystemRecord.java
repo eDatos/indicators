@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.web.client.model;
 
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
+import org.siemac.metamac.web.common.client.utils.BooleanWebUtils;
+
 import com.smartgwt.client.data.Record;
 
 import es.gobcan.istac.indicators.core.enume.domain.StreamMessageStatusEnum;
@@ -9,7 +12,6 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
-import org.siemac.metamac.web.common.client.resources.GlobalResources;
 
 public class IndicatorSystemRecord extends Record {
 
@@ -20,12 +22,14 @@ public class IndicatorSystemRecord extends Record {
         setProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb));
         setStreamStatus(indicatorsSystemDtoWeb.getStreamMessageStatus());
         setVersionNumber(indicatorsSystemDtoWeb.getVersionNumber());
+        setIsOperational(BooleanWebUtils.getBooleanLabel(indicatorsSystemDtoWeb.getIsOperational()));
     }
 
     public IndicatorSystemRecord(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb) {
         setUuid(indicatorsSystemDtoWeb.getUuid());
         setCode(indicatorsSystemDtoWeb.getCode());
         setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
+        setIsOperational(BooleanWebUtils.getBooleanLabel(indicatorsSystemDtoWeb.getIsOperational()));
         // Diffusion version
         if (indicatorsSystemDtoWeb.getDiffusionVersion() != null) {
             setDiffusionProcStatus(CommonUtils.getIndicatorSystemProcStatusName(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
@@ -54,6 +58,10 @@ public class IndicatorSystemRecord extends Record {
 
     public void setTitle(String title) {
         setAttribute(IndicatorsSystemsDS.TITLE, title);
+    }
+
+    public void setIsOperational(String isOperational) {
+        setAttribute(IndicatorsSystemsDS.OPERATIONAL, isOperational);
     }
 
     public void setProcStatus(String value) {

@@ -98,6 +98,34 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         IndicatorsSystemVersion indicatorsSystemVersion = new IndicatorsSystemVersion();
         indicatorsSystemVersion.setIndicatorsSystem(new IndicatorsSystem());
         indicatorsSystemVersion.getIndicatorsSystem().setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemVersion.getIndicatorsSystem().setIsOperational(true);
+        // Create
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion);
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemVersionCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemVersionCreated.getLastUpdatedBy());
+
+        // Validate properties are not in Dto
+        String uuid = indicatorsSystemVersionCreated.getIndicatorsSystem().getUuid();
+        String version = indicatorsSystemVersionCreated.getVersionNumber();
+        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, version);
+        assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
+        assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
+        assertNull(indicatorsSystemCreated.getIndicatorsSystem().getDiffusionVersion());
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemNonOperational() throws Exception {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = new IndicatorsSystemVersion();
+        indicatorsSystemVersion.setIndicatorsSystem(new IndicatorsSystem());
+        indicatorsSystemVersion.getIndicatorsSystem().setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemVersion.getIndicatorsSystem().setIsOperational(false);
+
+        // non operational metadata
+        indicatorsSystemVersion.setTitle(IndicatorsMocks.mockInternationalString("es", "title-1"));
+        indicatorsSystemVersion.setAcronym(IndicatorsMocks.mockInternationalString("es", "acronym-1"));
+        indicatorsSystemVersion.setDescription(IndicatorsMocks.mockInternationalString("es", "description-1"));
+        indicatorsSystemVersion.setObjective(IndicatorsMocks.mockInternationalString("es", "objective-1"));
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion);
@@ -111,6 +139,12 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
         assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
         assertNull(indicatorsSystemCreated.getIndicatorsSystem().getDiffusionVersion());
+
+        assertNotNull(indicatorsSystemCreated.getTitle());
+        assertNotNull(indicatorsSystemCreated.getAcronym());
+        assertNotNull(indicatorsSystemCreated.getDescription());
+        assertNotNull(indicatorsSystemCreated.getObjective());
+        assertEquals(Boolean.FALSE, indicatorsSystemCreated.getIndicatorsSystem().getIsOperational());
     }
 
     @Test

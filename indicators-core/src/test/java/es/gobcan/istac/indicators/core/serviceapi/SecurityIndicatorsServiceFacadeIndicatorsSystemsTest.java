@@ -61,6 +61,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         // With access
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(true);
         indicatorsServiceFacade.createIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), indicatorsSystemDto);
 
         // Without access
@@ -103,7 +104,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-
+        indicatorsSystemDto.setIsOperational(true);
         ServiceContext ctx = getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1();
         SecurityUtils.getMetamacPrincipal(ctx).getAccesses()
                 .add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, indicatorsSystemDto.getCode()));
@@ -116,6 +117,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setIsOperational(true);
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), indicatorsSystemDto);
             fail("without access");
@@ -130,7 +132,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-
+        indicatorsSystemDto.setIsOperational(true);
         ServiceContext ctx = getServiceContextTecnicoSistemaIndicadores();
         SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
         SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "other"));

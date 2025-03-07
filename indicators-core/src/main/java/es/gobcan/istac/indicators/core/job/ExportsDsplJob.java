@@ -23,7 +23,7 @@ public class ExportsDsplJob implements Job {
     public static final String CODE                     = "code";
     public static final String USER                     = "user";
     public static final String MERGE_TIME_GRANULARITIES = "mergeTimeGranularities";
-
+    public static final String IS_OPERATIONAL           = "operational";
     private TaskServiceFacade  taskServiceFacade        = null;
 
     @Override
@@ -37,11 +37,11 @@ public class ExportsDsplJob implements Job {
         String code = (String) jobDataMap.get(CODE);
         String user = (String) jobDataMap.get(USER);
         boolean mergeTimeGranularities = jobDataMap.getBoolean(MERGE_TIME_GRANULARITIES);
-
+        boolean isOperational = jobDataMap.getBoolean(IS_OPERATIONAL);
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "metamac-core");
 
         try {
-            getTaskServiceFacade().executeExportDSPLTask(serviceContext, jobKey.getName(), indicatorUuid, code, mergeTimeGranularities);
+            getTaskServiceFacade().executeExportDSPLTask(serviceContext, jobKey.getName(), indicatorUuid, code, mergeTimeGranularities, isOperational);
         } catch (MetamacException e) {
             logger.error("Error en exports dspl job");
             throw new JobExecutionException(e);
