@@ -60,7 +60,8 @@
             shadow: true,
             borderRadius: true,
             scale: "natural",
-            showLanguageDropdown: false
+            showLanguageDropdown: false,
+            showEmbedMoreLink: true
         },
 
         _containerTemplate: Handlebars.templates.container,
@@ -151,6 +152,7 @@
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
             this.set('showLanguageDropdown', !!options.showLanguageDropdown);
+            this.set('showEmbedMoreLink', options.showEmbedMoreLink);
             this.reloadData();
         },
 
@@ -166,6 +168,10 @@
             if (_.isFunction(setter)) {
                 setter.call(this, value);
             }
+        },
+
+        setShowEmbedMoreLink: function(showEmbedMoreLink) {
+            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink);
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
@@ -307,7 +313,6 @@
                 var systemIdStr = systemId || "";
                 url = this.url + "/indicatorsSystems/" + systemIdStr;
             }
-
 
             if (url) {
                 this.titleText.html('<a href="' + url + '" target="_blank"></a>');

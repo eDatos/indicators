@@ -39,7 +39,8 @@
             style: 'custom', //custom, gobcan,
             gobcanStyleColor: 'blue', //blue, green
             sideView: false,
-            scale: 'natural-lib'
+            scale: 'natural-lib',
+            showEmbedMoreLink: true
         },
 
         validate: function (attrs) {
