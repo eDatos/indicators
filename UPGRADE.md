@@ -10,10 +10,10 @@
 
 ## 11.2.0 a 11.2.1-SNAPSHOT
 * Se añade script que añade nuevos metadatos necesarios para registrar sistemas de indicadores sin operación. Este script actualiza también todas las entradas existentes con el nuevo campo "IS_OPERATIONAL" con el valor TRUE.
-* Hay cambios en base de datos de indicators por lo que es necesario ejecutar los scripts que se encuentran en la
+* Además, también hay cambios en base de datos de indicators relativos a las extensiones utilizadas, por lo que es necesario ejecutar los scripts que se encuentran en la
   siguiente carpeta:
 ```
-etc/changes-from-release/11.2.0/db/indicators/postgresql/1_20250205_alter_table_indicators_systems.sql
+etc/changes-from-release/11.2.0/db/indicators/postgresql/*.sql
 ```
 
 ## 11.0.0 a 11.1.0
