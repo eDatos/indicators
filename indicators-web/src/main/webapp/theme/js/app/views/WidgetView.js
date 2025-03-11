@@ -26,6 +26,7 @@
 
             this.views.style = new App.views.WidgetStyleOptionsView({model : this.widgetOptions});
             this.views["export"] = new App.views.WidgetCodeView({model : this.widgetOptions});
+            this.views["language"] = new App.views.WidgetLanguageOptionsView({model : this.widgetOptions});
             this.tabView = new App.views.TabView({el : '#widget-options-tabs', views : this.views});
 
             var self = this;
