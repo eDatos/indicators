@@ -443,7 +443,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
-        MultiLanguageTextItem conceptDescription = new MultiLanguageTextItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
+        MultiLanguageRichTextEditorItem conceptDescription = new MultiLanguageRichTextEditorItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
 
         contentDescriptorsEditionForm.setFields(conceptDescription);
 
