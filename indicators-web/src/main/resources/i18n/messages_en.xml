@@ -50,6 +50,7 @@
     
     <entry key="entity.widgets.tab.data">Data</entry>
     <entry key="entity.widgets.tab.styles">Styles</entry>
+    <entry key="entity.widgets.tab.language">Language</entry>
     <entry key="entity.widgets.tab.export">Export</entry>
     
     <entry key="page.widgets.example.title">Widget Example</entry>    
