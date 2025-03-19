@@ -141,6 +141,7 @@ module.exports = function (grunt) {
         jsPath + '/app/views/WidgetDataOptionsLastDataView.js',
         jsPath + '/app/views/WidgetDataOptionsRecentView.js',
         jsPath + '/app/views/WidgetDataOptionsTemporalView.js',
+        jsPath + '/app/views/WidgetLanguageOptionsView.js',
         jsPath + '/app/views/WidgetPreviewView.js',
         jsPath + '/app/views/WidgetStyleOptionsView.js',
         jsPath + '/app/views/WidgetView.js'
