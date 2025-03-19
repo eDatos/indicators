@@ -308,24 +308,20 @@
         _updateLinks: function () {
             var systemId = this.options.indicatorSystem;
             var url;
-            var hasSystemId = this.options.type === 'temporal' || (this.options.groupType === 'system');
-            if (hasSystemId) {
+            if (this.options.type === 'temporal' || this.options.groupType === 'system') {
                 var systemIdStr = systemId || "";
                 url = this.url + "/indicatorsSystems/" + systemIdStr;
+            } else if (this.options.groupType !== 'system') {
+                url = this.url + "/indicators";
             }
+            this.titleText.html('<a href="' + url + '" target="_blank"></a>');
 
-            if (url) {
-                this.titleText.html('<a href="' + url + '" target="_blank"></a>');
-            } else {
-                this.titleText.html('');
-            }
             this.setTitle(this.title);
             this.setHeaderColor(this.headerColor);
             this.setTitleColor(this.titleColor);
 
 
             this.allIndicatorsContainer.find('a').attr('href', url);
-            this.el.find('.istac-widget-body-allIndicators-text').toggle(hasSystemId);
         },
 
         setStyle: function (style) {
