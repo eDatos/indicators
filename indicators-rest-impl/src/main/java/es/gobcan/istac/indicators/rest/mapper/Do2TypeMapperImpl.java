@@ -450,35 +450,39 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
-            for (int i = 0; i < geographicalCodes.size(); i++) {
-                String geographicalCode = geographicalCodes.get(i);
+            // At least one geographical code must exist. But some indicators can have an error in their observations and it is not possible to obtain the data.
+            // To avoid a general error in this case the observations are not filled but the api does not return an error.
+            if (!dataTypeRequest.getGeographicalCodes().isEmpty()) {
+                for (int i = 0; i < geographicalCodes.size(); i++) {
+                    String geographicalCode = geographicalCodes.get(i);
 
-                for (int j = 0; j < timeValues.size(); j++) {
-                    String timeValueCode = timeValues.get(j);
+                    for (int j = 0; j < timeValues.size(); j++) {
+                        String timeValueCode = timeValues.get(j);
 
-                    for (int k = 0; k < measureValues.size(); k++) {
-                        String measureValueCode = measureValues.get(k);
+                        for (int k = 0; k < measureValues.size(); k++) {
+                            String measureValueCode = measureValues.get(k);
 
-                        // Observation ID: Be careful!!! don't change order of ids
-                        String geographicalValueCode = geographicalCode;
-                        String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
+                            // Observation ID: Be careful!!! don't change order of ids
+                            String geographicalValueCode = geographicalCode;
+                            String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
 
-                        ObservationDto observationDto = observationMap.get(newId);
-                        if (observationDto == null) {
-                            observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
-                        } else if (observationDto.getPrimaryMeasure() == null) {
-                            observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                            ObservationDto observationDto = observationMap.get(newId);
+                            if (observationDto == null) {
+                                observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
+                            } else if (observationDto.getPrimaryMeasure() == null) {
+                                observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                            }
+
+                            // PRIMARY MEASURE
+                            observations.add(observationDto.getPrimaryMeasure());
+
+                            // ATTRIBUTES
+                            if (includeObservationMetadata) {
+                                ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
+                                attributes.add(setObservationAttributes(observationExtendedDto));
+                            }
+
                         }
-
-                        // PRIMARY MEASURE
-                        observations.add(observationDto.getPrimaryMeasure());
-
-                        // ATTRIBUTES
-                        if (includeObservationMetadata) {
-                            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
-                            attributes.add(setObservationAttributes(observationExtendedDto));
-                        }
-
                     }
                 }
             }
@@ -490,21 +494,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 dataRepresentationTypeMeasure.getIndex().put(measureValues.get(k), k);
             }
 
-            if (geographicalCodesRequired) {
-                for (int i = 0; i < geographicalCodes.size(); i++) {
-                    String geographicalCode = geographicalCodes.get(i);
-                    String codeId = geographicalValuesCodes.get(geographicalCode);
-
-                    if (codeId != null) {
-                        geographicalCode = codeId;
-                    }
-                    dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
-                }
-            } else {
-                for (int i = 0; i < geographicalCodes.size(); i++) {
-                    dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
-                }
-            }
+            convertVariableElementToGeographicalCodes(geographicalCodesRequired, geographicalValuesCodes, geographicalCodes, dataRepresentationTypeGeographical);
 
             DataType dataType = new DataType();
             dataType.setFormat(format);
@@ -520,6 +510,25 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         } finally {
             // Remove All Cache
             requestCache.remove();
+        }
+    }
+
+    private void convertVariableElementToGeographicalCodes(boolean geographicalCodesRequired, Map<String, String> geographicalValuesCodes, List<String> geographicalCodes,
+            DataRepresentationType dataRepresentationTypeGeographical) {
+        if (geographicalCodesRequired) {
+            for (int i = 0; i < geographicalCodes.size(); i++) {
+                String geographicalCode = geographicalCodes.get(i);
+                String codeId = geographicalValuesCodes.get(geographicalCode);
+
+                if (codeId != null) {
+                    geographicalCode = codeId;
+                }
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCode, i);
+            }
+        } else {
+            for (int i = 0; i < geographicalCodes.size(); i++) {
+                dataRepresentationTypeGeographical.getIndex().put(geographicalCodes.get(i), i);
+            }
         }
     }
 
