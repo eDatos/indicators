@@ -311,7 +311,7 @@
             if (this.options.type === 'temporal' || this.options.groupType === 'system') {
                 var systemIdStr = systemId || "";
                 url = this.url + "/indicatorsSystems/" + systemIdStr;
-            } else if (this.options.groupType !== 'system') {
+            } else {
                 url = this.url + "/indicators";
             }
             this.titleText.html('<a href="' + url + '" target="_blank"></a>');
