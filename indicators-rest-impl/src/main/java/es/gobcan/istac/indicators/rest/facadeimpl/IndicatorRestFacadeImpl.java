@@ -479,18 +479,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
             Map<String, String> geographicalValuesCodes) throws MetamacException {
 
-        if (geographicalValuesCodes.isEmpty()) {
-            geographicalValuesCodes = srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-        }
-
-        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        if (geographicalSelectedValues != null) {
-            for (int i = 0; i < geographicalSelectedValues.size(); i++) {
-                String geographicalCode = geographicalSelectedValues.get(i);
-                String codeId = geographicalValuesCodes.get(geographicalCode);
-                geographicalSelectedValues.set(i, codeId != null ? codeId : geographicalCode);
-            }
-        }
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataMeasureDimensionFilterVO measureFilter = ConditionUtil.filterMeasureDimension(selectedRepresentations);
