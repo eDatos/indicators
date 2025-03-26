@@ -217,21 +217,4 @@
     </fieldset>
     {{/if}}
 
-    <fieldset>
-        <legend>{{ translate "OPTIONS.STYLE.LANGUAGE.TITLE" }}</legend>
-        <div>
-            <label>{{ translate "OPTIONS.STYLE.LANGUAGE.DROPDOWN.TITLE" }}</label>
-            <input type="checkbox" name="showLanguageDropdown">
-        </div>
-        <div>
-            <label>{{ translate "OPTIONS.STYLE.LANGUAGE.PREFERENCE.TITLE" }}</label>
-            <select name="locale" class="sparkline-type">
-                <option value="navigator" selected>{{ translate "OPTIONS.STYLE.LANGUAGE.PREFERENCE.NAVIGATOR" }}</option>
-                {{#each languages}}
-                <option value="{{ this }}">{{ this }}</option>
-                {{/each}}
-            </select>
-        </div>
-    </fieldset>
-
 </div>

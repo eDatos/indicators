@@ -27,8 +27,7 @@
                 showSideView: this._isLastDataOrRecent(),
                 showCustomStyle: this.model.get('style') === 'custom',
                 showTextColor: !this._isTemporal(),
-                showScale: this._isTemporal(),
-                languages: edatosInternationalizationlanguages || []
+                showScale: this._isTemporal()
             };
             this.$el.html(this.template(context));
 

@@ -11,6 +11,7 @@
         <ul class="tab-navigation nav-tabs">
             <li><a href="#" data-tab="data">[@apph.messageEscape 'entity.widgets.tab.data'/]</a></li>
             <li><a href="#" data-tab="style">[@apph.messageEscape 'entity.widgets.tab.styles'/]</a></li>
+            <li><a href="#" data-tab="language">[@apph.messageEscape 'entity.widgets.tab.language'/]</a></li>
             <li><a href="#" data-tab="export">[@apph.messageEscape 'entity.widgets.tab.export'/]</a></li>
         </ul>
         <div class="tab-content"></div>

@@ -122,14 +122,6 @@
             'NO_MATCHES': 'No matches',
             'LOADING': 'Loading...'
         },
-        'HIGHCHARTS': {
-            'months': ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            'weekdays': ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            'shortMonths': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            // A priori no cambiamos esto para ser coherentes con ale existencia de addThousandSeparator
-            'thousandsSep': '.',
-            'decimalPoint': ','
-        },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"
         },

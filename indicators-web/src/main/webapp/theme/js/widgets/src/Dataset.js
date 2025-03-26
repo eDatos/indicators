@@ -145,32 +145,35 @@
 
         getTimeValues : function () {
             var timeValues = [];
-            self = this;
-            self.smallestTimeGranularity = this._getSmallestTimeGranularity();
             if (this.data.dimension.TIME.representation.index) {
-                timeValues = _.chain(this.data.dimension.TIME.representation.index)
-                    .map(function (value, key) {
-                        return {key : key, value : value};
-                    }).sortBy(function (dimension) {
-                        return dimension.value;
-                    }).filter(function (time) { 
-                    	return this.metadata.dimension.TIME.representation[time.value].granularityCode == self.smallestTimeGranularity }, 
-                    	self
-                    ).map(function (dimension) {
-                        return dimension.key;
-                    }).value().reverse();
+                this.smallestTimeGranularity = this._getSmallestTimeGranularity();
+
+                self = this;
+                timeValues = _.chain(this.metadata.dimension.TIME.representation)
+                .filter(function (representation) {
+                    return representation.granularityCode === self.smallestTimeGranularity && self.data.dimension.TIME.representation.index.hasOwnProperty(representation.code);
+                }).sortBy(function (representation) {
+                    return -self.data.dimension.TIME.representation.index[representation.code];
+                }).map(function (representation) {
+                    return representation.code;
+                }).value();
             }
             return timeValues;
         },
         
         _getSmallestTimeGranularity : function() {
+            var smallestGranularity;
+            var self = this;
+            var allTimeGranularitiesCodes = _.pluck(this.allTimeGranularities, 'code');
+            this.metadata.dimension.TIME.representation.forEach(function (timeRepresentation) {
+                if (self.data.dimension.TIME.representation.index.hasOwnProperty(timeRepresentation.code)
+                    && allTimeGranularitiesCodes.indexOf(smallestGranularity) < allTimeGranularitiesCodes.indexOf(timeRepresentation.granularityCode)) {
 
-        	this.timeGranularityCodes = _.pluck(this.metadata.dimension.TIME.granularity, 'code');
-        	var sortedTimeGranularities = _.filter(this.allTimeGranularities, function(timeGranularity) {
-        		return _.contains(this.timeGranularityCodes, timeGranularity.code); 
-        	}, this);
-        	
-        	return sortedTimeGranularities[sortedTimeGranularities.length - 1].code;                     
+                    smallestGranularity = timeRepresentation.granularityCode;
+                }
+            });
+
+        	return smallestGranularity;
         },
 
         getTimeValuesTitles : function (locale) {
