@@ -82,13 +82,8 @@
             var self = this;
             this.systems.fetchWithoutLimit().done(function () {
                 if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
-                    self.model.set('groupType', 'system');
-                    $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SYSTEM_OR_SUBJECT'));
-                } else {
-                    $("#widget-data-title-groupType").text(EDatos.common.I18n.translate('OPTIONS.DATA.SUBJECT'));
-                    $("#system").hide();
+                    $("#system").show();
                 }
-                $(".widget-group-type").show();
             });
         },
 
