@@ -84,6 +84,12 @@
                         'TITLE': 'Idioma a utilizar',
                         'NAVIGATOR': 'Idioma del navegador'
                     }
+                },
+                'MORE_INDICATORS': {
+                    'TITLE': 'Más indicadores',
+                    'LINK': {
+                        'TITLE': 'Añadir enlace a más indicadores'
+                    }
                 }
             },
         },
