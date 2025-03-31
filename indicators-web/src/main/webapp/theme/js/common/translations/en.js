@@ -14,7 +14,7 @@
             'DATA': {
                 'MEASURES': 'Measures',
                 'SYSTEM': 'System',
-                'SYSTEM_OR_SUBJECT': 'System or subject',
+                'SYSTEM_OR_SUBJECT': 'Data selection mode',
                 'SUBJECT': 'Subject',
                 'ALL_SUBJECT': 'All subjects',
                 'INDICATORS': 'Indicators',

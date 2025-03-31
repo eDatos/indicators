@@ -57,6 +57,8 @@
             this.model.on('change:measures', this.updatePreview, this);
             this.model.on('change:nrecent', this.updatePreview, this);
             this.model.on('change:indicatorsMain', this.updatePreview, this);
+
+            this.fetchSystems();
         },
 
         _fetchGeographicalGranularities : function () {
@@ -74,6 +76,15 @@
             }else if (groupType === 'allValues') {
                 this.geographicalGranularities.fetchAll();
             }
+        },
+
+        fetchSystems: function() {
+            var self = this;
+            this.systems.fetchWithoutLimit().done(function () {
+                if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
+                    $("#system").show();
+                }
+            });
         },
 
         _fetchGeographicalValuesAndTimeGranularities : function () {
@@ -232,7 +243,6 @@
             this._renderGroupType();
 
             this.measures.resetDefaults();
-            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
             return this;

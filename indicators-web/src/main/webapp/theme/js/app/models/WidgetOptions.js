@@ -21,7 +21,7 @@
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
-            groupType: 'system', // or subject
+            groupType: 'subject',	// or system
             indicatorsMain: "all", // or onlyMain
             indicatorSystem: '',
             subjectCode: '',

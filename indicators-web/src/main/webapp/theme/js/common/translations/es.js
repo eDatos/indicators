@@ -14,7 +14,7 @@
             'DATA': {
                 'MEASURES': 'Medidas',
                 'SYSTEM': 'Sistema',
-                'SYSTEM_OR_SUBJECT': 'Sistema o Tema',
+                'SYSTEM_OR_SUBJECT': 'Modo de selección de datos',
                 'SUBJECT': 'Tema',
                 'ALL_SUBJECT': 'Todos los temas',
                 'INDICATORS': 'Indicadores',
