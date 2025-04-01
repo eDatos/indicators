@@ -13,9 +13,10 @@ import es.gobcan.istac.indicators.rest.exception.RestIndicatorsCommonServiceExce
 
 public class ExportResourceAccessToPlainText {
 
+
     public void exportResourceAccessToPlainText(ResourceAccess resourceAccess, String format, OutputStream os) throws MetamacException {
         try {
-            PlainTextExporter exporter = new PlainTextExporter(resourceAccess, format);
+            PlainTextExporter exporter = new PlainTextExporter(format, resourceAccess);
             exporter.writeObservationsAndAttributesWithObservationAttachmentLevel(os);
         } catch (Exception e) {
             throw ExceptionUtils.manageException(e);

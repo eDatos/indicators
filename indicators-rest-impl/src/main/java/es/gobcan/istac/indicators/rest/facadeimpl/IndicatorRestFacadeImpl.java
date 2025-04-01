@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +47,6 @@ import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
 import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
-import es.gobcan.istac.indicators.rest.types.AttributeType;
-import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
@@ -204,7 +200,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         try {
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData);
+
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData); // Fijarnos en el portal en lugar de statistical resources
+
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
             exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);
 
@@ -219,8 +217,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 exportResourceAccessToPlainText.exportResourceAccessToPlainText(resourceAccess, format, outputStreamObservations);
 
                 byteArrayOutputStream = new ByteArrayOutputStream();
-                // return ResponseEntity<>.ok(new DeleteOnCloseFileInputStream(tmpFileObservations), ResourcesFormat.getMimeType(format.toUpperCase()))
-                // .header("Content-Disposition", getContentDisposition(fileNamePrefix, format)).build();
 
                 inputStream = new FileInputStream(tmpFileObservations);
 
@@ -236,194 +232,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 IOUtils.closeQuietly(outputStreamObservations);
             }
 
-            // switch (format.toLowerCase()) {
-            // case "csv":
-            // content = convertJsonToText(indicatorData, ",").getBytes(StandardCharsets.UTF_8);
-            // break;
-            // case "tsv":
-            // content = convertJsonToText(indicatorData, "\t").getBytes(StandardCharsets.UTF_8);
-            // break;
-            // case "xlsx":
-            // content = generateXlsxFromJson(indicatorData);
-            // break;
-            // default:
-            // throw new IllegalArgumentException("Unsupported format: " + format);
-            // }
-
         } catch (Exception e) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorCode);
         }
-    }
-
-    private String convertJsonToText(DataType indicatorData, String delimiter) {
-        StringBuilder csvBuilder = new StringBuilder();
-
-        List<String> headers = extractHeadersFromIndicatorData(indicatorData);
-        csvBuilder.append(String.join(delimiter, headers)).append("\n");
-
-        List<List<String>> rows = extractRowsFromIndicatorData(indicatorData, headers);
-        for (List<String> row : rows) {
-            csvBuilder.append(String.join(delimiter, row)).append("\n");
-        }
-
-        return csvBuilder.toString();
-    }
-    private List<String> extractHeadersFromIndicatorData(DataType indicatorData) {
-        List<String> headers = new ArrayList<>();
-
-        if (indicatorData == null) {
-            return headers;
-        }
-
-        Map<String, DataDimensionType> dimensions = indicatorData.getDimension();
-        if (dimensions != null) {
-            for (String key : dimensions.keySet()) {
-                headers.add(key);
-            }
-            DataDimensionType measureDimension = dimensions.get("MEASURE");
-            if (measureDimension != null && measureDimension.getRepresentation() != null) {
-                Map<String, Integer> measureIndexMap = measureDimension.getRepresentation().getIndex();
-                if (measureIndexMap != null) {
-                    for (String measureKey : measureIndexMap.keySet()) {
-                        headers.add(measureKey);
-                    }
-                }
-            }
-        }
-
-        List<Map<String, AttributeType>> attributes = indicatorData.getAttribute();
-        if (attributes != null) {
-            for (Map<String, AttributeType> attributeMap : attributes) {
-                if (attributeMap != null) {
-                    for (String attributeKey : attributeMap.keySet()) {
-                        if (!headers.contains(attributeKey)) {
-                            headers.add(attributeKey);
-                        }
-                    }
-                }
-            }
-        }
-
-        return headers;
-    }
-
-    private List<List<String>> extractRowsFromIndicatorData(DataType indicatorData, List<String> headers) {
-        List<List<String>> rows = new ArrayList<>();
-
-        if (indicatorData == null) {
-            return rows;
-        }
-
-        Map<String, DataDimensionType> dimensions = indicatorData.getDimension();
-        List<Map<String, Object>> combinations = new ArrayList<>();
-
-        // Generar todas las combinaciones posibles de dimensiones
-        if (dimensions != null) {
-            for (String dimensionKey : dimensions.keySet()) {
-                DataDimensionType dimension = dimensions.get(dimensionKey);
-                if (dimension != null && dimension.getRepresentation() != null) {
-                    Map<String, Integer> indexMap = dimension.getRepresentation().getIndex();
-                    if (indexMap != null) {
-                        if (combinations.isEmpty()) {
-                            // Inicializar combinaciones con la primera dimensión
-                            for (String key : indexMap.keySet()) {
-                                Map<String, Object> combination = new HashMap<>();
-                                combination.put(dimensionKey, key);
-                                combinations.add(combination);
-                            }
-                        } else {
-                            // Agregar combinaciones adicionales para dimensiones subsiguientes
-                            List<Map<String, Object>> newCombinations = new ArrayList<>();
-                            for (Map<String, Object> existing : combinations) {
-                                for (String key : indexMap.keySet()) {
-                                    Map<String, Object> newCombination = new HashMap<>(existing);
-                                    newCombination.put(dimensionKey, key);
-                                    newCombinations.add(newCombination);
-                                }
-                            }
-                            combinations = newCombinations;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Generar las filas basadas en las combinaciones
-        for (Map<String, Object> combination : combinations) {
-            List<String> row = new ArrayList<>(Collections.nCopies(headers.size(), ""));
-
-            // Insertar valores de las combinaciones de dimensiones en las columnas correspondientes
-            for (Map.Entry<String, Object> entry : combination.entrySet()) {
-                int headerIndex = headers.indexOf(entry.getKey());
-                if (headerIndex >= 0) {
-                    row.set(headerIndex, entry.getValue().toString());
-                }
-            }
-
-            // Agregar la observación correspondiente
-            List<String> observations = indicatorData.getObservation();
-            if (observations != null) {
-                int obsIndex = headers.indexOf("OBS_VALUE");
-                if (obsIndex >= 0 && observations.size() > 0) {
-                    row.set(obsIndex, observations.get(0)); // Aquí podrías ajustar la lógica si hay múltiples observaciones
-                }
-            }
-
-            // Insertar valores de los atributos en las columnas correspondientes
-            List<Map<String, AttributeType>> attributes = indicatorData.getAttribute();
-
-            if (attributes != null) {
-                for (Map<String, AttributeType> attributeMap : attributes) {
-                    for (Map.Entry<String, AttributeType> entry : attributeMap.entrySet()) {
-                        int headerIndex = headers.indexOf(entry.getKey());
-
-                        // Validar si headerIndex y entry tienen valores válidos
-                        if (headerIndex >= 0 && entry.getValue() != null) {
-                            String attributeValue = (entry.getValue().getValue() != null) ? entry.getValue().getValue().toString() : ""; // Valor por defecto en caso de nulo
-
-                            row.set(headerIndex, attributeValue);
-                        }
-                    }
-                }
-            }
-
-            rows.add(row);
-        }
-
-        return rows;
-    }
-    private byte[] generateXlsxFromJson(DataType indicatorData) throws MetamacException {
-        excelMapper = new ExcelMapper();
-
-        List<String> headers = extractHeadersFromIndicatorData(indicatorData);
-        Map<String, String> headerMap = createHeaderMap(headers);
-        excelMapper.createHeaderRow(headerMap);
-
-        List<List<String>> rows = extractRowsFromIndicatorData(indicatorData, headers);
-        for (List<String> rowData : rows) {
-            Map<String, String> rowMap = createRowMap(rowData);
-            excelMapper.addObservationRow(rowMap);
-        }
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        excelMapper.writeExcelWorkBookToOutputStream(outputStream);
-        return outputStream.toByteArray();
-    }
-
-    private Map<String, String> createHeaderMap(List<String> headers) {
-        Map<String, String> headerMap = new HashMap<>();
-        for (String header : headers) {
-            headerMap.put(header, header);
-        }
-        return headerMap;
-    }
-
-    private Map<String, String> createRowMap(List<String> rowData) {
-        Map<String, String> rowMap = new HashMap<>();
-        for (int i = 0; i < rowData.size(); i++) {
-            rowMap.put("Column" + i, rowData.get(i));
-        }
-        return rowMap;
     }
 
     private static String getContentDisposition(String fileNamePrefix, String format) {
