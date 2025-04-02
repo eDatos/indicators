@@ -14,6 +14,7 @@ public class MetadataDimensionType implements Serializable {
     private Map<String, List<String>>        title            = null;
     private List<MetadataGranularityType>    granularity      = null;
     private List<MetadataRepresentationType> representation   = null;
+    private Boolean                          showCode         = false;
 
     public String getCode() {
         return code;
@@ -45,6 +46,14 @@ public class MetadataDimensionType implements Serializable {
 
     public void setRepresentation(List<MetadataRepresentationType> representation) {
         this.representation = representation;
+    }
+
+    public Boolean getShowCode() {
+        return showCode;
+    }
+
+    public void setShowCode(Boolean showCode) {
+        this.showCode = showCode;
     }
 
 }
