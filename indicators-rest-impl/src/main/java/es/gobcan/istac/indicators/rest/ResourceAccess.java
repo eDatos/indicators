@@ -210,7 +210,7 @@ public class ResourceAccess {
     }
 
     public String getDimensionValueLabelCurrentLocale(String dimensionId, String dimensionValueId) {
-        return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId);
+        return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
     }
 
     public InternationalString getDimensionValueLabel(String dimensionId, String dimensionValueId) {

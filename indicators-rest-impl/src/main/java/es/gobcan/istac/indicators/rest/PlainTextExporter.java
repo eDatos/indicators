@@ -21,7 +21,7 @@ import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 
 public class PlainTextExporter {
 
-    private final ResourceAccess             indicatorAccess;
+    private final ResourceAccess             resourceAccess;
     private static final String              ESCAPE_DOUBLE_QUOTES                = "\"";
     private static final String              HEADER_OBSERVATION                  = "OBS_VALUE";
     private static final String              HEADER_ATTRIBUTE_ID                 = "ATTRIBUTE";
@@ -42,7 +42,7 @@ public class PlainTextExporter {
     }
 
     public PlainTextExporter(String format, ResourceAccess resourceAccess) throws MetamacException {
-        indicatorAccess = resourceAccess;
+        resourceAccess = resourceAccess;
         this.format = format;
         this.separator = separatorsByFormat.get(format);
         if (this.format == null) {
@@ -72,8 +72,8 @@ public class PlainTextExporter {
 
             int numberOfColumnsToAttributeValue = guessNumberOfColumnsToAttributeValue();
             writeHeaderForPlainTextAttributes(printWriter, numberOfColumnsToAttributeValue);
-            writeBodyForPlainTextAttributesDataset(printWriter, indicatorAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
-            writeBodyForPlainTextAttributesDimensions(printWriter, indicatorAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
+            writeBodyForPlainTextAttributesDataset(printWriter, resourceAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
+            writeBodyForPlainTextAttributesDimensions(printWriter, resourceAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
             // NOTE: Attributes observations are exported another plain text
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error exporting to " + format);
@@ -86,8 +86,8 @@ public class PlainTextExporter {
 
     private void writeHeaderForPlainTextObservations(PrintWriter printWriter) {
         StringBuilder header = new StringBuilder();
-        for (String dimensionId : indicatorAccess.getDimensionsOrderedForData()) {
-            LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getDimensionLabelVisualisationMode(dimensionId);
+        for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
+            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
             if (labelVisualisation.isLabel() || labelVisualisation.isCode()) {
                 header.append(escapeString(dimensionId, ESCAPE_IF_NECESSARY) + separator);
             }
@@ -96,12 +96,12 @@ public class PlainTextExporter {
             }
         }
         header.append(HEADER_OBSERVATION);
-        for (Attribute attribute : indicatorAccess.getAttributesMetadata()) {
+        for (Attribute attribute : resourceAccess.getAttributesMetadata()) {
             if (!AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
                 continue; // only observation attachment level
             }
             String attributeId = attribute.getId();
-            LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getAttributeLabelVisualisationMode(attributeId);
+            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
             if (labelVisualisation.isLabel() || labelVisualisation.isCode()) {
                 header.append(separator + escapeString(attributeId, ESCAPE_IF_NECESSARY));
             }
@@ -121,11 +121,11 @@ public class PlainTextExporter {
                 StringBuilder line = new StringBuilder();
 
                 // Dimension values
-                for (String dimensionId : indicatorAccess.getDimensionsOrderedForData()) {
+                for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
                     String dimensionValueId = permutationAtCell.get(dimensionId);
-                    LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getDimensionLabelVisualisationMode(dimensionId);
+                    LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
                     if (labelVisualisation.isLabel()) {
-                        String dimensionValueLabel = indicatorAccess.getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
+                        String dimensionValueLabel = resourceAccess.getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
                         line.append(escapeString(dimensionValueLabel, ESCAPE_IF_NECESSARY) + separator);
                     }
                     if (labelVisualisation.isCode()) {
@@ -134,27 +134,27 @@ public class PlainTextExporter {
                 }
 
                 // Observation
-                String observation = indicatorAccess.observationAtPermutation(permutationAtCell);
+                String observation = resourceAccess.observationAtPermutation(permutationAtCell);
                 if (observation == null) {
                     observation = StringUtils.EMPTY;
                 }
                 line.append(escapeString(observation, ESCAPE_IF_NECESSARY));
 
                 // Attributes
-                for (Attribute attribute : indicatorAccess.getAttributesMetadata()) {
+                for (Attribute attribute : resourceAccess.getAttributesMetadata()) {
                     if (!AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
                         continue; // only observation attachment level
                     }
 
                     String attributeId = attribute.getId();
-                    String attributeValue = indicatorAccess.measureAttributeValueAtPermutation(attributeId, permutationAtCell);
+                    String attributeValue = resourceAccess.measureAttributeValueAtPermutation(attributeId, permutationAtCell);
                     if (attributeValue == null) {
                         attributeValue = StringUtils.EMPTY;
                         line.append(separator + escapeString(attributeValue, ESCAPE_IF_NECESSARY));
                     } else {
-                        LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getAttributeLabelVisualisationMode(attributeId);
+                        LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
                         if (labelVisualisation.isLabel()) {
-                            String attributeValueLabel = indicatorAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+                            String attributeValueLabel = resourceAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
                             line.append(
                                     attributeValueLabel != null ? separator + escapeString(attributeValueLabel, ESCAPE_IF_NECESSARY) : separator + escapeString(attributeValue, ESCAPE_IF_NECESSARY));
                         }
@@ -170,8 +170,8 @@ public class PlainTextExporter {
 
     private void writeHeaderForPlainTextAttributes(PrintWriter printWriter, int numberOfColumnsToAttributeValue) {
         StringBuilder header = new StringBuilder();
-        for (String dimensionId : indicatorAccess.getDimensionsOrderedForData()) {
-            LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getDimensionLabelVisualisationMode(dimensionId);
+        for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
+            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
             if (labelVisualisation.isLabel() || labelVisualisation.isCode()) {
                 header.append(escapeString(dimensionId, ESCAPE_IF_NECESSARY) + separator);
             }
@@ -193,15 +193,15 @@ public class PlainTextExporter {
                 continue;
             }
             String attributeId = attribute.getId();
-            String[] attributeValues = indicatorAccess.getAttributeValues(attributeId);
+            String[] attributeValues = resourceAccess.getAttributeValues(attributeId);
             if (attributeValues == null) {
                 continue;
             }
             StringBuilder line = new StringBuilder();
             // Dimensions
-            for (String dimensionId : indicatorAccess.getDimensionsOrderedForData()) {
+            for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
                 // Write empty code dimensions
-                LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getDimensionLabelVisualisationMode(dimensionId);
+                LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
                 if (labelVisualisation.isLabel()) {
                     line.append(separator);
                 }
@@ -224,11 +224,11 @@ public class PlainTextExporter {
                 continue;
             }
             String attributeId = attribute.getId();
-            String[] attributeValues = indicatorAccess.getAttributeValues(attributeId);
+            String[] attributeValues = resourceAccess.getAttributeValues(attributeId);
             if (attributeValues == null) {
                 continue;
             }
-            List<String> dimensionsAttributeOrderedForData = indicatorAccess.getDimensionsAttributeOrderedForData(attribute);
+            List<String> dimensionsAttributeOrderedForData = resourceAccess.getDimensionsAttributeOrderedForData(attribute);
             writeBodyForPlainTextAttributeDimensions(printWriter, attributeId, attributeValues, dimensionsAttributeOrderedForData, numberOfColumnsToAttributeValue);
         }
     }
@@ -255,15 +255,15 @@ public class PlainTextExporter {
             if (dimensionPosition == lastDimensionPosition) {
                 // We have all dimensions here
                 String attributeValue = attributeValues[attributeValueIndex++];
-                if (!StringUtils.isEmpty(attributeValue) && allDimensionValuesAreSelected(indicatorAccess.getDimensionsOrderedForData(), dimensionValuesForAttributeValue)) {
+                if (!StringUtils.isEmpty(attributeValue) && allDimensionValuesAreSelected(resourceAccess.getDimensionsOrderedForData(), dimensionValuesForAttributeValue)) {
                     StringBuilder line = new StringBuilder();
                     // Dimensions
-                    for (String dimensionId : indicatorAccess.getDimensionsOrderedForData()) {
+                    for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
                         String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-                        LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getDimensionLabelVisualisationMode(dimensionId);
+                        LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
                         if (labelVisualisation.isLabel()) {
                             if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-                                String dimensionValueLabel = indicatorAccess.getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
+                                String dimensionValueLabel = resourceAccess.getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
                                 line.append(escapeString(dimensionValueLabel, ESCAPE_IF_NECESSARY));
                             }
                             line.append(separator);
@@ -283,7 +283,7 @@ public class PlainTextExporter {
                 }
             } else {
                 String dimensionId = dimensionsAttributeOrderedForData.get(dimensionPosition + 1);
-                List<String> dimensionValues = indicatorAccess.getDimensionValuesOrderedForData(dimensionId);
+                List<String> dimensionValues = resourceAccess.getDimensionValuesOrderedForData(dimensionId);
                 for (int i = dimensionValues.size() - 1; i >= 0; i--) {
                     DataOrderingStackElement temp = new DataOrderingStackElement(dimensionId, dimensionPosition + 1, dimensionValues.get(i));
                     stack.push(temp);
@@ -306,10 +306,10 @@ public class PlainTextExporter {
     }
 
     private void writeBodyAttributeValueForPlainTextAttributes(StringBuilder line, String attributeId, String attributeValueCode, int numberOfColumnsToAttributeValue) {
-        LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getAttributeLabelVisualisationMode(attributeId);
+        LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
         attributeValueCode = escapeString(attributeValueCode, ESCAPE_IF_NECESSARY);
         if (labelVisualisation.isLabel()) {
-            String attributeValueLabel = indicatorAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValueCode);
+            String attributeValueLabel = resourceAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValueCode);
             attributeValueLabel = escapeString(attributeValueLabel, ESCAPE_IF_NECESSARY);
             line.append(attributeValueLabel != null ? attributeValueLabel : attributeValueCode);
             if (numberOfColumnsToAttributeValue == 2) {
@@ -324,12 +324,12 @@ public class PlainTextExporter {
     }
 
     private int guessNumberOfColumnsToAttributeValue() {
-        for (Attribute attribute : indicatorAccess.getAttributesMetadata()) {
+        for (Attribute attribute : resourceAccess.getAttributesMetadata()) {
             if (!AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel()) && AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
                 continue;
             }
             String attributeId = attribute.getId();
-            LabelVisualisationModeEnum labelVisualisation = indicatorAccess.getAttributeLabelVisualisationMode(attributeId);
+            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
             if (labelVisualisation.isCode() && labelVisualisation.isLabel()) {
                 return 2;
             }
