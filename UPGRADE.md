@@ -8,6 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 11.4.0 a 11.4.1-SNAPSHOT
+* Se añade script de relocalización de las extensiones actualmente usadas al esquema de extensiones
+
+```
+etc/changes-from-release/11.4.0/db/indicators/postgresql/20250207_relocate_extensions.sql
+```
+
 ## 11.2.0 a 11.3.0
 * Se añade script que añade nuevos metadatos necesarios para registrar sistemas de indicadores sin operación. Este script actualiza también todas las entradas existentes con el nuevo campo "IS_OPERATIONAL" con el valor TRUE.
 * Además, también hay cambios en base de datos de indicators relativos a las extensiones utilizadas, por lo que es necesario ejecutar los scripts que se encuentran en la

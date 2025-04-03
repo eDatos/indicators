@@ -50,6 +50,8 @@
             this.model.on('change:indicators', this.updatePreview, this);
 
             this.measures.resetDefaults();
+            this.fetchSystems();
+
         },
 
         events: {
@@ -59,6 +61,15 @@
         updatePreview: function () {
             this.trigger("updatePreviewData");
             return false;
+        },
+
+        fetchSystems: function() {
+            var self = this;
+            this.systems.fetchWithoutLimit().done(function () {
+                if (self.model.get('groupType') !== 'system' && self.systems.length > 0) {
+                    $("#system").show();
+                } 
+            });
         },
 
         _fetchGeographicalGranularities: function () {
@@ -228,7 +239,7 @@
                 this.model.set('geographicalValues', value);
             }, this);
         },
-
+        
         _renderGroupType: function () {
             // Group type
             var toggleGroupType = function () {
@@ -298,7 +309,7 @@
 
         render: function () {
             this.$el.html(this.template());
-
+            
             this.$('.main-indicators-help').qtip({
                 content: EDatos.common.I18n.translate('MAIN_INDICATORS.ONLY_MAIN.TOOLTIP'),
                 show: 'mouseover',
@@ -321,7 +332,6 @@
             // Visible zones
             this._renderGroupType();
 
-            this.systems.fetchWithoutLimit();
             this.subjects.fetch();
 
             return this;

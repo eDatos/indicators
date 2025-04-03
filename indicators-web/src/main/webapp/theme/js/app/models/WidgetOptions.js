@@ -21,7 +21,7 @@
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
-            groupType: 'system', // or subject
+            groupType: 'subject',	// or system
             indicatorsMain: "all", // or onlyMain
             indicatorSystem: '',
             subjectCode: '',
@@ -39,7 +39,8 @@
             style: 'custom', //custom, gobcan,
             gobcanStyleColor: 'blue', //blue, green
             sideView: false,
-            scale: 'natural-lib'
+            scale: 'natural-lib',
+            showEmbedMoreLink: true
         },
 
         validate: function (attrs) {
