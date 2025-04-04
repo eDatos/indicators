@@ -12,9 +12,8 @@
             });
 
             this.widgetPreviewView = new App.views.WidgetPreviewView({el : $('#widget-preview-content'), model : this.widgetOptions});
-
+            
             this.views = {};
-
             var type = this.widgetOptions.get('type');
             if (type === "lastData") {
                 this.views.data = new App.views.WidgetDataOptionsLastDataView({model : this.widgetOptions});
@@ -35,9 +34,9 @@
             });
         },
 
-        render : function () {
+        render: function() {
             this.tabView.render();
-        }
+        },
 
     });
 }());

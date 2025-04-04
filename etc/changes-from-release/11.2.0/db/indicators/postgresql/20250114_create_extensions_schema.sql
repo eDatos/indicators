@@ -16,6 +16,7 @@
 
 -- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
 -- (unaccent is a trusted extension)
+-- CREATE extension unaccent WITH SCHEMA extensions;
 -- Make sure indicators_bd and indicators_own_bd can use everything in the extensions schema
 -- GRANT USAGE ON SCHEMA extensions TO public;
 -- GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO indicators_bd, indicators_own_bd;

@@ -113,7 +113,7 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
                     break;
             }
 
-            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields, null, null);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveQuery(agencyID, resourceID, lang, fields, null, null, null);
         } catch (Exception e) {
             logger.error("Unable to find Queries", e);
             throw toRestException(e);
@@ -139,7 +139,7 @@ public class StatisticalResoucesRestExternalServiceImpl implements StatisticalRe
                     break;
             }
 
-            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveDataset(agencyId, resourceId, LATEST, lang, fields, null, null);
+            return restApiLocator.getStatisticalResourcesRestExternalFacacadeV10().retrieveDataset(agencyId, resourceId, LATEST, lang, fields, null, null, null);
 
         } catch (Exception e) {
             logger.error("Unable to find Datasets", e);

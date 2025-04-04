@@ -14,7 +14,7 @@
             'DATA': {
                 'MEASURES': 'Measures',
                 'SYSTEM': 'System',
-                'SYSTEM_OR_SUBJECT': 'System or subject',
+                'SYSTEM_OR_SUBJECT': 'Data selection mode',
                 'SUBJECT': 'Subject',
                 'ALL_SUBJECT': 'All subjects',
                 'INDICATORS': 'Indicators',
@@ -83,6 +83,12 @@
                     'PREFERENCE': {
                         'TITLE': 'Language to use',
                         'NAVIGATOR': 'Browser language'
+                    }
+                },
+                'MORE_INDICATORS': {
+                    'TITLE': 'More indicators',
+                    'LINK': {
+                        'TITLE': 'Add link to more indicators'
                     }
                 }
             },

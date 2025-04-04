@@ -14,7 +14,7 @@
             'DATA': {
                 'MEASURES': 'Mesures',
                 'SYSTEM': 'Sistema',
-                'SYSTEM_OR_SUBJECT': 'Sistema o Tema',
+                'SYSTEM_OR_SUBJECT': 'Mode de selecció de dades',
                 'SUBJECT': 'Tema',
                 'ALL_SUBJECT': 'Tots els temes',
                 'INDICATORS': 'Indicadors',
@@ -83,6 +83,12 @@
                     'PREFERENCE': {
                         'TITLE': 'Idioma a utilitzar',
                         'NAVIGATOR': 'Idioma del navegador'
+                    }
+                },
+                'MORE_INDICATORS': {
+                    'TITLE': 'Més indicadors',
+                    'LINK': {
+                        'TITLE': 'Afegir enllaç a més indicadors'
                     }
                 }
             },

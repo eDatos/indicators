@@ -5,10 +5,6 @@
 
 <div class="control-group">
     <div class="widget-data-title">{{ translate "OPTIONS.DATA.SYSTEM_OR_SUBJECT" }}</div>
-
-    <label class="radio">
-        <input type="radio" name="groupType" value="system"> {{ translate "OPTIONS.DATA.SYSTEM" }}
-    </label>
     <label class="radio">
         <input type="radio" name="groupType" value="subject"> {{ translate "OPTIONS.DATA.SUBJECT" }}
     </label>
@@ -17,6 +13,9 @@
         <input type="radio" name="groupType" value="allValues"> {{ translate "OPTIONS.DATA.ALL_SUBJECT" }}
     </label>
 
+    <label class="radio" id="system" style="display: none;">
+        <input type="radio" name="groupType" value="system"> {{ translate "OPTIONS.DATA.SYSTEM" }}
+    </label>
 
     <div class="widget-data-system"></div>
     <div class="widget-data-subject"></div>
