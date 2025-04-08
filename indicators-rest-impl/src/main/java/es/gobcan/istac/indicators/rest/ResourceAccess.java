@@ -714,31 +714,24 @@ public class ResourceAccess {
 
     private static List<DataAttribute> indicatorAttributeToDataAttribute(List<Map<String, AttributeType>> attributes) {
         List<DataAttribute> dataAttributes = new ArrayList<>();
-
         for (Map<String, AttributeType> attribute : attributes) {
-            // Listas temporales para almacenar los IDs y valores aplanados
             List<String> ids = new ArrayList<>();
             List<String> values = new ArrayList<>();
-
-            // Recorrer cada AttributeType dentro del Map
             for (Map.Entry<String, AttributeType> entry : attribute.entrySet()) {
                 String value = indicatorAttributeValueToDataAttributeValue(entry.getValue());
                 if (StringUtils.isNotBlank(value)) {
-                    ids.add(entry.getKey()); // Añadir el ID (clave) a la lista
-                    values.add(value); // Añadir el valor a la lista
+                    ids.add(entry.getKey());
+                    values.add(value);
                 }
             }
-
-            // Si hay valores, crear un único DataAttribute con los IDs concatenados y los valores concatenados
             if (!values.isEmpty()) {
                 DataAttribute dataAttribute = new DataAttribute();
-                dataAttribute.setId(String.join(OBSERVATIONS_SEPARATOR, ids)); // Concatenar todos los IDs
-                dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, values)); // Concatenar todos los valores
-                dataAttributes.add(dataAttribute); // Añadir el DataAttribute a la lista
+                dataAttribute.setId(String.join(OBSERVATIONS_SEPARATOR, ids));
+                dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, values));
+                dataAttributes.add(dataAttribute);
             }
         }
-
-        return dataAttributes; // Devolver la lista de DataAttributes
+        return dataAttributes;
     }
 
     private static String indicatorAttributeValueToDataAttributeValue(AttributeType attribute) {
