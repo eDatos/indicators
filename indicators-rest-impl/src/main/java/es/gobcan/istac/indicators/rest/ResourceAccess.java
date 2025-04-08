@@ -29,7 +29,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetBase;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetMetadataBase;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
@@ -41,6 +40,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Enumerat
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
@@ -58,7 +58,7 @@ public class ResourceAccess {
     private Dimensions                                    dimensions;
     private Attributes                                    attributes;
 
-    private InternationalString                           name;
+    private String                                        name;
     private DatasetMetadataBase                           metadata;
     private DataStructureDefinition                       relatedDsd;
     private String                                        urn;
@@ -89,43 +89,24 @@ public class ResourceAccess {
     private Map<String, String[]>                         attributesValuesByAttributeId;
     private List<String>                                  dimensionsOrderedForData;
     private Map<String, List<String>>                     dimensionValuesOrderedForDataByDimensionId;
-
-    private DatasetBase                                   dataset;
-
     private final Map<String, Integer>                    multipliers                   = new HashMap<String, Integer>();
     private final Map<String, Map<String, Integer>>       multipliersByAttribute        = new HashMap<String, Map<String, Integer>>();
     private final Map<String, Map<String, Long>>          representationIndex           = new HashMap<String, Map<String, Long>>();   // Map<Dimension, Map<Code, Index>
 
     private int                                           primaryMeasureAttributesCount = 0;
 
-    // private SrmRestExternalFacade srmRestExternalFacade;
-
-    public ResourceAccess(DataType indicator) throws MetamacException {
+    public ResourceAccess(DataType indicatorData, IndicatorVersion indicator) throws MetamacException {
 
         data = new Data();
 
-        data.setObservations(indicatorObservationsToDataObservations(indicator.getObservation()));
-        data.setAttributes(indicatorAttributesToDataAttributes(indicator.getAttribute()));
-        data.setDimensions(indicatorDimensionsToDataDimensions(indicator.getDimension()));
+        data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
+        data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
+        data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        // uniqueId = dataset.getId();
-        // // if (datasetSelection != null && datasetSelection.isUserSelection()) {
-        // // uniqueId = PxExporter.generateMatrixFromString(dataset.getId());
-        // // }
-        //
-        // name = dataset.getName();
-        // id = dataset.getId();
-        // urn = dataset.getUrn();
-        // description = dataset.getDescription();
-        // relatedDsd = dataset.getMetadata().getRelatedDsd();
-        //
-        // this.dataset = dataset;
-        // metadata = dataset.getMetadata();
-
-        initialize(data, dimensions, attributes);
+        initialize(data);
     }
 
-    private void initialize(Data data, Dimensions dimensions, Attributes attributes) throws MetamacException {
+    private void initialize(Data data) throws MetamacException {
         // this.lang = lang;
         // this.langDefault = langDefault;
 
@@ -150,63 +131,21 @@ public class ResourceAccess {
         return attributes;
     }
 
-    public InternationalString getName() {
-        return name;
-    }
-
-    public DatasetBase getDataset() {
-        return dataset;
-    }
     public DatasetMetadataBase getMetadata() {
         return metadata;
-    }
-
-    public DataStructureDefinition getRelatedDsd() {
-        return relatedDsd;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getUrn() {
-        return urn;
-    }
-
-    public InternationalString getDescription() {
-        return description;
-    }
-
     public String getLang() {
         return lang;
     }
 
-    public String getLangDefault() {
-        return langDefault;
-    }
-
-    public List<Dimension> getDimensionsMetadata() {
-        return dimensionsMetadata;
-    }
-
-    public Map<String, Dimension> getDimensionsMetadataMap() {
-        return dimensionsMetadataMap;
-    }
 
     public List<Attribute> getAttributesMetadata() {
         return attributesMetadata;
-    }
-
-    public Map<String, Attribute> getAttributesMetadataMap() {
-        return attributesMetadataMap;
-    }
-
-    public Attribute getMeasureAttribute() {
-        return measureAttribute;
     }
 
     public Dimension getMeasureDimension() {
@@ -215,10 +154,6 @@ public class ResourceAccess {
 
     public String getDimensionLabelCurrentLocale(String dimensionId) {
         return dimensionLabelsCurrentLocale.get(dimensionId);
-    }
-
-    public String getDimensionLabelDefaultLocale(String dimensionId) {
-        return dimensionLabelsDefaultLocale.get(dimensionId);
     }
 
     public String getDimensionValueLabelCurrentLocale(String dimensionId, String dimensionValueId) {
@@ -235,10 +170,6 @@ public class ResourceAccess {
 
     public String getAttributeValueLabelCurrentLocale(String attributeId, String attributeValue) {
         return attributesValuesCurrentLocaleLabels.get(attributeId).get(attributeValue);
-    }
-
-    public InternationalString getAttributeValue(String attributeId, String attributeValue) {
-        return attributesValuesLabels.get(attributeId).get(attributeValue);
     }
 
     public LabelVisualisationModeEnum getDimensionLabelVisualisationMode(String dimensionId) {
@@ -771,47 +702,52 @@ public class ResourceAccess {
         if (attributes == null) {
             return null;
         }
+
+        List<DataAttribute> dataAttributesList = indicatorAttributeToDataAttribute(attributes);
         DataAttributes dataAttributes = new DataAttributes();
-        dataAttributes.getAttributes().add(indicatorAttributeToDataAttribute(attributes));
+        for (DataAttribute dataAttribute : dataAttributesList) {
+            dataAttributes.getAttributes().add(dataAttribute);
+        }
         dataAttributes.setTotal(BigInteger.valueOf(attributes.size()));
         return dataAttributes;
     }
 
-    private static DataAttribute indicatorAttributeToDataAttribute(List<Map<String, AttributeType>> attributes) {
-        List<String> values = new ArrayList<String>();
-        List<DataAttribute> dataAttribute = new ArrayList<>();
+    private static List<DataAttribute> indicatorAttributeToDataAttribute(List<Map<String, AttributeType>> attributes) {
+        List<DataAttribute> dataAttributes = new ArrayList<>();
+
         for (Map<String, AttributeType> attribute : attributes) {
-            indicatorAttributeValueToDataAttributeValue(attribute, dataAttribute);
+            // Listas temporales para almacenar los IDs y valores aplanados
+            List<String> ids = new ArrayList<>();
+            List<String> values = new ArrayList<>();
 
-        }
-        // dataAttribute.setId(PROP_ATTRIBUTE_OBS_CONF);
-        // dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, values));
-
-        return dataAttribute;
-    }
-
-    private static void indicatorAttributeValueToDataAttributeValue(Map<String, AttributeType> attribute, DataAttribute dataAttribute) {
-
-        StringBuilder builder = new StringBuilder();
-        boolean first = true;
-
-        for (AttributeType attr : attribute.values()) {
-            if (attr != null && attr.getValue() != null) {
-                String value = localisedStringsToDefaultString(attr.getValue());
+            // Recorrer cada AttributeType dentro del Map
+            for (Map.Entry<String, AttributeType> entry : attribute.entrySet()) {
+                String value = indicatorAttributeValueToDataAttributeValue(entry.getValue());
                 if (StringUtils.isNotBlank(value)) {
-                    if (!first) {
-                        builder.append(";"); // Puedes cambiar el delimitador
-                    }
-                    builder.append(value);
-                    first = false;
+                    ids.add(entry.getKey()); // Añadir el ID (clave) a la lista
+                    values.add(value); // Añadir el valor a la lista
                 }
-                dataAttribute.setId(attr.getCode());
-                dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, builder.toString()));
+            }
+
+            // Si hay valores, crear un único DataAttribute con los IDs concatenados y los valores concatenados
+            if (!values.isEmpty()) {
+                DataAttribute dataAttribute = new DataAttribute();
+                dataAttribute.setId(String.join(OBSERVATIONS_SEPARATOR, ids)); // Concatenar todos los IDs
+                dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, values)); // Concatenar todos los valores
+                dataAttributes.add(dataAttribute); // Añadir el DataAttribute a la lista
             }
         }
 
-        // return builder.toString();
+        return dataAttributes; // Devolver la lista de DataAttributes
     }
+
+    private static String indicatorAttributeValueToDataAttributeValue(AttributeType attribute) {
+        if (attribute == null || attribute.getValue() == null) {
+            return StringUtils.EMPTY;
+        }
+        return localisedStringsToDefaultString(attribute.getValue());
+    }
+
     private static String localisedStringsToDefaultString(Map<String, String> localisedStrings) {
         return localisedStrings.get(DEFAULT);
     }
