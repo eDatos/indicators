@@ -1,11 +1,13 @@
 package es.gobcan.istac.indicators.rest;
 
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionLabel;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionToMapDimensionsLabelVisualisationMode;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLocalisedLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.dataToDataArray;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +23,17 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribut
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeDimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ComponentType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetBase;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetMetadataBase;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
@@ -37,10 +42,14 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Enumerat
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
+import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.util.ExportUtils;
 
 public class ResourceAccess {
+
+    private static final String                           OBSERVATIONS_SEPARATOR        = " | ";
 
     private String                                        lang;
     private String                                        langDefault;
@@ -92,23 +101,26 @@ public class ResourceAccess {
     // private SrmRestExternalFacade srmRestExternalFacade;
 
     public ResourceAccess(DataType indicator) throws MetamacException {
-        data = dataset.getData();
-        dimensions = dataset.getMetadata().getDimensions();
-        attributes = dataset.getMetadata().getAttributes();
 
-        uniqueId = dataset.getId();
-        // if (datasetSelection != null && datasetSelection.isUserSelection()) {
-        // uniqueId = PxExporter.generateMatrixFromString(dataset.getId());
-        // }
+        data = new Data();
 
-        name = dataset.getName();
-        id = dataset.getId();
-        urn = dataset.getUrn();
-        description = dataset.getDescription();
-        relatedDsd = dataset.getMetadata().getRelatedDsd();
+        data.setObservations(indicatorObservationsToDataObservations(indicator.getObservation()));
+        data.setAttributes(indicatorAttributesToDataAttributes(indicator.getAttribute()));
+        data.setDimensions(indicatorDimensionsToDataDimensions(indicator.getDimension()));
 
-        this.dataset = dataset;
-        metadata = dataset.getMetadata();
+        // uniqueId = dataset.getId();
+        // // if (datasetSelection != null && datasetSelection.isUserSelection()) {
+        // // uniqueId = PxExporter.generateMatrixFromString(dataset.getId());
+        // // }
+        //
+        // name = dataset.getName();
+        // id = dataset.getId();
+        // urn = dataset.getUrn();
+        // description = dataset.getDescription();
+        // relatedDsd = dataset.getMetadata().getRelatedDsd();
+        //
+        // this.dataset = dataset;
+        // metadata = dataset.getMetadata();
 
         initialize(data, dimensions, attributes);
     }
@@ -701,5 +713,136 @@ public class ResourceAccess {
 
     public int getPrimaryMeasureAttributesCount() {
         return primaryMeasureAttributesCount;
+    }
+
+    /**
+     * Calculate rows
+     *
+     * @return the number of total rows in the displayed data table
+     */
+    public int getRows() {
+        return dimensionsOrderedForData.size();
+    }
+
+    /**
+     * Calculate columns
+     *
+     * @return the number of total columns in the displayed data table
+     */
+    public int getColumns() {
+        return dimensionsValuesCurrentLocaleLabels.size() + attributesValuesByAttributeId.size();
+    }
+
+    /**
+     * Calculate the key permutation for a cell of data
+     *
+     * @param row
+     * @param column
+     * @return
+     */
+    public Map<String, String> permutationAtCell(int row, int column) {
+        Map<String, String> permutation = new HashMap<String, String>();
+
+        // for (DatasetSelectionDimension dimension : getLeftDimensions()) {
+        // Integer multiplier = multipliers.get(dimension.getId());
+        // int selectedCategoryIndex = (row / multiplier) % dimension.getSelectedDimensionValues().size();
+        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedCategoryIndex));
+        // }
+        //
+        // for (DatasetSelectionDimension dimension : getTopDimensions()) {
+        // Integer multiplier = multipliers.get(dimension.getId());
+        // int selectedCategoryIndex = (column / multiplier) % dimension.getSelectedDimensionValues().size();
+        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedCategoryIndex));
+        // }
+        //
+        // for (DatasetSelectionDimension dimension : getFixedDimensions()) {
+        // if (dimension.getSelectedDimensionValues().size() > 0) {
+        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(0));
+        // }
+        // }
+
+        return permutation;
+    }
+    private static String indicatorObservationsToDataObservations(List<String> observation) {
+        return String.join(OBSERVATIONS_SEPARATOR, observation);
+    }
+
+    private static DataAttributes indicatorAttributesToDataAttributes(List<Map<String, AttributeType>> attributes) {
+        if (attributes == null) {
+            return null;
+        }
+        DataAttributes dataAttributes = new DataAttributes();
+        dataAttributes.getAttributes().add(indicatorAttributeToDataAttribute(attributes));
+        dataAttributes.setTotal(BigInteger.valueOf(attributes.size()));
+        return dataAttributes;
+    }
+
+    private static DataAttribute indicatorAttributeToDataAttribute(List<Map<String, AttributeType>> attributes) {
+        List<String> values = new ArrayList<String>();
+        List<DataAttribute> dataAttribute = new ArrayList<>();
+        for (Map<String, AttributeType> attribute : attributes) {
+            indicatorAttributeValueToDataAttributeValue(attribute, dataAttribute);
+
+        }
+        // dataAttribute.setId(PROP_ATTRIBUTE_OBS_CONF);
+        // dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, values));
+
+        return dataAttribute;
+    }
+
+    private static void indicatorAttributeValueToDataAttributeValue(Map<String, AttributeType> attribute, DataAttribute dataAttribute) {
+
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+
+        for (AttributeType attr : attribute.values()) {
+            if (attr != null && attr.getValue() != null) {
+                String value = localisedStringsToDefaultString(attr.getValue());
+                if (StringUtils.isNotBlank(value)) {
+                    if (!first) {
+                        builder.append(";"); // Puedes cambiar el delimitador
+                    }
+                    builder.append(value);
+                    first = false;
+                }
+                dataAttribute.setId(attr.getCode());
+                dataAttribute.setValue(String.join(OBSERVATIONS_SEPARATOR, builder.toString()));
+            }
+        }
+
+        // return builder.toString();
+    }
+    private static String localisedStringsToDefaultString(Map<String, String> localisedStrings) {
+        return localisedStrings.get(DEFAULT);
+    }
+    private static DimensionRepresentations indicatorDimensionsToDataDimensions(Map<String, DataDimensionType> dataDimensions) {
+        if (dataDimensions == null) {
+            return null;
+        }
+        DimensionRepresentations dimensionRepresentations = new DimensionRepresentations();
+
+        for (Map.Entry<String, DataDimensionType> entry : dataDimensions.entrySet()) {
+            dimensionRepresentations.getDimensions().add(indicatorDataDimensionToDataDimensionRepresentation(entry.getKey(), entry.getValue()));
+        }
+        return dimensionRepresentations;
+    }
+
+    private static DimensionRepresentation indicatorDataDimensionToDataDimensionRepresentation(String index, DataDimensionType dataDimension) {
+        DimensionRepresentation dimensionRepresentation = new DimensionRepresentation();
+        dimensionRepresentation.setDimensionId(index);
+        dimensionRepresentation.setRepresentations(indicatorDataDimensionTypeToDataCodeRepresentations(dataDimension));
+        return dimensionRepresentation;
+    }
+
+    private static CodeRepresentations indicatorDataDimensionTypeToDataCodeRepresentations(DataDimensionType dataDimension) {
+        CodeRepresentations codeRepresentations = new CodeRepresentations();
+        codeRepresentations.setTotal(BigInteger.valueOf(dataDimension.getRepresentation().getSize()));
+        for (Map.Entry<String, Integer> entry : dataDimension.getRepresentation().getIndex().entrySet()) {
+            CodeRepresentation codeRepresentation = new CodeRepresentation();
+            codeRepresentation.setCode(entry.getKey());
+            codeRepresentation.setIndex(entry.getValue());
+            codeRepresentations.getRepresentations().add(codeRepresentation);
+        }
+        return codeRepresentations;
     }
 }

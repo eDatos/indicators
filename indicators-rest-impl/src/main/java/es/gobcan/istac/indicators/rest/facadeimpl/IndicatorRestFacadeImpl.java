@@ -201,7 +201,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
 
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData); // Fijarnos en el portal en lugar de statistical resources
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData);
 
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
             exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);

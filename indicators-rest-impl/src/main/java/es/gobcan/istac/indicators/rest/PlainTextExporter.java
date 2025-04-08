@@ -42,7 +42,7 @@ public class PlainTextExporter {
     }
 
     public PlainTextExporter(String format, ResourceAccess resourceAccess) throws MetamacException {
-        resourceAccess = resourceAccess;
+        this.resourceAccess = resourceAccess;
         this.format = format;
         this.separator = separatorsByFormat.get(format);
         if (this.format == null) {
@@ -113,9 +113,9 @@ public class PlainTextExporter {
     }
 
     private void writeBodyForPlainTextObservations(PrintWriter printWriter) {
-        for (int i = 0; i < datasetSelection.getRows(); i++) {
-            for (int j = 0; j < datasetSelection.getColumns(); j++) {
-                Map<String, String> permutationAtCell = datasetSelection.permutationAtCell(i, j);
+        for (int i = 0; i < resourceAccess.getRows(); i++) {
+            for (int j = 0; j < resourceAccess.getColumns(); j++) {
+                Map<String, String> permutationAtCell = resourceAccess.permutationAtCell(i, j);
 
                 // The observation is complete
                 StringBuilder line = new StringBuilder();
@@ -237,7 +237,7 @@ public class PlainTextExporter {
             int numberOfColumnsToAttributeValue) {
 
         Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
-        stack.push(new DataOrderingStackElement(null, -1, null));
+        stack.push(new DataOrderingStackElement(null, -1, null, null));
         Map<String, String> dimensionValuesForAttributeValue = new HashMap<String, String>(dimensionsAttributeOrderedForData.size());
 
         int lastDimensionPosition = dimensionsAttributeOrderedForData.size() - 1;
@@ -245,7 +245,7 @@ public class PlainTextExporter {
         while (stack.size() > 0) {
             DataOrderingStackElement elem = stack.pop();
             int dimensionPosition = elem.getDimensionPosition();
-            String dimensionCodeId = elem.getDimensionCodeId();
+            String dimensionCodeId = elem.getDimensionId();
 
             if (dimensionPosition != -1) {
                 String dimensionId = elem.getDimensionId();
@@ -285,7 +285,7 @@ public class PlainTextExporter {
                 String dimensionId = dimensionsAttributeOrderedForData.get(dimensionPosition + 1);
                 List<String> dimensionValues = resourceAccess.getDimensionValuesOrderedForData(dimensionId);
                 for (int i = dimensionValues.size() - 1; i >= 0; i--) {
-                    DataOrderingStackElement temp = new DataOrderingStackElement(dimensionId, dimensionPosition + 1, dimensionValues.get(i));
+                    DataOrderingStackElement temp = new DataOrderingStackElement(dimensionId, dimensionPosition + 1, dimensionValues.get(i), null);
                     stack.push(temp);
                 }
             }
@@ -296,9 +296,10 @@ public class PlainTextExporter {
         for (String dimensionId : dimensionsOrderedForData) {
             if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
                 String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-                if (!datasetSelection.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
-                    return false;
-                }
+                // TODO: revisar
+                // if (!resourceAccess.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
+                // return false;
+                // }
             }
         }
 
