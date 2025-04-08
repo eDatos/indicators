@@ -40,7 +40,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Enumerat
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
@@ -95,10 +94,9 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount = 0;
 
-    public ResourceAccess(DataType indicatorData, IndicatorVersion indicator) throws MetamacException {
+    public ResourceAccess(DataType indicatorData) throws MetamacException {
 
         data = new Data();
-
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
@@ -110,8 +108,8 @@ public class ResourceAccess {
         // this.lang = lang;
         // this.langDefault = langDefault;
 
-        initializeDimensions(dimensions);
-        initializeAttributes(data, attributes);
+        initializeDimensions(data);
+        initializeAttributes(data);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
@@ -220,13 +218,16 @@ public class ResourceAccess {
     /**
      * Init dimensions and dimensions values
      */
-    private void initializeDimensions(Dimensions dimensions) throws MetamacException {
+    private void initializeDimensions(Data data) throws MetamacException {
+
+        DimensionRepresentations dimensionRepresentation = data.getDimensions();
+
         dimensionsMetadata = dimensions.getDimensions();
 
-        Map<String, Dimension> dimensionsMetadataMap = new HashMap<String, Dimension>(dimensionsMetadata.size());
-        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
+        Map<String, Dimension> dimensionsMetadataMap = new HashMap<String, Dimension>(dimensionRepresentation.getDimensions().size());
+        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionRepresentation.getTotal().intValue());
         // TODO: Corregir
-        // Map<String, Map<String, InternationalString>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
+        // Map<String, Map<String, InternationalString>> dimensionsValuesCurrentLocaleLabels = new HashMap<Object, Map<String, InternationalString>>(dimensionRepresentation.getTotal().intValue());
         Map<String, Map<String, InternationalString>> dimensionsValuesLabels = new HashMap<String, Map<String, InternationalString>>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
@@ -257,9 +258,9 @@ public class ResourceAccess {
     /**
      * Init definitions and values of attributes
      *
-     * @param attributes
+     * @param data
      */
-    private void initializeAttributes(Data data, Attributes attributes) throws MetamacException {
+    private void initializeAttributes(Data data) throws MetamacException {
         if (attributes == null) {
             attributesMetadata = new ArrayList<Attribute>();
         } else {
