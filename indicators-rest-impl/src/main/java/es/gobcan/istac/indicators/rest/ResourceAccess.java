@@ -33,7 +33,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetM
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
@@ -66,13 +65,13 @@ public class ResourceAccess {
     private InternationalString                           description;
 
     // Metadata
-    private List<Dimension>                               dimensionsMetadata;
-    private Map<String, Dimension>                        dimensionsMetadataMap;
+    private List<DimensionRepresentation>                 dimensionsMetadata;
+    private Map<String, DimensionRepresentation>          dimensionsMetadataMap;
     private Dimension                                     measureDimension;
     private Map<String, String>                           dimensionLabelsCurrentLocale;
     private Map<String, String>                           dimensionLabelsDefaultLocale;
-    private Map<String, Map<String, InternationalString>> dimensionsValuesCurrentLocaleLabels;
-    private Map<String, Map<String, InternationalString>> dimensionsValuesLabels;
+    private Map<String, Map<String, String>>              dimensionsValuesCurrentLocaleLabels;
+    private Map<String, Map<String, String>>              dimensionsValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       dimensionsLabelVisualisationMode;
 
     private List<Attribute>                               attributesMetadata;
@@ -141,7 +140,6 @@ public class ResourceAccess {
         return lang;
     }
 
-
     public List<Attribute> getAttributesMetadata() {
         return attributesMetadata;
     }
@@ -158,7 +156,7 @@ public class ResourceAccess {
         return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
     }
 
-    public InternationalString getDimensionValueLabel(String dimensionId, String dimensionValueId) {
+    public String getDimensionValueLabel(String dimensionId, String dimensionValueId) {
         return dimensionsValuesLabels.get(dimensionId).get(dimensionValueId);
     }
 
@@ -222,29 +220,29 @@ public class ResourceAccess {
 
         DimensionRepresentations dimensionRepresentation = data.getDimensions();
 
-        dimensionsMetadata = dimensions.getDimensions();
+        dimensionsMetadata = dimensionRepresentation.getDimensions();
 
-        Map<String, Dimension> dimensionsMetadataMap = new HashMap<String, Dimension>(dimensionRepresentation.getDimensions().size());
-        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionRepresentation.getTotal().intValue());
+        Map<String, DimensionRepresentation> dimensionsMetadataMap = new HashMap<String, DimensionRepresentation>(dimensionsMetadata.size());
+        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
         // TODO: Corregir
-        // Map<String, Map<String, InternationalString>> dimensionsValuesCurrentLocaleLabels = new HashMap<Object, Map<String, InternationalString>>(dimensionRepresentation.getTotal().intValue());
-        Map<String, Map<String, InternationalString>> dimensionsValuesLabels = new HashMap<String, Map<String, InternationalString>>(dimensionsMetadata.size());
+        Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
+        Map<String, Map<String, String>> dimensionsValuesLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
 
-        for (Dimension dimension : dimensionsMetadata) {
-            String dimensionId = dimension.getId();
+        for (DimensionRepresentation dimension : dimensionsMetadata) {
+            System.out.println(dimension);
+            String dimensionId = dimension.getDimensionId();
 
             dimensionsMetadataMap.put(dimensionId, dimension);
             labelVisualisationsMode.put(dimensionId, buildMapDimensionToMapDimensionsLabelVisualisationMode(dimension));
-            dimensionsValuesCurrentLocaleLabels.put(dimension.getId(), buildMapDimensionsValuesLabels(dimension));
-            dimensionsValuesLabels.put(dimension.getId(), buildMapDimensionsValuesLocalisedLabels(dimension));
+            dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension));
+            dimensionsValuesLabels.put(dimensionId, buildMapDimensionsValuesLocalisedLabels(dimension));
             dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang, langDefault));
-            dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, langDefault, langDefault));
 
-            if (DimensionType.MEASURE_DIMENSION.equals(dimension.getType())) {
-                measureDimension = dimension;
-            }
+            // if (DimensionType.MEASURE_DIMENSION.equals(dimension.getRepresen)) {
+            // measureDimension = dimension;
+            // }
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;

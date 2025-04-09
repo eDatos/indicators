@@ -11,15 +11,13 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedAttributeValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedAttributeValues;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValue;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedDimensionValues;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
@@ -51,49 +49,43 @@ public class ExportUtils {
     /**
      * Builds map indexed by dimensionValueId and value as localised title of the dimension value
      */
-    public static Map<String, InternationalString> buildMapDimensionsValuesLocalisedLabels(Dimension dimension) throws MetamacException {
-        Map<String, InternationalString> dimensionValuesLabels = null;
-        if (dimension.getDimensionValues() instanceof EnumeratedDimensionValues) {
-            EnumeratedDimensionValues dimensionValues = (EnumeratedDimensionValues) dimension.getDimensionValues();
-            dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-            for (EnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-                String dimensionValueId = dimensionValue.getId();
-                dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
-            }
-        } else if (dimension.getDimensionValues() instanceof NonEnumeratedDimensionValues) {
-            NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
-            dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-            for (NonEnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-                String dimensionValueId = dimensionValue.getId();
-                dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
-            }
-        } else {
-            throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension.getDimensionValues().getClass().getCanonicalName());
-        }
+    public static Map<String, String> buildMapDimensionsValuesLocalisedLabels(DimensionRepresentation dimension) throws MetamacException {
+        Map<String, String> dimensionValuesLabels = null;
+        // if (dimension.getDimensionValues() instanceof EnumeratedDimensionValues) {
+        // EnumeratedDimensionValues dimensionValues = (EnumeratedDimensionValues) dimension.getDimensionValues();
+        // dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
+        // for (EnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
+        // String dimensionValueId = dimensionValue.getId();
+        // dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
+        // }
+        // } else if (dimension.getDimensionValues() instanceof NonEnumeratedDimensionValues) {
+        // NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
+        // dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
+        // for (NonEnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
+        // String dimensionValueId = dimensionValue.getId();
+        // dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
+        // }
+        // } else {
+        // throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension.getDimensionValues().getClass().getCanonicalName());
+        // }
         return dimensionValuesLabels;
     }
 
     /**
      * Builds map indexed by dimensionValueId and value as title of the dimension value
      */
-    public static Map<String, InternationalString> buildMapDimensionsValuesLabels(Dimension dimension) throws MetamacException {
-        Map<String, InternationalString> dimensionValuesLabels = null;
-        if (dimension.getDimensionValues() instanceof EnumeratedDimensionValues) {
-            EnumeratedDimensionValues dimensionValues = (EnumeratedDimensionValues) dimension.getDimensionValues();
-            dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-            for (EnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-                String dimensionValueId = dimensionValue.getId();
-                dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
-            }
-        } else if (dimension.getDimensionValues() instanceof NonEnumeratedDimensionValues) {
-            NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
-            dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-            for (NonEnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-                String dimensionValueId = dimensionValue.getId();
-                dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
+    public static Map<String, String> buildMapDimensionsValuesLabels(DimensionRepresentation dimension) throws MetamacException {
+        Map<String, String> dimensionValuesLabels = null;
+        String dimensionId = dimension.getDimensionId();
+        // TODO: adaptar a nuevo tipo de dato
+        if (dimension.getRepresentations() instanceof CodeRepresentations) {
+            dimensionValuesLabels = new HashMap<String, String>(dimension.getRepresentations().getRepresentations().size());
+            for (CodeRepresentation codeRepresentation : dimension.getRepresentations().getRepresentations()) {
+                String dimensionValueId = dimensionId;
+                dimensionValuesLabels.put(dimensionValueId, codeRepresentation.getCode());
             }
         } else {
-            throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension.getDimensionValues().getClass().getCanonicalName());
+            throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension);
         }
         return dimensionValuesLabels;
     }
@@ -175,8 +167,8 @@ public class ExportUtils {
     /**
      * Calculate the value as name of the dimension
      */
-    public static String buildMapDimensionLabel(Dimension dimension, String lang, String langAlternative) throws MetamacException {
-        String dimensionLabel = getLabel(dimension.getName(), lang);
+    public static String buildMapDimensionLabel(DimensionRepresentation dimension, String lang, String langAlternative) throws MetamacException {
+        String dimensionLabel = dimension.getDimensionId();
         return dimensionLabel;
     }
 
@@ -186,8 +178,8 @@ public class ExportUtils {
      *
      * @param dimension
      */
-    public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(Dimension dimension) {
-        String dimensionId = dimension.getId();
+    public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(DimensionRepresentation dimension) {
+        String dimensionId = dimension.getDimensionId();
         LabelVisualisationModeEnum labelVisualisationMode = null;
         if (labelVisualisationMode == null) {
             // default value
