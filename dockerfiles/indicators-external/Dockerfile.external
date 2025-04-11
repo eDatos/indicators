@@ -1,0 +1,36 @@
+###
+# Dockerfile usado para consutruir la imagen de indicators-external
+#
+# Antes de construir la imagen debemos haber compilado previamente el proyecto (desde el directorio raíz):
+#
+# mvn clean package
+#
+# A continuación podremos construir la imagen ejecutando siempre desde el directorio raíz del proyecto:
+#
+# docker build -f dockerfiles/indicators-external/Dockerfile.external -t indicators-external:<version> .
+#
+# Para ejecutar un contenedor asociado a esta imagen:
+# docker run -i --rm -p 8080:8080 indicators-external:<version>
+#
+# Para ejecutar con opciones de debug habilitadas:
+# docker run -i --rm \
+# -e JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n" \
+# -p 8080:8080 \
+# -p 5005:5005 \
+# indicators-external:<version>
+###
+
+FROM tomcat:9.0.98-jdk8
+LABEL MAINTAINER=info@arte-consultores.com
+
+RUN mkdir -p /data/edatos/indicators/conf
+
+COPY dockerfiles/indicators-external/conf/*.xml /data/edatos/indicators/conf/
+COPY indicators-external-api-web/target/*.war /usr/local/tomcat/webapps/indicators.war
+
+ENV LANG='es_ES.UTF-8'
+ENV INDICATORSCONF_PATH='file:/data/edatos/indicators/conf/environment.xml'
+
+RUN env
+
+CMD ["catalina.sh", "run"]
