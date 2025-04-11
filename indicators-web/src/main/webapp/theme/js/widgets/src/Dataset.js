@@ -143,7 +143,7 @@
             return this._getLabel(this.request.conceptDescription, locale);
         },
 
-        getTimeValues : function () {
+        getTimeRepresentations : function () {
             var timeValues = [];
             if (this.data.dimension.TIME.representation.index) {
                 this.smallestTimeGranularity = this._getSmallestTimeGranularity();
@@ -154,11 +154,13 @@
                     return representation.granularityCode === self.smallestTimeGranularity && self.data.dimension.TIME.representation.index.hasOwnProperty(representation.code);
                 }).sortBy(function (representation) {
                     return -self.data.dimension.TIME.representation.index[representation.code];
-                }).map(function (representation) {
-                    return representation.code;
                 }).value();
             }
             return timeValues;
+        },
+        
+        getTimeValues: function () {
+            return this.getTimeRepresentations().map(representation => representation.code);
         },
         
         _getSmallestTimeGranularity : function() {

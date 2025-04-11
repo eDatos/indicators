@@ -24,7 +24,7 @@
             var locale = this.locale;
 
             var measureValue = this.measures[0];
-            var timeValues = dataset.getTimeValues();
+            this.timeRepresentations = dataset.getTimeRepresentations();
             var timeValuesTitles = dataset.getTimeValuesTitles(locale);
             var geographicalValues = Object.keys(dataset.data.dimension.GEOGRAPHICAL.representation.index);
             var geographicalValuesTitles = dataset.getGeographicalValuesTitles(locale);
@@ -41,8 +41,8 @@
                 }
 
                 var data = [];
-                for (var j = 0; j < timeValues.length; j++) {
-                    var timeValue = timeValues[j];
+                for (var j = 0; j < this.timeRepresentations.length; j++) {
+                    var timeValue = this.timeRepresentations[j].code;
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
                     var unit = dataset.getUnit(measureValue, locale, this.options.defaultLocale);
@@ -128,12 +128,29 @@
             echarts.registerLocale("ca", EDatos.common.I18n.translate("ECHARTS", "ca"));
             this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
 
+            const representations = this.timeRepresentations;
+            const parsedValues = representations.map(representation => Istac.widget.DateParser.parse(representation.code, this.options.timeGranularities[0]));
+            const self = this;
+
             var echartsOptions = {
                 xAxis: {
                     type: 'time',
                     axisLabel: {
                         show: this.showLabels,
-                        hideOverlap: true
+                        hideOverlap: true,
+                        rotate: 70,
+                        customValues: parsedValues,
+                        formatter: function (epoch) {
+                            // For some reason, formatter does not receive only the customValues setted before, but also
+                            // more values that are not in the customValues array, probably intercalated by eCharts itself
+                            const index = parsedValues.indexOf(epoch);
+
+                            // The idea is to show the label of the original value, not the parsed one (which is an epoch).
+                            // Only the labels of the values present in the graph will be shown.
+                            if (index > -1) {
+                                return self._getLabel(representations[index].title, self.options.locale);
+                            }
+                        }
                     },
                     axisTick: {
                         show: this.showLabels,
@@ -202,7 +219,6 @@
                 }
             }
 
-            var self = this;
             this.chart.setOption(echartsOptions, true);
             this.chart.getZr().on("mousemove", function (p) {
                 self.mouseCoords = [p.offsetX, p.offsetY];
@@ -242,7 +258,13 @@
             var axisLabel = value.toString().replace("\.", ",");
             axisLabel = Istac.widget.helper.addThousandSeparator(axisLabel)
             return axisLabel;
-        }
+        },
+
+        _getLabel : function (iString, locale) {
+            if (iString) {
+                return iString[locale] || iString["__default__"];
+            }
+        },
     });
 
 }(window.jQuery, window._, window.echarts));
