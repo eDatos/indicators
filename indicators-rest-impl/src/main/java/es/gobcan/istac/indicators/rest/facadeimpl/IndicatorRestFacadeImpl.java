@@ -200,8 +200,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         try {
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
-
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData);
+            IndicatorType indicator = retrieveIndicator(indicatorCode);
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator);
 
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
             exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);

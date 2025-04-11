@@ -43,6 +43,8 @@ import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.util.ExportUtils;
 
 public class ResourceAccess {
@@ -65,13 +67,13 @@ public class ResourceAccess {
     private InternationalString                           description;
 
     // Metadata
-    private List<DimensionRepresentation>                 dimensionsMetadata;
-    private Map<String, DimensionRepresentation>          dimensionsMetadataMap;
+    private Map<String, MetadataDimensionType>            dimensionsMetadata;
+    private Map<String, MetadataDimensionType>            dimensionsMetadataMap;
     private Dimension                                     measureDimension;
     private Map<String, String>                           dimensionLabelsCurrentLocale;
     private Map<String, String>                           dimensionLabelsDefaultLocale;
     private Map<String, Map<String, String>>              dimensionsValuesCurrentLocaleLabels;
-    private Map<String, Map<String, String>>              dimensionsValuesLabels;
+    private Map<String, Map<String, InternationalString>> dimensionsValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       dimensionsLabelVisualisationMode;
 
     private List<Attribute>                               attributesMetadata;
@@ -93,21 +95,21 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount = 0;
 
-    public ResourceAccess(DataType indicatorData) throws MetamacException {
+    public ResourceAccess(DataType indicatorData, IndicatorType indicator) throws MetamacException {
 
         data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        initialize(data);
+        initialize(data, indicator);
     }
 
-    private void initialize(Data data) throws MetamacException {
+    private void initialize(Data data, IndicatorType indicator) throws MetamacException {
         // this.lang = lang;
         // this.langDefault = langDefault;
 
-        initializeDimensions(data);
+        initializeDimensions(data, indicator);
         initializeAttributes(data);
         initializeObservations(data);
         initializeDimensionsForData(data);
@@ -157,7 +159,7 @@ public class ResourceAccess {
     }
 
     public String getDimensionValueLabel(String dimensionId, String dimensionValueId) {
-        return dimensionsValuesLabels.get(dimensionId).get(dimensionValueId);
+        return dimensionsValuesLabels.get(dimensionId).get(dimensionValueId).toString();
     }
 
     public String getAttributeLabel(String attributeId) {
@@ -216,41 +218,37 @@ public class ResourceAccess {
     /**
      * Init dimensions and dimensions values
      */
-    private void initializeDimensions(Data data) throws MetamacException {
+    private void initializeDimensions(Data data, IndicatorType indicator) throws MetamacException {
+        dimensionsMetadata = indicator.getDimension();
 
-        DimensionRepresentations dimensionRepresentation = data.getDimensions();
-
-        dimensionsMetadata = dimensionRepresentation.getDimensions();
-
-        Map<String, DimensionRepresentation> dimensionsMetadataMap = new HashMap<String, DimensionRepresentation>(dimensionsMetadata.size());
+        Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
         Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
-        // TODO: Corregir
         Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
-        Map<String, Map<String, String>> dimensionsValuesLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
+        Map<String, Map<String, InternationalString>> dimensionsValuesLabels = new HashMap<String, Map<String, InternationalString>>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
 
-        for (DimensionRepresentation dimension : dimensionsMetadata) {
-            System.out.println(dimension);
-            String dimensionId = dimension.getDimensionId();
+        for (Map.Entry<String, MetadataDimensionType> dimension : dimensionsMetadata.entrySet()) {
+            String dimensionId = dimension.getKey();
 
-            dimensionsMetadataMap.put(dimensionId, dimension);
+            dimensionsMetadataMap.put(dimensionId, dimension.getValue());
             labelVisualisationsMode.put(dimensionId, buildMapDimensionToMapDimensionsLabelVisualisationMode(dimension));
-            dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension));
+            dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension, lang, langDefault));
             dimensionsValuesLabels.put(dimensionId, buildMapDimensionsValuesLocalisedLabels(dimension));
             dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang, langDefault));
+            dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, langDefault, langDefault));
 
-            // if (DimensionType.MEASURE_DIMENSION.equals(dimension.getRepresen)) {
+            // if (DimensionType.MEASURE_DIMENSION.equals(dimension.getType())) {
             // measureDimension = dimension;
             // }
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;
-        dimensionsLabelVisualisationMode = labelVisualisationsMode;
-        this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
-        this.dimensionsValuesLabels = dimensionsValuesLabels;
-        dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
-        dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
+        // dimensionsLabelVisualisationMode = labelVisualisationsMode;
+        // this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
+        // this.dimensionsValuesLabels = dimensionsValuesLabels;
+        // dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
+        // dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
     }
 
     /**
@@ -621,7 +619,7 @@ public class ResourceAccess {
             for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
                 String lang = unitMeasureLocalisedString.getLang();
                 String unitMeasureLabel = unitMeasureLocalisedString.getValue();
-                String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang);
+                String unitMultiplierLabel = ExportUtils.getLabel((Map<String, String>) unitMultiplier, lang, langDefault);
 
                 String value = unitMeasureLabel;
                 value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";
@@ -714,6 +712,9 @@ public class ResourceAccess {
     private static List<DataAttribute> indicatorAttributeToDataAttribute(List<Map<String, AttributeType>> attributes) {
         List<DataAttribute> dataAttributes = new ArrayList<>();
         for (Map<String, AttributeType> attribute : attributes) {
+            if (attribute == null || attribute.isEmpty()) {
+                continue;
+            }
             List<String> ids = new ArrayList<>();
             List<String> values = new ArrayList<>();
             for (Map.Entry<String, AttributeType> entry : attribute.entrySet()) {

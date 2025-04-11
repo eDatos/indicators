@@ -8,12 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnumeratedAttributeValue;
@@ -22,6 +18,8 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.NonEnume
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
+import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
 
 public class ExportUtils {
 
@@ -34,23 +32,23 @@ public class ExportUtils {
     /**
      * Returns label in locale 'lang'. Null if it does not exist
      */
-    public static String getLabel(InternationalString internationalString, String lang) {
+    public static String getLabel(Map<String, String> internationalString, String lang, String langAlternative) {
         if (internationalString == null) {
             return null;
         }
-        for (LocalisedString localisedString : internationalString.getTexts()) {
-            if (localisedString.getLang().equals(lang)) {
-                return localisedString.getValue();
-            }
-        }
+        // for (LocalisedString localisedString : internationalString.getTexts()) {
+        // if (localisedString.getLang().equals(lang)) {
+        // return localisedString.getValue();
+        // }
+        // }
         return null;
     }
 
     /**
      * Builds map indexed by dimensionValueId and value as localised title of the dimension value
      */
-    public static Map<String, String> buildMapDimensionsValuesLocalisedLabels(DimensionRepresentation dimension) throws MetamacException {
-        Map<String, String> dimensionValuesLabels = null;
+    public static Map<String, InternationalString> buildMapDimensionsValuesLocalisedLabels(Map.Entry<String, MetadataDimensionType> dimension) throws MetamacException {
+        Map<String, InternationalString> dimensionValuesLabels = null;
         // if (dimension.getDimensionValues() instanceof EnumeratedDimensionValues) {
         // EnumeratedDimensionValues dimensionValues = (EnumeratedDimensionValues) dimension.getDimensionValues();
         // dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
@@ -74,18 +72,16 @@ public class ExportUtils {
     /**
      * Builds map indexed by dimensionValueId and value as title of the dimension value
      */
-    public static Map<String, String> buildMapDimensionsValuesLabels(DimensionRepresentation dimension) throws MetamacException {
+    public static Map<String, String> buildMapDimensionsValuesLabels(Map.Entry<String, MetadataDimensionType> dimension, String lang, String langAlternative) throws MetamacException {
         Map<String, String> dimensionValuesLabels = null;
-        String dimensionId = dimension.getDimensionId();
-        // TODO: adaptar a nuevo tipo de dato
-        if (dimension.getRepresentations() instanceof CodeRepresentations) {
-            dimensionValuesLabels = new HashMap<String, String>(dimension.getRepresentations().getRepresentations().size());
-            for (CodeRepresentation codeRepresentation : dimension.getRepresentations().getRepresentations()) {
-                String dimensionValueId = dimensionId;
-                dimensionValuesLabels.put(dimensionValueId, codeRepresentation.getCode());
-            }
-        } else {
-            throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension);
+        String dimensionId = dimension.getKey();
+        // TODO: revisar
+
+        dimensionValuesLabels = new HashMap<String, String>(dimension.getValue().getRepresentation().size());
+        String dimensionValueId = dimension.getKey();
+        for (MetadataRepresentationType dimensionValue : dimension.getValue().getRepresentation()) {
+            String dimensionValueLabel = getLabel(dimensionValue.getTitle(), lang, langAlternative);
+            dimensionValuesLabels.put(dimensionValueId, dimensionValueLabel);
         }
         return dimensionValuesLabels;
     }
@@ -167,8 +163,8 @@ public class ExportUtils {
     /**
      * Calculate the value as name of the dimension
      */
-    public static String buildMapDimensionLabel(DimensionRepresentation dimension, String lang, String langAlternative) throws MetamacException {
-        String dimensionLabel = dimension.getDimensionId();
+    public static String buildMapDimensionLabel(Map.Entry<String, MetadataDimensionType> dimension, String lang, String langAlternative) throws MetamacException {
+        String dimensionLabel = dimension.getKey();
         return dimensionLabel;
     }
 
@@ -178,13 +174,13 @@ public class ExportUtils {
      *
      * @param dimension
      */
-    public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(DimensionRepresentation dimension) {
-        String dimensionId = dimension.getDimensionId();
+    public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(Map.Entry<String, MetadataDimensionType> dimension) {
+        String dimensionId = dimension.getKey();
         LabelVisualisationModeEnum labelVisualisationMode = null;
-        if (labelVisualisationMode == null) {
-            // default value
-            labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
-        }
+        // if (labelVisualisationMode == null) {
+        // // default value
+        // labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
+        // }
         return labelVisualisationMode;
     }
 
