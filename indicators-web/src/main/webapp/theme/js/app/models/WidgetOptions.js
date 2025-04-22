@@ -69,6 +69,11 @@
                         headerColor: "#0F5B95",
                         titleColor: "#FFFFFF"
                     });
+                } else if (color === "lightBlue") {
+                    this.set({
+                        headerColor: "#C4D0DC",
+                        titleColor: "#333333"
+                    });
                 } else if (color === "green") {
                     this.set({
                         headerColor: "#457A0E",
