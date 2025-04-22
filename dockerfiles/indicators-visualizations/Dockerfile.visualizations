@@ -27,6 +27,7 @@ RUN mkdir -p /data/edatos/indicators-visualizations/conf
 
 COPY dockerfiles/indicators-visualizations/conf/*.xml /data/edatos/indicators-visualizations/conf/
 COPY indicators-web/target/*.war /usr/local/tomcat/webapps/indicators-visualizations.war
+COPY dockerfiles/server.xml /usr/local/tomcat/conf/
 
 ENV LANG='es_ES.UTF-8'
 ENV INDICATORS_VISUALIZATIONS_CONF_PATH='file:/data/edatos/indicators-visualizations/conf/environment.xml'
