@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,6 @@ import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
 import es.gobcan.istac.indicators.rest.types.MetadataType;
@@ -166,14 +166,18 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
         srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
 
-        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
+        IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
+        GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(Arrays.asList(indicatorVersion),
+                selectedRepresentations, srmRestObjectsMapper);
+
+        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorVersion, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
+        dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
         return do2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
     }
 
-    public DataTypeRequest retrieveIndicatorDataCommon(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+    public DataTypeRequest retrieveIndicatorDataCommon(IndicatorVersion indicatorVersion, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
             boolean includeObservationMetadata, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
-        IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
         IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities, srmRestObjectsMapper.getGeographicalVariableElementsByCode());
         DataTypeRequest dataTypeRequest = null;
@@ -195,7 +199,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
             GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils, boolean includeObservationMetadata, SrmRestObjectsMapper srmRestObjectsMapper)
             throws MetamacException {
-        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
+        IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
+        DataTypeRequest dataTypeRequest = retrieveIndicatorDataCommon(indicatorVersion, selectedRepresentations, selectedGranularities, includeObservationMetadata, srmRestObjectsMapper);
         dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
         return do2TypeMapper.createDataTypeWithGeographicalCodes(dataTypeRequest, includeObservationMetadata, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
 
