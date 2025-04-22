@@ -75,6 +75,7 @@
                         titleColor: "#333333"
                     });
                 } else if (color === "green") {
+                    // Probably belonging to DREM
                     this.set({
                         headerColor: "#457A0E",
                         titleColor: "#FFFFFF"
