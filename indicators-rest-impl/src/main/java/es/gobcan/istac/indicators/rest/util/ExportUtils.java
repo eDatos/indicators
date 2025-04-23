@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
@@ -32,15 +33,15 @@ public class ExportUtils {
     /**
      * Returns label in locale 'lang'. Null if it does not exist
      */
-    public static String getLabel(Map<String, String> internationalString, String lang, String langAlternative) {
+    public static String getLabel(InternationalString internationalString, String lang, String langAlternative) {
         if (internationalString == null) {
             return null;
         }
-        // for (LocalisedString localisedString : internationalString.getTexts()) {
-        // if (localisedString.getLang().equals(lang)) {
-        // return localisedString.getValue();
-        // }
-        // }
+        for (LocalisedString localisedString : internationalString.getTexts()) {
+            if (localisedString.getLang().equals(lang)) {
+                return localisedString.getValue();
+            }
+        }
         return null;
     }
 
@@ -80,7 +81,7 @@ public class ExportUtils {
         dimensionValuesLabels = new HashMap<String, String>(dimension.getValue().getRepresentation().size());
         String dimensionValueId = dimension.getKey();
         for (MetadataRepresentationType dimensionValue : dimension.getValue().getRepresentation()) {
-            String dimensionValueLabel = getLabel(dimensionValue.getTitle(), lang, langAlternative);
+            String dimensionValueLabel = getLabel(localisedStringsToInternationalString(dimensionValue.getTitle()), lang, langAlternative);
             dimensionValuesLabels.put(dimensionValueId, dimensionValueLabel);
         }
         return dimensionValuesLabels;
@@ -177,10 +178,10 @@ public class ExportUtils {
     public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(Map.Entry<String, MetadataDimensionType> dimension) {
         String dimensionId = dimension.getKey();
         LabelVisualisationModeEnum labelVisualisationMode = null;
-        // if (labelVisualisationMode == null) {
-        // // default value
-        // labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
-        // }
+        if (labelVisualisationMode == null) {
+            // default value
+            labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
+        }
         return labelVisualisationMode;
     }
 
@@ -214,6 +215,19 @@ public class ExportUtils {
             attributesValuesLocalisedLabels.put(attributeId, attributeValuesLabels);
         }
         return attributesValuesLocalisedLabels;
+    }
+
+    public static InternationalString localisedStringsToInternationalString(Map<String, String> localisedStrings) {
+        InternationalString internationalString = new InternationalString();
+        for (Map.Entry<String, String> entry : localisedStrings.entrySet()) {
+            if (!DEFAULT.equals(entry.getKey())) {
+                LocalisedString localisedString = new LocalisedString();
+                localisedString.setLang(entry.getKey());
+                localisedString.setValue(entry.getValue());
+                internationalString.getTexts().add(localisedString);
+            }
+        }
+        return internationalString;
     }
 
 }

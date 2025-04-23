@@ -102,14 +102,14 @@ public class ResourceAccess {
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        initialize(data, indicator);
+        initialize(data, indicator, indicatorData);
     }
 
-    private void initialize(Data data, IndicatorType indicator) throws MetamacException {
+    private void initialize(Data data, IndicatorType indicator, DataType indicatorData) throws MetamacException {
         // this.lang = lang;
         // this.langDefault = langDefault;
 
-        initializeDimensions(data, indicator);
+        initializeDimensions(data, indicator, indicatorData);
         initializeAttributes(data);
         initializeObservations(data);
         initializeDimensionsForData(data);
@@ -218,7 +218,8 @@ public class ResourceAccess {
     /**
      * Init dimensions and dimensions values
      */
-    private void initializeDimensions(Data data, IndicatorType indicator) throws MetamacException {
+    private void initializeDimensions(Data data, IndicatorType indicator, DataType indicatorData) throws MetamacException {
+
         dimensionsMetadata = indicator.getDimension();
 
         Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
@@ -244,11 +245,11 @@ public class ResourceAccess {
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;
-        // dimensionsLabelVisualisationMode = labelVisualisationsMode;
-        // this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
-        // this.dimensionsValuesLabels = dimensionsValuesLabels;
-        // dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
-        // dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
+        dimensionsLabelVisualisationMode = labelVisualisationsMode;
+        this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
+        this.dimensionsValuesLabels = dimensionsValuesLabels;
+        dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
+        dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
     }
 
     /**
@@ -619,7 +620,7 @@ public class ResourceAccess {
             for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
                 String lang = unitMeasureLocalisedString.getLang();
                 String unitMeasureLabel = unitMeasureLocalisedString.getValue();
-                String unitMultiplierLabel = ExportUtils.getLabel((Map<String, String>) unitMultiplier, lang, langDefault);
+                String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang, langDefault);
 
                 String value = unitMeasureLabel;
                 value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";
@@ -774,4 +775,5 @@ public class ResourceAccess {
         }
         return codeRepresentations;
     }
+
 }

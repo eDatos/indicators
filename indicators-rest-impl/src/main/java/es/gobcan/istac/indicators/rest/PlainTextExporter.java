@@ -49,7 +49,6 @@ public class PlainTextExporter {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Plain Text format is required ");
         }
     }
-
     public void writeObservationsAndAttributesWithObservationAttachmentLevel(OutputStream os) throws MetamacException {
         PrintWriter printWriter = null;
         try {
@@ -255,7 +254,7 @@ public class PlainTextExporter {
             if (dimensionPosition == lastDimensionPosition) {
                 // We have all dimensions here
                 String attributeValue = attributeValues[attributeValueIndex++];
-                if (!StringUtils.isEmpty(attributeValue) && allDimensionValuesAreSelected(resourceAccess.getDimensionsOrderedForData(), dimensionValuesForAttributeValue)) {
+                if (!StringUtils.isEmpty(attributeValue)) {
                     StringBuilder line = new StringBuilder();
                     // Dimensions
                     for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
@@ -291,20 +290,18 @@ public class PlainTextExporter {
             }
         }
     }
-
-    private boolean allDimensionValuesAreSelected(List<String> dimensionsOrderedForData, Map<String, String> dimensionValuesForAttributeValue) {
-        for (String dimensionId : dimensionsOrderedForData) {
-            if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-                String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-                // TODO: revisar
-                // if (!resourceAccess.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
-                // return false;
-                // }
-            }
-        }
-
-        return true;
-    }
+    // TODO revisar si es necesario eliminar
+    // private boolean allDimensionValuesAreSelected(List<String> dimensionsOrderedForData, Map<String, String> dimensionValuesForAttributeValue) {
+    // for (String dimensionId : dimensionsOrderedForData) {
+    // if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
+    // String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
+    // if (!resourceAccess.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
+    // return false;
+    // }
+    // }
+    // }
+    // return true;
+    // }
 
     private void writeBodyAttributeValueForPlainTextAttributes(StringBuilder line, String attributeId, String attributeValueCode, int numberOfColumnsToAttributeValue) {
         LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
