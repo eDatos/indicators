@@ -1,0 +1,37 @@
+###
+# Dockerfile usado para consutruir la imagen de indicators-visualizations
+#
+# Antes de construir la imagen debemos haber compilado previamente el proyecto (desde el directorio raíz):
+#
+# mvn clean package
+#
+# A continuación podremos construir la imagen ejecutando siempre desde el directorio raíz del proyecto:
+#
+# docker build -f dockerfiles/indicators-visualizations/Dockerfile.visualizations -t indicators-visualizations:<version> .
+#
+# Para ejecutar un contenedor asociado a esta imagen:
+# docker run -i --rm -p 8080:8080 indicators-visualizations:<version>
+#
+# Para ejecutar con opciones de debug habilitadas:
+# docker run -i --rm \
+# -e JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n" \
+# -p 8080:8080 \
+# -p 5005:5005 \
+# indicators-visualizations:<version>
+###
+
+FROM tomcat:9.0.98-jdk8
+LABEL MAINTAINER=info@arte-consultores.com
+
+RUN mkdir -p /data/edatos/indicators-visualizations/conf
+
+COPY dockerfiles/indicators-visualizations/conf/*.xml /data/edatos/indicators-visualizations/conf/
+COPY indicators-web/target/*.war /usr/local/tomcat/webapps/indicators-visualizations.war
+COPY dockerfiles/server.xml /usr/local/tomcat/conf/
+
+ENV LANG='es_ES.UTF-8'
+ENV INDICATORS_VISUALIZATIONS_CONF_PATH='file:/data/edatos/indicators-visualizations/conf/environment.xml'
+
+RUN env
+
+CMD ["catalina.sh", "run"]
