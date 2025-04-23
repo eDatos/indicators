@@ -5,7 +5,9 @@
   	<!-- Import more custom beans -->
   	  	<!-- Metamac environment configuration -->
 	<bean id="configurationService" class="es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationServiceImpl">
-		<property name="systemConfigurationFile"><value>classpath:indicators/environment.xml</value></property>
+		<property name="systemConfigurationFile">
+			<value>${INDICATORSCONF_PATH:classpath:indicators/environment.xml}</value>
+		</property>
 	</bean>
 
 	<bean id="metadataProperties" class="es.gobcan.istac.indicators.core.conf.MetadataProperties">
