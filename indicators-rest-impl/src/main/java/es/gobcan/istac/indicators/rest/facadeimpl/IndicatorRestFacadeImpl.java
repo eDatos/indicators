@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -153,8 +152,15 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public JsonStatDataType retrieveJsonStatIndicator(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities, new HashMap<>());
+
+        getInformationForOldGeographicalValuesCompatibility(Arrays.asList(indicatorVersion), selectedRepresentations, srmRestObjectsMapper);
+
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
         IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
         return do2TypeMapper.indicatorDoToJsonStatType(indicatorVersion, indicatorObservationsExtended);
     }
@@ -179,7 +185,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     public DataTypeRequest retrieveIndicatorDataCommon(IndicatorVersion indicatorVersion, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
             boolean includeObservationMetadata, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
 
-        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities, srmRestObjectsMapper.getGeographicalVariableElementsByCode());
+        IndicatorsDataFilterVO dataFilter = getIndicatorsDataFilter(selectedRepresentations, selectedGranularities);
         DataTypeRequest dataTypeRequest = null;
         if (includeObservationMetadata) {
             IndicatorObservationsExtendedVO indicatorObservationsExtended = indicatorsApiService.findObservationsExtendedInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
@@ -206,8 +212,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
     }
 
-    private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            Map<String, String> geographicalValuesCodes) throws MetamacException {
+    private IndicatorsDataFilterVO getIndicatorsDataFilter(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws MetamacException {
 
         IndicatorsDataGeoDimensionFilterVO geoFilter = ConditionUtil.filterGeographicalDimension(selectedRepresentations, selectedGranularities);
         IndicatorsDataTimeDimensionFilterVO timeFilter = ConditionUtil.normalizeAndFilterTimeDimension(selectedRepresentations, selectedGranularities);

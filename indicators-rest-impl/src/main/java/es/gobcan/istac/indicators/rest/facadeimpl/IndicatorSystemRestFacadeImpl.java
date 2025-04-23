@@ -101,7 +101,15 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     @Override
     public JsonStatDataType retrieveIndicatorInstanceJsonStatByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities) throws MetamacException {
+
+        SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
+        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+
         IndicatorInstance indicatorInstance = indicatorsApiService.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
+
+        getInformationForOldGeographicalValuesCompatibilityForInstanceData(indicatorInstance.getIndicator().getCode(), selectedRepresentations, srmRestObjectsMapper);
+
         IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicatorByCode(indicatorInstance.getIndicator().getCode());
         IndicatorsDataFilterVO dataFilter = getIndicatorDataFilter(selectedRepresentations, selectedGranularities);
         IndicatorObservationsExtendedVO instanceObservations = indicatorsApiService.findObservationsExtendedInIndicatorInstance(indicatorInstance.getUuid(), dataFilter);
