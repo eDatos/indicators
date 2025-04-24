@@ -170,7 +170,7 @@
         },
 
         setShowEmbedMoreLink: function(showEmbedMoreLink) {
-            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink !== undefined ? showEmbedMoreLink : !showEmbedMoreLink);
+            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink !== undefined ? showEmbedMoreLink : true);
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
