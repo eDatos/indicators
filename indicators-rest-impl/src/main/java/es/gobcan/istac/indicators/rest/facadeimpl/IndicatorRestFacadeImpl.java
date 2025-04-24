@@ -198,10 +198,11 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             String format)
             throws MetamacException {
         try {
+            String lang = configurationService.retrieveLanguageDefault();
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
             IndicatorType indicator = retrieveIndicator(indicatorCode);
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator);
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, lang);
 
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
             exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);

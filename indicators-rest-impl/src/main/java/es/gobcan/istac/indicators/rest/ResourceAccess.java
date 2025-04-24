@@ -52,8 +52,6 @@ public class ResourceAccess {
     private static final String                           OBSERVATIONS_SEPARATOR        = " | ";
 
     private String                                        lang;
-    private String                                        langDefault;
-
     private Data                                          data;
     private Dimensions                                    dimensions;
     private Attributes                                    attributes;
@@ -95,19 +93,18 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount = 0;
 
-    public ResourceAccess(DataType indicatorData, IndicatorType indicator) throws MetamacException {
+    public ResourceAccess(DataType indicatorData, IndicatorType indicator, String lang) throws MetamacException {
 
         data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        initialize(data, indicator, indicatorData);
+        initialize(data, indicator, indicatorData, lang);
     }
 
-    private void initialize(Data data, IndicatorType indicator, DataType indicatorData) throws MetamacException {
-        // this.lang = lang;
-        // this.langDefault = langDefault;
+    private void initialize(Data data, IndicatorType indicator, DataType indicatorData, String lang) throws MetamacException {
+        this.lang = lang;
 
         initializeDimensions(data, indicator, indicatorData);
         initializeAttributes(data);
@@ -234,10 +231,10 @@ public class ResourceAccess {
 
             dimensionsMetadataMap.put(dimensionId, dimension.getValue());
             labelVisualisationsMode.put(dimensionId, buildMapDimensionToMapDimensionsLabelVisualisationMode(dimension));
-            dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension, lang, langDefault));
+            dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension, lang));
             dimensionsValuesLabels.put(dimensionId, buildMapDimensionsValuesLocalisedLabels(dimension));
-            dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang, langDefault));
-            dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, langDefault, langDefault));
+            dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
+            dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
 
             // if (DimensionType.MEASURE_DIMENSION.equals(dimension.getType())) {
             // measureDimension = dimension;
@@ -620,7 +617,7 @@ public class ResourceAccess {
             for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
                 String lang = unitMeasureLocalisedString.getLang();
                 String unitMeasureLabel = unitMeasureLocalisedString.getValue();
-                String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang, langDefault);
+                String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang);
 
                 String value = unitMeasureLabel;
                 value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";

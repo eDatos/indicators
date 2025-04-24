@@ -254,7 +254,7 @@ public class PlainTextExporter {
             if (dimensionPosition == lastDimensionPosition) {
                 // We have all dimensions here
                 String attributeValue = attributeValues[attributeValueIndex++];
-                if (!StringUtils.isEmpty(attributeValue)) {
+                if (!StringUtils.isEmpty(attributeValue) && allDimensionValuesAreSelected(resourceAccess.getDimensionsOrderedForData(), dimensionValuesForAttributeValue)) {
                     StringBuilder line = new StringBuilder();
                     // Dimensions
                     for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
@@ -291,17 +291,18 @@ public class PlainTextExporter {
         }
     }
     // TODO revisar si es necesario eliminar
-    // private boolean allDimensionValuesAreSelected(List<String> dimensionsOrderedForData, Map<String, String> dimensionValuesForAttributeValue) {
-    // for (String dimensionId : dimensionsOrderedForData) {
-    // if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-    // String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-    // if (!resourceAccess.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
-    // return false;
-    // }
-    // }
-    // }
-    // return true;
-    // }
+    private boolean allDimensionValuesAreSelected(List<String> dimensionsOrderedForData, Map<String, String> dimensionValuesForAttributeValue) {
+        for (String dimensionId : dimensionsOrderedForData) {
+            if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
+                String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
+                // TODO: Revisar
+                // if (!resourceAccess.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
+                // return false;
+                // }
+            }
+        }
+        return true;
+    }
 
     private void writeBodyAttributeValueForPlainTextAttributes(StringBuilder line, String attributeId, String attributeValueCode, int numberOfColumnsToAttributeValue) {
         LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);

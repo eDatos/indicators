@@ -33,7 +33,7 @@ public class ExportUtils {
     /**
      * Returns label in locale 'lang'. Null if it does not exist
      */
-    public static String getLabel(InternationalString internationalString, String lang, String langAlternative) {
+    public static String getLabel(InternationalString internationalString, String lang) {
         if (internationalString == null) {
             return null;
         }
@@ -73,7 +73,7 @@ public class ExportUtils {
     /**
      * Builds map indexed by dimensionValueId and value as title of the dimension value
      */
-    public static Map<String, String> buildMapDimensionsValuesLabels(Map.Entry<String, MetadataDimensionType> dimension, String lang, String langAlternative) throws MetamacException {
+    public static Map<String, String> buildMapDimensionsValuesLabels(Map.Entry<String, MetadataDimensionType> dimension, String lang) throws MetamacException {
         Map<String, String> dimensionValuesLabels = null;
         String dimensionId = dimension.getKey();
         // TODO: revisar
@@ -81,7 +81,7 @@ public class ExportUtils {
         dimensionValuesLabels = new HashMap<String, String>(dimension.getValue().getRepresentation().size());
         String dimensionValueId = dimension.getKey();
         for (MetadataRepresentationType dimensionValue : dimension.getValue().getRepresentation()) {
-            String dimensionValueLabel = getLabel(localisedStringsToInternationalString(dimensionValue.getTitle()), lang, langAlternative);
+            String dimensionValueLabel = getLabel(localisedStringsToInternationalString(dimensionValue.getTitle()), lang);
             dimensionValuesLabels.put(dimensionValueId, dimensionValueLabel);
         }
         return dimensionValuesLabels;
@@ -164,15 +164,14 @@ public class ExportUtils {
     /**
      * Calculate the value as name of the dimension
      */
-    public static String buildMapDimensionLabel(Map.Entry<String, MetadataDimensionType> dimension, String lang, String langAlternative) throws MetamacException {
+    public static String buildMapDimensionLabel(Map.Entry<String, MetadataDimensionType> dimension, String lang) throws MetamacException {
         String dimensionLabel = dimension.getKey();
         return dimensionLabel;
     }
 
-    /**
+    /*
      * Calculate the effective label visualisation mode for a dimension.
      * If configuration does not exist for component, returns default configuration
-     *
      * @param dimension
      */
     public static LabelVisualisationModeEnum buildMapDimensionToMapDimensionsLabelVisualisationMode(Map.Entry<String, MetadataDimensionType> dimension) {
