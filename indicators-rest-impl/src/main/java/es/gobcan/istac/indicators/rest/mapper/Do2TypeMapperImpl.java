@@ -458,32 +458,35 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 for (int i = 0; i < geographicalCodes.size(); i++) {
                     String geographicalCode = geographicalCodes.get(i);
 
-                    for (int j = 0; j < timeValues.size(); j++) {
-                        String timeValueCode = timeValues.get(j);
+                    if (dataTypeRequest.getGeographicalCodes().size() > i) {
 
-                        for (int k = 0; k < measureValues.size(); k++) {
-                            String measureValueCode = measureValues.get(k);
+                        for (int j = 0; j < timeValues.size(); j++) {
+                            String timeValueCode = timeValues.get(j);
 
-                            // Observation ID: Be careful!!! don't change order of ids
-                            String geographicalValueCode = geographicalCode;
-                            String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
+                            for (int k = 0; k < measureValues.size(); k++) {
+                                String measureValueCode = measureValues.get(k);
 
-                            ObservationDto observationDto = observationMap.get(newId);
-                            if (observationDto == null) {
-                                observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
-                            } else if (observationDto.getPrimaryMeasure() == null) {
-                                observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                                // Observation ID: Be careful!!! don't change order of ids
+                                String geographicalValueCode = geographicalCode;
+                                String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
+
+                                ObservationDto observationDto = observationMap.get(newId);
+                                if (observationDto == null) {
+                                    observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
+                                } else if (observationDto.getPrimaryMeasure() == null) {
+                                    observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                                }
+
+                                // PRIMARY MEASURE
+                                observations.add(observationDto.getPrimaryMeasure());
+
+                                // ATTRIBUTES
+                                if (includeObservationMetadata) {
+                                    ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
+                                    attributes.add(setObservationAttributes(observationExtendedDto));
+                                }
+
                             }
-
-                            // PRIMARY MEASURE
-                            observations.add(observationDto.getPrimaryMeasure());
-
-                            // ATTRIBUTES
-                            if (includeObservationMetadata) {
-                                ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
-                                attributes.add(setObservationAttributes(observationExtendedDto));
-                            }
-
                         }
                     }
                 }
