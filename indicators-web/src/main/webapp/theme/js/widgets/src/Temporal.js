@@ -128,9 +128,11 @@
             echarts.registerLocale("ca", EDatos.common.I18n.translate("ECHARTS", "ca"));
             this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
 
-            const representations = this.timeRepresentations;
-            const parsedValues = representations.map(representation => Istac.widget.DateParser.parse(representation.code, this.options.timeGranularities[0]));
             const self = this;
+            const representations = this.timeRepresentations;
+            const parsedValues = representations.map(function (representation) {
+                return Istac.widget.DateParser.parse(representation.code, self.options.timeGranularities[0]);
+            });
 
             var echartsOptions = {
                 xAxis: {

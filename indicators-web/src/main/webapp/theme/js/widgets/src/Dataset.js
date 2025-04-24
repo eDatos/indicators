@@ -160,7 +160,9 @@
         },
         
         getTimeValues: function () {
-            return this.getTimeRepresentations().map(representation => representation.code);
+            return this.getTimeRepresentations().map(function (representation) {
+                return representation.code;
+            });
         },
         
         _getSmallestTimeGranularity : function() {
