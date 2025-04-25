@@ -9,6 +9,8 @@ import static es.gobcan.istac.indicators.rest.util.ExportUtils.dataToDataArray;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -49,7 +51,10 @@ import es.gobcan.istac.indicators.rest.util.ExportUtils;
 
 public class ResourceAccess {
 
-    private static final String                           OBSERVATIONS_SEPARATOR        = " | ";
+    private static final String                           OBSERVATIONS_SEPARATOR          = " | ";
+    public static final int                               LEFT_DIMENSIONS_START_POSITION  = 0;
+    public static final int                               TOP_DIMENSIONS_START_POSITION   = 20;
+    public static final int                               FIXED_DIMENSIONS_START_POSITION = 40;
 
     private String                                        lang;
     private Data                                          data;
@@ -87,11 +92,11 @@ public class ResourceAccess {
     private Map<String, String[]>                         attributesValuesByAttributeId;
     private List<String>                                  dimensionsOrderedForData;
     private Map<String, List<String>>                     dimensionValuesOrderedForDataByDimensionId;
-    private final Map<String, Integer>                    multipliers                   = new HashMap<String, Integer>();
-    private final Map<String, Map<String, Integer>>       multipliersByAttribute        = new HashMap<String, Map<String, Integer>>();
-    private final Map<String, Map<String, Long>>          representationIndex           = new HashMap<String, Map<String, Long>>();   // Map<Dimension, Map<Code, Index>
+    private final Map<String, Integer>                    multipliers                     = new HashMap<String, Integer>();
+    private final Map<String, Map<String, Integer>>       multipliersByAttribute          = new HashMap<String, Map<String, Integer>>();
+    private final Map<String, Map<String, Long>>          representationIndex             = new HashMap<String, Map<String, Long>>();   // Map<Dimension, Map<Code, Index>
 
-    private int                                           primaryMeasureAttributesCount = 0;
+    private int                                           primaryMeasureAttributesCount   = 0;
 
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, String lang) throws MetamacException {
 
@@ -668,27 +673,72 @@ public class ResourceAccess {
      */
     public Map<String, String> permutationAtCell(int row, int column) {
         Map<String, String> permutation = new HashMap<String, String>();
-
-        // for (DatasetSelectionDimension dimension : getLeftDimensions()) {
-        // Integer multiplier = multipliers.get(dimension.getId());
-        // int selectedCategoryIndex = (row / multiplier) % dimension.getSelectedDimensionValues().size();
-        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedCategoryIndex));
-        // }
-        //
-        // for (DatasetSelectionDimension dimension : getTopDimensions()) {
-        // Integer multiplier = multipliers.get(dimension.getId());
-        // int selectedCategoryIndex = (column / multiplier) % dimension.getSelectedDimensionValues().size();
-        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedCategoryIndex));
-        // }
-        //
-        // for (DatasetSelectionDimension dimension : getFixedDimensions()) {
-        // if (dimension.getSelectedDimensionValues().size() > 0) {
-        // permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(0));
-        // }
-        // }
-
+        addLeftDimensions(permutation, row);
+        addTopDimensions(permutation, column);
+        addFixedDimensions(permutation);
         return permutation;
     }
+
+    private void addLeftDimensions(Map<String, String> permutation, int row) {
+        for (DatasetSelectionDimension dimension : getLeftDimensions()) {
+            int selectedIndex = getSelectedIndex(row, dimension);
+            permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedIndex));
+        }
+    }
+
+    private void addTopDimensions(Map<String, String> permutation, int column) {
+
+        for (Dimensions this.dimensions : getTopDimensions()) {
+            int selectedIndex = getSelectedIndex(column, dimension);
+            permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedIndex));
+        }
+    }
+
+    private void addFixedDimensions(Map<String, String> permutation) {
+        for (DatasetSelectionDimension dimension : getFixedDimensions()) {
+            if (!dimension.getSelectedDimensionValues().isEmpty()) {
+                permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(0));
+            }
+        }
+    }
+
+    private int getSelectedIndex(int index, DatasetSelectionDimension dimension) {
+        Integer multiplier = multipliers.get(dimension.getId());
+        return (index / multiplier) % dimension.getSelectedDimensionValues().size();
+    }
+    public List<DatasetSelectionDimension> getLeftDimensions() {
+        return getDimensionsInPositionRange(LEFT_DIMENSIONS_START_POSITION, TOP_DIMENSIONS_START_POSITION);
+    }
+
+    public List<DatasetSelectionDimension> getTopDimensions() {
+        return getDimensionsInPositionRange(TOP_DIMENSIONS_START_POSITION, FIXED_DIMENSIONS_START_POSITION);
+    }
+
+    public List<DatasetSelectionDimension> getFixedDimensions() {
+        return getDimensionsInPositionRange(FIXED_DIMENSIONS_START_POSITION, FIXED_DIMENSIONS_START_POSITION + 20);
+    }
+
+    private List<DatasetSelectionDimension> getDimensionsInPositionRange(int from, int to) {
+        List<DatasetSelectionDimension> dimensionsInRange = new ArrayList<DatasetSelectionDimension>();
+        for (DatasetSelectionDimension dimension : getDimensions()) {
+            if (dimension.getPosition() >= from && dimension.getPosition() < to) {
+                dimensionsInRange.add(dimension);
+            }
+        }
+        sortDimensionsByPosition(dimensionsInRange);
+        return dimensionsInRange;
+    }
+
+    private void sortDimensionsByPosition(List<DatasetSelectionDimension> dimensions) {
+        Collections.sort(dimensions, new Comparator<DatasetSelectionDimension>() {
+
+            @Override
+            public int compare(DatasetSelectionDimension datasetSelectionDimension, DatasetSelectionDimension datasetSelectionDimension2) {
+                return datasetSelectionDimension.getPosition() - datasetSelectionDimension2.getPosition(); // Ascending sort
+            }
+        });
+    }
+
     private static String indicatorObservationsToDataObservations(List<String> observation) {
         return String.join(OBSERVATIONS_SEPARATOR, observation);
     }
