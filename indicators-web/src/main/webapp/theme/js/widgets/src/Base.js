@@ -461,7 +461,7 @@
                 this.afterRenderCallback(this);
             }
             var self = this;
-            this.el.find('#' + this.getLanguageSelectorId()).on("change", function (event) {
+            this.el.find('#' + this.getLanguageSelectorId()).off("change").on("change", function (event) {
                 self.options.locale = event.target.value;
                 self.init(self.options);
                 self.render();
