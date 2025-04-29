@@ -60,8 +60,7 @@
             shadow: true,
             borderRadius: true,
             scale: "natural",
-            showLanguageDropdown: false,
-            showEmbedMoreLink: true
+            showLanguageDropdown: false
         },
 
         _containerTemplate: Handlebars.templates.container,
@@ -171,7 +170,7 @@
         },
 
         setShowEmbedMoreLink: function(showEmbedMoreLink) {
-            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink);
+            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink !== undefined ? showEmbedMoreLink : true);
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
