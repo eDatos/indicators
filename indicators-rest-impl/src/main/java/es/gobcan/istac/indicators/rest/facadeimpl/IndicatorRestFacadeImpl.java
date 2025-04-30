@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.rest.ExportResourceAccessToPlainText;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
@@ -195,14 +196,16 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     private ResponseEntity<byte[]> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            String format)
-            throws MetamacException {
+            String format) throws MetamacException {
         try {
             String lang = configurationService.retrieveLanguageDefault();
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
             IndicatorType indicator = retrieveIndicator(indicatorCode);
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, lang);
+            // DatasetSelection datasetSelection = DatasetSelectionMapper.datasetToDatasetSelection(dataset.getData().getDimensions(), dataset.getMetadata().getAttributes(),
+            // dataset.getMetadata().getRelatedDsd(), exportationBody);
+            IndicatorSelection indicatorSelection = null;
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, indicatorSelection, lang);
 
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
             exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);

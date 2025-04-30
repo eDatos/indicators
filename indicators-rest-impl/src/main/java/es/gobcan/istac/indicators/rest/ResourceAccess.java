@@ -9,8 +9,6 @@ import static es.gobcan.istac.indicators.rest.util.ExportUtils.dataToDataArray;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -41,6 +39,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Enumerat
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
+import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
@@ -55,7 +54,7 @@ public class ResourceAccess {
     public static final int                               LEFT_DIMENSIONS_START_POSITION  = 0;
     public static final int                               TOP_DIMENSIONS_START_POSITION   = 20;
     public static final int                               FIXED_DIMENSIONS_START_POSITION = 40;
-
+    private IndicatorSelection                            indicatorSelection;
     private String                                        lang;
     private Data                                          data;
     private Dimensions                                    dimensions;
@@ -98,17 +97,19 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount   = 0;
 
-    public ResourceAccess(DataType indicatorData, IndicatorType indicator, String lang) throws MetamacException {
+    public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
 
         data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        initialize(data, indicator, indicatorData, lang);
+        this.indicatorSelection = indicatorSelection;
+
+        initialize(data, indicator, indicatorData, indicatorSelection, lang);
     }
 
-    private void initialize(Data data, IndicatorType indicator, DataType indicatorData, String lang) throws MetamacException {
+    private void initialize(Data data, IndicatorType indicator, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         this.lang = lang;
 
         initializeDimensions(data, indicator, indicatorData);
@@ -247,11 +248,13 @@ public class ResourceAccess {
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;
-        dimensionsLabelVisualisationMode = labelVisualisationsMode;
+        this.dimensionsLabelVisualisationMode = labelVisualisationsMode;
         this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
         this.dimensionsValuesLabels = dimensionsValuesLabels;
-        dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
-        dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
+        this.dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
+        this.dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
+        // this.dimensions = (Dimensions) dimensionsLabelsCurrentLocale;
+
     }
 
     /**
@@ -644,99 +647,6 @@ public class ResourceAccess {
 
     public int getPrimaryMeasureAttributesCount() {
         return primaryMeasureAttributesCount;
-    }
-
-    /**
-     * Calculate rows
-     *
-     * @return the number of total rows in the displayed data table
-     */
-    public int getRows() {
-        return dimensionsOrderedForData.size();
-    }
-
-    /**
-     * Calculate columns
-     *
-     * @return the number of total columns in the displayed data table
-     */
-    public int getColumns() {
-        return dimensionsValuesCurrentLocaleLabels.size() + attributesValuesByAttributeId.size();
-    }
-
-    /**
-     * Calculate the key permutation for a cell of data
-     *
-     * @param row
-     * @param column
-     * @return
-     */
-    public Map<String, String> permutationAtCell(int row, int column) {
-        Map<String, String> permutation = new HashMap<String, String>();
-        addLeftDimensions(permutation, row);
-        addTopDimensions(permutation, column);
-        addFixedDimensions(permutation);
-        return permutation;
-    }
-
-    private void addLeftDimensions(Map<String, String> permutation, int row) {
-        for (DatasetSelectionDimension dimension : getLeftDimensions()) {
-            int selectedIndex = getSelectedIndex(row, dimension);
-            permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedIndex));
-        }
-    }
-
-    private void addTopDimensions(Map<String, String> permutation, int column) {
-
-        for (Dimensions this.dimensions : getTopDimensions()) {
-            int selectedIndex = getSelectedIndex(column, dimension);
-            permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(selectedIndex));
-        }
-    }
-
-    private void addFixedDimensions(Map<String, String> permutation) {
-        for (DatasetSelectionDimension dimension : getFixedDimensions()) {
-            if (!dimension.getSelectedDimensionValues().isEmpty()) {
-                permutation.put(dimension.getId(), dimension.getSelectedDimensionValues().get(0));
-            }
-        }
-    }
-
-    private int getSelectedIndex(int index, DatasetSelectionDimension dimension) {
-        Integer multiplier = multipliers.get(dimension.getId());
-        return (index / multiplier) % dimension.getSelectedDimensionValues().size();
-    }
-    public List<DatasetSelectionDimension> getLeftDimensions() {
-        return getDimensionsInPositionRange(LEFT_DIMENSIONS_START_POSITION, TOP_DIMENSIONS_START_POSITION);
-    }
-
-    public List<DatasetSelectionDimension> getTopDimensions() {
-        return getDimensionsInPositionRange(TOP_DIMENSIONS_START_POSITION, FIXED_DIMENSIONS_START_POSITION);
-    }
-
-    public List<DatasetSelectionDimension> getFixedDimensions() {
-        return getDimensionsInPositionRange(FIXED_DIMENSIONS_START_POSITION, FIXED_DIMENSIONS_START_POSITION + 20);
-    }
-
-    private List<DatasetSelectionDimension> getDimensionsInPositionRange(int from, int to) {
-        List<DatasetSelectionDimension> dimensionsInRange = new ArrayList<DatasetSelectionDimension>();
-        for (DatasetSelectionDimension dimension : getDimensions()) {
-            if (dimension.getPosition() >= from && dimension.getPosition() < to) {
-                dimensionsInRange.add(dimension);
-            }
-        }
-        sortDimensionsByPosition(dimensionsInRange);
-        return dimensionsInRange;
-    }
-
-    private void sortDimensionsByPosition(List<DatasetSelectionDimension> dimensions) {
-        Collections.sort(dimensions, new Comparator<DatasetSelectionDimension>() {
-
-            @Override
-            public int compare(DatasetSelectionDimension datasetSelectionDimension, DatasetSelectionDimension datasetSelectionDimension2) {
-                return datasetSelectionDimension.getPosition() - datasetSelectionDimension2.getPosition(); // Ascending sort
-            }
-        });
     }
 
     private static String indicatorObservationsToDataObservations(List<String> observation) {
