@@ -133,6 +133,10 @@
     border-left: 1px solid;
 }
 
+.istac-widget-content {
+    overflow-x: auto;
+}
+
 /* LastData Widget*/
 
 .istac-widget-lastData .istac-widget-content {
