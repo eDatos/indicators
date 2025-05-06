@@ -22,10 +22,10 @@
 		initialize : function(){
 			this.fetch({
 				success: function () {
-					$('#loader').hide();
+					$('#page-loader').hide();
 				},
 				error: function () {
-					$('#loader').hide();
+					$('#page-loader').hide();
 				}
 			});
 			_.bindAll(this);
