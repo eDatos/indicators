@@ -5,9 +5,11 @@ import java.io.OutputStream;
 import javax.ws.rs.core.Response.Status;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.portal.core.exporters.PlainTextExporter;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 
+import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
 import es.gobcan.istac.indicators.rest.exception.ExceptionUtils;
 import es.gobcan.istac.indicators.rest.exception.RestIndicatorsCommonServiceExceptionType;
 
@@ -16,12 +18,13 @@ public class ExportResourceAccessToPlainText {
 
     public void exportResourceAccessToPlainText(ResourceAccess resourceAccess, String format, OutputStream os) throws MetamacException {
         try {
-            PlainTextExporter exporter = new PlainTextExporter(format, resourceAccess);
+            PlainTextExporter exporter = new PlainTextExporter(PlainTextTypeEnum.valueOf(format), resourceAccess);
             exporter.writeObservationsAndAttributesWithObservationAttachmentLevel(os);
         } catch (Exception e) {
             throw ExceptionUtils.manageException(e);
         }
     }
+
 
     public void checkMaxRowsInXlsxFormat(ResourceAccess resourceAccess, String format, String maxXlsxRows, String indicatorCode) throws RestException {
         if (ResourcesFormat.XLSX.name().equals(format.toUpperCase()) && (getObservationsNumber(resourceAccess) > Long.parseLong(maxXlsxRows))) {

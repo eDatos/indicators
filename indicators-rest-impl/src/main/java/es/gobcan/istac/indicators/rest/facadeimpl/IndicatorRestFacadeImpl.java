@@ -45,6 +45,7 @@ import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorSelectionMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
 import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
@@ -204,7 +205,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             IndicatorType indicator = retrieveIndicator(indicatorCode);
             // DatasetSelection datasetSelection = DatasetSelectionMapper.datasetToDatasetSelection(dataset.getData().getDimensions(), dataset.getMetadata().getAttributes(),
             // dataset.getMetadata().getRelatedDsd(), exportationBody);
-            IndicatorSelection indicatorSelection = null;
+            IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
             ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, indicatorSelection, lang);
 
             ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
