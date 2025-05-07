@@ -137,6 +137,12 @@
     overflow-x: auto;
 }
 
+/* Temporal Widget*/
+
+.istac-widget-temporal .istac-widget-content {
+    overflow-x: clip;
+}
+
 /* LastData Widget*/
 
 .istac-widget-lastData .istac-widget-content {
