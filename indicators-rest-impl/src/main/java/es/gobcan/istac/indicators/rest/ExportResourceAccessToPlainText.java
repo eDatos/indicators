@@ -36,8 +36,9 @@ public class ExportResourceAccessToPlainText {
 
     // return number of observations + 1 (header row)
     public Long getObservationsNumber(ResourceAccess resourceAccess) {
-        Long dimensionRows = Long.valueOf(resourceAccess.getRows());
-        Long dimensionColumns = Long.valueOf(resourceAccess.getColumns());
-        return dimensionRows * dimensionColumns + 1;
+        // Long dimensionRows = Long.valueOf(indicatorSelection.getRows());
+        // Long dimensionColumns = Long.valueOf(resourceAccess.getColumns());
+        // return dimensionRows * dimensionColumns + 1;
+        return 1L;
     }
 }

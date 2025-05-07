@@ -120,6 +120,9 @@ public class ResourceAccess {
         initializeMultipliersAttributes();
         initializeIndex();
     }
+    public IndicatorSelection getDataSelection() {
+        return indicatorSelection;
+    }
 
     public Data getData() {
         return data;
