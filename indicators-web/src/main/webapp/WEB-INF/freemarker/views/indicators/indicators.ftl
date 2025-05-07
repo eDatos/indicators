@@ -2,6 +2,8 @@
 [#include "/includes.ftl"]
 [@template.base]
 
+<div id="page-loader">[@apph.messageEscape 'app.loading'/]</div>
+
 <div id="indicators"></div>
 
 <script type="text/html" id="indicatorTmpl">
@@ -18,7 +20,14 @@
 		url: apiUrl + '/indicators/?limit=1000',
 
 		initialize : function(){
-			this.fetch();
+			this.fetch({
+				success: function () {
+					$('#page-loader').hide();
+				},
+				error: function () {
+					$('#page-loader').hide();
+				}
+			});
 			_.bindAll(this);
 		},
 		
