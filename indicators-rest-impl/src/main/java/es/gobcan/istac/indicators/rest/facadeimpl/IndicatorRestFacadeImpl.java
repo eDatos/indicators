@@ -41,6 +41,7 @@ import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
@@ -183,21 +184,22 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataXLSX(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "xlsx");
+        // FIXME: revisar el enum o crear nuevo metodo para exportar excel tipo exportIndicatorToExcel
+        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, null);
     }
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataCSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "csv");
+        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.CSV_COMMA);
     }
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataTSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, "tsv");
+        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.TSV);
     }
 
     private ResponseEntity<byte[]> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            String format) throws MetamacException {
+            PlainTextTypeEnum format) throws MetamacException {
         try {
             String lang = configurationService.retrieveLanguageDefault();
             byte[] content = null;
@@ -217,7 +219,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             try {
                 String fileNamePrefix = IndicatorsRestConstants.API_INDICATORS_INDICATORS_DATA + "-" + indicatorCode;
 
-                final File tmpFileObservations = File.createTempFile(fileNamePrefix, format);
+                final File tmpFileObservations = File.createTempFile(fileNamePrefix, format.getExtension());
                 outputStreamObservations = new FileOutputStream(tmpFileObservations);
                 exportResourceAccessToPlainText.exportResourceAccessToPlainText(resourceAccess, format, outputStreamObservations);
 
@@ -230,7 +232,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 content = byteArrayOutputStream.toByteArray();
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", getContentDisposition(indicatorCode, format));
+                headers.add("Content-Disposition", getContentDisposition(indicatorCode, format.getExtension()));
                 return new ResponseEntity<>(content, headers, HttpStatus.OK);
 
             } finally {

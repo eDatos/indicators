@@ -79,8 +79,8 @@ public class ExportUtils {
         // TODO: revisar
 
         dimensionValuesLabels = new HashMap<String, String>(dimension.getValue().getRepresentation().size());
-        String dimensionValueId = dimension.getKey();
         for (MetadataRepresentationType dimensionValue : dimension.getValue().getRepresentation()) {
+            String dimensionValueId = dimensionValue.getCode();
             String dimensionValueLabel = getLabel(localisedStringsToInternationalString(dimensionValue.getTitle()), lang);
             dimensionValuesLabels.put(dimensionValueId, dimensionValueLabel);
         }
