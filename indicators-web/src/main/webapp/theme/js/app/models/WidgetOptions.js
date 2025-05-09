@@ -3,9 +3,6 @@
 
     var validTypes = ["lastData", "temporal", "recent"];
 
-    var CENTRAL_WIDTH = 423;
-    var LATERAL_WIDTH = 266;
-
     App.models.WidgetOptions = Backbone.Model.extend({
 
         initialize: function () {
@@ -15,7 +12,9 @@
         defaults: {
             title: '',
             type: 'lastData', // temporal, lastData, recent
-            width: CENTRAL_WIDTH,
+            width: '100%',
+            widthQuantity: 100,
+            widthUnit: '%', // or px
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
@@ -77,8 +76,11 @@
                 }
             });
 
-        }
+        },
 
+        getVisibleOptions: function () {
+            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit']);
+        }
     });
 
 }(window._));

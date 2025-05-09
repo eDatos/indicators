@@ -1,6 +1,13 @@
 (function () {
     "use strict";
 
+    var MIN_SLIDER_PERCENTAGE_VALUE = 10;
+    var MAX_SLIDER_PERCENTAGE_VALUE = 100;
+    var MIN_SLIDER_PIXEL_VALUE = 100;
+    var MAX_SLIDER_PIXEL_VALUE = 700;
+    var DEFAULT_PERCENTAGE_WIDTH = 100;
+    var DEFAULT_PIXEL_WIDTH = 423;
+
     App.views.WidgetStyleOptionsView = Backbone.View.extend({
 
         template: App.loadTemplate('style-options'),
@@ -73,15 +80,26 @@
             var self = this;
             var $slider = this.$(".width-slider");
             $slider.slider({
-                min: 100,
-                max: 700,
-                value: self.model.get('width'),
+                min: self.model.get("widthUnit") === '%' ? MIN_SLIDER_PERCENTAGE_VALUE : MIN_SLIDER_PIXEL_VALUE,
+                max: self.model.get("widthUnit") === '%' ? MAX_SLIDER_PERCENTAGE_VALUE : MAX_SLIDER_PIXEL_VALUE,
+                value: this.model.get("widthQuantity"),
                 slide: function (event, ui) {
-                    self.model.set('width', ui.value);
+                    self.model.set("widthQuantity", ui.value);
                 }
             });
-            self.model.on('change:width', function (model, value) {
+            self.model.on('change:widthQuantity', function (model, value) {
                 $slider.slider('value', value);
+                self.model.set('width', value + self.model.get("widthUnit"));
+            });
+            self.model.on('change:widthUnit', function () {
+                var widthUnitIsPercentage = (self.model.get("widthUnit") === '%');
+
+                $slider.slider('option', 'min', widthUnitIsPercentage ? MIN_SLIDER_PERCENTAGE_VALUE : MIN_SLIDER_PIXEL_VALUE);
+                $slider.slider('option', 'max', widthUnitIsPercentage ? MAX_SLIDER_PERCENTAGE_VALUE : MAX_SLIDER_PIXEL_VALUE);
+
+                self.model.set("widthQuantity", widthUnitIsPercentage ? DEFAULT_PERCENTAGE_WIDTH : DEFAULT_PIXEL_WIDTH)
+                self.model.set('width', self.model.get("widthQuantity") + self.model.get("widthUnit"));
+                $slider.slider('value', self.model.get("widthQuantity"));
             });
         },
 
