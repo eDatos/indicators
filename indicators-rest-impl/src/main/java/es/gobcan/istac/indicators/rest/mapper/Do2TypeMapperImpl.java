@@ -783,6 +783,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             return;
         }
 
+        /*
+         * TODO EDATOS-4989
+         * This call to statistical-resources API has a bad performance in the indicators api. If it is necessary to retrieve additional metadata it must not be here.
+         * Dataset/query metadata must be saved during the creation/reload/publish indicator process. So these metadata can be retrieved from indicators bd here (in the indicator api)
+         * creation/reload metadata from statistical-resources is done here:
+         * * Queries: es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils
+         * * Datasets: es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils
+         */
+
         for (DataSource dataSource : dataSources) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
                 String queryUuid = dataSource.getQueryUuid();
