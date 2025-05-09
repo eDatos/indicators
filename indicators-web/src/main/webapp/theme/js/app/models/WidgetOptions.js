@@ -13,7 +13,7 @@
             title: '',
             type: 'lastData', // temporal, lastData, recent
             width: '100%',
-            widthQuantity: 100,
+            widthQuantity: App.constants.WidgetWidthConstants.DEFAULT_PERCENTAGE_WIDTH,
             widthUnit: '%', // or px
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',

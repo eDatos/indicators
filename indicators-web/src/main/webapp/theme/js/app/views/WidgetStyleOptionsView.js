@@ -1,13 +1,6 @@
 (function () {
     "use strict";
 
-    var MIN_SLIDER_PERCENTAGE_VALUE = 10;
-    var MAX_SLIDER_PERCENTAGE_VALUE = 100;
-    var MIN_SLIDER_PIXEL_VALUE = 100;
-    var MAX_SLIDER_PIXEL_VALUE = 700;
-    var DEFAULT_PERCENTAGE_WIDTH = 100;
-    var DEFAULT_PIXEL_WIDTH = 423;
-
     App.views.WidgetStyleOptionsView = Backbone.View.extend({
 
         template: App.loadTemplate('style-options'),
@@ -80,8 +73,8 @@
             var self = this;
             var $slider = this.$(".width-slider");
             $slider.slider({
-                min: self.model.get("widthUnit") === '%' ? MIN_SLIDER_PERCENTAGE_VALUE : MIN_SLIDER_PIXEL_VALUE,
-                max: self.model.get("widthUnit") === '%' ? MAX_SLIDER_PERCENTAGE_VALUE : MAX_SLIDER_PIXEL_VALUE,
+                min: self._getWidthSlideMin(),
+                max: self._getWidthSlideMax(),
                 value: this.model.get("widthQuantity"),
                 slide: function (event, ui) {
                     self.model.set("widthQuantity", ui.value);
@@ -92,15 +85,31 @@
                 self.model.set('width', value + self.model.get("widthUnit"));
             });
             self.model.on('change:widthUnit', function () {
-                var widthUnitIsPercentage = (self.model.get("widthUnit") === '%');
+                $slider.slider('option', 'min', self._getWidthSlideMin());
+                $slider.slider('option', 'max', self._getWidthSlideMax());
 
-                $slider.slider('option', 'min', widthUnitIsPercentage ? MIN_SLIDER_PERCENTAGE_VALUE : MIN_SLIDER_PIXEL_VALUE);
-                $slider.slider('option', 'max', widthUnitIsPercentage ? MAX_SLIDER_PERCENTAGE_VALUE : MAX_SLIDER_PIXEL_VALUE);
-
-                self.model.set("widthQuantity", widthUnitIsPercentage ? DEFAULT_PERCENTAGE_WIDTH : DEFAULT_PIXEL_WIDTH)
+                self.model.set("widthQuantity", self._getWidthSlideDefaultValue())
                 self.model.set('width', self.model.get("widthQuantity") + self.model.get("widthUnit"));
                 $slider.slider('value', self.model.get("widthQuantity"));
             });
+        },
+
+        _getWidthSlideMin: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetWidthConstants.MIN_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetWidthConstants.MIN_SLIDER_PIXEL_VALUE;
+        },
+
+        _getWidthSlideMax: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetWidthConstants.MAX_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetWidthConstants.MAX_SLIDER_PIXEL_VALUE;
+        },
+
+        _getWidthSlideDefaultValue: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetWidthConstants.DEFAULT_PERCENTAGE_WIDTH
+                : App.constants.WidgetWidthConstants.DEFAULT_PIXEL_WIDTH;
         },
 
         bindColorPicker: function (input, property) {

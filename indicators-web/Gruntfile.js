@@ -79,6 +79,9 @@ module.exports = function (grunt) {
         commonPath + '/Helper.js',
         commonPath + '/I18n.js',
 
+        // constants
+        jsPath + '/app/constants/WidgetWidthConstants.js',
+
         // helpers        
         jsPath + '/app/helpers/I18n.js',
         jsPath + '/app/helpers/HandlebarsHelpers.js',
