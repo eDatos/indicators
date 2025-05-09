@@ -675,12 +675,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
-        List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
-        indicatorDoToMetadataTypeCommon(source, target, geographicalValues, srmRestObjectsMapper);
-    }
-
-    @Override
     public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
             SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
@@ -705,7 +699,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
-        extractMetadataFromDataSource(source.getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), null, dimensionVisualisationShowCodesPreferences);
 
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
@@ -886,8 +879,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
             Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
-            extractMetadataFromDataSource(source.getIndicator().getDiffusionIndicatorVersion().getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), null,
-                    dimensionVisualisationShowCodesPreferences);
 
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());

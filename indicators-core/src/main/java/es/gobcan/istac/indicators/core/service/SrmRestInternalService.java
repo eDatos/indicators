@@ -25,7 +25,10 @@ public interface SrmRestInternalService {
     public String getQueryByCategoryElementCriteria(CategoryCriteriaPropertyRestriction categoryCriteria, String value);
     public Code retrieveCodeOfCodelist(String codeUrn) throws MetamacException;
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
+    public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn, Codes codes) throws MetamacException;
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
+    public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn, Codes codes) throws MetamacException;
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException;
+    public Codes retrieveCodesOfCodelist(String codelistUrn);
 
 }
