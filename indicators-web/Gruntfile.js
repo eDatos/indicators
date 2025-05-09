@@ -80,7 +80,7 @@ module.exports = function (grunt) {
         commonPath + '/I18n.js',
 
         // constants
-        jsPath + '/app/constants/WidgetWidthConstants.js',
+        jsPath + '/app/constants/WidgetConstants.js',
 
         // helpers        
         jsPath + '/app/helpers/I18n.js',

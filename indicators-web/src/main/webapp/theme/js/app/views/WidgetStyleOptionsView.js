@@ -96,20 +96,20 @@
 
         _getWidthSlideMin: function () {
             return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetWidthConstants.MIN_SLIDER_PERCENTAGE_VALUE
-                : App.constants.WidgetWidthConstants.MIN_SLIDER_PIXEL_VALUE;
+                ? App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PIXEL_VALUE;
         },
 
         _getWidthSlideMax: function () {
             return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetWidthConstants.MAX_SLIDER_PERCENTAGE_VALUE
-                : App.constants.WidgetWidthConstants.MAX_SLIDER_PIXEL_VALUE;
+                ? App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PIXEL_VALUE;
         },
 
         _getWidthSlideDefaultValue: function () {
             return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetWidthConstants.DEFAULT_PERCENTAGE_WIDTH
-                : App.constants.WidgetWidthConstants.DEFAULT_PIXEL_WIDTH;
+                ? App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH
+                : App.constants.WidgetConstants.DEFAULT_PIXEL_WIDTH;
         },
 
         bindColorPicker: function (input, property) {
