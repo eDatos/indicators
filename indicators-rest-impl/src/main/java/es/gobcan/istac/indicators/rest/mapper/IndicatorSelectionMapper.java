@@ -105,7 +105,7 @@ public class IndicatorSelectionMapper {
             DataStructureDefinition relatedDsd, String exportationBody) {
         Map<String, IndicatorSelection> selectionDimensionsMap = null;
         Map<String, IndicatorSelectionAttribute> selectionAttributesMap = null;
-        // FIXME
+        // FIXME ¿Realmente es necesario este codigo?
         // if (exportationBody != null && exportationBody.getIndicatorSelection() != null) {
         // if (exportationBody.getIndicatorSelection().getDimensions() != null) {
         // selectionDimensionsMap = indexDimensionsById(exportationBody.getIndicatorSelection().getDimensions().getDimensions());
@@ -115,8 +115,8 @@ public class IndicatorSelectionMapper {
         // }
         // }
         List<IndicatorSelectionDimension> dimensions = dimensionsToIndicatorSelectionDimensions(indicatorDimensions, selectionDimensionsMap, relatedDsd);
-        // List<IndicatorSelectionAttribute> attributes = attributesToIndicatorSelectionAttributes(indicatorAttributes, selectionAttributesMap);
-        return new IndicatorSelection(dimensions, null, false);
+        List<IndicatorSelectionAttribute> attributes = attributesToIndicatorSelectionAttributes(indicatorAttributes, selectionAttributesMap);
+        return new IndicatorSelection(dimensions, attributes, false);
     }
 
     // @SuppressWarnings("unchecked")
@@ -145,33 +145,32 @@ public class IndicatorSelectionMapper {
 
     private static List<IndicatorSelectionAttribute> attributesToIndicatorSelectionAttributes(List<Map<String, AttributeType>> attributes,
             Map<String, IndicatorSelectionAttribute> selectionAttributesMap) {
+
         if (attributes == null) {
             return null;
         }
         List<IndicatorSelectionAttribute> indicatorSelectionAttributes = new ArrayList<IndicatorSelectionAttribute>();
-    // for (Attribute attribute : attributes.getAttributes()) {
-    // finalIndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(attribute.getId()) : null;
-    // indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(attribute, selectionAttribute));
-    // }
-    // return indicatorSelectionAttributes;
-    // }
 
-    // private static IndicatorSelectionAttribute attributeToIndicatorSelectionAttribute(Attribute attribute, IndicatorSelectionAttribute selectionAttribute) {
-    // IndicatorSelectionAttribute indicatorSelectionAttribute = new IndicatorSelectionAttribute(attribute.getId());
-    //
-    // // Default values
-    // LabelVisualisationModeEnum labelVisualizationMode = CODE_AND_LABEL;
-    //
-    // // If we have data sent via api, use that instead
-    // if (selectionAttribute != null) {
-    // if (selectionAttribute.getLabelVisualisationMode() != null) {
-    // labelVisualizationMode = toLabelVisualisationMode(selectionAttribute.getLabelVisualisationMode());
-    // }
-    // }
-    //
-    // indicatorSelectionAttribute.setLabelVisualisationMode(labelVisualizationMode);
-    return null;
-}
+        for (Map<String, AttributeType> attributeTypeMap : attributes) {
+            for (Map.Entry<String, AttributeType> attributeTypeEntry : attributeTypeMap.entrySet()) {
+                indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(attributeTypeEntry, selectionAttributesMap));
+            }
+        }
+
+        return indicatorSelectionAttributes;
+    }
+
+    private static IndicatorSelectionAttribute attributeToIndicatorSelectionAttribute(Map.Entry<String, AttributeType> attributeMap, Map<String, IndicatorSelectionAttribute> selectionAttributesMap) {
+        // IndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(attributeMap.getKey()) : null;
+        IndicatorSelectionAttribute selectionAttribute = new IndicatorSelectionAttribute(attributeMap.getKey());
+        // Default values
+        LabelVisualisationModeEnum labelVisualizationMode = CODE_AND_LABEL;
+
+        selectionAttribute.setLabelVisualisationMode(labelVisualizationMode);
+
+        return selectionAttribute;
+
+    }
 
     private static List<IndicatorSelectionDimension> dimensionsToIndicatorSelectionDimensions(Map<String, DataDimensionType> indicatorDimensions,
             Map<String, IndicatorSelection> selectionDimensionsMap, DataStructureDefinition dataStructureDefinition) {

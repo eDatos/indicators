@@ -1,6 +1,10 @@
 package es.gobcan.istac.indicators.rest;
 
 import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesLabelVisualisationMode;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesLabels;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesValuesLabels;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesValuesLocalisedLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionLabel;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionToMapDimensionsLabelVisualisationMode;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLabels;
@@ -18,13 +22,9 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeDimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.ComponentType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
@@ -78,9 +78,9 @@ public class ResourceAccess {
     private Map<String, Map<String, InternationalString>> dimensionsValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       dimensionsLabelVisualisationMode;
 
-    private List<Attribute>                               attributesMetadata;
-    private Map<String, Attribute>                        attributesMetadataMap;
-    private Attribute                                     measureAttribute;
+    private List<AttributeType>                           attributesMetadata;
+    private Map<String, AttributeType>                    attributesMetadataMap;
+    private AttributeType                                 measureAttribute;
     private Map<String, String>                           attributesLabels;
     private Map<String, Map<String, String>>              attributesValuesCurrentLocaleLabels;
     private Map<String, Map<String, InternationalString>> attributesValuesLabels;
@@ -113,7 +113,7 @@ public class ResourceAccess {
         this.lang = lang;
 
         initializeDimensions(data, indicator, indicatorData);
-        initializeAttributes(data);
+        initializeAttributes(data, indicatorData.getAttribute(), indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
@@ -148,7 +148,7 @@ public class ResourceAccess {
         return lang;
     }
 
-    public List<Attribute> getAttributesMetadata() {
+    public List<AttributeType> getAttributesMetadata() {
         return attributesMetadata;
     }
 
@@ -200,25 +200,27 @@ public class ResourceAccess {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
     }
 
-    public List<String> getDimensionsAttributeOrderedForData(Attribute attribute) {
+    public List<String> getDimensionsAttributeOrderedForData(AttributeType attribute) {
         List<String> allDimensionsOrderedForData = getDimensionsOrderedForData();
-        if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-            List<String> dimensionsAttribute = new ArrayList<String>();
-            for (AttributeDimension attributeDimension : attribute.getDimensions().getDimensions()) {
-                dimensionsAttribute.add(attributeDimension.getDimensionId());
-            }
-            List<String> dimensionsAttributeOrdered = new ArrayList<String>(dimensionsAttribute.size());
-            for (String dimensionDatasetId : getDimensionsOrderedForData()) {
-                if (dimensionsAttribute.contains(dimensionDatasetId)) {
-                    dimensionsAttributeOrdered.add(dimensionDatasetId);
-                }
-            }
-            return dimensionsAttributeOrdered;
-        } else if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-            return allDimensionsOrderedForData;
-        } else {
-            throw new IllegalArgumentException("Attribute attachement level unsupported in this operation: " + attribute.getAttachmentLevel());
-        }
+        // FIXME
+        // if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+        // List<String> dimensionsAttribute = new ArrayList<String>();
+        // for (AttributeDimension attributeDimension : attribute.getDimensions().getDimensions()) {
+        // dimensionsAttribute.add(attributeDimension.getDimensionId());
+        // }
+        // List<String> dimensionsAttributeOrdered = new ArrayList<String>(dimensionsAttribute.size());
+        // for (String dimensionDatasetId : getDimensionsOrderedForData()) {
+        // if (dimensionsAttribute.contains(dimensionDatasetId)) {
+        // dimensionsAttributeOrdered.add(dimensionDatasetId);
+        // }
+        // }
+        // return dimensionsAttributeOrdered;
+        // } else if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+        // return allDimensionsOrderedForData;
+        // } else {
+        // throw new IllegalArgumentException("Attribute attachement level unsupported in this operation: " + attribute.getAttachmentLevel());
+        // }
+        return allDimensionsOrderedForData;
     }
 
     /**
@@ -265,44 +267,49 @@ public class ResourceAccess {
      *
      * @param data
      */
-    private void initializeAttributes(Data data) throws MetamacException {
+    private void initializeAttributes(Data data, List<Map<String, AttributeType>> attributes, IndicatorSelection indicatorSelection) throws MetamacException {
         if (attributes == null) {
-            attributesMetadata = new ArrayList<Attribute>();
+            attributesMetadata = new ArrayList<AttributeType>();
         } else {
-            attributesMetadata = attributes.getAttributes();
+            // attributesMetadata = attributes.getAttributes();
         }
 
-        Map<String, Attribute> attributesMetadataMap = new HashMap<String, Attribute>(attributesMetadata.size());
+        List<AttributeType> dataAttributeTypeList = indicatorAttributesToListAttributes(attributes);
+
+        Map<String, AttributeType> attributesMetadataMap = new HashMap<String, AttributeType>(attributesMetadata.size());
 
         // Attribute Instances
         attributesValuesByAttributeId = new HashMap<String, String[]>(attributesMetadata.size());
-        for (Attribute attribute : attributesMetadata) {
+
+        for (AttributeType attribute : attributesMetadata) {
             if (data.getAttributes() != null) {
                 for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
-                    if (dataAttribute.getId().equals(attribute.getId())) {
-                        attributesValuesByAttributeId.put(attribute.getId(), dataToDataArray(dataAttribute.getValue()));
+                    if (dataAttribute.getId().equals(attribute.getCode())) {
+                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(dataAttribute.getValue()));
                     }
                 }
             }
-
-            if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-                primaryMeasureAttributesCount += calculateNonEmptyCount(attributesValuesByAttributeId.get(attribute.getId()));
-            }
+            // FIXME: If necesary?
+            // if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+            // primaryMeasureAttributesCount += calculateNonEmptyCount(attributesValuesByAttributeId.get(attribute.getId()));
+            // }
 
             // Measure Attribute
-            if (ComponentType.MEASURE.equals(attribute.getType())) {
-                measureAttribute = attribute;
-            }
+            // FIXME
+            // if (ComponentType.MEASURE.equals(attribute.getType())) {
+            // measureAttribute = attribute;
+            // }
 
             // Attributes Metadata Map
-            attributesMetadataMap.put(attribute.getId(), attribute);
+            attributesMetadataMap.put(attribute.getCode(), attribute);
         }
+
         // TODO: corregir
-        // this.attributesMetadataMap = attributesMetadataMap;
-        // attributesLabelVisualisationMode = buildMapAttributesLabelVisualisationMode(attributesMetadata);
-        // attributesValuesCurrentLocaleLabels = buildMapAttributesValuesLabels(attributesMetadata, lang, langDefault);
-        // attributesValuesLabels = buildMapAttributesValuesLocalisedLabels(attributesMetadata);
-        // attributesLabels = buildMapAttributesLabels(attributesMetadata, lang, langDefault);
+        this.attributesMetadataMap = attributesMetadataMap;
+        attributesLabelVisualisationMode = buildMapAttributesLabelVisualisationMode(indicatorSelection, attributesMetadata);
+        attributesValuesCurrentLocaleLabels = buildMapAttributesValuesLabels(attributesMetadata, lang);
+        attributesValuesLabels = buildMapAttributesValuesLocalisedLabels(attributesMetadata);
+        attributesLabels = buildMapAttributesLabels(attributesMetadata, lang);
     }
 
     private int calculateNonEmptyCount(String[] strings) {
@@ -504,20 +511,22 @@ public class ResourceAccess {
 
     // ... and we'll have the multipliers stored for attributes at DIMENSION or combinated DIMENSION attachment level
     private void initializeMultipliersAttributes() {
-        for (Attribute attribute : attributesMetadata) {
-            if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-                continue;
-            }
-            multipliersByAttribute.put(attribute.getId(), new HashMap<String, Integer>());
-            List<AttributeDimension> dimensions = attribute.getDimensions().getDimensions();
-            ListIterator<AttributeDimension> dimensionsListIterator = dimensions.listIterator(dimensions.size());
-            int incrementCounter = 1;
+        for (AttributeType attribute : attributesMetadata) {
+            // FIXME
+            // if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+            // continue;
+            // }
+            multipliersByAttribute.put(attribute.getCode(), new HashMap<String, Integer>());
+            // FIXME
+            // List<AttributeDimension> dimensions = attribute.getDimensions().getDimensions();
+            // ListIterator<AttributeDimension> dimensionsListIterator = dimensions.listIterator(dimensions.size());
+            // int incrementCounter = 1;
             // Iterate the list in reverse order: right to left or down to up in the display table to calculate cell spacing
-            while (dimensionsListIterator.hasPrevious()) {
-                AttributeDimension dimension = dimensionsListIterator.previous();
-                multipliersByAttribute.get(attribute.getId()).put(dimension.getDimensionId(), incrementCounter);
-                incrementCounter *= dimensionValuesOrderedForDataByDimensionId.get(dimension.getDimensionId()).size();
-            }
+            // while (dimensionsListIterator.hasPrevious()) {
+            // AttributeDimension dimension = dimensionsListIterator.previous();
+            // multipliersByAttribute.get(attribute.getId()).put(dimension.getDimensionId(), incrementCounter);
+            // incrementCounter *= dimensionValuesOrderedForDataByDimensionId.get(dimension.getDimensionId()).size();
+            // }
         }
     }
 
@@ -734,6 +743,19 @@ public class ResourceAccess {
             codeRepresentations.getRepresentations().add(codeRepresentation);
         }
         return codeRepresentations;
+    }
+
+    private static List<AttributeType> indicatorAttributesToListAttributes(List<Map<String, AttributeType>> attributes) {
+        List<AttributeType> listAttribute = new ArrayList<>();
+        for (Map<String, AttributeType> attributeTypeMap : attributes) {
+            if (attributeTypeMap == null || attributeTypeMap.isEmpty()) {
+                continue;
+            }
+
+            for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
+            }
+        }
+        return listAttribute;
     }
 
 }

@@ -205,8 +205,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             byte[] content = null;
             DataType indicatorData = retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, true);
             IndicatorType indicator = retrieveIndicator(indicatorCode);
-            // DatasetSelection datasetSelection = DatasetSelectionMapper.datasetToDatasetSelection(dataset.getData().getDimensions(), dataset.getMetadata().getAttributes(),
-            // dataset.getMetadata().getRelatedDsd(), exportationBody);
+
             IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
             ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, indicatorSelection, lang);
 
