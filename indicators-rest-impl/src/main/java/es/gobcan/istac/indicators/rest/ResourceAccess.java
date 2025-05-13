@@ -4,11 +4,9 @@ import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstan
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesLabelVisualisationMode;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesValuesLabels;
-import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesValuesLocalisedLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionLabel;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionToMapDimensionsLabelVisualisationMode;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLabels;
-import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLocalisedLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.dataToDataArray;
 
 import java.math.BigInteger;
@@ -34,7 +32,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensio
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedAttributeValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
@@ -83,7 +80,7 @@ public class ResourceAccess {
     private AttributeType                                 measureAttribute;
     private Map<String, String>                           attributesLabels;
     private Map<String, Map<String, String>>              attributesValuesCurrentLocaleLabels;
-    private Map<String, Map<String, InternationalString>> attributesValuesLabels;
+    // private Map<String, Map<String, InternationalString>> attributesValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       attributesLabelVisualisationMode;
 
     // Data
@@ -112,7 +109,7 @@ public class ResourceAccess {
     private void initialize(Data data, IndicatorType indicator, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         this.lang = lang;
 
-        initializeDimensions(data, indicator, indicatorData);
+        initializeDimensions(indicator);
         initializeAttributes(data, indicatorData.getAttribute(), indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
@@ -162,10 +159,6 @@ public class ResourceAccess {
 
     public String getDimensionValueLabelCurrentLocale(String dimensionId, String dimensionValueId) {
         return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
-    }
-
-    public String getDimensionValueLabel(String dimensionId, String dimensionValueId) {
-        return dimensionsValuesLabels.get(dimensionId).get(dimensionValueId).toString();
     }
 
     public String getAttributeLabel(String attributeId) {
@@ -226,14 +219,13 @@ public class ResourceAccess {
     /**
      * Init dimensions and dimensions values
      */
-    private void initializeDimensions(Data data, IndicatorType indicator, DataType indicatorData) throws MetamacException {
+    private void initializeDimensions(IndicatorType indicator) throws MetamacException {
 
         dimensionsMetadata = indicator.getDimension();
 
         Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
         Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
         Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
-        Map<String, Map<String, InternationalString>> dimensionsValuesLabels = new HashMap<String, Map<String, InternationalString>>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
         Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
 
@@ -243,22 +235,16 @@ public class ResourceAccess {
             dimensionsMetadataMap.put(dimensionId, dimension.getValue());
             labelVisualisationsMode.put(dimensionId, buildMapDimensionToMapDimensionsLabelVisualisationMode(dimension));
             dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension, lang));
-            dimensionsValuesLabels.put(dimensionId, buildMapDimensionsValuesLocalisedLabels(dimension));
             dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
             dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
 
-            // if (DimensionType.MEASURE_DIMENSION.equals(dimension.getType())) {
-            // measureDimension = dimension;
-            // }
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;
         this.dimensionsLabelVisualisationMode = labelVisualisationsMode;
         this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
-        this.dimensionsValuesLabels = dimensionsValuesLabels;
         this.dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
         this.dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
-        // this.dimensions = (Dimensions) dimensionsLabelsCurrentLocale;
 
     }
 
@@ -268,15 +254,10 @@ public class ResourceAccess {
      * @param data
      */
     private void initializeAttributes(Data data, List<Map<String, AttributeType>> attributes, IndicatorSelection indicatorSelection) throws MetamacException {
-        if (attributes == null) {
-            attributesMetadata = new ArrayList<AttributeType>();
-        } else {
-            // attributesMetadata = attributes.getAttributes();
-        }
 
-        List<AttributeType> dataAttributeTypeList = indicatorAttributesToListAttributes(attributes);
+        attributesMetadata = indicatorAttributesToListAttributes(attributes);
 
-        Map<String, AttributeType> attributesMetadataMap = new HashMap<String, AttributeType>(attributesMetadata.size());
+        Map<String, AttributeType> attributesMetadataMap = new HashMap<String, AttributeType>();
 
         // Attribute Instances
         attributesValuesByAttributeId = new HashMap<String, String[]>(attributesMetadata.size());
@@ -284,21 +265,11 @@ public class ResourceAccess {
         for (AttributeType attribute : attributesMetadata) {
             if (data.getAttributes() != null) {
                 for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
-                    if (dataAttribute.getId().equals(attribute.getCode())) {
-                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(dataAttribute.getValue()));
+                    if (dataAttribute.getId().contains(attribute.getCode())) {
+                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(localisedStringsToDefaultString(attribute.getValue())));
                     }
                 }
             }
-            // FIXME: If necesary?
-            // if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-            // primaryMeasureAttributesCount += calculateNonEmptyCount(attributesValuesByAttributeId.get(attribute.getId()));
-            // }
-
-            // Measure Attribute
-            // FIXME
-            // if (ComponentType.MEASURE.equals(attribute.getType())) {
-            // measureAttribute = attribute;
-            // }
 
             // Attributes Metadata Map
             attributesMetadataMap.put(attribute.getCode(), attribute);
@@ -308,7 +279,7 @@ public class ResourceAccess {
         this.attributesMetadataMap = attributesMetadataMap;
         attributesLabelVisualisationMode = buildMapAttributesLabelVisualisationMode(indicatorSelection, attributesMetadata);
         attributesValuesCurrentLocaleLabels = buildMapAttributesValuesLabels(attributesMetadata, lang);
-        attributesValuesLabels = buildMapAttributesValuesLocalisedLabels(attributesMetadata);
+        // attributesValuesLabels = buildMapAttributesValuesLocalisedLabels(attributesMetadata);
         attributesLabels = buildMapAttributesLabels(attributesMetadata, lang);
     }
 
@@ -564,20 +535,20 @@ public class ResourceAccess {
         return offset;
     }
 
-    public InternationalString extractUnitCode(EnumeratedDimensionValue dimensionValue, String unitMeasureKey, String unitMultiplierKey) {
-        Integer offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMeasureKey);
-        InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, offset);
-
-        offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMultiplierKey);
-        InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, offset);
-        return extractUnitCode(dimensionValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
-    }
-
-    public InternationalString extractUnitCode(EnumeratedAttributeValue attributeValue, String unitMeasureKey, String unitMultiplierKey) {
-        InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, 0);
-        InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, 0);
-        return extractUnitCode(attributeValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
-    }
+    // public InternationalString extractUnitCode(EnumeratedDimensionValue dimensionValue, String unitMeasureKey, String unitMultiplierKey) {
+    // Integer offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMeasureKey);
+    // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, offset);
+    //
+    // offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMultiplierKey);
+    // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, offset);
+    // return extractUnitCode(dimensionValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
+    // }
+    //
+    // public InternationalString extractUnitCode(EnumeratedAttributeValue attributeValue, String unitMeasureKey, String unitMultiplierKey) {
+    // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, 0);
+    // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, 0);
+    // return extractUnitCode(attributeValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
+    // }
 
     private InternationalString extractUnitCode(MeasureQuantity measureQuantity, InternationalString unitMeasureName, InternationalString unitMultiplierName) {
         if (unitMeasureName == null && measureQuantity != null && measureQuantity.getUnitCode() != null) {
@@ -589,13 +560,13 @@ public class ResourceAccess {
         return prepareQuantityInternationalString(unitMeasureName, unitMultiplierName);
     }
 
-    private InternationalString getAttributeByDimensionValue(String attributeKey, Integer offset) {
-        if (!attributesValuesByAttributeId.containsKey(attributeKey)) {
-            return null;
-        }
-        String attributeValue = attributesValuesByAttributeId.get(attributeKey)[offset];
-        return attributesValuesLabels.get(attributeKey).get(attributeValue);
-    }
+    // private InternationalString getAttributeByDimensionValue(String attributeKey, Integer offset) {
+    // if (!attributesValuesByAttributeId.containsKey(attributeKey)) {
+    // return null;
+    // }
+    // String attributeValue = attributesValuesByAttributeId.get(attributeKey)[offset];
+    // return attributesValuesLabels.get(attributeKey).get(attributeValue);
+    // }
 
     private Integer calculateOffsetDimensionValueId(String dimensionValueId, String attributeKey) {
         Integer offset = null;
@@ -753,6 +724,7 @@ public class ResourceAccess {
             }
 
             for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
+                listAttribute.add(entry.getValue());
             }
         }
         return listAttribute;

@@ -40,31 +40,6 @@ public class ExportUtils {
     }
 
     /**
-     * Builds map indexed by dimensionValueId and value as localised title of the dimension value
-     */
-    public static Map<String, InternationalString> buildMapDimensionsValuesLocalisedLabels(Map.Entry<String, MetadataDimensionType> dimension) throws MetamacException {
-        Map<String, InternationalString> dimensionValuesLabels = null;
-        // if (dimension.getDimensionValues() instanceof EnumeratedDimensionValues) {
-        // EnumeratedDimensionValues dimensionValues = (EnumeratedDimensionValues) dimension.getDimensionValues();
-        // dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-        // for (EnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-        // String dimensionValueId = dimensionValue.getId();
-        // dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
-        // }
-        // } else if (dimension.getDimensionValues() instanceof NonEnumeratedDimensionValues) {
-        // NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
-        // dimensionValuesLabels = new HashMap<String, InternationalString>(dimensionValues.getValues().size());
-        // for (NonEnumeratedDimensionValue dimensionValue : dimensionValues.getValues()) {
-        // String dimensionValueId = dimensionValue.getId();
-        // dimensionValuesLabels.put(dimensionValueId, dimensionValue.getName());
-        // }
-        // } else {
-        // throw new MetamacException(CommonServiceExceptionType.UNKNOWN, "Dimension values unexpected: " + dimension.getDimensionValues().getClass().getCanonicalName());
-        // }
-        return dimensionValuesLabels;
-    }
-
-    /**
      * Builds map indexed by dimensionValueId and value as title of the dimension value
      */
     public static Map<String, String> buildMapDimensionsValuesLabels(Map.Entry<String, MetadataDimensionType> dimension, String lang) throws MetamacException {
@@ -101,37 +76,18 @@ public class ExportUtils {
     /**
      * Builds a map indexed by attributeId with a map indexed by attributeValueId and value as title of the attribute value
      */
-
     public static Map<String, Map<String, String>> buildMapAttributesValuesLabels(List<AttributeType> attributes, String lang) throws MetamacException {
         Map<String, Map<String, String>> attributesValuesLabels = new HashMap<String, Map<String, String>>(attributes.size());
         for (AttributeType attribute : attributes) {
             String attributeId = attribute.getCode();
-            Map<String, String> attributeValuesLabels = null;
-            // FIXME ........
-            // if (attribute.getAttributeValues() == null) {
-            // attributeValuesLabels = new HashMap<String, String>();
-            // } else if (attribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+            Map<String, String> attributeValuesLabels;
+
             // EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
-            // attributeValuesLabels = new HashMap<String, String>(attributeValues.getValues().size());
-            // for (EnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
-            // String attributeValueId = attributeValue.getId();
-            // String attributeValueLabel = getLabel(attributeValue.getName(), lang);
-            // attributeValuesLabels.put(attributeValueId, attributeValueLabel);
-            // }
-            // } else if (attribute.getAttributeValues() instanceof NonEnumeratedAttributeValues) {
-            // NonEnumeratedAttributeValues attributeValues = (NonEnumeratedAttributeValues) attribute.getAttributeValues();
-            // attributeValuesLabels = new HashMap<String, String>(attributeValues.getValues().size());
-            // for (NonEnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
-            // String attributeValueId = attributeValue.getId();
-            // String attributeValueLabel = getLabel(attributeValue.getName(), lang);
-            // attributeValuesLabels.put(attributeValueId, attributeValueLabel);
-            // }
-            // } else {
-            // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Attribute values unexpected: " + attribute.getAttributeValues().getClass().getCanonicalName());
-            // }
+            attributeValuesLabels = attribute.getValue();
             attributesValuesLabels.put(attributeId, attributeValuesLabels);
         }
         return attributesValuesLabels;
+
     }
 
     public static String[] dataToDataArray(String data) {
@@ -148,17 +104,11 @@ public class ExportUtils {
         for (AttributeType attribute : attributes) {
             String attributeId = attribute.getCode();
             LabelVisualisationModeEnum labelVisualisationMode = null;
-            // FIXME
-            // if (attribute.getAttributeValues() == null) {
-            // // Attribute has not translation for the codes
-            // labelVisualisationMode = LabelVisualisationModeEnum.CODE;
-            // } else {
             labelVisualisationMode = indicatorSelection != null ? indicatorSelection.getAttributeLabelVisualisationModel(attributeId) : null;
             if (labelVisualisationMode == null) {
                 // default value
                 labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
             }
-            // }
             labelVisualisationsMode.put(attributeId, labelVisualisationMode);
         }
         return labelVisualisationsMode;
