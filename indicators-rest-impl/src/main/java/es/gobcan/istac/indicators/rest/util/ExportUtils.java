@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical_resources.rest.common.StatisticalResources
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
 
@@ -59,14 +60,12 @@ public class ExportUtils {
     /**
      * Builds a map indexed by dimensionId with a value as name of the dimension
      */
-    public static Map<String, String> buildMapAttributesLabels(List<AttributeType> attributes, String lang) throws MetamacException {
+    public static Map<String, String> buildMapAttributesLabels(List<MetadataAttributeType> attributes, String lang) throws MetamacException {
         Map<String, String> attributesValuesLabels = new HashMap<String, String>(attributes.size());
 
-        for (AttributeType attribute : attributes) {
+        for (MetadataAttributeType attribute : attributes) {
             String attributeId = attribute.getCode();
-            // FIXME
-            // String attributeLabel = getLabel(localisedStringsToInternationalString("a",lang), lang);
-            String attributeLabel = "test";
+            String attributeLabel = getLabel(localisedStringsToInternationalString(attribute.getTitle()), lang);
             attributesValuesLabels.put(attributeId, attributeLabel);
         }
 
@@ -76,14 +75,21 @@ public class ExportUtils {
     /**
      * Builds a map indexed by attributeId with a map indexed by attributeValueId and value as title of the attribute value
      */
-    public static Map<String, Map<String, String>> buildMapAttributesValuesLabels(List<AttributeType> attributes, String lang) throws MetamacException {
+    public static Map<String, Map<String, String>> buildMapAttributesValuesLabels(List<MetadataAttributeType> attributes, String lang) throws MetamacException {
         Map<String, Map<String, String>> attributesValuesLabels = new HashMap<String, Map<String, String>>(attributes.size());
-        for (AttributeType attribute : attributes) {
-            String attributeId = attribute.getCode();
-            Map<String, String> attributeValuesLabels;
 
-            // EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
-            attributeValuesLabels = attribute.getValue();
+        for (MetadataAttributeType attribute : attributes) {
+            String attributeId = attribute.getCode();
+            Map<String, String> attributeValuesLabels = attribute.getTitle();
+
+            // EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getTitle();
+            // attributeValuesLabels = new HashMap<String, String>(attributeValues.getValues().size());
+            // for (EnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
+            // String attributeValueId = attributeValue.getId();
+            // String attributeValueLabel = getLabel(attributeValue.getName(), lang);
+            // attributeValuesLabels.put(attributeValueId, attributeValueLabel);
+            // }
+
             attributesValuesLabels.put(attributeId, attributeValuesLabels);
         }
         return attributesValuesLabels;
@@ -99,9 +105,9 @@ public class ExportUtils {
      * If attributes has not attributes values in metadata, returns 'only code'
      * If configuration does not exist for component, returns default configuration
      */
-    public static Map<String, LabelVisualisationModeEnum> buildMapAttributesLabelVisualisationMode(IndicatorSelection indicatorSelection, List<AttributeType> attributes) {
+    public static Map<String, LabelVisualisationModeEnum> buildMapAttributesLabelVisualisationMode(IndicatorSelection indicatorSelection, List<MetadataAttributeType> attributes) {
         Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(attributes.size());
-        for (AttributeType attribute : attributes) {
+        for (MetadataAttributeType attribute : attributes) {
             String attributeId = attribute.getCode();
             LabelVisualisationModeEnum labelVisualisationMode = null;
             labelVisualisationMode = indicatorSelection != null ? indicatorSelection.getAttributeLabelVisualisationModel(attributeId) : null;

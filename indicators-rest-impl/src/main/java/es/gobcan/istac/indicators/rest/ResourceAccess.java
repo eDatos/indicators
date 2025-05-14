@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
@@ -28,7 +29,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttr
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetMetadataBase;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.util.ExportUtils;
 
@@ -75,8 +76,8 @@ public class ResourceAccess {
     private Map<String, Map<String, InternationalString>> dimensionsValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       dimensionsLabelVisualisationMode;
 
-    private List<AttributeType>                           attributesMetadata;
-    private Map<String, AttributeType>                    attributesMetadataMap;
+    private List<MetadataAttributeType>                   attributesMetadata;
+    private Map<String, MetadataAttributeType>            attributesMetadataMap;
     private AttributeType                                 measureAttribute;
     private Map<String, String>                           attributesLabels;
     private Map<String, Map<String, String>>              attributesValuesCurrentLocaleLabels;
@@ -110,7 +111,7 @@ public class ResourceAccess {
         this.lang = lang;
 
         initializeDimensions(indicator);
-        initializeAttributes(data, indicatorData.getAttribute(), indicatorSelection);
+        initializeAttributes(data, indicator.getAttribute(), indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
@@ -145,7 +146,7 @@ public class ResourceAccess {
         return lang;
     }
 
-    public List<AttributeType> getAttributesMetadata() {
+    public List<MetadataAttributeType> getAttributesMetadata() {
         return attributesMetadata;
     }
 
@@ -193,7 +194,7 @@ public class ResourceAccess {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
     }
 
-    public List<String> getDimensionsAttributeOrderedForData(AttributeType attribute) {
+    public List<String> getDimensionsAttributeOrderedForData(MetadataAttributeType attribute) {
         List<String> allDimensionsOrderedForData = getDimensionsOrderedForData();
         // FIXME
         // if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
@@ -253,20 +254,20 @@ public class ResourceAccess {
      *
      * @param data
      */
-    private void initializeAttributes(Data data, List<Map<String, AttributeType>> attributes, IndicatorSelection indicatorSelection) throws MetamacException {
+    private void initializeAttributes(Data data, Map<String, MetadataAttributeType> attributes, IndicatorSelection indicatorSelection) throws MetamacException {
 
         attributesMetadata = indicatorAttributesToListAttributes(attributes);
 
-        Map<String, AttributeType> attributesMetadataMap = new HashMap<String, AttributeType>();
+        Map<String, MetadataAttributeType> attributesMetadataMap = new HashMap<String, MetadataAttributeType>();
 
         // Attribute Instances
         attributesValuesByAttributeId = new HashMap<String, String[]>(attributesMetadata.size());
 
-        for (AttributeType attribute : attributesMetadata) {
+        for (MetadataAttributeType attribute : attributesMetadata) {
             if (data.getAttributes() != null) {
                 for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
                     if (dataAttribute.getId().contains(attribute.getCode())) {
-                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(localisedStringsToDefaultString(attribute.getValue())));
+                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(localisedStringsToDefaultString(attribute.getTitle())));
                     }
                 }
             }
@@ -279,8 +280,7 @@ public class ResourceAccess {
         this.attributesMetadataMap = attributesMetadataMap;
         attributesLabelVisualisationMode = buildMapAttributesLabelVisualisationMode(indicatorSelection, attributesMetadata);
         attributesValuesCurrentLocaleLabels = buildMapAttributesValuesLabels(attributesMetadata, lang);
-        // attributesValuesLabels = buildMapAttributesValuesLocalisedLabels(attributesMetadata);
-        attributesLabels = buildMapAttributesLabels(attributesMetadata, lang);
+        attributesLabels = buildMapAttributesLabels(attributesMetadata, lang); // OK revisado
     }
 
     private int calculateNonEmptyCount(String[] strings) {
@@ -482,11 +482,10 @@ public class ResourceAccess {
 
     // ... and we'll have the multipliers stored for attributes at DIMENSION or combinated DIMENSION attachment level
     private void initializeMultipliersAttributes() {
-        for (AttributeType attribute : attributesMetadata) {
-            // FIXME
-            // if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-            // continue;
-            // }
+        for (MetadataAttributeType attribute : attributesMetadata) {
+            if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+                continue;
+            }
             multipliersByAttribute.put(attribute.getCode(), new HashMap<String, Integer>());
             // FIXME
             // List<AttributeDimension> dimensions = attribute.getDimensions().getDimensions();
@@ -716,16 +715,10 @@ public class ResourceAccess {
         return codeRepresentations;
     }
 
-    private static List<AttributeType> indicatorAttributesToListAttributes(List<Map<String, AttributeType>> attributes) {
-        List<AttributeType> listAttribute = new ArrayList<>();
-        for (Map<String, AttributeType> attributeTypeMap : attributes) {
-            if (attributeTypeMap == null || attributeTypeMap.isEmpty()) {
-                continue;
-            }
-
-            for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
-                listAttribute.add(entry.getValue());
-            }
+    private static List<MetadataAttributeType> indicatorAttributesToListAttributes(Map<String, MetadataAttributeType> attributes) {
+        List<MetadataAttributeType> listAttribute = new ArrayList<>();
+        for (Map.Entry<String, MetadataAttributeType> metadataAttributeTypeMap : attributes.entrySet()) {
+            listAttribute.add(metadataAttributeTypeMap.getValue());
         }
         return listAttribute;
     }
