@@ -40,8 +40,8 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
         String currentLocale = getCurrentLocale(request);
         model.put("locale", currentLocale);
-        fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
-        fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
+        fillOptionalAppStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
+        fillOptionalAppStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
 
         super.doRender(model, request, response);
     }
@@ -50,9 +50,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
     }
 
-    private void fillOptionalApiStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalAppStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
         try {
-            model.put("apiStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleFooterUrl() + "?" + urlQueryParams));
+            model.put("appStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveAppStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -60,9 +60,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalApiStyleHeaderUrl(Map<String, Object> model, String urlQueryParams) throws IOException {
+    private void fillOptionalAppStyleHeaderUrl(Map<String, Object> model, String urlQueryParams) throws IOException {
         try {
-            model.put("apiStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleHeaderUrl() + "?" + urlQueryParams));
+            model.put("appStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveAppStyleHeaderUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -73,8 +73,10 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private String getLocaleQueryParam(Map<String, Object> model, String locale) {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
-        String appVersion = resourceBundle.getString("app.version"); 
-        String result = String.format("appId=%s&appVersion=%s", "indicators-external", appVersion);
+        String appVersion = resourceBundle.getString("app.version");
+        // TODO: pendiente ver cómo obtener el appName
+        String appName = "TODO";
+        String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, appName);
         if (StringUtils.isNotBlank(internationalizationUrlParamId)) {
            result = result.concat(String.format("&%s=%s", internationalizationUrlParamId, locale));
         }
