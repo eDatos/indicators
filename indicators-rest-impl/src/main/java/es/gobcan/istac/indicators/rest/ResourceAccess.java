@@ -20,24 +20,18 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttribute;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DatasetMetadataBase;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.EnumeratedDimensionValues;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
+import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
@@ -55,21 +49,11 @@ public class ResourceAccess {
     private IndicatorSelection                            indicatorSelection;
     private String                                        lang;
     private Data                                          data;
-    private Dimensions                                    dimensions;
-    private Attributes                                    attributes;
-
-    private String                                        name;
-    private DatasetMetadataBase                           metadata;
-    private DataStructureDefinition                       relatedDsd;
-    private String                                        urn;
-    private String                                        id;
-    private String                                        uniqueId;
-    private InternationalString                           description;
 
     // Metadata
     private Map<String, MetadataDimensionType>            dimensionsMetadata;
     private Map<String, MetadataDimensionType>            dimensionsMetadataMap;
-    private Dimension                                     measureDimension;
+
     private Map<String, String>                           dimensionLabelsCurrentLocale;
     private Map<String, String>                           dimensionLabelsDefaultLocale;
     private Map<String, Map<String, String>>              dimensionsValuesCurrentLocaleLabels;
@@ -81,7 +65,6 @@ public class ResourceAccess {
     private AttributeType                                 measureAttribute;
     private Map<String, String>                           attributesLabels;
     private Map<String, Map<String, String>>              attributesValuesCurrentLocaleLabels;
-    // private Map<String, Map<String, InternationalString>> attributesValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       attributesLabelVisualisationMode;
 
     // Data
@@ -111,7 +94,7 @@ public class ResourceAccess {
         this.lang = lang;
 
         initializeDimensions(indicator);
-        initializeAttributes(data, indicator.getAttribute(), indicatorSelection);
+        initializeAttributes(data, indicator.getAttribute(), indicatorData, indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
@@ -126,32 +109,12 @@ public class ResourceAccess {
         return data;
     }
 
-    public Dimensions getDimensions() {
-        return dimensions;
-    }
-
-    public Attributes getAttributes() {
-        return attributes;
-    }
-
-    public DatasetMetadataBase getMetadata() {
-        return metadata;
-    }
-
-    public String getId() {
-        return id;
-    }
-
     public String getLang() {
         return lang;
     }
 
     public List<MetadataAttributeType> getAttributesMetadata() {
         return attributesMetadata;
-    }
-
-    public Dimension getMeasureDimension() {
-        return measureDimension;
     }
 
     public String getDimensionLabelCurrentLocale(String dimensionId) {
@@ -197,7 +160,7 @@ public class ResourceAccess {
     public List<String> getDimensionsAttributeOrderedForData(MetadataAttributeType attribute) {
         List<String> allDimensionsOrderedForData = getDimensionsOrderedForData();
         // FIXME
-        // if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+        // if (AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
         // List<String> dimensionsAttribute = new ArrayList<String>();
         // for (AttributeDimension attributeDimension : attribute.getDimensions().getDimensions()) {
         // dimensionsAttribute.add(attributeDimension.getDimensionId());
@@ -209,7 +172,7 @@ public class ResourceAccess {
         // }
         // }
         // return dimensionsAttributeOrdered;
-        // } else if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+        // } else if (AttributeAttachmentLevelEnumType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
         // return allDimensionsOrderedForData;
         // } else {
         // throw new IllegalArgumentException("Attribute attachement level unsupported in this operation: " + attribute.getAttachmentLevel());
@@ -254,7 +217,7 @@ public class ResourceAccess {
      *
      * @param data
      */
-    private void initializeAttributes(Data data, Map<String, MetadataAttributeType> attributes, IndicatorSelection indicatorSelection) throws MetamacException {
+    private void initializeAttributes(Data data, Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection) throws MetamacException {
 
         attributesMetadata = indicatorAttributesToListAttributes(attributes);
 
@@ -264,13 +227,24 @@ public class ResourceAccess {
         attributesValuesByAttributeId = new HashMap<String, String[]>(attributesMetadata.size());
 
         for (MetadataAttributeType attribute : attributesMetadata) {
+
             if (data.getAttributes() != null) {
                 for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
                     if (dataAttribute.getId().contains(attribute.getCode())) {
-                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(localisedStringsToDefaultString(attribute.getTitle())));
+                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(dataAttribute.getValue()));
                     }
                 }
             }
+
+            // if (indicatorData.getAttribute() != null) {
+            // for (Map<String, AttributeType> attributeTypeMap : indicatorData.getAttribute()) {
+            // for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
+            // if (entry.getKey().equals(attribute.getCode())) {
+            // attributesValuesByAttributeId.put(attribute.getCode(), entry.getValue().getValue().keySet().toArray(new String[0]));
+            // }
+            // }
+            // }
+            // }
 
             // Attributes Metadata Map
             attributesMetadataMap.put(attribute.getCode(), attribute);
@@ -483,7 +457,7 @@ public class ResourceAccess {
     // ... and we'll have the multipliers stored for attributes at DIMENSION or combinated DIMENSION attachment level
     private void initializeMultipliersAttributes() {
         for (MetadataAttributeType attribute : attributesMetadata) {
-            if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+            if (!AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
                 continue;
             }
             multipliersByAttribute.put(attribute.getCode(), new HashMap<String, Integer>());
@@ -566,38 +540,6 @@ public class ResourceAccess {
     // String attributeValue = attributesValuesByAttributeId.get(attributeKey)[offset];
     // return attributesValuesLabels.get(attributeKey).get(attributeValue);
     // }
-
-    private Integer calculateOffsetDimensionValueId(String dimensionValueId, String attributeKey) {
-        Integer offset = null;
-        if (multipliersByAttribute.containsKey(attributeKey)) {
-            Map<String, String> permutation = new HashMap<>();
-            permutation.put(measureDimension.getId(), dimensionValueId);
-            offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attributeKey));
-        }
-        return offset;
-    }
-
-    public boolean existsContVariable() {
-        return getMeasureDimension() != null;
-    }
-
-    public List<EnumeratedDimensionValue> getSelectedValuesForMeasureDimension() {
-        List<EnumeratedDimensionValue> result = new ArrayList<>();
-
-        Dimension measureDimension = getMeasureDimension();
-        if (!(measureDimension.getDimensionValues() instanceof EnumeratedDimensionValues)) {
-            return result;
-        }
-
-        // List<String> selectedDimensionValues = datasetSelection.getDimension(measureDimension.getId()).getSelectedDimensionValues();
-        List<String> selectedDimensionValues = null;
-        for (EnumeratedDimensionValue dimensionValue : ((EnumeratedDimensionValues) measureDimension.getDimensionValues()).getValues()) {
-            if (selectedDimensionValues.contains(dimensionValue.getId())) {
-                result.add(dimensionValue);
-            }
-        }
-        return result;
-    }
 
     private InternationalString prepareQuantityInternationalString(InternationalString unitMeasure, InternationalString unitMultiplier) {
         InternationalString result = null;

@@ -11,7 +11,6 @@ import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOrderingStackElement;
@@ -19,6 +18,7 @@ import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
+import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 
 public class PlainTextExporter {
@@ -110,10 +110,9 @@ public class PlainTextExporter {
         }
         header.append(HEADER_OBSERVATION);
         for (MetadataAttributeType attribute : resourceAccess.getAttributesMetadata()) {
-            // FIXME ¿Necesario el attachmentLevel?
-            // if (!AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-            // continue; // only observation attachment level
-            // }
+            if (!AttributeAttachmentLevelEnumType.OBSERVATION.equals(attribute.getAttachmentLevel())) {
+                continue; // only observation attachment level
+            }
             String attributeId = attribute.getCode();
             LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
             if (labelVisualisation.isLabel() || labelVisualisation.isCode()) {
@@ -156,9 +155,9 @@ public class PlainTextExporter {
 
                 // Attributes
                 for (MetadataAttributeType attribute : resourceAccess.getAttributesMetadata()) {
-                    // if (!AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-                    // continue; // only observation attachment level
-                    // }
+                    if (!AttributeAttachmentLevelEnumType.OBSERVATION.equals(attribute.getAttachmentLevel())) {
+                        continue; // only observation attachment level
+                    }
 
                     String attributeId = attribute.getCode();
                     String attributeValue = resourceAccess.measureAttributeValueAtPermutation(attributeId, permutationAtCell);
@@ -204,10 +203,9 @@ public class PlainTextExporter {
 
     private void writeBodyForPlainTextAttributesDataset(PrintWriter printWriter, List<MetadataAttributeType> attributes, int numberOfColumnsToAttributeValue) {
         for (MetadataAttributeType attribute : attributes) {
-            // FIXME if??
-            // if (!AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
-            // continue;
-            // }
+            if (!AttributeAttachmentLevelEnumType.DATASET.equals(attribute.getAttachmentLevel())) {
+                continue;
+            }
             String attributeId = attribute.getCode();
             String[] attributeValues = resourceAccess.getAttributeValues(attributeId);
             if (attributeValues == null) {
@@ -236,8 +234,7 @@ public class PlainTextExporter {
 
     private void writeBodyForPlainTextAttributesDimensions(PrintWriter printWriter, List<MetadataAttributeType> attributes, int numberOfColumnsToAttributeValue) {
         for (MetadataAttributeType attribute : attributes) {
-            // FIXME if??
-            if (!AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+            if (!AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
                 continue;
             }
             String attributeId = attribute.getCode();
@@ -345,7 +342,7 @@ public class PlainTextExporter {
     private int guessNumberOfColumnsToAttributeValue() {
         for (MetadataAttributeType attribute : resourceAccess.getAttributesMetadata()) {
 
-            if (!AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel()) && AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+            if (!AttributeAttachmentLevelEnumType.DATASET.equals(attribute.getAttachmentLevel()) && AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
                 continue;
             }
             String attributeId = attribute.getCode();
