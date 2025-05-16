@@ -4,6 +4,7 @@ import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.FIXED_DI
 import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.LEFT_DIMENSIONS_START_POSITION;
 import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.TOP_DIMENSIONS_START_POSITION;
 import static es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum.CODE_AND_LABEL;
+import static es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum.LABEL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,8 +153,10 @@ public class IndicatorSelectionMapper {
         List<IndicatorSelectionAttribute> indicatorSelectionAttributes = new ArrayList<IndicatorSelectionAttribute>();
 
         for (Map<String, AttributeType> attributeTypeMap : attributes) {
-            for (Map.Entry<String, AttributeType> attributeTypeEntry : attributeTypeMap.entrySet()) {
-                indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(attributeTypeEntry, selectionAttributesMap));
+            if (attributeTypeMap != null) {
+                for (Map.Entry<String, AttributeType> attributeTypeEntry : attributeTypeMap.entrySet()) {
+                    indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(attributeTypeEntry, selectionAttributesMap));
+                }
             }
         }
 
@@ -164,7 +167,7 @@ public class IndicatorSelectionMapper {
         // IndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(attributeMap.getKey()) : null;
         IndicatorSelectionAttribute selectionAttribute = new IndicatorSelectionAttribute(attributeMap.getKey());
         // Default values
-        LabelVisualisationModeEnum labelVisualizationMode = CODE_AND_LABEL;
+        LabelVisualisationModeEnum labelVisualizationMode = LABEL;
 
         selectionAttribute.setLabelVisualisationMode(labelVisualizationMode);
 

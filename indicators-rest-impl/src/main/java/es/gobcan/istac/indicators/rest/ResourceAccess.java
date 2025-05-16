@@ -8,6 +8,8 @@ import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimension
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionToMapDimensionsLabelVisualisationMode;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapDimensionsValuesLabels;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.dataToDataArray;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.getLabel;
+import static es.gobcan.istac.indicators.rest.util.ExportUtils.localisedStringsToInternationalString;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -19,7 +21,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
@@ -27,7 +28,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttr
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.MeasureQuantity;
 
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
@@ -38,7 +38,6 @@ import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
-import es.gobcan.istac.indicators.rest.util.ExportUtils;
 
 public class ResourceAccess {
 
@@ -117,9 +116,10 @@ public class ResourceAccess {
         return attributesMetadata;
     }
 
-    public String getDimensionLabelCurrentLocale(String dimensionId) {
-        return dimensionLabelsCurrentLocale.get(dimensionId);
-    }
+    // FIXME: NO USAGE
+    // public String getDimensionLabelCurrentLocale(String dimensionId) {
+    // return dimensionLabelsCurrentLocale.get(dimensionId);
+    // }
 
     public String getDimensionValueLabelCurrentLocale(String dimensionId, String dimensionValueId) {
         return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
@@ -228,23 +228,25 @@ public class ResourceAccess {
 
         for (MetadataAttributeType attribute : attributesMetadata) {
 
-            if (data.getAttributes() != null) {
-                for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
-                    if (dataAttribute.getId().contains(attribute.getCode())) {
-                        attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(dataAttribute.getValue()));
+            // if (data.getAttributes() != null) {
+            // for (DataAttribute dataAttribute : data.getAttributes().getAttributes()) {
+            // if (dataAttribute.getId().contains(attribute.getCode())) {
+            // attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(dataAttribute.getValue()));
+            // }
+            // }
+            // }
+
+            if (indicatorData.getAttribute() != null) {
+                for (Map<String, AttributeType> attributeTypeMap : indicatorData.getAttribute()) {
+                    if (attributeTypeMap != null) {
+                        for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
+                            if (entry.getKey().equals(attribute.getCode())) {
+                                attributesValuesByAttributeId.put(attribute.getCode(), dataToDataArray(getLabel(localisedStringsToInternationalString(entry.getValue().getValue()), lang)));
+                            }
+                        }
                     }
                 }
             }
-
-            // if (indicatorData.getAttribute() != null) {
-            // for (Map<String, AttributeType> attributeTypeMap : indicatorData.getAttribute()) {
-            // for (Map.Entry<String, AttributeType> entry : attributeTypeMap.entrySet()) {
-            // if (entry.getKey().equals(attribute.getCode())) {
-            // attributesValuesByAttributeId.put(attribute.getCode(), entry.getValue().getValue().keySet().toArray(new String[0]));
-            // }
-            // }
-            // }
-            // }
 
             // Attributes Metadata Map
             attributesMetadataMap.put(attribute.getCode(), attribute);
@@ -257,18 +259,19 @@ public class ResourceAccess {
         attributesLabels = buildMapAttributesLabels(attributesMetadata, lang); // OK revisado
     }
 
-    private int calculateNonEmptyCount(String[] strings) {
-        if (strings == null) {
-            return 0;
-        }
-        int totalNonEmpty = 0;
-        for (int i = 0; i < strings.length; i++) {
-            if (StringUtils.isNotBlank(strings[i])) {
-                totalNonEmpty++;
-            }
-        }
-        return totalNonEmpty;
-    }
+    // FIXME: NO USAGE
+    // private int calculateNonEmptyCount(String[] strings) {
+    // if (strings == null) {
+    // return 0;
+    // }
+    // int totalNonEmpty = 0;
+    // for (int i = 0; i < strings.length; i++) {
+    // if (StringUtils.isNotBlank(strings[i])) {
+    // totalNonEmpty++;
+    // }
+    // }
+    // return totalNonEmpty;
+    // }
 
     /**
      * Init observations values
@@ -295,33 +298,33 @@ public class ResourceAccess {
             }
         }
     }
-
-    public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
-        // Visualisation mode
-        LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-        switch (labelVisualisation) {
-            case CODE:
-                // no extra action
-                break;
-            case LABEL: {
-                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-                if (attributeValueLabel != null) {
-                    attributeValue = attributeValueLabel;
-                }
-            }
-                break;
-            case CODE_AND_LABEL: {
-                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-                if (attributeValueLabel != null) {
-                    attributeValue = attributeValueLabel + " (" + attributeValue + ")";
-                }
-            }
-                break;
-            default:
-                break;
-        }
-        return attributeValue;
-    }
+    // FIXME:NO USAGE
+    // public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
+    // // Visualisation mode
+    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
+    // switch (labelVisualisation) {
+    // case CODE:
+    // // no extra action
+    // break;
+    // case LABEL: {
+    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+    // if (attributeValueLabel != null) {
+    // attributeValue = attributeValueLabel;
+    // }
+    // }
+    // break;
+    // case CODE_AND_LABEL: {
+    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+    // if (attributeValueLabel != null) {
+    // attributeValue = attributeValueLabel + " (" + attributeValue + ")";
+    // }
+    // }
+    // break;
+    // default:
+    // break;
+    // }
+    // return attributeValue;
+    // }
 
     /**
      * Retrieve the observation for a specific key <param>permutation</param>
@@ -348,97 +351,98 @@ public class ResourceAccess {
         }
         return attributeValue;
     }
+    // FIXME: NO USAGE
+    // public String obtainAttributeValue(String attributeId, int offset) {
+    // String[] attributeValues = getAttributeValues(attributeId);
+    // String attributeValue = null;
+    // if (attributeValues != null) {
+    // attributeValue = attributeValues[offset];
+    // attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
+    // }
+    // return attributeValue;
+    // }
+    // FIXME: NO USAGE
+    // public String applyLabelVisualizationModeForAttribute(String attributeId) {
+    // // Visualisation mode
+    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
+    // String resultText = null;
+    // switch (labelVisualisation) {
+    // case CODE:
+    // resultText = attributeId;
+    // break;
+    // case LABEL: {
+    // String attributeLabel = getAttributeLabel(attributeId);
+    // if (attributeLabel != null) {
+    // resultText = attributeLabel;
+    // }
+    // }
+    // break;
+    // case CODE_AND_LABEL: {
+    // String attributeLabel = getAttributeLabel(attributeId);
+    // if (attributeLabel != null) {
+    // resultText = attributeLabel + " (" + attributeId + ")";
+    // }
+    // }
+    // break;
+    // default:
+    // break;
+    // }
+    // return resultText;
+    // }
+    // FIXME: NO USAGE
+    // public String applyLabelVisualizationModeForDimension(String dimensionId) {
+    // LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
+    // String resultText = null;
+    // switch (labelVisualisation) {
+    // case CODE:
+    // resultText = dimensionId;
+    // break;
+    // case LABEL: {
+    // String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
+    // if (dimensionValueLabel != null) {
+    // resultText = dimensionValueLabel;
+    // }
+    // }
+    // break;
+    // case CODE_AND_LABEL: {
+    // String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
+    // if (dimensionValueLabel != null) {
+    // resultText = dimensionValueLabel + " (" + dimensionId + ")";
+    // }
+    // }
+    // break;
+    // default:
+    // break;
+    // }
+    // return resultText;
+    // }
 
-    public String obtainAttributeValue(String attributeId, int offset) {
-        String[] attributeValues = getAttributeValues(attributeId);
-        String attributeValue = null;
-        if (attributeValues != null) {
-            attributeValue = attributeValues[offset];
-            attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
-        }
-        return attributeValue;
-    }
-
-    public String applyLabelVisualizationModeForAttribute(String attributeId) {
-        // Visualisation mode
-        LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-        String resultText = null;
-        switch (labelVisualisation) {
-            case CODE:
-                resultText = attributeId;
-                break;
-            case LABEL: {
-                String attributeLabel = getAttributeLabel(attributeId);
-                if (attributeLabel != null) {
-                    resultText = attributeLabel;
-                }
-            }
-                break;
-            case CODE_AND_LABEL: {
-                String attributeLabel = getAttributeLabel(attributeId);
-                if (attributeLabel != null) {
-                    resultText = attributeLabel + " (" + attributeId + ")";
-                }
-            }
-                break;
-            default:
-                break;
-        }
-        return resultText;
-    }
-
-    public String applyLabelVisualizationModeForDimension(String dimensionId) {
-        LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
-        String resultText = null;
-        switch (labelVisualisation) {
-            case CODE:
-                resultText = dimensionId;
-                break;
-            case LABEL: {
-                String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
-                if (dimensionValueLabel != null) {
-                    resultText = dimensionValueLabel;
-                }
-            }
-                break;
-            case CODE_AND_LABEL: {
-                String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
-                if (dimensionValueLabel != null) {
-                    resultText = dimensionValueLabel + " (" + dimensionId + ")";
-                }
-            }
-                break;
-            default:
-                break;
-        }
-        return resultText;
-    }
-
-    public String applyLabelVisualizationModeForDimensionValue(String dimensionId, String dimensionValueId) {
-        LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
-        switch (labelVisualisation) {
-            case CODE:
-                // no extra action
-                break;
-            case LABEL: {
-                String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
-                if (dimensionValueLabel != null) {
-                    dimensionValueId = dimensionValueLabel;
-                }
-            }
-                break;
-            case CODE_AND_LABEL: {
-                String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
-                if (dimensionValueLabel != null) {
-                    dimensionValueId = dimensionValueLabel + " (" + dimensionValueId + ")";
-                }
-            }
-                break;
-            default:
-                break;
-        }
-        return dimensionValueId;
-    }
+    // FIXME: NO USAGE
+    // public String applyLabelVisualizationModeForDimensionValue(String dimensionId, String dimensionValueId) {
+    // LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
+    // switch (labelVisualisation) {
+    // case CODE:
+    // // no extra action
+    // break;
+    // case LABEL: {
+    // String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
+    // if (dimensionValueLabel != null) {
+    // dimensionValueId = dimensionValueLabel;
+    // }
+    // }
+    // break;
+    // case CODE_AND_LABEL: {
+    // String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
+    // if (dimensionValueLabel != null) {
+    // dimensionValueId = dimensionValueLabel + " (" + dimensionValueId + ")";
+    // }
+    // }
+    // break;
+    // default:
+    // break;
+    // }
+    // return dimensionValueId;
+    // }
 
     // We´ll have the "multipliers" variable, used for calculating the offset for observations or attributes at PRIMARY_MEASURE attachment level
     private void initializeMultipliers() {
@@ -508,6 +512,7 @@ public class ResourceAccess {
         return offset;
     }
 
+    // FIXME: NO USAGE
     // public InternationalString extractUnitCode(EnumeratedDimensionValue dimensionValue, String unitMeasureKey, String unitMultiplierKey) {
     // Integer offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMeasureKey);
     // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, offset);
@@ -522,16 +527,16 @@ public class ResourceAccess {
     // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, 0);
     // return extractUnitCode(attributeValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
     // }
-
-    private InternationalString extractUnitCode(MeasureQuantity measureQuantity, InternationalString unitMeasureName, InternationalString unitMultiplierName) {
-        if (unitMeasureName == null && measureQuantity != null && measureQuantity.getUnitCode() != null) {
-            unitMeasureName = measureQuantity.getUnitCode().getName();
-        }
-        if (unitMultiplierName == null && measureQuantity != null && measureQuantity.getUnitMultiplier() != null) {
-            unitMultiplierName = measureQuantity.getUnitMultiplier().getName();
-        }
-        return prepareQuantityInternationalString(unitMeasureName, unitMultiplierName);
-    }
+    // FIXME: NO USAGE
+    // private InternationalString extractUnitCode(MeasureQuantity measureQuantity, InternationalString unitMeasureName, InternationalString unitMultiplierName) {
+    // if (unitMeasureName == null && measureQuantity != null && measureQuantity.getUnitCode() != null) {
+    // unitMeasureName = measureQuantity.getUnitCode().getName();
+    // }
+    // if (unitMultiplierName == null && measureQuantity != null && measureQuantity.getUnitMultiplier() != null) {
+    // unitMultiplierName = measureQuantity.getUnitMultiplier().getName();
+    // }
+    // return prepareQuantityInternationalString(unitMeasureName, unitMultiplierName);
+    // }
 
     // private InternationalString getAttributeByDimensionValue(String attributeKey, Integer offset) {
     // if (!attributesValuesByAttributeId.containsKey(attributeKey)) {
@@ -540,38 +545,38 @@ public class ResourceAccess {
     // String attributeValue = attributesValuesByAttributeId.get(attributeKey)[offset];
     // return attributesValuesLabels.get(attributeKey).get(attributeValue);
     // }
-
-    private InternationalString prepareQuantityInternationalString(InternationalString unitMeasure, InternationalString unitMultiplier) {
-        InternationalString result = null;
-
-        if (unitMeasure != null) {
-            result = new InternationalString();
-            for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
-                String lang = unitMeasureLocalisedString.getLang();
-                String unitMeasureLabel = unitMeasureLocalisedString.getValue();
-                String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang);
-
-                String value = unitMeasureLabel;
-                value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";
-
-                LocalisedString localisedString = new LocalisedString();
-                localisedString.setLang(lang);
-                localisedString.setValue(value);
-                result.getTexts().add(localisedString);
-            }
-        } else if (unitMultiplier != null) {
-            result = new InternationalString();
-            for (LocalisedString localisedString : unitMultiplier.getTexts()) {
-                localisedString.setValue("(" + localisedString.getValue() + ")");
-                result.getTexts().add(localisedString);
-            }
-        }
-        return result;
-    }
-
-    public int getPrimaryMeasureAttributesCount() {
-        return primaryMeasureAttributesCount;
-    }
+    // FIXME: NO USAGE
+    // private InternationalString prepareQuantityInternationalString(InternationalString unitMeasure, InternationalString unitMultiplier) {
+    // InternationalString result = null;
+    //
+    // if (unitMeasure != null) {
+    // result = new InternationalString();
+    // for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
+    // String lang = unitMeasureLocalisedString.getLang();
+    // String unitMeasureLabel = unitMeasureLocalisedString.getValue();
+    // String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang);
+    //
+    // String value = unitMeasureLabel;
+    // value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";
+    //
+    // LocalisedString localisedString = new LocalisedString();
+    // localisedString.setLang(lang);
+    // localisedString.setValue(value);
+    // result.getTexts().add(localisedString);
+    // }
+    // } else if (unitMultiplier != null) {
+    // result = new InternationalString();
+    // for (LocalisedString localisedString : unitMultiplier.getTexts()) {
+    // localisedString.setValue("(" + localisedString.getValue() + ")");
+    // result.getTexts().add(localisedString);
+    // }
+    // }
+    // return result;
+    // }
+    // FIXME: NO USAGE
+    // public int getPrimaryMeasureAttributesCount() {
+    // return primaryMeasureAttributesCount;
+    // }
 
     private static String indicatorObservationsToDataObservations(List<String> observation) {
         return String.join(OBSERVATIONS_SEPARATOR, observation);

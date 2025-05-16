@@ -12,7 +12,6 @@ import org.siemac.metamac.statistical_resources.rest.common.StatisticalResources
 
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
-import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
@@ -62,13 +61,11 @@ public class ExportUtils {
      */
     public static Map<String, String> buildMapAttributesLabels(List<MetadataAttributeType> attributes, String lang) throws MetamacException {
         Map<String, String> attributesValuesLabels = new HashMap<String, String>(attributes.size());
-
         for (MetadataAttributeType attribute : attributes) {
             String attributeId = attribute.getCode();
             String attributeLabel = getLabel(localisedStringsToInternationalString(attribute.getTitle()), lang);
             attributesValuesLabels.put(attributeId, attributeLabel);
         }
-
         return attributesValuesLabels;
     }
 
@@ -113,7 +110,7 @@ public class ExportUtils {
             labelVisualisationMode = indicatorSelection != null ? indicatorSelection.getAttributeLabelVisualisationModel(attributeId) : null;
             if (labelVisualisationMode == null) {
                 // default value
-                labelVisualisationMode = LabelVisualisationModeEnum.CODE_AND_LABEL;
+                labelVisualisationMode = LabelVisualisationModeEnum.LABEL;
             }
             labelVisualisationsMode.put(attributeId, labelVisualisationMode);
         }
@@ -149,35 +146,36 @@ public class ExportUtils {
     /**
      * Builds a map indexed by attributeId with a map indexed by attributeValueId and localised value as title of the attribute value
      */
-    public static Map<String, Map<String, InternationalString>> buildMapAttributesValuesLocalisedLabels(List<AttributeType> attributes) throws MetamacException {
-        Map<String, Map<String, InternationalString>> attributesValuesLocalisedLabels = new HashMap<String, Map<String, InternationalString>>(attributes.size());
-        for (AttributeType attribute : attributes) {
-            String attributeId = attribute.getCode();
-            Map<String, InternationalString> attributeValuesLabels = null;
-            // FIXME ......
-            // if (attribute.getAttributeValues() == null) {
-            // attributeValuesLabels = new HashMap<String, InternationalString>();
-            // } else if (attribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
-            // EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
-            // attributeValuesLabels = new HashMap<String, InternationalString>(attributeValues.getValues().size());
-            // for (EnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
-            // String attributeValueId = attributeValue.getId();
-            // attributeValuesLabels.put(attributeValueId, attributeValue.getName());
-            // }
-            // } else if (attribute.getAttributeValues() instanceof NonEnumeratedAttributeValues) {
-            // NonEnumeratedAttributeValues attributeValues = (NonEnumeratedAttributeValues) attribute.getAttributeValues();
-            // attributeValuesLabels = new HashMap<String, InternationalString>(attributeValues.getValues().size());
-            // for (NonEnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
-            // String attributeValueId = attributeValue.getId();
-            // attributeValuesLabels.put(attributeValueId, attributeValue.getName());
-            // }
-            // } else {
-            // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Attribute values unexpected: " + attribute.getAttributeValues().getClass().getCanonicalName());
-            // }
-            attributesValuesLocalisedLabels.put(attributeId, attributeValuesLabels);
-        }
-        return attributesValuesLocalisedLabels;
-    }
+    // FIXME: NO USAGE
+    // public static Map<String, Map<String, InternationalString>> buildMapAttributesValuesLocalisedLabels(List<AttributeType> attributes) throws MetamacException {
+    // Map<String, Map<String, InternationalString>> attributesValuesLocalisedLabels = new HashMap<String, Map<String, InternationalString>>(attributes.size());
+    // for (AttributeType attribute : attributes) {
+    // String attributeId = attribute.getCode();
+    // Map<String, InternationalString> attributeValuesLabels = null;
+    // // FIXME ......
+    // // if (attribute.getAttributeValues() == null) {
+    // // attributeValuesLabels = new HashMap<String, InternationalString>();
+    // // } else if (attribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+    // // EnumeratedAttributeValues attributeValues = (EnumeratedAttributeValues) attribute.getAttributeValues();
+    // // attributeValuesLabels = new HashMap<String, InternationalString>(attributeValues.getValues().size());
+    // // for (EnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
+    // // String attributeValueId = attributeValue.getId();
+    // // attributeValuesLabels.put(attributeValueId, attributeValue.getName());
+    // // }
+    // // } else if (attribute.getAttributeValues() instanceof NonEnumeratedAttributeValues) {
+    // // NonEnumeratedAttributeValues attributeValues = (NonEnumeratedAttributeValues) attribute.getAttributeValues();
+    // // attributeValuesLabels = new HashMap<String, InternationalString>(attributeValues.getValues().size());
+    // // for (NonEnumeratedAttributeValue attributeValue : attributeValues.getValues()) {
+    // // String attributeValueId = attributeValue.getId();
+    // // attributeValuesLabels.put(attributeValueId, attributeValue.getName());
+    // // }
+    // // } else {
+    // // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Attribute values unexpected: " + attribute.getAttributeValues().getClass().getCanonicalName());
+    // // }
+    // attributesValuesLocalisedLabels.put(attributeId, attributeValuesLabels);
+    // }
+    // return attributesValuesLocalisedLabels;
+    // }
 
     public static InternationalString localisedStringsToInternationalString(Map<String, String> localisedStrings) {
         InternationalString internationalString = new InternationalString();

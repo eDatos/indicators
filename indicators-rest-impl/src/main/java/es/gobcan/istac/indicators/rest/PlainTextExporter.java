@@ -154,6 +154,7 @@ public class PlainTextExporter {
                 line.append(escapeString(observation, ESCAPE_IF_NECESSARY));
 
                 // Attributes
+                // FIXME: DESCOMENTAR de momento se queda asi para ir iterando
                 for (MetadataAttributeType attribute : resourceAccess.getAttributesMetadata()) {
                     if (!AttributeAttachmentLevelEnumType.OBSERVATION.equals(attribute.getAttachmentLevel())) {
                         continue; // only observation attachment level
@@ -167,10 +168,13 @@ public class PlainTextExporter {
                     } else {
                         LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
                         if (labelVisualisation.isLabel()) {
-                            String attributeValueLabel = resourceAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-                            line.append(attributeValueLabel != null
-                                    ? plainTextTypeEnum.getSeparator() + escapeString(attributeValueLabel, ESCAPE_IF_NECESSARY)
-                                    : plainTextTypeEnum.getSeparator() + escapeString(attributeValue, ESCAPE_IF_NECESSARY));
+
+                            // String attributeValueLabel = resourceAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+                            // line.append(attributeValueLabel != null
+                            // ? plainTextTypeEnum.getSeparator() + escapeString(attributeValueLabel, ESCAPE_IF_NECESSARY)
+                            // : plainTextTypeEnum.getSeparator() + escapeString(attributeValue, ESCAPE_IF_NECESSARY));
+
+                            line.append(plainTextTypeEnum.getSeparator() + escapeString(attributeValue + "CRISTO", ESCAPE_IF_NECESSARY));
                         }
                         if (labelVisualisation.isCode()) {
                             line.append(plainTextTypeEnum.getSeparator() + escapeString(attributeValue, ESCAPE_IF_NECESSARY));
