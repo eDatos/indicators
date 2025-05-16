@@ -16,7 +16,7 @@ import org.siemac.metamac.core.common.util.WebUtils;
 import org.siemac.metamac.core.common.util.swagger.SwaggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
@@ -29,11 +29,6 @@ import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
 public class FreeMarkerHelperView extends FreeMarkerView {
 
     private static IndicatorsConfigurationService configurationService;
-
-    /*
-     * @Autowired
-     * private MessageSource messageSource;
-     */
 
     protected Logger                              logger = LoggerFactory.getLogger(getClass());
 
@@ -81,10 +76,13 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
         String appVersion = resourceBundle.getString("app.version");
+        /*
+         * ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+         * messageSource.setBasename("classpath:i18n/rest-messages");
+         * messageSource.setDefaultEncoding("UTF-8");
+         */
 
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:i18n/rest-messages");
-        messageSource.setDefaultEncoding("UTF-8");
+        MessageSource messageSource = (MessageSource) ApplicationContextProvider.getApplicationContext().getBean("messageSource");
         String appName = messageSource.getMessage("api.doc.title", null, locale);
 
         String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, appName.substring(0, 2));
