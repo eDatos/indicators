@@ -44,18 +44,18 @@ public class WebUtils {
         sb.append("miga=");
         StringJoiner labelJoiner = new StringJoiner("|");
         for (Breadcrumb breadcrumb : breadcrumbList.getBreadcrumbs()) {
-            labelJoiner.add(encodeParamValue(breadcrumb.getLabel()));
+            labelJoiner.add(breadcrumb.getLabel());
         }
-        sb.append(labelJoiner.toString());
+        sb.append(encodeParamValue(labelJoiner.toString()));
 
         sb.append("&");
 
         sb.append("enlace=");
         StringJoiner urlJoiner = new StringJoiner("|");
         for (Breadcrumb breadcrumb : breadcrumbList.getBreadcrumbs()) {
-            urlJoiner.add(encodeParamValue(breadcrumb.getUrl()));
+            urlJoiner.add(breadcrumb.getUrl());
         }
-        sb.append(urlJoiner.toString());
+        sb.append(encodeParamValue(urlJoiner.toString()));
 
         return sb.toString();
     }
