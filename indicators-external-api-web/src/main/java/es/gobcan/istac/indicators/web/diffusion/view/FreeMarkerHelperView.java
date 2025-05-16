@@ -84,7 +84,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
          * messageSource.setDefaultEncoding("UTF-8");
          */
 
-        MessageSource messageSource = (MessageSource) ApplicationContextProvider.getApplicationContext().getBean("messageSource");
+        MessageSource messageSource = (MessageSource) getAttributesMap().get("messageSource");
         String appName = messageSource.getMessage("api.doc.title", null, locale);
 
         String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, UriUtils.encodeQueryParam(appName, StandardCharsets.UTF_8.toString()));
