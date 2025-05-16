@@ -78,12 +78,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
         String appVersion = resourceBundle.getString("app.version");
-        /*
-         * ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-         * messageSource.setBasename("classpath:i18n/rest-messages");
-         * messageSource.setDefaultEncoding("UTF-8");
-         */
-
         MessageSource messageSource = (MessageSource) getAttributesMap().get("messageSource");
         String appName = messageSource.getMessage("api.doc.title", null, locale);
 
