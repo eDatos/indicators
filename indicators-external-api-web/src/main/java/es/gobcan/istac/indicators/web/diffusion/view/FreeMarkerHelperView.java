@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.diffusion.view;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
+import org.springframework.web.util.UriUtils;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
@@ -72,7 +74,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private String getLocaleQueryParam(Map<String, Object> model, Locale locale) {
+    private String getLocaleQueryParam(Map<String, Object> model, Locale locale) throws UnsupportedEncodingException {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
         String appVersion = resourceBundle.getString("app.version");
@@ -85,7 +87,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         MessageSource messageSource = (MessageSource) ApplicationContextProvider.getApplicationContext().getBean("messageSource");
         String appName = messageSource.getMessage("api.doc.title", null, locale);
 
-        String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, appName.substring(0, 2));
+        String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, UriUtils.encodeQueryParam(appName, StandardCharsets.UTF_8.toString()));
         if (StringUtils.isNotBlank(internationalizationUrlParamId)) {
             result = result.concat(String.format("&%s=%s", internationalizationUrlParamId, locale));
         }
