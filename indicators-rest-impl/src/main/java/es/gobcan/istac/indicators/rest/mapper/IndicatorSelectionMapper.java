@@ -1,20 +1,11 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.FIXED_DIMENSIONS_START_POSITION;
-import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.LEFT_DIMENSIONS_START_POSITION;
-import static es.gobcan.istac.indicators.rest.domain.IndicatorSelection.TOP_DIMENSIONS_START_POSITION;
 import static es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum.CODE_AND_LABEL;
-import static es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum.LABEL;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response.Status;
-
-import org.siemac.metamac.rest.exception.RestCommonServiceExceptionType;
-import org.siemac.metamac.rest.exception.RestException;
-import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
 
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
@@ -28,48 +19,46 @@ import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 public class IndicatorSelectionMapper {
 
     private static final int MAX_SIZE_URL = 2000;
-
-    public static IndicatorSelection toIndicatorSelection(IndicatorSelection source) throws Exception {
-        List<IndicatorSelectionDimension> dimensions = toIndicatorSelectionDimensions(source);
-        List<IndicatorSelectionAttribute> attributes = toIndicatorSelectionAttributes(source);
-        return new IndicatorSelection(dimensions, attributes);
-    }
-
-    private static List<IndicatorSelectionDimension> toIndicatorSelectionDimensions(IndicatorSelection source) throws Exception {
-        if (source == null || source.getDimensions() == null) {
-            return null;
-        }
-        List<IndicatorSelectionDimension> dimensions = new ArrayList<IndicatorSelectionDimension>();
-        // List<IndicatorSelectionDimension> dimensions = new ArrayList<IndicatorSelectionDimension>(source.getDimensions().getDimensions().size());
-        // for (Iterator<IndicatorSelection> iterator = source.getDimensions().getDimensions().iterator(); iterator.hasNext();) {
-        // IndicatorSelection dimensionSource = iterator.next();
-        // IndicatorSelectionDimension target = toIndicatorSelectionDimension(dimensionSource);
-        // dimensions.add(target);
-        // }
-        return dimensions;
-    }
-
-    private static IndicatorSelectionDimension toIndicatorSelectionDimension(IndicatorSelection source) throws Exception {
-        // IndicatorSelectionDimension target = new IndicatorSelectionDimension(source.getDimensionId());
-        // target.setSelectedDimensionValues(source.getDimensionValues().getDimensionValues());
-        // target.setPosition(source.getPosition());
-        // target.setLabelVisualisationMode(toLabelVisualisationMode(source.getLabelVisualisationMode()));
-        // return target;
-        return null;
-    }
-
-    private static List<IndicatorSelectionAttribute> toIndicatorSelectionAttributes(IndicatorSelection source) throws Exception {
-        // if (source == null || source.getAttributes() == null) {
-        // return null;
-        // }
-        // List<IndicatorSelectionAttribute> attributes = new ArrayList<IndicatorSelectionAttribute>(source.getAttributes().getAttributes().size());
-        // for (Iterator<IndicatorSelectionAttribute> iterator = source.getAttributes().getAttributes().iterator(); iterator.hasNext();) {
-        // IndicatorSelectionAttribute attributeSource = iterator.next();
-        // IndicatorSelectionAttribute target = toIndicatorSelectionAttribute(attributeSource);
-        // attributes.add(target);
-        // }
-        return null;
-    }
+    // FIXME: NO USAGE
+    // public static IndicatorSelection toIndicatorSelection(IndicatorSelection source) throws Exception {
+    // List<IndicatorSelectionDimension> dimensions = toIndicatorSelectionDimensions(source);
+    // List<IndicatorSelectionAttribute> attributes = toIndicatorSelectionAttributes(source);
+    // return new IndicatorSelection(dimensions, attributes);
+    // }
+    //
+    // private static List<IndicatorSelectionDimension> toIndicatorSelectionDimensions(IndicatorSelection source) throws Exception {
+    // if (source == null || source.getDimensions() == null) {
+    // return null;
+    // }
+    // List<IndicatorSelectionDimension> dimensions = new ArrayList<IndicatorSelectionDimension>();
+    // // List<IndicatorSelectionDimension> dimensions = new ArrayList<IndicatorSelectionDimension>(source.getDimensions().getDimensions().size());
+    // // for (Iterator<IndicatorSelection> iterator = source.getDimensions().getDimensions().iterator(); iterator.hasNext();) {
+    // // IndicatorSelection dimensionSource = iterator.next();
+    // // IndicatorSelectionDimension target = toIndicatorSelectionDimension(dimensionSource);
+    // // dimensions.add(target);
+    // // }
+    // return dimensions;
+    // }
+    // private static IndicatorSelectionDimension toIndicatorSelectionDimension(IndicatorSelection source) throws Exception {
+    // // IndicatorSelectionDimension target = new IndicatorSelectionDimension(source.getDimensionId());
+    // // target.setSelectedDimensionValues(source.getDimensionValues().getDimensionValues());
+    // // target.setPosition(source.getPosition());
+    // // target.setLabelVisualisationMode(toLabelVisualisationMode(source.getLabelVisualisationMode()));
+    // // return target;
+    // return null;
+    // }
+    // private static List<IndicatorSelectionAttribute> toIndicatorSelectionAttributes(IndicatorSelection source) throws Exception {
+    // // if (source == null || source.getAttributes() == null) {
+    // // return null;
+    // // }
+    // // List<IndicatorSelectionAttribute> attributes = new ArrayList<IndicatorSelectionAttribute>(source.getAttributes().getAttributes().size());
+    // // for (Iterator<IndicatorSelectionAttribute> iterator = source.getAttributes().getAttributes().iterator(); iterator.hasNext();) {
+    // // IndicatorSelectionAttribute attributeSource = iterator.next();
+    // // IndicatorSelectionAttribute target = toIndicatorSelectionAttribute(attributeSource);
+    // // attributes.add(target);
+    // // }
+    // return null;
+    // }
 
     // private static IndicatorSelectionAttribute toIndicatorSelectionAttribute(IndicatorSelectionAttribute source) throws Exception {
     // IndicatorSelectionAttribute target = new IndicatorSelectionAttribute(source.getAttributeId());
@@ -77,22 +66,22 @@ public class IndicatorSelectionMapper {
     // return target;
     // }
 
-    private static LabelVisualisationModeEnum toLabelVisualisationMode(LabelVisualisationModeEnum source) {
-        if (source == null) {
-            return null;
-        }
-        switch (source) {
-            case LABEL:
-                return LabelVisualisationModeEnum.LABEL;
-            case CODE:
-                return LabelVisualisationModeEnum.CODE;
-            case CODE_AND_LABEL:
-                return CODE_AND_LABEL;
-            default:
-                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestCommonServiceExceptionType.UNKNOWN);
-                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // private static LabelVisualisationModeEnum toLabelVisualisationMode(LabelVisualisationModeEnum source) {
+    // if (source == null) {
+    // return null;
+    // }
+    // switch (source) {
+    // case LABEL:
+    // return LabelVisualisationModeEnum.LABEL;
+    // case CODE:
+    // return LabelVisualisationModeEnum.CODE;
+    // case CODE_AND_LABEL:
+    // return CODE_AND_LABEL;
+    // default:
+    // org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestCommonServiceExceptionType.UNKNOWN);
+    // throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+    // }
+    // }
 
     /**
      * @param indicatorDimensions
@@ -153,26 +142,36 @@ public class IndicatorSelectionMapper {
         List<IndicatorSelectionAttribute> indicatorSelectionAttributes = new ArrayList<IndicatorSelectionAttribute>();
 
         for (Map<String, AttributeType> attributeTypeMap : attributes) {
-            if (attributeTypeMap != null) {
+            if (attributeTypeMap == null) {
+                indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(null, null));
+            } else {
                 for (Map.Entry<String, AttributeType> attributeTypeEntry : attributeTypeMap.entrySet()) {
                     indicatorSelectionAttributes.add(attributeToIndicatorSelectionAttribute(attributeTypeEntry, selectionAttributesMap));
                 }
             }
         }
-
         return indicatorSelectionAttributes;
     }
 
     private static IndicatorSelectionAttribute attributeToIndicatorSelectionAttribute(Map.Entry<String, AttributeType> attributeMap, Map<String, IndicatorSelectionAttribute> selectionAttributesMap) {
-        // IndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(attributeMap.getKey()) : null;
-        IndicatorSelectionAttribute selectionAttribute = new IndicatorSelectionAttribute(attributeMap.getKey());
-        // Default values
-        LabelVisualisationModeEnum labelVisualizationMode = LABEL;
+        String id;
+        if (attributeMap == null) {
+            id = "NULL";
+        } else {
+            id = attributeMap.getKey();
+        }
 
+        IndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(id) : null;
+
+        if (selectionAttribute == null) {
+            selectionAttribute = new IndicatorSelectionAttribute(id);
+        }
+
+        // Default values
+        LabelVisualisationModeEnum labelVisualizationMode = LabelVisualisationModeEnum.LABEL;
         selectionAttribute.setLabelVisualisationMode(labelVisualizationMode);
 
         return selectionAttribute;
-
     }
 
     private static List<IndicatorSelectionDimension> dimensionsToIndicatorSelectionDimensions(Map<String, DataDimensionType> indicatorDimensions,
@@ -199,16 +198,16 @@ public class IndicatorSelectionMapper {
         indicatorSelectionDimension.setSelectedDimensionValues(codeRepresentationsToSelectedDimensionValues(dimension.getValue().getRepresentation()));
         return indicatorSelectionDimension;
     }
-
-    private static Integer dataStructureDefinitionToPosition(String id, DataStructureDefinition dataStructureDefinition) {
-        if (dataStructureDefinition.getHeading().getDimensionIds().contains(id)) {
-            return TOP_DIMENSIONS_START_POSITION + dataStructureDefinition.getHeading().getDimensionIds().indexOf(id);
-        } else if (dataStructureDefinition.getStub().getDimensionIds().contains(id)) {
-            return LEFT_DIMENSIONS_START_POSITION + dataStructureDefinition.getStub().getDimensionIds().indexOf(id);
-        } else {
-            return FIXED_DIMENSIONS_START_POSITION;
-        }
-    }
+    // FIXME: NO USAGE
+    // private static Integer dataStructureDefinitionToPosition(String id, DataStructureDefinition dataStructureDefinition) {
+    // if (dataStructureDefinition.getHeading().getDimensionIds().contains(id)) {
+    // return TOP_DIMENSIONS_START_POSITION + dataStructureDefinition.getHeading().getDimensionIds().indexOf(id);
+    // } else if (dataStructureDefinition.getStub().getDimensionIds().contains(id)) {
+    // return LEFT_DIMENSIONS_START_POSITION + dataStructureDefinition.getStub().getDimensionIds().indexOf(id);
+    // } else {
+    // return FIXED_DIMENSIONS_START_POSITION;
+    // }
+    // }
 
     private static List<String> codeRepresentationsToSelectedDimensionValues(DataRepresentationType dataRepresentation) {
         List<String> selectedDimensionValues = new ArrayList<String>();
