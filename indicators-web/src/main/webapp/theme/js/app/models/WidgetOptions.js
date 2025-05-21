@@ -51,11 +51,11 @@
         _bindCalculatedValues: function () {
             this.on("change:style", function () {
                 if (this.get('style') === 'gobcan') {
-                    var width = this.get('sideView') ? 151 : 423;
                     this.set({
                         textColor: this.defaults.textColor,
                         indicatorNameColor: this.defaults.indicatorNameColor,
-                        width: width
+                        widthQuantity: this.get("sideView") ? 151 : 100,
+                        widthUnit: this.get("sideView") ? 'px' : '%'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }

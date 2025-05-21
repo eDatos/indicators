@@ -85,10 +85,14 @@
                 self.model.set('width', value + self.model.get("widthUnit"));
             });
             self.model.on('change:widthUnit', function () {
-                $slider.slider('option', 'min', self._getWidthSlideMin());
-                $slider.slider('option', 'max', self._getWidthSlideMax());
+                var slideMin = self._getWidthSlideMin();
+                var slideMax = self._getWidthSlideMax();
+                $slider.slider('option', 'min', slideMin);
+                $slider.slider('option', 'max', slideMax);
 
-                self.model.set("widthQuantity", self._getWidthSlideDefaultValue())
+                if (self.model.get("widthQuantity") < slideMin || self.model.get("widthQuantity") > slideMax) {
+                    self.model.set("widthQuantity", self._getWidthSlideDefaultValue());
+                }
                 self.model.set('width', self.model.get("widthQuantity") + self.model.get("widthUnit"));
                 $slider.slider('value', self.model.get("widthQuantity"));
             });
