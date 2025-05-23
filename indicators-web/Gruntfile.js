@@ -47,6 +47,7 @@ module.exports = function (grunt) {
         commonPath + '/I18n.js',
 
         widgetsPath + '/src/Istac.js',
+        widgetsPath + '/src/Constants.js',
         widgetsPath + '/src/Helper.js',
         widgetsPath + '/src/Dataset.js',
         widgetsPath + '/src/DatasetRequestBuilder.js',

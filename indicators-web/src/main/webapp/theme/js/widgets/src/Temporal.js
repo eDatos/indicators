@@ -119,14 +119,14 @@
         },
 
         renderChart: function (chartData) {
-            var $chartContainer = $('<div id="' + this.getChartId() + '"></div>');
-            $chartContainer.css('width', this.width - 20);
-            $chartContainer.css('height', 250);
-            this.contentContainer.html($chartContainer);
+            this.$chartContainer = $('<div id="' + this.getChartId() + '"></div>');
+            this.$chartContainer.css('width', this.width - 20);
+            this.$chartContainer.css('height', 250);
+            this.contentContainer.html(this.$chartContainer);
 
             echarts.registerLocale("es", EDatos.common.I18n.translate("ECHARTS", "es"));
             echarts.registerLocale("ca", EDatos.common.I18n.translate("ECHARTS", "ca"));
-            this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
+            this.chart = echarts.init(this.$chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
 
             const self = this;
             const representations = this.timeRepresentations;
@@ -141,6 +141,10 @@
                         show: this.showLabels,
                         hideOverlap: true,
                         rotate: 70,
+                        align: "right",
+                        verticalAlign: "top",
+                        width: 50,
+                        overflow: "truncate",
                         customValues: parsedValues,
                         formatter: function (epoch) {
                             // For some reason, formatter does not receive only the customValues setted before, but also
@@ -183,7 +187,8 @@
                     textStyle: {
                         fontSize: 10
                     },
-                    itemWidth: 16
+                    itemWidth: 16,
+                    itemHeight: Istac.widget.Constants.charts.legend.itemHeight,
                 },
                 animation: false,
                 tooltip: {
@@ -207,6 +212,18 @@
                 },
                 series: chartData.series
             };
+
+
+            var gridBottom = echartsOptions.legend.bottom + (this.showLegend ? this._getLegendHeight() + Istac.widget.Constants.charts.gap : 0);
+
+            var extendedChartOptions = {
+                xAxis: {
+                    axisLabel:{
+                        width: this._getXAxisLabelWidth(this._getChartDomEl().clientHeight - gridBottom - echartsOptions.grid.top) + 20,
+                    }
+                }
+            }
+            Istac.widget.helper.deepExtend(echartsOptions, extendedChartOptions);
 
             if (_.isFinite(chartData.minValue) && _.isFinite(chartData.maxValue)) {
                 if (this.options.scale === "minmax") {
@@ -266,6 +283,18 @@
             if (iString) {
                 return iString[locale] || iString["__default__"];
             }
+        },
+
+        _getXAxisLabelWidth(gridHeight) {
+            return Math.min(Istac.widget.Constants.charts.axis.maxWidth, (gridHeight)/4);
+        },
+
+        _getChartDomEl: function () {
+            return this.$chartContainer ? this.$chartContainer[0] : undefined;
+        },
+
+        _getLegendHeight: function () {
+            return Istac.widget.Constants.charts.legend.itemHeight + Istac.widget.Constants.charts.legend.padding * 2;
         },
     });
 
