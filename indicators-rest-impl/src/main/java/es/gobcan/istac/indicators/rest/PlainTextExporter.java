@@ -1,4 +1,4 @@
-package org.siemac.metamac.portal.core.exporters;
+package es.gobcan.istac.indicators.rest;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -14,7 +14,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOrderingStackElement;
-import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;

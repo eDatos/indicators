@@ -18,7 +18,6 @@ import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 
 public class IndicatorSelectionMapper {
 
-    private static final int MAX_SIZE_URL = 2000;
     // FIXME: NO USAGE
     // public static IndicatorSelection toIndicatorSelection(IndicatorSelection source) throws Exception {
     // List<IndicatorSelectionDimension> dimensions = toIndicatorSelectionDimensions(source);
