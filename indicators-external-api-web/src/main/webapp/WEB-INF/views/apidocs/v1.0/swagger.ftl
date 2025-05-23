@@ -189,6 +189,10 @@
             "$ref": "#/definitions/GeographicalRepresentation"
           },
           "type": "array"
+        },
+        "showCode": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dimensions.properties.showCode' /]",
+          "type": "boolean"
         }
       }
     },
@@ -862,6 +866,10 @@
             "$ref": "#/definitions/MeasureRepresentation"
           },
           "type": "array"
+        },
+        "showCode": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dimensions.properties.showCode' /]",
+          "type": "boolean"
         }
       }
     },
@@ -1057,6 +1065,10 @@
             "$ref": "#/definitions/TimeRepresentation"
           },
           "type": "array"
+        },
+        "showCode": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.dimensions.properties.showCode' /]",
+          "type": "boolean"
         }
       }
     },

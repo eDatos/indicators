@@ -22,6 +22,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimension;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -456,32 +458,35 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 for (int i = 0; i < geographicalCodes.size(); i++) {
                     String geographicalCode = geographicalCodes.get(i);
 
-                    for (int j = 0; j < timeValues.size(); j++) {
-                        String timeValueCode = timeValues.get(j);
+                    if (dataTypeRequest.getGeographicalCodes().size() > i) {
 
-                        for (int k = 0; k < measureValues.size(); k++) {
-                            String measureValueCode = measureValues.get(k);
+                        for (int j = 0; j < timeValues.size(); j++) {
+                            String timeValueCode = timeValues.get(j);
 
-                            // Observation ID: Be careful!!! don't change order of ids
-                            String geographicalValueCode = geographicalCode;
-                            String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
+                            for (int k = 0; k < measureValues.size(); k++) {
+                                String measureValueCode = measureValues.get(k);
 
-                            ObservationDto observationDto = observationMap.get(newId);
-                            if (observationDto == null) {
-                                observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
-                            } else if (observationDto.getPrimaryMeasure() == null) {
-                                observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                                // Observation ID: Be careful!!! don't change order of ids
+                                String geographicalValueCode = geographicalCode;
+                                String newId = dataTypeRequest.getGeographicalCodes().get(i) + "#" + timeValueCode + "#" + measureValueCode;
+
+                                ObservationDto observationDto = observationMap.get(newId);
+                                if (observationDto == null) {
+                                    observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
+                                } else if (observationDto.getPrimaryMeasure() == null) {
+                                    observationDto.setPrimaryMeasure(IndicatorsConstants.DOT_1_NOT_APPLICABLE);
+                                }
+
+                                // PRIMARY MEASURE
+                                observations.add(observationDto.getPrimaryMeasure());
+
+                                // ATTRIBUTES
+                                if (includeObservationMetadata) {
+                                    ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
+                                    attributes.add(setObservationAttributes(observationExtendedDto));
+                                }
+
                             }
-
-                            // PRIMARY MEASURE
-                            observations.add(observationDto.getPrimaryMeasure());
-
-                            // ATTRIBUTES
-                            if (includeObservationMetadata) {
-                                ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
-                                attributes.add(setObservationAttributes(observationExtendedDto));
-                            }
-
                         }
                     }
                 }
@@ -699,10 +704,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throws MetamacException {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+        Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
+        extractMetadataFromDataSource(source.getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), null, dimensionVisualisationShowCodesPreferences);
+
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, srmRestObjectsMapper.getGeographicalCodesByVariableElement());
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, srmRestObjectsMapper.getGeographicalCodesByVariableElement(),
+                dimensionVisualisationShowCodesPreferences);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -715,7 +724,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper, dimensionVisualisationShowCodesPreferences);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES
@@ -733,6 +742,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+        Map<String, MetadataAttributeType> metadataAttributes = new HashMap<>();
+        Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
+        extractMetadataFromDataSource(source.getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), metadataAttributes, dimensionVisualisationShowCodesPreferences);
+
         // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorVersion(source);
         List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorVersion(source);
@@ -740,7 +753,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Map<String, String> geographicalValuesCodes = new HashMap<>();
         geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
-        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
+        MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes, dimensionVisualisationShowCodesPreferences);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
@@ -753,12 +766,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source);
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, srmRestObjectsMapper, dimensionVisualisationShowCodesPreferences);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES
-        Map<String, MetadataAttributeType> metadataAttributes = extractMetadataAttributes(source.getDataSources(), metadataProperties.getDefaultInternationalizationLanguage());
-
         metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
         target.setAttribute(metadataAttributes);
 
@@ -771,26 +782,33 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // DECIMAL PLACES
         target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
     }
-    private Map<String, MetadataAttributeType> extractMetadataAttributes(List<DataSource> dataSources, String defaultLang) throws MetamacException {
-        Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<>();
+
+    private void extractMetadataFromDataSource(List<DataSource> dataSources, String defaultLang, Map<String, MetadataAttributeType> metadataAttributes,
+            Map<String, Boolean> dimensionVisualisationShowCodesPreferences) {
+
+        if (dataSources == null) {
+            return;
+        }
 
         for (DataSource dataSource : dataSources) {
             if (QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
                 String queryUuid = dataSource.getQueryUuid();
                 Attributes metadataAttributesAux = null;
-
+                List<Dimension> dimensions = new ArrayList<>();
                 if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
                     String queryUrn = dataSource.getQueryUrn();
                     Query queryMetadata = statisticalResourceRestExternalFacade.retrieveQueryByUrn(queryUrn, Collections.singletonList(defaultLang),
                             StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
                     metadataAttributesAux = queryMetadata.getMetadata().getAttributes();
+                    dimensions = queryMetadata.getMetadata().getDimensions().getDimensions();
                 } else if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
                     Dataset datasetMetadata = statisticalResourceRestExternalFacade.retrieveDatasetByUrn(queryUuid, Collections.singletonList(defaultLang),
                             StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
                     metadataAttributesAux = datasetMetadata.getMetadata().getAttributes();
+                    dimensions = datasetMetadata.getMetadata().getDimensions().getDimensions();
                 }
 
-                if (metadataAttributesAux != null) {
+                if (metadataAttributes != null && metadataAttributesAux != null) {
                     for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
                         if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
                             MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
@@ -798,9 +816,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         }
                     }
                 }
+
+                if (dimensionVisualisationShowCodesPreferences.isEmpty()) { // the preferences of the first datasource.
+                    dimensionVisualisationShowCodePreferences(dimensions, dimensionVisualisationShowCodesPreferences);
+                }
             }
         }
-        return metadataAttributes;
+    }
+
+    private void dimensionVisualisationShowCodePreferences(List<Dimension> dimensions, Map<String, Boolean> dimensionVisualisationShowCodesPreferences) {
+        for (Dimension dimension : dimensions) {
+            if (DimensionType.GEOGRAPHIC_DIMENSION.equals(dimension.getType())) {
+                dimensionVisualisationShowCodesPreferences.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), dimension.getShowCode());
+            } else if (DimensionType.MEASURE_DIMENSION.equals(dimension.getType())) {
+                dimensionVisualisationShowCodesPreferences.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dimension.getShowCode());
+            }
+        }
     }
 
     private MetadataAttributeType createMetadataAttributeType(Attribute attribute) {
@@ -854,13 +885,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+            Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
+            extractMetadataFromDataSource(source.getIndicator().getDiffusionIndicatorVersion().getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), null,
+                    dimensionVisualisationShowCodesPreferences);
+
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             geoValuesOldVersionCompatibilityUtils.getGeoValuesWithOldCompatibility(geographicalValues);
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes,
+                    dimensionVisualisationShowCodesPreferences);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -873,7 +909,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper());
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper(), dimensionVisualisationShowCodesPreferences);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -889,13 +925,19 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
+            Map<String, MetadataAttributeType> metadataAttributes = new HashMap<>();
+            Map<String, Boolean> dimensionVisualisationShowCodesPreferences = new HashMap<>();
+            extractMetadataFromDataSource(source.getIndicator().getDiffusionIndicatorVersion().getDataSources(), metadataProperties.getDefaultInternationalizationLanguage(), metadataAttributes,
+                    dimensionVisualisationShowCodesPreferences);
+
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
             List<GeographicalValueVO> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
-            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes);
+            MetadataDimensionType geographicaDimension = createGeographicalDimension(geographicalGranularities, geographicalValues, geographicalValuesCodes,
+                    dimensionVisualisationShowCodesPreferences);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
@@ -908,7 +950,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper());
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, new SrmRestObjectsMapper(), dimensionVisualisationShowCodesPreferences);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
 
             // DECIMAL PLACES
@@ -922,9 +964,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
 
             // ATTRIBUTES
-            Map<String, MetadataAttributeType> metadataAttributes = extractMetadataAttributes(source.getIndicator().getDiffusionIndicatorVersion().getDataSources(),
-                    metadataProperties.getDefaultInternationalizationLanguage());
-
             metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF));
             target.setAttribute(metadataAttributes);
 
@@ -937,19 +976,35 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
+    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, SrmRestObjectsMapper srmRestObjectsMapper,
+            Map<String, Boolean> dimensionVisualisationShowCodesPreferences) throws MetamacException {
         MetadataDimensionType measureDimension = new MetadataDimensionType();
         measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
         measureDimension.setRepresentation(measureValueDoToMeasureRepresentationType(measureValues, indicatorVersion, srmRestObjectsMapper));
+
+        Boolean showCodes = dimensionVisualisationShowCodesPreferences.get(IndicatorDataDimensionTypeEnum.MEASURE.name());
+
+        if (showCodes != null) {
+            measureDimension.setShowCode(showCodes);
+        }
+
         return measureDimension;
     }
 
     private MetadataDimensionType createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValueVO> geographicalValues,
-            Map<String, String> geographicalValuesCodes) {
+            Map<String, String> geographicalValuesCodes, Map<String, Boolean> dimensionVisualisationShowCodesPreferences) {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
         geographicaDimension.setRepresentation(geographicalValuesDoToMetadataRepresentationType(geographicalValues, geographicalValuesCodes));
+
+        // if source is not from edatos it will always be null de showCodes.
+        Boolean showCodes = dimensionVisualisationShowCodesPreferences.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+
+        if (showCodes != null) {
+            geographicaDimension.setShowCode(showCodes);
+        }
+
         return geographicaDimension;
     }
 

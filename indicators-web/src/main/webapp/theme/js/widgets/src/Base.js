@@ -60,8 +60,7 @@
             shadow: true,
             borderRadius: true,
             scale: "natural",
-            showLanguageDropdown: false,
-            showEmbedMoreLink: true
+            showLanguageDropdown: false
         },
 
         _containerTemplate: Handlebars.templates.container,
@@ -171,7 +170,7 @@
         },
 
         setShowEmbedMoreLink: function(showEmbedMoreLink) {
-            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink);
+            this.el.find('.istac-widget-body-allIndicators-text').toggle(showEmbedMoreLink !== undefined ? showEmbedMoreLink : true);
         },
 
         setShowLanguageDropdown: function (showLanguageDropdown) {
@@ -460,15 +459,23 @@
             if (this.afterRenderCallback) {
                 this.afterRenderCallback(this);
             }
+
+            this._unbindEvents();
+            this._bindEvents();
+        },
+
+        _bindEvents: function () {
             var self = this;
             this.el.find('#' + this.getLanguageSelectorId()).on("change", function (event) {
                 self.options.locale = event.target.value;
                 self.init(self.options);
                 self.render();
-            })
+            });
+        },
+
+        _unbindEvents: function () {
+            this.el.find('#' + this.getLanguageSelectorId()).off("change");
         }
-
-
     };
 
 }(window.jQuery, window._));

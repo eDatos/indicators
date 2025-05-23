@@ -14,6 +14,8 @@
 ---- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
 ---- (unaccent is a trusted extension)
 ---- Make sure indicators_bd and indicators_own_bd can use everything in the extensions schema
+-- CREATE extension unaccent WITH SCHEMA extensions;
+
 --GRANT USAGE ON SCHEMA extensions TO public;
 --GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO indicators_bd, indicators_own_bd;
 --
@@ -36,7 +38,12 @@
 --        );
 --END $$;
 --
+-- CREATE SCHEMA extensions;
 --
+---- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
+---- (unaccent is a trusted extension)
+---- Make sure indicators_bd and indicators_own_bd can use everything in the extensions schema
+-- CREATE extension unaccent WITH SCHEMA extensions;
 ---- Make sure indicators_data_bd and indicators_data_own_bd can use everything in the extensions schema
 --GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO indicators_data_bd, indicators_data_own_bd;
 --
@@ -69,6 +76,7 @@
 --
 ---- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
 ---- (unaccent is a trusted extension)
+-- CREATE extension unaccent WITH SCHEMA extensions;
 ---- Make sure indicators_bd and indicators_own_bd can use everything in the extensions schema
 --GRANT USAGE ON SCHEMA extensions TO public;
 --GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO indicators_bd, indicators_own_bd;
@@ -76,9 +84,9 @@
 ---- Include future extensions
 --ALTER DEFAULT PRIVILEGES IN SCHEMA extensions
 --GRANT EXECUTE ON FUNCTIONS TO indicators_bd, indicators_own_bd;
---
---ALTER DEFAULT PRIVILEGES IN SCHEMA extensions
---GRANT USAGE ON TYPES TO indicators_bd, indicators_own_bd;
+
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA extensions
+-- GRANT USAGE ON TYPES TO indicators_bd, indicators_own_bd;
 --
 --DO $$
 --DECLARE
@@ -92,6 +100,12 @@
 --        );
 --END $$;
 --
+---- indicators_data_bd
+--CREATE SCHEMA extensions;
+--
+---- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
+---- (unaccent is a trusted extension)
+-- CREATE extension unaccent WITH SCHEMA extensions;
 --
 ---- Make sure indicators_data_bd and indicators_data_own_bd can use everything in the extensions schema
 --GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO indicators_data_bd, indicators_data_own_bd;
@@ -125,7 +139,8 @@
 --
 ---- Extension 'unaccent' needs to be created, a superuser or user with create privilege should execute the following:
 ---- (unaccent is a trusted extension)
----- Make sure indicators_bd and indicators_own_bd can use everything in the extensions schema
+-- CREATE extension unaccent WITH SCHEMA extensions;
+
 --GRANT USAGE ON SCHEMA extensions TO public;
 --GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA extensions TO istac_indicator_data_ci, istac_indicator_ci;
 --
