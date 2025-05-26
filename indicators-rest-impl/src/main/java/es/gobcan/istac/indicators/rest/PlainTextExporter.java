@@ -14,7 +14,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOrderingStackElement;
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;

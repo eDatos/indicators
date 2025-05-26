@@ -10,7 +10,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;

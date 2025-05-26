@@ -29,7 +29,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttr
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;

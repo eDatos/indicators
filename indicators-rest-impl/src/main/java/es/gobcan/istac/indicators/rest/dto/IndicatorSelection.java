@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.rest.domain;
+package es.gobcan.istac.indicators.rest.dto;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -40,7 +40,7 @@ import es.gobcan.istac.indicators.rest.ExportResourceAccessToPlainText;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.ResourceAccess;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;

@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
 
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelection;
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelectionAttribute;
-import es.gobcan.istac.indicators.rest.domain.IndicatorSelectionDimension;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelectionAttribute;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelectionDimension;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
