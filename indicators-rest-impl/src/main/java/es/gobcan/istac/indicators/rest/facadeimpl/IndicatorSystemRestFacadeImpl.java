@@ -103,8 +103,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             Map<String, List<String>> selectedGranularities) throws MetamacException {
 
         SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
-        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
-        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        srmRestInternalFacade.retrieveCodelistVariableElementInformation(metadataProperties.getDefaultGeographicalCodeListUrn(), srmRestObjectsMapper);
 
         IndicatorInstance indicatorInstance = indicatorsApiService.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
@@ -199,8 +198,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
         SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
         if (fieldsToAdd.contains("+metadata") || fieldsToAdd.contains("+data")) {
-            srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
-            srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+            srmRestInternalFacade.retrieveCodelistVariableElementInformation(metadataProperties.getDefaultGeographicalCodeListUrn(), srmRestObjectsMapper);
         }
 
         GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = getInformationForOldGeographicalValuesCompatibility(instances, result, representation,
@@ -288,8 +286,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     public DataType retrieveIndicatorInstanceDataByCode(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws MetamacException {
         SrmRestObjectsMapper srmRestObjectsMapper = new SrmRestObjectsMapper();
-        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
-        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalFacade.retrieveVariableElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn()));
+        srmRestInternalFacade.retrieveCodelistVariableElementInformation(metadataProperties.getDefaultGeographicalCodeListUrn(), srmRestObjectsMapper);
 
         IndicatorInstance indicatorInstance = getIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 

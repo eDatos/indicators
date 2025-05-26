@@ -14,14 +14,12 @@
 
 .gobcan-style.blue.istac-widget-lastData .istac-widget-title,
 .gobcan-style.blue.istac-widget-temporal .istac-widget-title {
-    height: 20px;
     overflow: hidden;
     color: #ffffff !important;
 }
 
 .gobcan-style.lightBlue.istac-widget-lastData .istac-widget-title,
 .gobcan-style.lightBlue.istac-widget-temporal .istac-widget-title {
-    height: 20px;
     overflow: hidden;
     color: #ffffff !important;
 }

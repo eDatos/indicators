@@ -10,6 +10,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 
+import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
+
 public interface SrmRestInternalFacade {
 
     public static final String BEAN_ID = "srmRestInternalFacade";
@@ -20,6 +22,7 @@ public interface SrmRestInternalFacade {
     public HashMap<String, CategoryResourceInternal> retrieveSrmCategoryResoourcesByCategoryScheme(String categorySchemeUrn) throws MetamacException;
     public Code retrieveCodeOfCodelistByUrn(String codeUrn) throws MetamacException;
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
+    public void retrieveCodelistVariableElementInformation(String codelistUrn, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException;
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException;
 
