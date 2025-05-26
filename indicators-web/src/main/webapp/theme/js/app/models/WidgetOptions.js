@@ -73,6 +73,11 @@
                         headerColor: "#457A0E",
                         titleColor: "#FFFFFF"
                     });
+                } else if (color === "lightBlue") {
+                    this.set({
+                        headerColor: "#C4D0DC",
+                        titleColor: "#333333"
+                    });
                 }
             });
 

@@ -135,6 +135,8 @@
 
             var realWidth = this.options.uwa ? "100%" : options.width;
 
+            this.set('style', options.style);
+            this.set('gobcanStyleColor', options.gobcanStyleColor);
             this.set('textColor', options.textColor);
             this.set('borderColor', options.borderColor);
             this.set('headerColor', options.headerColor);
@@ -148,8 +150,6 @@
             this.set('indicatorSystem', options.indicatorSystem);
             this.set('borderRadius', options.borderRadius);
             this.set('shadow', options.shadow);
-            this.set('style', options.style);
-            this.set('gobcanStyleColor', options.gobcanStyleColor);
             this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.set('showEmbedMoreLink', options.showEmbedMoreLink);
             this.reloadData();
