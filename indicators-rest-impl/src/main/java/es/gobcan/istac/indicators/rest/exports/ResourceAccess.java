@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.rest;
+package es.gobcan.istac.indicators.rest.exports;
 
 import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
 import static es.gobcan.istac.indicators.rest.util.ExportUtils.buildMapAttributesLabelVisualisationMode;

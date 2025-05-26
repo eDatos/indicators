@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.rest;
+package es.gobcan.istac.indicators.rest.exports;
 
 import static org.siemac.metamac.core.common.exception.CommonServiceExceptionType.UNKNOWN;
 

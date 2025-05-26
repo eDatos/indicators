@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.rest;
+package es.gobcan.istac.indicators.rest.exports;
 
 import java.io.OutputStream;
 
