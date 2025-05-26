@@ -54,8 +54,8 @@
                     this.set({
                         textColor: this.defaults.textColor,
                         indicatorNameColor: this.defaults.indicatorNameColor,
-                        widthQuantity: this.get("sideView") ? 151 : 100,
-                        widthUnit: this.get("sideView") ? 'px' : '%'
+                        widthQuantity: 100,
+                        widthUnit: '%'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }
