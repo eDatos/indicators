@@ -1,29 +1,12 @@
 /* Common widget */
 
-.gobcan-style.istac-widget-lastData,
-.gobcan-style.istac-widget-temporal {
-    width: 423px !important;
-
-}
-
-.gobcan-style.istac-widget-lateral {
-    width: 151px !important;
-}
-
-.gobcan-style .istac-widget-body {
-    box-shadow: none !important;
-    border-bottom: none;
-}
-
 .gobcan-style.blue.istac-widget-lateral .istac-widget-title {
-    background: url("../../images/pestana_peke_azul.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
     color: #ffffff !important;
 }
 
 .gobcan-style.lightBlue.istac-widget-lateral .istac-widget-title {
-    background: url("../../images/pestana_peke_lightBlue.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
     color: #ffffff !important;
@@ -42,34 +25,19 @@
 }
 
 .gobcan-style.istac-widget-lateral .istac-widget-footer {
-    background: url("../../images/bajo_peke_caja.gif") no-repeat !important;
     height: 32px;
 }
 
 .gobcan-style.istac-widget-lastData .istac-widget-footer,
 .gobcan-style.istac-widget-temporal .istac-widget-footer {
-    background: url("../../images/bajo_caja.gif") no-repeat !important;
     height: 32px;
-    border: 0;
     width: auto;
 }
 
 .gobcan-style .istac-widget-title {
 }
 
-.gobcan-style .istac-widget-body {
-    border: 0 !important;
-}
-
-.gobcan-style .istac-widget-content,
-.gobcan-style .istac-widget-body-allIndicators {
-    border-left: 1px solid #EBEBEB;
-    border-right: 1px solid #EBEBEB;
-}
-
 .gobcan-style .istac-widget-body-embed {
-    border-left: 1px solid #EBEBEB;
-    border-right: 1px solid #EBEBEB;
     margin: 0;
     padding: 10px;
 }
@@ -127,6 +95,16 @@
     border-right: 1px solid;
     border-bottom: 1px solid;
     border-left: 1px solid;
+}
+
+.istac-widget-content {
+    overflow-x: auto;
+}
+
+/* Temporal Widget*/
+
+.istac-widget-temporal .istac-widget-content {
+    overflow-x: clip;
 }
 
 /* LastData Widget*/

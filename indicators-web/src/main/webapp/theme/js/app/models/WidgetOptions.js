@@ -3,9 +3,6 @@
 
     var validTypes = ["lastData", "temporal", "recent"];
 
-    var CENTRAL_WIDTH = 423;
-    var LATERAL_WIDTH = 266;
-
     App.models.WidgetOptions = Backbone.Model.extend({
 
         initialize: function () {
@@ -15,7 +12,9 @@
         defaults: {
             title: '',
             type: 'lastData', // temporal, lastData, recent
-            width: CENTRAL_WIDTH,
+            width: '100%',
+            widthQuantity: App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH,
+            widthUnit: '%', // or px
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
@@ -52,11 +51,11 @@
         _bindCalculatedValues: function () {
             this.on("change:style", function () {
                 if (this.get('style') === 'gobcan') {
-                    var width = this.get('sideView') ? 151 : 423;
                     this.set({
                         textColor: this.defaults.textColor,
                         indicatorNameColor: this.defaults.indicatorNameColor,
-                        width: width
+                        widthQuantity: 100,
+                        widthUnit: '%'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }
@@ -80,11 +79,19 @@
                         headerColor: "#457A0E",
                         titleColor: "#FFFFFF"
                     });
+                } else if (color === "lightBlue") {
+                    this.set({
+                        headerColor: "#C4D0DC",
+                        titleColor: "#333333"
+                    });
                 }
             });
 
-        }
+        },
 
+        getVisibleOptions: function () {
+            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit']);
+        }
     });
 
 }(window._));
