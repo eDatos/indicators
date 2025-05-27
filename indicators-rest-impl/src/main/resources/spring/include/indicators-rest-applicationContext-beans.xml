@@ -8,7 +8,6 @@
     <context:component-scan base-package="es.gobcan.istac.indicators.rest" />
     
     <bean class="es.gobcan.istac.indicators.rest.spring.JacksonFix" />
-    <!--    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.IndicatorRestFacadeImpl"/>-->
     <bean class="es.gobcan.istac.indicators.rest.jackson.MappingJacksonJsonStatHttpMessageConverter" />
 
 </beans>
