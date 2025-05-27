@@ -34,6 +34,7 @@ public class ExportResourceAccessToPlainText {
 
     // return number of observations + 1 (header row)
     public Long getObservationsNumber(ResourceAccess resourceAccess) {
+        // TODO: EDATOS-5025
         // Long dimensionRows = Long.valueOf(indicatorSelection.getRows());
         // Long dimensionColumns = Long.valueOf(resourceAccess.getColumns());
         // return dimensionRows * dimensionColumns + 1;

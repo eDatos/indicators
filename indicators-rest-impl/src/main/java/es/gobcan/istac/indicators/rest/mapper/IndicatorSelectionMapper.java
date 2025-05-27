@@ -153,23 +153,16 @@ public class IndicatorSelectionMapper {
     }
 
     private static IndicatorSelectionAttribute attributeToIndicatorSelectionAttribute(Map.Entry<String, AttributeType> attributeMap, Map<String, IndicatorSelectionAttribute> selectionAttributesMap) {
-        String id;
-        if (attributeMap == null) {
-            id = "NULL";
-        } else {
-            id = attributeMap.getKey();
-        }
 
-        IndicatorSelectionAttribute selectionAttribute = selectionAttributesMap != null ? selectionAttributesMap.get(id) : null;
+        String id = (attributeMap != null) ? attributeMap.getKey() : null;
+
+        IndicatorSelectionAttribute selectionAttribute = (selectionAttributesMap != null) ? selectionAttributesMap.get(id) : null;
 
         if (selectionAttribute == null) {
             selectionAttribute = new IndicatorSelectionAttribute(id);
         }
 
-        // Default values
-        LabelVisualisationModeEnum labelVisualizationMode = LabelVisualisationModeEnum.LABEL;
-        selectionAttribute.setLabelVisualisationMode(labelVisualizationMode);
-
+        selectionAttribute.setLabelVisualisationMode(LabelVisualisationModeEnum.LABEL);
         return selectionAttribute;
     }
 

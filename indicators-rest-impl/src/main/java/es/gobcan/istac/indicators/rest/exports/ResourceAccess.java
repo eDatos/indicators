@@ -289,33 +289,7 @@ public class ResourceAccess {
             }
         }
     }
-    // FIXME:NO USAGE
-    // public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
-    // // Visualisation mode
-    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-    // switch (labelVisualisation) {
-    // case CODE:
-    // // no extra action
-    // break;
-    // case LABEL: {
-    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-    // if (attributeValueLabel != null) {
-    // attributeValue = attributeValueLabel;
-    // }
-    // }
-    // break;
-    // case CODE_AND_LABEL: {
-    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-    // if (attributeValueLabel != null) {
-    // attributeValue = attributeValueLabel + " (" + attributeValue + ")";
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return attributeValue;
-    // }
+
 
     /**
      * Retrieve the observation for a specific key <param>permutation</param>
@@ -343,13 +317,80 @@ public class ResourceAccess {
         return attributeValue;
     }
 
-    // FIXME: NO USAGE
+    // TODO: EDATOS-5025
+    // public CellCommentDetails attributesAtPermutation(Map<String, String> permutation, String unitMeasure, String unitMultiplier) {
+    // CellCommentDetails cellCommentDetails = new CellCommentDetails();
+    // for (Attribute attribute : getAttributesMetadata()) {
+    // // We handle dataset level attributes elsewhere
+    // if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
+    // continue;
+    // }
+    //
+    // Integer offset = null;
+    // String attributeId = attribute.getId();
+    // // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
+    // if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
+    // continue;
+    // }
+    //
+    // boolean CELL_AT_HEADER = permutation.size() == 1;
+    // boolean CELL_AT_BODY = permutation.size() > 1;
+    // // Observation level attributes (body cell)
+    // if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+    // offset = calculateOffsetAtPermutation(permutation);
+    // } else if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+    // if (attribute.getDimensions() == null) {
+    // continue;
+    // }
+    // boolean singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension = CELL_AT_HEADER && attribute.getDimensions().getDimensions().size() == 1
+    // && permutation.get(attribute.getDimensions().getDimensions().get(0).getDimensionId()) != null;
+    // boolean combinationDimensionLevelAttributeForBodyCell = CELL_AT_BODY && attribute.getDimensions().getDimensions().size() > 1;
+    // if (!(singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension || combinationDimensionLevelAttributeForBodyCell)) {
+    // continue;
+    // }
+    // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attribute.getId()));
+    // }
+    // if (offset != null) {
+    // String attributeValue = obtainAttributeValue(attributeId, offset);
+    // cellCommentDetails.addCommentLine(attributeValue);
+    // }
+    // }
+    // return cellCommentDetails;
+    //
+    // }
+
     // public String obtainAttributeValue(String attributeId, int offset) {
     // String[] attributeValues = getAttributeValues(attributeId);
     // String attributeValue = null;
     // if (attributeValues != null) {
     // attributeValue = attributeValues[offset];
     // attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
+    // }
+    // return attributeValue;
+    // }
+    // public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
+    // // Visualisation mode
+    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
+    // switch (labelVisualisation) {
+    // case CODE:
+    // // no extra action
+    // break;
+    // case LABEL: {
+    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+    // if (attributeValueLabel != null) {
+    // attributeValue = attributeValueLabel;
+    // }
+    // }
+    // break;
+    // case CODE_AND_LABEL: {
+    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+    // if (attributeValueLabel != null) {
+    // attributeValue = attributeValueLabel + " (" + attributeValue + ")";
+    // }
+    // }
+    // break;
+    // default:
+    // break;
     // }
     // return attributeValue;
     // }
@@ -500,7 +541,7 @@ public class ResourceAccess {
         return offset;
     }
 
-    // FIXME: NO USAGE
+    // TODO: EDATOS-5025
     // public InternationalString extractUnitCode(EnumeratedDimensionValue dimensionValue, String unitMeasureKey, String unitMultiplierKey) {
     // Integer offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMeasureKey);
     // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, offset);
@@ -509,12 +550,13 @@ public class ResourceAccess {
     // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, offset);
     // return extractUnitCode(dimensionValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
     // }
-    //
+
     // public InternationalString extractUnitCode(EnumeratedAttributeValue attributeValue, String unitMeasureKey, String unitMultiplierKey) {
     // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, 0);
     // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, 0);
     // return extractUnitCode(attributeValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
     // }
+
     // private InternationalString extractUnitCode(MeasureQuantity measureQuantity, InternationalString unitMeasureName, InternationalString unitMultiplierName) {
     // if (unitMeasureName == null && measureQuantity != null && measureQuantity.getUnitCode() != null) {
     // unitMeasureName = measureQuantity.getUnitCode().getName();
@@ -524,6 +566,17 @@ public class ResourceAccess {
     // }
     // return prepareQuantityInternationalString(unitMeasureName, unitMultiplierName);
     // }
+
+    // private Integer calculateOffsetDimensionValueId(String dimensionValueId, String attributeKey) {
+    // Integer offset = null;
+    // if (multipliersByAttribute.containsKey(attributeKey)) {
+    // Map<String, String> permutation = new HashMap<>();
+    // permutation.put(measureDimension.getId(), dimensionValueId);
+    // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attributeKey));
+    // }
+    // return offset;
+    // }
+
     // private InternationalString getAttributeByDimensionValue(String attributeKey, Integer offset) {
     // if (!attributesValuesByAttributeId.containsKey(attributeKey)) {
     // return null;
