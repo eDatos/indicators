@@ -44,8 +44,16 @@
         </div>
 
         <div>
-            <label>{{ translate "OPTIONS.STYLE.WIDGET_WIDTH" }}<small>(px)</small>:</label>
-            <input type="text" name="width" id="widget-width" class="small" />
+            <label>{{ translate "OPTIONS.STYLE.WIDGET_WIDTH" }}:</label>
+            <input type="number" name="widthQuantity" id="widget-width" class="small"/>
+            <div class="compact-radio-group">
+                <label class="radio">
+                    <input type="radio" name="widthUnit" value="px">px
+                </label>
+                <label class="radio">
+                    <input type="radio" name="widthUnit" value="%">%
+                </label>
+            </div>
         </div>
         <div class="width-slider"></div>
 

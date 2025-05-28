@@ -75,8 +75,6 @@ public interface Do2TypeMapper {
 
     List<GeographicalValueType> geographicalValuesVOToType(List<GeographicalValueVO> geographicalValues);
 
-    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException;
-
     void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils,
             SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException;
 

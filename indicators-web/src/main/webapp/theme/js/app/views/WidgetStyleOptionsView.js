@@ -73,16 +73,47 @@
             var self = this;
             var $slider = this.$(".width-slider");
             $slider.slider({
-                min: 100,
-                max: 700,
-                value: self.model.get('width'),
+                min: self._getWidthSlideMin(),
+                max: self._getWidthSlideMax(),
+                value: this.model.get("widthQuantity"),
                 slide: function (event, ui) {
-                    self.model.set('width', ui.value);
+                    self.model.set("widthQuantity", ui.value);
                 }
             });
-            self.model.on('change:width', function (model, value) {
+            self.model.on('change:widthQuantity', function (model, value) {
                 $slider.slider('value', value);
+                self.model.set('width', value + self.model.get("widthUnit"));
             });
+            self.model.on('change:widthUnit', function () {
+                var slideMin = self._getWidthSlideMin();
+                var slideMax = self._getWidthSlideMax();
+                $slider.slider('option', 'min', slideMin);
+                $slider.slider('option', 'max', slideMax);
+
+                if (self.model.get("widthQuantity") < slideMin || self.model.get("widthQuantity") > slideMax) {
+                    self.model.set("widthQuantity", self._getWidthSlideDefaultValue());
+                }
+                self.model.set('width', self.model.get("widthQuantity") + self.model.get("widthUnit"));
+                $slider.slider('value', self.model.get("widthQuantity"));
+            });
+        },
+
+        _getWidthSlideMin: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PIXEL_VALUE;
+        },
+
+        _getWidthSlideMax: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PERCENTAGE_VALUE
+                : App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PIXEL_VALUE;
+        },
+
+        _getWidthSlideDefaultValue: function () {
+            return this.model.get("widthUnit") === '%'
+                ? App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH
+                : App.constants.WidgetConstants.DEFAULT_PIXEL_WIDTH;
         },
 
         bindColorPicker: function (input, property) {
