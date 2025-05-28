@@ -4,16 +4,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceimpl.util.DataOrderingStackElement;
 import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
@@ -44,50 +41,12 @@ public class PlainTextExporter {
         }
     }
 
-    // FIXME: NO USAGE
-    // public PlainTextExporter(PlainTextTypeEnum plainTextTypeEnum, DatasetBase dataset, IndicatorSelection indicatorSelection, String lang, String langAlternative) throws MetamacException {
-    // resourceAccess = new ResourceAccess(dataset, indicatorSelection, lang, langAlternative);
-    // this.indicatorSelection = indicatorSelection;
-    // this.plainTextTypeEnum = plainTextTypeEnum;
-    // if (this.plainTextTypeEnum == null) {
-    // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Plain Text format is required ");
-    // }
-    // }
-    //
-    // public PlainTextExporter(PlainTextTypeEnum plainTextTypeEnum, QueryBase query, IndicatorSelection indicatorSelection, String lang, String langAlternative) throws MetamacException {
-    // resourceAccess = new ResourceAccess(query, null, indicatorSelection, lang, langAlternative);
-    // this.indicatorSelection = indicatorSelection;
-    // this.plainTextTypeEnum = plainTextTypeEnum;
-    // if (this.plainTextTypeEnum == null) {
-    // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Plain Text format is required ");
-    // }
-    // }
-
     public void writeObservationsAndAttributesWithObservationAttachmentLevel(OutputStream os) throws MetamacException {
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(new OutputStreamWriter(os, Charset.forName("UTF-8")));
             writeHeaderForPlainTextObservations(printWriter);
             writeBodyForPlainTextObservations(printWriter);
-        } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error exporting to " + plainTextTypeEnum.getName());
-        } finally {
-            if (printWriter != null) {
-                printWriter.flush();
-            }
-        }
-    }
-
-    public void writeAttributesWithDatasetAndDimensionAttachmentLevel(OutputStream os) throws MetamacException {
-        PrintWriter printWriter = null;
-        try {
-            printWriter = new PrintWriter(new OutputStreamWriter(os, Charset.forName("UTF-8")));
-
-            int numberOfColumnsToAttributeValue = guessNumberOfColumnsToAttributeValue();
-            writeHeaderForPlainTextAttributes(printWriter, numberOfColumnsToAttributeValue);
-            writeBodyForPlainTextAttributesDataset(printWriter, resourceAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
-            writeBodyForPlainTextAttributesDimensions(printWriter, resourceAccess.getAttributesMetadata(), numberOfColumnsToAttributeValue);
-            // NOTE: Attributes observations are exported another plain text
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error exporting to " + plainTextTypeEnum.getName());
         } finally {
@@ -232,94 +191,6 @@ public class PlainTextExporter {
         }
     }
 
-    private void writeBodyForPlainTextAttributesDimensions(PrintWriter printWriter, List<MetadataAttributeType> attributes, int numberOfColumnsToAttributeValue) {
-        for (MetadataAttributeType attribute : attributes) {
-            if (!AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-                continue;
-            }
-            String attributeId = attribute.getCode();
-            String[] attributeValues = resourceAccess.getAttributeValues(attributeId);
-            if (attributeValues == null) {
-                continue;
-            }
-            List<String> dimensionsAttributeOrderedForData = resourceAccess.getDimensionsAttributeOrderedForData(attribute);
-            writeBodyForPlainTextAttributeDimensions(printWriter, attributeId, attributeValues, dimensionsAttributeOrderedForData, numberOfColumnsToAttributeValue);
-        }
-    }
-
-    private void writeBodyForPlainTextAttributeDimensions(PrintWriter printWriter, String attributeId, String[] attributeValues, List<String> dimensionsAttributeOrderedForData,
-            int numberOfColumnsToAttributeValue) {
-
-        Stack<DataOrderingStackElement> stack = new Stack<DataOrderingStackElement>();
-        stack.push(new DataOrderingStackElement(null, -1, null, null));
-        Map<String, String> dimensionValuesForAttributeValue = new HashMap<String, String>(dimensionsAttributeOrderedForData.size());
-
-        int lastDimensionPosition = dimensionsAttributeOrderedForData.size() - 1;
-        int attributeValueIndex = 0;
-        while (stack.size() > 0) {
-            DataOrderingStackElement elem = stack.pop();
-            int dimensionPosition = elem.getDimensionPosition();
-            // TODO: revisar
-            // String dimensionCodeId = elem.getDimensionCodeId();
-            String dimensionCodeId = "";
-
-            if (dimensionPosition != -1) {
-                String dimensionId = elem.getDimensionId();
-                dimensionValuesForAttributeValue.put(dimensionId, dimensionCodeId);
-            }
-
-            if (dimensionPosition == lastDimensionPosition) {
-                // We have all dimensions here
-                String attributeValue = attributeValues[attributeValueIndex++];
-                if (!StringUtils.isEmpty(attributeValue) && allDimensionValuesAreSelected(resourceAccess.getDimensionsOrderedForData(), dimensionValuesForAttributeValue)) {
-                    StringBuilder line = new StringBuilder();
-                    // Dimensions
-                    for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
-                        String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-                        LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
-                        if (labelVisualisation.isLabel()) {
-                            if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-                                String dimensionValueLabel = resourceAccess.getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
-                                line.append(escapeString(dimensionValueLabel, ESCAPE_IF_NECESSARY));
-                            }
-                            line.append(plainTextTypeEnum.getSeparator());
-                        }
-                        if (labelVisualisation.isCode()) {
-                            if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-                                line.append(escapeString(dimensionValueId, ESCAPE_IF_NECESSARY));
-                            }
-                            line.append(plainTextTypeEnum.getSeparator());
-                        }
-                    }
-                    // Attribute Id
-                    line.append(escapeString(attributeId, ESCAPE_IF_NECESSARY) + plainTextTypeEnum.getSeparator());
-                    // Attribute value
-                    writeBodyAttributeValueForPlainTextAttributes(line, attributeId, attributeValue, numberOfColumnsToAttributeValue);
-                    printWriter.println(line);
-                }
-            } else {
-                String dimensionId = dimensionsAttributeOrderedForData.get(dimensionPosition + 1);
-                List<String> dimensionValues = resourceAccess.getDimensionValuesOrderedForData(dimensionId);
-                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
-                    DataOrderingStackElement temp = new DataOrderingStackElement(dimensionId, dimensionPosition + 1, dimensionValues.get(i), null);
-                    stack.push(temp);
-                }
-            }
-        }
-    }
-
-    private boolean allDimensionValuesAreSelected(List<String> dimensionsOrderedForData, Map<String, String> dimensionValuesForAttributeValue) {
-        for (String dimensionId : dimensionsOrderedForData) {
-            if (dimensionValuesForAttributeValue.containsKey(dimensionId)) {
-                String dimensionValueId = dimensionValuesForAttributeValue.get(dimensionId);
-                if (!indicatorSelection.getDimension(dimensionId).getSelectedDimensionValues().contains(dimensionValueId)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     private void writeBodyAttributeValueForPlainTextAttributes(StringBuilder line, String attributeId, String attributeValueCode, int numberOfColumnsToAttributeValue) {
         LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);

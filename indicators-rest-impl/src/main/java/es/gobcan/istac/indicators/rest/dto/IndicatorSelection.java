@@ -148,19 +148,6 @@ public class IndicatorSelection {
         return getDimensionsInPositionRange(FIXED_DIMENSIONS_START_POSITION, FIXED_DIMENSIONS_START_POSITION + 20);
     }
 
-    // FIXME:NO USAGE
-    // public void moveTopDimensionsToLeft() {
-    // int currentAvailablePosition = LEFT_DIMENSIONS_START_POSITION;
-    // for (IndicatorSelectionDimension dimension : getDimensions()) {
-    // // We are not interested on fixedDimensions
-    // if (getFixedDimensions().contains(dimension)) {
-    // continue;
-    // }
-    // dimension.setPosition(currentAvailablePosition);
-    // currentAvailablePosition += 1;
-    // }
-    // recalculateMultipliers();
-    // }
 
     private List<IndicatorSelectionDimension> getDimensionsInPositionRange(int from, int to) {
         List<IndicatorSelectionDimension> dimensionsInRange = new ArrayList<IndicatorSelectionDimension>();
@@ -213,14 +200,4 @@ public class IndicatorSelection {
 
         return permutation;
     }
-    // FIXME: NO USAGE
-    // public Map<String, String> permutationAtDimension(String dimensionId, String selectedDimensionValue) {
-    // Map<String, String> permutation = new HashMap<>();
-    // permutation.put(dimensionId, selectedDimensionValue);
-    // return permutation;
-    // }
-    //
-    // public int getMultiplierForDimension(IndicatorSelectionDimension dimension) {
-    // return multipliers.get(dimension.getId());
-    // }
 }

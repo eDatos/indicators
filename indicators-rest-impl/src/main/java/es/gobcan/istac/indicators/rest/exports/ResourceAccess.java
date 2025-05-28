@@ -115,11 +115,6 @@ public class ResourceAccess {
         return attributesMetadata;
     }
 
-    // FIXME: NO USAGE
-    // public String getDimensionLabelCurrentLocale(String dimensionId) {
-    // return dimensionLabelsCurrentLocale.get(dimensionId);
-    // }
-
     public String getDimensionValueLabelCurrentLocale(String dimensionId, String dimensionValueId) {
         return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
     }
@@ -154,29 +149,6 @@ public class ResourceAccess {
 
     public List<String> getDimensionValuesOrderedForData(String dimensionId) {
         return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
-    }
-
-    public List<String> getDimensionsAttributeOrderedForData(MetadataAttributeType attribute) {
-        List<String> allDimensionsOrderedForData = getDimensionsOrderedForData();
-        // FIXME ¿?
-        // if (AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-        // List<String> dimensionsAttribute = new ArrayList<String>();
-        // for (AttributeDimension attributeDimension : attribute.getDimensions().getDimensions()) {
-        // dimensionsAttribute.add(attributeDimension.getDimensionId());
-        // }
-        // List<String> dimensionsAttributeOrdered = new ArrayList<String>(dimensionsAttribute.size());
-        // for (String dimensionDatasetId : getDimensionsOrderedForData()) {
-        // if (dimensionsAttribute.contains(dimensionDatasetId)) {
-        // dimensionsAttributeOrdered.add(dimensionDatasetId);
-        // }
-        // }
-        // return dimensionsAttributeOrdered;
-        // } else if (AttributeAttachmentLevelEnumType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-        // return allDimensionsOrderedForData;
-        // } else {
-        // throw new IllegalArgumentException("Attribute attachement level unsupported in this operation: " + attribute.getAttachmentLevel());
-        // }
-        return allDimensionsOrderedForData;
     }
 
     /**
@@ -249,20 +221,6 @@ public class ResourceAccess {
         attributesValuesCurrentLocaleLabels = buildMapAttributesValuesLabels(attributesMetadata, lang);
         attributesLabels = buildMapAttributesLabels(attributesMetadata, lang);
     }
-
-    // FIXME: NO USAGE
-    // private int calculateNonEmptyCount(String[] strings) {
-    // if (strings == null) {
-    // return 0;
-    // }
-    // int totalNonEmpty = 0;
-    // for (int i = 0; i < strings.length; i++) {
-    // if (StringUtils.isNotBlank(strings[i])) {
-    // totalNonEmpty++;
-    // }
-    // }
-    // return totalNonEmpty;
-    // }
 
     /**
      * Init observations values
@@ -486,26 +444,6 @@ public class ResourceAccess {
             incrementCounter *= dimension.getRepresentations().getRepresentations().size();
         }
     }
-    // FIXME: NO USAGE¿?
-    // ... and we'll have the multipliers stored for attributes at DIMENSION or combinated DIMENSION attachment level
-    // private void initializeMultipliersAttributes() {
-    // for (MetadataAttributeType attribute : attributesMetadata) {
-    // if (!AttributeAttachmentLevelEnumType.OBSERVATION.equals(attribute.getAttachmentLevel())) {
-    // continue;
-    // }
-    // multipliersByAttribute.put(attribute.getCode(), new HashMap<String, Integer>());
-
-    // // List<A> dimensions = attribute.().getDimensions();
-    // // ListIterator<AttributeDimension> dimensionsListIterator = dimensions.listIterator(dimensions.size());
-    // // int incrementCounter = 1;
-    // // Iterate the list in reverse order: right to left or down to up in the display table to calculate cell spacing
-    // // while (dimensionsListIterator.hasPrevious()) {
-    // // AttributeDimension dimension = dimensionsListIterator.previous();
-    // // multipliersByAttribute.get(attribute.getId()).put(dimension.getDimensionId(), incrementCounter);
-    // // incrementCounter *= dimensionValuesOrderedForDataByDimensionId.get(dimension.getDimensionId()).size();
-    // // }
-    // }
-    // }
 
     /**
      * Calculate a map indexed by dimension with map as value. The value map is indexed by code and its value is a index.

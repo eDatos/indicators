@@ -191,7 +191,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataXLSX(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        // FIXME: revisar el enum o crear nuevo metodo para exportar excel tipo exportIndicatorToExcel
+        // TODO EDATOS-5025: revisar el enum o crear nuevo metodo para exportar excel tipo exportIndicatorToExcel
         return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, null);
     }
     @Override
