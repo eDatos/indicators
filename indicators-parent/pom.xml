@@ -150,7 +150,7 @@
         <metamac-srm-rest-internal-api.version>3.2.1</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>3.2.1</metamac-srm-rest-external-api.version>
 		<metamac-sso-client.version>4.8.1</metamac-sso-client.version>
-		<metamac-rest-common.version>2.7.1</metamac-rest-common.version>
+		<metamac-rest-common.version>2.7.2-SNAPSHOT</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.7.1</metamac-notifications-rest-internal-api.version>
         <metamac-statistical-resources-kafka.version>6.0.0</metamac-statistical-resources-kafka.version>
         <metamac-srm-kafka.version>7.0.0</metamac-srm-kafka.version>

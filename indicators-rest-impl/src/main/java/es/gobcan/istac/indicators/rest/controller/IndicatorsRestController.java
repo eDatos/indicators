@@ -101,7 +101,6 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    @ResponseBody
     public ResponseEntity<byte[]> retrieveIndicatorDataXLSX(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
@@ -110,7 +109,6 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/csv")
-    @ResponseBody
     public ResponseEntity<byte[]> retrieveIndicatorDataCSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
@@ -119,7 +117,6 @@ public class IndicatorsRestController extends AbstractRestController {
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET, produces = "text/tab-separated-values")
-    @ResponseBody
     public ResponseEntity<byte[]> retrieveIndicatorDataTSV(@PathVariable("indicatorCode") final String indicatorCode, @RequestParam(required = false, value = "representation") String representation,
             @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
