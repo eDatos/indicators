@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 
 @Component(SrmRestInternalFacade.BEAN_ID)
 public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
@@ -59,4 +60,12 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException {
         return srmRestInternalService.retrieveCodelistCodesByCode(code, defaultTerritoryVariableUrn, numResults);
     }
+
+    @Override
+    public void retrieveCodelistVariableElementInformation(String codelistUrn, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
+        Codes codes = srmRestInternalService.retrieveCodesOfCodelist(codelistUrn);
+        srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(codelistUrn, codes));
+        srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalService.retrieveGeographicalElementsIdByCodesOfCodelists(codelistUrn, codes));
+    }
+
 }

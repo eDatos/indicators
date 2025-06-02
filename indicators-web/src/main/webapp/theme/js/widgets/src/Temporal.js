@@ -2,6 +2,18 @@
 
     Istac.widget.Temporal = function (options) {
         this.init(options);
+
+        var self = this;
+        const updateChartSize = _.debounce(_.bind(this._updateChartSize, this), 200);
+        const resizeObserver = new ResizeObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.target === self.el[0]) {
+                    updateChartSize();
+                }
+            });
+        });
+
+        resizeObserver.observe(this.el[0]);
     };
 
     Istac.widget.Temporal.prototype = _.extend({}, Istac.widget.Base.prototype, {
@@ -93,6 +105,17 @@
             this.updateTitle();
 
             this.onAfterRender();
+        },
+
+        _updateChartSize: function () {
+            if (!this.chart) {
+                return;
+            }
+            var chartContainer = $("#" + this.getChartId())
+            this.chart.resize({
+                width: chartContainer.width(),
+                height: chartContainer.height()
+            });
         },
 
         renderChart: function (chartData) {

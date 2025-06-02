@@ -141,12 +141,18 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
         return restApiLocator.getSrmRestInternalFacadeV10().retrieveCode(agencyId, resourceId, version, codeId);
     }
-
     @Override
     public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        return retrieveVariableElementsIdByCodesOfCodelists(codelistUrn, null);
+    }
+
+    @Override
+    public Map<String, String> retrieveVariableElementsIdByCodesOfCodelists(String codelistUrn, Codes codes) throws MetamacException {
         Map<String, String> variableElementsByCodesOfCodelist = new HashMap<String, String>();
 
-        Codes codes = retrieveCodesOfCodelist(codelistUrn);
+        if (codes == null) {
+            codes = retrieveCodesOfCodelist(codelistUrn);
+        }
 
         for (CodeResourceInternal code : codes.getCodes()) {
             variableElementsByCodesOfCodelist.put(code.getId(), code.getVariableElement().getId());
@@ -156,9 +162,16 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     @Override
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException {
+        return retrieveGeographicalElementsIdByCodesOfCodelists(codelistUrn, null);
+    }
+
+    @Override
+    public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn, Codes codes) throws MetamacException {
         Map<String, String> geographicalElementsByCodesOfCodelist = new HashMap<String, String>();
 
-        Codes codes = retrieveCodesOfCodelist(codelistUrn);
+        if (codes == null) {
+            codes = retrieveCodesOfCodelist(codelistUrn);
+        }
 
         for (CodeResourceInternal code : codes.getCodes()) {
             geographicalElementsByCodesOfCodelist.put(code.getVariableElement().getId(), code.getId());
@@ -181,7 +194,8 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     }
 
-    private Codes retrieveCodesOfCodelist(String codelistUrn) {
+    @Override
+    public Codes retrieveCodesOfCodelist(String codelistUrn) {
 
         String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
         String agencyId = params[0];

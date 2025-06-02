@@ -24,7 +24,7 @@
         _getCode: function () {
             var url = this._getUrl();
             var id = crypto.randomUUID();
-            var code = _.extend(this.model.toJSON(), {
+            var code = _.extend(this.model.getVisibleOptions(), {
                 el: "#indicators-widget-" + id,
                 url: url,
                 visualizerUrl: visualizerUrl,

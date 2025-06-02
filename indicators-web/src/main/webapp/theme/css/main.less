@@ -682,7 +682,8 @@ html[xmlns] .clearfix {
     }
 
     select,
-    input[type=text] {
+    input[type=text],
+    input[type=number] {
         font-size: 11px;
         width: 400px;
         padding: 5px;
@@ -724,6 +725,15 @@ html[xmlns] .clearfix {
         display: none;
     }
 
+    .compact-radio-group {
+        display: inline-block;
+        margin-left: 10px;
+
+        label.radio {
+            width: auto;
+            margin-right: 5px;
+        }
+    }
 }
 
 /* ******************************* */
