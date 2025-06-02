@@ -45,8 +45,6 @@ public class ExportUtils {
     public static Map<String, String> buildMapDimensionsValuesLabels(Map.Entry<String, MetadataDimensionType> dimension, String lang) throws MetamacException {
         Map<String, String> dimensionValuesLabels = null;
         String dimensionId = dimension.getKey();
-        // TODO: revisar
-
         dimensionValuesLabels = new HashMap<String, String>(dimension.getValue().getRepresentation().size());
         for (MetadataRepresentationType dimensionValue : dimension.getValue().getRepresentation()) {
             String dimensionValueId = dimensionValue.getCode();
