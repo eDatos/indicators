@@ -1,12 +1,12 @@
 #indicators li {
   list-style: none;
   position: relative;
-  padding-left: 1.2em;
+  padding-left: @indicatorPaddingLeft;
 
   &::before {
     position: absolute;
     left: 0;
-    color: #555;
+    color: @gray;
     font-weight: bold;
   }
 }
@@ -23,16 +23,16 @@
 .collapsible-header {
   cursor: pointer;
   font-weight: bold;
-  margin: 5px 0;
+  margin: @collapsibleMarginVertical 0;
 
   &::before {
     content: '';
     display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 5px;
+    width: @collapsibleIconSize;
+    height: @collapsibleIconSize;
+    margin-right: @collapsibleIconMarginRight;
     vertical-align: middle;
-    background-image: url('../images/right-chevron.png');
+    background-image: url(@iconChevronRight);
     background-size: contain;
     background-repeat: no-repeat;
     transition: transform 0.3s ease;
@@ -53,17 +53,16 @@
 
 .collapsible-content li {
   position: relative;
-  padding-left: 1.2em;
+  padding-left: @indicatorPaddingLeft;
   list-style: none;
-}
 
-.collapsible-content li::before {
-  content: '\25B7';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #555;
-  font-weight: bold;
-  font-size: 0.8em;
+  &::before {
+    content: @collapsibleArrowContent;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: @gray;
+    font-weight: bold;
+  }
 }
