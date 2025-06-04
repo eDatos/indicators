@@ -56,6 +56,26 @@
             }
         });
 
+        var SRMCollection = Backbone.Collection.extend({
+            url: srmRestUrl + '/categoryschemes/' + srmAgency + '/' + srmResource + '/' + srmVersion + '/categories?limit=1000',
+
+            initialize: function () {
+                this.fetch({
+                    success: function () {
+                        console.log('SRMCollection cargada con éxito');
+                    },
+                    error: function () {
+                        console.error('Error al cargar SRMCollection');
+                    }
+                });
+                _.bindAll(this);
+            },
+
+            parse: function (response) {
+                return response.items || response; // ajusta según estructura del JSON
+            }
+        });
+
         var IndicatorView = Backbone.View.extend({
             template: _.template($('#indicatorTmpl').html()),
 
