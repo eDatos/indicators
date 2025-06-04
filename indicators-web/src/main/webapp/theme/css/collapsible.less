@@ -1,7 +1,7 @@
 #indicators li {
   list-style: none;
   position: relative;
-  padding-left: @indicatorPaddingLeft;
+  padding-left: 1.2em;
 
   &::before {
     position: absolute;
@@ -23,16 +23,16 @@
 .collapsible-header {
   cursor: pointer;
   font-weight: bold;
-  margin: @collapsibleMarginVertical 0;
+  margin: 5px 0;
 
   &::before {
     content: '';
     display: inline-block;
-    width: @collapsibleIconSize;
-    height: @collapsibleIconSize;
-    margin-right: @collapsibleIconMarginRight;
+    width: @baseIconWidth;
+    height: @baseIconHeight;
+    margin-right: 5px;
     vertical-align: middle;
-    background-image: url(@iconChevronRight);
+    background-image: url('@{iconChevronRight}');
     background-size: contain;
     background-repeat: no-repeat;
     transition: transform 0.3s ease;
@@ -53,16 +53,17 @@
 
 .collapsible-content li {
   position: relative;
-  padding-left: @indicatorPaddingLeft;
+  padding-left: 1.2em;
   list-style: none;
+}
 
-  &::before {
-    content: @collapsibleArrowContent;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    color: @gray;
-    font-weight: bold;
-  }
+.collapsible-content li::before {
+  content: '\25B7'; // ▶
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: @gray;
+  font-weight: bold;
+  font-size: 0.8em;
 }
