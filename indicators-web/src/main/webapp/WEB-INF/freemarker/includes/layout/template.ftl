@@ -40,17 +40,7 @@
         var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';
         [/#if]
         var visualizerUrl = "${visualizerApplicationExternalUrlBase}";
-    </script>
 
-    <div class="indicators-main">
-        [#nested]
-    </div>
-
-    <!-- begin: pie -->
-    ${portalDefaultStyleFooter!}
-    <!-- end: pie -->
-
-    <script type="text/javascript">
         function splitUrnScheme(urn) {
             const tripletIdentifier = removeUrnPrefix(urn);
             return splitUrnWithoutPrefix(tripletIdentifier);
@@ -73,7 +63,17 @@
             const srmVersion = identifier.substring(identifier.indexOf("(") + 1, identifier.indexOf(")"));
             return {srmAgency, srmResource, srmVersion};
         }
+    </script>
 
+    <div class="indicators-main">
+        [#nested]
+    </div>
+
+    <!-- begin: pie -->
+    ${portalDefaultStyleFooter!}
+    <!-- end: pie -->
+
+    <script type="text/javascript">
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
             i[r] = i[r] || function () {

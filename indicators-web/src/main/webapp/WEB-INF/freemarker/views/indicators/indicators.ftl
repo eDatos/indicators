@@ -4,7 +4,10 @@
 
     <div id="page-loader">[@apph.messageEscape 'app.loading'/]</div>
 
+    <div id="categories"></div>
+
     <div id="indicators"></div>
+
 
     <script type="text/html" id="indicatorTmpl">
         <a href="<%= getVisualizerUrlForIndicator(id) %>" title="<%= getLabel(title) %>"><%= getLabel(title) %></a>
@@ -15,9 +18,12 @@
     </script>
 
     <script>
+        const indicatorsApiUrl = apiUrl + '/indicators/?limit=1000';
+        const srmCategoriesApiUrl = srmRestUrl + '/categoryschemes/' + srmAgency + '/' + srmResource + '/' + srmVersion + '/categories.json';
+
         var IndicatorsCollection = Backbone.Collection.extend({
 
-            url: apiUrl + '/indicators/?limit=1000',
+            url: indicatorsApiUrl,
 
             initialize: function () {
                 this.fetch({
@@ -56,24 +62,28 @@
             }
         });
 
-        var SRMCollection = Backbone.Collection.extend({
-            url: srmRestUrl + '/categoryschemes/' + srmAgency + '/' + srmResource + '/' + srmVersion + '/categories?limit=1000',
+        var CategoriesCollection = Backbone.Collection.extend({
+            url: srmCategoriesApiUrl,
 
             initialize: function () {
                 this.fetch({
                     success: function () {
-                        console.log('SRMCollection cargada con éxito');
+                        console.log('CategoriesCollection cargada con éxito');
                     },
                     error: function () {
-                        console.error('Error al cargar SRMCollection');
+                        console.error('Error al cargar CategoriesCollection');
                     }
                 });
                 _.bindAll(this);
             },
 
             parse: function (response) {
-                return response.items || response; // ajusta según estructura del JSON
-            }
+                const allCategories = response.category || [];
+                const parentCategories = allCategories.filter(function (category) {
+                    return !category.nestedId.includes('.');
+                });
+                return parentCategories;
+            },
         });
 
         var IndicatorView = Backbone.View.extend({
@@ -88,51 +98,97 @@
 
             noResultsHtml: _.template($('#noResultsTmpl').html()),
 
-            initialize: function () {
+            initialize: function (options) {
+                this.categories = options.categories;
                 this.collection.bind("filterChange", this.render, this);
                 this.collection.bind("reset", this.render, this);
             },
 
+            getCategoryNameById: function (id) {
+                const category = this.categories.find(function (cat) {
+                    return cat.get('id') === id;
+                });
+
+                if (!category) return '[Sin categoría]';
+
+                const name = category.get('name');
+                const nameTexts = (name && name.text) ? name.text : [];
+
+                const currentMatch = nameTexts.find(txt => txt.lang === currentLocale);
+                const fallbackMatch = nameTexts.find(txt => txt.lang === defaultLocale);
+
+                return currentMatch?.value || fallbackMatch?.value || '[Sin nombre]';
+            },
+
             render: function () {
-                var filtered = this.collection.filtered();
-                if (filtered.length > 0) {
-                    var self = this;
-                    var viewHtml = '';
-                    var groupLast = '';
-                    var subjectCodeLastIndicator = '';
+                let self = this;
+                const filtered = this.collection.filtered();
 
-                    filtered.forEach(function (model) {
-                        var indicatorsView = new IndicatorView({model: model});
-                        var subViewHtml = indicatorsView.render();
+                if (filtered.length === 0 && this.collection.query != null) {
+                    $(this.el).html(this.noResultsHtml({query: this.collection.query}));
+                    return;
+                }
 
-                        var groupCurrent = model.get("subjectCode");
-                        var subjectCodeIndicator = model.get("subjectCode");
+                const groupByCategory = {};
 
-                        if (groupLast != groupCurrent) {
-                            viewHtml += viewHtml != '' ? '</ul></li></ul></li>' : '';
-                            viewHtml += '<li>';
-                            viewHtml += '<h2 class="collapsible-header">' + getLabel(model.get("subjectTitle")) + '</h2>';
-                            viewHtml += '<ul class="collapsible-group-content">';
-                            groupLast = groupCurrent;
-                            subjectCodeLastIndicator = '';
+                filtered.forEach(function (model) {
+                    const subjectCode = model.get("subjectCode") || "";
+                    const categoryKey = subjectCode.split('.')[0];
+
+                    if (!groupByCategory[categoryKey]) {
+                        groupByCategory[categoryKey] = [];
+                    }
+
+                    groupByCategory[categoryKey].push(model);
+                });
+
+                let viewHtml = '<ul>';
+
+                Object.keys(groupByCategory).forEach(function (categoryKey) {
+                    const indicators = groupByCategory[categoryKey];
+                    const categoryName = self.getCategoryNameById(categoryKey);
+
+                    viewHtml += '<li>';
+                    viewHtml += '<h2 class="collapsible-header">' + categoryName + '</h2>';
+                    viewHtml += '<ul class="collapsible-group-content">';
+
+                    const groupedBySubjectCode = {};
+
+                    indicators.forEach(function (model) {
+                        const subjectCode = model.get("subjectCode");
+                        if (!groupedBySubjectCode[subjectCode]) {
+                            groupedBySubjectCode[subjectCode] = [];
                         }
-
-                        if (subjectCodeLastIndicator != subjectCodeIndicator) {
-                            viewHtml += subjectCodeLastIndicator != '' ? '</ul></li>' : '';
-                            viewHtml += '<li>';
-                            viewHtml += '<h3 class="collapsible-header">' + getLabel(model.get("subjectTitle")) + '</h3>';
-                            viewHtml += '<ul class="collapsible-content">';
-                            subjectCodeLastIndicator = subjectCodeIndicator;
-                        }
-
-                        viewHtml += '<li>' + subViewHtml + '</li>';
+                        groupedBySubjectCode[subjectCode].push(model);
                     });
 
-                    viewHtml += viewHtml != '' ? '</ul></li></ul></li>' : '';
-                    $(self.el).html('<ul>' + viewHtml + '</ul>');
-                } else if (this.collection.query != null) {
-                    $(this.el).html(this.noResultsHtml({query: this.collection.query}));
-                }
+                    Object.keys(groupedBySubjectCode).forEach(function (subjectCode) {
+                        const models = groupedBySubjectCode[subjectCode];
+
+                        if (subjectCode === categoryKey) {
+                            models.forEach(function (model) {
+                                const view = new IndicatorView({model});
+                                viewHtml += '<li>' + view.render() + '</li>';
+                            });
+                        } else {
+                            viewHtml += '<li>';
+                            viewHtml += '<h3 class="collapsible-header">' + getLabel(models[0].get("subjectTitle")) + '</h3>';
+                            viewHtml += '<ul class="collapsible-content">';
+
+                            models.forEach(function (model) {
+                                const view = new IndicatorView({model});
+                                viewHtml += '<li>' + view.render() + '</li>';
+                            });
+
+                            viewHtml += '</ul></li>';
+                        }
+                    });
+
+                    viewHtml += '</ul></li>';
+                });
+
+                viewHtml += '</ul>';
+                this.$el.html(viewHtml);
             }
         });
 
@@ -148,10 +204,24 @@
         });
 
         $(function () {
-            var indicatorsCollection = new IndicatorsCollection();
-            var indicatorsView = new IndicatorsView({el: $("#indicators"), collection: indicatorsCollection});
-            indicatorsView.render();
-            new SearchView({el: $("#indicators-search"), collection: indicatorsCollection});
+            let categoriesCollection = new CategoriesCollection();
+            let indicatorsCollection = new IndicatorsCollection();
+
+            categoriesCollection.fetch({
+                success: function () {
+                    var indicatorsView = new IndicatorsView({
+                        el: $("#indicators"),
+                        collection: indicatorsCollection,
+                        categories: categoriesCollection
+                    });
+                    indicatorsView.render();
+                }
+            });
+
+            new SearchView({
+                el: $("#indicators-search"),
+                collection: indicatorsCollection
+            });
         });
 
     </script>
