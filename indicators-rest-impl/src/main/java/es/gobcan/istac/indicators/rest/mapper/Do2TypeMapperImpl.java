@@ -784,7 +784,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
 
         /*
-         * TODO EDATOS-4989
+         * TODO EDATOS-5057
          * This call to statistical-resources API has a bad performance in the indicators api. If it is necessary to retrieve additional metadata it must not be here.
          * Dataset/query metadata must be saved during the creation/reload/publish indicator process. So these metadata can be retrieved from indicators bd here (in the indicator api)
          * creation/reload metadata from statistical-resources is done here:
