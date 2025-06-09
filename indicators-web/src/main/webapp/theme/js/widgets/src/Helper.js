@@ -165,7 +165,7 @@
     * - Lodash could be what we need, but we are already using underscore, so it would probably be hard to include.
     * */
     Istac.widget.helper.deepExtend = function (target, source) {
-        for (const key in source) {
+        for (var key in source) {
             if ($.isPlainObject(source[key])) {
                 if (!(key in target) || !$.isPlainObject(target[key])) {
                     target[key] = {};

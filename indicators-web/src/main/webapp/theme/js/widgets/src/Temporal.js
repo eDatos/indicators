@@ -284,7 +284,7 @@
             }
         },
 
-        _getXAxisLabelWidth(gridHeight) {
+        _getXAxisLabelWidth: function (gridHeight) {
             return Math.min(Istac.widget.Constants.charts.axis.maxWidth, (gridHeight)/4);
         },
 
