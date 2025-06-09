@@ -219,7 +219,7 @@
             var extendedChartOptions = {
                 xAxis: {
                     axisLabel:{
-                        width: this._getXAxisLabelWidth(this._getChartDomEl().clientHeight - gridBottom - echartsOptions.grid.top) + 20,
+                        width: this._getXAxisLabelWidth(this._getChartDomEl().clientHeight - gridBottom - echartsOptions.grid.top)
                     }
                 }
             }
