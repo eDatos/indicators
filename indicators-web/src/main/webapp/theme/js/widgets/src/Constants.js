@@ -114,6 +114,7 @@
                 fontSize: 12,
                 exportFontSize: 10,
                 padding: 5,
+                itemWidth: 16,
                 itemHeight: 15,
                 gap: 6
             },

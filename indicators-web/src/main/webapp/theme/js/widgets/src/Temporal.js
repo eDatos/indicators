@@ -187,8 +187,8 @@
                     textStyle: {
                         fontSize: 10
                     },
-                    itemWidth: 16,
                     padding: Istac.widget.Constants.charts.legend.padding,
+                    itemWidth: Istac.widget.Constants.charts.legend.itemWidth,
                     itemHeight: Istac.widget.Constants.charts.legend.itemHeight,
                 },
                 animation: false,
