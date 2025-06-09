@@ -109,7 +109,7 @@
                     return cat.get('id') === id;
                 });
 
-                if (!category) return '[Sin categoría]';
+                if (!category) return '[@apph.messageEscape 'page.indicators-list.categories.noName'/]';
 
                 const name = category.get('name');
                 const nameTexts = (name && name.text) ? name.text : [];
@@ -117,7 +117,7 @@
                 const currentMatch = nameTexts.find(txt => txt.lang === currentLocale);
                 const fallbackMatch = nameTexts.find(txt => txt.lang === defaultLocale);
 
-                return currentMatch?.value || fallbackMatch?.value || '[Sin nombre]';
+                return currentMatch?.value || fallbackMatch?.value || '[@apph.messageEscape 'page.indicators-list.categories.noCategory'/]';
             },
 
             render: function () {

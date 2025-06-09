@@ -34,7 +34,9 @@
     <entry key="entity.indicators.modal.detail.data">Datos</entry>
     <entry key="entity.indicators.modal.detail.metadata">Metadatos</entry>  
     <entry key="entity.indicators.modal.detail.query">Consultar datos</entry>
-    
+    <entry key="page.indicators-list.categories.noName">[Sin nombre]</entry>
+    <entry key="page.indicators-list.categories.noCategory">[Sin categoría]</entry>
+
     <!-- Widgets -->
     <entry key="page.open-data.title">Datos abiertos</entry>
     <entry key="page.query-tools.title">Herramientas de consulta</entry>
