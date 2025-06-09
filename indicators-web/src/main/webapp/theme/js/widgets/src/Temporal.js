@@ -18,8 +18,6 @@
 
     Istac.widget.Temporal.prototype = _.extend({}, Istac.widget.Base.prototype, {
 
-        CHART_TOOLTIP_BORDER_RADIUS: 4,
-
         parse: function (dataset) {
             var locale = this.locale;
 
@@ -51,7 +49,7 @@
                     data.push({
                         value: [date, value],
                         tooltip: {
-                            formatter: '<div style="border: 1px solid ' + colors[i] + ';padding: 10px;border-radius: ' + this.CHART_TOOLTIP_BORDER_RADIUS + 'px;">' +
+                            formatter: '<div style="border: 1px solid ' + colors[i] + ';padding: 10px;border-radius: ' + Istac.widget.Constants.charts.tooltip.border.radius + 'px;">' +
                                 '<strong>' + valueStr + ' '  + unit + '</strong>' +
                                 '<br/>' +
                                 geoValueTitle +
@@ -140,10 +138,10 @@
                     axisLabel: {
                         show: this.showLabels,
                         hideOverlap: true,
-                        rotate: 70,
+                        rotate: Istac.widget.Constants.charts.axis.rotate,
                         align: "right",
                         verticalAlign: "top",
-                        width: 50,
+                        width: Istac.widget.Constants.charts.axis.width,
                         overflow: "truncate",
                         customValues: parsedValues,
                         formatter: function (epoch) {
@@ -172,20 +170,20 @@
                     show: this.showLegend,
                     selectedMode: false,
                     type: 'scroll',
-                    animationDurationUpdate: 100,
+                    animationDurationUpdate: Istac.widget.Constants.charts.legend.animationDuration,
                     left: "center",
-                    width: "80%",
-                    bottom: 10,
-                    borderWidth: 1,
-                    borderColor: "#909090",
-                    borderRadius: 5,
+                    width: Istac.widget.Constants.charts.legend.width,
+                    bottom: Istac.widget.Constants.charts.legend.bottom,
+                    borderWidth: Istac.widget.Constants.charts.legend.border.width,
+                    borderColor: Istac.widget.Constants.charts.legend.border.color,
+                    borderRadius: Istac.widget.Constants.charts.legend.border.radius,
                     animation: true,
                     orient: 'horizontal',
                     pageTextStyle: {
                         fontWeight: 'bold'
                     },
                     textStyle: {
-                        fontSize: 10
+                        fontSize: Istac.widget.Constants.charts.legend.fontSize,
                     },
                     padding: Istac.widget.Constants.charts.legend.padding,
                     itemWidth: Istac.widget.Constants.charts.legend.itemWidth,
@@ -197,7 +195,7 @@
                     axisPointer: {
                         type: 'none'
                     },
-                    extraCssText: 'padding: 0px; border-width: 0px;border-radius: ' + this.CHART_TOOLTIP_BORDER_RADIUS + 'px;',
+                    extraCssText: 'padding: 0px; border-width: 0px;border-radius: ' + Istac.widget.Constants.charts.tooltip.border.radius + 'px;',
                     formatter: function (seriesParams) {
                         var closesSerieToMouse = self._getClosestSeriesToMouse(seriesParams);
                         self._selectLineData(closesSerieToMouse.seriesIndex, closesSerieToMouse.dataIndex);
@@ -205,10 +203,10 @@
                     }
                 },
                 grid: {
-                    top: 15,
-                    right: 10,
-                    bottom: this.showLegend ? 50 : 10,
-                    left: 20,
+                    top: Istac.widget.Constants.charts.grid.top,
+                    right: Istac.widget.Constants.charts.grid.right,
+                    bottom: this.showLegend ? Istac.widget.Constants.charts.grid.bottomWithLegend : Istac.widget.Constants.charts.grid.bottomWithoutLegend,
+                    left: Istac.widget.Constants.charts.grid.left,
                     containLabel: true
                 },
                 series: chartData.series
