@@ -34,8 +34,8 @@
     <entry key="entity.indicators.modal.detail.data">Data</entry>
     <entry key="entity.indicators.modal.detail.metadata">Metadata</entry>  
     <entry key="entity.indicators.modal.detail.query">Query data</entry>
-    <entry key="page.indicators-list.categories.noName">[No name]</entry>
-    <entry key="page.indicators-list.categories.noCategory">[No Category]</entry>
+    <entry key="page.indicators-list.categories.noName">No name</entry>
+    <entry key="page.indicators-list.categories.noCategory">No Category</entry>
     
     <!-- Widgets -->
     <entry key="page.open-data.title">Open Data</entry>
