@@ -1,4 +1,4 @@
-(function ($, _) {
+(function () {
     "use strict";
 
     Istac.widget.Constants = {

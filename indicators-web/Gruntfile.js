@@ -126,6 +126,7 @@ module.exports = function (grunt) {
         jsPath + '/widgets/src/HandlebarsHelpers.js',
         jsPath + '/widgets/src/Templates.js',
         jsPath + '/widgets/src/Istac.js',
+        jsPath + '/widgets/src/Constants.js',
         jsPath + '/widgets/src/Helper.js',
         jsPath + '/widgets/src/Dataset.js',
         jsPath + '/widgets/src/DatasetRequestBuilder.js',
