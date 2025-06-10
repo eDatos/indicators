@@ -134,6 +134,11 @@
             <param-value>true
             </param-value> <!-- true or false if param is not defined it will be considered as false by default -->
         </init-param>
+        <init-param>
+            <param-name>filter-default-format</param-name>
+            <param-value>application/json
+            </param-value> <!-- if param is not defined it will be considered as xml by default -->
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>HttpWrapperFilter</filter-name>
