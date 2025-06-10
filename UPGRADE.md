@@ -8,23 +8,23 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 11.7.1 a 11.7.2-SNAPSHOT
+## 11.8.0 a 11.8.1-SNAPSHOT
 * Se añade script de actualización de base de datos
 
 ```
-etc/changes-from-release/11.7.1/db/indicators/postgresql/20250528_update_urn_field_length.sql
+etc/changes-from-release/11.8.0/db/indicators/postgresql/20250528_update_urn_field_length.sql
 ```
 
 * Se añade script de actualización de la base de datos "data" de indicadores
 
 ```
-etc/changes-from-release/11.7.1/db/indicators_data/postgresql/20250528_update_urn_field_length.sql
+etc/changes-from-release/11.8.0/db/indicators_data/postgresql/20250528_update_urn_field_length.sql
 ```
 
 * Se añade script de adecuación de las tablas de datos de indicadores. En él se detallan los pasos a seguir para su adecuación
 
 ```
-etc/changes-from-release/11.7.1/db/indicators_data/postgresql/20250602_update_length_data_fields.sql
+etc/changes-from-release/11.8.0/db/indicators_data/postgresql/20250602_update_length_data_fields.sql
 ```
 
 ## 11.4.0 a 11.5.0
