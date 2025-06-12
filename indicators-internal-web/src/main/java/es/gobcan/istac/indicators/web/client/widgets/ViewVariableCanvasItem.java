@@ -24,7 +24,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         setTitleStyle("staticFormItemTitle");
 
         setCellStyle("variableCanvasCell");
-        setCellHeight(30);
+        setCellHeight(70);
         setTextBoxStyle("variableCanvasCell");
         setWidth(650);
 
@@ -35,6 +35,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         vLayout.addMember(form);
 
         setCanvas(vLayout);
+
     }
 
     public void setRequired(boolean required) {
@@ -63,6 +64,8 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
             FormItem[] formItems = new FormItem[dataSourceVariableDtos.size()];
             for (int i = 0; i < dataSourceVariableDtos.size(); i++) {
                 ViewTextItem item = new ViewTextItem("variable" + i, dataSourceVariableDtos.get(i).getVariable());
+                item.setCellStyle("wrapValue");
+                item.setWidth("*");
                 List<String> codes = dataStructureDto.getValueCodes().get(dataSourceVariableDtos.get(i).getVariable());
                 List<String> labels = dataStructureDto.getValueLabels().get(dataSourceVariableDtos.get(i).getVariable());
                 if (codes != null && labels != null) {
@@ -77,6 +80,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
             }
             form.setFields(formItems);
             form.markForRedraw();
+
         }
     }
 }
