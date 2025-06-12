@@ -4,10 +4,7 @@
 
     <div id="page-loader">[@apph.messageEscape 'app.loading'/]</div>
 
-    <div id="categories"></div>
-
     <div id="indicators"></div>
-
 
     <script type="text/html" id="indicatorTmpl">
         <a href="<%= getVisualizerUrlForIndicator(id) %>" title="<%= getLabel(title) %>"><%= getLabel(title) %></a>
@@ -22,18 +19,9 @@
         const srmCategoriesApiUrl = srmRestUrl + '/categoryschemes/' + srmAgency + '/' + srmResource + '/' + srmVersion + '/categories.json';
 
         var IndicatorsCollection = Backbone.Collection.extend({
-
             url: indicatorsApiUrl,
 
             initialize: function () {
-                this.fetch({
-                    success: function () {
-                        $('#page-loader').hide();
-                    },
-                    error: function () {
-                        $('#page-loader').hide();
-                    }
-                });
                 _.bindAll(this);
             },
 
@@ -65,25 +53,78 @@
         var CategoriesCollection = Backbone.Collection.extend({
             url: srmCategoriesApiUrl,
 
-            initialize: function () {
-                this.fetch({
-                    success: function () {
-                        console.log('CategoriesCollection cargada con éxito');
-                    },
-                    error: function () {
-                        console.error('Error al cargar CategoriesCollection');
-                    }
-                });
-                _.bindAll(this);
+            initialize: function (models, options) {
+                this.options = options || {};
             },
 
             parse: function (response) {
-                const allCategories = response.category || [];
-                const parentCategories = allCategories.filter(function (category) {
-                    return !category.nestedId.includes('.');
-                });
-                return parentCategories;
+                var indicatorsCollection = this.options.indicators;
+                var categories = response.category || [];
+                var categoryMap = {};
+
+                for (var i = 0; i < categories.length; i++) {
+                    var category = categories[i];
+                    category.children = [];
+                    category.indicators = [];
+                    categoryMap [category.urn] = category;
+                }
+
+                for (var i = 0; i < categories.length; i++) {
+                    var category = categories[i];
+                    if (category.parent && categoryMap [category.parent]) {
+                        categoryMap [category.parent].children.push(category);
+                    }
+                }
+
+                if (indicatorsCollection) {
+                    indicatorsCollection.each(function (indicator) {
+                        var subjectCode = indicator.get('subjectCode');
+                        var matchingUrn = null;
+                        for (var urn in categoryMap) {
+                            if (categoryMap.hasOwnProperty(urn) && urn.endsWith(subjectCode)) {
+                                matchingUrn = urn;
+                                break;
+                            }
+                        }
+                        if (subjectCode && matchingUrn) {
+                            categoryMap [matchingUrn].indicators.push(indicator.toJSON());
+                        }
+                    });
+                }
+
+                function hasIndicators(category) {
+                    var filteredChildren = [];
+                    for (var j = 0; j < category.children.length; j++) {
+                        if (hasIndicators(category.children[j])) {
+                            filteredChildren.push(category.children[j]);
+                        }
+                    }
+                    category.children = filteredChildren;
+                    return category.indicators.length > 0 || category.children.length > 0;
+                }
+
+                var categoriaRaiz = [];
+                for (var i = 0; i < categories.length; i++) {
+                    var category = categories[i];
+                    if (!category.parent || !categoryMap[category.parent]) {
+                        categoriaRaiz.push(category);
+                    }
+                }
+
+                var tree = [];
+                for (var i = 0; i < categoriaRaiz.length; i++) {
+                    if (hasIndicators(categoriaRaiz[i])) {
+                        tree.push(categoriaRaiz[i]);
+                    }
+                }
+
+                this.tree = tree;
+                return categories;
             },
+
+            toTree: function () {
+                return this.tree || [];
+            }
         });
 
         var IndicatorView = Backbone.View.extend({
@@ -94,101 +135,81 @@
             }
         });
 
-        var IndicatorsView = Backbone.View.extend({
+        var CategoryView = Backbone.View.extend({
 
-            noResultsHtml: _.template($('#noResultsTmpl').html()),
-
-            initialize: function (options) {
-                this.categories = options.categories;
-                this.collection.bind("filterChange", this.render, this);
-                this.collection.bind("reset", this.render, this);
-            },
-
-            getCategoryNameById: function (id) {
-                const category = this.categories.find(function (cat) {
-                    return cat.get('id') === id;
-                });
-
-                if (!category) return '[@apph.messageEscape 'page.indicators-list.categories.noName'/]';
-
-                const name = category.get('name');
-                const nameTexts = (name && name.text) ? name.text : [];
-
-                const currentMatch = nameTexts.find(txt => txt.lang === currentLocale);
-                const fallbackMatch = nameTexts.find(txt => txt.lang === defaultLocale);
-
-                return currentMatch?.value || fallbackMatch?.value || '[@apph.messageEscape 'page.indicators-list.categories.noCategory'/]';
-            },
+            tagName: 'li',
 
             render: function () {
-                let self = this;
-                const filtered = this.collection.filtered();
+                var nameArray = this.model.name ? this.model.name.text : [];
+                var displayName = this.getLocalizedName(nameArray);
 
-                if (filtered.length === 0 && this.collection.query != null) {
-                    $(this.el).html(this.noResultsHtml({query: this.collection.query}));
-                    return;
+                this.$el.html('<div class="collapsible-header">' + displayName + '</div>');
+
+                var hasContent = false;
+                var $content = $('<div class="collapsible-content"></div>');
+
+                if (this.model.indicators && this.model.indicators.length) {
+                    hasContent = true;
+                    var ul = $('<ul class="indicators">');
+                    for (var i = 0; i < this.model.indicators.length; i++) {
+                        var model = new Backbone.Model(this.model.indicators[i]);
+                        var indicatorView = new IndicatorView({model: model});
+                        ul.append('<li>' + indicatorView.render() + '</li>');
+                    }
+                    $content.append(ul);
                 }
 
-                const groupByCategory = {};
-
-                filtered.forEach(function (model) {
-                    const subjectCode = model.get("subjectCode") || "";
-                    const categoryKey = subjectCode.split('.')[0];
-
-                    if (!groupByCategory[categoryKey]) {
-                        groupByCategory[categoryKey] = [];
+                if (this.model.children && this.model.children.length) {
+                    hasContent = true;
+                    var childrenUl = $('<ul class="children">');
+                    for (var j = 0; j < this.model.children.length; j++) {
+                        var childView = new CategoryView({
+                            model: this.model.children[j]
+                        });
+                        childrenUl.append(childView.render().el);
                     }
+                    $content.append(childrenUl);
+                }
 
-                    groupByCategory[categoryKey].push(model);
+                if (hasContent) {
+                    this.$el.append($content);
+                }
+
+                return this;
+            },
+
+            getLocalizedName: function (text) {
+                var nameInCurrentLocale = text.find(function (text) {
+                    return text.lang === currentLocale;
                 });
-
-                let viewHtml = '<ul>';
-
-                Object.keys(groupByCategory).forEach(function (categoryKey) {
-                    const indicators = groupByCategory[categoryKey];
-                    const categoryName = self.getCategoryNameById(categoryKey);
-
-                    viewHtml += '<li>';
-                    viewHtml += '<h2 class="collapsible-header">' + categoryName + '</h2>';
-                    viewHtml += '<ul class="collapsible-group-content">';
-
-                    const groupedBySubjectCode = {};
-
-                    indicators.forEach(function (model) {
-                        const subjectCode = model.get("subjectCode");
-                        if (!groupedBySubjectCode[subjectCode]) {
-                            groupedBySubjectCode[subjectCode] = [];
-                        }
-                        groupedBySubjectCode[subjectCode].push(model);
-                    });
-
-                    Object.keys(groupedBySubjectCode).forEach(function (subjectCode) {
-                        const models = groupedBySubjectCode[subjectCode];
-
-                        if (subjectCode === categoryKey) {
-                            models.forEach(function (model) {
-                                const view = new IndicatorView({model});
-                                viewHtml += '<li>' + view.render() + '</li>';
-                            });
-                        } else {
-                            viewHtml += '<li>';
-                            viewHtml += '<h3 class="collapsible-header">' + getLabel(models[0].get("subjectTitle")) + '</h3>';
-                            viewHtml += '<ul class="collapsible-content">';
-
-                            models.forEach(function (model) {
-                                const view = new IndicatorView({model});
-                                viewHtml += '<li>' + view.render() + '</li>';
-                            });
-
-                            viewHtml += '</ul></li>';
-                        }
-                    });
-
-                    viewHtml += '</ul></li>';
+                if (nameInCurrentLocale) {
+                    return nameInCurrentLocale.value;
+                }
+                var nameInDefaultLocale = text.find(function (text) {
+                    return text.lang === defaultLocale;
                 });
+                if (nameInDefaultLocale) {
+                    return nameInDefaultLocale.value;
+                }
+                return '[@apph.messageEscape 'page.indicators-list.categories.noName'/]';
+            }
 
-                viewHtml += '</ul>';
-                this.$el.html(viewHtml);
+        });
+
+        var CategoriesView = Backbone.View.extend({
+            el: '#indicators',
+
+            render: function () {
+                var tree = this.collection.toTree();
+                var $ul = $('<ul></ul>');
+
+                for (var i = 0; i < tree.length; i++) {
+                    var view = new CategoryView({model: tree[i]});
+                    $ul.append(view.render().el);
+                }
+
+                this.$el.empty().append($ul);
+                return this;
             }
         });
 
@@ -204,17 +225,30 @@
         });
 
         $(function () {
-            let categoriesCollection = new CategoriesCollection();
-            let indicatorsCollection = new IndicatorsCollection();
+            const indicatorsCollection = new IndicatorsCollection();
 
-            categoriesCollection.fetch({
+            indicatorsCollection.fetch({
                 success: function () {
-                    var indicatorsView = new IndicatorsView({
-                        el: $("#indicators"),
-                        collection: indicatorsCollection,
-                        categories: categoriesCollection
+                    const categoriesCollection = new CategoriesCollection([], {
+                        indicators: indicatorsCollection
                     });
-                    indicatorsView.render();
+
+                    categoriesCollection.fetch({
+                        success: function () {
+                            $('#page-loader').hide();
+                            var categoriesView = new CategoriesView({
+                                el: $("#indicators"),
+                                collection: categoriesCollection
+                            });
+                            categoriesView.render();
+                        },
+                        error: function () {
+                            $('#page-loader').hide();
+                        }
+                    });
+                },
+                error: function () {
+                    $('#page-loader').hide();
                 }
             });
 
@@ -223,13 +257,12 @@
                 collection: indicatorsCollection
             });
         });
-
     </script>
 
     <script>
         $(document).on('click', '.collapsible-header', function () {
             $(this).toggleClass('open');
-            const nextContent = $(this).next('.collapsible-content, .collapsible-group-content');
+            var nextContent = $(this).next('.collapsible-content, .collapsible-group-content');
             if (nextContent.length) {
                 nextContent.toggleClass('show');
             }
