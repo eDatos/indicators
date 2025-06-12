@@ -1002,9 +1002,9 @@ Application Indicators {
         	gap
         	
 			"Query in GPE"
-			String queryUuid not nullable databaseColumn="QUERY_UUID";
+			String queryUuid not nullable databaseColumn="QUERY_UUID" length="4000";
 			"Px"
-			String queryUrn not nullable databaseColumn="QUERY_URN";
+			String queryUrn not nullable databaseColumn="QUERY_URN" length="4000";
 			"Text"
 			String queryText nullable databaseColumn="QUERY_TEXT";
 			"Time variable"
@@ -1034,7 +1034,7 @@ Application Indicators {
 			"Structural Resource Code (Metamac) related with the data source"
             - @ExternalItem statResource nullable cascade="all" databaseColumn="STAT_RESOURCE_FK";
             "Geographical codelist urn" 
-            String geographicalCodelistUrn nullable databaseColumn="GEOGRAPHICAL_CODELIST_URN";
+            String geographicalCodelistUrn nullable databaseColumn="GEOGRAPHICAL_CODELIST_URN" length="4000";
              		
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;

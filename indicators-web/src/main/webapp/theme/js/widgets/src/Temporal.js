@@ -18,13 +18,11 @@
 
     Istac.widget.Temporal.prototype = _.extend({}, Istac.widget.Base.prototype, {
 
-        CHART_TOOLTIP_BORDER_RADIUS: 4,
-
         parse: function (dataset) {
             var locale = this.locale;
 
             var measureValue = this.measures[0];
-            var timeValues = dataset.getTimeValues();
+            this.timeRepresentations = dataset.getTimeRepresentations();
             var timeValuesTitles = dataset.getTimeValuesTitles(locale);
             var geographicalValues = Object.keys(dataset.data.dimension.GEOGRAPHICAL.representation.index);
             var geographicalValuesTitles = dataset.getGeographicalValuesTitles(locale);
@@ -41,8 +39,8 @@
                 }
 
                 var data = [];
-                for (var j = 0; j < timeValues.length; j++) {
-                    var timeValue = timeValues[j];
+                for (var j = 0; j < this.timeRepresentations.length; j++) {
+                    var timeValue = this.timeRepresentations[j].code;
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
                     var unit = dataset.getUnit(measureValue, locale, this.options.defaultLocale);
@@ -51,7 +49,7 @@
                     data.push({
                         value: [date, value],
                         tooltip: {
-                            formatter: '<div style="border: 1px solid ' + colors[i] + ';padding: 10px;border-radius: ' + this.CHART_TOOLTIP_BORDER_RADIUS + 'px;">' +
+                            formatter: '<div style="border: 1px solid ' + colors[i] + ';padding: 10px;border-radius: ' + Istac.widget.Constants.charts.tooltip.border.radius + 'px;">' +
                                 '<strong>' + valueStr + ' '  + unit + '</strong>' +
                                 '<br/>' +
                                 geoValueTitle +
@@ -119,21 +117,44 @@
         },
 
         renderChart: function (chartData) {
-            var $chartContainer = $('<div id="' + this.getChartId() + '"></div>');
-            $chartContainer.css('width', this.width - 20);
-            $chartContainer.css('height', 250);
-            this.contentContainer.html($chartContainer);
+            this.$chartContainer = $('<div id="' + this.getChartId() + '"></div>');
+            this.$chartContainer.css('width', this.width - 20);
+            this.$chartContainer.css('height', 250);
+            this.contentContainer.html(this.$chartContainer);
 
             echarts.registerLocale("es", EDatos.common.I18n.translate("ECHARTS", "es"));
             echarts.registerLocale("ca", EDatos.common.I18n.translate("ECHARTS", "ca"));
-            this.chart = echarts.init($chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
+            this.chart = echarts.init(this.$chartContainer[0], null, { renderer: 'canvas', locale: this.options.locale });
+
+            const self = this;
+            const representations = this.timeRepresentations;
+            const parsedValues = representations.map(function (representation) {
+                return Istac.widget.DateParser.parse(representation.code, self.options.timeGranularities[0]);
+            });
 
             var echartsOptions = {
                 xAxis: {
                     type: 'time',
                     axisLabel: {
                         show: this.showLabels,
-                        hideOverlap: true
+                        hideOverlap: true,
+                        rotate: Istac.widget.Constants.charts.axis.rotate,
+                        align: "right",
+                        verticalAlign: "top",
+                        width: Istac.widget.Constants.charts.axis.width,
+                        overflow: "truncate",
+                        customValues: parsedValues,
+                        formatter: function (epoch) {
+                            // For some reason, formatter does not receive only the customValues setted before, but also
+                            // more values that are not in the customValues array, probably intercalated by eCharts itself
+                            const index = parsedValues.indexOf(epoch);
+
+                            // The idea is to show the label of the original value, not the parsed one (which is an epoch).
+                            // Only the labels of the values present in the graph will be shown.
+                            if (index > -1) {
+                                return self._getLabel(representations[index].title, self.options.locale);
+                            }
+                        }
                     },
                     axisTick: {
                         show: this.showLabels,
@@ -149,22 +170,24 @@
                     show: this.showLegend,
                     selectedMode: false,
                     type: 'scroll',
-                    animationDurationUpdate: 100,
+                    animationDurationUpdate: Istac.widget.Constants.charts.legend.animationDuration,
                     left: "center",
-                    width: "80%",
-                    bottom: 10,
-                    borderWidth: 1,
-                    borderColor: "#909090",
-                    borderRadius: 5,
+                    width: Istac.widget.Constants.charts.legend.width,
+                    bottom: Istac.widget.Constants.charts.legend.bottom,
+                    borderWidth: Istac.widget.Constants.charts.legend.border.width,
+                    borderColor: Istac.widget.Constants.charts.legend.border.color,
+                    borderRadius: Istac.widget.Constants.charts.legend.border.radius,
                     animation: true,
                     orient: 'horizontal',
                     pageTextStyle: {
                         fontWeight: 'bold'
                     },
                     textStyle: {
-                        fontSize: 10
+                        fontSize: Istac.widget.Constants.charts.legend.fontSize,
                     },
-                    itemWidth: 16
+                    padding: Istac.widget.Constants.charts.legend.padding,
+                    itemWidth: Istac.widget.Constants.charts.legend.itemWidth,
+                    itemHeight: Istac.widget.Constants.charts.legend.itemHeight,
                 },
                 animation: false,
                 tooltip: {
@@ -172,7 +195,7 @@
                     axisPointer: {
                         type: 'none'
                     },
-                    extraCssText: 'padding: 0px; border-width: 0px;border-radius: ' + this.CHART_TOOLTIP_BORDER_RADIUS + 'px;',
+                    extraCssText: 'padding: 0px; border-width: 0px;border-radius: ' + Istac.widget.Constants.charts.tooltip.border.radius + 'px;',
                     formatter: function (seriesParams) {
                         var closesSerieToMouse = self._getClosestSeriesToMouse(seriesParams);
                         self._selectLineData(closesSerieToMouse.seriesIndex, closesSerieToMouse.dataIndex);
@@ -180,14 +203,26 @@
                     }
                 },
                 grid: {
-                    top: 15,
-                    right: 10,
-                    bottom: this.showLegend ? 50 : 10,
-                    left: 20,
+                    top: Istac.widget.Constants.charts.grid.top,
+                    right: Istac.widget.Constants.charts.grid.right,
+                    bottom: this.showLegend ? Istac.widget.Constants.charts.grid.bottomWithLegend : Istac.widget.Constants.charts.grid.bottomWithoutLegend,
+                    left: Istac.widget.Constants.charts.grid.left,
                     containLabel: true
                 },
                 series: chartData.series
             };
+
+
+            var gridBottom = echartsOptions.legend.bottom + (this.showLegend ? this._getLegendHeight() + Istac.widget.Constants.charts.gap : 0);
+
+            var extendedChartOptions = {
+                xAxis: {
+                    axisLabel:{
+                        width: this._getXAxisLabelWidth(this._getChartDomEl().clientHeight - gridBottom - echartsOptions.grid.top)
+                    }
+                }
+            }
+            Istac.widget.helper.deepExtend(echartsOptions, extendedChartOptions);
 
             if (_.isFinite(chartData.minValue) && _.isFinite(chartData.maxValue)) {
                 if (this.options.scale === "minmax") {
@@ -202,7 +237,6 @@
                 }
             }
 
-            var self = this;
             this.chart.setOption(echartsOptions, true);
             this.chart.getZr().on("mousemove", function (p) {
                 self.mouseCoords = [p.offsetX, p.offsetY];
@@ -242,7 +276,25 @@
             var axisLabel = value.toString().replace("\.", ",");
             axisLabel = Istac.widget.helper.addThousandSeparator(axisLabel)
             return axisLabel;
-        }
+        },
+
+        _getLabel : function (iString, locale) {
+            if (iString) {
+                return iString[locale] || iString["__default__"];
+            }
+        },
+
+        _getXAxisLabelWidth: function (gridHeight) {
+            return Math.min(Istac.widget.Constants.charts.axis.maxWidth, (gridHeight)/4);
+        },
+
+        _getChartDomEl: function () {
+            return this.$chartContainer ? this.$chartContainer[0] : undefined;
+        },
+
+        _getLegendHeight: function () {
+            return Istac.widget.Constants.charts.legend.itemHeight + Istac.widget.Constants.charts.legend.padding * 2;
+        },
     });
 
 }(window.jQuery, window._, window.echarts));
