@@ -82,6 +82,7 @@
                         var matchingUrn = null;
                         for (var urn in categoryMap) {
                             if (categoryMap.hasOwnProperty(urn)) {
+                                // See code at SrmRestInternalServiceImpl.splitUrnWithoutPrefixItem
                                 var urnCode = urn.substring(urn.indexOf(").") + 2, urn.length);
                                 if (urnCode === subjectCode) {
                                     matchingUrn = urn;
