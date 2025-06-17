@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.diffusion.view;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -15,8 +17,10 @@ import org.siemac.metamac.core.common.util.WebUtils;
 import org.siemac.metamac.core.common.util.swagger.SwaggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
+import org.springframework.web.util.UriUtils;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
@@ -38,21 +42,21 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("organisation", getConfigurationService().retrieveOrganisation());
         model.put("faviconUrl", WebUtils.getFavicon());
         model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
-        String currentLocale = getCurrentLocale(request);
-        model.put("locale", currentLocale);
-        fillOptionalApiStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
-        fillOptionalApiStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
+        Locale currentLocale = getCurrentLocale(request);
+        model.put("locale", currentLocale.getLanguage());
+        fillOptionalAppStyleHeaderUrl(model, getLocaleQueryParam(model, currentLocale));
+        fillOptionalAppStyleFooterUrl(model, getLocaleQueryParam(model, currentLocale));
 
         super.doRender(model, request, response);
     }
 
-    private String getCurrentLocale(HttpServletRequest request) {
-        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request).getLanguage();
+    private Locale getCurrentLocale(HttpServletRequest request) {
+        return RequestContextUtils.getLocaleResolver(request).resolveLocale(request);
     }
 
-    private void fillOptionalApiStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
+    private void fillOptionalAppStyleFooterUrl(Map<String, Object> model, String urlQueryParams) throws UnsupportedEncodingException, IOException {
         try {
-            model.put("apiStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleFooterUrl() + "?" + urlQueryParams));
+            model.put("appStyleFooter", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveAppStyleFooterUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -60,9 +64,9 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private void fillOptionalApiStyleHeaderUrl(Map<String, Object> model, String urlQueryParams) throws IOException {
+    private void fillOptionalAppStyleHeaderUrl(Map<String, Object> model, String urlQueryParams) throws IOException {
         try {
-            model.put("apiStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveApiStyleHeaderUrl() + "?" + urlQueryParams));
+            model.put("appStyleHeader", FreeMarkerUtil.importHTMLFromUrl(getConfigurationService().retrieveAppStyleHeaderUrl() + "?" + urlQueryParams));
         } catch (MetamacException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e.getHumanReadableMessage());
@@ -70,13 +74,16 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         }
     }
 
-    private String getLocaleQueryParam(Map<String, Object> model, String locale) {
+    private String getLocaleQueryParam(Map<String, Object> model, Locale locale) throws UnsupportedEncodingException {
         String internationalizationUrlParamId = (String) model.getOrDefault("internationalizationUrlParamId", null);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
-        String appVersion = resourceBundle.getString("app.version"); 
-        String result = String.format("appId=%s&appVersion=%s", "indicators-external", appVersion);
+        String appVersion = resourceBundle.getString("app.version");
+        MessageSource messageSource = (MessageSource) getAttributesMap().get("messageSource");
+        String appName = messageSource.getMessage("api.doc.title", null, locale);
+
+        String result = String.format("appId=%s&appVersion=%s&appName=%s", "indicators-external", appVersion, UriUtils.encodeQueryParam(appName, StandardCharsets.UTF_8.toString()));
         if (StringUtils.isNotBlank(internationalizationUrlParamId)) {
-           result = result.concat(String.format("&%s=%s", internationalizationUrlParamId, locale));
+            result = result.concat(String.format("&%s=%s", internationalizationUrlParamId, locale));
         }
         return result;
     }
