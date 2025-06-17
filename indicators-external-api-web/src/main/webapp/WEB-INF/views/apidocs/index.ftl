@@ -100,13 +100,15 @@
 </head>
 <body>
     
-    ${apiStyleHeader!}
+    ${appStyleHeader!}
     
-    <div class="swagger-section">
-        <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
-        <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+    <div class="content-wrapper edatos-wrapper edatos-swagger">
+	    <div class="swagger-section">
+	        <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+	        <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+	    </div>
     </div>
 
-    ${apiStyleFooter!}
+    ${appStyleFooter!}
 </body>
 </html>
