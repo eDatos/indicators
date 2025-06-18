@@ -126,12 +126,20 @@
     </filter-mapping>
 
     <!-- JSON-stat -->
-	<filter>
-		<filter-name>JsonStatFilter</filter-name>
-		<filter-class>es.gobcan.istac.indicators.rest.filter.JsonStatFilter</filter-class>
-	</filter>
+    <filter>
+        <filter-name>HttpWrapperFilter</filter-name>
+        <filter-class>org.siemac.metamac.rest.request.filter.HttpWrapperFilter</filter-class>
+        <init-param>
+            <param-name>url-filter-format</param-name>
+            <param-value>true</param-value> <!-- true or false if param is not defined it will be considered as false by default -->
+        </init-param>
+        <init-param>
+            <param-name>filter-default-format</param-name>
+            <param-value>application/json</param-value> <!-- if param is not defined it will be considered as xml by default -->
+        </init-param>
+    </filter>
     <filter-mapping>
-        <filter-name>JsonStatFilter</filter-name>
+        <filter-name>HttpWrapperFilter</filter-name>
         <url-pattern>/internal/api/*</url-pattern>
     </filter-mapping>
 		

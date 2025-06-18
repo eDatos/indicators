@@ -1269,8 +1269,10 @@
         "operationId": "findIndicator",
         "produces":[
            "application/json",
-           "application/jsonstat+json"
-        ],
+"application/jsonstat+json",
+"text/csv",
+"text/tab-separated-values"
+],
         "parameters": [
           {
             "description": "[@messageEscape 'api.doc.swagger.paths.indicators.code.data.get.parameters.indicatorcode' /]",
@@ -1486,7 +1488,7 @@
         "operationId": "retrieveIndicatorsInstanceData",
         "produces":[
            "application/json",
-           "application/jsonstat+json"
+"application/jsonstat+json"
         ],
         "parameters": [
           {
