@@ -143,14 +143,14 @@
 
 		<!-- METAMAC -->
 		<metamac-core-common.version>8.3.1</metamac-core-common.version>
-		<metamac-web-common.version>5.11.1</metamac-web-common.version>
+		<metamac-web-common.version>5.11.2-SNAPSHOT</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.8.1</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.7.1</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>10.7.0</metamac-statistical-resources-rest-external-api.version>
         <metamac-srm-rest-internal-api.version>3.2.1</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>3.2.1</metamac-srm-rest-external-api.version>
 		<metamac-sso-client.version>4.8.1</metamac-sso-client.version>
-		<metamac-rest-common.version>2.7.1</metamac-rest-common.version>
+		<metamac-rest-common.version>2.7.2-SNAPSHOT</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.7.1</metamac-notifications-rest-internal-api.version>
         <metamac-statistical-resources-kafka.version>6.0.0</metamac-statistical-resources-kafka.version>
         <metamac-srm-kafka.version>7.0.0</metamac-srm-kafka.version>

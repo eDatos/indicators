@@ -187,7 +187,7 @@ public class IndicatorListViewImpl extends ViewWithUiHandlers<IndicatorListUiHan
             }
         });
 
-        newIndicatorActor.setVisibility(ClientSecurityUtils.canUpdatedCategoryCache() ? Visibility.VISIBLE : Visibility.HIDDEN);
+        updateCategoryCacheButton.setVisibility(ClientSecurityUtils.canUpdatedCategoryCache() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
         return updateCategoryCacheButton;
     }

@@ -15,28 +15,30 @@
 	</head>
 	<body>
 	
-	   ${apiStyleHeader!}
+	   ${appStyleHeader!}
 	   
-	   <div class="version-list">
-    	   <h1>[@messageEscape 'api.doc.title'/]</h1>
-    	   <h2>[@messageEscape 'api.doc.versions'/]</h2>
-    	   <ul>
-    	       <li>
-    	           <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/latest">/latest</a></h3>
-    	           <div class="version-description">
-    	               <p><strong>latest</strong> [@messageEscape 'api.doc.latest'/]</p>
-    	           </div>
-    	       </li>
-    	       
-    	       <li>
-                   <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/v1.0">/v1.0</a></h3>
-                   <div class="version-description">
-                        <p>[@messageEscape 'api.doc.version.1_0'/]</p>
-                   </div>
-               </li>
-    	   </ul>
+	   <div class="content-wrapper edatos-wrapper edatos-swagger">
+		   <div class="version-list">
+	    	   <h1>[@messageEscape 'api.doc.title'/]</h1>
+	    	   <h2>[@messageEscape 'api.doc.versions'/]</h2>
+	    	   <ul>
+	    	       <li>
+	    	           <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/latest">/latest</a></h3>
+	    	           <div class="version-description">
+	    	               <p><strong>latest</strong> [@messageEscape 'api.doc.latest'/]</p>
+	    	           </div>
+	    	       </li>
+	    	       
+	    	       <li>
+	                   <h3 class="version-title"><a href="${indicatorsExternalApiUrlBase}/v1.0">/v1.0</a></h3>
+	                   <div class="version-description">
+	                        <p>[@messageEscape 'api.doc.version.1_0'/]</p>
+	                   </div>
+	               </li>
+	    	   </ul>
+		   </div>
 	   </div>
 	   
-        ${apiStyleFooter!}	   	           
+        ${appStyleFooter!}	   	           
 	</body>
 </html>
