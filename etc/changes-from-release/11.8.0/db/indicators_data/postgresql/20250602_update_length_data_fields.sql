@@ -34,7 +34,7 @@ WHERE viewname IN (
 
 --3)  Obtener un alter table para cada columna del tipo dimensión en cada tabla de datos y cambiar el tamaño a 255 caracteres.
 
-3.1) Ejecutar la siguiente consulta que generará sentencias ALTER TABLE para las columnas del tipo dimensión
+--3.1) Ejecutar la siguiente consulta que generará sentencias ALTER TABLE para las columnas del tipo dimensión
 select ' ALTER TABLE ' || a.table_name  || ' ALTER COLUMN ' || b.column_name  || ' TYPE VARCHAR(255);'   
  from tb_datasets a, tb_dataset_dimensions b 
  where a.id = b.dataset_fk 
@@ -63,6 +63,22 @@ select ' ALTER TABLE ' || a.table_name  || ' ALTER COLUMN ' || b.column_name || 
 
 --6) Regenerar las vistas borradas con el script donde se han guardado resguardoVistasData.sql
 
+-- 6.1) Restaurar los permisos sobre las vistas: existe un rol de base de datos definido en la propiedad indicators.bbbd.data_views_role del common-metadata que 
+-- debe tener permisos de select sobre todas las vistas de los indicadores.
+-- 6.1.1) Consultar en la base de datos del common-metadata el rol definido en la propiedad indicators.bbbd.data_views_role
+select conf_value from tb_data_configurations where conf_key = 'indicators.bbbd.data_views_role';
+
+-- 6.1.2) Sustituir el valor obtenido en la consulta anterior en el campo [FILL_ME_WITH_ROLE] la siguiente consulta y ejecutarla para obtener todos los grant necesarios 
+-- para restaurar los permisos sobre las vistas
+SELECT 'GRANT SELECT ON ' || quote_ident(viewname) || ' TO [FILL_ME_WITH_ROLE];' create_sql
+FROM pg_views
+WHERE viewname IN (
+ SELECT distinct v.viewname FROM pg_views v where v.viewname like 'dv_%'
+);
+
+-- 6.1.3) Ejecutar las sentecias grant obtenidas en el apartado anterior
+
+
 --7) Comprobar que ya no quedan columnas ni del tipo dimensión ni del tipo atributo. Para ello ejecutar la consulta del ANEXO apartado a1) y comprobar que no devuelve ningún resultado.
 --OJO!! Se han detectado tablas en desarrollo que aparecen en esta consulta pero es porque no tienen dataset asociado en tb_datasets. En este caso no es problema y no será error.
 -- Para detectarlo, comprobar con la consulta indicada en a1.1) del anexo que debe devolver cero resultados indicando que esas tablas no están asociadas a nada.
@@ -79,7 +95,6 @@ FROM
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
     or  column_name LIKE 'attribute\_%' ESCAPE '\')
-    
     AND data_type = 'character varying'
     AND character_maximum_length = 100
 union ALL
@@ -88,8 +103,7 @@ FROM
     information_schema.columns
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
-    or  column_name LIKE 'attribute\_%_es' ESCAPE '\')
-    
+    or  column_name LIKE 'attribute\_%_es' ESCAPE '\')    
     AND data_type = 'character varying'
     AND character_maximum_length = 500
    ) a
@@ -104,7 +118,6 @@ FROM
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
     or  column_name LIKE 'attribute\_%' ESCAPE '\')
-    
     AND data_type = 'character varying'
     AND character_maximum_length = 100
 union ALL
@@ -113,11 +126,10 @@ FROM
     information_schema.columns
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
-    or  column_name LIKE 'attribute\_%_es' ESCAPE '\')
-    
+    or  column_name LIKE 'attribute\_%_es' ESCAPE '\') 
     AND data_type = 'character varying'
     AND character_maximum_length = 500
-   ) a
+   ) a;
 
 
 
@@ -131,8 +143,7 @@ FROM
     information_schema.columns
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
-    or  column_name LIKE 'attribute\_%' ESCAPE '\')
-    
+    or  column_name LIKE 'attribute\_%' ESCAPE '\') 
     AND data_type = 'character varying'
     AND character_maximum_length = 100
 ORDER BY 
@@ -150,7 +161,6 @@ FROM
 WHERE 
     (column_name LIKE 'dimension\_%' ESCAPE '\'
     or  column_name LIKE 'attribute\_%' ESCAPE '\')
-    
     AND data_type = 'character varying'
     and upper(table_name) = 'DATA_FF1I864I67FQPG0IC7EL1G8'
 ORDER BY 
