@@ -1139,6 +1139,20 @@
             "required": false,
             "type": "boolean"
           },
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalgranularities.get.parameters.subjectCode' /]",
+            "in": "query",
+            "name": "subjectCode",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalgranularities.get.parameters.systemCode' /]",
+            "in": "query",
+            "name": "systemCode",
+            "required": false,
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
