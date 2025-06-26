@@ -41,8 +41,13 @@ public class GeographicRestFacadeImpl implements GeographicRestFacade {
     private IndicatorsConfigurationService configurationService;
 
     @Override
-    public List<MetadataGranularityType> findGeographicGranularities() throws MetamacException {
-        List<GeographicalGranularity> geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(IndicatorsRestConstants.SERVICE_CONTEXT);
+    public List<MetadataGranularityType> findGeographicGranularities(boolean excludeUnusedGranularities) throws MetamacException {
+        List<GeographicalGranularity> geographicalGranularities;
+        if (excludeUnusedGranularities) {
+            geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularitiesInUse(IndicatorsRestConstants.SERVICE_CONTEXT);
+        } else {
+            geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(IndicatorsRestConstants.SERVICE_CONTEXT);
+        }
         return dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
     }
 

@@ -1131,6 +1131,29 @@
         "tags": [ "[@messageEscape 'api.doc.swagger.paths.geographicgranuarities.get.tags' /]" ],
         "description": "[@messageEscape 'api.doc.swagger.paths.geographicgranuarities.get.description' /]",
         "operationId": "findGeographicGranularities",
+        "parameters": [
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalgranularities.get.parameters.excludeUnusedGranularities' /]",
+            "in": "query",
+            "name": "excludeUnusedGranularities",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalgranularities.get.parameters.subjectCode' /]",
+            "in": "query",
+            "name": "subjectCode",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "[@messageEscape 'api.doc.swagger.paths.geographicalgranularities.get.parameters.systemCode' /]",
+            "in": "query",
+            "name": "systemCode",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "[@messageEscape 'api.doc.swagger.paths.responses.200' /]",
