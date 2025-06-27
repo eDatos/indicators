@@ -36,6 +36,8 @@
                 'BORDER_COLOR': 'Border color',
                 'INDICATOR_NAME_COLOR': 'Indicator name color',
                 'WIDGET_WIDTH': 'Widget width',
+                'WIDGET_HEIGHT': 'Widget height',
+                'WIDGET_AUTO_HEIGHT': 'Automatic',
                 'BORDER_RADIUS': 'Border radius',
                 'SHADOW': 'Shadow',
                 'COLORS': {

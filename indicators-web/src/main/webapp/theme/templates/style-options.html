@@ -58,6 +58,23 @@
         <div class="width-slider"></div>
 
         <div>
+            <label>{{ translate "OPTIONS.STYLE.WIDGET_HEIGHT" }}:</label>
+            <input type="number" name="heightQuantity" id="widget-height" class="small" disabled/>
+            <div class="compact-radio-group">
+                <label class="radio">
+                    <input type="radio" name="heightUnit" value="px">px
+                </label>
+                <label class="radio">
+                    <input type="radio" name="heightUnit" value="%">%
+                </label>
+                <label class="radio">
+                    <input type="radio" name="heightUnit" value="auto">{{ translate "OPTIONS.STYLE.WIDGET_AUTO_HEIGHT" }}
+                </label>
+            </div>
+        </div>
+        <div class="height-slider"></div>
+
+        <div>
             <label>
                 {{ translate "OPTIONS.STYLE.BORDER_RADIUS" }}
                 <i class="old-browser-warning icon-help"></i>

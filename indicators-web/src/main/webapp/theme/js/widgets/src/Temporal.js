@@ -119,7 +119,7 @@
         renderChart: function (chartData) {
             this.$chartContainer = $('<div id="' + this.getChartId() + '"></div>');
             this.$chartContainer.css('width', this.width - 20);
-            this.$chartContainer.css('height', 250);
+            this.$chartContainer.css('height', '100%');
             this.contentContainer.html(this.$chartContainer);
 
             echarts.registerLocale("es", EDatos.common.I18n.translate("ECHARTS", "es"));

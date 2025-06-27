@@ -15,6 +15,9 @@
             width: '100%',
             widthQuantity: App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH,
             widthUnit: '%', // or px
+            height: 'auto',
+            heightQuantity: '',
+            heightUnit: 'auto', // px, %, auto
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
@@ -55,7 +58,9 @@
                         textColor: this.defaults.textColor,
                         indicatorNameColor: this.defaults.indicatorNameColor,
                         widthQuantity: 100,
-                        widthUnit: '%'
+                        widthUnit: '%',
+                        heightQuantity: '',
+                        heightUnit: 'auto'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }
@@ -90,7 +95,7 @@
         },
 
         getVisibleOptions: function () {
-            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit']);
+            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit', 'heightQuantity', 'heightUnit']);
         }
     });
 
