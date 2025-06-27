@@ -151,7 +151,7 @@
         },
 
         _getWidthSlideConfig: function () {
-            if (this.model.get("heightUnit") === '%') {
+            if (this.model.get("widthUnit") === '%') {
                 return {
                     min: App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PERCENTAGE_VALUE,
                     max: App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PERCENTAGE_VALUE,
