@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 11.8.0 a 11.8.1-SNAPSHOT
+## 11.8.0 a 11.9.0
 * Se añade script de actualización de base de datos
 
 ```
@@ -27,7 +27,7 @@ etc/changes-from-release/11.8.0/db/indicators_data/postgresql/20250528_update_ur
 etc/changes-from-release/11.8.0/db/indicators_data/postgresql/20250602_update_length_data_fields.sql
 ```
 
-* Esta versión tiene como dependencia complementos-apps en su versión 8.12.2-SNAPSHOT
+* Esta versión tiene como dependencia complementos-apps en su versión 8.13.0
 
 ## 11.4.0 a 11.5.0
 * Se añade script de relocalización de las extensiones actualmente usadas al esquema de extensiones
