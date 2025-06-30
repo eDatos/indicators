@@ -134,7 +134,14 @@
             // Initialize style
 
             var realWidth = this.options.uwa ? "100%" : options.width;
-            var realHeight = this.options.uwa ? "auto" : options.height;
+            var realHeight;
+            if (this.options.uwa) {
+                realHeight = 'auto';
+            } else if (options.height) {
+                realHeight = options.height;
+            } else {
+                realHeight = this.options.type === 'temporal' ? '328px' : 'auto';
+            }
 
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);

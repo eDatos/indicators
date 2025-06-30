@@ -106,6 +106,9 @@
         _bindHeightSlider: function () {
             var self = this;
             var $heightSlider = this.$(".height-slider");
+            if (this.model.get("heightUnit") === 'auto') {
+                self.$("#widget-height").attr('disabled', 'disabled');
+            }
             var heightSlideConfig = this._getHeightSlideConfig();
             $heightSlider.slider({
                 min: heightSlideConfig.min,
@@ -114,7 +117,7 @@
                 slide: function (event, ui) {
                     self.model.set("heightQuantity", ui.value);
                 },
-                disabled: true
+                disabled: this.model.get("heightUnit") === 'auto'
             });
             self.model.on('change:heightQuantity', function (model, value) {
                 $heightSlider.slider('value', value);

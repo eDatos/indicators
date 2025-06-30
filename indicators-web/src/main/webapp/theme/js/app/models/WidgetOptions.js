@@ -7,6 +7,9 @@
 
         initialize: function () {
             this._bindCalculatedValues();
+            this.set("height", this.get("type") === "temporal" ? '328px' : 'auto');
+            this.set("heightQuantity", this.get("type") === "temporal" ? '328' : '');
+            this.set("heightUnit", this.get("type") === "temporal" ? 'px' : 'auto');
         },
 
         defaults: {
@@ -59,8 +62,8 @@
                         indicatorNameColor: this.defaults.indicatorNameColor,
                         widthQuantity: 100,
                         widthUnit: '%',
-                        heightQuantity: '',
-                        heightUnit: 'auto'
+                        heightQuantity: this.get("type") === "temporal" ? '328' : '',
+                        heightUnit: this.get("type") === "temporal" ? 'px' : 'auto'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }
