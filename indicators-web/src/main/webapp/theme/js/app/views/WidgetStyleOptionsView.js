@@ -116,7 +116,9 @@
                 value: this.model.get("heightQuantity"),
                 slide: function (event, ui) {
                     self.model.set("heightQuantity", ui.value);
-                },
+                }
+            });
+            $heightSlider.slider({
                 disabled: this.model.get("heightUnit") === 'auto'
             });
             self.model.on('change:heightQuantity', function (model, value) {
