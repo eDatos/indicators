@@ -36,6 +36,8 @@
                 'BORDER_COLOR': 'Color de la vora',
                 'INDICATOR_NAME_COLOR': "Color del nombre de l'indicador",
                 'WIDGET_WIDTH': 'Ample del widget',
+                'WIDGET_HEIGHT': 'Altura del widget',
+                'WIDGET_AUTO_HEIGHT': 'Automàtic',
                 'BORDER_RADIUS': 'Vores arrodonides',
                 'SHADOW': 'Ombra',
                 'COLORS': {
