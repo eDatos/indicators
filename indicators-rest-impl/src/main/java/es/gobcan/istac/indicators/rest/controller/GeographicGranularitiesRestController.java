@@ -31,7 +31,8 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
     @ResponseBody
     //@formatter:off
     public ResponseEntity<ListResultType<MetadataGranularityType>> findGeographicGranularities(@RequestParam(value = "subjectCode", required = false) String subjectCode,
-                                                                                                @RequestParam(value = "systemCode", required = false) String systemCode
+                                                                                                @RequestParam(value = "systemCode", required = false) String systemCode,
+                                                                                                @RequestParam(value = "excludeUnusedGranularities", required = false) Boolean excludeUnusedGranularities
                                                                                               ) throws MetamacException {
     //@formatter:on
 
@@ -41,7 +42,7 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
         } else if (systemCode != null) {
             items = geographicRestFacade.findGeographicGranularitiesByIndicatorsSystemCode(systemCode);
         } else {
-            items = geographicRestFacade.findGeographicGranularities();
+            items = geographicRestFacade.findGeographicGranularities(excludeUnusedGranularities != null && excludeUnusedGranularities);
         }
 
         String selfLink = uriLinks.getGeographicalGranularitiesSelfLink(subjectCode, systemCode);

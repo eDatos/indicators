@@ -42,4 +42,15 @@ public class GeographicalGranularityRepositoryImpl extends GeographicalGranulari
             return result.get(0);
         }
     }
+
+    @Override
+    public List<GeographicalGranularity> findGeographicalGranularitiesInUse() {
+        String hql = "select distinct gg from GeographicalGranularity gg " +
+                     "where exists (" +
+                     "  select 1 " +
+                     "  from GeographicalValue gv, IndicatorVersionLastValueCache ivlv " +
+                     "  where gv.granularity = gg and ivlv.geographicalCode = gv.code" +
+                     ")";
+        return findByQuery(hql, null, 0);
+    }
 }

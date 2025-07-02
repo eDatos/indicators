@@ -13,7 +13,7 @@
         _defaultOptions: {
             title: 'default title',
             width: 300,
-            height: 400,
+            height: 'auto',
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
@@ -134,6 +134,14 @@
             // Initialize style
 
             var realWidth = this.options.uwa ? "100%" : options.width;
+            var realHeight;
+            if (this.options.uwa) {
+                realHeight = 'auto';
+            } else if (options.height) {
+                realHeight = options.height;
+            } else {
+                realHeight = this.options.type === 'temporal' ? '328px' : 'auto';
+            }
 
             this.set('style', options.style);
             this.set('gobcanStyleColor', options.gobcanStyleColor);
@@ -145,6 +153,7 @@
             this.set('title', options.title);
             this.set('widgetWith', options.width);
             this.set('width', realWidth);
+            this.set('height', realHeight);
             this.set('showLabels', options.showLabels);
             this.set('showLegend', options.showLegend);
             this.set('indicatorSystem', options.indicatorSystem);
@@ -250,6 +259,11 @@
         setWidth: function (width) {
             this.width = width;
             this.el.css('width', width);
+        },
+
+        setHeight: function (height) {
+            this.height = height;
+            this.el.css('height', height);
         },
 
         updateTitle: function () {

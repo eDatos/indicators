@@ -62,58 +62,135 @@
             });
 
             this.bindColorPickers();
-            this.bindSlider();
+            this.bindSliders();
 
             this.modelBinder.bind(this.model, this.$el);
 
             return this;
         },
 
-        bindSlider: function () {
+        bindSliders: function () {
+            this._bindWidthSlider();
+            this._bindHeightSlider();
+         },
+
+        _bindWidthSlider: function () {
             var self = this;
-            var $slider = this.$(".width-slider");
-            $slider.slider({
-                min: self._getWidthSlideMin(),
-                max: self._getWidthSlideMax(),
+            var $widthSlider = this.$(".width-slider");
+            var widthSlideConfig = this._getWidthSlideConfig();
+            $widthSlider.slider({
+                min: widthSlideConfig.min,
+                max: widthSlideConfig.max,
                 value: this.model.get("widthQuantity"),
                 slide: function (event, ui) {
                     self.model.set("widthQuantity", ui.value);
                 }
             });
             self.model.on('change:widthQuantity', function (model, value) {
-                $slider.slider('value', value);
+                $widthSlider.slider('value', value);
                 self.model.set('width', value + self.model.get("widthUnit"));
             });
             self.model.on('change:widthUnit', function () {
-                var slideMin = self._getWidthSlideMin();
-                var slideMax = self._getWidthSlideMax();
-                $slider.slider('option', 'min', slideMin);
-                $slider.slider('option', 'max', slideMax);
+                var widthSlideConfig = self._getWidthSlideConfig();
+                $widthSlider.slider('option', 'min', widthSlideConfig.min);
+                $widthSlider.slider('option', 'max', widthSlideConfig.max);
 
-                if (self.model.get("widthQuantity") < slideMin || self.model.get("widthQuantity") > slideMax) {
-                    self.model.set("widthQuantity", self._getWidthSlideDefaultValue());
+                if (self.model.get("widthQuantity") < widthSlideConfig.min || self.model.get("widthQuantity") > widthSlideConfig.max) {
+                    self.model.set("widthQuantity", widthSlideConfig.default);
                 }
                 self.model.set('width', self.model.get("widthQuantity") + self.model.get("widthUnit"));
-                $slider.slider('value', self.model.get("widthQuantity"));
+                $widthSlider.slider('value', self.model.get("widthQuantity"));
             });
         },
 
-        _getWidthSlideMin: function () {
-            return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PERCENTAGE_VALUE
-                : App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PIXEL_VALUE;
+        _bindHeightSlider: function () {
+            var self = this;
+            var $heightSlider = this.$(".height-slider");
+            if (this.model.get("heightUnit") === 'auto') {
+                self.$("#widget-height").attr('disabled', 'disabled');
+            }
+            var heightSlideConfig = this._getHeightSlideConfig();
+            $heightSlider.slider({
+                min: heightSlideConfig.min,
+                max: heightSlideConfig.max,
+                value: this.model.get("heightQuantity"),
+                slide: function (event, ui) {
+                    self.model.set("heightQuantity", ui.value);
+                }
+            });
+            $heightSlider.slider({
+                disabled: this.model.get("heightUnit") === 'auto'
+            });
+            self.model.on('change:heightQuantity', function (model, value) {
+                $heightSlider.slider('value', value);
+                self.model.set('height', value + self.model.get("heightUnit"));
+            });
+            self.model.on('change:heightUnit', function () {
+                if (self.model.get("heightUnit") === 'auto') {
+                    self.model.set("heightQuantity", '');
+
+                    $heightSlider.slider({disabled: true});
+                    self.$("#widget-height").attr('disabled', 'disabled');
+                } else {
+                    var heightSlideConfig = self._getHeightSlideConfig();
+                    $heightSlider.slider('option', 'min', heightSlideConfig.min);
+                    $heightSlider.slider('option', 'max', heightSlideConfig.max);
+
+                    if (self.model.get("heightQuantity") < heightSlideConfig.min || self.model.get("heightQuantity") > heightSlideConfig.max) {
+                        self.model.set("heightQuantity", heightSlideConfig.default);
+                    }
+
+                    $heightSlider.slider({disabled: false});
+                    self.$("#widget-height").removeAttr('disabled');
+                }
+
+                if (self.model.get("heightUnit") === '%') {
+                    $("#widget-preview-container").css('height', '750px');
+                } else {
+                    $("#widget-preview-container").css('height', 'auto');
+                }
+
+                self.model.set('height', self.model.get("heightQuantity") + self.model.get("heightUnit"));
+                $heightSlider.slider('value', self.model.get("heightQuantity"));
+            });
         },
 
-        _getWidthSlideMax: function () {
-            return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PERCENTAGE_VALUE
-                : App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PIXEL_VALUE;
+        _getWidthSlideConfig: function () {
+            if (this.model.get("widthUnit") === '%') {
+                return {
+                    min: App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PERCENTAGE_VALUE,
+                    max: App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PERCENTAGE_VALUE,
+                    default: App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH
+                };
+            } else {
+                return {
+                    min: App.constants.WidgetConstants.MIN_WIDTH_SLIDER_PIXEL_VALUE,
+                    max: App.constants.WidgetConstants.MAX_WIDTH_SLIDER_PIXEL_VALUE,
+                    default: App.constants.WidgetConstants.DEFAULT_PIXEL_WIDTH
+                };
+            }
         },
 
-        _getWidthSlideDefaultValue: function () {
-            return this.model.get("widthUnit") === '%'
-                ? App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH
-                : App.constants.WidgetConstants.DEFAULT_PIXEL_WIDTH;
+        _getHeightSlideConfig: function () {
+            if (this.model.get("heightUnit") === 'auto') {
+                return {
+                    min: '',
+                    max: '',
+                    default: ''
+                };
+            } else if (this.model.get("heightUnit") === '%') {
+                return {
+                    min: App.constants.WidgetConstants.MIN_HEIGHT_SLIDER_PERCENTAGE_VALUE,
+                    max: App.constants.WidgetConstants.MAX_HEIGHT_SLIDER_PERCENTAGE_VALUE,
+                    default: App.constants.WidgetConstants.DEFAULT_PERCENTAGE_HEIGHT
+                };
+            } else {
+                return {
+                    min: App.constants.WidgetConstants.MIN_HEIGHT_SLIDER_PIXEL_VALUE,
+                    max: App.constants.WidgetConstants.MAX_HEIGHT_SLIDER_PIXEL_VALUE,
+                    default: App.constants.WidgetConstants.DEFAULT_PIXEL_HEIGHT
+                };
+            }
         },
 
         bindColorPicker: function (input, property) {

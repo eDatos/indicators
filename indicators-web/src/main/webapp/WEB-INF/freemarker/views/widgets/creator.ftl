@@ -5,7 +5,9 @@
 
 <div id="widget-creator" class="edatos-indicators">
 
-    <div id="widget-preview-content" class="widget"></div>
+    <div id="widget-preview-container">
+        <div id="widget-preview-content" class="widget"></div>
+    </div>
 
     <div class="tabbable" id="widget-options-tabs">
         <ul class="tab-navigation nav-tabs">

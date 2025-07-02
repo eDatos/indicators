@@ -36,6 +36,8 @@
                 'BORDER_COLOR': 'Color del borde',
                 'INDICATOR_NAME_COLOR': 'Color del nombre del indicador',
                 'WIDGET_WIDTH': 'Ancho del widget',
+                'WIDGET_HEIGHT': 'Altura del widget',
+                'WIDGET_AUTO_HEIGHT': 'Automático',
                 'BORDER_RADIUS': 'Bordes redondeados',
                 'SHADOW': 'Sombra',
                 'COLORS': {
