@@ -47,6 +47,8 @@
     line-height: 18px;
     color: #333;
     background-color: #fff;
+    display: flex;
+    flex-direction: column;
 }
 
 .istac-widget a:link, .istac-widget a:visited, .istac-widget a:active, .istac-widget a:hover {
@@ -95,10 +97,15 @@
     border-right: 1px solid;
     border-bottom: 1px solid;
     border-left: 1px solid;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .istac-widget-content {
     overflow-x: auto;
+    height: 100%;
 }
 
 /* Temporal Widget*/

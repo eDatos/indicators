@@ -1000,6 +1000,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInUse(ServiceContext ctx) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveGeographicalGranularities(null);
+
+        // Find
+        return getGeographicalGranularityRepository().findGeographicalGranularitiesInUse();
+    }
+
+    @Override
     public GeographicalGranularity createGeographicalGranularity(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkCreateGeographicalGranularity(null, geographicalGranularity);

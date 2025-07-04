@@ -7,6 +7,9 @@
 
         initialize: function () {
             this._bindCalculatedValues();
+            this.set("height", this.get("type") === "temporal" ? '328px' : 'auto');
+            this.set("heightQuantity", this.get("type") === "temporal" ? '328' : '');
+            this.set("heightUnit", this.get("type") === "temporal" ? 'px' : 'auto');
         },
 
         defaults: {
@@ -15,6 +18,9 @@
             width: '100%',
             widthQuantity: App.constants.WidgetConstants.DEFAULT_PERCENTAGE_WIDTH,
             widthUnit: '%', // or px
+            height: 'auto',
+            heightQuantity: '',
+            heightUnit: 'auto', // px, %, auto
             headerColor: '#0F5B95',
             titleColor: '#FFFFFF',
             borderColor: '#EBEBEB',
@@ -55,7 +61,9 @@
                         textColor: this.defaults.textColor,
                         indicatorNameColor: this.defaults.indicatorNameColor,
                         widthQuantity: 100,
-                        widthUnit: '%'
+                        widthUnit: '%',
+                        heightQuantity: this.get("type") === "temporal" ? '328' : '',
+                        heightUnit: this.get("type") === "temporal" ? 'px' : 'auto'
                     });
                     this.trigger("change:gobcanStyleColor");
                 }
@@ -90,7 +98,7 @@
         },
 
         getVisibleOptions: function () {
-            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit']);
+            return _.omit(this.toJSON(), ['widthQuantity', 'widthUnit', 'heightQuantity', 'heightUnit']);
         }
     });
 
