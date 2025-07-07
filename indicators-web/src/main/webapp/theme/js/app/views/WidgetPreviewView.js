@@ -41,6 +41,11 @@
                     self.widget.render();
                 }, 500),
 
+                height : _.debounce(function (height) {
+                    self.widget.set('height', height);
+                    self.widget.render();
+                }, 500),
+
                 borderColor : function (borderColor) {
                     self.widget.set('borderColor', borderColor);
                     this.widget.render();
