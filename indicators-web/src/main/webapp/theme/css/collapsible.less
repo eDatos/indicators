@@ -67,3 +67,29 @@
   font-weight: bold;
   font-size: 0.8em;
 }
+
+.collapsible-content {
+  ul.children {
+    padding-left: 1.2em;
+
+    li {
+      position: relative;
+      padding-left: 1.2em;
+      list-style: none;
+
+      &::before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: @gray;
+        font-weight: bold;
+        font-size: 0.8em;
+      }
+    }
+  }
+}
+
+.collapsible-content ul.indicators {
+  padding-left: 30px !important;
+}
