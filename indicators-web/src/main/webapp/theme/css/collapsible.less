@@ -14,10 +14,10 @@
 .collapsible-group-content {
   display: none;
   margin-left: 1em;
-}
 
-.collapsible-group-content.show {
-  display: block;
+  &.show {
+    display: block;
+  }
 }
 
 .collapsible-header {
@@ -49,28 +49,9 @@
   &.show {
     display: block;
   }
-}
 
-.collapsible-content ul.indicators li {
-  position: relative;
-  padding-left: 1.2em;
-  list-style: none;
-}
-
-.collapsible-content ul.indicators li::before {
-  content: '\25B7';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  color: @gray;
-  font-weight: bold;
-  font-size: 0.8em;
-}
-
-.collapsible-content {
-  ul.children {
-    padding-left: 1.2em;
+  ul.indicators {
+    padding-left: 30px !important;
 
     li {
       position: relative;
@@ -78,6 +59,7 @@
       list-style: none;
 
       &::before {
+        content: '\25B7';
         position: absolute;
         left: 0;
         top: 50%;
@@ -88,8 +70,14 @@
       }
     }
   }
-}
 
-.collapsible-content ul.indicators {
-  padding-left: 30px !important;
+  ul.children {
+    padding-left: 1.2em;
+
+    li {
+      position: relative;
+      padding-left: 1.2em;
+      list-style: none;
+    }
+  }
 }
