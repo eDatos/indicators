@@ -18,11 +18,11 @@ public class ExporterResourceAccess {
     public void exportResourceAccess(ResourceAccess resourceAccess, ExportFormatEnum format, OutputStream os) throws MetamacException {
         try {
             if (format.isXlsx()) {
-
-            }
-            if (format.isPlainText()) {
-                PlainTextExporter exporter = new PlainTextExporter(format, resourceAccess);
-                exporter.writeObservationsAndAttributesWithObservationAttachmentLevel(os);
+                new ExcelExporter(format, resourceAccess).write(os);
+            } else if (format.isPlainText()) {
+                new PlainTextExporter(format, resourceAccess).writeObservationsAndAttributesWithObservationAttachmentLevel(os);
+            } else {
+                throw new IllegalArgumentException("Unsupported export format: " + format);
             }
         } catch (Exception e) {
             throw ExceptionUtils.manageException(e);
