@@ -29,6 +29,7 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttr
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 
+import es.gobcan.istac.indicators.rest.dto.CellCommentDetails;
 import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
@@ -47,6 +48,8 @@ public class ResourceAccess {
     private IndicatorSelection                            indicatorSelection;
     private String                                        lang;
     private Data                                          data;
+
+    private Map<String, String>                           name;
 
     // Metadata
     private Map<String, MetadataDimensionType>            dimensionsMetadata;
@@ -83,6 +86,7 @@ public class ResourceAccess {
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
+        this.name = indicator.getTitle();
         this.indicatorSelection = indicatorSelection;
 
         initialize(data, indicator, indicatorData, indicatorSelection, lang);
@@ -105,6 +109,10 @@ public class ResourceAccess {
 
     public Data getData() {
         return data;
+    }
+
+    public Map<String, String> getName() {
+        return name;
     }
 
     public String getLang() {
@@ -248,7 +256,6 @@ public class ResourceAccess {
         }
     }
 
-
     /**
      * Retrieve the observation for a specific key <param>permutation</param>
      *
@@ -276,82 +283,84 @@ public class ResourceAccess {
     }
 
     // TODO: EDATOS-5025
-    // public CellCommentDetails attributesAtPermutation(Map<String, String> permutation, String unitMeasure, String unitMultiplier) {
-    // CellCommentDetails cellCommentDetails = new CellCommentDetails();
-    // for (Attribute attribute : getAttributesMetadata()) {
-    // // We handle dataset level attributes elsewhere
-    // if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
-    // continue;
-    // }
-    //
-    // Integer offset = null;
-    // String attributeId = attribute.getId();
-    // // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
-    // if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
-    // continue;
-    // }
-    //
-    // boolean CELL_AT_HEADER = permutation.size() == 1;
-    // boolean CELL_AT_BODY = permutation.size() > 1;
-    // // Observation level attributes (body cell)
-    // if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-    // offset = calculateOffsetAtPermutation(permutation);
-    // } else if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-    // if (attribute.getDimensions() == null) {
-    // continue;
-    // }
-    // boolean singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension = CELL_AT_HEADER && attribute.getDimensions().getDimensions().size() == 1
-    // && permutation.get(attribute.getDimensions().getDimensions().get(0).getDimensionId()) != null;
-    // boolean combinationDimensionLevelAttributeForBodyCell = CELL_AT_BODY && attribute.getDimensions().getDimensions().size() > 1;
-    // if (!(singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension || combinationDimensionLevelAttributeForBodyCell)) {
-    // continue;
-    // }
-    // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attribute.getId()));
-    // }
-    // if (offset != null) {
-    // String attributeValue = obtainAttributeValue(attributeId, offset);
-    // cellCommentDetails.addCommentLine(attributeValue);
-    // }
-    // }
-    // return cellCommentDetails;
-    //
-    // }
+    public CellCommentDetails attributesAtPermutation(Map<String, String> permutation, String unitMeasure, String unitMultiplier) {
+        CellCommentDetails cellCommentDetails = new CellCommentDetails();
+        // for (Attribute attribute : getAttributesMetadata()) {
+        // // We handle dataset level attributes elsewhere
+        // if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
+        // continue;
+        // }
+        //
+        // Integer offset = null;
+        // String attributeId = attribute.getId();
+        // // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
+        // if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
+        // continue;
+        // }
+        //
+        // boolean CELL_AT_HEADER = permutation.size() == 1;
+        // boolean CELL_AT_BODY = permutation.size() > 1;
+        // // Observation level attributes (body cell)
+        // if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+        // offset = calculateOffsetAtPermutation(permutation);
+        // } else if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
+        // if (attribute.getDimensions() == null) {
+        // continue;
+        // }
+        // boolean singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension = CELL_AT_HEADER && attribute.getDimensions().getDimensions().size() == 1
+        // && permutation.get(attribute.getDimensions().getDimensions().get(0).getDimensionId()) != null;
+        // boolean combinationDimensionLevelAttributeForBodyCell = CELL_AT_BODY && attribute.getDimensions().getDimensions().size() > 1;
+        // if (!(singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension || combinationDimensionLevelAttributeForBodyCell)) {
+        // continue;
+        // }
+        // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attribute.getId()));
+        // }
+        // if (offset != null) {
+        // String attributeValue = obtainAttributeValue(attributeId, offset);
+        // cellCommentDetails.addCommentLine(attributeValue);
+        // }
+        // }
 
-    // public String obtainAttributeValue(String attributeId, int offset) {
-    // String[] attributeValues = getAttributeValues(attributeId);
-    // String attributeValue = null;
-    // if (attributeValues != null) {
-    // attributeValue = attributeValues[offset];
-    // attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
-    // }
-    // return attributeValue;
-    // }
-    // public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
-    // // Visualisation mode
-    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-    // switch (labelVisualisation) {
-    // case CODE:
-    // // no extra action
-    // break;
-    // case LABEL: {
-    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-    // if (attributeValueLabel != null) {
-    // attributeValue = attributeValueLabel;
-    // }
-    // }
-    // break;
-    // case CODE_AND_LABEL: {
-    // String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-    // if (attributeValueLabel != null) {
-    // attributeValue = attributeValueLabel + " (" + attributeValue + ")";
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return attributeValue;
-    // }
+        cellCommentDetails.addCommentLine("attributeValue");
+        return cellCommentDetails;
+
+    }
+
+    public String obtainAttributeValue(String attributeId, int offset) {
+        String[] attributeValues = getAttributeValues(attributeId);
+        String attributeValue = null;
+        if (attributeValues != null) {
+            attributeValue = attributeValues[offset];
+            attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
+        }
+        return attributeValue;
+    }
+    public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
+        // Visualisation mode
+        LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
+        switch (labelVisualisation) {
+            case CODE:
+                // no extra action
+                break;
+            case LABEL: {
+                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+                if (attributeValueLabel != null) {
+                    attributeValue = attributeValueLabel;
+                }
+            }
+                break;
+            case CODE_AND_LABEL: {
+                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
+                if (attributeValueLabel != null) {
+                    attributeValue = attributeValueLabel + " (" + attributeValue + ")";
+                }
+            }
+                break;
+            default:
+                break;
+        }
+        return attributeValue;
+    }
     // public String applyLabelVisualizationModeForAttribute(String attributeId) {
     // // Visualisation mode
     // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);

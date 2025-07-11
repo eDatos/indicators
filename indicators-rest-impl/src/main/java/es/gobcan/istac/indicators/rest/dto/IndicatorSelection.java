@@ -200,4 +200,14 @@ public class IndicatorSelection {
 
         return permutation;
     }
+
+    public int getMultiplierForDimension(IndicatorSelectionDimension dimension) {
+        return multipliers.get(dimension.getId());
+    }
+
+    public Map<String, String> permutationAtDimension(String dimensionId, String selectedDimensionValue) {
+        Map<String, String> permutation = new HashMap<>();
+        permutation.put(dimensionId, selectedDimensionValue);
+        return permutation;
+    }
 }
