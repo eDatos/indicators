@@ -40,10 +40,10 @@ public class KafkaInitializeTopics {
 
     }
 
-    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService) throws MetamacException {
+    public static void propagateCreationOfTopics(IndicatorsConfigurationService configurationService, String externalDatasetTopic) throws MetamacException {
         Properties kafkaProperties = getKafkaProperties(configurationService);
 
-        List<NewTopic> topics = getTopics(configurationService);
+        List<NewTopic> topics = getTopics(configurationService, externalDatasetTopic);
 
         CreateTopicsOptions topicsOptions = getTopicsOptions();
 
@@ -58,7 +58,7 @@ public class KafkaInitializeTopics {
         return properties;
     }
 
-    private static List<NewTopic> getTopics(IndicatorsConfigurationService configurationService) throws MetamacException {
+    private static List<NewTopic> getTopics(IndicatorsConfigurationService configurationService, String externalDatasetTopic) throws MetamacException {
         List<NewTopic> topics = new ArrayList<>();
 
         topics.add(createTopic(configurationService.retrieveKafkaTopicQueryPublication()));
@@ -68,6 +68,11 @@ public class KafkaInitializeTopics {
         topics.add(createTopic(configurationService.retrieveKafkaTopicIndicatorSystemsPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicVariableElementPublication()));
         topics.add(createTopic(configurationService.retrieveKafkaTopicCodelistsPublication()));
+
+        // only for organisations that have external dataset topic
+        if (externalDatasetTopic != null) {
+            topics.add(createTopic(configurationService.retrieveKafkaTopicExternalDatasetPublication()));
+        }
 
         return topics;
     }

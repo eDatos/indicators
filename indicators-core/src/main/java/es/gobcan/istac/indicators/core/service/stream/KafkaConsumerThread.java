@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.notices.ServiceNoticeMessage;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
@@ -39,15 +40,16 @@ import net.sf.ehcache.Element;
 @Scope("prototype")
 public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnable {
 
-    protected static Log               LOGGER       = LogFactory.getLog(KafkaConsumerThread.class);
+    protected static Log               LOGGER                 = LogFactory.getLog(KafkaConsumerThread.class);
 
-    private static final String        MAX_POOL_MSG = "We have set a poll of 1 message at most. This error can not be given.";
+    private static final String        MAX_POOL_MSG           = "We have set a poll of 1 message at most. This error can not be given.";
 
     private KafkaConsumer<String, T>   consumer;
     private String                     topicName;
     private IndicatorsServiceFacade    indicatorsServiceFacade;
     private NoticesRestInternalService noticesRestInternalService;
     private Cache                      kafkaFailedMessagesCache;
+    private boolean                    isJaxiConsumerDisabled = false;
 
     public void setConsumer(KafkaConsumer<String, T> consumer) {
         this.consumer = consumer;
@@ -92,6 +94,11 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
 
                 // Process resources
                 ConsumerRecord<String, T> record = records.iterator().next();
+
+                if (this.isJaxiConsumerDisabled) {
+                    commitSync(record);
+                    return;
+                }
 
                 if (pendigOffsetsToCommit.containsKey(record.partition()) && record.offset() == pendigOffsetsToCommit.get(record.partition())) {
                     LOGGER.debug("The current message already processed successfully");
@@ -146,6 +153,8 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
         } else if (message instanceof CodelistAvro) {
             indicatorsServiceFacade.processCodelistKafkaMessage(ctx, message);
+        } else if (message instanceof DatasetAvro) {
+            indicatorsServiceFacade.updateIndicatorsDataFromExternalDataSource(ctx, message);
         }
     }
 
@@ -191,6 +200,10 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
         if (kafkaFailedMessagesCache.isKeyInCache(record.key())) {
             kafkaFailedMessagesCache.remove(record.key());
         }
+    }
+
+    public void setIsJaxiConsumerDisabled(boolean isDisabled) {
+        this.isJaxiConsumerDisabled = isDisabled;
     }
 
     private boolean alwaysWithDelay() {
