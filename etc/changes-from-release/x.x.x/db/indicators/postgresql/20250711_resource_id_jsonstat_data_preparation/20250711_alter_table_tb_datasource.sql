@@ -20,5 +20,13 @@ la última parte que es el DATASETID. Resultado será -> I208013_m010
  set resource_id = regexp_replace(split_part(query_urn, '/', array_length(string_to_array(query_urn, '/'), 1)),'\.px$','')
  where query_environment= 'JSON_STAT';
  
+ 
+ -- Actualiza el campo resource_id con la parte del query_urn que va después del último ":"   
+ -- regexp_replace(query_urn, '^.*:', ''): esta expresión regular elimina todo hasta el último : (gracias a .* que es greedy).
+ -- Ej: urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=ISTAC:C00010A_000025 se queda con C00010A_000025 
+UPDATE tb_data_sources
+SET resource_id = regexp_replace(query_urn, '^.*:', '')
+where query_environment= 'METAMAC';
+ 
  commit;
   

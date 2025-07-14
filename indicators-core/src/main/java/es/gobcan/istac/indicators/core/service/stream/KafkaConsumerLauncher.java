@@ -252,7 +252,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                                     futuresMap.put(CONSUMER_DATASET_1_NAME, startConsumerForDatasetTopic(ApplicationContextProvider.getApplicationContext()));
                                     break;
                                 case CONSUMER_JAXI_DATASET_1_NAME:
-                                    futuresMap.put(CONSUMER_JAXI_DATASET_1_NAME, startConsumerForDatasetTopic(ApplicationContextProvider.getApplicationContext()));
+                                    futuresMap.put(CONSUMER_JAXI_DATASET_1_NAME, startConsumerForJaxiDatasetTopic(ApplicationContextProvider.getApplicationContext()));
                                     break;
                                 case CONSUMER_QUERY_1_NAME:
                                     futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ApplicationContextProvider.getApplicationContext()));
