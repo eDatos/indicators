@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
@@ -151,6 +152,9 @@ public class ResourceAccess {
         return attributesValuesByAttributeId.get(attributeId);
     }
 
+    public String getDimensionLabelCurrentLocale(String dimensionId) {
+        return dimensionLabelsCurrentLocale.get(dimensionId);
+    }
     public List<String> getDimensionsOrderedForData() {
         return dimensionsOrderedForData;
     }
@@ -285,43 +289,31 @@ public class ResourceAccess {
     // TODO: EDATOS-5025
     public CellCommentDetails attributesAtPermutation(Map<String, String> permutation, String unitMeasure, String unitMultiplier) {
         CellCommentDetails cellCommentDetails = new CellCommentDetails();
-        // for (Attribute attribute : getAttributesMetadata()) {
-        // // We handle dataset level attributes elsewhere
-        // if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
-        // continue;
-        // }
-        //
-        // Integer offset = null;
-        // String attributeId = attribute.getId();
-        // // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
-        // if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
-        // continue;
-        // }
-        //
-        // boolean CELL_AT_HEADER = permutation.size() == 1;
-        // boolean CELL_AT_BODY = permutation.size() > 1;
-        // // Observation level attributes (body cell)
-        // if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-        // offset = calculateOffsetAtPermutation(permutation);
-        // } else if (AttributeAttachmentLevelType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-        // if (attribute.getDimensions() == null) {
-        // continue;
-        // }
-        // boolean singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension = CELL_AT_HEADER && attribute.getDimensions().getDimensions().size() == 1
-        // && permutation.get(attribute.getDimensions().getDimensions().get(0).getDimensionId()) != null;
-        // boolean combinationDimensionLevelAttributeForBodyCell = CELL_AT_BODY && attribute.getDimensions().getDimensions().size() > 1;
-        // if (!(singleDimensionLevelAttributeForHeaderCellMatchHeaderCellDimension || combinationDimensionLevelAttributeForBodyCell)) {
-        // continue;
-        // }
-        // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attribute.getId()));
-        // }
-        // if (offset != null) {
-        // String attributeValue = obtainAttributeValue(attributeId, offset);
-        // cellCommentDetails.addCommentLine(attributeValue);
-        // }
-        // }
+        for (MetadataAttributeType attribute : getAttributesMetadata()) {
+            // We handle dataset level attributes elsewhere
+            if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
+                continue;
+            }
 
-        cellCommentDetails.addCommentLine("attributeValue");
+            Integer offset = null;
+            String attributeId = attribute.getCode();
+            // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
+            if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
+                continue;
+            }
+
+            boolean CELL_AT_HEADER = permutation.size() == 1;
+            boolean CELL_AT_BODY = permutation.size() > 1;
+            // Observation level attributes (body cell)
+            if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
+                offset = calculateOffsetAtPermutation(permutation);
+            }
+
+            if (offset != null) {
+                String attributeValue = obtainAttributeValue(attributeId, offset);
+                cellCommentDetails.addCommentLine(attributeValue);
+            }
+        }
         return cellCommentDetails;
 
     }
@@ -361,84 +353,6 @@ public class ResourceAccess {
         }
         return attributeValue;
     }
-    // public String applyLabelVisualizationModeForAttribute(String attributeId) {
-    // // Visualisation mode
-    // LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-    // String resultText = null;
-    // switch (labelVisualisation) {
-    // case CODE:
-    // resultText = attributeId;
-    // break;
-    // case LABEL: {
-    // String attributeLabel = getAttributeLabel(attributeId);
-    // if (attributeLabel != null) {
-    // resultText = attributeLabel;
-    // }
-    // }
-    // break;
-    // case CODE_AND_LABEL: {
-    // String attributeLabel = getAttributeLabel(attributeId);
-    // if (attributeLabel != null) {
-    // resultText = attributeLabel + " (" + attributeId + ")";
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return resultText;
-    // }
-    // public String applyLabelVisualizationModeForDimension(String dimensionId) {
-    // LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
-    // String resultText = null;
-    // switch (labelVisualisation) {
-    // case CODE:
-    // resultText = dimensionId;
-    // break;
-    // case LABEL: {
-    // String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
-    // if (dimensionValueLabel != null) {
-    // resultText = dimensionValueLabel;
-    // }
-    // }
-    // break;
-    // case CODE_AND_LABEL: {
-    // String dimensionValueLabel = getDimensionLabelCurrentLocale(dimensionId);
-    // if (dimensionValueLabel != null) {
-    // resultText = dimensionValueLabel + " (" + dimensionId + ")";
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return resultText;
-    // }
-    // public String applyLabelVisualizationModeForDimensionValue(String dimensionId, String dimensionValueId) {
-    // LabelVisualisationModeEnum labelVisualisation = getDimensionLabelVisualisationMode(dimensionId);
-    // switch (labelVisualisation) {
-    // case CODE:
-    // // no extra action
-    // break;
-    // case LABEL: {
-    // String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
-    // if (dimensionValueLabel != null) {
-    // dimensionValueId = dimensionValueLabel;
-    // }
-    // }
-    // break;
-    // case CODE_AND_LABEL: {
-    // String dimensionValueLabel = getDimensionValueLabelCurrentLocale(dimensionId, dimensionValueId);
-    // if (dimensionValueLabel != null) {
-    // dimensionValueId = dimensionValueLabel + " (" + dimensionValueId + ")";
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return dimensionValueId;
-    // }
 
     // We´ll have the "multipliers" variable, used for calculating the offset for observations or attributes at PRIMARY_MEASURE attachment level
     private void initializeMultipliers() {

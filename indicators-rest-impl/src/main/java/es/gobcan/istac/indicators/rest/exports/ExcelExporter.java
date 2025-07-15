@@ -137,7 +137,7 @@ public class ExcelExporter {
 
     private void contentHeader() {
         int headerRow = currentRowCount;
-        for (IndicatorSelectionDimension dimension : indicatorSelection.getLeftDimensions()) {
+        for (IndicatorSelectionDimension dimension : indicatorSelection.getTopDimensions()) {
             SXSSFRow row = sheet.createRow(headerRow);
             List<String> selectedDimensionValues = dimension.getSelectedDimensionValues();
             int headerColumn = leftHeaderSizeOfData;
@@ -218,10 +218,8 @@ public class ExcelExporter {
                 continue;
             }
             // FIXME
-            // String attributeName = getLabel(resourceAccess.getAttributesMetadata().get(attributeId).getName());
-            // String attributeValue = resourceAccess.obtainAttributeValue(attributeId, 0);
-            String attributeName = "getLabel(resourceAccess.getAttributesMetadata().get(attributeId).getName())";
-            String attributeValue = "atributeValue";
+            String attributeName = "getLabel(resourceAccess.getAttributesMetadata().get(Integer.parseInt(attributeId)).getTitle(), resourceAccess.getLang())";
+            String attributeValue = resourceAccess.obtainAttributeValue(attributeId, 0);
             if (StringUtils.isNotBlank(attributeValue)) {
                 attributeValue = attributeValue.trim();
 
