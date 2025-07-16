@@ -18,7 +18,7 @@ public class ExporterResourceAccess {
     public void exportResourceAccess(ResourceAccess resourceAccess, ExportFormatEnum format, OutputStream os) throws MetamacException {
         try {
             if (format.isXlsx()) {
-                new ExcelExporter(format, resourceAccess).write(os);
+                new ExcelExporter(resourceAccess).write(os);
             } else if (format.isPlainText()) {
                 new PlainTextExporter(format, resourceAccess).writeObservationsAndAttributesWithObservationAttachmentLevel(os);
             } else {
@@ -39,10 +39,7 @@ public class ExporterResourceAccess {
 
     // return number of observations + 1 (header row)
     public Long getObservationsNumber(ResourceAccess resourceAccess) {
-        // TODO: EDATOS-5025
-        // Long dimensionRows = Long.valueOf(indicatorSelection.getRows());
-        // Long dimensionColumns = Long.valueOf(resourceAccess.getColumns());
-        // return dimensionRows * dimensionColumns + 1;
-        return 1L;
+        Long dimensionRows = Long.valueOf(resourceAccess.getRows());
+        return dimensionRows + 1;
     }
 }

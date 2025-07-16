@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
@@ -30,7 +28,6 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataAttr
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentation;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DimensionRepresentations;
 
-import es.gobcan.istac.indicators.rest.dto.CellCommentDetails;
 import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
 import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
@@ -43,9 +40,6 @@ import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 public class ResourceAccess {
 
     private static final String                           OBSERVATIONS_SEPARATOR          = " | ";
-    public static final int                               LEFT_DIMENSIONS_START_POSITION  = 0;
-    public static final int                               TOP_DIMENSIONS_START_POSITION   = 20;
-    public static final int                               FIXED_DIMENSIONS_START_POSITION = 40;
     private IndicatorSelection                            indicatorSelection;
     private String                                        lang;
     private Data                                          data;
@@ -59,12 +53,10 @@ public class ResourceAccess {
     private Map<String, String>                           dimensionLabelsCurrentLocale;
     private Map<String, String>                           dimensionLabelsDefaultLocale;
     private Map<String, Map<String, String>>              dimensionsValuesCurrentLocaleLabels;
-    private Map<String, Map<String, InternationalString>> dimensionsValuesLabels;
     private Map<String, LabelVisualisationModeEnum>       dimensionsLabelVisualisationMode;
 
     private List<MetadataAttributeType>                   attributesMetadata;
     private Map<String, MetadataAttributeType>            attributesMetadataMap;
-    private AttributeType                                 measureAttribute;
     private Map<String, String>                           attributesLabels;
     private Map<String, Map<String, String>>              attributesValuesCurrentLocaleLabels;
     private Map<String, LabelVisualisationModeEnum>       attributesLabelVisualisationMode;
@@ -75,10 +67,8 @@ public class ResourceAccess {
     private List<String>                                  dimensionsOrderedForData;
     private Map<String, List<String>>                     dimensionValuesOrderedForDataByDimensionId;
     private final Map<String, Integer>                    multipliers                     = new HashMap<String, Integer>();
-    private final Map<String, Map<String, Integer>>       multipliersByAttribute          = new HashMap<String, Map<String, Integer>>();
     private final Map<String, Map<String, Long>>          representationIndex             = new HashMap<String, Map<String, Long>>();   // Map<Dimension, Map<Code, Index>
 
-    private int                                           primaryMeasureAttributesCount   = 0;
 
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
 
@@ -97,7 +87,7 @@ public class ResourceAccess {
         this.lang = lang;
 
         initializeDimensions(indicator);
-        initializeAttributes(data, indicator.getAttribute(), indicatorData, indicatorSelection);
+        initializeAttributes(indicator.getAttribute(), indicatorData, indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
@@ -128,9 +118,6 @@ public class ResourceAccess {
         return dimensionsValuesCurrentLocaleLabels.get(dimensionId).get(dimensionValueId).toString();
     }
 
-    public String getAttributeLabel(String attributeId) {
-        return attributesLabels.get(attributeId);
-    }
 
     public String getAttributeValueLabelCurrentLocale(String attributeId, String attributeValue) {
         return attributesValuesCurrentLocaleLabels.get(attributeId).get(attributeValue);
@@ -159,9 +146,6 @@ public class ResourceAccess {
         return dimensionsOrderedForData;
     }
 
-    public List<String> getDimensionValuesOrderedForData(String dimensionId) {
-        return dimensionValuesOrderedForDataByDimensionId.get(dimensionId);
-    }
 
     /**
      * Init dimensions and dimensions values
@@ -197,10 +181,8 @@ public class ResourceAccess {
 
     /**
      * Init definitions and values of attributes
-     *
-     * @param data
      */
-    private void initializeAttributes(Data data, Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection) throws MetamacException {
+    private void initializeAttributes(Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection) throws MetamacException {
 
         attributesMetadata = indicatorAttributesToListAttributes(attributes);
 
@@ -286,73 +268,6 @@ public class ResourceAccess {
         return attributeValue;
     }
 
-    // TODO: EDATOS-5025
-    public CellCommentDetails attributesAtPermutation(Map<String, String> permutation, String unitMeasure, String unitMultiplier) {
-        CellCommentDetails cellCommentDetails = new CellCommentDetails();
-        for (MetadataAttributeType attribute : getAttributesMetadata()) {
-            // We handle dataset level attributes elsewhere
-            if (AttributeAttachmentLevelType.DATASET.equals(attribute.getAttachmentLevel())) {
-                continue;
-            }
-
-            Integer offset = null;
-            String attributeId = attribute.getCode();
-            // unit multiplier and unit measure attributes wont appear here because they must appear elsewhere, in units
-            if ((unitMeasure != null && unitMeasure.equals(attributeId)) || (unitMultiplier != null && unitMultiplier.equals(attributeId))) {
-                continue;
-            }
-
-            boolean CELL_AT_HEADER = permutation.size() == 1;
-            boolean CELL_AT_BODY = permutation.size() > 1;
-            // Observation level attributes (body cell)
-            if (CELL_AT_BODY && AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(attribute.getAttachmentLevel())) {
-                offset = calculateOffsetAtPermutation(permutation);
-            }
-
-            if (offset != null) {
-                String attributeValue = obtainAttributeValue(attributeId, offset);
-                cellCommentDetails.addCommentLine(attributeValue);
-            }
-        }
-        return cellCommentDetails;
-
-    }
-
-    public String obtainAttributeValue(String attributeId, int offset) {
-        String[] attributeValues = getAttributeValues(attributeId);
-        String attributeValue = null;
-        if (attributeValues != null) {
-            attributeValue = attributeValues[offset];
-            attributeValue = applyLabelVisualizationModeForAttributeValue(attributeId, attributeValue);
-        }
-        return attributeValue;
-    }
-    public String applyLabelVisualizationModeForAttributeValue(String attributeId, String attributeValue) {
-        // Visualisation mode
-        LabelVisualisationModeEnum labelVisualisation = getAttributeLabelVisualisationMode(attributeId);
-        switch (labelVisualisation) {
-            case CODE:
-                // no extra action
-                break;
-            case LABEL: {
-                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-                if (attributeValueLabel != null) {
-                    attributeValue = attributeValueLabel;
-                }
-            }
-                break;
-            case CODE_AND_LABEL: {
-                String attributeValueLabel = getAttributeValueLabelCurrentLocale(attributeId, attributeValue);
-                if (attributeValueLabel != null) {
-                    attributeValue = attributeValueLabel + " (" + attributeValue + ")";
-                }
-            }
-                break;
-            default:
-                break;
-        }
-        return attributeValue;
-    }
 
     // We´ll have the "multipliers" variable, used for calculating the offset for observations or attributes at PRIMARY_MEASURE attachment level
     private void initializeMultipliers() {
@@ -401,80 +316,6 @@ public class ResourceAccess {
         }
         return offset;
     }
-
-    // TODO: EDATOS-5025
-    // public InternationalString extractUnitCode(EnumeratedDimensionValue dimensionValue, String unitMeasureKey, String unitMultiplierKey) {
-    // Integer offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMeasureKey);
-    // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, offset);
-    //
-    // offset = calculateOffsetDimensionValueId(dimensionValue.getId(), unitMultiplierKey);
-    // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, offset);
-    // return extractUnitCode(dimensionValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
-    // }
-
-    // public InternationalString extractUnitCode(EnumeratedAttributeValue attributeValue, String unitMeasureKey, String unitMultiplierKey) {
-    // InternationalString unitMeasureName = getAttributeByDimensionValue(unitMeasureKey, 0);
-    // InternationalString unitMultiplierName = getAttributeByDimensionValue(unitMultiplierKey, 0);
-    // return extractUnitCode(attributeValue.getMeasureQuantity(), unitMeasureName, unitMultiplierName);
-    // }
-
-    // private InternationalString extractUnitCode(MeasureQuantity measureQuantity, InternationalString unitMeasureName, InternationalString unitMultiplierName) {
-    // if (unitMeasureName == null && measureQuantity != null && measureQuantity.getUnitCode() != null) {
-    // unitMeasureName = measureQuantity.getUnitCode().getName();
-    // }
-    // if (unitMultiplierName == null && measureQuantity != null && measureQuantity.getUnitMultiplier() != null) {
-    // unitMultiplierName = measureQuantity.getUnitMultiplier().getName();
-    // }
-    // return prepareQuantityInternationalString(unitMeasureName, unitMultiplierName);
-    // }
-
-    // private Integer calculateOffsetDimensionValueId(String dimensionValueId, String attributeKey) {
-    // Integer offset = null;
-    // if (multipliersByAttribute.containsKey(attributeKey)) {
-    // Map<String, String> permutation = new HashMap<>();
-    // permutation.put(measureDimension.getId(), dimensionValueId);
-    // offset = calculateOffsetAtPermutation(permutation, multipliersByAttribute.get(attributeKey));
-    // }
-    // return offset;
-    // }
-
-    // private InternationalString getAttributeByDimensionValue(String attributeKey, Integer offset) {
-    // if (!attributesValuesByAttributeId.containsKey(attributeKey)) {
-    // return null;
-    // }
-    // String attributeValue = attributesValuesByAttributeId.get(attributeKey)[offset];
-    // return attributesValuesLabels.get(attributeKey).get(attributeValue);
-    // }
-    // private InternationalString prepareQuantityInternationalString(InternationalString unitMeasure, InternationalString unitMultiplier) {
-    // InternationalString result = null;
-    //
-    // if (unitMeasure != null) {
-    // result = new InternationalString();
-    // for (LocalisedString unitMeasureLocalisedString : unitMeasure.getTexts()) {
-    // String lang = unitMeasureLocalisedString.getLang();
-    // String unitMeasureLabel = unitMeasureLocalisedString.getValue();
-    // String unitMultiplierLabel = ExportUtils.getLabel(unitMultiplier, lang);
-    //
-    // String value = unitMeasureLabel;
-    // value += (unitMultiplierLabel != null) ? " (" + unitMultiplierLabel + ")" : "";
-    //
-    // LocalisedString localisedString = new LocalisedString();
-    // localisedString.setLang(lang);
-    // localisedString.setValue(value);
-    // result.getTexts().add(localisedString);
-    // }
-    // } else if (unitMultiplier != null) {
-    // result = new InternationalString();
-    // for (LocalisedString localisedString : unitMultiplier.getTexts()) {
-    // localisedString.setValue("(" + localisedString.getValue() + ")");
-    // result.getTexts().add(localisedString);
-    // }
-    // }
-    // return result;
-    // }
-    // public int getPrimaryMeasureAttributesCount() {
-    // return primaryMeasureAttributesCount;
-    // }
 
     private static String indicatorObservationsToDataObservations(List<String> observation) {
         return String.join(OBSERVATIONS_SEPARATOR, observation);
@@ -566,6 +407,14 @@ public class ResourceAccess {
             listAttribute.add(metadataAttributeTypeMap.getValue());
         }
         return listAttribute;
+    }
+
+    public int getRows() {
+        return this.indicatorSelection.getRows();
+    }
+
+    public int getColumns() {
+        return this.indicatorSelection.getRows();
     }
 
 }

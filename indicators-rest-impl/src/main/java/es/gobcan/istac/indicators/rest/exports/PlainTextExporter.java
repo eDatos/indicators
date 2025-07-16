@@ -4,7 +4,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,9 +23,6 @@ public class PlainTextExporter {
 
     private static final String      ESCAPE_DOUBLE_QUOTES                = "\"";
     private static final String      HEADER_OBSERVATION                  = "OBS_VALUE";
-    private static final String      HEADER_ATTRIBUTE_ID                 = "ATTRIBUTE";
-    private static final String      HEADER_ATTRIBUTE_VALUE              = "ATTRIBUTE_VALUE";
-    private static final String      HEADER_ATTRIBUTE_VALUE_CODE         = "ATTRIBUTE_VALUE_CODE";
     private static final String      HEADER_SUFIX_CODE_WHEN_EXPORT_TITLE = "_CODE";
     private static final boolean     ESCAPE_IF_NECESSARY                 = true;
 
@@ -141,89 +137,9 @@ public class PlainTextExporter {
         }
     }
 
-    private void writeHeaderForPlainTextAttributes(PrintWriter printWriter, int numberOfColumnsToAttributeValue) {
-        StringBuilder header = new StringBuilder();
-        for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
-            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
-            if (labelVisualisation.isLabel() || labelVisualisation.isCode()) {
-                header.append(escapeString(dimensionId, ESCAPE_IF_NECESSARY) + exportFormatEnum.getSeparator());
-            }
-            if (labelVisualisation.isCode() && labelVisualisation.isLabel()) {
-                header.append(escapeString(dimensionId + HEADER_SUFIX_CODE_WHEN_EXPORT_TITLE, ESCAPE_IF_NECESSARY) + exportFormatEnum.getSeparator());
-            }
-        }
-        header.append(HEADER_ATTRIBUTE_ID);
-        header.append(exportFormatEnum.getSeparator() + escapeString(HEADER_ATTRIBUTE_VALUE, ESCAPE_IF_NECESSARY));
-        if (numberOfColumnsToAttributeValue == 2) {
-            header.append(exportFormatEnum.getSeparator() + escapeString(HEADER_ATTRIBUTE_VALUE_CODE, ESCAPE_IF_NECESSARY)); // put this column only when it is necessary
-        }
-        printWriter.println(header);
-    }
-
-    private void writeBodyForPlainTextAttributesDataset(PrintWriter printWriter, List<MetadataAttributeType> attributes, int numberOfColumnsToAttributeValue) {
-        for (MetadataAttributeType attribute : attributes) {
-            if (!AttributeAttachmentLevelEnumType.DATASET.equals(attribute.getAttachmentLevel())) {
-                continue;
-            }
-            String attributeId = attribute.getCode();
-            String[] attributeValues = resourceAccess.getAttributeValues(attributeId);
-            if (attributeValues == null) {
-                continue;
-            }
-            StringBuilder line = new StringBuilder();
-            // Dimensions
-            for (String dimensionId : resourceAccess.getDimensionsOrderedForData()) {
-                // Write empty code dimensions
-                LabelVisualisationModeEnum labelVisualisation = resourceAccess.getDimensionLabelVisualisationMode(dimensionId);
-                if (labelVisualisation.isLabel()) {
-                    line.append(exportFormatEnum.getSeparator());
-                }
-                if (labelVisualisation.isCode()) {
-                    line.append(exportFormatEnum.getSeparator());
-                }
-            }
-            // Attribute Id
-            line.append(escapeString(attributeId, ESCAPE_IF_NECESSARY) + exportFormatEnum.getSeparator());
-            // Attribute value
-            String attributeValue = attributeValues[0];
-            writeBodyAttributeValueForPlainTextAttributes(line, attributeId, attributeValue, numberOfColumnsToAttributeValue);
-            printWriter.println(line);
-        }
-    }
 
 
-    private void writeBodyAttributeValueForPlainTextAttributes(StringBuilder line, String attributeId, String attributeValueCode, int numberOfColumnsToAttributeValue) {
-        LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
-        attributeValueCode = escapeString(attributeValueCode, ESCAPE_IF_NECESSARY);
-        if (labelVisualisation.isLabel()) {
-            String attributeValueLabel = resourceAccess.getAttributeValueLabelCurrentLocale(attributeId, attributeValueCode);
-            attributeValueLabel = escapeString(attributeValueLabel, ESCAPE_IF_NECESSARY);
-            line.append(attributeValueLabel != null ? attributeValueLabel : attributeValueCode);
-            if (numberOfColumnsToAttributeValue == 2) {
-                line.append(exportFormatEnum.getSeparator());
-            }
-        } else if (numberOfColumnsToAttributeValue == 2) {
-            line.append(exportFormatEnum.getSeparator());
-        }
-        if (labelVisualisation.isCode()) {
-            line.append(attributeValueCode);
-        }
-    }
 
-    private int guessNumberOfColumnsToAttributeValue() {
-        for (MetadataAttributeType attribute : resourceAccess.getAttributesMetadata()) {
-
-            if (!AttributeAttachmentLevelEnumType.DATASET.equals(attribute.getAttachmentLevel()) && AttributeAttachmentLevelEnumType.DIMENSION.equals(attribute.getAttachmentLevel())) {
-                continue;
-            }
-            String attributeId = attribute.getCode();
-            LabelVisualisationModeEnum labelVisualisation = resourceAccess.getAttributeLabelVisualisationMode(attributeId);
-            if (labelVisualisation.isCode() && labelVisualisation.isLabel()) {
-                return 2;
-            }
-        }
-        return 1;
-    }
 
     private String escapeString(String source, boolean escapeOnlyIfNecessary) {
         if (StringUtils.isEmpty(source)) {

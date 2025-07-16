@@ -17,8 +17,6 @@ public class IndicatorSelection {
     public static final int                                TOP_DIMENSIONS_START_POSITION   = 20;
     public static final int                                FIXED_DIMENSIONS_START_POSITION = 40;
 
-    private boolean                                        userSelection                   = true;
-
     private List<IndicatorSelectionDimension>              dimensions                      = new ArrayList<IndicatorSelectionDimension>();
     private final Map<String, IndicatorSelectionDimension> dimensionsMap                   = new HashMap<String, IndicatorSelectionDimension>();
 
@@ -27,10 +25,6 @@ public class IndicatorSelection {
 
     private final Map<String, Integer>                     multipliers                     = new HashMap<String, Integer>();
 
-    public IndicatorSelection(List<IndicatorSelectionDimension> dimensions, List<IndicatorSelectionAttribute> attributes, boolean userSelection) {
-        this(dimensions, attributes);
-        this.userSelection = userSelection;
-    }
 
     public IndicatorSelection(List<IndicatorSelectionDimension> dimensions, List<IndicatorSelectionAttribute> attributes) {
         if (dimensions != null) {
@@ -55,9 +49,6 @@ public class IndicatorSelection {
         initializedFixedMultipliers();
     }
 
-    public boolean isUserSelection() {
-        return userSelection;
-    }
 
     public IndicatorSelectionDimension getDimension(String dimensionId) {
         return dimensionsMap.get(dimensionId);
@@ -67,11 +58,7 @@ public class IndicatorSelection {
         return new ArrayList<IndicatorSelectionDimension>(dimensions);
     }
 
-    public LabelVisualisationModeEnum getDimensionLabelVisualisationModel(String dimensionId) {
-        IndicatorSelectionDimension dimension = getDimension(dimensionId);
-        LabelVisualisationModeEnum labelVisualisationMode = dimension != null ? dimension.getLabelVisualisationMode() : null;
-        return labelVisualisationMode;
-    }
+
 
     public IndicatorSelectionAttribute getAttribute(String attributeId) {
         return attributesMap.get(attributeId);
@@ -205,9 +192,4 @@ public class IndicatorSelection {
         return multipliers.get(dimension.getId());
     }
 
-    public Map<String, String> permutationAtDimension(String dimensionId, String selectedDimensionValue) {
-        Map<String, String> permutation = new HashMap<>();
-        permutation.put(dimensionId, selectedDimensionValue);
-        return permutation;
-    }
 }
