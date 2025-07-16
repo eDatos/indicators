@@ -278,19 +278,17 @@
 
         _renderAllIndicators: function () {
             // Indicators
-            var indicatorsView = new App.views.Select2View({
-                el: this.$(".widget-data-all-indicators"),
-                collection: this.indicators,
-                idAttribute: 'code',
-                textAttribute: 'title',
-                multiple: true,
-                width: "600px"
+            var self = this;
+            var allIndicatorsWidget = new App.views.IndicatorPicklist({
+                el: self.$(".widget-data-all-indicators"),
+                collection: this.indicators
             });
-            indicatorsView.on('change', function (indicators) {
+            allIndicatorsWidget.on('change', function (indicators) {
                 var value = indicators ? _.pluck(indicators, "id") : [];
                 this.model.set('indicators', value);
             }, this);
         },
+
         _renderInstances: function () {
             // Instances
             var instancesView = new App.views.Select2View({

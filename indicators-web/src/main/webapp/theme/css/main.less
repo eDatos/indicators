@@ -267,6 +267,10 @@ input[type="image"] {
     margin-bottom: 20px;
 }
 
+.widget-data-all-indicators {
+    width: 600px;
+}
+
 /*****************************************
  Pagination
 /****************************************/
@@ -912,6 +916,70 @@ a.rounded_button span {
 
 }
 
+/* ******************************* */
+/*  PICKLIST     		           */
+/* ******************************* */
+
+.indicator-picklist {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    height: 400px;
+
+    ul.indicator-picklist-left-list, ul.indicator-picklist-right-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 1;
+        overflow-y: auto;
+        list-style-type: none;
+        border: 1px solid #B9C5D3;
+        border-radius: 4px;
+        padding: 8px;
+
+        li {
+            margin: 0;
+
+            &.indicator-picklist-subject-header:not(:first-child) {
+                margin-top: 10px;
+            }
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li.selectable-picklist-item {
+            padding: 5px;
+            border-radius: 4px;
+            background-color: @grayLighter;
+            cursor: pointer;
+
+            &.selected-picklist-item {
+                background-color: #3875d7;
+                color: white;
+            }
+        }
+    }
+
+    .indicator-picklist-center-buttons {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        gap: 5px;
+
+        button {
+            padding: 10px;
+            border-radius: 10px;
+            border-width: 0;
+            background: @grayLighter;
+        }
+    }
+}
 
 .edatos-indicators {
     @import "app/input";   

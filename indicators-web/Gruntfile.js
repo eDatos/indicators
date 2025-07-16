@@ -142,6 +142,7 @@ module.exports = function (grunt) {
         jsPath + '/app/views/TabView.js',
 
         jsPath + '/app/views/Select2View.js',
+        jsPath + '/app/views/IndicatorPicklist.js',
         jsPath + '/app/views/WidgetCodeView.js',
         jsPath + '/app/views/WidgetDataOptionsLastDataView.js',
         jsPath + '/app/views/WidgetDataOptionsRecentView.js',

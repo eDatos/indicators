@@ -1,0 +1,19 @@
+<div class="indicator-picklist">
+    <ul class="indicator-picklist-left-list">
+        {{#each indicatorsBySubject}}
+        <li class="indicator-picklist-subject-header">{{this.subjectTitle}}</li>
+        <ul id="{{this.subjectCode}}">
+            {{#each this.indicators}}
+            <li id="{{this.id}}" subjectId="{{this.subjectCode}}" class="selectable-picklist-item">{{this.title}}</li>
+            {{/each}}
+        </ul>
+        {{/each}}
+    </ul>
+    <div class="indicator-picklist-center-buttons">
+        <button class="selected-to-the-left-button"><</button>
+        <button class="all-to-the-left-button"><<</button>
+        <button class="selected-to-the-right-button">></button>
+        <button class="all-to-the-right-button">>></button>
+    </div>
+    <ul class="indicator-picklist-right-list"></ul>
+</div>
