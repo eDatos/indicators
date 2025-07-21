@@ -1,0 +1,83 @@
+#indicators li {
+  list-style: none;
+  position: relative;
+  padding-left: 1.2em;
+
+  &::before {
+    position: absolute;
+    left: 0;
+    color: @gray;
+    font-weight: bold;
+  }
+}
+
+.collapsible-group-content {
+  display: none;
+  margin-left: 1em;
+
+  &.show {
+    display: block;
+  }
+}
+
+.collapsible-header {
+  cursor: pointer;
+  font-weight: bold;
+  margin: 5px 0;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: @baseIconWidth;
+    height: @baseIconHeight;
+    margin-right: 5px;
+    vertical-align: middle;
+    background-image: url('@{iconChevronRight}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+  }
+
+  &.open::before {
+    transform: rotate(90deg);
+  }
+}
+
+.collapsible-content {
+  display: none;
+
+  &.show {
+    display: block;
+  }
+
+  ul.indicators {
+    padding-left: 30px !important;
+
+    li {
+      position: relative;
+      padding-left: 1.2em;
+      list-style: none;
+
+      &::before {
+        content: '\25B7';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: @gray;
+        font-weight: bold;
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  ul.children {
+    padding-left: 1.2em;
+
+    li {
+      position: relative;
+      padding-left: 1.2em;
+      list-style: none;
+    }
+  }
+}

@@ -34,6 +34,8 @@
     <entry key="entity.indicators.modal.detail.data">Dades</entry>
     <entry key="entity.indicators.modal.detail.metadata">Metadades</entry>  
     <entry key="entity.indicators.modal.detail.query">Consultar dades</entry>
+    <entry key="page.indicators-list.categories.noName">Sense nom</entry>
+    <entry key="page.indicators-list.categories.noCategory">Sense categoría</entry>
     
     <!-- Widgets -->
     <entry key="page.open-data.title">Dades obertes</entry>
