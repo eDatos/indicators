@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
+import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.util.FreeMarkerUtil;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
@@ -41,6 +41,8 @@ public class FreeMarkerHelperView extends FreeMarkerView {
 
         model.put("serverURL", getIndicatorsExternalWebUrlBaseWithoutProtocol());
         model.put("indicatorsExternalApiUrlBase", getIndicatorsExternalApiUrlBaseWithoutProtocol());
+        model.put("srmExternalApiUrlBase", getSrmExternalApiUrlBaseWithoutProtocol());
+        model.put("defaultCategorySchemeUrn", getDefaultCategorySchemeUrn());
         model.put("visualizerExternalUrlBase", getVisualizerExternalUrlBase());
         model.put("visualizerApplicationExternalUrlBase", getVisualizerApplicationExternalUrlBase());
         model.put("analyticsGoogleTrackingId", getConfigurationService().retrieveAnalyticsGoogleTrackingId());
@@ -134,6 +136,16 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private String getIndicatorsExternalApiUrlBaseWithoutProtocol() throws MetamacException {
         String indicatorsExternalApiUrlBase = removeLastSlashInUrl(getConfigurationService().retrieveIndicatorsExternalApiUrlBase());
         return removeUrlProtocol(indicatorsExternalApiUrlBase);
+    }
+
+    private String getSrmExternalApiUrlBaseWithoutProtocol() throws MetamacException {
+        String srmExternalApiUrlBase = removeLastSlashInUrl(getConfigurationService().retrieveSrmExternalApiUrlBase());
+        return removeUrlProtocol(srmExternalApiUrlBase);
+    }
+
+    private String getDefaultCategorySchemeUrn() throws MetamacException {
+        String defaultCategorySchemeUrn = removeLastSlashInUrl(getConfigurationService().retrieveDefaultCategoryScheme());
+        return removeUrlProtocol(defaultCategorySchemeUrn);
     }
 
     private String getVisualizerExternalUrlBase() throws MetamacException {
