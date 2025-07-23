@@ -117,6 +117,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return new ResponseEntity<>(indicatorInstanceType, HttpStatus.OK);
     }
 
+
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
     // @formatter:off
@@ -140,6 +141,23 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         dataType.addHeader(selfLink, parentLink, IndicatorsRestConstants.KIND_INDICATOR_INSTANCE_DATA);
 
         return new ResponseEntity<DataType>(dataType, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET, produces = "text/csv")
+    @ResponseBody
+    // @formatter:off
+    public ResponseEntity<byte[]> retrieveIndicatorsInstanceDataCSV(@PathVariable("idIndicatorSystem") String idIndicatorSystem,
+            @PathVariable("idIndicatorInstance") String idIndicatorInstance,
+            @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity,
+            @RequestParam(required = false, value = "fields") String fields) throws MetamacException {
+
+        // @formatter:on
+        //
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+
+        return indicatorSystemRestFacade.retrieveIndicatorInstanceDataCSV(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.springframework.http.ResponseEntity;
 
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
@@ -27,4 +28,6 @@ public interface IndicatorSystemRestFacade {
             Map<String, List<String>> granularity) throws MetamacException;
     DataType retrieveIndicatorInstanceDataByCode(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities, boolean includeObservations) throws MetamacException;
+    ResponseEntity<byte[]> retrieveIndicatorInstanceDataCSV(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException;
 }

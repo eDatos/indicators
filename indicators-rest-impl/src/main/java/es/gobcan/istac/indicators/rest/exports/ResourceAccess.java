@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
@@ -76,27 +77,38 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount   = 0;
 
-    public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
 
+    public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
+        commonConstructor(indicatorData, indicatorSelection);
+        initializeCommon(indicator, indicator.getAttribute(), indicatorData, indicatorSelection, lang);
+    }
+
+    public ResourceAccess(DataType indicatorData, IndicatorInstanceType indicatorInstance, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
+        commonConstructor(indicatorData, indicatorSelection);
+        initializeCommon(indicatorInstance, indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
+    }
+
+    private void commonConstructor(DataType indicatorData, IndicatorSelection indicatorSelection) {
         data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
-
         this.indicatorSelection = indicatorSelection;
-
-        initialize(data, indicator, indicatorData, indicatorSelection, lang);
     }
 
-    private void initialize(Data data, IndicatorType indicator, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
+    private void initializeCommon(Object indicator, Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         this.lang = lang;
 
-        initializeDimensions(indicator);
-        initializeAttributes(data, indicator.getAttribute(), indicatorData, indicatorSelection);
+        if (indicator instanceof IndicatorType) {
+            initializeDimensions((IndicatorType) indicator);
+        } else if (indicator instanceof IndicatorInstanceType) {
+            initializeDimensions((IndicatorInstanceType) indicator);
+        }
+
+        initializeAttributes(data, attributes, indicatorData, indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
-        // initializeMultipliersAttributes();
         initializeIndex();
     }
     public IndicatorSelection getDataSelection() {
@@ -152,17 +164,30 @@ public class ResourceAccess {
     }
 
     /**
-     * Init dimensions and dimensions values
+     * Init dimensions and dimensions values for IndicatorType
      */
     private void initializeDimensions(IndicatorType indicator) throws MetamacException {
+        initializeDimensionsCommon(indicator.getDimension());
+    }
 
-        dimensionsMetadata = indicator.getDimension();
+    /**
+     * Init dimensions and dimensions values for IndicatorInstanceType
+     */
+    private void initializeDimensions(IndicatorInstanceType indicator) throws MetamacException {
+        initializeDimensionsCommon(indicator.getDimension());
+    }
+
+    /**
+     * Shared logic to initialize dimensions
+     */
+    private void initializeDimensionsCommon(Map<String, MetadataDimensionType> dimensionsMetadata) throws MetamacException {
+        this.dimensionsMetadata = dimensionsMetadata;
 
         Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
-        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
-        Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
-        Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
-        Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
+        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<>(dimensionsMetadata.size());
+        Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<>(dimensionsMetadata.size());
+        Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<>(dimensionsMetadata.size());
+        Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<>(dimensionsMetadata.size());
 
         for (Map.Entry<String, MetadataDimensionType> dimension : dimensionsMetadata.entrySet()) {
             String dimensionId = dimension.getKey();
@@ -172,7 +197,6 @@ public class ResourceAccess {
             dimensionsValuesCurrentLocaleLabels.put(dimensionId, buildMapDimensionsValuesLabels(dimension, lang));
             dimensionsLabelsCurrentLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
             dimensionsLabelsDefaultLocale.put(dimensionId, buildMapDimensionLabel(dimension, lang));
-
         }
 
         this.dimensionsMetadataMap = dimensionsMetadataMap;
@@ -180,7 +204,6 @@ public class ResourceAccess {
         this.dimensionsValuesCurrentLocaleLabels = dimensionsValuesCurrentLocaleLabels;
         this.dimensionLabelsCurrentLocale = dimensionsLabelsCurrentLocale;
         this.dimensionLabelsDefaultLocale = dimensionsLabelsDefaultLocale;
-
     }
 
     /**
@@ -247,7 +270,6 @@ public class ResourceAccess {
             }
         }
     }
-
 
     /**
      * Retrieve the observation for a specific key <param>permutation</param>

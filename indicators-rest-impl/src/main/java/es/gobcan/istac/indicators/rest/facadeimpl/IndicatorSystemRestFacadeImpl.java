@@ -1,24 +1,36 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
@@ -27,11 +39,16 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
+import es.gobcan.istac.indicators.rest.exports.ExportResourceAccessToPlainText;
+import es.gobcan.istac.indicators.rest.exports.ResourceAccess;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorInstancesRest2DoMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorSelectionMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorsSystemRest2DoMapper;
 import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
@@ -71,6 +88,9 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Autowired
     private IndicatorsSystemRest2DoMapper   indicatorsSystemRest2DoMapper;
+
+    @Autowired
+    IndicatorsConfigurationService          configurationService;
 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(String q, String order, final RestCriteriaPaginator paginator) throws MetamacException {
@@ -309,4 +329,63 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return dataFilter;
     }
 
+    @Override
+    public ResponseEntity<byte[]> retrieveIndicatorInstanceDataCSV(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException {
+        return retrieveIndicatorInstanceDataPlainText(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.CSV_COMMA);
+    }
+
+    private ResponseEntity<byte[]> retrieveIndicatorInstanceDataPlainText(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, PlainTextTypeEnum format) throws MetamacException {
+        try {
+            String lang = configurationService.retrieveLanguageDefault();
+            byte[] content = null;
+            DataType indicatorData = retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, true);
+            IndicatorInstanceType indicatorInstanceType = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
+
+            IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
+            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicatorInstanceType, indicatorSelection, lang);
+
+            ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
+            exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), idIndicatorInstance);
+
+            FileOutputStream outputStreamObservations = null;
+            ByteArrayOutputStream byteArrayOutputStream = null;
+            FileInputStream inputStream = null;
+            try {
+                String fileNamePrefix = IndicatorsRestConstants.API_INDICATORS_INDICATORS_DATA + "-" + idIndicatorInstance;
+
+                final File tmpFileObservations = File.createTempFile(fileNamePrefix, format.getExtension());
+                outputStreamObservations = new FileOutputStream(tmpFileObservations);
+                exportResourceAccessToPlainText.exportResourceAccessToPlainText(resourceAccess, format, outputStreamObservations);
+
+                byteArrayOutputStream = new ByteArrayOutputStream();
+
+                inputStream = new FileInputStream(tmpFileObservations);
+
+                IOUtils.copy(inputStream, byteArrayOutputStream);
+
+                content = byteArrayOutputStream.toByteArray();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", getContentDisposition(idIndicatorInstance, format.getExtension()));
+                return new ResponseEntity<>(content, headers, HttpStatus.OK);
+
+            } finally {
+                IOUtils.closeQuietly(outputStreamObservations);
+            }
+
+        } catch (Exception e) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, idIndicatorInstance);
+        }
+    }
+
+    private static String getContentDisposition(String fileNamePrefix, String format) {
+        return "attachment; filename=" + getExportFileName(fileNamePrefix, format);
+    }
+
+    private static String getExportFileName(String fileNamePrefix, String format) {
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        return fileNamePrefix + "_" + timestamp + "." + format;
+    }
 }
