@@ -30,4 +30,7 @@ public interface IndicatorSystemRestFacade {
             Map<String, List<String>> selectedGranularities, boolean includeObservations) throws MetamacException;
     ResponseEntity<byte[]> retrieveIndicatorInstanceDataCSV(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities) throws MetamacException;
+
+    ResponseEntity<byte[]> retrieveIndicatorInstanceDataTSV(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException;
 }

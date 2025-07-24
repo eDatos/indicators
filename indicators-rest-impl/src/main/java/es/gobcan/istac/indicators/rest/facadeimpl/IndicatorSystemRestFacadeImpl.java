@@ -333,6 +333,11 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
             Map<String, List<String>> selectedGranularities) throws MetamacException {
         return retrieveIndicatorInstanceDataPlainText(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.CSV_COMMA);
     }
+    @Override
+    public ResponseEntity<byte[]> retrieveIndicatorInstanceDataTSV(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException {
+        return retrieveIndicatorInstanceDataPlainText(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.TSV);
+    }
 
     private ResponseEntity<byte[]> retrieveIndicatorInstanceDataPlainText(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities, PlainTextTypeEnum format) throws MetamacException {

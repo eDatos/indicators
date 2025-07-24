@@ -149,15 +149,30 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     public ResponseEntity<byte[]> retrieveIndicatorsInstanceDataCSV(@PathVariable("idIndicatorSystem") String idIndicatorSystem,
             @PathVariable("idIndicatorInstance") String idIndicatorInstance,
             @RequestParam(required = false, value = "representation") String representation,
-            @RequestParam(required = false, value = "granularity") String granularity,
-            @RequestParam(required = false, value = "fields") String fields) throws MetamacException {
+            @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
 
         // @formatter:on
-        //
+
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
 
         return indicatorSystemRestFacade.retrieveIndicatorInstanceDataCSV(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
+    }
+
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET, produces = "text/tab-separated-values")
+    @ResponseBody
+    // @formatter:off
+    public ResponseEntity<byte[]> retrieveIndicatorsInstanceDataTSV(@PathVariable("idIndicatorSystem") String idIndicatorSystem,
+            @PathVariable("idIndicatorInstance") String idIndicatorInstance,
+            @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity) throws MetamacException {
+
+        // @formatter:on
+
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+
+        return indicatorSystemRestFacade.retrieveIndicatorInstanceDataTSV(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
     }
 
 }
