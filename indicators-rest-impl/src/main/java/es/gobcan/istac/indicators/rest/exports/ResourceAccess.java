@@ -78,16 +78,16 @@ public class ResourceAccess {
     private int                                           primaryMeasureAttributesCount   = 0;
 
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
-        initializeCommon(indicator.getAttribute(), indicatorData, indicatorSelection, lang);
+        initialize(indicator.getAttribute(), indicatorData, indicatorSelection, lang);
         initializeDimensions(indicator.getDimension());
     }
 
     public ResourceAccess(DataType indicatorData, IndicatorInstanceType indicatorInstance, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
-        initializeCommon(indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
+        initialize(indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
         initializeDimensions(indicatorInstance.getDimension());
     }
 
-    private void initializeCommon(Map<String, es.gobcan.istac.indicators.rest.types.MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang)
+    private void initialize(Map<String, es.gobcan.istac.indicators.rest.types.MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang)
             throws MetamacException {
         this.data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
