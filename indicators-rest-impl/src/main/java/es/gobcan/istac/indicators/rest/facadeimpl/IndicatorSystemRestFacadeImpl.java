@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +61,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import es.gobcan.istac.indicators.rest.util.ExportUtils;
 import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Service
@@ -368,7 +367,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                 content = byteArrayOutputStream.toByteArray();
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", getContentDisposition(idIndicatorInstance, format.getExtension()));
+                headers.add("Content-Disposition", ExportUtils.getContentDisposition(idIndicatorInstance, format.getExtension()));
                 return new ResponseEntity<>(content, headers, HttpStatus.OK);
 
             } finally {
@@ -378,14 +377,5 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         } catch (Exception e) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, idIndicatorInstance);
         }
-    }
-
-    private static String getContentDisposition(String fileNamePrefix, String format) {
-        return "attachment; filename=" + getExportFileName(fileNamePrefix, format);
-    }
-
-    private static String getExportFileName(String fileNamePrefix, String format) {
-        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        return fileNamePrefix + "_" + timestamp + "." + format;
     }
 }

@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.rest.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,4 +160,12 @@ public class ExportUtils {
         return internationalString;
     }
 
+    public static String getContentDisposition(String fileNamePrefix, String format) {
+        return "attachment; filename=" + getExportFileName(fileNamePrefix, format);
+    }
+
+    private static String getExportFileName(String fileNamePrefix, String format) {
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        return fileNamePrefix + "_" + timestamp + "." + format;
+    }
 }

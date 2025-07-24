@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +56,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import es.gobcan.istac.indicators.rest.util.ExportUtils;
 import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Service
@@ -236,7 +235,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 content = byteArrayOutputStream.toByteArray();
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", getContentDisposition(indicatorCode, format.getExtension()));
+                headers.add("Content-Disposition", ExportUtils.getContentDisposition(indicatorCode, format.getExtension()));
                 return new ResponseEntity<>(content, headers, HttpStatus.OK);
 
             } finally {
@@ -248,14 +247,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         }
     }
 
-    private static String getContentDisposition(String fileNamePrefix, String format) {
-        return "attachment; filename=" + getExportFileName(fileNamePrefix, format);
-    }
 
-    private static String getExportFileName(String fileNamePrefix, String format) {
-        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        return fileNamePrefix + "_" + timestamp + "." + format;
-    }
     @Override
     public DataType retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata)
             throws MetamacException {
