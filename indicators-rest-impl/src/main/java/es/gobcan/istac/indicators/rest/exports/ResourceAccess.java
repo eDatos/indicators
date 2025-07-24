@@ -77,33 +77,24 @@ public class ResourceAccess {
 
     private int                                           primaryMeasureAttributesCount   = 0;
 
-
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
-        commonConstructor(indicatorData, indicatorSelection);
-        initializeCommon(indicator, indicator.getAttribute(), indicatorData, indicatorSelection, lang);
+        initializeCommon(indicator.getAttribute(), indicatorData, indicatorSelection, lang);
+        initializeDimensions(indicator);
     }
 
     public ResourceAccess(DataType indicatorData, IndicatorInstanceType indicatorInstance, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
-        commonConstructor(indicatorData, indicatorSelection);
-        initializeCommon(indicatorInstance, indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
+        initializeCommon(indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
+        initializeDimensions(indicatorInstance);
     }
 
-    private void commonConstructor(DataType indicatorData, IndicatorSelection indicatorSelection) {
-        data = new Data();
+    private void initializeCommon(Map<String, es.gobcan.istac.indicators.rest.types.MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang)
+            throws MetamacException {
+        this.data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
         this.indicatorSelection = indicatorSelection;
-    }
-
-    private void initializeCommon(Object indicator, Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         this.lang = lang;
-
-        if (indicator instanceof IndicatorType) {
-            initializeDimensions((IndicatorType) indicator);
-        } else if (indicator instanceof IndicatorInstanceType) {
-            initializeDimensions((IndicatorInstanceType) indicator);
-        }
 
         initializeAttributes(data, attributes, indicatorData, indicatorSelection);
         initializeObservations(data);
