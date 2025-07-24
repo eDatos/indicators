@@ -79,12 +79,12 @@ public class ResourceAccess {
 
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         initializeCommon(indicator.getAttribute(), indicatorData, indicatorSelection, lang);
-        initializeDimensions(indicator);
+        initializeDimensions(indicator.getDimension());
     }
 
     public ResourceAccess(DataType indicatorData, IndicatorInstanceType indicatorInstance, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         initializeCommon(indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang);
-        initializeDimensions(indicatorInstance);
+        initializeDimensions(indicatorInstance.getDimension());
     }
 
     private void initializeCommon(Map<String, es.gobcan.istac.indicators.rest.types.MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang)
@@ -155,23 +155,9 @@ public class ResourceAccess {
     }
 
     /**
-     * Init dimensions and dimensions values for IndicatorType
+     * Init dimensions and dimensions values
      */
-    private void initializeDimensions(IndicatorType indicator) throws MetamacException {
-        initializeDimensionsCommon(indicator.getDimension());
-    }
-
-    /**
-     * Init dimensions and dimensions values for IndicatorInstanceType
-     */
-    private void initializeDimensions(IndicatorInstanceType indicator) throws MetamacException {
-        initializeDimensionsCommon(indicator.getDimension());
-    }
-
-    /**
-     * Shared logic to initialize dimensions
-     */
-    private void initializeDimensionsCommon(Map<String, MetadataDimensionType> dimensionsMetadata) throws MetamacException {
+    private void initializeDimensions(Map<String, MetadataDimensionType> dimensionsMetadata) throws MetamacException {
         this.dimensionsMetadata = dimensionsMetadata;
 
         Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
