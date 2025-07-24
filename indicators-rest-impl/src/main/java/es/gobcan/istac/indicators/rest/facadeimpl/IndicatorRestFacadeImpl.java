@@ -36,9 +36,9 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
 import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
-import es.gobcan.istac.indicators.rest.enume.PlainTextTypeEnum;
+import es.gobcan.istac.indicators.rest.enume.ExportFormatEnum;
 import es.gobcan.istac.indicators.rest.exports.ExcelMapper;
-import es.gobcan.istac.indicators.rest.exports.ExportResourceAccessToPlainText;
+import es.gobcan.istac.indicators.rest.exports.ExporterResourceAccess;
 import es.gobcan.istac.indicators.rest.exports.ResourceAccess;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
@@ -188,22 +188,21 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataXLSX(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        // TODO EDATOS-5025: revisar el enum o crear nuevo metodo para exportar excel tipo exportIndicatorToExcel
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, null);
+        return retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, ExportFormatEnum.XLSX);
     }
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataCSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.CSV_COMMA);
+        return retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, ExportFormatEnum.CSV_COMMA);
     }
     @Override
     public ResponseEntity<byte[]> retrieveIndicatorDataTSV(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities)
             throws MetamacException {
-        return retrieveIndicatorDataPlainText(indicatorCode, selectedRepresentations, selectedGranularities, PlainTextTypeEnum.TSV);
+        return retrieveIndicatorData(indicatorCode, selectedRepresentations, selectedGranularities, ExportFormatEnum.TSV);
     }
 
-    private ResponseEntity<byte[]> retrieveIndicatorDataPlainText(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
-            PlainTextTypeEnum format) throws MetamacException {
+    private ResponseEntity<byte[]> retrieveIndicatorData(String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            ExportFormatEnum format) throws MetamacException {
         try {
             String lang = configurationService.retrieveLanguageDefault();
             byte[] content = null;
@@ -213,8 +212,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
             IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
             ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicator, indicatorSelection, lang);
 
-            ExportResourceAccessToPlainText exportResourceAccessToPlainText = new ExportResourceAccessToPlainText();
-            exportResourceAccessToPlainText.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);
+            ExporterResourceAccess exporterResourceAccess = new ExporterResourceAccess();
+            exporterResourceAccess.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), indicatorCode);
 
             FileOutputStream outputStreamObservations = null;
             ByteArrayOutputStream byteArrayOutputStream = null;
@@ -224,7 +223,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
                 final File tmpFileObservations = File.createTempFile(fileNamePrefix, format.getExtension());
                 outputStreamObservations = new FileOutputStream(tmpFileObservations);
-                exportResourceAccessToPlainText.exportResourceAccessToPlainText(resourceAccess, format, outputStreamObservations);
+                exporterResourceAccess.exportResourceAccess(resourceAccess, format, outputStreamObservations);
 
                 byteArrayOutputStream = new ByteArrayOutputStream();
 
