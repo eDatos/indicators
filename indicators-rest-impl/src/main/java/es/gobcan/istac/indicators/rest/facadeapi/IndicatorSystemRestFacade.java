@@ -33,4 +33,6 @@ public interface IndicatorSystemRestFacade {
 
     ResponseEntity<byte[]> retrieveIndicatorInstanceDataTSV(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities) throws MetamacException;
+    ResponseEntity<byte[]> retrieveIndicatorInstanceDataXLSX(final String idIndicatorSystem, final String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException;
 }
