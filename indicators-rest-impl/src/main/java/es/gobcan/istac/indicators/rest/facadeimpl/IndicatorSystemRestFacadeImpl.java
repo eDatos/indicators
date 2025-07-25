@@ -1,23 +1,16 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +21,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
@@ -61,7 +53,6 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.ConditionUtil;
-import es.gobcan.istac.indicators.rest.util.ExportUtils;
 import es.gobcan.istac.indicators.rest.util.GeographicalValuesOldVersionCompatibilityUtils;
 
 @Service
@@ -346,46 +337,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     private ResponseEntity<byte[]> retrieveIndicatorInstanceData(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
             Map<String, List<String>> selectedGranularities, ExportFormatEnum format) throws MetamacException {
-        try {
-            String lang = configurationService.retrieveLanguageDefault();
-            byte[] content = null;
-            DataType indicatorData = retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, true);
-            IndicatorInstanceType indicatorInstanceType = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
-
-            IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
-            ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicatorInstanceType, indicatorSelection, lang);
-
-            ExporterResourceAccess exporterResourceAccess = new ExporterResourceAccess();
-            exporterResourceAccess.checkMaxRowsInXlsxFormat(resourceAccess, format, configurationService.retrieveMaxXlsxRows(), idIndicatorInstance);
-
-            FileOutputStream outputStreamObservations = null;
-            ByteArrayOutputStream byteArrayOutputStream = null;
-            FileInputStream inputStream = null;
-            try {
-                String fileNamePrefix = IndicatorsRestConstants.API_INDICATORS_INDICATORS_DATA + "-" + idIndicatorInstance;
-
-                final File tmpFileObservations = File.createTempFile(fileNamePrefix, format.getExtension());
-                outputStreamObservations = new FileOutputStream(tmpFileObservations);
-                exporterResourceAccess.exportResourceAccess(resourceAccess, format, outputStreamObservations);
-
-                byteArrayOutputStream = new ByteArrayOutputStream();
-
-                inputStream = new FileInputStream(tmpFileObservations);
-
-                IOUtils.copy(inputStream, byteArrayOutputStream);
-
-                content = byteArrayOutputStream.toByteArray();
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", ExportUtils.getContentDisposition(idIndicatorInstance, format.getExtension()));
-                return new ResponseEntity<>(content, headers, HttpStatus.OK);
-
-            } finally {
-                IOUtils.closeQuietly(outputStreamObservations);
-            }
-
-        } catch (Exception e) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, idIndicatorInstance);
-        }
+        DataType indicatorData = retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, true);
+        IndicatorInstanceType indicatorInstanceType = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
+        IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
+        ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicatorInstanceType, indicatorSelection, configurationService.retrieveLanguageDefault());
+        return ExporterResourceAccess.exportIndicatorResource(idIndicatorInstance, format, configurationService, resourceAccess);
     }
 }
