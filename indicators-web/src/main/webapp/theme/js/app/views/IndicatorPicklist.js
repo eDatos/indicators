@@ -13,21 +13,18 @@
             'click .selectable-picklist-item': "_toggleSelectedItem"
         },
 
-        initialize: function () {
+        initialize: function (options) {
+            this.subjects = options.subjects;
+            this.subjects.on('reset', this.render, this);
             this.collection.on('reset', this.render, this);
             this.render();
         },
 
         render: function () {
             var self = this;
+
             var context = {
-                indicatorsBySubject: _.map(_.groupBy(self.collection.toJSON(), "subjectCode"), function (value, key) {
-                    return {
-                        subjectCode: key,
-                        subjectTitle: self._getLabel(value[0].subjectTitle),
-                        indicators: value
-                    };
-                })
+                subjectsAndIndicatorsTree: this._getSubjectsAndIndicatorsTree()
             };
             this.$el.html(this.template(context));
 
@@ -39,10 +36,50 @@
             return this;
         },
 
-        _getLabel: function (internationalString) {
-            if (internationalString) {
-                return internationalString[currentLocale] || internationalString["__default__"];
+        _getSubjectsAndIndicatorsTree: function () {
+            if (!this.collection.length || !this.subjects.length) {
+                return [];
             }
+
+            var tree = [];
+            var indicatorsGroupedBySubjectCode = _.groupBy(this.collection.toJSON(), "subjectCode");
+            var subjects = this._getAllSubjects();
+
+            var self = this;
+            _.each(indicatorsGroupedBySubjectCode, function (indicators, subjectCode) {
+                var currentTreeBranch = tree;
+                var subjectCodeParts = subjectCode.split(".");
+                subjectCodeParts.reduce(function (parentCode, currentCode) {
+                    var nestedCode = parentCode ? parentCode + "." + currentCode : currentCode;
+                    var existingSubjectNode = currentTreeBranch.find(function(treeNode) {
+                        return treeNode.subjectCode === nestedCode;
+                    });
+                    if (!existingSubjectNode) {
+                        currentTreeBranch.push(self._getSubjectTreeNode(nestedCode, subjects, indicatorsGroupedBySubjectCode));
+                        existingSubjectNode = currentTreeBranch[currentTreeBranch.length - 1];
+                    }
+                    currentTreeBranch = existingSubjectNode.children;
+                    return nestedCode;
+                }, null);
+            });
+            return tree;
+        },
+
+        _getAllSubjects: function () {
+            return this.subjects.toJSON().reduce((subjects, subject) => {
+                subjects[subject.nestedId] = subject;
+                return subjects;
+            }, {})
+        },
+
+        _getSubjectTreeNode: function (nestedCode, subjects, indicatorsByCode) {
+            return {
+                subjectCode: nestedCode,
+                subjectTitle: App.utils.InternationalizationUtils.localizeLabel(subjects[nestedCode].name),
+                children: [],
+                indicators: indicatorsByCode[nestedCode] || [],
+                isSubject: true
+            };
         },
 
         _toggleSelectedItem: function (event) {

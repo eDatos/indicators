@@ -15,6 +15,7 @@
             this.subjects = new App.collections.Subjects();
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
+            this.allSubjects = new App.collections.AllSubjects();
 
             this.model.on('change:groupType', function (model, value) {
 
@@ -281,7 +282,8 @@
             var self = this;
             var allIndicatorsWidget = new App.views.IndicatorPicklist({
                 el: self.$(".widget-data-all-indicators"),
-                collection: this.indicators
+                collection: this.indicators,
+                subjects: this.allSubjects
             });
             allIndicatorsWidget.on('change', function (indicators) {
                 var value = indicators ? _.pluck(indicators, "id") : [];
@@ -331,6 +333,7 @@
             this._renderGroupType();
 
             this.subjects.fetch();
+            this.allSubjects.fetch();
 
             return this;
         }
