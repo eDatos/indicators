@@ -123,6 +123,7 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataGeoDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
 
 /**
  * Implementation of IndicatorsDataService.
@@ -2210,6 +2211,65 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private Map<String, String> getVariableElementsIdByCodeOfCodelist() throws MetamacException {
         return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+    }
+
+    @Override
+    /*
+     * Get indicators with the same datasetId and to reload data of them from jaxi system
+     * in jaxi/alfresco the datasetId is unique. it is not needed agency or version to match data sources.
+     */
+    public List<IndicatorVersion> updateIndicatorsDataFromExternalDataSource(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+
+        DatasetAvro datasetAvro;
+        String datasetId;
+        if (message instanceof DatasetAvro) {
+            datasetAvro = (DatasetAvro) message;
+        } else {
+            return new ArrayList<>();
+        }
+
+        if (datasetAvro.getCode() != null) {
+            datasetId = datasetAvro.getCode();
+        } else {
+            return new ArrayList<>();
+        }
+
+        List<IndicatorVersion> failedPopulationIndicators = new ArrayList<>();
+        List<IndicatorVersion> pendingIndicators = getJsonStatIndicatorsVersionsByResourceId(datasetId);
+
+        LOG.info("Total indicatorsVersions that needs to be updated from kafka message with datasetId= {} are {}", datasetId, pendingIndicators.size());
+        for (IndicatorVersion indicatorVersion : pendingIndicators) {
+            Indicator indicator = indicatorVersion.getIndicator();
+
+            try {
+                LOG.info("Updating IndicatorVersion from topic 'jaxi_publications': code = {}, version = {}", indicatorVersion.getIndicator().getCode(), indicatorVersion.getVersionNumber());
+                populateIndicatorVersionData(ctx, indicator.getUuid(), indicatorVersion.getVersionNumber());
+            } catch (MetamacException e) {
+                LOG.error("Error populating IndicatorVersion from topic 'jaxi_publications'. Indicator: {}, Version: {}", indicatorVersion.getIndicator().getCode(),
+                        indicatorVersion.getVersionNumber());
+                failedPopulationIndicators.add(indicatorVersion);
+            }
+        }
+        LOG.info("Finished Indicators data update process from jaxi_publications topic");
+
+        createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+
+        return failedPopulationIndicators;
+
+    }
+
+    private List<IndicatorVersion> getJsonStatIndicatorsVersionsByResourceId(String resourceId) {
+        List<ConditionalCriteria> conditions = new ArrayList<>();
+
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().resourceId(), resourceId));
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT));
+        return getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
+    }
+
+    private void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
+        if (!failedPopulationIndicators.isEmpty()) {
+            getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+        }
     }
 
 }

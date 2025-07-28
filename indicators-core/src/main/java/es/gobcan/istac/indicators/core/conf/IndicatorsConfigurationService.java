@@ -33,6 +33,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveKafkaDatasetGroup() throws MetamacException;
 
+    String retrieveKafkaJaxiDatasetGroup() throws MetamacException;
+
     String retrieveKafkaVariableElementGroup() throws MetamacException;
 
     String retrieveKafkaCodelistGroup() throws MetamacException;
@@ -48,4 +50,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException;
 
     String retrieveDefaultGeographicalCodeListUrn() throws MetamacException;
+
+    boolean retrieveJaxiPublicationConsumerIsDisabled();
 }

@@ -294,6 +294,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.doString2DtoList(source.getPublishers()));
         target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
+        target.setResourceId(source.getResourceId());
 
         target.setAnnualPuntualRate(rateDerivationDoToDto(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDoToDto(source.getAnnualPercentageRate()));
@@ -454,6 +455,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         if (!StringUtils.isEmpty(source.getContVariable())) {
             target.setContVariable(source.getContVariable());
         }
+
         return target;
     }
 
@@ -500,6 +502,10 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
 
         // GPE: contVariable -> JSON-stat: role - metric (primer elemento)
         target.setContVariable(jsonStatData.getContVariable());
+
+        if (jsonStatData.getExtension() != null) {
+            target.setResourceId(jsonStatData.getExtension().getDatasetId());
+        }
 
         return target;
     }
