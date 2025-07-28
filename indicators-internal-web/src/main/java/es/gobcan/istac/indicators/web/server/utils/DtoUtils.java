@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
 import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnItemScheme;
+import static org.siemac.edatos.core.common.util.shared.UrnUtils.splitUrnQueryGlobal;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -267,6 +268,8 @@ public class DtoUtils {
         // PX Uri
         dataStructureDto.setQueryUrn(query.getUrn());
 
+        dataStructureDto.setResourceId(DtoUtils.getResourceIdFromMetamacUrn(query.getUrn()));
+
         Resource statisticalOperation = query.getMetadata().getStatisticalOperation();
 
         // Survey Code
@@ -322,6 +325,22 @@ public class DtoUtils {
         return GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(agencyId, resourceId);
     }
 
+    private static String getResourceIdFromMetamacUrn(String datasetVersionUrn) {
+        // check if urn has version
+        String[] params = splitUrnItemScheme(datasetVersionUrn);
+
+        if (params != null && params[1] != null) {
+            return params[1];
+        }
+
+        // urn without version example query urn o dataset urn without version
+        params = splitUrnQueryGlobal(datasetVersionUrn);
+        if (params == null) {
+            return "";
+        }
+        return params[1];
+    }
+
     public static DataStructureDto createDataStructureDatasetDto(Dataset dataset, SrmRestInternalService srmRestInternalService) throws MetamacException {
         if (dataset == null) {
             return null;
@@ -339,6 +358,8 @@ public class DtoUtils {
 
         // PX Uri
         dataStructureDto.setQueryUrn(datasetUrn);
+
+        dataStructureDto.setResourceId(getResourceIdFromMetamacUrn(datasetUrn));
 
         Resource statisticalOperation = dataset.getMetadata().getStatisticalOperation();
 
