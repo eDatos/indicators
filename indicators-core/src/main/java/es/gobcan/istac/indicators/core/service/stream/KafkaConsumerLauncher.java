@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -39,6 +40,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
 
     private Map<String, Future<?>>         futuresMap;
     private static final String            CONSUMER_DATASET_1_NAME          = "indicators_consumer_dataset_1";
+    private static final String            CONSUMER_JAXI_DATASET_1_NAME     = "indicators_consumer_jaxi_dataset_1";
     private static final String            CONSUMER_QUERY_1_NAME            = "indicators_consumer_query_1";
     private static final String            CONSUMER_VARIABLE_ELEMENT_1_NAME = "indicators_consumer_variable_element_1";
     private static final String            CONSUMER_CODELIST_1_NAME         = "indicators_consumer_codelist_1";
@@ -64,10 +66,12 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         if (ac.getParent() == null) {
             // @formatter:off
             try {
-                KafkaInitializeTopics.propagateCreationOfTopics(configurationService);
+                
+                String externalDatasetTopic = getExternalDatasetPublicationTopic();
+                KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
                 prepareFailedMessageCache();
 
-               startConsumers(ac);
+               startConsumers(ac, externalDatasetTopic);
                 
             } catch (Exception e) {
                 LOGGER.error(e, e.getCause());
@@ -76,7 +80,7 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         }
     }
 
-    private void startConsumers(ApplicationContext ac) throws MetamacException {
+    private void startConsumers(ApplicationContext ac, String externalDatasetTopic) throws MetamacException {
 
         futuresMap = new HashMap<>();
         futuresMap.put(CONSUMER_DATASET_1_NAME, startConsumerForDatasetTopic(ac));
@@ -84,7 +88,23 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         futuresMap.put(CONSUMER_VARIABLE_ELEMENT_1_NAME, startConsumerForVariableElementTopic(ac));
         futuresMap.put(CONSUMER_CODELIST_1_NAME, startConsumerForCodelistTopic(ac));
 
+        // only for organisations that have external dataset topic
+        if (externalDatasetTopic != null) {
+            futuresMap.put(CONSUMER_JAXI_DATASET_1_NAME, startConsumerForJaxiDatasetTopic(ac));
+        }
+
         startKeepAliveKafkaThread(ac);
+    }
+
+    private String getExternalDatasetPublicationTopic() {
+        try {
+            // The topic can not be enabled in some environments.
+            return configurationService.retrieveKafkaTopicExternalDatasetPublication();
+        } catch (Exception e) {
+            LOGGER.info("getExternalDatasetPublicationTopic in indicators not found. Check if must exists in common metadata");
+
+        }
+        return null;
     }
 
     private void prepareFailedMessageCache() {
@@ -110,6 +130,21 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
         consumerThread.setNoticesRestInternalService(noticesRestInternalService);
         consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
+        return threadPoolTaskExecutor.submit(consumerThread);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Future<?> startConsumerForJaxiDatasetTopic(ApplicationContext context) throws MetamacException {
+        String topicDatasetPublication = configurationService.retrieveKafkaTopicExternalDatasetPublication();
+        KafkaConsumerThread<DatasetAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
+
+        KafkaConsumer<String, DatasetAvro> consumerFromBegin = createJaxiDatasetConsumerFromCurrentOffset(topicDatasetPublication, CONSUMER_JAXI_DATASET_1_NAME);
+        consumerThread.setConsumer(consumerFromBegin);
+        consumerThread.setTopicName(topicDatasetPublication);
+        consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
+        consumerThread.setNoticesRestInternalService(noticesRestInternalService);
+        consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
+        consumerThread.setIsJaxiConsumerDisabled(configurationService.retrieveJaxiPublicationConsumerIsDisabled());
         return threadPoolTaskExecutor.submit(consumerThread);
     }
 
@@ -178,6 +213,12 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         return kafkaConsumer;
     }
 
+    private KafkaConsumer<String, DatasetAvro> createJaxiDatasetConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
+        KafkaConsumer<String, DatasetAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaJaxiDatasetGroup()));
+        kafkaConsumer.subscribe(Collections.singletonList(topic));
+        return kafkaConsumer;
+    }
+
     private KafkaConsumer<String, QueryVersionAvro> createQueryConsumerFromCurrentOffset(String topic, String clientId) throws MetamacException {
         KafkaConsumer<String, QueryVersionAvro> kafkaConsumer = new KafkaConsumer<>(getConsumerProperties(clientId, configurationService.retrieveKafkaQueryGroup()));
         kafkaConsumer.subscribe(Collections.singletonList(topic));
@@ -209,6 +250,9 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                             switch (entry.getKey()) {
                                 case CONSUMER_DATASET_1_NAME:
                                     futuresMap.put(CONSUMER_DATASET_1_NAME, startConsumerForDatasetTopic(ApplicationContextProvider.getApplicationContext()));
+                                    break;
+                                case CONSUMER_JAXI_DATASET_1_NAME:
+                                    futuresMap.put(CONSUMER_JAXI_DATASET_1_NAME, startConsumerForJaxiDatasetTopic(ApplicationContextProvider.getApplicationContext()));
                                     break;
                                 case CONSUMER_QUERY_1_NAME:
                                     futuresMap.put(CONSUMER_QUERY_1_NAME, startConsumerForQueryTopic(ApplicationContextProvider.getApplicationContext()));

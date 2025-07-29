@@ -295,6 +295,8 @@ public class DataSourcePanel extends VLayout {
 
         dataSourceDto.setGeographicalCodelistUrn(dataStructureDtoEdition.getGeographicalCodelistUrn());
 
+        dataSourceDto.setResourceId(dataStructureDtoEdition.getResourceId());
+
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setAbsoluteMethod(dataEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
         }

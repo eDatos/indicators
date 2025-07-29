@@ -229,6 +229,8 @@ Application Indicators {
 	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
 	    	"Updates data for all published indicators"
             List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
+            "Updates data for all published external data sources indicators"
+            List<@IndicatorVersion> updateIndicatorsDataFromExternalDataSource(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;  	
 	    	"Create a dataset repository definition"
 	    	DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException;
 	    	"Link a dataset view to the latest version of the indicator"
@@ -544,9 +546,11 @@ Application Indicators {
 	    	"Update indicators data GPE"
 	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Update indicators data JSON-stat"
-	    	List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;
+            List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;  
 	    	"Update indicators data METAMAC"
-	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
+	    	List<@IndicatorVersion> updateIndicatorsDataFromMetamac(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;   
+	    	"Update indicators data jsonStat"
+	    	List<@IndicatorVersion> updateIndicatorsDataFromExternalDataSource(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;    
 	    	
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"
@@ -1053,6 +1057,9 @@ Application Indicators {
 			- @RateDerivation interperiodPercentageRate nullable cascade="all" databaseColumn="INTERPERIOD_PERCENTAGE_RATE_FK";
             "Geographical value"
 			- @GeographicalValue geographicalValue cascade="none" nullable databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			"Resource ID"
+			String resourceId nullable length="4000";
+			
             
 			"Provides access to Dimension"
             Repository DataSourceRepository {
@@ -1852,6 +1859,8 @@ Application Indicators {
 			Long versionOptimisticLocking;		
 			"Geographical codelist urn"
     		String geographicalCodelistUrn; 
+    		"Resource ID"
+			String resourceId;
 	    }
 	    
 	    "Dto for variables and categories"
@@ -2071,6 +2080,8 @@ Application Indicators {
     		MapList valueCodes;
     		"Geographical codelist urn"
     		String geographicalCodelistUrn; 
+    		"Resource id"
+    		String resourceId;
     	}
     	
     	"Dto for data"
