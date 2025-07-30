@@ -152,6 +152,7 @@
                         $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
                     } else {
                         const self = this;
+                        const observers = [];
                         parentsWithDisplayNone.each(function (idx, parent) {
                             const observer = new MutationObserver(function () {
                                 const hasDisplayNone = self._getParentsThatHasDisplayNone($el).length > 0;
@@ -159,10 +160,11 @@
                                     $el.find('.inlinesparkline-line').sparkline('html', _.extend({}, sparklineOptions, {type: 'line'}));
                                     $el.find('.inlinesparkline-bar').sparkline('html', _.extend({}, sparklineOptions, {type: 'bar'}));
                                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
-                                    observer.disconnect();
+                                    observers.forEach(function (observer) { observer.disconnect(); })
                                 }
                             });
                             observer.observe(parent, {attributes: true, attributeFilter: ['style', 'class']});
+                            observers.push(observer);
                         });
                     }
                 }
