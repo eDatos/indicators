@@ -32,7 +32,7 @@ public class IndicatorSelectionMapper {
         Map<String, IndicatorSelectionAttribute> selectionAttributesMap = null;
         List<IndicatorSelectionDimension> dimensions = dimensionsToIndicatorSelectionDimensions(indicatorDimensions, selectionDimensionsMap, relatedDsd);
         List<IndicatorSelectionAttribute> attributes = attributesToIndicatorSelectionAttributes(indicatorAttributes, selectionAttributesMap);
-        return new IndicatorSelection(dimensions, attributes, false);
+        return new IndicatorSelection(dimensions, attributes);
     }
 
     private static List<IndicatorSelectionAttribute> attributesToIndicatorSelectionAttributes(List<Map<String, AttributeType>> attributes,
