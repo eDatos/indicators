@@ -33,6 +33,7 @@ import es.gobcan.istac.indicators.rest.enume.LabelVisualisationModeEnum;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
@@ -71,27 +72,30 @@ public class ResourceAccess {
 
 
     public ResourceAccess(DataType indicatorData, IndicatorType indicator, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
+        initialize(indicator.getAttribute(), indicatorData, indicatorSelection, lang, indicator.getTitle());
+        initializeDimensions(indicator.getDimension());
+    }
 
-        data = new Data();
+    public ResourceAccess(DataType indicatorData, IndicatorInstanceType indicatorInstance, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
+        initialize(indicatorInstance.getAttribute(), indicatorData, indicatorSelection, lang, indicatorInstance.getTitle());
+        initializeDimensions(indicatorInstance.getDimension());
+    }
+
+    private void initialize(Map<String, MetadataAttributeType> attributes, DataType indicatorData, IndicatorSelection indicatorSelection, String lang, Map<String, String> indicatorTitle)
+            throws MetamacException {
+        this.data = new Data();
         data.setObservations(indicatorObservationsToDataObservations(indicatorData.getObservation()));
         data.setAttributes(indicatorAttributesToDataAttributes(indicatorData.getAttribute()));
         data.setDimensions(indicatorDimensionsToDataDimensions(indicatorData.getDimension()));
 
-        this.name = indicator.getTitle();
+        this.name = indicatorTitle;
         this.indicatorSelection = indicatorSelection;
-
-        initialize(data, indicator, indicatorData, indicatorSelection, lang);
-    }
-
-    private void initialize(Data data, IndicatorType indicator, DataType indicatorData, IndicatorSelection indicatorSelection, String lang) throws MetamacException {
         this.lang = lang;
 
-        initializeDimensions(indicator);
-        initializeAttributes(indicator.getAttribute(), indicatorData, indicatorSelection);
+        initializeAttributes(attributes, indicatorData, indicatorSelection);
         initializeObservations(data);
         initializeDimensionsForData(data);
         initializeMultipliers();
-        // initializeMultipliersAttributes();
         initializeIndex();
     }
     public IndicatorSelection getDataSelection() {
@@ -150,15 +154,14 @@ public class ResourceAccess {
     /**
      * Init dimensions and dimensions values
      */
-    private void initializeDimensions(IndicatorType indicator) throws MetamacException {
-
-        dimensionsMetadata = indicator.getDimension();
+    private void initializeDimensions(Map<String, MetadataDimensionType> dimensionsMetadata) throws MetamacException {
+        this.dimensionsMetadata = dimensionsMetadata;
 
         Map<String, MetadataDimensionType> dimensionsMetadataMap = new HashMap<>(dimensionsMetadata.size());
-        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<String, LabelVisualisationModeEnum>(dimensionsMetadata.size());
-        Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<String, Map<String, String>>(dimensionsMetadata.size());
-        Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<String, String>(dimensionsMetadata.size());
-        Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<String, String>(dimensionsMetadata.size());
+        Map<String, LabelVisualisationModeEnum> labelVisualisationsMode = new HashMap<>(dimensionsMetadata.size());
+        Map<String, Map<String, String>> dimensionsValuesCurrentLocaleLabels = new HashMap<>(dimensionsMetadata.size());
+        Map<String, String> dimensionsLabelsCurrentLocale = new HashMap<>(dimensionsMetadata.size());
+        Map<String, String> dimensionsLabelsDefaultLocale = new HashMap<>(dimensionsMetadata.size());
 
         for (Map.Entry<String, MetadataDimensionType> dimension : dimensionsMetadata.entrySet()) {
             String dimensionId = dimension.getKey();

@@ -11,8 +11,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.rest.RequestUtil;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
@@ -27,11 +29,16 @@ import es.gobcan.istac.indicators.core.vo.IndicatorsDataMeasureDimensionFilterVO
 import es.gobcan.istac.indicators.core.vo.IndicatorsDataTimeDimensionFilterVO;
 import es.gobcan.istac.indicators.rest.IndicatorsRestConstants;
 import es.gobcan.istac.indicators.rest.clients.SrmRestInternalFacade;
+import es.gobcan.istac.indicators.rest.dto.IndicatorSelection;
+import es.gobcan.istac.indicators.rest.enume.ExportFormatEnum;
+import es.gobcan.istac.indicators.rest.exports.ExporterResourceAccess;
+import es.gobcan.istac.indicators.rest.exports.ResourceAccess;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorInstancesRest2DoMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorSelectionMapper;
 import es.gobcan.istac.indicators.rest.mapper.IndicatorsSystemRest2DoMapper;
 import es.gobcan.istac.indicators.rest.mapper.SrmRestObjectsMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
@@ -71,6 +78,9 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Autowired
     private IndicatorsSystemRest2DoMapper   indicatorsSystemRest2DoMapper;
+
+    @Autowired
+    IndicatorsConfigurationService          configurationService;
 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(String q, String order, final RestCriteriaPaginator paginator) throws MetamacException {
@@ -309,4 +319,28 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return dataFilter;
     }
 
+    @Override
+    public ResponseEntity<byte[]> retrieveIndicatorInstanceDataCSV(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException {
+        return retrieveIndicatorInstanceData(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, ExportFormatEnum.CSV_COMMA);
+    }
+    @Override
+    public ResponseEntity<byte[]> retrieveIndicatorInstanceDataTSV(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException {
+        return retrieveIndicatorInstanceData(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, ExportFormatEnum.TSV);
+    }
+    @Override
+    public ResponseEntity<byte[]> retrieveIndicatorInstanceDataXLSX(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities) throws MetamacException {
+        return retrieveIndicatorInstanceData(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, ExportFormatEnum.XLSX);
+    }
+
+    private ResponseEntity<byte[]> retrieveIndicatorInstanceData(String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations,
+            Map<String, List<String>> selectedGranularities, ExportFormatEnum format) throws MetamacException {
+        DataType indicatorData = retrieveIndicatorInstanceDataByCode(idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, true);
+        IndicatorInstanceType indicatorInstanceType = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
+        IndicatorSelection indicatorSelection = IndicatorSelectionMapper.indicatorToIndicatorSelection(indicatorData.getDimension(), indicatorData.getAttribute(), null, null);
+        ResourceAccess resourceAccess = new ResourceAccess(indicatorData, indicatorInstanceType, indicatorSelection, configurationService.retrieveLanguageDefault());
+        return ExporterResourceAccess.exportIndicatorResource(idIndicatorInstance, format, configurationService, resourceAccess);
+    }
 }
