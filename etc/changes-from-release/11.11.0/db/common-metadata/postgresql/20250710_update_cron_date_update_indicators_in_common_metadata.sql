@@ -7,11 +7,11 @@
 
 -- ---------------------------------------------------------------------------------------------------
 
--- update job configuration to execute in 2999 year
+-- update job configuration to execute in 2099 year
 
 update tb_data_configurations
-set conf_value = '0 0 23 * * ? 2999'   
-where conf_key = 'indicators.update.quartz.expression'
+set conf_value = '0 0 23 * * ? 2099'   
+where conf_key = 'indicators.update.quartz.expression';
 ----------------------------------------------
 
 --Actualmente la programación era conf_value = "0 0 23 * * ?" todos los días a las 23:00, sin límite de año.
