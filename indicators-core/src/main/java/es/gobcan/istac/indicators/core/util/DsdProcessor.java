@@ -1,0 +1,100 @@
+package es.gobcan.istac.indicators.core.util;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
+
+import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
+
+public class DsdProcessor {
+
+    public static Map<String, String> getDsdMetadata(SrmRestInternalService srmRestInternalService, StatisticalResoucesRestExternalService statisticalResoucesRestExternalService,
+            List<DataSource> dataSources) throws MetamacException {
+        for (DataSource dataSource : dataSources) {
+            if (!QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
+                continue;
+            }
+
+            String queryUuid = dataSource.getQueryUuid();
+            String dsdUrn = extractDsdUrnFromQueryUuid(statisticalResoucesRestExternalService, queryUuid);
+
+            if (StringUtils.isNotEmpty(dsdUrn)) {
+                return getDimensions(srmRestInternalService, dsdUrn);
+            }
+        }
+
+        return new HashMap<>();
+    }
+
+    private static String extractDsdUrnFromQueryUuid(StatisticalResoucesRestExternalService statisticalResoucesRestExternalService, String queryUuid) throws MetamacException {
+        if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
+            Query queryMetadata = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(queryUuid, StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+
+            if (queryMetadata.getMetadata() != null) {
+                return getUrnDsd(queryMetadata.getMetadata().getRelatedDsd());
+            }
+        } else if (StringUtils.startsWithIgnoreCase(queryUuid, UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
+            Dataset datasetMetadata = statisticalResoucesRestExternalService.retrieveDatasetByUrnInDefaultLang(queryUuid, StatisticalResoucesRestExternalService.QueryFetchEnum.ONLY_METADATA);
+
+            if (datasetMetadata.getMetadata() != null) {
+                return getUrnDsd(datasetMetadata.getMetadata().getRelatedDsd());
+            }
+        }
+
+        return null;
+    }
+
+    private static String getUrnDsd(DataStructureDefinition dsdDefinition) throws MetamacException {
+        return dsdDefinition != null ? dsdDefinition.getUrn() : null;
+    }
+
+    private static Map<String, String> getDimensions(SrmRestInternalService srmRestInternalService, String dsdUrn) throws MetamacException {
+        org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
+        Map<String, String> representationByDimension = new HashMap<>();
+        DataStructureComponents components = dsd.getDataStructureComponents();
+        if (components != null && components.getDimensions() != null) {
+            Dimensions dimensionList = components.getDimensions();
+            for (DimensionBase dimObj : dimensionList.getDimensions()) {
+
+                if (dimObj instanceof Dimension) {
+                    Dimension dim = (Dimension) dimObj;
+                    if (Boolean.TRUE.equals(dim.isIsSpatial())) {
+                        representationByDimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), extractRepresentation(dim.getLocalRepresentation()));
+                    }
+
+                } else if (dimObj instanceof MeasureDimension) {
+                    representationByDimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), extractRepresentation(dimObj.getLocalRepresentation()));
+                }
+            }
+        }
+        return representationByDimension;
+    }
+
+    private static String extractRepresentation(Representation representation) {
+
+        if (representation.getEnumerationCodelist() != null) {
+            return representation.getEnumerationCodelist().getUrn();
+        } else if (representation.getEnumerationConceptScheme() != null) {
+            return representation.getEnumerationConceptScheme().getUrn();
+        }
+        return null;
+    }
+
+}

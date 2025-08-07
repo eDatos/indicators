@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
@@ -24,6 +25,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,6 +207,20 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
         return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
 
+    }
+
+    @Override
+    public DataStructure retrieveDsdByUrn(String urn) throws MetamacException {
+        try {
+            String[] dataStructureComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
+            String agencyId = dataStructureComponents[0];
+            String dsdId = dataStructureComponents[1];
+            String version = dataStructureComponents[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveDataStructure(agencyId, dsdId, version, null);
+        } catch (Exception e) {
+            logger.error("Unable to find dsd by urn:" + urn, e);
+            throw toRestException(e);
+        }
     }
 
 }

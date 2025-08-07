@@ -55,6 +55,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservatio
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.DimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
@@ -115,6 +116,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.MetamacTimeUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
+import es.gobcan.istac.indicators.core.util.DsdProcessor;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 import es.gobcan.istac.indicators.core.vo.GeographicalCodeVO;
 import es.gobcan.istac.indicators.core.vo.IndicatorObservationsExtendedVO;
@@ -409,7 +411,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(ctx, indicatorUuid, indicatorVersionNumber, getObservationsMapAttributes(dataCache, dataOps));
+            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber, dataSources, getObservationsMapAttributes(dataCache, dataOps));
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
@@ -474,7 +476,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private void createOrReplaceLastVersionDatabaseView(IndicatorVersion indicatorVersion) {
         try {
-            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
+            List<String> languages = null;
+            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()
+                    && QueryEnvironmentEnum.METAMAC.equals(indicatorVersion.getDataSources().get(0).getQueryEnvironment())) {
+                languages = configurationService.retrieveInternationalizationLanguages();
+            }
+            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
@@ -1724,9 +1731,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
-        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
-        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
-        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+
+        IndicatorVersion indicatorVersionDataSource = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersion);
+        Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, indicatorVersionDataSource.getDataSources());
+
+        DimensionDto dimension = new DimensionDto();
+        dimension.setDimensionId(GEO_DIMENSION);
+        dimension.setSourceUrn(dimensionRepresentation.get(GEO_DIMENSION));
+        datasetRepoDto.getDimensions().add(dimension);
+        dimension = new DimensionDto();
+        dimension.setDimensionId(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(dimension);
+        dimension = new DimensionDto();
+        dimension.setDimensionId(MEASURE_DIMENSION);
+        dimension.setSourceUrn(dimensionRepresentation.get(MEASURE_DIMENSION));
+        datasetRepoDto.getDimensions().add(dimension);
 
         AttributeDto obsConf = new AttributeDto();
         obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
@@ -1751,12 +1770,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
-    public DatasetRepositoryDto createDatasetRepositoryDefinition(ServiceContext ctx, String indicatorUuid, String indicatorVersion, List<String> observationsMapAttributes) throws MetamacException {
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion, List<DataSource> dataSources, List<String> observationsMapAttributes)
+            throws MetamacException {
+
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
-        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
-        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
-        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+        Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, dataSources);
+
+        DimensionDto dimension = new DimensionDto();
+        dimension.setDimensionId(GEO_DIMENSION);
+        dimension.setSourceUrn(dimensionRepresentation.get(GEO_DIMENSION));
+        datasetRepoDto.getDimensions().add(dimension);
+        dimension = new DimensionDto();
+        dimension.setDimensionId(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(dimension);
+        dimension = new DimensionDto();
+        dimension.setDimensionId(MEASURE_DIMENSION);
+        dimension.setSourceUrn(dimensionRepresentation.get(MEASURE_DIMENSION));
+        datasetRepoDto.getDimensions().add(dimension);
 
         AttributeDto code = new AttributeDto();
         code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
