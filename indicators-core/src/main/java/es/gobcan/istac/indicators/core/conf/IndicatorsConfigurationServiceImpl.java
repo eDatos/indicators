@@ -12,6 +12,7 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     final String INDICATOR_QUERY_GROUP            = "INDICATOR_QUERY_GROUP";
     final String INDICATOR_VARIABLE_ELEMENT_GROUP = "INDICATOR_VARIABLE_ELEMENT_GROUP";
     final String INDICATOR_CODELIST_GROUP         = "INDICATOR_CODELIST_GROUP";
+    final String INDICATOR_CONCEPT_SCHEME_GROUP   = "INDICATOR_CONCEPT_SCHEME_GROUP";
 
     @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
@@ -116,6 +117,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveKafkaCodelistGroup() throws MetamacException {
         return INDICATOR_CODELIST_GROUP;
+    }
+
+    @Override
+    public String retrieveKafkaConceptSchemeGroup() throws MetamacException {
+        return INDICATOR_CONCEPT_SCHEME_GROUP;
     }
 
     @Override
