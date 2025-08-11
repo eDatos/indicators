@@ -5,7 +5,7 @@
         idAttribute : "code",
 
         parse : function (response) {
-            response.title = response.title.__default__;
+            response.title = response.title[currentLocale] || response.title.__default__;
             return response;
         }
 
