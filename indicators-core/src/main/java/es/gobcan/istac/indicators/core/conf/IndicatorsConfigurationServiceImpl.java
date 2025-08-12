@@ -135,6 +135,12 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveIndicatorsWebRestApiKey() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
+
+    }
+
+    @Override
     public boolean retrieveJaxiPublicationConsumerIsDisabled() {
         try {
             return retrievePropertyBoolean(IndicatorsConfigurationConstants.DISABLED_JAXI_PUBLICATIONS_CONSUMER);
@@ -144,8 +150,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveIndicatorsWebRestApiKey() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
+    @Deprecated
+    public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_DATA_VIEW_ADJUSTMENT);
     }
 
 }

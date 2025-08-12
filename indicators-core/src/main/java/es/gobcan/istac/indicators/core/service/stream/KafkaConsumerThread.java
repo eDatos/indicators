@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
+import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
@@ -101,7 +102,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                 }
 
                 if (pendigOffsetsToCommit.containsKey(record.partition()) && record.offset() == pendigOffsetsToCommit.get(record.partition())) {
-                    LOGGER.debug("The current message already processed successfully");
+                    LOGGER.debug("Indicators. The current message already processed successfully");
                     if (commitSync(record)) {
                         pendigOffsetsToCommit.remove(record.partition());
                         removeFromErrorCacheMessagesIfNeccesary(record);
@@ -109,7 +110,7 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                     continue;
                 }
 
-                StringBuilder logMessageBldr = new StringBuilder("Received message from Kafka -> Topic Name: ");
+                StringBuilder logMessageBldr = new StringBuilder("Indicators. Received message from Kafka -> Topic Name: ");
                 // @formatter:off
                 logMessageBldr
                     .append(topicName)
@@ -130,18 +131,18 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
                     updateIndicatorsFromKafkaMessage(serviceContext, record.value(), record.key());
                     commitSync(record);
                 } catch (Exception e) {
-                    LOGGER.error("Unable to process resource received from Kafka. The business of application has failed", e);
+                    LOGGER.error("Indicators. Unable to process resource received from Kafka. The business of application has failed", e);
 
                     // Send a error notification, the error message will send only if not exist in error cache
                     sendErrorMessageIfNeccesary(record);
 
-                    LOGGER.error("Process the next resource and discard the current message, key of message: " + record.key());
+                    LOGGER.error("Indicators. Process the next resource and discard the current message, key of message: " + record.key());
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("An error has occurred in the Kafka client. Finishing the client.", e);
+            LOGGER.error("Indicators. An error has occurred in the Kafka client. Finishing the client.", e);
         } finally {
-            LOGGER.info("Closing the consumer...");
+            LOGGER.info("Indicators. Closing the consumer...");
             consumer.close();
         }
     }
@@ -153,6 +154,8 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
         } else if (message instanceof CodelistAvro) {
             indicatorsServiceFacade.processCodelistKafkaMessage(ctx, message);
+        } else if (message instanceof ConceptSchemeAvro) {
+            indicatorsServiceFacade.processConceptSchemeKafkaMessage(ctx, message);
         } else if (message instanceof DatasetAvro) {
             indicatorsServiceFacade.updateIndicatorsDataFromExternalDataSource(ctx, message);
         }
@@ -179,9 +182,9 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
     private boolean commitSync(ConsumerRecord<String, T> record) {
         try {
             consumer.commitSync(Collections.singletonMap(new TopicPartition(record.topic(), record.partition()), new OffsetAndMetadata(record.offset() + 1)));
-            LOGGER.debug("Commited message: " + record.partition() + " : " + record.offset());
+            LOGGER.debug("Indicators. Commited message: " + record.partition() + " : " + record.offset());
         } catch (CommitFailedException e) {
-            LOGGER.debug("The message processing takes longer than the session timeout. The coordinator kicks the consumer out of the group (rebalanced)");
+            LOGGER.debug("Indicators. The message processing takes longer than the session timeout. The coordinator kicks the consumer out of the group (rebalanced)");
             return false;
         }
         return true;

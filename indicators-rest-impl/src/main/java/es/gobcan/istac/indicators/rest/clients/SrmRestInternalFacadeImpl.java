@@ -63,7 +63,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
     @Override
     public void retrieveCodelistVariableElementInformation(String codelistUrn, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
-        Codes codes = srmRestInternalService.retrieveCodesOfCodelist(codelistUrn);
+        Codes codes = srmRestInternalService.retrieveCodesOfCodelist(codelistUrn, true);
         srmRestObjectsMapper.setGeographicalVariableElementsByCode(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(codelistUrn, codes));
         srmRestObjectsMapper.setGeographicalCodesByVariableElement(srmRestInternalService.retrieveGeographicalElementsIdByCodesOfCodelists(codelistUrn, codes));
     }

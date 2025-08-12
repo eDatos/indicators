@@ -25,6 +25,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.slf4j.Logger;
@@ -153,7 +154,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         Map<String, String> variableElementsByCodesOfCodelist = new HashMap<String, String>();
 
         if (codes == null) {
-            codes = retrieveCodesOfCodelist(codelistUrn);
+            codes = retrieveCodesOfCodelist(codelistUrn, true);
         }
 
         for (CodeResourceInternal code : codes.getCodes()) {
@@ -172,7 +173,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         Map<String, String> geographicalElementsByCodesOfCodelist = new HashMap<String, String>();
 
         if (codes == null) {
-            codes = retrieveCodesOfCodelist(codelistUrn);
+            codes = retrieveCodesOfCodelist(codelistUrn, true);
         }
 
         for (CodeResourceInternal code : codes.getCodes()) {
@@ -197,15 +198,26 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public Codes retrieveCodesOfCodelist(String codelistUrn) {
+    public Codes retrieveCodesOfCodelist(String codelistUrn, boolean retrieveLastVersion) {
 
         String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
         String agencyId = params[0];
         String resourceId = params[1];
-        String version = "~latest";
+        String version = retrieveLastVersion ? "~latest" : params[2];
         String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
         return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
+
+    }
+
+    @Override
+    public Concepts retrieveConceptsOfConceptScheme(String conceptSchemeUrn) throws MetamacException {
+
+        String[] params = UrnUtils.splitUrnItemScheme(conceptSchemeUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = params[2];
+        return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, null, null, null, null, null);
 
     }
 

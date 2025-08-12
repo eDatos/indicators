@@ -28,4 +28,20 @@ public class InternationalStringUtils {
         labels.put(defaultLabel, defaultLabelValue);
         return labels;
     }
+
+    public static es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(
+            org.siemac.metamac.rest.common.v1_0.domain.InternationalString internationalStringDto) {
+        if (internationalStringDto.getTexts().isEmpty()) {
+            return null;
+        }
+
+        es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto datasetRepositoryInternationalStringDto = new es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto();
+        for (org.siemac.metamac.rest.common.v1_0.domain.LocalisedString locale : internationalStringDto.getTexts()) {
+            es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto localised = new es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto();
+            localised.setLabel(locale.getValue());
+            localised.setLocale(locale.getLang());
+            datasetRepositoryInternationalStringDto.addText(localised);
+        }
+        return datasetRepositoryInternationalStringDto;
+    }
 }

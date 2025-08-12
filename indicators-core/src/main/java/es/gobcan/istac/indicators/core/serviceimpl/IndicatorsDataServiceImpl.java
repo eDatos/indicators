@@ -99,6 +99,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.error.utils.TranslateExceptionUtils;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
+import es.gobcan.istac.indicators.core.mapper.KafkaMapper;
 import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService;
@@ -147,6 +148,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private InternationalString2InternationalStringMapper internationalString2InternationalStringMapper;
+
+    @Autowired
+    private KafkaMapper                                   kafkaMapper;
 
     private static final Logger                           LOG                = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
@@ -2300,6 +2304,112 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
         if (!failedPopulationIndicators.isEmpty()) {
             getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+        }
+    }
+
+    @Override
+    public void processSrmResourcesKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        es.gobcan.istac.edatos.dataset.repository.dto.ExternalItemDto externalItemDto = kafkaMapper.kafkaMessageToRepositoryExternalItemDto(ctx, message);
+        try {
+            datasetRepositoriesServiceFacade.processSrmResources(kafkaMapper.kafkaMessageToRepositoryExternalItemDto(ctx, message));
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.CREATE_OR_UPDATE_SRM_RESOURCE, externalItemDto.getUrn());
+        }
+
+    }
+
+    @Override
+    public void processDataViewAdjustmentInRepository(ServiceContext ctx) {
+
+        // retrieve all datasets
+        Map<String, List<DimensionDto>> dsdByDimension = new HashMap<>();
+
+        // List<IndicatorVersion> indicatorVersions = this.getIndicatorVersionRepository().findAll();
+
+        List<ConditionalCriteria> conditions = new ArrayList<>();
+
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC));
+        List<IndicatorVersion> indicatorVersions = getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
+
+        LOG.info("----------------------------------------- Indicators (ONLY METAMAC INDICATORS NOT JSONSTAT. processDataViewAdjustmentTask: starting at {}  --- number affected indicators: {}",
+                new Date(), indicatorVersions.size());
+
+        int numberAffectedIndicators = 0;
+        int i = 0;
+
+        for (IndicatorVersion indicatorVersion : indicatorVersions) {
+
+            if (indicatorVersion.getDataRepositoryId() != "dataset:03729178-f811-4455-9b4d-db29c26f262a") {
+                continue;
+            }
+
+            processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions);
+
+            if (i++ >= 50) {
+                LOG.info(String.format("Indicators. processDataViewAdjustmentTask checkPoint : number updated indicators %d --- of total indicators: %d at %s", numberAffectedIndicators,
+                        indicatorVersions.size(), new Date().toString()));
+                i = 0;
+            }
+            numberAffectedIndicators++;
+        }
+
+        LOG.info("----------------------------------------- Indicators. processDataViewAdjustmentTask: finished at {}", new Date());
+
+    }
+
+    @Deprecated
+    private void processDataViewAdjustmentDataset(ServiceContext ctx, IndicatorVersion indicatorVersion, Map<String, List<DimensionDto>> dsdByDimension, List<IndicatorVersion> indicatorVersions) {
+        try {
+
+            if (indicatorVersion.getDataRepositoryId() == null) {
+                // dataset not exists in repository
+                LOG.error("processDataViewAdjustmentDataset -> ID_NOT_EXISTS Indicators {} not exists in repository. It will not be updated", indicatorVersion.getIndicator().getCode());
+                return;
+            }
+
+            Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, indicatorVersion.getDataSources());
+
+            List<DimensionDto> dimensionsDto = new ArrayList<>();
+
+            DimensionDto dimension = new DimensionDto();
+            dimension.setDimensionId(GEO_DIMENSION);
+            dimension.setSourceUrn(dimensionRepresentation.get(GEO_DIMENSION));
+            dimensionsDto.add(dimension);
+            dimension = new DimensionDto();
+            dimension.setDimensionId(TIME_DIMENSION);
+            dimensionsDto.add(dimension);
+            dimension = new DimensionDto();
+            dimension.setDimensionId(MEASURE_DIMENSION);
+            dimension.setSourceUrn(dimensionRepresentation.get(MEASURE_DIMENSION));
+            dimensionsDto.add(dimension);
+
+            datasetRepositoriesServiceFacade.updateDatasetDimensionSourceUrn(indicatorVersion.getDataRepositoryId(), dimensionsDto);
+            // do not assign view role because it has a bad performance. I will be assign manually by script.
+            createOrReplaceLastVersionDatabaseViewWithoutRoleAssigment(indicatorVersion);
+
+        } catch (MetamacException | ApplicationException e) {
+            LOG.error("Indicators data repository [" + indicatorVersion.getDataRepositoryId() + "] Error in data view adjustment for descriptions fields. ind code:"
+                    + indicatorVersion.getIndicator().getCode(), e);
+
+        } catch (Exception e) {
+            LOG.error("General error. Indicators data repository [" + indicatorVersion.getDataRepositoryId() + "] Error in data view adjustment for descriptions fields. ind code:"
+                    + indicatorVersion.getIndicator().getCode(), e);
+        }
+    }
+
+    @Deprecated
+    private void createOrReplaceLastVersionDatabaseViewWithoutRoleAssigment(IndicatorVersion indicatorVersion) throws MetamacException {
+        try {
+            List<String> languages = null;
+            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()
+                    && QueryEnvironmentEnum.METAMAC.equals(indicatorVersion.getDataSources().get(0).getQueryEnvironment())) {
+                languages = configurationService.retrieveInternationalizationLanguages();
+            }
+            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
+        } catch (Exception e) {
+            getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
+            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
+                    + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
         }
     }
 

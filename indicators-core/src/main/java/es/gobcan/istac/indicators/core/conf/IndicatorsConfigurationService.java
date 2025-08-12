@@ -56,4 +56,7 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     boolean retrieveJaxiPublicationConsumerIsDisabled();
 
     String retrieveIndicatorsWebRestApiKey() throws MetamacException;
+
+    @Deprecated
+    public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException;
 }

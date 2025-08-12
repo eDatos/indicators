@@ -943,6 +943,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
+        this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
+
         StreamMessageCodelistActionEnum streamMessageCodelistActionEnum = getIndicatorsService().getCodelistAction(ctx, message);
 
         if (streamMessageCodelistActionEnum == null) {
@@ -1234,5 +1236,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // update category cache
         getIndicatorsService().updateCategoryCacheAll(ctx);
+    }
+
+    @Override
+    public void processConceptSchemeKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
     }
 }
