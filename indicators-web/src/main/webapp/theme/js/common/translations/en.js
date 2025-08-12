@@ -15,8 +15,6 @@
                 'MEASURES': 'Measures',
                 'SYSTEM': 'System',
                 'SYSTEM_OR_SUBJECT': 'Data selection mode',
-                'SUBJECT': 'Subject',
-                'ALL_SUBJECT': 'All subjects',
                 'INDICATORS': 'Indicators',
                 'GEOGRAPHICAL_VALUES': 'Geographical values',
                 'TIME_GRANULARITIES': 'Time granularities',

@@ -15,8 +15,6 @@
                 'MEASURES': 'Mesures',
                 'SYSTEM': 'Sistema',
                 'SYSTEM_OR_SUBJECT': 'Mode de selecció de dades',
-                'SUBJECT': 'Tema',
-                'ALL_SUBJECT': 'Tots els temes',
                 'INDICATORS': 'Indicadors',
                 'GEOGRAPHICAL_VALUES': 'Valors espacials',
                 'TIME_GRANULARITIES': 'Granularitat temporal',
