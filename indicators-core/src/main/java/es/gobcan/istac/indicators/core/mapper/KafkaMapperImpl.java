@@ -49,7 +49,10 @@ public class KafkaMapperImpl implements KafkaMapper {
 
         Codes codes = srmService.retrieveCodesOfCodelist(codelistAvro.getUrn(), false);
         for (CodeResourceInternal srmCode : codes.getCodes()) {
-            externalItemDto.addCode(itemResourceInternalToExternalItemCodesDto(srmCode));
+            ExternalItemCodesDto code = itemResourceInternalToExternalItemCodesDto(srmCode);
+            code.setElementCode(srmCode.getVariableElement().getId());
+            externalItemDto.addCode(code);
+
         }
 
         return externalItemDto;

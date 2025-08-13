@@ -943,8 +943,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
-
         StreamMessageCodelistActionEnum streamMessageCodelistActionEnum = getIndicatorsService().getCodelistAction(ctx, message);
 
         if (streamMessageCodelistActionEnum == null) {
@@ -955,6 +953,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             populateIndicatorsDataFromGeographicalCodelist(ctx, message);
         } else if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES.equals(streamMessageCodelistActionEnum)) {
             updateGeopgraphicalGranularities(ctx, message);
+        }
+
+        if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES.equals(streamMessageCodelistActionEnum) || StreamMessageCodelistActionEnum.MEASURE_VALUES.equals(streamMessageCodelistActionEnum)) {
+            this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
         }
     }
 

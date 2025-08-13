@@ -1737,7 +1737,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
 
         IndicatorVersion indicatorVersionDataSource = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersion);
-        Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, indicatorVersionDataSource.getDataSources());
+        Map<String, String> dimensionRepresentation = getDimensionRepresentation(indicatorVersionDataSource.getDataSources());
 
         DimensionDto dimension = new DimensionDto();
         dimension.setDimensionId(GEO_DIMENSION);
@@ -1774,12 +1774,29 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return datasetRepoDto;
     }
 
+    private Map<String, String> getDimensionRepresentation(List<DataSource> dataSources) throws MetamacException {
+        Map<String, String> dimensionRepresentation = new HashMap<>();
+        if (dataSources != null && !dataSources.isEmpty()) {
+            if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment())) {
+                dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            } else if (QueryEnvironmentEnum.METAMAC.equals(dataSources.get(0).getQueryEnvironment())) {
+                dimensionRepresentation.putAll(DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, dataSources));
+            }
+        }
+
+        dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), configurationService.retrieveDefaultCodelistMeasureDimensionValues());
+
+        return dimensionRepresentation;
+
+    }
+
     public DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion, List<DataSource> dataSources, List<String> observationsMapAttributes)
             throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
-        Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, dataSources);
+
+        Map<String, String> dimensionRepresentation = getDimensionRepresentation(dataSources);
 
         DimensionDto dimension = new DimensionDto();
         dimension.setDimensionId(GEO_DIMENSION);
@@ -2311,7 +2328,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public void processSrmResourcesKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         es.gobcan.istac.edatos.dataset.repository.dto.ExternalItemDto externalItemDto = kafkaMapper.kafkaMessageToRepositoryExternalItemDto(ctx, message);
         try {
-            datasetRepositoriesServiceFacade.processSrmResources(kafkaMapper.kafkaMessageToRepositoryExternalItemDto(ctx, message));
+            datasetRepositoriesServiceFacade.processSrmResources(externalItemDto);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.CREATE_OR_UPDATE_SRM_RESOURCE, externalItemDto.getUrn());
         }
@@ -2319,29 +2336,26 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
+    @Deprecated
     public void processDataViewAdjustmentInRepository(ServiceContext ctx) {
 
         // retrieve all datasets
         Map<String, List<DimensionDto>> dsdByDimension = new HashMap<>();
 
-        // List<IndicatorVersion> indicatorVersions = this.getIndicatorVersionRepository().findAll();
-
         List<ConditionalCriteria> conditions = new ArrayList<>();
 
-        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC));
+        conditions.add(ConditionalCriteria.or(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC),
+                ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT)));
+
         List<IndicatorVersion> indicatorVersions = getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
 
-        LOG.info("----------------------------------------- Indicators (ONLY METAMAC INDICATORS NOT JSONSTAT. processDataViewAdjustmentTask: starting at {}  --- number affected indicators: {}",
-                new Date(), indicatorVersions.size());
+        LOG.info("----------------------------------------- Indicators (METAMAC AND JSONSTAT INDICATORS. processDataViewAdjustmentTask: starting at {}  --- number affected indicators: {}", new Date(),
+                indicatorVersions.size());
 
         int numberAffectedIndicators = 0;
         int i = 0;
 
         for (IndicatorVersion indicatorVersion : indicatorVersions) {
-
-            if (indicatorVersion.getDataRepositoryId() != "dataset:03729178-f811-4455-9b4d-db29c26f262a") {
-                continue;
-            }
 
             processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions);
 
@@ -2367,7 +2381,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 return;
             }
 
-            Map<String, String> dimensionRepresentation = DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, indicatorVersion.getDataSources());
+            Map<String, String> dimensionRepresentation = getDimensionRepresentation(indicatorVersion.getDataSources());
 
             List<DimensionDto> dimensionsDto = new ArrayList<>();
 

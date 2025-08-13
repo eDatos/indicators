@@ -54,8 +54,10 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveDefaultGeographicalCodeListUrn() throws MetamacException;
 
     boolean retrieveJaxiPublicationConsumerIsDisabled();
-
+    
     String retrieveIndicatorsWebRestApiKey() throws MetamacException;
+
+    String retrieveDefaultCodelistMeasureDimensionValues() throws MetamacException;
 
     @Deprecated
     public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException;

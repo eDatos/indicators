@@ -2267,7 +2267,8 @@ Application Indicators {
     	"Used when a kafka message is received from CODELIST_PUBLICATION topic to determine the action must be done depending on codelist urn"
     	 enum StreamMessageCodelistActionEnum {
            GEOGRAPHICAL_VALUES,
-           GEOGRAPHICAL_GRANURALITIES
+           GEOGRAPHICAL_GRANURALITIES,
+           MEASURE_VALUES
        }
 	}
 }

@@ -27,6 +27,7 @@ public class DsdProcessor {
 
     public static Map<String, String> getDsdMetadata(SrmRestInternalService srmRestInternalService, StatisticalResoucesRestExternalService statisticalResoucesRestExternalService,
             List<DataSource> dataSources) throws MetamacException {
+
         for (DataSource dataSource : dataSources) {
             if (!QueryEnvironmentEnum.METAMAC.equals(dataSource.getQueryEnvironment())) {
                 continue;
@@ -36,7 +37,7 @@ public class DsdProcessor {
             String dsdUrn = extractDsdUrnFromQueryUuid(statisticalResoucesRestExternalService, queryUuid);
 
             if (StringUtils.isNotEmpty(dsdUrn)) {
-                return getDimensions(srmRestInternalService, dsdUrn);
+                return getDimensions(srmRestInternalService, dsdUrn, true);
             }
         }
 
@@ -65,7 +66,7 @@ public class DsdProcessor {
         return dsdDefinition != null ? dsdDefinition.getUrn() : null;
     }
 
-    private static Map<String, String> getDimensions(SrmRestInternalService srmRestInternalService, String dsdUrn) throws MetamacException {
+    private static Map<String, String> getDimensions(SrmRestInternalService srmRestInternalService, String dsdUrn, boolean onlyGeographicalDimension) throws MetamacException {
         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
         Map<String, String> representationByDimension = new HashMap<>();
         DataStructureComponents components = dsd.getDataStructureComponents();
@@ -77,9 +78,13 @@ public class DsdProcessor {
                     Dimension dim = (Dimension) dimObj;
                     if (Boolean.TRUE.equals(dim.isIsSpatial())) {
                         representationByDimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), extractRepresentation(dim.getLocalRepresentation()));
+
+                        if (onlyGeographicalDimension) {
+                            break;
+                        }
                     }
 
-                } else if (dimObj instanceof MeasureDimension) {
+                } else if (!onlyGeographicalDimension && dimObj instanceof MeasureDimension) {
                     representationByDimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), extractRepresentation(dimObj.getLocalRepresentation()));
                 }
             }

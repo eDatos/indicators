@@ -150,6 +150,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveDefaultCodelistMeasureDimensionValues() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATOR_DEFAULT_CODELIST_URN_MEASURE_VALUES);
+    }
+
+    @Override
     @Deprecated
     public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_DATA_VIEW_ADJUSTMENT);
