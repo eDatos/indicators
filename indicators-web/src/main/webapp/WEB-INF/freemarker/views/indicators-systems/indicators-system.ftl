@@ -48,7 +48,8 @@
         [/#list]
     [/#macro]
 
-    [#macro localizeTitle title][#if title.es??]${title.es}[#else]#{title.__default__}[/#if][/#macro]
+    [#assign locale][@apph.locale/][/#assign]
+    [#macro localizeTitle title][#if title[locale]??]${title[locale]}[#else]${title.__default__}[/#if][/#macro]
 
 <div class="listadoTablas">
 
