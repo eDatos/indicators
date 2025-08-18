@@ -1239,9 +1239,4 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // update category cache
         getIndicatorsService().updateCategoryCacheAll(ctx);
     }
-
-    @Override
-    public void processConceptSchemeKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
-        this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
-    }
 }

@@ -464,9 +464,6 @@ Application Indicators {
 	    	"Update indicators when it is received codelist changes" 
 	    	processCodelistKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
-	    	"Update indicators when it is received concept schemes changes" 
-	    	processConceptSchemeKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
-	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;

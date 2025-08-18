@@ -18,7 +18,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
-import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.VariableElementAvro;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
@@ -154,8 +153,6 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
         } else if (message instanceof CodelistAvro) {
             indicatorsServiceFacade.processCodelistKafkaMessage(ctx, message);
-        } else if (message instanceof ConceptSchemeAvro) {
-            indicatorsServiceFacade.processConceptSchemeKafkaMessage(ctx, message);
         } else if (message instanceof DatasetAvro) {
             indicatorsServiceFacade.updateIndicatorsDataFromExternalDataSource(ctx, message);
         }

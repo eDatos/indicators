@@ -6,11 +6,8 @@ import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
-import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.ExternalItemCodesDto;
@@ -32,8 +29,6 @@ public class KafkaMapperImpl implements KafkaMapper {
     public ExternalItemDto kafkaMessageToRepositoryExternalItemDto(ServiceContext ctx, SpecificRecordBase messageSource) throws MetamacException {
         if (messageSource instanceof CodelistAvro) {
             return processSrmCodelistKafkaMessage(ctx, messageSource);
-        } else if (messageSource instanceof ConceptSchemeAvro) {
-            return processSrmConceptSchemeKafkaMessage(ctx, messageSource);
         }
         return null;
     }
@@ -57,23 +52,6 @@ public class KafkaMapperImpl implements KafkaMapper {
 
         return externalItemDto;
 
-    }
-
-    private ExternalItemDto processSrmConceptSchemeKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
-
-        ConceptSchemeAvro conceptSchemeAvro = (ConceptSchemeAvro) message;
-
-        ExternalItemDto externalItemDto = new ExternalItemDto();
-
-        externalItemDto.setType(TypeExternalArtefactsEnum.CONCEPT_SCHEME.getName());
-        externalItemDto.setUrn(conceptSchemeAvro.getUrn());
-
-        Concepts concepts = srmService.retrieveConceptsOfConceptScheme(conceptSchemeAvro.getUrn());
-        for (ConceptResourceInternal srmConcept : concepts.getConcepts()) {
-            externalItemDto.addCode(itemResourceInternalToExternalItemCodesDto(srmConcept));
-        }
-
-        return externalItemDto;
     }
 
     private ExternalItemCodesDto itemResourceInternalToExternalItemCodesDto(ItemResourceInternal item) {
