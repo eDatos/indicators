@@ -24,6 +24,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
@@ -207,6 +208,18 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String fields = SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
         return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, fields);
+
+    }
+
+    @Override
+    public Codelist retrieveCodelistLastVersion(String codelistUrn) {
+
+        String[] params = UrnUtils.splitUrnItemScheme(codelistUrn);
+        String agencyId = params[0];
+        String resourceId = params[1];
+        String version = "~latest";
+
+        return restApiLocator.getSrmRestInternalFacadeV10().retrieveCodelist(agencyId, resourceId, version);
 
     }
 

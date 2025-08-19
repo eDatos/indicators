@@ -45,7 +45,7 @@ Y si se quiere pasar a esquema extensions:
  ---------A ejecutar en la bd del SRM-------------------
 --1.2) Rellenar la tabla anterior con todas las clasificaciones y esquemas de conceptos existentes
 --1.2.1) Clasificaciones
-c   insert into temp_srm_codes(code, urn, type, code_title_es, code_title_ca, code_title_en, element_code) 
+  insert into temp_srm_codes(code, urn, type, code_title_es, code_title_ca, code_title_en, element_code) 
   select  n.code, n1.urn, 'structuralResources#codelist',
 (select label from tb_localised_strings l where l.international_string_fk = n.name_fk and l.locale = 'es') as code_title_es,
 (select label from tb_localised_strings l where l.international_string_fk = n.name_fk and l.locale = 'ca') as code_title_ca,
@@ -117,8 +117,8 @@ INSERT INTO tb_external_items_codes
 (id, "uuid", "version", external_item_fk, code, title_fk, element_code )
  VALUES(nextval(''SEQ_EXTERNAL_ITEMS_CODES''), extensions.uuid_generate_v4(), 0, currval(''SEQ_EXTERNAL_ITEMS''),'
 || '''' || c.code || ''', ' ||
-'currval(''seq_i18nstrs''), '
-|| '''' || c.element_code || ''');' 
+'currval(''seq_i18nstrs''), ' ||
+case when c.element_code is null then 'null' else '''' || c.element_code || '''' end || ');'
 from temp_srm_codes c;
 
 --2.2 Ejecutar el resultado obtenido en el apartado anterior. El resultado puede ser bastante elevado así que evaluar si lanzarlo en servidor directamente y no en dbeaver.

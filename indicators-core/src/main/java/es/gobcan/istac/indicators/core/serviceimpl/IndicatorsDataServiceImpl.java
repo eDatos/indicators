@@ -40,6 +40,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
@@ -1778,7 +1779,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Map<String, String> dimensionRepresentation = new HashMap<>();
         if (dataSources != null && !dataSources.isEmpty()) {
             if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment())) {
-                dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+                Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+                dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
             } else if (QueryEnvironmentEnum.METAMAC.equals(dataSources.get(0).getQueryEnvironment())) {
                 dimensionRepresentation.putAll(DsdProcessor.getDsdMetadata(srmRestInternalService, statisticalResoucesRestExternalService, dataSources));
             }
@@ -2355,9 +2357,20 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         int numberAffectedIndicators = 0;
         int i = 0;
 
+        Map<String, String> dimensionRepresentationJsonStat = new HashMap<>();
+
+        try {
+            Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
+            dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), configurationService.retrieveDefaultCodelistMeasureDimensionValues());
+        } catch (MetamacException e) {
+            LOG.error(
+                    "ERROR in processDataViewAdjustmentTask. Error to retrieve retrieveDefaultTerritoryCodelistForGpeJsonStat or  retrieveDefaultCodelistMeasureDimensionValues parameter. JSONSTAT indicators will not be treated.");
+        }
+
         for (IndicatorVersion indicatorVersion : indicatorVersions) {
 
-            processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions);
+            processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions, dimensionRepresentationJsonStat);
 
             if (i++ >= 50) {
                 LOG.info(String.format("Indicators. processDataViewAdjustmentTask checkPoint : number updated indicators %d --- of total indicators: %d at %s", numberAffectedIndicators,
@@ -2372,7 +2385,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Deprecated
-    private void processDataViewAdjustmentDataset(ServiceContext ctx, IndicatorVersion indicatorVersion, Map<String, List<DimensionDto>> dsdByDimension, List<IndicatorVersion> indicatorVersions) {
+    private void processDataViewAdjustmentDataset(ServiceContext ctx, IndicatorVersion indicatorVersion, Map<String, List<DimensionDto>> dsdByDimension, List<IndicatorVersion> indicatorVersions,
+            Map<String, String> dimensionRepresentationJsonStat) {
         try {
 
             if (indicatorVersion.getDataRepositoryId() == null) {
@@ -2381,7 +2395,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 return;
             }
 
-            Map<String, String> dimensionRepresentation = getDimensionRepresentation(indicatorVersion.getDataSources());
+            List<DataSource> dataSources = indicatorVersion.getDataSources();
+
+            Map<String, String> dimensionRepresentation = new HashMap<>();
+
+            if (dataSources != null && !dataSources.isEmpty() && QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment())) {
+                dimensionRepresentation.putAll(dimensionRepresentationJsonStat);
+            } else {
+                dimensionRepresentation = getDimensionRepresentation(dataSources);
+            }
 
             List<DimensionDto> dimensionsDto = new ArrayList<>();
 
@@ -2415,11 +2437,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void createOrReplaceLastVersionDatabaseViewWithoutRoleAssigment(IndicatorVersion indicatorVersion) throws MetamacException {
         try {
             List<String> languages = null;
-            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()
-                    && QueryEnvironmentEnum.METAMAC.equals(indicatorVersion.getDataSources().get(0).getQueryEnvironment())) {
+            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()) {
                 languages = configurationService.retrieveInternationalizationLanguages();
+                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
             }
-            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
