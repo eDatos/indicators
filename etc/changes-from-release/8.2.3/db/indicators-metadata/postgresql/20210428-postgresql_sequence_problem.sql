@@ -135,7 +135,8 @@ BEGIN
                     COLUMN_NAME AS COLUMN_NAME,
                     RANDOM_STRING(36) AS UUID,
                     VERSION AS VERSION,
-                    P_NEW_ID AS DATASET_FK
+                    P_NEW_ID AS DATASET_FK,
+                    SOURCE_URN
 			FROM TB_DATASET_DIMENSIONS
 			WHERE DATASET_FK = P_OLD_ID);
 	END IF;
