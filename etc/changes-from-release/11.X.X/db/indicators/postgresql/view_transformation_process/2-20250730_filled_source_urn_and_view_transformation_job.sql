@@ -17,7 +17,7 @@ WHERE viewname IN (
 
 
 --2 Obtener la urn del codelist asociado a cada dimensión con representación enumerada de cada dataset.
--- Para ello se ha creado un job  temporal que va a realizar esta tarea. hay que programarlo una sóla vezSe ha creado EDATOS-4200 para borrar el código asociado a posteriori ya que no será de utilidad más.
+-- Para ello se ha creado un job  temporal que va a realizar esta tarea. hay que programarlo una sóla vezSe ha creado EDATOS-5200 para borrar el código asociado a posteriori ya que no será de utilidad más.
  ----2.1) Añadir a common-metadata la programación de job programado que actualiza la clasificación asociada a los códigos geográficos para las consultas que provienen de eDatos. Para ello ejecutar script indicado en 
  
  -- !! ATTENTION Configure cron expression
