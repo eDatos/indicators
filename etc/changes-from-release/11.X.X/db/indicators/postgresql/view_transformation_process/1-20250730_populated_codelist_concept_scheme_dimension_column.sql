@@ -60,7 +60,9 @@ vea.code
  inner join tb_annotable_artefacts vea on ve.identifiable_artefact_fk =  vea.id
  inner join tb_m_variables v on ve.variable_fk = v.id
 inner join tb_annotable_artefacts va on v.nameable_artefact_fk =  va.id
- where va.code = 'VR_TERRITORIO';
+ where va.code = 'VR_TERRITORIO'
+  and n1.final_logic = true or n1.public_logic=true
+ ;
  
  --1.2.2) Clasificación con los códigos de medida para la dimensión de medida en indicadores.
  --sustituir XXX por el valor del recurso para la urn que contiene el nuevo parámetro de common-metadata "metamac.indicators.measure_values.default_codelist_urn"

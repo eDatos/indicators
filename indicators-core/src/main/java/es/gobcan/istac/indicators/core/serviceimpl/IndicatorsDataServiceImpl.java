@@ -482,11 +482,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void createOrReplaceLastVersionDatabaseView(IndicatorVersion indicatorVersion) {
         try {
             List<String> languages = null;
-            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()
-                    && QueryEnvironmentEnum.METAMAC.equals(indicatorVersion.getDataSources().get(0).getQueryEnvironment())) {
+            if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()) {
                 languages = configurationService.retrieveInternationalizationLanguages();
+
+                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages,
+                        Arrays.asList(IndicatorDataDimensionTypeEnum.TIME.name()));
             }
-            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
@@ -2346,8 +2347,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         List<ConditionalCriteria> conditions = new ArrayList<>();
 
-        conditions.add(ConditionalCriteria.or(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC),
-                ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT)));
+        // WHERE (queryEnvironment = 'METAMAC' OR queryEnvironment = 'JSON_STAT') AND isLastVersion = true
+        conditions.add(ConditionalCriteria.and(
+                ConditionalCriteria.or(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC),
+                        ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT)),
+                ConditionalCriteria.equal(IndicatorVersionProperties.isLastVersion(), Boolean.TRUE)));
 
         List<IndicatorVersion> indicatorVersions = getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
 
@@ -2439,7 +2443,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             List<String> languages = null;
             if (indicatorVersion.getDataSources() != null && !indicatorVersion.getDataSources().isEmpty()) {
                 languages = configurationService.retrieveInternationalizationLanguages();
-                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages);
+                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages,
+                        Arrays.asList(IndicatorDataDimensionTypeEnum.TIME.name()));
             }
         } catch (Exception e) {
             getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
