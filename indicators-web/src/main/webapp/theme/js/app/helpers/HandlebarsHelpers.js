@@ -35,8 +35,8 @@
 
     Handlebars.registerPartial('subjectsAndIndicatorsTreeNode', `
         {{#if isSubject}}
-            <li class="indicator-picklist-subject-header">
-                {{subjectTitle}}
+            <li class="indicator-picklist-subject-header collapsed">
+                <span>{{subjectTitle}}</span>
                 <ul id="{{subjectCode}}">
                     {{#each indicators}}
                         {{> subjectsAndIndicatorsTreeNode }}

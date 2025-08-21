@@ -11,6 +11,7 @@
             "click .selected-to-the-right-button": "_moveSelectedToTheRight",
             "click .all-to-the-right-button": "__moveAllToTheRight",
             'click .selectable-picklist-item': "_toggleSelectedItem",
+            'click .indicator-picklist-subject-header > span': "_toggleSubject",
             "keyup input.indicator-picklist-filter": "_filterTree"
         },
 
@@ -86,7 +87,13 @@
             };
         },
 
+        _toggleSubject: function (event) {
+            event.stopPropagation();
+            this.$(event.currentTarget).parent().toggleClass("collapsed");
+        },
+
         _toggleSelectedItem: function (event) {
+            event.stopPropagation();
             this.$(event.currentTarget).toggleClass("selected-picklist-item");
         },
 

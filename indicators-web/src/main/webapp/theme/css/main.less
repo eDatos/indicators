@@ -948,6 +948,7 @@ a.rounded_button span {
         border: 1px solid #B9C5D3;
         border-radius: 4px;
         padding: 8px 8px 8px 0;
+        margin-bottom: 0;
 
 
         > li.indicator-picklist-subject-header:first-child {
@@ -959,6 +960,38 @@ a.rounded_button span {
 
             &.indicator-picklist-subject-header {
                 margin-top: 5px;
+
+                > span {
+                    display: inline-block;
+                    width: 100%;
+                    cursor: pointer;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        width: 12px;
+                        height: 12px;
+                        margin-right: 5px;
+                        vertical-align: middle;
+                        background-image: url(../images/icon-right-chevron.png);
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        transition: transform .3s ease;
+                        transform: rotateZ(90deg);
+                    }
+                }
+
+                &.collapsed {
+                    ul {
+                        opacity: 0;
+                        height: 0;
+                        overflow: clip;
+                    }
+
+                    > span::before {
+                        transform: none;
+                    }
+                }
             }
 
             &.hidden {
@@ -972,6 +1005,7 @@ a.rounded_button span {
             gap: 3px;
             list-style-type: none;
             padding: 0;
+            transition: opacity 0.3s ease-out;
         }
 
         li.selectable-picklist-item {
