@@ -921,17 +921,28 @@ a.rounded_button span {
 /*  PICKLIST     		           */
 /* ******************************* */
 
+#widget-creator input[type=text].indicator-picklist-filter {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .indicator-picklist {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 8px;
-    height: 400px;
+
+    ul.indicator-picklist-left-list {
+        height: 500px;
+    }
+
+    ul.indicator-picklist-right-list {
+        height: 300px;
+    }
 
     ul.indicator-picklist-left-list, ul.indicator-picklist-right-list {
         display: flex;
         flex-direction: column;
         gap: 3px;
-        flex: 1;
         overflow-y: auto;
         list-style-type: none;
         border: 1px solid #B9C5D3;
@@ -948,6 +959,10 @@ a.rounded_button span {
 
             &.indicator-picklist-subject-header {
                 margin-top: 5px;
+            }
+
+            &.hidden {
+                display: none;
             }
         }
 
@@ -974,7 +989,7 @@ a.rounded_button span {
 
     .indicator-picklist-center-buttons {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-self: center;
         gap: 5px;
 
@@ -983,6 +998,10 @@ a.rounded_button span {
             border-radius: 10px;
             border-width: 0;
             background: @grayLighter;
+            transform: rotateZ(90deg);
+            line-height: 0;
+            height: 35px;
+            width: 35px;
         }
     }
 }

@@ -128,6 +128,9 @@
             'NO_MATCHES': 'No hay resultados',
             'LOADING': 'Cargando...'
         },
+        'PICKLIST': {
+            'FILTER_PLACEHOLDER': 'Escribe para filtrar los indicadores de la siguiente caja'
+        },
         'ECHARTS': {
             'time': {
                 'month': [

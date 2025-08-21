@@ -128,6 +128,9 @@
             'NO_MATCHES': 'No matches',
             'LOADING': 'Loading...'
         },
+        'PICKLIST': {
+            'FILTER_PLACEHOLDER': 'Type to filter the indicators in the following box'
+        },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"
         },

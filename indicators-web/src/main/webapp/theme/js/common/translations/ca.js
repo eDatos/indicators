@@ -128,6 +128,9 @@
             'NO_MATCHES': 'No hi ha resultats',
             'LOADING': 'Carregant...'
         },
+        'PICKLIST': {
+            'FILTER_PLACEHOLDER': 'Escriu per a filtrar els indicadors de la següent caixa'
+        },
         'ECHARTS': {
             'time': {
                 'month': [

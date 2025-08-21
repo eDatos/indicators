@@ -10,13 +10,17 @@
             "click .all-to-the-left-button": "_moveAllToTheLeft",
             "click .selected-to-the-right-button": "_moveSelectedToTheRight",
             "click .all-to-the-right-button": "__moveAllToTheRight",
-            'click .selectable-picklist-item': "_toggleSelectedItem"
+            'click .selectable-picklist-item': "_toggleSelectedItem",
+            "keyup input.indicator-picklist-filter": "_filterTree"
         },
 
         initialize: function (options) {
             this.subjects = options.subjects;
             this.subjects.on('reset', this.render, this);
             this.collection.on('reset', this.render, this);
+
+            this._filterTree = _.debounce(this._filterTree, 200);
+
             this.render();
         },
 
@@ -117,6 +121,17 @@
                 $(rightListItemEl).prependTo("ul.indicator-picklist-left-list ul#" + $(rightListItemEl).attr("subjectId").replaceAll(".", "\\."));
             });
             this.trigger("change", []);
+        },
+
+        _filterTree: function () {
+            var filter = this.$(".indicator-picklist-filter")[0] ? this.$(".indicator-picklist-filter")[0].value : "";
+            this.$("ul.indicator-picklist-left-list li").each(function () {
+                if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
+                    $(this).removeClass("hidden");
+                } else {
+                    $(this).addClass("hidden");
+                }
+            });
         }
     });
 }(window._));
