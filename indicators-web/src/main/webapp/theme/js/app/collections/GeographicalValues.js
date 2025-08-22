@@ -10,7 +10,9 @@
         model : App.models.GeographicalValue,
 
         parse : function (response) {
-            return response.items;
+            return window.firstTerritory ? _.sortBy(response.items, function (item) {
+                return item.code === firstTerritory ? 0 : 1;
+            }) : response.items;
         },
 
         fetchBySubjectCodeAndGeographicalGranularityCode : function (subjectCode, granularityCode) {
