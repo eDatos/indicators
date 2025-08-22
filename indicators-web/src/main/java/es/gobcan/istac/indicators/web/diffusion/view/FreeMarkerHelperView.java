@@ -58,6 +58,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         try {
             model.put("firstTerritory", getConfigurationService().retrieveFirstTerritory());
         } catch (MetamacException metamacException) {
+            model.put("firstTerritory", "");
             logger.debug("The optional property 'firstTerritory' could not be initialized.");
         }
 
