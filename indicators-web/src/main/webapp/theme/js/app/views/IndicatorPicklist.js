@@ -132,11 +132,11 @@
 
         _filterTree: function () {
             var filter = this.$(".indicator-picklist-filter")[0] ? this.$(".indicator-picklist-filter")[0].value : "";
-            this.$("ul.indicator-picklist-left-list li").each(function () {
+            this.$("ul.indicator-picklist-left-list li").addClass("hidden");
+            this.$("ul.indicator-picklist-left-list li > span").each(function () {
                 if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
-                    $(this).removeClass("hidden");
-                } else {
-                    $(this).addClass("hidden");
+                    $(this).parents("ul.indicator-picklist-left-list li").removeClass("hidden");
+                    $(this).parent().find("li").removeClass("hidden");
                 }
             });
         }
