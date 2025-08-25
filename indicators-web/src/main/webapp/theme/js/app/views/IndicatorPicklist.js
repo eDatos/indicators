@@ -6,10 +6,10 @@
         template: App.loadTemplate('indicator-picklist'),
 
         events: {
-            "click .selected-to-the-left-button": "_moveSelectedToTheLeft",
-            "click .all-to-the-left-button": "_moveAllToTheLeft",
-            "click .selected-to-the-right-button": "_moveSelectedToTheRight",
-            "click .all-to-the-right-button": "__moveAllToTheRight",
+            "click .selected-to-the-first-list-button": "_moveSelectedToTheFirstList",
+            "click .all-to-the-first-list-button": "_moveAllToTheFirstList",
+            "click .selected-to-the-second-list-button": "_moveSelectedToTheSecondList",
+            "click .all-to-the-second-list-button": "_moveAllToTheSecondList",
             'click .selectable-picklist-item:not(.disabled)': "_toggleSelectedItem",
             'click .indicator-picklist-subject-header > span': "_toggleSubject",
             "keyup input.indicator-picklist-filter": "_filterTree"
@@ -33,9 +33,9 @@
             };
             this.$el.html(this.template(context));
 
-            this.$(".indicator-picklist-right-list" ).sortable({
+            this.$(".indicator-picklist-second-list" ).sortable({
                 update: function () {
-                    self.trigger("change", self._getRightListIndicatorsFromDom());
+                    self.trigger("change", self._getSecondListIndicatorsFromDom());
                 }
             });
             return this;
@@ -97,55 +97,55 @@
             this.$(event.currentTarget).toggleClass("selected-picklist-item");
         },
 
-        _getRightListIndicatorsFromDom: function () {
+        _getSecondListIndicatorsFromDom: function () {
             var self = this;
-            return this.$("ul.indicator-picklist-right-list li").map(function (i, rightListItemEl) {
+            return this.$("ul.indicator-picklist-second-list li").map(function (i, secondListItemEl) {
                 return self.collection.toJSON().find(function (indicator) {
-                    return indicator.id === rightListItemEl.attributes["indicatorid"].value;
+                    return indicator.id === secondListItemEl.attributes["indicatorid"].value;
                 });
             }).get();
         },
 
-        _moveSelectedToTheRight: function () {
-            this.$("ul.indicator-picklist-left-list li.selected-picklist-item")
+        _moveSelectedToTheSecondList: function () {
+            this.$("ul.indicator-picklist-first-list li.selected-picklist-item")
                 .removeClass("selected-picklist-item")
                 .addClass("disabled")
                 .clone()
-                .prependTo("ul.indicator-picklist-right-list")
+                .prependTo("ul.indicator-picklist-second-list")
                 .removeClass("disabled");
-            this.trigger("change", this._getRightListIndicatorsFromDom());
+            this.trigger("change", this._getSecondListIndicatorsFromDom());
         },
 
-        __moveAllToTheRight: function () {
-            this.$("ul.indicator-picklist-left-list li.selectable-picklist-item")
+        _moveAllToTheSecondList: function () {
+            this.$("ul.indicator-picklist-first-list li.selectable-picklist-item")
                 .removeClass("selected-picklist-item")
                 .addClass("disabled")
                 .clone()
-                .prependTo("ul.indicator-picklist-right-list")
+                .prependTo("ul.indicator-picklist-second-list")
                 .removeClass("disabled");
             this.trigger("change", this.collection.toJSON());
         },
 
-        _moveSelectedToTheLeft: function () {
-            this.$("ul.indicator-picklist-right-list li.selected-picklist-item").each(function () {
-                $("ul.indicator-picklist-left-list li.selectable-picklist-item[indicatorId=" + $(this).attr("indicatorId") + "]").removeClass("disabled");
+        _moveSelectedToTheFirstList: function () {
+            this.$("ul.indicator-picklist-second-list li.selected-picklist-item").each(function () {
+                $("ul.indicator-picklist-first-list li.selectable-picklist-item[indicatorId=" + $(this).attr("indicatorId") + "]").removeClass("disabled");
                 $(this).remove();
             });
-            this.trigger("change", this._getRightListIndicatorsFromDom());
+            this.trigger("change", this._getSecondListIndicatorsFromDom());
         },
 
-        _moveAllToTheLeft: function () {
-            this.$("ul.indicator-picklist-right-list li").remove();
-            this.$("ul.indicator-picklist-left-list li.selectable-picklist-item.disabled").removeClass("disabled")
+        _moveAllToTheFirstList: function () {
+            this.$("ul.indicator-picklist-second-list li").remove();
+            this.$("ul.indicator-picklist-first-list li.selectable-picklist-item.disabled").removeClass("disabled")
             this.trigger("change", []);
         },
 
         _filterTree: function () {
             var filter = this.$(".indicator-picklist-filter")[0] ? this.$(".indicator-picklist-filter")[0].value : "";
-            this.$("ul.indicator-picklist-left-list li").addClass("hidden");
-            this.$("ul.indicator-picklist-left-list li > span").each(function () {
+            this.$("ul.indicator-picklist-first-list li").addClass("hidden");
+            this.$("ul.indicator-picklist-first-list li > span").each(function () {
                 if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
-                    $(this).parents("ul.indicator-picklist-left-list li").removeClass("hidden");
+                    $(this).parents("ul.indicator-picklist-first-list li").removeClass("hidden");
                     $(this).parent().find("li").removeClass("hidden");
                 }
             });
