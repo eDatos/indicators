@@ -47,7 +47,7 @@
                 </ul>
             </li>
         {{else}}
-            <li id="{{id}}" subjectId="{{subjectCode}}" class="selectable-picklist-item"><span>{{title}}</span></li>
+            <li indicatorId="{{id}}" subjectId="{{subjectCode}}" class="selectable-picklist-item"><span>{{title}}</span></li>
         {{/if}}
     `);
 

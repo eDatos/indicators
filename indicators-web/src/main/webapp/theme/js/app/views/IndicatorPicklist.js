@@ -10,7 +10,7 @@
             "click .all-to-the-left-button": "_moveAllToTheLeft",
             "click .selected-to-the-right-button": "_moveSelectedToTheRight",
             "click .all-to-the-right-button": "__moveAllToTheRight",
-            'click .selectable-picklist-item': "_toggleSelectedItem",
+            'click .selectable-picklist-item:not(.disabled)': "_toggleSelectedItem",
             'click .indicator-picklist-subject-header > span': "_toggleSubject",
             "keyup input.indicator-picklist-filter": "_filterTree"
         },
@@ -101,32 +101,42 @@
             var self = this;
             return this.$("ul.indicator-picklist-right-list li").map(function (i, rightListItemEl) {
                 return self.collection.toJSON().find(function (indicator) {
-                    return indicator.id === rightListItemEl.id;
+                    return indicator.id === rightListItemEl.attributes["indicatorid"].value;
                 });
             }).get();
         },
 
         _moveSelectedToTheRight: function () {
-            this.$("ul.indicator-picklist-left-list li.selected-picklist-item").removeClass("selected-picklist-item").prependTo("ul.indicator-picklist-right-list");
+            this.$("ul.indicator-picklist-left-list li.selected-picklist-item")
+                .removeClass("selected-picklist-item")
+                .addClass("disabled")
+                .clone()
+                .prependTo("ul.indicator-picklist-right-list")
+                .removeClass("disabled");
             this.trigger("change", this._getRightListIndicatorsFromDom());
         },
 
         __moveAllToTheRight: function () {
-            this.$("ul.indicator-picklist-left-list li.selectable-picklist-item").removeClass("selected-picklist-item").prependTo("ul.indicator-picklist-right-list");
+            this.$("ul.indicator-picklist-left-list li.selectable-picklist-item")
+                .removeClass("selected-picklist-item")
+                .addClass("disabled")
+                .clone()
+                .prependTo("ul.indicator-picklist-right-list")
+                .removeClass("disabled");
             this.trigger("change", this.collection.toJSON());
         },
 
         _moveSelectedToTheLeft: function () {
-            this.$("ul.indicator-picklist-right-list li.selected-picklist-item").removeClass("selected-picklist-item").each(function (_, rightListItemEl) {
-                $(rightListItemEl).prependTo("ul.indicator-picklist-left-list ul#" + $(rightListItemEl).attr("subjectId").replaceAll(".", "\\."));
+            this.$("ul.indicator-picklist-right-list li.selected-picklist-item").each(function () {
+                $("ul.indicator-picklist-left-list li.selectable-picklist-item[indicatorId=" + $(this).attr("indicatorId") + "]").removeClass("disabled");
+                $(this).remove();
             });
             this.trigger("change", this._getRightListIndicatorsFromDom());
         },
 
         _moveAllToTheLeft: function () {
-            this.$("ul.indicator-picklist-right-list li").removeClass("selected-picklist-item").each(function (_, rightListItemEl) {
-                $(rightListItemEl).prependTo("ul.indicator-picklist-left-list ul#" + $(rightListItemEl).attr("subjectId").replaceAll(".", "\\."));
-            });
+            this.$("ul.indicator-picklist-right-list li").remove();
+            this.$("ul.indicator-picklist-left-list li.selectable-picklist-item.disabled").removeClass("disabled")
             this.trigger("change", []);
         },
 

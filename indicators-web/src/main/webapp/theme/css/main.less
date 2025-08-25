@@ -1014,9 +1014,14 @@ a.rounded_button span {
             background-color: @grayLighter;
             cursor: pointer;
 
-            &.selected-picklist-item {
+            &.selected-picklist-item:not(.disabled) {
                 background-color: #3875d7;
                 color: white;
+            }
+
+            &.disabled {
+                opacity: 60%;
+                cursor: default;
             }
         }
     }
