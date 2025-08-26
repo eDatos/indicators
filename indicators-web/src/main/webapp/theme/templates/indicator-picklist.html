@@ -1,4 +1,4 @@
-<input type='text' class='indicator-picklist-filter' placeholder='{{ translate "PICKLIST.FILTER_PLACEHOLDER" }}'>
+<input type='text' class='indicator-picklist-filter' placeholder='{{ translate "PICKLIST.FILTER_PLACEHOLDER" }}' {{#if disableFilterInput}} disabled {{/if}}>
 <div class="indicator-picklist">
     <ul class="indicator-picklist-first-list">
         {{#each subjectsAndIndicatorsTree}}

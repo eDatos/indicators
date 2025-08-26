@@ -28,8 +28,10 @@
         render: function () {
             var self = this;
 
+            var subjectsAndIndicatorsTree = this._getSubjectsAndIndicatorsTree();
             var context = {
-                subjectsAndIndicatorsTree: this._getSubjectsAndIndicatorsTree()
+                disableFilterInput: subjectsAndIndicatorsTree.length === 0,
+                subjectsAndIndicatorsTree: subjectsAndIndicatorsTree
             };
             this.$el.html(this.template(context));
 
