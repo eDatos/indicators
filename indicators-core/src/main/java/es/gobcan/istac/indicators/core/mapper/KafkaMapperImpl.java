@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avro.specific.SpecificRecordBase;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
@@ -39,13 +42,20 @@ public class KafkaMapperImpl implements KafkaMapper {
 
         ExternalItemDto externalItemDto = new ExternalItemDto();
 
-        externalItemDto.setType(TypeExternalArtefactsEnum.CODELIST.getName());
+        externalItemDto.setType(TypeExternalArtefactsEnum.CODELIST.getValue());
         externalItemDto.setUrn(codelistAvro.getUrn());
+
+        List<String> elementCodeUsed = new ArrayList<>();
 
         Codes codes = srmService.retrieveCodesOfCodelist(codelistAvro.getUrn(), false);
         for (CodeResourceInternal srmCode : codes.getCodes()) {
             ExternalItemCodesDto code = itemResourceInternalToExternalItemCodesDto(srmCode);
-            code.setElementCode(srmCode.getVariableElement().getId());
+            if (elementCodeUsed.contains(srmCode.getVariableElement().getId())) {
+                code.setElementCode(srmCode.getVariableElement().getId() + "$");
+            } else {
+                code.setElementCode(srmCode.getVariableElement().getId());
+                elementCodeUsed.add(srmCode.getVariableElement().getId());
+            }
             externalItemDto.addCode(code);
 
         }

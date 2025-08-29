@@ -38,12 +38,13 @@ Y si se quiere pasar a esquema extensions:
   code_title_es varchar(4000),
   code_title_ca varchar(4000),
   code_title_en varchar(4000),
-  element_code varchar(255)
+  element_code varchar(255),
+  external_item_fk int8
   );
  
  
  ---------A ejecutar en la bd del SRM-------------------
---1.2) Rellenar la tabla anterior con todas las clasificaciones y esquemas de conceptos existentes
+--1.2) Rellenar la tabla anterior con todas las clasificaciones geográficas existentes (publicadas)
 --1.2.1) Clasificaciones
   insert into temp_srm_codes(code, urn, type, code_title_es, code_title_ca, code_title_en, element_code) 
   select  n.code, n1.urn, 'structuralResources#codelist',
@@ -81,26 +82,113 @@ null
  where n1.code = XXX;
  
  
- --1.3) Exportar los datos a fichero tsv.
- --ATENCIÓN!! Al exportar si hay valores nulos los convierte a vacío. Lo que puede dar problemas en pasos posteriores. 
---Es por eso que hay que indicar en la exportación que convierta los valores nulos al valor "null" Para ello:
--- 1.3.1 Exportar a CSV
--- 1.3.2 En la última pantalla de exportación, en "Exporting settings" al valor "NULL String" asignarle el valor null
+ 
+ --1.3 Generar insert para cada entrada en temp_srm_codes. Se hace así y no exportando a csv por temas de rendimiento en la importación. Ver apartado 1.4 para exportación a tsv como consulta
+ --1.3.1 
+ select '
+insert into temp_srm_codes(code, urn, type, code_title_es, code_title_ca, code_title_en, element_code) values(' 
+|| '''' || c.code || ''', ' 
+|| '''' || c.urn || ''', ' 
+|| '''' || c.type || ''', ' || 
+case when c.code_title_es is not null then   
+ '''' || replace(c.code_title_es, '''', '''''') || ''', '  else 'null, ' end ||
+case when c.code_title_ca is not null then 
+ '''' || replace(c.code_title_ca, '''', '''''') || ''', '  else 'null, ' end ||
+case when c.code_title_en is not null then 
+ '''' || replace(c.code_title_en, '''', '''''') || ''', '  else 'null, ' end ||
+ case when c.element_code is not null then   
+ '''' || replace(c.element_code, '''', '''''') || ''''  else 'null' end 
+|| ');'
+from temp_srm_codes c; 
 
---1.4 Importar la tabla anterior a la tabla "temp_srm_codes" a la base de datos de  indicators_data.
---ATENCIÓN!! Al importar si hay valores nulos los convierte a vacío. En la exportación se ha puesto "null" como valor asociado a nulo hay que asociarlo a las opciones de importación 
---Es por eso que hay que indicar en la importación que convierta los valores con el valor "null" a NULO Para ello:
--- 1.4.1 Importar a CSV
--- 1.4.2 En la última pantalla de importación, en "Importing settings" al valor "NULL value mark" asignarle el valor null
+--1.3.2 ejecutar el resultado anterior. Por temas de velocidad se puede introducir en txt y ejecutarlo en servidor como se indica en paso 2.2
+-- Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
+-- 1.3.1. Seleccionar la  consulta en dbeaver
+-- 1.3.2. desplegar menú Ejecutar (Execute)
+-- 1.3.3. Seleccionar submenú Exportar desde consulta (Execute from query)
+-- 1.3.4. Seleccionar como tipo de salida "TXT"
+-- 1.3.5. Ampliar el fetch size a 300000 que por defecto está en 10000
+-- 1.3.6. Seleccionar directorio de salida
+-- 1.3.7. Exportar y generará un fichero con las inserciones en el directorio de  salida.
+-- 1.3.8. Genera la salida pero con un delimitador entre INSERT.
+----1.3.8.1 Quitar la primera línea "|?column?    ".  
+----1.3.8.2 Quitar el delimitador "¶" sustituyéndolo por "" en un editor de textos (sublime, visual studio code)
+----1.3.8.3 Ir a consola de comandos y ejecutar la siguiente sentencia (donde estén los comandos para el dump. Por eje. en local hay que situarse en carpeta  con dump si no está mapeado ej: E:\program files\PostgreSQL\14\bin )
+psql -U "indicators_data_bd" -W -h localhost indicators_data_bd < E:\mig\<NOMBRE_FICHERO_CREADO>
+--EJ:  psql -U "indicators_data_bd" -W -h localhost -p 5432 indicators_data_bd < E:\mig\nombre_fichero.sql
 
---1.4 Borrar tabla temp_srm_codes de la base de datos del srm. Situarse en la base de datos  de srm  y hacer:
+--lanzando directamente en servidor: psql -U "indicators_data_bd"  -d indicators_data_bd < /home/arte/mquimar/indicators_data/temp_srm_codes_to_indicators_data.txt
+
+
+--1.4 Borrar tabla temp_srm_codes de la base de datos del srm. Situarse en la base de datos metamac_structural_resources y hacer:
 drop table temp_srm_codes;
+
 
 
 -------------A EJECUTAR EN BD DE INDICATORS-DATABASE
 
 --2) Obtener los insert a realizar en la bd data a partir de la tabla temp_srm_codes
---2.1 Ejecutar la siguient consulta
+--2.1 Ejecutar la siguient consulta para generar los valores en la tabla padre tb_external_items. No tarda mucho ya que son unas 207 entradas en desarrollo. Ejecutarlo el resultado directamente en consola quitando dobles comillas si se añaden al copiar a una ventana de dbeaver.
+SELECT
+    'INSERT INTO tb_external_items
+    (id, "type", urn, "uuid", "version", creation_date_tz, creation_date, last_update_date_tz, last_update_date)
+     VALUES(nextval(''SEQ_EXTERNAL_ITEMS''), '
+     || quote_literal(MIN(c.type)) || ', '
+     || quote_literal(c.urn) || ', '
+     || 'extensions.uuid_generate_v4(), 0, ''Europe/London'', current_timestamp, null, null);'
+FROM temp_srm_codes c
+GROUP BY c.urn;
+
+--2.3 crear índice a tabla temp 
+CREATE INDEX pk_temp_srm_codes_urn ON temp_srm_codes (urn);
+
+--2.4 Actualizar campo external_item_fk en tabla temp_srm_codes
+--2.4.1 crear este script
+select 'update temp_srm_codes set external_item_fk = ' || id || ' where temp_srm_codes.urn = ''' || urn || ''';' 
+from tb_external_items;
+
+
+--2.4.2 ejecutar el resultado anterior. Por temas de velocidad se puede introducir en txt y ejecutarlo en servidor como se indica en paso 2.2
+-- Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
+-- 2.4.1. Seleccionar la  consulta en dbeaver
+-- 2.4.2. desplegar menú Ejecutar (Execute)
+-- 2.4.3. Seleccionar submenú Exportar desde consulta (Execute from query)
+-- 2.4.4. Seleccionar como tipo de salida "TXT"
+-- 2.4.5. Ampliar el fetch size a 300000 que por defecto está en 10000
+-- 2.4.6. Seleccionar directorio de salida
+-- 2.4.7. Exportar y generará un fichero con las inserciones en el directorio de  salida.
+-- 2.4.8. Genera la salida pero con un delimitador entre INSERT.
+----2.4.8.1 Quitar la primera línea "|?column?    ".  
+----2.4.8.2 Quitar el delimitador "¶" sustituyéndolo por "" en un editor de textos (sublime, visual studio code)
+----2.4.8.3 Ir a consola de comandos y ejecutar la siguiente sentencia (donde estén los comandos para el dump. Por eje. en local hay que situarse en carpeta  con dump si no está mapeado ej: E:\program files\PostgreSQL\14\bin )
+psql -U "indicators_data_bd" -W -h localhost indicators_data_bd < E:\mig\<NOMBRE_FICHERO_CREADO>
+--EJ:  psql -U "indicators_data_bd" -W -h localhost -p 5432 indicators_data_bd < E:\mig\temp_srm_codes_data_indicators_resto.sql
+
+--lanzando directamente en servidor: psql -U "indicators_data_bd"  -d indicators_data_bd < /home/arte/mquimar/indicators_data/temp_srm_codes_indicators_update_external_item_fk.txt
+
+--2.4.3 Asegurarse de que ninguna entrada quedó sin rellenar. La siguiente consulta debe dar 0.
+select count(*) from temp_srm_codes where external_item_fk is null;
+
+--2.4.4 Se comprueba que para la clasificación no normalizada que usa jsonstat y gpe el mismo elemento de código puede estar asociado a más de un código. Se actualiza para quedarnos con ún único código por cada elemento
+--Ejecutar la siguiente sentencia en indicators_data_bd
+WITH cte AS (
+  SELECT 
+    ctid,                -- Identificador interno de fila
+    element_code,
+    urn,
+    ROW_NUMBER() OVER (PARTITION BY urn, element_code ORDER BY code) AS rn
+  FROM temp_srm_codes
+)
+UPDATE temp_srm_codes t
+SET element_code = t.element_code || '$'
+FROM cte
+WHERE t.ctid = cte.ctid
+  AND cte.rn > 1;
+  
+  
+
+
+--2.5 Ejecutar el siguiente script para generar entradas en la tabla hija tb_external_items_codes. Hacerlo como se indica en el aparrtado 2.4.2 ya que puede tener mal rendimiento
 select  
 'INSERT INTO TB_INTERNATIONAL_STRINGS (ID, "uuid", VERSION) VALUES (nextval(''seq_i18nstrs''), extensions.uuid_generate_v4(), 0);' ||  
 case when c.code_title_es is not null then '  
@@ -108,39 +196,23 @@ INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VE
 case when c.code_title_ca is not null then '
 INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION, "uuid") values (nextval(''SEQ_L10NSTRS''), ''' || replace(c.code_title_ca, '''', '''''') || ''', ''ca'', currval(''SEQ_I18NSTRS''), 1, extensions.uuid_generate_v4());' else '' end || 
 case when c.code_title_en is not null then '
-INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION, "uuid") values (nextval(''SEQ_L10NSTRS''), ''' || replace(c.code_title_en, '''', '''''') || ''', ''en'', currval(''SEQ_I18NSTRS''), 1, extensions.uuid_generate_v4());' else '' end || '
-INSERT INTO tb_external_items
-(id, "type", urn, "uuid", "version", creation_date_tz, creation_date, last_update_date_tz, last_update_date)
- VALUES(nextval(''SEQ_EXTERNAL_ITEMS''),'
-|| '''' || c.type || ''', '
-|| '''' || c.urn || ''', '
-|| ' extensions.uuid_generate_v4(), 0, ''Europe/London'', current_timestamp, null, null);
+INSERT INTO TB_LOCALISED_STRINGS (ID, LABEL, LOCALE, INTERNATIONAL_STRING_FK, VERSION, "uuid") values (nextval(''SEQ_L10NSTRS''), ''' || replace(c.code_title_en, '''', '''''') || ''', ''en'', currval(''SEQ_I18NSTRS''), 1, extensions.uuid_generate_v4());' else '' end || 
+'
 INSERT INTO tb_external_items_codes
-(id, "uuid", "version", external_item_fk, code, title_fk, element_code )
- VALUES(nextval(''SEQ_EXTERNAL_ITEMS_CODES''), extensions.uuid_generate_v4(), 0, currval(''SEQ_EXTERNAL_ITEMS''),'
+(id, "uuid", "version", external_item_fk, code, title_fk, element_code)
+ VALUES(nextval(''SEQ_EXTERNAL_ITEMS_CODES''), extensions.uuid_generate_v4(), 0, '
+ || c.external_item_fk || ', ' 
 || '''' || c.code || ''', ' ||
 'currval(''seq_i18nstrs''), ' ||
 case when c.element_code is null then 'null' else '''' || c.element_code || '''' end || ');'
 from temp_srm_codes c;
 
---2.2 Ejecutar el resultado obtenido en el apartado anterior. El resultado puede ser bastante elevado así que evaluar si lanzarlo en servidor directamente y no en dbeaver.
--- Esta consulta puede dar problemas de rendimiento al hacer el copy. Por lo que se puede optar por exportar la consulta a un fichero. Para ello hacer lo siguiente
--- 2.2.1. Seleccionar la  consulta en dbeaver
--- 2.2.2. desplegar menú Ejecutar (Execute)
--- 2.2.3. Seleccionar submenú Exportar desde consulta (Execute from query)
--- 2.2.4. Seleccionar como tipo de salida "TXT"
--- 2.2.5. Ampliar el fetch size a 300000 que por defecto está en 10000
--- 2.2.6. Seleccionar directorio de salida
--- 2.2.7. Exportar y generará un fichero con las inserciones en el directorio de  salida.
--- 2.2.8. Genera la salida pero con un delimitador entre INSERT.
-----2.2.8.1 Quitar la primera línea "|?column?    ".  
-----2.2.8.2 Quitar el delimitador "¶" sustituyéndolo por "" en un editor de textos (sublime, visual studio code)
-----2.2.8.3 Ir a consola de comandos y ejecutar la siguiente sentencia (donde estén los comandos para el dump. Por eje. en local hay que situarse en carpeta  con dump si no está mapeado ej: E:\program files\PostgreSQL\14\bin )
-psql -U "indicators_data_bd" -W -h localhost indicators_data_bd < E:\mig\<NOMBRE_FICHERO_CREADO>
---EJ:  psql -U "indicators_data_bd" -W -h localhost -p 5432 indicators_data_bd < E:\mig\temp_srm_codes_data_indicators.sql
--- tiempo estimado: en desarrollo tardó 3 horas y 15 con un fichero con 69214 entradas
+--2.6 ejecutar el fichero txt resultante en servidor para crear las entradas. 
+--Ej: psql -U "indicators_data_bd"  -d indicators_data_bd < /home/arte/mquimar/indicators_data/temp_srm_codes_indicators_tb_external_item_codes.txt
 
---2.3) Comprobar que el número de entradas en la tabla tb_external_items coincide con la de temp_srm_codes
+--2.7) Comprobar que el número de entradas en la tabla tb_external_items coincide con la de temp_srm_codes
+select count(*) from temp_srm_codes;
+select count(*) from tb_external_items_codes;
 
 
 --3) Si todo fue bien, borrar la tabla temporal de indicators-data

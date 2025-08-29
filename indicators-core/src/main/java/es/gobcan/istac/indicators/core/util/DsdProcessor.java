@@ -9,6 +9,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
@@ -69,27 +71,49 @@ public class DsdProcessor {
     private static Map<String, String> getDimensions(SrmRestInternalService srmRestInternalService, String dsdUrn, boolean onlyGeographicalDimension) throws MetamacException {
         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
         Map<String, String> representationByDimension = new HashMap<>();
+
         DataStructureComponents components = dsd.getDataStructureComponents();
-        if (components != null && components.getDimensions() != null) {
-            Dimensions dimensionList = components.getDimensions();
-            for (DimensionBase dimObj : dimensionList.getDimensions()) {
+        if (components == null || components.getDimensions() == null) {
+            return representationByDimension;
+        }
 
-                if (dimObj instanceof Dimension) {
-                    Dimension dim = (Dimension) dimObj;
-                    if (Boolean.TRUE.equals(dim.isIsSpatial())) {
-                        representationByDimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), extractRepresentation(dim.getLocalRepresentation()));
+        Dimensions dimensions = components.getDimensions();
+        for (DimensionBase dimObj : dimensions.getDimensions()) {
 
-                        if (onlyGeographicalDimension) {
-                            break;
-                        }
+            if (dimObj instanceof Dimension) {
+                Dimension dim = (Dimension) dimObj;
+                if (Boolean.TRUE.equals(dim.isIsSpatial())) {
+                    representationByDimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), extractRepresentation(dim.getLocalRepresentation()));
+                    if (onlyGeographicalDimension) {
+                        return representationByDimension;
                     }
-
-                } else if (!onlyGeographicalDimension && dimObj instanceof MeasureDimension) {
-                    representationByDimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), extractRepresentation(dimObj.getLocalRepresentation()));
                 }
+            }
+
+            else if (!onlyGeographicalDimension && dimObj instanceof MeasureDimension) {
+                representationByDimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), extractRepresentation(dimObj.getLocalRepresentation()));
+            }
+        }
+
+        final String geoKey = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+        if (!representationByDimension.containsKey(geoKey)) {
+            String urn = getAttributeSpatialRepresentation(components);
+            if (urn != null) {
+                representationByDimension.put(geoKey, urn);
             }
         }
         return representationByDimension;
+    }
+
+    private static String getAttributeSpatialRepresentation(DataStructureComponents components) {
+        if (components.getAttributes() != null && components.getAttributes().getAttributes() != null) {
+            for (AttributeBase attribute : components.getAttributes().getAttributes()) {
+                if (AttributeQualifierType.SPATIAL.equals(attribute.getType())) {
+                    return extractRepresentation(attribute.getLocalRepresentation());
+                }
+            }
+        }
+        return null;
     }
 
     private static String extractRepresentation(Representation representation) {

@@ -39,12 +39,13 @@ CREATE TABLE TB_EXTERNAL_ITEMS_CODES (
 	external_item_fk int8 NOT NULL,
 	code varchar(255) NOT NULL,
 	title_fk int8 NOT NULL,
-	element_code varchar(255) 
+	element_code varchar(255), 
 	CONSTRAINT pk_tb_external_items_codes PRIMARY KEY (id) 
 );
 CREATE INDEX idx_tb_external_items_codes_title_fk ON tb_external_items_codes  (title_fk);
 CREATE UNIQUE INDEX uq_tb_external_items_codes on tb_external_items_codes (external_item_fk, code);
 CREATE INDEX idx_tb_external_items_codes_element_code ON tb_external_items_codes  (element_code);
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES ADD CONSTRAINT uq_tb_external_items_uuid UNIQUE ("uuid");
 
 -- TB_EXTERNAL_ITEMS_CODES foreign keys
 
