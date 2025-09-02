@@ -1780,8 +1780,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private Map<String, String> getDimensionRepresentation(List<DataSource> dataSources) throws MetamacException {
         Map<String, String> dimensionRepresentation = new HashMap<>();
         if (dataSources != null && !dataSources.isEmpty()) {
-            if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment())) {
-                Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment()) || QueryEnvironmentEnum.GPE.equals(dataSources.get(0).getQueryEnvironment())) {
+                // normalized codelist for jsonstat/gpe. It must be used to retrieve descriptions from variable_element. retrieveDefaultTerritoryCodelistForGpeJsonStat must not be used because is not
+                // normalized.
+                Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn());
                 dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
             } else if (QueryEnvironmentEnum.METAMAC.equals(dataSources.get(0).getQueryEnvironment())) {
                 if (dataSources.get(0).getGeographicalCodelistUrn() != null) {
@@ -2373,7 +2375,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Map<String, String> dimensionRepresentationJsonStat = new HashMap<>();
 
         try {
-            Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn());
             dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
             dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), configurationService.retrieveDefaultCodelistMeasureDimensionValues());
         } catch (MetamacException e) {
