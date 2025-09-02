@@ -43,6 +43,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
@@ -80,28 +81,34 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
 
-    List<GeographicalValue>               geographicalValues = new ArrayList<GeographicalValue>();
+    List<GeographicalValue>                geographicalValues = new ArrayList<GeographicalValue>();
 
     @Autowired
-    protected IndicatorsServiceFacade     indicatorsServiceFacade;
+    protected IndicatorsServiceFacade      indicatorsServiceFacade;
 
     @Autowired
-    protected IndicatorsSystemsService    indicatorsSystemService;
+    protected IndicatorsSystemsService     indicatorsSystemService;
 
     @Autowired
-    private IndicatorsDataService         indicatorsDataService;
+    private IndicatorsDataService          indicatorsDataService;
 
     @Autowired
-    private IndicatorsDataProviderService indicatorsDataProviderService;
+    private IndicatorsDataProviderService  indicatorsDataProviderService;
 
     @Autowired
-    private SrmRestInternalService        srmRestInternalService;
+    private SrmRestInternalService         srmRestInternalService;
+
+    @Autowired
+    private IndicatorsConfigurationService configurationService;
 
     @Before
     public void setUp() throws MetamacException {
         geographicalValues = indicatorsSystemService.findAllGeographicalValues(getServiceContextAdministrador());
         Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
         when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+        when(srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn()))
+                .thenReturn(SrmResourcesMocks.buildCodelist("defaultJsonstat", "defaultCodelistJsonstat", "es", "urn:defaultCodelistJsonstat"));
 
     }
 

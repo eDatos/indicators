@@ -484,7 +484,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             List<String> languages = null;
 
-            languages = configurationService.retrieveLanguages();
+            languages = configurationService.retrieveInternationalizationLanguages();
 
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages,
                     Arrays.asList(IndicatorDataDimensionTypeEnum.TIME.name()), Arrays.asList(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()));
@@ -2380,7 +2380,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), configurationService.retrieveDefaultCodelistMeasureDimensionValues());
         } catch (MetamacException e) {
             LOG.error(
-                    "ERROR in processDataViewAdjustmentTask. Error to retrieve retrieveDefaultTerritoryCodelistForGpeJsonStat or  retrieveDefaultCodelistMeasureDimensionValues parameter. JSONSTAT or GPE indicators will not be treated.");
+                    "ERROR in processDataViewAdjustmentTask. Error to retrieve retrieveDefaultGeographicalCodeListUrn or  retrieveDefaultCodelistMeasureDimensionValues parameter. JSONSTAT or GPE indicators will not be treated.");
         }
 
         for (IndicatorVersion indicatorVersion : indicatorVersions) {
@@ -2490,7 +2490,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             List<String> languages = null;
 
-            languages = configurationService.retrieveLanguages();
+            languages = configurationService.retrieveInternationalizationLanguages();
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages,
                     Arrays.asList(IndicatorDataDimensionTypeEnum.TIME.name()), Arrays.asList(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()));
 

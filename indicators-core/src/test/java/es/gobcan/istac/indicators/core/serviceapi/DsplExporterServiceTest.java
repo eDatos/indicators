@@ -42,77 +42,83 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
 
     @Autowired
-    private IndicatorsService                indicatorsService;
+    private IndicatorsService                                                     indicatorsService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade                                      datasetRepositoriesServiceFacade;
 
     @Autowired
-    private IndicatorsDataProviderService    indicatorsDataProviderService;
+    private IndicatorsDataProviderService                                         indicatorsDataProviderService;
 
     @Autowired
-    private IndicatorsDataService            indicatorsDataService;
+    private IndicatorsDataService                                                 indicatorsDataService;
 
     @Autowired
-    protected DsplExporterService            dsplExporterService;
+    protected DsplExporterService                                                 dsplExporterService;
 
     @Autowired
-    private SrmRestInternalService           srmRestInternalService;
+    private SrmRestInternalService                                                srmRestInternalService;
 
     @Autowired
-    private IndicatorsSystemsService         indicatorsSystemsService;
+    private IndicatorsSystemsService                                              indicatorsSystemsService;
 
-    private static final String              INDICATORS_SYSTEM_1       = "IndSys-1";
-    private static final String              INDICATORS_SYSTEM_2       = "IndSys-2";
-    private static final String              INDICATORS_SYSTEM_3       = "IndSys-3";
+    @Autowired
+    protected es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
 
-    private static final String              INDICATOR1_UUID           = "Indicator-1";
-    private static final String              INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_GPE_JSON_DATA  = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATORS_SYSTEM_1       = "IndSys-1";
+    private static final String                                                   INDICATORS_SYSTEM_2       = "IndSys-2";
+    private static final String                                                   INDICATORS_SYSTEM_3       = "IndSys-3";
 
-    private static final String              INDICATOR2_UUID           = "Indicator-2";
-    private static final String              INDICATOR2_DS_GPE_UUID    = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR2_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_countries.json");
+    private static final String                                                   INDICATOR1_UUID           = "Indicator-1";
+    private static final String                                                   INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR1_GPE_JSON_DATA  = readFile("json/data_temporal_spatials.json");
 
-    private static final String              INDICATOR3_UUID           = "Indicator-3";
-    private static final String              INDICATOR3_DS_GPE_UUID    = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR3_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_provinces.json");
+    private static final String                                                   INDICATOR2_UUID           = "Indicator-2";
+    private static final String                                                   INDICATOR2_DS_GPE_UUID    = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR2_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_countries.json");
 
-    private static final String              INDICATOR4_UUID           = "Indicator-4";
-    private static final String              INDICATOR4_DS_GPE_UUID    = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR4_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    private static final String                                                   INDICATOR3_UUID           = "Indicator-3";
+    private static final String                                                   INDICATOR3_DS_GPE_UUID    = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR3_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_provinces.json");
 
-    private static final String              INDICATOR5_UUID           = "Indicator-5";
-    private static final String              INDICATOR5_DS1_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR5_DS2_GPE_UUID   = "Indicator-5-v1-DataSource-2-GPE-TIME-GEO";
-    private static final String              INDICATOR5_DS3_GPE_UUID   = "Indicator-5-v1-DataSource-3-GPE-TIME-GEO";
-    private static final String              INDICATOR5_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
-    private static final String              INDICATOR5_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
-    private static final String              INDICATOR5_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
+    private static final String                                                   INDICATOR4_UUID           = "Indicator-4";
+    private static final String                                                   INDICATOR4_DS_GPE_UUID    = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR4_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
 
-    private static final String              INDICATOR6_UUID           = "Indicator-6";
-    private static final String              INDICATOR6_DS1_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR6_DS2_GPE_UUID   = "Indicator-6-v1-DataSource-2-GPE-TIME-GEO";
-    private static final String              INDICATOR6_DS3_GPE_UUID   = "Indicator-6-v1-DataSource-3-GPE-TIME-GEO";
-    private static final String              INDICATOR6_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
-    private static final String              INDICATOR6_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
-    private static final String              INDICATOR6_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
+    private static final String                                                   INDICATOR5_UUID           = "Indicator-5";
+    private static final String                                                   INDICATOR5_DS1_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR5_DS2_GPE_UUID   = "Indicator-5-v1-DataSource-2-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR5_DS3_GPE_UUID   = "Indicator-5-v1-DataSource-3-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR5_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
+    private static final String                                                   INDICATOR5_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
+    private static final String                                                   INDICATOR5_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
 
-    private static final String              INDICATOR7_UUID           = "Indicator-7";
-    private static final String              INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    private static final String                                                   INDICATOR6_UUID           = "Indicator-6";
+    private static final String                                                   INDICATOR6_DS1_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR6_DS2_GPE_UUID   = "Indicator-6-v1-DataSource-2-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR6_DS3_GPE_UUID   = "Indicator-6-v1-DataSource-3-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR6_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
+    private static final String                                                   INDICATOR6_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
+    private static final String                                                   INDICATOR6_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
 
-    private static final String              INDICATOR8_UUID           = "Indicator-8";
-    private static final String              INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    private static final String                                                   INDICATOR7_UUID           = "Indicator-7";
+    private static final String                                                   INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
 
-    List<GeographicalValue>                  geographicalValues        = new ArrayList<GeographicalValue>();
+    private static final String                                                   INDICATOR8_UUID           = "Indicator-8";
+    private static final String                                                   INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+
+    List<GeographicalValue>                                                       geographicalValues        = new ArrayList<GeographicalValue>();
 
     @Before
     public void setUp() throws MetamacException {
         geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
         Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
         when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+        when(srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn()))
+                .thenReturn(SrmResourcesMocks.buildCodelist("defaultJsonstat", "defaultCodelistJsonstat", "es", "urn:defaultCodelistJsonstat"));
 
     }
 

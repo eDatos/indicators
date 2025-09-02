@@ -49,73 +49,76 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 @Transactional
 public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
 
-    private static final String              SUBJECT_CODE_EDUCACION            = "EDUCACION";
-    private static final String              SUBJECT_CODE_POLITICA_ECON        = "POLITICA_ECON";
+    private static final String                                                   SUBJECT_CODE_EDUCACION            = "EDUCACION";
+    private static final String                                                   SUBJECT_CODE_POLITICA_ECON        = "POLITICA_ECON";
 
     /* Has geographic and time variables */
-    private static final String              INDICATOR1_UUID                   = "Indicator-1";
-    private static final String              INDICATOR1_CODE                   = "Indicator-1-CODE";
-    private static final String              INDICATOR1_V1_DS_GPE_UUID         = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_V2_DS_GPE_UUID         = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
-    private static final String              INDICATOR1_VERSION_DIFFUSION      = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
-    private static final String              INDICATOR1_VERSION_PRODUCTION     = IndicatorsDataBaseTest.SECOND_VERSION;
-    private static final String              INDICATOR1_INSTANCE_111_UUID      = "IndSys-1-v1-IInstance-1";
-    private static final String              INDICATOR1_INSTANCE_111_CODE      = "IndSys-1-v1-IInstance-1-CODE";
+    private static final String                                                   INDICATOR1_UUID                   = "Indicator-1";
+    private static final String                                                   INDICATOR1_CODE                   = "Indicator-1-CODE";
+    private static final String                                                   INDICATOR1_V1_DS_GPE_UUID         = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR1_V2_DS_GPE_UUID         = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR1_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR1_GPE_JSON_DATA_EXTENDED = readFile("json/data_temporal_spatials_extended.json");
+    private static final String                                                   INDICATOR1_VERSION_DIFFUSION      = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    private static final String                                                   INDICATOR1_VERSION_PRODUCTION     = IndicatorsDataBaseTest.SECOND_VERSION;
+    private static final String                                                   INDICATOR1_INSTANCE_111_UUID      = "IndSys-1-v1-IInstance-1";
+    private static final String                                                   INDICATOR1_INSTANCE_111_CODE      = "IndSys-1-v1-IInstance-1-CODE";
 
-    private static final String              INDICATOR2_UUID                   = "Indicator-2";
-    private static final String              INDICATOR2_CODE                   = "Indicator-2-CODE";
-    private static final String              INDICATOR2_DS_GPE_UUID            = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR2_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR2_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String              INDICATOR2_INSTANCE_112_UUID      = "IndSys-1-v1-IInstance-2";
-    private static final String              INDICATOR2_INSTANCE_112_CODE      = "IndSys-1-v1-IInstance-2-CODE";
+    private static final String                                                   INDICATOR2_UUID                   = "Indicator-2";
+    private static final String                                                   INDICATOR2_CODE                   = "Indicator-2-CODE";
+    private static final String                                                   INDICATOR2_DS_GPE_UUID            = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR2_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR2_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String                                                   INDICATOR2_INSTANCE_112_UUID      = "IndSys-1-v1-IInstance-2";
+    private static final String                                                   INDICATOR2_INSTANCE_112_CODE      = "IndSys-1-v1-IInstance-2-CODE";
 
-    private static final String              INDICATOR3_UUID                   = "Indicator-3";
+    private static final String                                                   INDICATOR3_UUID                   = "Indicator-3";
 
-    private static final String              INDICATOR3_DS_GPE_UUID            = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR3_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR3_DS_GPE_UUID            = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR3_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
 
-    private static final String              INDICATOR4_UUID                   = "Indicator-4";
-    private static final String              INDICATOR4_DS_GPE_UUID            = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR4_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR4_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String              INDICATOR4_INSTANCE_211_UUID      = "IndSys-2-v1-IInstance-1";
+    private static final String                                                   INDICATOR4_UUID                   = "Indicator-4";
+    private static final String                                                   INDICATOR4_DS_GPE_UUID            = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR4_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR4_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String                                                   INDICATOR4_INSTANCE_211_UUID      = "IndSys-2-v1-IInstance-1";
 
-    private static final String              INDICATOR5_UUID                   = "Indicator-5";
-    private static final String              INDICATOR5_DS_GPE_UUID            = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR5_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR5_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String              INDICATOR5_INSTANCE_311_UUID      = "IndSys-1-v1-IInstance-3";
-    private static final String              INDICATOR5_INSTANCE_311_CODE      = "IndSys-1-v1-IInstance-3-CODE";
+    private static final String                                                   INDICATOR5_UUID                   = "Indicator-5";
+    private static final String                                                   INDICATOR5_DS_GPE_UUID            = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR5_GPE_JSON_DATA          = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR5_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String                                                   INDICATOR5_INSTANCE_311_UUID      = "IndSys-1-v1-IInstance-3";
+    private static final String                                                   INDICATOR5_INSTANCE_311_CODE      = "IndSys-1-v1-IInstance-3-CODE";
 
-    private static final String              INDICATORS_SYSTEM1_UUID           = "IndSys-1";
-    private static final String              INDICATORS_SYSTEM1_CODE           = "CODE-1";
-    private static final String              INDICATORS_SYSTEM2_UUID           = "IndSys-2";
-    private static final String              INDICATORS_SYSTEM2_CODE           = "CODE-2";
-    List<GeographicalValue>                  geographicalValues                = new ArrayList<GeographicalValue>();
-
-    @Autowired
-    protected IndicatorsDataService          indicatorsDataService;
+    private static final String                                                   INDICATORS_SYSTEM1_UUID           = "IndSys-1";
+    private static final String                                                   INDICATORS_SYSTEM1_CODE           = "CODE-1";
+    private static final String                                                   INDICATORS_SYSTEM2_UUID           = "IndSys-2";
+    private static final String                                                   INDICATORS_SYSTEM2_CODE           = "CODE-2";
+    List<GeographicalValue>                                                       geographicalValues                = new ArrayList<GeographicalValue>();
 
     @Autowired
-    private IndicatorsDataProviderService    indicatorsDataProviderService;
+    protected IndicatorsDataService                                               indicatorsDataService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private IndicatorsDataProviderService                                         indicatorsDataProviderService;
 
     @Autowired
-    private IndicatorsService                indicatorsService;
+    private DatasetRepositoriesServiceFacade                                      datasetRepositoriesServiceFacade;
 
     @Autowired
-    private IndicatorsSystemsService         indicatorsSystemsService;
+    private IndicatorsService                                                     indicatorsService;
 
     @Autowired
-    private IndicatorVersionRepository       indicatorVersionRepository;
+    private IndicatorsSystemsService                                              indicatorsSystemsService;
 
     @Autowired
-    private SrmRestInternalService           srmRestInternalService;
+    private IndicatorVersionRepository                                            indicatorVersionRepository;
+
+    @Autowired
+    private SrmRestInternalService                                                srmRestInternalService;
+
+    @Autowired
+    protected es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
 
     /*** Indicator Version ***/
 
@@ -124,6 +127,9 @@ public class IndicatorsDataServiceLastValueTest extends IndicatorsDataBaseTest {
         geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
         Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
         when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+        when(srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn()))
+                .thenReturn(SrmResourcesMocks.buildCodelist("defaultJsonstat", "defaultCodelistJsonstat", "es", "urn:defaultCodelistJsonstat"));
     }
 
     @Test

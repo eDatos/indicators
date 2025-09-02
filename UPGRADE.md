@@ -12,7 +12,7 @@
 ## x.x.x a x.x.x-SNAPSHOT
 * Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/11.X.X/db](etc/changes-from-release/11.X.X/db) 
 * Ejecutar el script de la carpeta common-metadata
-* Ejecutar los scripts de la carpeta etc/changes-from-release/11.x.x/db/indicators/postgresql excepto los de la subcarpeta "view_transformation_process"
+* Ejecutar los scripts de la carpeta etc/changes-from-release/11.13.0/db/indicators/postgresql excepto los de la subcarpeta "view_transformation_process"
 * Ejecutar los scripts de la subcarpeta "view_transformation_process" siguiendo los pasos que se indican en cada fichero. 
 
 
