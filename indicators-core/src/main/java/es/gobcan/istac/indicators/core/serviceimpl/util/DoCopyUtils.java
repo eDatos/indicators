@@ -198,6 +198,7 @@ public class DoCopyUtils {
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(source.getPublishers());
         target.setGeographicalCodelistUrn(source.getGeographicalCodelistUrn());
+        target.setResourceId(source.getResourceId());
 
         target.setAnnualPuntualRate(copyRateDerivation(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(copyRateDerivation(source.getAnnualPercentageRate()));

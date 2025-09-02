@@ -7,7 +7,7 @@
 	<name>INDICATORS :: PARENT</name>
 	<description>INDICATORS :: PARENT</description>
 	<packaging>pom</packaging>
-	<version>11.11.1-SNAPSHOT</version>
+	<version>11.13.1-SNAPSHOT</version>
 
     <organization>
         <name>Arte Consultores, S.L.</name>
@@ -72,7 +72,7 @@
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
 		<commons-pool.version>1.5.6</commons-pool.version>
 		<commons-configuration.version>1.7</commons-configuration.version>
-		<commons-io.version>1.4</commons-io.version>
+		<commons-io.version>2.11.0</commons-io.version>
 		<commons-fileupload.version>1.2.2</commons-fileupload.version>
 
 		<!-- Jersey, rest client -->
@@ -134,25 +134,29 @@
 		<arte-maven-enforcer.version>1.0.0</arte-maven-enforcer.version>
 
 		<!-- EDATOS DATASET REPOSITORY -->
-		<edatos-dataset-repository.version>3.3.0</edatos-dataset-repository.version>
+		<edatos-dataset-repository.version>3.3.1</edatos-dataset-repository.version>
 		
 		<!--  KAFKA -->
         <kafka-avro-serializer.version>6.1.5</kafka-avro-serializer.version>
         <kafka-clients.version>6.1.5-ccs</kafka-clients.version>
         <avro.version>1.9.2</avro.version>
 
+		<!-- Excel -->
+		<apache-poi.version>5.2.3</apache-poi.version>
+		<apache-poi-schemas.version>5.2.3</apache-poi-schemas.version>
+
 		<!-- METAMAC -->
-		<metamac-core-common.version>8.5.0</metamac-core-common.version>
-		<metamac-web-common.version>5.12.0</metamac-web-common.version>
+		<metamac-core-common.version>8.7.0</metamac-core-common.version>
+		<metamac-web-common.version>5.15.0</metamac-web-common.version>
 		<metamac-statistical-operations-rest-internal-api.version>2.8.1</metamac-statistical-operations-rest-internal-api.version>
 		<metamac-statistical-operations-rest-external-api.version>3.7.1</metamac-statistical-operations-rest-external-api.version>
         <metamac-statistical-resources-rest-external-api.version>10.7.0</metamac-statistical-resources-rest-external-api.version>
         <metamac-srm-rest-internal-api.version>3.2.1</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>3.2.1</metamac-srm-rest-external-api.version>
-		<metamac-sso-client.version>4.8.1</metamac-sso-client.version>
-		<metamac-rest-common.version>2.8.0</metamac-rest-common.version>
+		<metamac-sso-client.version>4.11.1</metamac-sso-client.version>
+		<metamac-rest-common.version>2.8.1</metamac-rest-common.version>
 		<metamac-notifications-rest-internal-api.version>3.7.1</metamac-notifications-rest-internal-api.version>
-        <metamac-statistical-resources-kafka.version>6.0.0</metamac-statistical-resources-kafka.version>
+        <metamac-statistical-resources-kafka.version>10.13.0</metamac-statistical-resources-kafka.version>
         <metamac-srm-kafka.version>7.0.0</metamac-srm-kafka.version>
 	</properties>
 
@@ -838,6 +842,16 @@
                 <artifactId>avro</artifactId>
                 <version>${avro.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${apache-poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-lite</artifactId>
+				<version>${apache-poi-schemas.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
                 <artifactId>metamac-statistical-resources-kafka</artifactId>

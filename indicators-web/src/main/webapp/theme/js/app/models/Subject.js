@@ -9,7 +9,7 @@
 
         parse : function (response) {
             var result = response;
-            result.title = response.title.__default__;
+            result.title = response.title[currentLocale] || response.title.__default__;
             return result;
         }
 

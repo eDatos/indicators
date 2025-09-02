@@ -8,12 +8,36 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 11.12.0 a 11.13.0
+* Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/11.12.0/db/common-metadata/postgresql/*.sql
+```
+
+## 11.11.0 a 11.12.0
+* Se añade nuevas propiedades de configuración en base de datos common-metadata. Se quita una propiedad no utilizada. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
+
+```
+etc/changes-from-release/11.11.0/db/common-metadata/postgresql/*.sql
+```
+
+* Hay cambios en base de datos de indicators. Ejecutar los scripts de esta carpeta excepto los de la subcarperta "20250711_resource_id_jsonstat_data_preparation" que deberán ejecutarse al final.
+
+```
+etc/changes-from-release/11.11.0/db/indicators/postgresql/*.sql
+```
+
+* Ejecutar los scripts de la subcarpeta "20250711_resource_id_jsonstat_data_preparation"
+
 ## 11.10.0 a 11.11.0
 * Para esta versión se deben ejecutar de nuevo los scripts de migración que se lanzaron en la versión **"11.8.0". Sólo el script siguiente**: 
 
 ```
 etc/changes-from-release/11.8.0/db/indicators_data/postgresql/20250602_update_length_data_fields.sql
 ```
+
+
 
 ## 11.8.0 a 11.9.0
 * Se añade script de actualización de base de datos

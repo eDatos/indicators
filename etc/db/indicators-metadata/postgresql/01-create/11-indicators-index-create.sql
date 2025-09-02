@@ -15,3 +15,6 @@ CREATE INDEX pk_tb_indic_systems_versions_acronym_fk ON tb_indic_systems_version
 CREATE INDEX pk_tb_indic_systems_versions_description_fk ON tb_indic_systems_versions USING btree (description_fk); 
 CREATE INDEX pk_tb_indic_systems_versions_objective_fk ON tb_indic_systems_versions USING btree (objective_fk); 
 
+-- Data source index for searchings
+ CREATE INDEX IX_TB_DATA_SOURCES_RESOURCE_ID ON TB_DATA_SOURCES(RESOURCE_ID);
+

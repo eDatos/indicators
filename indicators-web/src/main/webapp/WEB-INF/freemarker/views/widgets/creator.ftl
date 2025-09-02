@@ -34,6 +34,7 @@
     [#list internationalizationLanguages as language]
     edatosInternationalizationlanguages.push('${language}');
     [/#list]
+    var firstTerritory = "${firstTerritory}"
 
     var options = {};
     [#if RequestParameters.type??]

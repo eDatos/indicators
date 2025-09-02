@@ -112,6 +112,12 @@
                 });
             },
 
+            _getParentsThatHasDisplayNone: function($el) {
+                return $el.parents().filter(function () {
+                    return $(this).css('display') === 'none';
+                });
+            },
+
             addSparklines: function ($el) {
                 if (this.options.showSparkline) {
                     var sparklineOptions = {
@@ -138,9 +144,29 @@
                         }
                     };
 
-                    $el.find('.inlinesparkline-line').sparkline('html', _.extend({}, sparklineOptions, { type: 'line' }));
-                    $el.find('.inlinesparkline-bar').sparkline('html', _.extend({}, sparklineOptions, { type: 'bar' }));
-                    $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
+                    const parentsWithDisplayNone = this._getParentsThatHasDisplayNone($el);
+
+                    if (parentsWithDisplayNone.length === 0) {
+                        $el.find('.inlinesparkline-line').sparkline('html', _.extend({}, sparklineOptions, {type: 'line'}));
+                        $el.find('.inlinesparkline-bar').sparkline('html', _.extend({}, sparklineOptions, {type: 'bar'}));
+                        $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
+                    } else {
+                        const self = this;
+                        const observers = [];
+                        parentsWithDisplayNone.each(function (idx, parent) {
+                            const observer = new MutationObserver(function () {
+                                const hasDisplayNone = self._getParentsThatHasDisplayNone($el).length > 0;
+                                if (!hasDisplayNone && $el.css('display') !== 'none') {
+                                    $el.find('.inlinesparkline-line').sparkline('html', _.extend({}, sparklineOptions, {type: 'line'}));
+                                    $el.find('.inlinesparkline-bar').sparkline('html', _.extend({}, sparklineOptions, {type: 'bar'}));
+                                    $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
+                                    observers.forEach(function (observer) { observer.disconnect(); })
+                                }
+                            });
+                            observer.observe(parent, {attributes: true, attributeFilter: ['style', 'class']});
+                            observers.push(observer);
+                        });
+                    }
                 }
 
                 function _buildFormatter(sparkline, x, y) {

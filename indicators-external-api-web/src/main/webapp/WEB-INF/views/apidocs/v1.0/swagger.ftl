@@ -1511,7 +1511,9 @@
         "operationId": "retrieveIndicatorsInstanceData",
         "produces":[
            "application/json",
-"application/jsonstat+json"
+           "application/jsonstat+json",
+           "text/csv",
+           "text/tab-separated-values"
         ],
         "parameters": [
           {

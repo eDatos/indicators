@@ -913,6 +913,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public List<IndicatorVersion> updateIndicatorsDataFromExternalDataSource(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        return getIndicatorsDataService().updateIndicatorsDataFromExternalDataSource(ctx, message);
+    }
+
+    @Override
     public void updateGeopgraphicalValuesFromSrmVariableElements(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
