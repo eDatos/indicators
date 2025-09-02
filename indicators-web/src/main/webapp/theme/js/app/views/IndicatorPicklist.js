@@ -144,13 +144,18 @@
 
         _filterTree: function () {
             var filter = this.$(".indicator-picklist-filter")[0] ? this.$(".indicator-picklist-filter")[0].value : "";
-            this.$("ul.indicator-picklist-first-list li").addClass("hidden");
-            this.$("ul.indicator-picklist-first-list li > span").each(function () {
-                if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
-                    $(this).parents("ul.indicator-picklist-first-list li").removeClass("hidden");
-                    $(this).parent().find("li").removeClass("hidden");
-                }
-            });
+
+            if (filter.trim() === "") {
+                this.$("ul.indicator-picklist-first-list li").removeClass("hidden").addClass("collapsed");
+            } else {
+                this.$("ul.indicator-picklist-first-list li").addClass("hidden");
+                this.$("ul.indicator-picklist-first-list li > span").each(function () {
+                    if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
+                        $(this).parents("ul.indicator-picklist-first-list li").removeClass("hidden").removeClass("collapsed");
+                        $(this).parent().addClass("collapsed").find("li").removeClass("hidden").addClass("collapsed");
+                    }
+                });
+            }
         }
     });
 }(window._));
