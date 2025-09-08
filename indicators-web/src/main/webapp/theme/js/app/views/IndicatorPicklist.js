@@ -146,14 +146,17 @@
             var filter = this.$(".indicator-picklist-filter")[0] ? this.$(".indicator-picklist-filter")[0].value : "";
 
             if (filter.trim() === "") {
-                this.$("ul.indicator-picklist-first-list li").removeClass("hidden").addClass("collapsed");
+                this.$("ul.indicator-picklist-first-list li").removeClass("hidden filter-matched").addClass("collapsed");
             } else {
-                this.$("ul.indicator-picklist-first-list li").addClass("hidden");
+                this.$("ul.indicator-picklist-first-list li").addClass("hidden").removeClass("filter-matched");
                 this.$("ul.indicator-picklist-first-list li > span").each(function () {
                     if ($(this).text().toLowerCase().includes(filter.toLowerCase())) {
                         $(this).parents("ul.indicator-picklist-first-list li").removeClass("hidden").removeClass("collapsed");
-                        $(this).parent().addClass("collapsed").find("li").removeClass("hidden").addClass("collapsed");
+                        $(this).parent().addClass("collapsed filter-matched").find("li").removeClass("hidden").addClass("collapsed");
                     }
+                });
+                this.$("ul.indicator-picklist-first-list li.filter-matched").each(function () {
+                    $(this).siblings(":not(.hidden):not(.filter-matched)").addClass("hidden");
                 });
             }
         }
