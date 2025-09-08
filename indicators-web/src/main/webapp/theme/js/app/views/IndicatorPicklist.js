@@ -155,8 +155,13 @@
                         $(this).parent().addClass("collapsed filter-matched").find("li").removeClass("hidden").addClass("collapsed");
                     }
                 });
-                this.$("ul.indicator-picklist-first-list li.filter-matched").each(function () {
-                    $(this).siblings(":not(.hidden):not(.filter-matched)").addClass("hidden");
+                this.$("ul.indicator-picklist-first-list li:not(.hidden):not(.filter-matched)").each(function () {
+                    var thereAreSiblingsMatchingTheFilter = $(this).siblings(".filter-matched").length > 0;
+                    var thereAreSiblingsWithDescendantsMatchingTheFilter = $(this).siblings().find(".filter-matched").length > 0;
+                    var thereAreDescendantsMatchingTheFilter = $(this).find(".filter-matched").length > 0;
+                    if ((thereAreSiblingsMatchingTheFilter || thereAreSiblingsWithDescendantsMatchingTheFilter) && !thereAreDescendantsMatchingTheFilter) {
+                        $(this).addClass("hidden");
+                    }
                 });
             }
         }
