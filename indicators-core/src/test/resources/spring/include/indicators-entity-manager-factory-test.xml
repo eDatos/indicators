@@ -29,7 +29,7 @@
 	     </property> 
 	</bean>
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="dataSource" class="org.siemac.edatos.core.common.datasource.EdatosBasicDataSource" destroy-method="close">
 	    <property name="driverClassName" value="${datasource.driver_name}" />
 		<property name="url" value="${datasource.url}" />
 		<property name="username" value="${datasource.username}" />
