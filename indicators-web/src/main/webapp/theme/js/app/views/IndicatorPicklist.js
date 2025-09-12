@@ -9,7 +9,6 @@
             "click .selected-to-the-first-list-button": "_moveSelectedToTheFirstList",
             "click .all-to-the-first-list-button": "_moveAllToTheFirstList",
             "click .selected-to-the-second-list-button": "_moveSelectedToTheSecondList",
-            "click .all-to-the-second-list-button": "_moveAllToTheSecondList",
             'click .selectable-picklist-item:not(.disabled)': "_toggleSelectedItem",
             'click .indicator-picklist-subject-header > span': "_toggleSubject",
             "keyup input.indicator-picklist-filter": "_filterTree"
@@ -116,16 +115,6 @@
                 .prependTo("ul.indicator-picklist-second-list")
                 .removeClass("disabled");
             this.trigger("change", this._getSecondListIndicatorsFromDom());
-        },
-
-        _moveAllToTheSecondList: function () {
-            this.$("ul.indicator-picklist-first-list li.selectable-picklist-item:not(.disabled)")
-                .removeClass("selected-picklist-item")
-                .addClass("disabled")
-                .clone()
-                .prependTo("ul.indicator-picklist-second-list")
-                .removeClass("disabled");
-            this.trigger("change", this.collection.toJSON());
         },
 
         _moveSelectedToTheFirstList: function () {
