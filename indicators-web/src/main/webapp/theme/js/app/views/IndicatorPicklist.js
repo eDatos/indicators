@@ -119,7 +119,7 @@
         },
 
         _moveAllToTheSecondList: function () {
-            this.$("ul.indicator-picklist-first-list li.selectable-picklist-item")
+            this.$("ul.indicator-picklist-first-list li.selectable-picklist-item:not(.disabled)")
                 .removeClass("selected-picklist-item")
                 .addClass("disabled")
                 .clone()
