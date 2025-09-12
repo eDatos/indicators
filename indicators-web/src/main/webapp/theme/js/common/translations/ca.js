@@ -129,7 +129,10 @@
             'LOADING': 'Carregant...'
         },
         'PICKLIST': {
-            'FILTER_PLACEHOLDER': 'Escriu per a filtrar indicadors'
+            'FILTER_PLACEHOLDER': 'Escriu per a filtrar indicadors',
+            'MOVE_SELECTED_TO_FIRST_LIST': 'Llevar els indicadors seleccionats del giny',
+            'MOVE_ALL_TO_FIRST_LIST': 'Llevar tots els indicadors del giny',
+            'MOVE_SELECTED_TO_SECOND_LIST': 'Afegir els indicadors seleccionat al giny'
         },
         'ECHARTS': {
             'time': {
