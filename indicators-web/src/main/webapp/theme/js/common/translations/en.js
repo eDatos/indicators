@@ -129,7 +129,7 @@
             'LOADING': 'Loading...'
         },
         'PICKLIST': {
-            'FILTER_PLACEHOLDER': 'Type to filter the indicators in the following box'
+            'FILTER_PLACEHOLDER': 'Type to filter indicators'
         },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"

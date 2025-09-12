@@ -129,7 +129,7 @@
             'LOADING': 'Carregant...'
         },
         'PICKLIST': {
-            'FILTER_PLACEHOLDER': 'Escriu per a filtrar els indicadors de la següent caixa'
+            'FILTER_PLACEHOLDER': 'Escriu per a filtrar indicadors'
         },
         'ECHARTS': {
             'time': {

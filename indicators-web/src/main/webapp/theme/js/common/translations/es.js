@@ -129,7 +129,7 @@
             'LOADING': 'Cargando...'
         },
         'PICKLIST': {
-            'FILTER_PLACEHOLDER': 'Escribe para filtrar los indicadores de la siguiente caja'
+            'FILTER_PLACEHOLDER': 'Escribe para filtrar indicadores'
         },
         'ECHARTS': {
             'time': {
