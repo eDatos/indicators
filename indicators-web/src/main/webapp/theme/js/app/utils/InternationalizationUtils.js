@@ -17,7 +17,7 @@
                     } else if (localizedLabel.lang === defaultLocale) {
                         return localizedLabel.value;
                     }
-                });
+                }, '');
             } else {
                 return labels[currentLocale] || labels["__default__"]
             }
