@@ -16,11 +16,16 @@
 
         initialize: function (options) {
             this.subjects = options.subjects;
-            this.subjects.on('reset', this.render, this);
-            this.collection.on('reset', this.render, this);
+            this.subjects.on('reset', this.cleanAndRender, this);
+            this.collection.on('reset', this.cleanAndRender, this);
 
             this._filterTree = _.debounce(this._filterTree, 200);
 
+            this.render();
+        },
+
+        cleanAndRender: function () {
+            this.trigger("change", []);
             this.render();
         },
 
