@@ -134,7 +134,7 @@
             'FILTER_PLACEHOLDER': 'Escribe para filtrar indicadores',
             'MOVE_SELECTED_TO_FIRST_LIST': 'Quitar los indicadores seleccionados del widget',
             'MOVE_ALL_TO_FIRST_LIST': 'Quitar todos los indicadores del widget',
-            'MOVE_SELECTED_TO_SECOND_LIST': 'Añadir los indicadores seleccionado al widget'
+            'MOVE_SELECTED_TO_SECOND_LIST': 'Añadir los indicadores seleccionados al widget'
         },
         'ECHARTS': {
             'time': {
