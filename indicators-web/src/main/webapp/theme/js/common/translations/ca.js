@@ -130,6 +130,12 @@
             'NO_MATCHES': 'No hi ha resultats',
             'LOADING': 'Carregant...'
         },
+        'PICKLIST': {
+            'FILTER_PLACEHOLDER': 'Escriu per a filtrar indicadors',
+            'MOVE_SELECTED_TO_FIRST_LIST': 'Llevar els indicadors seleccionats del giny',
+            'MOVE_ALL_TO_FIRST_LIST': 'Llevar tots els indicadors del giny',
+            'MOVE_SELECTED_TO_SECOND_LIST': 'Afegir els indicadors seleccionats al giny'
+        },
         'ECHARTS': {
             'time': {
                 'month': [

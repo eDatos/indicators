@@ -13,7 +13,8 @@
     App.views = {};
     App.mixins = {};
     App.helpers = {};
-    App.constants = {}
+    App.constants = {};
+    App.utils = {};
 
     window.App = App;
 
