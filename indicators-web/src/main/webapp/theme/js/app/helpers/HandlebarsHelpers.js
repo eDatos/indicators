@@ -33,4 +33,22 @@
         return serverURL;
     });
 
+    Handlebars.registerPartial('subjectsAndIndicatorsTreeNode', `
+        {{#if isSubject}}
+            <li class="indicator-picklist-subject-header collapsed">
+                <span>{{subjectTitle}}</span>
+                <ul id="{{subjectCode}}">
+                    {{#each indicators}}
+                        {{> subjectsAndIndicatorsTreeNode }}
+                    {{/each}}
+                    {{#each children}}
+                        {{> subjectsAndIndicatorsTreeNode }}
+                    {{/each}}
+                </ul>
+            </li>
+        {{else}}
+            <li indicatorId="{{id}}" subjectId="{{subjectCode}}" class="selectable-picklist-item"><span>{{title}}</span></li>
+        {{/if}}
+    `);
+
 }());
