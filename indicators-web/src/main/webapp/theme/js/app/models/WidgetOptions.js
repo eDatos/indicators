@@ -26,7 +26,7 @@
             borderColor: '#EBEBEB',
             textColor: '#000000',
             indicatorNameColor: "#003366",
-            groupType: 'subject',	// or system
+            groupType: 'allValues', // or system (or subject just for legacy widgets)
             indicatorsMain: "all", // or onlyMain
             indicatorSystem: '',
             subjectCode: '',

@@ -130,6 +130,12 @@
             'NO_MATCHES': 'No matches',
             'LOADING': 'Loading...'
         },
+        'PICKLIST': {
+            'FILTER_PLACEHOLDER': 'Type to filter indicators',
+            'MOVE_SELECTED_TO_FIRST_LIST': 'Remove the selected indicators from the widget',
+            'MOVE_ALL_TO_FIRST_LIST': 'Remove all indicators from the widget',
+            'MOVE_SELECTED_TO_SECOND_LIST': 'Add the selected indicators to the widget'
+        },
         'CAPTCHA': {
             'LABEL': "Write the value of the image shown above"
         },
