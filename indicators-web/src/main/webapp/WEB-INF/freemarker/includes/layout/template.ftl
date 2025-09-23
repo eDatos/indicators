@@ -35,6 +35,7 @@
         var currentLocale = "[@apph.locale /]";
         var defaultLocale = "${defaultLocale}";
         var srmRestUrl = "${srmExternalApiUrlBase}" + '/v1.0';
+        var apiKey = "${apiKey}"
         const {srmAgency, srmResource, srmVersion} = splitUrnScheme("${defaultCategorySchemeUrn}");
         [#if indicatorsExternalApiUrlBase??]
         var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';

@@ -20,6 +20,9 @@
                 data : {
                     subjectCode : subjectCode,
                     geographicalGranularityCode : granularityCode
+                },
+                headers: {
+                    "api-key": apiKey
                 }
             });
         },
@@ -29,6 +32,9 @@
                 data : {
                     systemCode : systemCode,
                     geographicalGranularityCode : granularityCode
+                },
+                headers: {
+                    "api-key": apiKey
                 }
             });
         },
@@ -37,6 +43,9 @@
             return this.fetch({
                 data : {
                     geographicalGranularityCode : granularityCode
+                },
+                headers: {
+                    "api-key": apiKey
                 }
             });
         }

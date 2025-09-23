@@ -8,6 +8,13 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 11.13.0 a 11.13.1-SNAPSHOT
+* Es necesario ejecutar el siguiente script SQL, donde se incluye la api-key para llamadas a apis desde indicators-web:
+
+```
+etc/changes-from-release/11.13.0/db/common-metadata/postgresql/20250905_create_indicators_web_api_key.sql
+```
+
 ## 11.12.0 a 11.13.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
 

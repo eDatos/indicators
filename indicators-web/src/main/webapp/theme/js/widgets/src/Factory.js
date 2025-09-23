@@ -16,7 +16,8 @@
                 method: "GET",
                 dataType: "jsonp",
                 jsonp: '_callback',
-                url: url
+                url: url,
+                headers: {'api-key': apiKey}
             });
 
             configRequest.success(function onSuccess(configuration) {

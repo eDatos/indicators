@@ -49,4 +49,7 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     // if it is only necessary to reload jaxi messages for e-catalogo it is better to disabled this consumer to avoid bad performance.
     public static final String DISABLED_JAXI_PUBLICATIONS_CONSUMER           = "metamac.indicators.kafka.jaxi_publication_consumer_disabled";
+
+    // API KEYS
+    public static final String INDICATORS_WEB_REST_API_KEY                   = "indicators_web.rest.api_key";
 }
