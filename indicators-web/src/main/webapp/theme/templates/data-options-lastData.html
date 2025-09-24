@@ -3,22 +3,17 @@
     <div class="widget-data-measures"></div>
 </div>
 
-<div class="control-group">
+<div id="system-or-subject-section" class="control-group" style="display: none;">
     <div class="widget-data-title">{{ translate "OPTIONS.DATA.SYSTEM_OR_SUBJECT" }}</div>
     <label class="radio">
-        <input type="radio" name="groupType" value="subject"> {{ translate "OPTIONS.DATA.SUBJECT" }}
+        <input type="radio" name="groupType" value="allValues"> {{ translate "OPTIONS.DATA.INDICATORS" }}
     </label>
 
     <label class="radio">
-        <input type="radio" name="groupType" value="allValues"> {{ translate "OPTIONS.DATA.ALL_SUBJECT" }}
-    </label>
-
-    <label class="radio" id="system" style="display: none;">
         <input type="radio" name="groupType" value="system"> {{ translate "OPTIONS.DATA.SYSTEM" }}
     </label>
 
     <div class="widget-data-system"></div>
-    <div class="widget-data-subject"></div>
 </div>
 
 <div class="control-group">
@@ -40,7 +35,6 @@
         </label>
     </div>
     <div class="widget-data-instances"></div>
-    <div class="widget-data-indicators"></div>
     <div class="widget-data-all-indicators"></div>
 </div>
 

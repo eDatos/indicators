@@ -268,6 +268,10 @@ input[type="image"] {
     margin-bottom: 20px;
 }
 
+.widget-data-all-indicators {
+    width: 600px;
+}
+
 /*****************************************
  Pagination
 /****************************************/
@@ -913,6 +917,135 @@ a.rounded_button span {
 
 }
 
+/* ******************************* */
+/*  PICKLIST     		           */
+/* ******************************* */
+
+#widget-creator input[type=text].indicator-picklist-filter {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.indicator-picklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    ul.indicator-picklist-first-list {
+        height: 375px;
+    }
+
+    ul.indicator-picklist-second-list {
+        height: auto;
+        min-height: 135px;
+        max-height: 320px;
+    }
+
+    ul.indicator-picklist-first-list, ul.indicator-picklist-second-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        overflow-y: auto;
+        list-style-type: none;
+        border: 1px solid #B9C5D3;
+        border-radius: 4px;
+        padding: 8px 8px 8px 0;
+        margin-bottom: 0;
+
+
+        > li.indicator-picklist-subject-header:first-child {
+            margin-top: 0;
+        }
+
+        li {
+            margin: 0 0 0 16px;
+
+            &.indicator-picklist-subject-header {
+                margin-top: 5px;
+
+                > span {
+                    display: inline-block;
+                    width: 100%;
+                    cursor: pointer;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        width: 12px;
+                        height: 12px;
+                        margin-right: 5px;
+                        vertical-align: middle;
+                        background-image: url(../images/icon-right-chevron.png);
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        transition: transform .3s ease;
+                        transform: rotateZ(90deg);
+                    }
+                }
+
+                &.collapsed {
+                    ul {
+                        opacity: 0;
+                        height: 0;
+                        overflow: clip;
+                    }
+
+                    > span::before {
+                        transform: none;
+                    }
+                }
+            }
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            list-style-type: none;
+            padding: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        li.selectable-picklist-item {
+            padding: 5px;
+            border-radius: 4px;
+            background-color: @grayLighter;
+            cursor: pointer;
+
+            &.selected-picklist-item:not(.disabled) {
+                background-color: #3875d7;
+                color: white;
+            }
+
+            &.disabled {
+                opacity: 60%;
+                cursor: default;
+            }
+        }
+    }
+
+    .indicator-picklist-center-buttons {
+        display: flex;
+        flex-direction: row;
+        align-self: center;
+        gap: 5px;
+
+        button {
+            padding: 10px;
+            border-radius: 10px;
+            border-width: 0;
+            background: @grayLighter;
+            transform: rotateZ(90deg);
+            line-height: 0;
+            height: 35px;
+            width: 35px;
+        }
+    }
+}
 
 .edatos-indicators {
     @import "app/input";   

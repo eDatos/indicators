@@ -23,7 +23,7 @@
             subjectCode: "",
             indicators: [],
             instances: [],
-            groupType: 'subject', // or system
+            groupType: 'subject', // or system or allValues
             measures: [
                 "ABSOLUTE",
                 "ANNUAL_PERCENTAGE_RATE",
