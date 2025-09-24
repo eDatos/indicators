@@ -282,7 +282,7 @@
             this._renderGroupType();
 
             this.subjects.fetch({headers: {"api-key": apiKey}});
-            this.allSubjects.fetch();
+            this.allSubjects.fetch({headers: {"api-key": apiKey}});
 
             return this;
         }
