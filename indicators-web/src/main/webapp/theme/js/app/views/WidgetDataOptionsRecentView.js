@@ -59,6 +59,7 @@
             this.model.on('change:indicatorsMain', this.updatePreview, this);
 
             this.fetchSystems();
+            this._fetchGeographicalGranularities();
         },
 
         _fetchGeographicalGranularities : function () {
