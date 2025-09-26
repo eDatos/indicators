@@ -243,7 +243,7 @@
             this._renderGroupType();
 
             this.measures.resetDefaults();
-            this.subjects.fetch({headers: {"api-key": apiKey}});
+            this.subjects.fetch();
 
             return this;
         }

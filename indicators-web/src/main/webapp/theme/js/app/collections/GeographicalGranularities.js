@@ -14,15 +14,15 @@
         },
 
         fetchByIndicatorSystemCode : function (systemCode) {
-            return this.fetch({ data : {systemCode : systemCode }, headers: { "api-key": apiKey } });
+            return this.fetch({ data : {systemCode : systemCode } });
         },
 
         fetchBySubjectCode : function (subjectCode) {
-            return this.fetch({ data : {subjectCode : subjectCode }, headers: { "api-key": apiKey } });
+            return this.fetch({ data : {subjectCode : subjectCode } });
         },
 
         fetchAll : function () {
-            return this.fetch({ data: { excludeUnusedGranularities: true }, headers: { "api-key": apiKey } });
+            return this.fetch({ data: { excludeUnusedGranularities: true } });
         }
 
     });

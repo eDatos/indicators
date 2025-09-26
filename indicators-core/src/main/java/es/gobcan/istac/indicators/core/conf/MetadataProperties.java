@@ -24,7 +24,6 @@ public class MetadataProperties {
         codelistAnnotationTypePositionUnit = configurationService.retrieveCodelistAnnotationTypePositionUnit();
         defaultCategoryScheme = configurationService.retrieveDefaultCategoryScheme();
         defaultGeographicalCodeListUrn = configurationService.retrieveDefaultGeographicalCodeListUrn();
-        apiKey = configurationService.retrieveIndicatorsWebRestApiKey();
     }
 
     public String getDefaultInternationalizationLanguage() {
@@ -41,9 +40,5 @@ public class MetadataProperties {
 
     public String getDefaultGeographicalCodeListUrn() {
         return defaultGeographicalCodeListUrn;
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 }

@@ -281,8 +281,8 @@
             // Visible zones
             this._renderGroupType();
 
-            this.subjects.fetch({headers: {"api-key": apiKey}});
-            this.allSubjects.fetch({headers: {"api-key": apiKey}});
+            this.subjects.fetch();
+            this.allSubjects.fetch();
 
             return this;
         }

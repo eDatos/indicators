@@ -55,7 +55,7 @@
             if (instances.length > 0) {
                 var instanceId = instances[0];
                 var instanceModel = this.instances.get(instanceId);
-                var req = instanceModel.fetch({headers: {"api-key": apiKey}});
+                var req = instanceModel.fetch();
                 this.geographicalValues.trigger('syncStart', this.geographicalValues);
                 this.timeGranularities.trigger("syncStart", this.getTimeGranularities);
                 req.success(function () {
