@@ -83,6 +83,9 @@ module.exports = function (grunt) {
         // constants
         jsPath + '/app/constants/WidgetConstants.js',
 
+        // Utils
+        jsPath + "/app/utils/InternationalizationUtils.js",
+
         // helpers        
         jsPath + '/app/helpers/I18n.js',
         jsPath + '/app/helpers/HandlebarsHelpers.js',
@@ -112,6 +115,7 @@ module.exports = function (grunt) {
         jsPath + '/app/collections/GeographicalGranularities.js',
         jsPath + '/app/collections/GeographicalValues.js',
         jsPath + '/app/collections/TimeGranularities.js',
+        jsPath + '/app/collections/AllSubjects.js',
 
 
         // Widget
@@ -142,6 +146,7 @@ module.exports = function (grunt) {
         jsPath + '/app/views/TabView.js',
 
         jsPath + '/app/views/Select2View.js',
+        jsPath + '/app/views/IndicatorPicklist.js',
         jsPath + '/app/views/WidgetCodeView.js',
         jsPath + '/app/views/WidgetDataOptionsLastDataView.js',
         jsPath + '/app/views/WidgetDataOptionsRecentView.js',
