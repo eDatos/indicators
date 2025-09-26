@@ -1554,6 +1554,22 @@ Application Indicators {
 
 			}
 		}
+		Entity Prueba {
+	   	 	databaseTable = "TB_M_PRUEBAS"
+	 		hint = "idSequence=PRUEBAS"
+
+			String job length="4000" key;
+			String extensionPoint length="4000" nullable;
+				   		      	
+	   		Repository PruebaRepository {
+	   			save;
+	   			delete;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				findByKey;
+				deleteAndFlush(@Task task);
+			}
+	    }
 	}   	
 	
 	// ----------------------------------------------------------------
