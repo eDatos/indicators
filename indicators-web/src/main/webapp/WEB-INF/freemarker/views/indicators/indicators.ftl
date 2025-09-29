@@ -25,14 +25,6 @@
                 _.bindAll(this);
             },
 
-           sync: function(method, model, options) {
-                options = options || {};
-                options.beforeSend = function(xhr) {
-                xhr.setRequestHeader("api-key", apiKey);
-                };
-                return Backbone.sync(method, model, options);
-            },
-
             parse: function (response) {
                 return response.items;
             },

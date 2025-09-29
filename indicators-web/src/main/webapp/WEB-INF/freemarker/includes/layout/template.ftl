@@ -64,6 +64,17 @@
             const srmVersion = identifier.substring(identifier.indexOf("(") + 1, identifier.indexOf(")"));
             return {srmAgency, srmResource, srmVersion};
         }
+
+        $.ajaxPrefilter(function( options ) {
+            console.log('entra aquí??', options);
+            if ( !options.beforeSend) {
+                console.log('entra aquí??2');
+                options.beforeSend = function (xhr) { 
+                    console.log('entra aquí??3');
+                    xhr.setRequestHeader('apiKey', apiKey);
+                }
+            }
+        });
     </script>
 
     <div class="indicators-main">

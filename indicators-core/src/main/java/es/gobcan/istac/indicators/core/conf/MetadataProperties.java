@@ -16,7 +16,6 @@ public class MetadataProperties {
     private String                         codelistAnnotationTypePositionUnit;
     private String                         defaultCategoryScheme;
     private String                         defaultGeographicalCodeListUrn;
-    private String                         apiKey;
 
     @PostConstruct
     public void setValues() throws MetamacException {

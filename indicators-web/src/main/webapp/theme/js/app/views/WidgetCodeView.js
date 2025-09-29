@@ -59,8 +59,7 @@
                     content: JSON.stringify(_.extend({}, this._getCode(), { uwa: true }))
                 }),
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                headers: { "api-key": apiKey }
+                dataType: "json"
             };
 
             var self = this;

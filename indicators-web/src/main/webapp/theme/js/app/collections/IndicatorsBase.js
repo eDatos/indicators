@@ -29,9 +29,6 @@
         		data : {} 
         	};
         	_.defaults(options.data, { limit : 1000 });
-            options.beforeSend = function(xhr) {
-                xhr.setRequestHeader("api-key", apiKey);
-            };
         	return this.fetch(options);
         },
 

@@ -34,8 +34,7 @@
         var req = $.ajax({
             url : permalinksUrlBase + "/v1.0/permalinks/${permalinkId?js_string}.json",
             dataType : 'jsonp',
-            jsonp : "_callback",
-            headers: {'api-key': apiKey}
+            jsonp : "_callback"
         });
         req.success(function (options) {
             var body = document.getElementsByTagName('body')[0];

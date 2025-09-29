@@ -5,7 +5,6 @@
             options.timeout = 1000000;
             options.dataType = "jsonp";
             options.jsonp = '_callback';
-            options.headers = {"api-key": apiKey}
 
             return Backbone.sync(method, model, options);
         }

@@ -206,8 +206,7 @@
             ajax({
                 url: this.apiUrl + '/timeGranularities',
                 dataType: 'jsonp',
-                jsonp: "_callback",
-                headers: {'api-key': apiKey}
+                jsonp: "_callback"
             });
         },
 
@@ -443,8 +442,7 @@
                 var req = $.ajax({
                     url: requestUrl,
                     dataType: 'jsonp',
-                    jsonp: "_callback",
-                    headers: {'api-key': apiKey}
+                    jsonp: "_callback"
                 });
 
                 this.requestInProgress = req;
