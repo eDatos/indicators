@@ -13,7 +13,7 @@
 		<property name="jpaProperties">
 			<props>
 				<!-- These properties override persistence.xml -->
-				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
 			</props>
 		</property>
 	</bean>
