@@ -39,7 +39,7 @@
                     var max = parseInt(this.options['sparklineMax_' + measure]);
 
                     var timeValues = dataset.getTimeValues();
-                    var timeValuesTitles = dataset.getTimeValuesTitles();
+                    var timeValuesTitles = dataset.getTimeValuesTitles(this.locale);
 
                     var timeTitles = _.map(timeValues, function (timeValue) {
                         return timeValuesTitles[timeValue];

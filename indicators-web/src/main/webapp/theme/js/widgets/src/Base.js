@@ -277,18 +277,18 @@
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
-                    title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
+                    title += ". " + this.datasets[0].getGeographicalValuesTitles(this.locale)[geographicalValue];
                 }
             } else if (this.options.type === "recent") {
                 title = EDatos.common.I18n.translate("RECENT.TITLE", this.locale);
 
                 if (this.datasets && this.datasets.length > 0) {
                     var geographicalValue = Object.keys(this.datasets[0].data.dimension.GEOGRAPHICAL.representation.index)[0];
-                    title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
+                    title += ". " + this.datasets[0].getGeographicalValuesTitles(this.locale)[geographicalValue];
                 }
             } else if (this.options.type === "temporal") {
                 if (this.datasets && this.datasets.length > 0) {
-                    title = this.datasets[0].getTitle();
+                    title = this.datasets[0].getTitle(this.locale);
                 } else {
                     title = EDatos.common.I18n.translate("TEMPORAL.TITLE", this.locale);
                 }
