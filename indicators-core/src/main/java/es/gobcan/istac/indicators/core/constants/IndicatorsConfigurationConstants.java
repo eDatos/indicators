@@ -51,5 +51,5 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DISABLED_JAXI_PUBLICATIONS_CONSUMER           = "metamac.indicators.kafka.jaxi_publication_consumer_disabled";
 
     // API KEYS
-    public static final String INDICATORS_WEB_REST_API_KEY                   = "indicators_web.rest.api_key";
+    public static final String INDICATORS_WEB_EXTERNAL_REST_API_KEY          = "indicators.web.external.api_key";
 }
