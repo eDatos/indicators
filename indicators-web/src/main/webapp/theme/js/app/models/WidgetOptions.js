@@ -10,6 +10,7 @@
             this.set("height", this.get("type") === "temporal" ? '328px' : 'auto');
             this.set("heightQuantity", this.get("type") === "temporal" ? '328' : '');
             this.set("heightUnit", this.get("type") === "temporal" ? 'px' : 'auto');
+            this.set("groupType",  this.get("type") === "recent" ? 'subject' : 'allValues');
         },
 
         defaults: {
