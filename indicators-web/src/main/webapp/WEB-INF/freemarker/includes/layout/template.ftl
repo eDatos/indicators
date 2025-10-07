@@ -66,7 +66,7 @@
         }
 
         $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-            jqXHR.setRequestHeader('apiKey', apiKey);     
+            jqXHR.setRequestHeader('api-key', apiKey);     
         });
     </script>
 
