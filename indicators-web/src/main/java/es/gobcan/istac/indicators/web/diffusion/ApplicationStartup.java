@@ -20,6 +20,7 @@ public class ApplicationStartup extends ApplicationStartupListener {
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_INDICATORS_EXTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.METAMAC_ORGANISATION);
+        checkRequiredProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
 
         // Widgets
         checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);

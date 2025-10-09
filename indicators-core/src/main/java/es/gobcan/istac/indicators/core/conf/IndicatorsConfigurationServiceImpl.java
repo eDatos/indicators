@@ -137,4 +137,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         }
     }
 
+    @Override
+    public String retrieveIndicatorsWebRestApiKey() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
+    }
+
 }

@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
     "use strict";
 
     var EDatos = function () {
@@ -8,4 +8,8 @@
 
     window.EDatos = EDatos;
 
-}());
+    $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        jqXHR.setRequestHeader('api-key', apiKey);     
+    });
+
+}(window.jQuery));

@@ -35,6 +35,7 @@
         var currentLocale = "[@apph.locale /]";
         var defaultLocale = "${defaultLocale}";
         var srmRestUrl = "${srmExternalApiUrlBase}" + '/v1.0';
+        var apiKey = "${apiKey}"
         const {srmAgency, srmResource, srmVersion} = splitUrnScheme("${defaultCategorySchemeUrn}");
         [#if indicatorsExternalApiUrlBase??]
         var apiUrl = "${indicatorsExternalApiUrlBase}" + '/v1.0';
@@ -63,6 +64,10 @@
             const srmVersion = identifier.substring(identifier.indexOf("(") + 1, identifier.indexOf(")"));
             return {srmAgency, srmResource, srmVersion};
         }
+
+        $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+            jqXHR.setRequestHeader('api-key', apiKey);     
+        });
     </script>
 
     <div class="indicators-main">

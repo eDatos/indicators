@@ -12,6 +12,7 @@
     <script src="${serverURL}/theme/js/widgets/widget.min.all.js"></script>
     <script>
         var options =  JSON.parse('${options}');
+        var apiKey = "${apiKey}"
 
         var body = document.getElementsByTagName('body')[0];
         var indicatorsWidgetDiv = document.createElement('div');
