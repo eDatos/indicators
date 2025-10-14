@@ -39,6 +39,8 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
 
     String retrieveKafkaCodelistGroup() throws MetamacException;
 
+    String retrieveKafkaConceptSchemeGroup() throws MetamacException;
+
     String retrieveDefaultCategoryScheme() throws MetamacException;
 
     String retrieveDefaultTerritoryVariable() throws MetamacException;
@@ -52,6 +54,11 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveDefaultGeographicalCodeListUrn() throws MetamacException;
 
     boolean retrieveJaxiPublicationConsumerIsDisabled();
-
+    
     String retrieveIndicatorsWebRestApiKey() throws MetamacException;
+
+    String retrieveDefaultCodelistMeasureDimensionValues() throws MetamacException;
+
+    @Deprecated
+    public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException;
 }

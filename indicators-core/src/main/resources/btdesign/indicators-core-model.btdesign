@@ -270,6 +270,11 @@ Application Indicators {
 			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance, @IndicatorVersion indicatorVersion) throws MetamacException;
 			
 			@IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException;
+			
+			void processSrmResourcesKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
+			
+			"Temporal for EDATOS-5154 Schedule data transformation job"
+			processDataViewAdjustmentInRepository();
     	}
     	
     	"Provides access to indicators coverage"
@@ -456,7 +461,7 @@ Application Indicators {
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
 	    	"Update geographical values table from srm"
 	    	updateGeopgraphicalValuesFromSrmVariableElements(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException; 
-	    	"Update indicators when geographical codelist changes" 
+	    	"Update indicators when it is received codelist changes" 
 	    	processCodelistKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
@@ -919,6 +924,7 @@ Application Indicators {
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				delete;
+				findAll;
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
@@ -930,6 +936,7 @@ Application Indicators {
             	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
             	List<String> findCategoryElementsInIndicators() throws MetamacException;
+            	
 
 			}
 		}     	
@@ -1432,6 +1439,10 @@ Application Indicators {
 			"execute geographical values migration job automatically execution"
 			executeGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
+			"Temporal for EDATOS-5154 Schedule data transformation job"
+			scheduleDataViewAdjustmentJob();
+			executeDataViewAdjustmentTask()  throws MetamacException;
+			
     	}
     	
     	"Provides access to background data operations"
@@ -1482,6 +1493,9 @@ Application Indicators {
 			"Process geographical values migration job automatically with cron expression"			
 			processGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
+			"Temporal for EDATOS-5154 Schedule data transformation job"
+    		processDataViewAdjustmentTask() throws MetamacException;   				
+			scheduleDataViewAdjustmentJob();
 	
     	}
     	
@@ -2250,7 +2264,8 @@ Application Indicators {
     	"Used when a kafka message is received from CODELIST_PUBLICATION topic to determine the action must be done depending on codelist urn"
     	 enum StreamMessageCodelistActionEnum {
            GEOGRAPHICAL_VALUES,
-           GEOGRAPHICAL_GRANURALITIES
+           GEOGRAPHICAL_GRANURALITIES,
+           MEASURE_VALUES
        }
 	}
 }

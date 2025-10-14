@@ -101,4 +101,16 @@ public class TaskServiceTest implements TaskServiceTestBase {
     public void testProcessGeographicalValuesMigrationTemporalTask() throws Exception {
         // no test
     }
+
+    @Override
+    public void testProcessDataViewAdjustmentTask() throws Exception {
+        // no test
+
+    }
+
+    @Override
+    public void testScheduleDataViewAdjustmentJob() throws Exception {
+        // no test
+
+    }
 }

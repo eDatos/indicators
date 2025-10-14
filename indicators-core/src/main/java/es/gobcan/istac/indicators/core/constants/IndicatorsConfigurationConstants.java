@@ -52,4 +52,10 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     // API KEYS
     public static final String INDICATORS_WEB_EXTERNAL_REST_API_KEY          = "indicators.web.external.api_key";
+
+    public static final String INDICATOR_DEFAULT_CODELIST_URN_MEASURE_VALUES = "metamac.indicators.measure_values.default_codelist_urn";
+
+    @Deprecated
+    public static final String CRON_EXPRESSION_FOR_DATA_VIEW_ADJUSTMENT      = "metamac.indicators.data_view_adjustment.cron_expression";
+
 }

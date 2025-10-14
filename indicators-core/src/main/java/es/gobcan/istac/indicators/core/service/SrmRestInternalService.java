@@ -10,7 +10,10 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryElements;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 
 public interface SrmRestInternalService {
 
@@ -29,6 +32,9 @@ public interface SrmRestInternalService {
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn) throws MetamacException;
     public Map<String, String> retrieveGeographicalElementsIdByCodesOfCodelists(String codelistUrn, Codes codes) throws MetamacException;
     public Codes retrieveCodelistCodesByCode(String code, String defaultTerritoryVariableUrn, int numResults) throws MetamacException;
-    public Codes retrieveCodesOfCodelist(String codelistUrn);
+    public Codes retrieveCodesOfCodelist(String codelistUrn, boolean retrieveLastVersion);
+    public Concepts retrieveConceptsOfConceptScheme(String conceptSchemeUrn) throws MetamacException;
+    public Codelist retrieveCodelistLastVersion(String codelistUrn);
+    public DataStructure retrieveDsdByUrn(String urn) throws MetamacException;
 
 }

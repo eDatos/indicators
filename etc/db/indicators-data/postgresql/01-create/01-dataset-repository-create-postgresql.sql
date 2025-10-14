@@ -76,6 +76,28 @@ CREATE TABLE TB_LOCALISED_STRINGS (
   INTERNATIONAL_STRING_FK BIGINT NOT NULL
 );
 
+CREATE TABLE TB_EXTERNAL_ITEMS (
+	id int8 NOT NULL,
+	type varchar(255) NOT NULL,
+	urn varchar(4000) NOT NULL,
+	"uuid" varchar(36) NOT NULL,
+	"version" int8 NOT NULL,
+	creation_date_tz varchar(50),
+	creation_date timestamp,
+	last_update_date_tz varchar(50),
+	last_update_date timestamp
+);
+
+CREATE TABLE TB_EXTERNAL_ITEMS_CODES (
+	id int8 NOT NULL,
+	"uuid" varchar(36) NOT NULL,
+	"version" int8 NOT NULL,
+	external_item_fk int8 NOT NULL,
+	code varchar(255) NOT NULL,
+	title_fk int8 NOT NULL,
+	element_code varchar(255)
+);
+
 
 
 -- Create many to many relations
@@ -111,7 +133,13 @@ ALTER TABLE TB_LOCALISED_STRINGS ADD CONSTRAINT PK_TB_LOCALISED_STRINGS
 	PRIMARY KEY (ID)
 ;
 
-    
+ALTER TABLE TB_EXTERNAL_ITEMS ADD CONSTRAINT PK_TB_TB_EXTERNAL_ITEMS
+	PRIMARY KEY (ID)
+;
+
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES ADD CONSTRAINT PK_TB_TB_EXTERNAL_ITEMS_CODES
+	PRIMARY KEY (ID)
+;    
 
 -- Unique constraints
 
@@ -149,6 +177,17 @@ ALTER TABLE TB_LOCALISED_STRINGS
     ADD CONSTRAINT UQ_TB_LOCALISED_STRINGS UNIQUE (UUID)
 ;
 
+ALTER TABLE TB_EXTERNAL_ITEMS
+    ADD CONSTRAINT uq_tb_external_items UNIQUE (UUID)
+;
+
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES
+    ADD CONSTRAINT uq_tb_external_items_codes UNIQUE (external_item_fk, code)
+;
+
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES
+    ADD CONSTRAINT uq_tb_external_items_uuid UNIQUE ("uuid")
+;
 
 
 -- Foreign key constraints
@@ -185,11 +224,24 @@ ALTER TABLE TB_LOCALISED_STRINGS ADD CONSTRAINT FK_TB_LOCALISED_STRINGS_INTERNAT
 	FOREIGN KEY (INTERNATIONAL_STRING_FK) REFERENCES TB_INTERNATIONAL_STRINGS (ID) ON DELETE CASCADE
 ;
 
-  
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES ADD CONSTRAINT FK_TB_EXTERNAL_ITEMS_CODES_EXTERNAL_ITEM_FK
+	FOREIGN KEY (EXTERNAL_ITEM_FK) REFERENCES TB_EXTERNAL_ITEMS (ID) ON DELETE CASCADE
+;
 
+ALTER TABLE TB_EXTERNAL_ITEMS_CODES ADD CONSTRAINT FK_TB_EXTERNAL_ITEMS_CODES_TITLE_FK
+	FOREIGN KEY (TITLE_FK) REFERENCES TB_INTERNATIONAL_STRINGS (ID) ON DELETE CASCADE
+;
     
 
 -- Index
+CREATE INDEX pk_tb_attributes_value_fk ON tb_attributes USING btree (value_fk);
+CREATE INDEX pk_tb_localised_strings_international_string_fk ON tb_localised_strings USING btree (international_string_fk);
+CREATE INDEX idx_tb_external_items_codes_element_code ON tb_external_items_codes  (element_code);
+CREATE INDEX idx_tb_external_items_urn ON tb_external_items (urn);
 
+CREATE INDEX idx_tb_datasets_dataset_id ON tb_datasets(dataset_id);
+CREATE INDEX idx_tb_dataset_dimensions_fk_col ON tb_dataset_dimensions(dataset_fk, column_name);
+CREATE INDEX idx_tb_external_items_codes_fk_code ON tb_external_items_codes(external_item_fk, code);
+CREATE UNIQUE INDEX tb_localised_strings_international_string_fk_locale ON tb_localised_strings (international_string_fk, locale);
 
     

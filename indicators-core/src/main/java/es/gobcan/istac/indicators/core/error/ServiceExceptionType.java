@@ -154,4 +154,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Kafka
     public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGE_TO_STREAM_MESSAGING_SERVER = create("exception.indicators.stream_message.send_message.error");
     public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS              = create("exception.indicators.stream_message.missing_settings.error");
+    public static final CommonServiceExceptionType CREATE_OR_UPDATE_SRM_RESOURCE                            = create("exception.indicators.kafka.process.message.update_resource_fail");
+
 }

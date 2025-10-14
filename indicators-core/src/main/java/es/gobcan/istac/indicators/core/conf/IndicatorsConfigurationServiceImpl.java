@@ -12,6 +12,7 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     final String INDICATOR_QUERY_GROUP            = "INDICATOR_QUERY_GROUP";
     final String INDICATOR_VARIABLE_ELEMENT_GROUP = "INDICATOR_VARIABLE_ELEMENT_GROUP";
     final String INDICATOR_CODELIST_GROUP         = "INDICATOR_CODELIST_GROUP";
+    final String INDICATOR_CONCEPT_SCHEME_GROUP   = "INDICATOR_CONCEPT_SCHEME_GROUP";
 
     @Override
     public String retrieveWidgetsTypeListUrl() throws MetamacException {
@@ -119,6 +120,11 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
+    public String retrieveKafkaConceptSchemeGroup() throws MetamacException {
+        return INDICATOR_CONCEPT_SCHEME_GROUP;
+    }
+
+    @Override
     public String retrieveCronExpressionCategoryCacheRefresh() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
     }
@@ -126,6 +132,12 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     @Override
     public String retrieveDefaultGeographicalCodeListUrn() throws MetamacException {
         return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_GEOGRAPHICAL_CODELIST_URN);
+    }
+
+    @Override
+    public String retrieveIndicatorsWebRestApiKey() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
+
     }
 
     @Override
@@ -138,8 +150,14 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveIndicatorsWebRestApiKey() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY);
+    public String retrieveDefaultCodelistMeasureDimensionValues() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.INDICATOR_DEFAULT_CODELIST_URN_MEASURE_VALUES);
+    }
+
+    @Override
+    @Deprecated
+    public String retrieveCronExpressionForDataViewAdjustment() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_DATA_VIEW_ADJUSTMENT);
     }
 
 }

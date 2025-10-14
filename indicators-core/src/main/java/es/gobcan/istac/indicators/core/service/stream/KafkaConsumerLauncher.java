@@ -176,11 +176,11 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Future<?> startConsumerForCodelistTopic(ApplicationContext context) throws MetamacException {
-        String topicVariableElementPublication = configurationService.retrieveKafkaTopicCodelistsPublication();
+        String topicCodelistPublication = configurationService.retrieveKafkaTopicCodelistsPublication();
         KafkaConsumerThread<CodelistAvro> consumerThread = (KafkaConsumerThread) context.getBean("kafkaConsumerThread");
-        KafkaConsumer<String, CodelistAvro> consumerFromBegin = createCodelistConsumerFromCurrentOffset(topicVariableElementPublication, CONSUMER_CODELIST_1_NAME);
+        KafkaConsumer<String, CodelistAvro> consumerFromBegin = createCodelistConsumerFromCurrentOffset(topicCodelistPublication, CONSUMER_CODELIST_1_NAME);
         consumerThread.setConsumer(consumerFromBegin);
-        consumerThread.setTopicName(topicVariableElementPublication);
+        consumerThread.setTopicName(topicCodelistPublication);
         consumerThread.setIndicatorsServiceFacade(indicatorsServiceFacade);
         consumerThread.setNoticesRestInternalService(noticesRestInternalService);
         consumerThread.setKafkaFailedMessagesCache(kafkaFailedMessagesCache);
