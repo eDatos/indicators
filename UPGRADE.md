@@ -8,12 +8,26 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+
+## 11.14.1 a 11.14.2-SNAPSHOT
+* Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/11.14.1/db](etc/changes-from-release/11.14.1/db) 
+* Ejecutar el script de la carpeta common-metadata (20250730_common_metadata_cron_expression_for_temporal_job_indicators.sql)
+* Ejecutar los scripts de la carpeta etc/changes-from-release/11.14.1/db/indicators/postgresql excepto los de la subcarpeta "view_transformation_process"
+* Ejecutar los scripts de la subcarpeta "view_transformation_process" siguiendo los pasos que se indican en cada fichero. 
+* Es necesario ejecutar el siguiente script SQL, donde se incluye la api-key para llamadas a apis desde indicators-web:
+
+```
+etc/changes-from-release/11.14.1/db/common-metadata/postgresql/20250905_create_indicators_web_api_key.sql
+```
+
 ## 11.12.0 a 11.13.0
 * Se añade nueva propiedad de configuración en base de datos common-metadata. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:
 
 ```
 etc/changes-from-release/11.12.0/db/common-metadata/postgresql/*.sql
 ```
+
+
 
 ## 11.11.0 a 11.12.0
 * Se añade nuevas propiedades de configuración en base de datos common-metadata. Se quita una propiedad no utilizada. Ejecutar los scripts de esta carpeta en la base de datos de common-metadata:

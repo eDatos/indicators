@@ -21,8 +21,9 @@
         		data : {} 
         	};
         	_.defaults(options.data, { limit : 1000 });
-        	return this.fetch(options);
-        }
+            return this.fetch(options);
+        },
+        
 
     });
 

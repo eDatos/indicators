@@ -954,6 +954,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         } else if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES.equals(streamMessageCodelistActionEnum)) {
             updateGeopgraphicalGranularities(ctx, message);
         }
+
+        if (StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES.equals(streamMessageCodelistActionEnum) || StreamMessageCodelistActionEnum.MEASURE_VALUES.equals(streamMessageCodelistActionEnum)) {
+            this.getIndicatorsDataService().processSrmResourcesKafkaMessage(ctx, message);
+        }
     }
 
     private void populateIndicatorsDataFromGeographicalCodelist(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {

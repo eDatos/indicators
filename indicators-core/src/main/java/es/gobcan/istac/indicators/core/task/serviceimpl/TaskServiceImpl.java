@@ -46,6 +46,7 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
+import es.gobcan.istac.indicators.core.job.DataViewAdjustmentJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
@@ -548,6 +549,33 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
+    }
+
+    @Override
+    @Deprecated
+    public void processDataViewAdjustmentTask(ServiceContext ctx) throws MetamacException {
+        this.getIndicatorsDataService().processDataViewAdjustmentInRepository(ctx);
+    }
+
+    @Override
+    @Deprecated
+    public void scheduleDataViewAdjustmentJob(ServiceContext ctx) {
+        try {
+
+            JobDetail job = newJob(DataViewAdjustmentJob.class).build();
+
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionForDataViewAdjustment()).withMisfireHandlingInstructionDoNothing()).build();
+
+            Scheduler sched = schedulerFactory.getScheduler();
+            sched.scheduleJob(job, cronTrigger);
+
+            logger.info("Indicators. Data view adjustment with dimension code descriptions job successfully scheduled at {} ", new Date());
+
+        } catch (Exception e) {
+            logger.error("Indicators. An unexpected error has occurred scheduling data view adjustment with dimension code descriptions job", e);
+        }
+
     }
 
 }

@@ -34,7 +34,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
     private static final String                   HTTPS = "https:";
 
     private static IndicatorsConfigurationService configurationService;
-    private static MetadataProperties metadataProperties;
+    private static MetadataProperties             metadataProperties;
 
     @Override
     protected void doRender(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -49,6 +49,7 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("permalinksUrlBase", getPermalinksUrlBase());
         model.put("permalinksUrlBaseWithProtocol", getPermalinksUrlBaseWithProtocol());
         model.put("internationalizationLanguages", getinternationalizationLanguages());
+        model.put("apiKey", getConfigurationService().retrieveIndicatorsWebRestApiKey());
         try {
             model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
         } catch (MetamacException metamacException) {

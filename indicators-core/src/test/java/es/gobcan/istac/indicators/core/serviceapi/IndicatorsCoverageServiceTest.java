@@ -45,84 +45,87 @@ import es.gobcan.istac.indicators.core.vo.GeographicalValueVO;
 @Transactional
 public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
 
-    private static final String              SUBJECT_CODE_1                              = "1";
-    private static final String              SUBJECT_CODE_3                              = "3";
+    private static final String                                                   SUBJECT_CODE_1                              = "1";
+    private static final String                                                   SUBJECT_CODE_3                              = "3";
 
-    private static final String              GEO_GRANULARITY_COUNTRIES_UUID              = "1";
-    private static final String              GEO_GRANULARITY_COMMUNITIES_UUID            = "2";
-    private static final String              GEO_GRANULARITY_PROVINCES_UUID              = "3";
-
-    /* Has geographic and time variables */
-    private static final String              INDICATOR1_UUID                             = "Indicator-1";
-    private static final String              INDICATOR1_PUBLISHED_DS_GPE_UUID            = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_DRAFT_DS_GPE_UUID                = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_PUBLISHED_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
-    private static final String              INDICATOR1_PUBLISHED_AFTER_POPULATE_VERSION = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
-    private static final String              INDICATOR1_DRAFT_VERSION                    = IndicatorsDataBaseTest.SECOND_VERSION;
+    private static final String                                                   GEO_GRANULARITY_COUNTRIES_UUID              = "1";
+    private static final String                                                   GEO_GRANULARITY_COMMUNITIES_UUID            = "2";
+    private static final String                                                   GEO_GRANULARITY_PROVINCES_UUID              = "3";
 
     /* Has geographic and time variables */
-    private static final String              INDICATOR2_UUID                             = "Indicator-2";
-    private static final String              INDICATOR2_DS_GPE_UUID                      = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR2_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
-
-    /* Has no geographic and temporal variables */
-    private static final String              INDICATOR3_UUID                             = "Indicator-3";
-    private static final String              INDICATOR3_DS_GPE_UUID                      = "Indicator-3-v1-DataSource-1-GPE-NOTIME-NOGEO";
-    private static final String              INDICATOR3_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR3_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
-
-    /* Has no geographic and temporal variables */
-    private static final String              INDICATOR4_UUID                             = "Indicator-4";
-    private static final String              INDICATOR4_DS_GPE_UUID                      = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
-    private static final String              INDICATOR4_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR4_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
-
-    /* Has no geographic and temporal variables */
-    private static final String              INDICATOR5_UUID                             = "Indicator-5";
-    private static final String              INDICATOR5_DS_GPE_UUID                      = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO";
-    private static final String              INDICATOR5_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
-    private static final String              INDICATOR5_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String                                                   INDICATOR1_UUID                             = "Indicator-1";
+    private static final String                                                   INDICATOR1_PUBLISHED_DS_GPE_UUID            = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR1_DRAFT_DS_GPE_UUID                = "Indicator-1-v2-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR1_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
+    private static final String                                                   INDICATOR1_PUBLISHED_VERSION                = IndicatorsDataBaseTest.INIT_VERSION;
+    private static final String                                                   INDICATOR1_PUBLISHED_AFTER_POPULATE_VERSION = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
+    private static final String                                                   INDICATOR1_DRAFT_VERSION                    = IndicatorsDataBaseTest.SECOND_VERSION;
 
     /* Has geographic and time variables */
-    private static final String              INDICATOR6_UUID                             = "Indicator-6";
-    private static final String              INDICATOR6_DS_GPE_UUID                      = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR6_GPE_JSON_DATA                    = readFile("json/data_temporals_calculate_ambiguous.json");
+    private static final String                                                   INDICATOR2_UUID                             = "Indicator-2";
+    private static final String                                                   INDICATOR2_DS_GPE_UUID                      = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR2_GPE_JSON_DATA                    = readFile("json/data_temporal_spatials.json");
+
+    /* Has no geographic and temporal variables */
+    private static final String                                                   INDICATOR3_UUID                             = "Indicator-3";
+    private static final String                                                   INDICATOR3_DS_GPE_UUID                      = "Indicator-3-v1-DataSource-1-GPE-NOTIME-NOGEO";
+    private static final String                                                   INDICATOR3_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
+    private static final String                                                   INDICATOR3_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
+
+    /* Has no geographic and temporal variables */
+    private static final String                                                   INDICATOR4_UUID                             = "Indicator-4";
+    private static final String                                                   INDICATOR4_DS_GPE_UUID                      = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
+    private static final String                                                   INDICATOR4_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
+    private static final String                                                   INDICATOR4_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
+
+    /* Has no geographic and temporal variables */
+    private static final String                                                   INDICATOR5_UUID                             = "Indicator-5";
+    private static final String                                                   INDICATOR5_DS_GPE_UUID                      = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO";
+    private static final String                                                   INDICATOR5_GPE_JSON_DATA                    = readFile("json/data_fixed.json");
+    private static final String                                                   INDICATOR5_VERSION                          = IndicatorsDataBaseTest.INIT_VERSION;
+
+    /* Has geographic and time variables */
+    private static final String                                                   INDICATOR6_UUID                             = "Indicator-6";
+    private static final String                                                   INDICATOR6_DS_GPE_UUID                      = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String                                                   INDICATOR6_GPE_JSON_DATA                    = readFile("json/data_temporals_calculate_ambiguous.json");
 
     /* Indicator instances */
     /* GEO Granularity provinces, time granularity yearly */
-    private static final String              INDICATOR_INSTANCE_11_UUID                  = "IndSys-1-v1-IInstance-11";
+    private static final String                                                   INDICATOR_INSTANCE_11_UUID                  = "IndSys-1-v1-IInstance-11";
     /* NOT geographic restrictions, TIME GRANULARITY monthly */
-    private static final String              INDICATOR_INSTANCE_12_UUID                  = "IndSys-1-v1-IInstance-12";
+    private static final String                                                   INDICATOR_INSTANCE_12_UUID                  = "IndSys-1-v1-IInstance-12";
     /* GEO es FIXED */
-    private static final String              INDICATOR_INSTANCE_13_UUID                  = "IndSys-1-v1-IInstance-13";
+    private static final String                                                   INDICATOR_INSTANCE_13_UUID                  = "IndSys-1-v1-IInstance-13";
     /* GEO es FIXED time is fixed */
-    private static final String              INDICATOR_INSTANCE_14_UUID                  = "IndSys-1-v1-IInstance-14";
+    private static final String                                                   INDICATOR_INSTANCE_14_UUID                  = "IndSys-1-v1-IInstance-14";
 
-    private static final String              INDICATORS_SYSTEM_2_CODE                    = "IndSys-CODE-2";
+    private static final String                                                   INDICATORS_SYSTEM_2_CODE                    = "IndSys-CODE-2";
 
-    List<GeographicalValue>                  geographicalValues                          = new ArrayList<GeographicalValue>();
-
-    @Autowired
-    protected IndicatorsCoverageService      indicatorsCoverageService;
+    List<GeographicalValue>                                                       geographicalValues                          = new ArrayList<GeographicalValue>();
 
     @Autowired
-    protected IndicatorsDataService          indicatorsDataService;
+    protected IndicatorsCoverageService                                           indicatorsCoverageService;
 
     @Autowired
-    private IndicatorsDataProviderService    indicatorsDataProviderService;
+    protected IndicatorsDataService                                               indicatorsDataService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private IndicatorsDataProviderService                                         indicatorsDataProviderService;
 
     @Autowired
-    private IndicatorsService                indicatorsService;
+    private DatasetRepositoriesServiceFacade                                      datasetRepositoriesServiceFacade;
 
     @Autowired
-    private IndicatorsSystemsService         indicatorsSystemsService;
+    private IndicatorsService                                                     indicatorsService;
 
     @Autowired
-    private SrmRestInternalService           srmRestInternalService;
+    private IndicatorsSystemsService                                              indicatorsSystemsService;
+
+    @Autowired
+    private SrmRestInternalService                                                srmRestInternalService;
+
+    @Autowired
+    protected es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
 
     /* GEOGRAPHICAL GRANULARITIES */
 
@@ -139,6 +142,9 @@ public class IndicatorsCoverageServiceTest extends IndicatorsDataBaseTest {
         geographicalValues = indicatorsSystemsService.findAllGeographicalValues(getServiceContextAdministrador());
         Map<String, String> geographicalVariableElementsByCode = SrmResourcesMocks.buildVariableElementsIdByCodeOfCodelist(geographicalValues);
         when(srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(Matchers.any(String.class))).thenReturn(geographicalVariableElementsByCode);
+
+        when(srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn()))
+                .thenReturn(SrmResourcesMocks.buildCodelist("defaultJsonstat", "defaultCodelistJsonstat", "es", "urn:defaultCodelistJsonstat"));
     }
 
     @Test

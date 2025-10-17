@@ -76,8 +76,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
 import es.gobcan.istac.indicators.core.task.serviceapi.TaskService;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
-;
-
 /**
  * Implementation of IndicatorsService
  */
@@ -1448,9 +1446,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             return StreamMessageCodelistActionEnum.GEOGRAPHICAL_VALUES;
         } else if (checkIsLastNumberVersionDefaultGranularityCodelist(codelistAvro)) {
             return StreamMessageCodelistActionEnum.GEOGRAPHICAL_GRANURALITIES;
+        } else if (checkIsDefaultMeasureCodelist(codelistAvro.getUrn())) {
+            return StreamMessageCodelistActionEnum.MEASURE_VALUES;
         }
+
         return null;
 
+    }
+
+    private boolean checkIsDefaultMeasureCodelist(String codelistUrn) throws MetamacException {
+        String defaultCodelistForMeasureDimension = indicatorsConfigurationService.retrieveDefaultCodelistMeasureDimensionValues();
+
+        return defaultCodelistForMeasureDimension.equals(codelistUrn);
     }
 
     private boolean checkIsDefaultTerritoryVariable(String variableUrn) throws MetamacException {

@@ -6,10 +6,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
+import es.gobcan.istac.indicators.core.serviceapi.utils.SrmResourcesMocks;
 import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 
 /**
@@ -33,13 +37,27 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
 public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
     @Autowired
-    protected IndicatorsService           indicatorService;
+    protected IndicatorsService                                                 indicatorService;
 
     @Autowired
-    private IndicatorsDataProviderService indicatorsDataProviderService;
+    private IndicatorsDataProviderService                                       indicatorsDataProviderService;
 
     @Autowired
-    private IndicatorsDataService         indicatorsDataService;
+    private IndicatorsDataService                                               indicatorsDataService;
+
+    @Autowired
+    private SrmRestInternalService                                              srmRestInternalService;
+
+    @Autowired
+    private es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService configurationService;
+
+    @Before
+    public void setUp() throws MetamacException {
+
+        when(srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn()))
+                .thenReturn(SrmResourcesMocks.buildCodelist("defaultJsonstat", "defaultCodelistJsonstat", "es", "urn:defaultCodelistJsonstat"));
+
+    }
 
     /*
      * This test tries to ensure that the version constants used in tests have the same format than the version constant used in the application. If the format of this constant changes, the test fails
