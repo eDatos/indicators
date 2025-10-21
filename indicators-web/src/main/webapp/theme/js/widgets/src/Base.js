@@ -80,9 +80,6 @@
             this.apiUrl = options.apiUrl || "";
             this.visualizerUrl = options.visualizerUrl || "";
 
-            //apiKey
-            var apiKey = options.apiKey || "";
-
             // Request builder
             this.datasetRequestBuilder = new DatasetRequestBuilder({ apiUrl: this.apiUrl });
 
@@ -165,9 +162,9 @@
             this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.set('showEmbedMoreLink', options.showEmbedMoreLink);
 
-              $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /*$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
                 jqXHR.setRequestHeader('api-key', apiKey);     
-            });
+            });*/
             this.reloadData();
         },
 
