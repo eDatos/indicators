@@ -162,9 +162,6 @@
             this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.set('showEmbedMoreLink', options.showEmbedMoreLink);
 
-            /*$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-                jqXHR.setRequestHeader('api-key', apiKey);     
-            });*/
             this.reloadData();
         },
 
