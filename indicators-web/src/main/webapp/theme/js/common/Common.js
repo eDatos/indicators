@@ -8,8 +8,10 @@
 
     window.EDatos = EDatos;
 
-    $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-        jqXHR.setRequestHeader('api-key', apiKey);     
-    });
+    /*$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        if(typeof apiKey !== 'undefined') {
+            jqXHR.setRequestHeader('api-key', apiKey);
+        }
+    });*/
 
 }(window.jQuery));
