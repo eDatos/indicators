@@ -5,12 +5,13 @@
     };
 
     EDatos.common = {};
+    EDatos.common.apiKey = typeof apiKey !== 'undefined' ? apiKey : '';
 
     window.EDatos = EDatos;
 
     $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-        if(typeof apiKey !== 'undefined') {
-            jqXHR.setRequestHeader('api-key', apiKey);
+        if (EDatos.common.apiKey) {
+            jqXHR.setRequestHeader('api-key', EDatos.common.apiKey);
         }
     });
 
