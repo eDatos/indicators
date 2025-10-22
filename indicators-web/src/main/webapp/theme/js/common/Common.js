@@ -5,7 +5,7 @@
     };
 
     EDatos.common = {};
-    EDatos.common.apiKey = typeof apiKey !== 'undefined' ? apiKey : '';
+    EDatos.common.apiKey = '';
 
     window.EDatos = EDatos;
 
