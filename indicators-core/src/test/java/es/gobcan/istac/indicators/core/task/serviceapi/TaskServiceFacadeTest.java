@@ -61,16 +61,4 @@ public class TaskServiceFacadeTest implements TaskServiceFacadeTestBase {
     public void testExecuteGeographicalValuesMigrationTemporalTask() throws Exception {
         // no test
     }
-
-    @Override
-    public void testScheduleDataViewAdjustmentJob() throws Exception {
-        // no test
-
-    }
-
-    @Override
-    public void testExecuteDataViewAdjustmentTask() throws Exception {
-        // no test
-
-    }
 }

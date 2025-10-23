@@ -28,7 +28,6 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
             logger.debug("Scheduling jobs...");
             schedulingIndicatorsUpdateJob();
             schedulingCategoryCacheRefreshJob();
-            schedulingDataViewAdjustmentJob();
         }
     }
 
@@ -40,13 +39,5 @@ public class JobsSchedulerListener implements ApplicationListener<ContextRefresh
     private void schedulingCategoryCacheRefreshJob() {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
         taskServiceFacade.scheduleCategoryCacheRefreshAutomaticJob(ctx);
-    }
-
-    private void schedulingDataViewAdjustmentJob() {
-        ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
-
-        logger.info("Indicators. Launching temporal job for scheduling data view adjustment with dimension code descriptions");
-        taskServiceFacade.scheduleDataViewAdjustmentJob(ctx);
-
     }
 }
