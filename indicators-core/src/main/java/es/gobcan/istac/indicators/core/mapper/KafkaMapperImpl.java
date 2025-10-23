@@ -31,12 +31,12 @@ public class KafkaMapperImpl implements KafkaMapper {
     @Override
     public ExternalItemDto kafkaMessageToRepositoryExternalItemDto(ServiceContext ctx, SpecificRecordBase messageSource) throws MetamacException {
         if (messageSource instanceof CodelistAvro) {
-            return processSrmCodelistKafkaMessage(ctx, messageSource);
+            return processSrmCodelistKafkaMessage(messageSource);
         }
         return null;
     }
 
-    private ExternalItemDto processSrmCodelistKafkaMessage(ServiceContext ctx, SpecificRecordBase message) throws MetamacException {
+    private ExternalItemDto processSrmCodelistKafkaMessage(SpecificRecordBase message) throws MetamacException {
 
         CodelistAvro codelistAvro = (CodelistAvro) message;
 
@@ -50,11 +50,13 @@ public class KafkaMapperImpl implements KafkaMapper {
         Codes codes = srmService.retrieveCodesOfCodelist(codelistAvro.getUrn(), false);
         for (CodeResourceInternal srmCode : codes.getCodes()) {
             ExternalItemCodesDto code = itemResourceInternalToExternalItemCodesDto(srmCode);
-            if (elementCodeUsed.contains(srmCode.getVariableElement().getId())) {
-                code.setElementCode(srmCode.getVariableElement().getId() + "$");
-            } else {
-                code.setElementCode(srmCode.getVariableElement().getId());
-                elementCodeUsed.add(srmCode.getVariableElement().getId());
+            if (srmCode.getVariableElement() != null) {
+                if (elementCodeUsed.contains(srmCode.getVariableElement().getId())) {
+                    code.setElementCode(srmCode.getVariableElement().getId() + "$");
+                } else {
+                    code.setElementCode(srmCode.getVariableElement().getId());
+                    elementCodeUsed.add(srmCode.getVariableElement().getId());
+                }
             }
             externalItemDto.addCode(code);
 
