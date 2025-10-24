@@ -211,7 +211,7 @@ Application Indicators {
 	    	"Populates a given indicator data"
 	    	List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Populates a given indicator data in background"
-	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	planifyPopulateIndicatorData(String indicatorUuid, boolean sendNotifications) throws MetamacException;
 	    	"Exports DSPL"
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	"Populates a given indicator version data"
@@ -545,7 +545,7 @@ Application Indicators {
 	    	// "Populates a given indicator data"
 	    	// List<MetamacExceptionItem> populateIndicatorData(String indicatorUuid) throws MetamacException;
 	        "Populates a given indicator data in background"
-	    	planifyPopulateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	planifyPopulateIndicatorData(String indicatorUuid, boolean sendNotifications) throws MetamacException;
 	    	"Exports DSPL"
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 	    	"Update indicators data GPE"
@@ -1455,7 +1455,7 @@ Application Indicators {
 			"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
     		"Plannify a scheduled task to populate indicator's data"
-    		planifyPopulationIndicatorData(String indicatorUuid) throws MetamacException;
+    		planifyPopulationIndicatorData(String indicatorUuid, boolean sendNotifications) throws MetamacException;
 	    	"Exports DSPL"
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
 			"Perform the population task"

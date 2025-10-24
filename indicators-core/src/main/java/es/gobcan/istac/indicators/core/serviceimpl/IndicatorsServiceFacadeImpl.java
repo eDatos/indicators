@@ -975,7 +975,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             try {
                 if (!indicatorsByIndicatorsVersion.contains(indicatorVersion.getIndicator().getCode())) {
                     indicatorsByIndicatorsVersion.add(indicatorVersion.getIndicator().getCode());
-                    getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid());
+                    getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorVersion.getIndicator().getUuid(), false);
                 }
             } catch (MetamacException e) {
                 LOG.error(String.format("Error updating indicator %s after receiving geographical codelist update ", indicatorVersion.getCode()), e);
@@ -990,11 +990,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid, boolean sendNotifications) throws MetamacException {
         // Security
         SecurityUtils.canPopulateIndicatorData(ctx);
 
-        getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorUuid);
+        getIndicatorsDataService().planifyPopulateIndicatorData(ctx, indicatorUuid, sendNotifications);
     }
 
     // -------------------------------------------------------------------------------------------

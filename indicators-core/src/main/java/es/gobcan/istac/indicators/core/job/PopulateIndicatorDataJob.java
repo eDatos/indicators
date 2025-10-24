@@ -27,6 +27,7 @@ public class PopulateIndicatorDataJob implements Job {
     public static final String USER              = "user";
     public static final String INDICATOR_UUID    = "indicatorUuid";
     public static final String TASK_NAME         = "taskName";
+    public static final String SEND_NOTIFICATION = "sendNotification";
 
     private TaskServiceFacade  taskServiceFacade = null;
 
@@ -38,6 +39,7 @@ public class PopulateIndicatorDataJob implements Job {
         String user = jobDataMap.getString(USER);
         String indicatorUuid = jobDataMap.getString(INDICATOR_UUID);
         String taskName = jobDataMap.getString(TASK_NAME);
+        Boolean sendNotification = jobDataMap.getBoolean(SEND_NOTIFICATION);
 
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "metamac-core");
 
@@ -45,7 +47,7 @@ public class PopulateIndicatorDataJob implements Job {
             logger.info("Populate Indicator Data Job: {} starting at {}", jobKey, new Date());
 
             List<MetamacExceptionItem> populateErrors = getTaskServiceFacade().executePopulationIndicatorDataTask(serviceContext, taskName, indicatorUuid);
-            processPopulationIndicatorDataResult(serviceContext, user, indicatorUuid, populateErrors);
+            processPopulationIndicatorDataResult(serviceContext, user, indicatorUuid, populateErrors, sendNotification);
 
             logger.info("Populate Indicator Data Job: {} finished at {}", jobKey, new Date());
         } catch (MetamacException metamacException) {
@@ -56,9 +58,11 @@ public class PopulateIndicatorDataJob implements Job {
         }
     }
 
-    private void processPopulationIndicatorDataResult(ServiceContext serviceContext, String user, String indicatorUuid, List<MetamacExceptionItem> populateErrors) {
+    private void processPopulationIndicatorDataResult(ServiceContext serviceContext, String user, String indicatorUuid, List<MetamacExceptionItem> populateErrors, Boolean sendEmail) {
         if (CollectionUtils.isEmpty(populateErrors)) {
-            sendSuccessNotification(serviceContext, user, indicatorUuid);
+            if (Boolean.TRUE.equals(sendEmail)) {
+                sendSuccessNotification(serviceContext, user, indicatorUuid);
+            }
         } else {
             MetamacException metamacException = MetamacExceptionBuilder.builder().withExceptionItems(populateErrors).build();
 
