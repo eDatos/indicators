@@ -94,6 +94,11 @@
 	
 	<filter-mapping>
 		<filter-name>CORSFilter</filter-name>
+		<url-pattern>/widgets/external/configuration</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>CORSFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
