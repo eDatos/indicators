@@ -206,8 +206,7 @@
             return $.
             ajax({
                 url: this.apiUrl + '/timeGranularities',
-                dataType: 'jsonp',
-                jsonp: "_callback"
+                dataType: 'json'
             });
         },
 

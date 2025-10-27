@@ -14,8 +14,7 @@
 
             var configRequest = $.ajax({
                 method: "GET",
-                dataType: "jsonp",
-                jsonp: '_callback',
+                dataType: "json",
                 url: url
             });
 
