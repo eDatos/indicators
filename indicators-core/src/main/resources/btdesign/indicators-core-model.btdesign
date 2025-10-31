@@ -272,9 +272,6 @@ Application Indicators {
 			@IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException;
 			
 			void processSrmResourcesKafkaMessage(org.apache.avro.specific.SpecificRecordBase message) throws MetamacException;
-			
-			"Temporal for EDATOS-5154 Schedule data transformation job"
-			processDataViewAdjustmentInRepository();
     	}
     	
     	"Provides access to indicators coverage"
@@ -1439,10 +1436,6 @@ Application Indicators {
 			"execute geographical values migration job automatically execution"
 			executeGeographicalValuesMigrationTemporalTask() throws MetamacException;
 			
-			"Temporal for EDATOS-5154 Schedule data transformation job"
-			scheduleDataViewAdjustmentJob();
-			executeDataViewAdjustmentTask()  throws MetamacException;
-			
     	}
     	
     	"Provides access to background data operations"
@@ -1491,11 +1484,7 @@ Application Indicators {
 			"Process category cache refresh job automatically with cron expression"			
 			processCategoryCacheRefreshAutomaticTask() throws MetamacException;
 			"Process geographical values migration job automatically with cron expression"			
-			processGeographicalValuesMigrationTemporalTask() throws MetamacException;
-			
-			"Temporal for EDATOS-5154 Schedule data transformation job"
-    		processDataViewAdjustmentTask() throws MetamacException;   				
-			scheduleDataViewAdjustmentJob();
+			processGeographicalValuesMigrationTemporalTask() throws MetamacException;		
 	
     	}
     	
