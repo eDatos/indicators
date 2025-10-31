@@ -278,7 +278,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid, boolean sendNotifications) throws MetamacException {
         // Validation
         InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
 
@@ -288,7 +288,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Check there are no tasks in progress for this indicator
         checkNotTasksInProgress(ctx, indicator.getUuid());
 
-        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid);
+        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid, sendNotifications);
     }
 
     private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {

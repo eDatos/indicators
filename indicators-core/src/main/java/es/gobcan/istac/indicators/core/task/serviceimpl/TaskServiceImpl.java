@@ -107,11 +107,11 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        planifyPopulationIndicatorData(ctx, indicatorUuid, ctx.getUserId());
+    public synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, boolean sendNotifications) throws MetamacException {
+        planifyPopulationIndicatorData(ctx, indicatorUuid, ctx.getUserId(), sendNotifications);
     }
 
-    private synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, String user) throws MetamacException {
+    private synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, String user, boolean sendNotifications) throws MetamacException {
         InvocationValidator.checkPlanifyPopulationIndicatorData(indicatorUuid, user, null);
 
         String populationIndicatorDataTaskName = createTaskNameForPopulationIndicatorData(indicatorUuid);
@@ -121,7 +121,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         checkExistTaskInResource(populationIndicatorDataJobKey);
         checkExistsGarbage(populationIndicatorDataTaskName);
 
-        JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid, populationIndicatorDataTaskName, user, populationIndicatorDataJobKey);
+        JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid, populationIndicatorDataTaskName, user, populationIndicatorDataJobKey, sendNotifications);
         SimpleTrigger trigger = createTrigger(populationIndicatorDataTriggerKey);
 
         Task newTask = new Task(populationIndicatorDataTaskName);
@@ -257,7 +257,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // If the recover process of one task fails, don't stop other recovery process
         try {
             if (task.getJob().startsWith(PREFIX_JOB_POPULATE_DATA)) {
-                planifyPopulationIndicatorData(ctx, task.getExtensionPoint(), task.getCreatedBy());
+                planifyPopulationIndicatorData(ctx, task.getExtensionPoint(), task.getCreatedBy(), true);
             }
         } catch (MetamacException e) {
             logger.error("Recover of task {} fails", task.getJob(), e);
@@ -323,7 +323,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         }
     }
 
-    private JobDetail createPopulateIndicatorDataJob(ServiceContext ctx, String indicatorUuid, String populationIndicatorDataTaskName, String user, JobKey jobKey) {
+    private JobDetail createPopulateIndicatorDataJob(ServiceContext ctx, String indicatorUuid, String populationIndicatorDataTaskName, String user, JobKey jobKey, Boolean sendNotification) {
         // @formatter:off
         return JobBuilder.newJob()
                 .ofType(PopulateIndicatorDataJob.class)
@@ -331,6 +331,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 .usingJobData(PopulateIndicatorDataJob.USER, user)
                 .usingJobData(PopulateIndicatorDataJob.INDICATOR_UUID, indicatorUuid)
                 .usingJobData(PopulateIndicatorDataJob.TASK_NAME, populationIndicatorDataTaskName)
+                .usingJobData(PopulateIndicatorDataJob.SEND_NOTIFICATION, sendNotification)
                 .requestRecovery().build();
         // @formatter:on
     }

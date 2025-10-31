@@ -28,7 +28,7 @@ public class PlanifyPopulateIndicatorDataActionHandler extends SecurityActionHan
     @Override
     public PlanifyPopulateIndicatorDataResult executeSecurityAction(PlanifyPopulateIndicatorDataAction action) throws ActionException {
         try {
-            indicatorsServiceFacade.planifyPopulateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
+            indicatorsServiceFacade.planifyPopulateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), true);
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), null);
 
             return new PlanifyPopulateIndicatorDataResult(indicatorDto);
