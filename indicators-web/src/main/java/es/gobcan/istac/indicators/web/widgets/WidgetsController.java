@@ -93,6 +93,7 @@ public class WidgetsController extends BaseController {
         properties.put(IndicatorsConfigurationConstants.METAMAC_ORGANISATION, configurationService.retrieveOrganisation());
         properties.put(IndicatorsConfigurationConstants.INTERNATIONALIZATION_LANGUAGES, configurationService.retrieveInternationalizationLanguages());
         properties.put(IndicatorsConfigurationConstants.ANALYTICS_SCRIPT_URL, configurationService.retrieveAppsExternalWebApplicationUrlBase() + "/includes/analytics.js");
+        properties.put(IndicatorsConfigurationConstants.INDICATORS_WEB_EXTERNAL_REST_API_KEY, configurationService.retrieveIndicatorsWebRestApiKey());
         return properties;
     }
 

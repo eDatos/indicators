@@ -14,8 +14,7 @@
 
             var configRequest = $.ajax({
                 method: "GET",
-                dataType: "jsonp",
-                jsonp: '_callback',
+                dataType: "json",
                 url: url
             });
 
@@ -24,6 +23,7 @@
 
                 options.languages = Istac.widget.configuration['metamac.internationalization.languages'];
                 options.defaultLocale = options.languages[0];
+                EDatos.common.apiKey = Istac.widget.configuration['indicators.web.external.api_key'];
                 EDatos.common.I18n.setDefaultLocale(options.defaultLocale);
 
                 options.locale = EDatos.common.I18n.getWidgetLocaleFromOptions(options);
