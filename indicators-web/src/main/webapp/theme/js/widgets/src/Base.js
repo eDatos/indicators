@@ -161,6 +161,7 @@
             this.set('shadow', options.shadow);
             this.set('showLanguageDropdown', !!options.showLanguageDropdown);
             this.set('showEmbedMoreLink', options.showEmbedMoreLink);
+
             this.reloadData();
         },
 
@@ -205,8 +206,7 @@
             return $.
             ajax({
                 url: this.apiUrl + '/timeGranularities',
-                dataType: 'jsonp',
-                jsonp: "_callback"
+                dataType: 'json'
             });
         },
 

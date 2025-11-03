@@ -278,7 +278,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public void planifyPopulateIndicatorData(ServiceContext ctx, String indicatorUuid, boolean sendNotifications) throws MetamacException {
         // Validation
         InvocationValidator.checkPlanifyPopulateIndicatorData(indicatorUuid, null);
 
@@ -288,7 +288,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Check there are no tasks in progress for this indicator
         checkNotTasksInProgress(ctx, indicator.getUuid());
 
-        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid);
+        getTaskService().planifyPopulationIndicatorData(ctx, indicatorUuid, sendNotifications);
     }
 
     private void checkNotTasksInProgress(ServiceContext ctx, String resourceId) throws MetamacException {
@@ -2345,160 +2345,4 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
     }
-
-    @Override
-    @Deprecated
-    public void processDataViewAdjustmentInRepository(ServiceContext ctx) {
-
-        // retrieve all datasets
-        Map<String, List<DimensionDto>> dsdByDimension = new HashMap<>();
-
-        List<ConditionalCriteria> conditions = new ArrayList<>();
-
-        // WHERE (queryEnvironment = 'METAMAC' OR queryEnvironment = 'JSON_STAT' OR queryEnvironment = 'GPE') AND isLastVersion = true
-        // Although GPE is desactivated, There are a few indicators with this environment and the associated view must be created.
-        conditions.add(ConditionalCriteria.and(
-                ConditionalCriteria.or(
-                        ConditionalCriteria.or(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC),
-                                ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT)),
-                        ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.GPE)),
-                ConditionalCriteria.equal(IndicatorVersionProperties.isLastVersion(), Boolean.TRUE)));
-
-        List<IndicatorVersion> indicatorVersions = getIndicatorVersionRepository().findByCondition(conditions, PagingParameter.noLimits()).getValues();
-        List<Long> indicatorVersionsTreated = new ArrayList<Long>();
-        LOG.info("----------------------------------------- Indicators (METAMAC AND JSONSTAT INDICATORS. processDataViewAdjustmentTask: starting at {}  --- number affected indicators: {}", new Date(),
-                indicatorVersions.size());
-
-        int numberAffectedIndicators = 0;
-        int i = 0;
-
-        Map<String, String> dimensionRepresentationJsonStat = new HashMap<>();
-
-        try {
-            Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn());
-            dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
-            dimensionRepresentationJsonStat.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), configurationService.retrieveDefaultCodelistMeasureDimensionValues());
-        } catch (MetamacException e) {
-            LOG.error(
-                    "ERROR in processDataViewAdjustmentTask. Error to retrieve retrieveDefaultGeographicalCodeListUrn or  retrieveDefaultCodelistMeasureDimensionValues parameter. JSONSTAT or GPE indicators will not be treated.");
-        }
-
-        for (IndicatorVersion indicatorVersion : indicatorVersions) {
-
-            processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions, dimensionRepresentationJsonStat, true);
-
-            if (i++ >= 50) {
-                LOG.info(String.format("Indicators. processDataViewAdjustmentTask checkPoint : number updated indicators %d --- of total indicators: %d at %s", numberAffectedIndicators,
-                        indicatorVersions.size(), new Date().toString()));
-                i = 0;
-            }
-            numberAffectedIndicators++;
-            indicatorVersionsTreated.add(indicatorVersion.getId());
-        }
-
-        LOG.info("----------------------------------------- Indicators. processDataViewAdjustmentTask: finished at {}", new Date());
-
-        // ----------------------------------------RETRIEVE SOURCE_URN FOR ALL INDICATORS
-
-        List<ConditionalCriteria> conditionsAll = new ArrayList<>();
-
-        conditionsAll.add(ConditionalCriteria.or(
-                ConditionalCriteria.or(ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.METAMAC),
-                        ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.JSON_STAT)),
-                ConditionalCriteria.equal(IndicatorVersionProperties.dataSources().queryEnvironment(), QueryEnvironmentEnum.GPE)));
-        List<IndicatorVersion> indicatorsVersionsAll = getIndicatorVersionRepository().findByCondition(conditionsAll, PagingParameter.noLimits()).getValues();
-
-        LOG.info(
-                "----------------------------------------- Indicators (METAMAC AND JSONSTAT INDICATORS. processDataViewAdjustmentTask sourceUrn not lastVersion indicators: starting at {}  --- number affected indicators: {}",
-                new Date(), indicatorsVersionsAll.size() - indicatorVersionsTreated.size());
-
-        numberAffectedIndicators = 0;
-        i = 0;
-
-        for (IndicatorVersion indicatorVersion : indicatorsVersionsAll) {
-            if (!indicatorVersionsTreated.contains(indicatorVersion.getId())) {
-                processDataViewAdjustmentDataset(ctx, indicatorVersion, dsdByDimension, indicatorVersions, dimensionRepresentationJsonStat, false);
-
-                if (i++ >= 50) {
-                    LOG.info(String.format("Indicators. processDataViewAdjustmentTask checkPoint : number updated indicators %d --- of total indicators: %d at %s", numberAffectedIndicators,
-                            indicatorVersions.size(), new Date().toString()));
-                    i = 0;
-                }
-                numberAffectedIndicators++;
-            }
-        }
-
-        LOG.info("----------------------------------------- Indicators. processDataViewAdjustmentTask sourceUrn not lastVersion indicators: finished at {}", new Date());
-
-    }
-
-    @Deprecated
-    private void processDataViewAdjustmentDataset(ServiceContext ctx, IndicatorVersion indicatorVersion, Map<String, List<DimensionDto>> dsdByDimension, List<IndicatorVersion> indicatorVersions,
-            Map<String, String> dimensionRepresentationJsonStat, boolean regenerateViewForLastVersionIndicator) {
-        try {
-
-            if (indicatorVersion.getDataRepositoryId() == null) {
-                // dataset not exists in repository
-                LOG.error("processDataViewAdjustmentDataset -> ID_NOT_EXISTS Indicators {} not exists in repository. It will not be updated", indicatorVersion.getIndicator().getCode());
-                return;
-            }
-
-            List<DataSource> dataSources = indicatorVersion.getDataSources();
-
-            Map<String, String> dimensionRepresentation = new HashMap<>();
-
-            if (dataSources != null && !dataSources.isEmpty()
-                    && (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment()) || QueryEnvironmentEnum.GPE.equals(dataSources.get(0).getQueryEnvironment()))) {
-                dimensionRepresentation.putAll(dimensionRepresentationJsonStat);
-            } else {
-                dimensionRepresentation = getDimensionRepresentation(dataSources);
-            }
-
-            List<DimensionDto> dimensionsDto = new ArrayList<>();
-
-            DimensionDto dimension = new DimensionDto();
-            dimension.setDimensionId(GEO_DIMENSION);
-            dimension.setSourceUrn(dimensionRepresentation.get(GEO_DIMENSION));
-            dimensionsDto.add(dimension);
-            dimension = new DimensionDto();
-            dimension.setDimensionId(TIME_DIMENSION);
-            dimensionsDto.add(dimension);
-            dimension = new DimensionDto();
-            dimension.setDimensionId(MEASURE_DIMENSION);
-            dimension.setSourceUrn(dimensionRepresentation.get(MEASURE_DIMENSION));
-            dimensionsDto.add(dimension);
-
-            datasetRepositoriesServiceFacade.updateDatasetDimensionSourceUrn(indicatorVersion.getDataRepositoryId(), dimensionsDto);
-
-            if (regenerateViewForLastVersionIndicator) {
-                // do not assign view role because it has a bad performance. I will be assign manually by script.
-                createOrReplaceLastVersionDatabaseViewWithoutRoleAssigment(indicatorVersion);
-            }
-
-        } catch (MetamacException | ApplicationException e) {
-            LOG.error("Indicators data repository [" + indicatorVersion.getDataRepositoryId() + "] Error in data view adjustment for descriptions fields. ind code:"
-                    + indicatorVersion.getIndicator().getCode(), e);
-
-        } catch (Exception e) {
-            LOG.error("General error. Indicators data repository [" + indicatorVersion.getDataRepositoryId() + "] Error in data view adjustment for descriptions fields. ind code:"
-                    + indicatorVersion.getIndicator().getCode(), e);
-        }
-    }
-
-    @Deprecated
-    private void createOrReplaceLastVersionDatabaseViewWithoutRoleAssigment(IndicatorVersion indicatorVersion) throws MetamacException {
-        try {
-            List<String> languages = null;
-
-            languages = configurationService.retrieveInternationalizationLanguages();
-            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode(), languages,
-                    Arrays.asList(IndicatorDataDimensionTypeEnum.TIME.name()), Arrays.asList(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()));
-
-        } catch (Exception e) {
-            getNoticesRestInternalService().createCreateReplaceDatasetErrorBackgroundNotification(indicatorVersion);
-            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
-                    + " related with indicatorVersionUuid " + indicatorVersion.getUuid(), e);
-        }
-    }
-
 }

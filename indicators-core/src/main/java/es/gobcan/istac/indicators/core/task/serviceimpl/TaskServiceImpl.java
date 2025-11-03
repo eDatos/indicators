@@ -46,7 +46,6 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.enume.domain.TaskStatusTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.job.CategoryCacheRefreshJob;
-import es.gobcan.istac.indicators.core.job.DataViewAdjustmentJob;
 import es.gobcan.istac.indicators.core.job.ExportsDsplJob;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 import es.gobcan.istac.indicators.core.job.PopulateIndicatorDataJob;
@@ -107,11 +106,11 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        planifyPopulationIndicatorData(ctx, indicatorUuid, ctx.getUserId());
+    public synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, boolean sendNotifications) throws MetamacException {
+        planifyPopulationIndicatorData(ctx, indicatorUuid, ctx.getUserId(), sendNotifications);
     }
 
-    private synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, String user) throws MetamacException {
+    private synchronized void planifyPopulationIndicatorData(ServiceContext ctx, String indicatorUuid, String user, boolean sendNotifications) throws MetamacException {
         InvocationValidator.checkPlanifyPopulationIndicatorData(indicatorUuid, user, null);
 
         String populationIndicatorDataTaskName = createTaskNameForPopulationIndicatorData(indicatorUuid);
@@ -121,7 +120,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         checkExistTaskInResource(populationIndicatorDataJobKey);
         checkExistsGarbage(populationIndicatorDataTaskName);
 
-        JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid, populationIndicatorDataTaskName, user, populationIndicatorDataJobKey);
+        JobDetail jobDetail = createPopulateIndicatorDataJob(ctx, indicatorUuid, populationIndicatorDataTaskName, user, populationIndicatorDataJobKey, sendNotifications);
         SimpleTrigger trigger = createTrigger(populationIndicatorDataTriggerKey);
 
         Task newTask = new Task(populationIndicatorDataTaskName);
@@ -257,7 +256,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // If the recover process of one task fails, don't stop other recovery process
         try {
             if (task.getJob().startsWith(PREFIX_JOB_POPULATE_DATA)) {
-                planifyPopulationIndicatorData(ctx, task.getExtensionPoint(), task.getCreatedBy());
+                planifyPopulationIndicatorData(ctx, task.getExtensionPoint(), task.getCreatedBy(), true);
             }
         } catch (MetamacException e) {
             logger.error("Recover of task {} fails", task.getJob(), e);
@@ -323,7 +322,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         }
     }
 
-    private JobDetail createPopulateIndicatorDataJob(ServiceContext ctx, String indicatorUuid, String populationIndicatorDataTaskName, String user, JobKey jobKey) {
+    private JobDetail createPopulateIndicatorDataJob(ServiceContext ctx, String indicatorUuid, String populationIndicatorDataTaskName, String user, JobKey jobKey, Boolean sendNotification) {
         // @formatter:off
         return JobBuilder.newJob()
                 .ofType(PopulateIndicatorDataJob.class)
@@ -331,6 +330,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 .usingJobData(PopulateIndicatorDataJob.USER, user)
                 .usingJobData(PopulateIndicatorDataJob.INDICATOR_UUID, indicatorUuid)
                 .usingJobData(PopulateIndicatorDataJob.TASK_NAME, populationIndicatorDataTaskName)
+                .usingJobData(PopulateIndicatorDataJob.SEND_NOTIFICATION, sendNotification)
                 .requestRecovery().build();
         // @formatter:on
     }
@@ -550,32 +550,4 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
     }
-
-    @Override
-    @Deprecated
-    public void processDataViewAdjustmentTask(ServiceContext ctx) throws MetamacException {
-        this.getIndicatorsDataService().processDataViewAdjustmentInRepository(ctx);
-    }
-
-    @Override
-    @Deprecated
-    public void scheduleDataViewAdjustmentJob(ServiceContext ctx) {
-        try {
-
-            JobDetail job = newJob(DataViewAdjustmentJob.class).build();
-
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retrieveCronExpressionForDataViewAdjustment()).withMisfireHandlingInstructionDoNothing()).build();
-
-            Scheduler sched = schedulerFactory.getScheduler();
-            sched.scheduleJob(job, cronTrigger);
-
-            logger.info("Indicators. Data view adjustment with dimension code descriptions job successfully scheduled at {} ", new Date());
-
-        } catch (Exception e) {
-            logger.error("Indicators. An unexpected error has occurred scheduling data view adjustment with dimension code descriptions job", e);
-        }
-
-    }
-
 }
