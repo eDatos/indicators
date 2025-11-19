@@ -18,8 +18,6 @@
     <!--                                           -->
     <title>Indicators</title>
 
-	<link rel="shortcut icon" href="http://www.gobiernodecanarias.org/gc/img/favicon.ico"/>
-
     <!--                                           -->
     <!-- This script loads your compiled module.   -->
     <!-- If you add any GWT meta tags, they must   -->
