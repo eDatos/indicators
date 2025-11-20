@@ -11,6 +11,8 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.client.widgets.MasterHead;
 import org.siemac.metamac.web.common.shared.CloseSessionAction;
 import org.siemac.metamac.web.common.shared.CloseSessionResult;
 
@@ -35,6 +37,7 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.core.navigation.shared.NameTokens;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 import es.gobcan.istac.indicators.web.shared.GetHelpUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetHelpUrlResult;
 
@@ -44,11 +47,15 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 
     private final DispatchAsync                       dispatcher;
 
+    private String helpUrl;
+
+    private static IndicatorsMasterHead masterHead;
+
     @ContentSlot
     public static final Type<RevealContentHandler<?>> CONTENT_SLOT = new Type<RevealContentHandler<?>>();
 
     public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
-
+        IndicatorsMasterHead getIndicatorsMasterHead();
         void showMessage(Throwable throwable, String message, MessageTypeEnum type);
 
         void hideMessages();
@@ -66,6 +73,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     public MainPagePresenter(EventBus eventBus, MainView view, MainProxy proxy, DispatchAsync dispatcher) {
         super(eventBus, view, proxy);
         getView().setUiHandlers(this);
+        this.masterHead = getView().getIndicatorsMasterHead();
         this.dispatcher = dispatcher;
     }
 
@@ -78,6 +86,13 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     protected void onBind() {
         super.onBind();
         addRegisteredHandler(ShowMessageEvent.getType(), this);
+        dispatcher.execute(new GetHelpUrlAction(), new WaitingAsyncCallbackHandlingError<GetHelpUrlResult>(this) {
+            @Override
+            public void onWaitSuccess(GetHelpUrlResult result) {
+                helpUrl = result.getHelpUrl();
+                masterHead.setHelpLinkVisibility(helpUrl);
+            }
+        });
     }
 
     @ProxyEvent
@@ -121,17 +136,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 
     @Override
     public void openHelpUrl() {
-        dispatcher.execute(new GetHelpUrlAction(), new WaitingAsyncCallback<GetHelpUrlResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
-            }
-
-            @Override
-            public void onWaitSuccess(GetHelpUrlResult result) {
-                Window.open(result.getHelpUrl(), "_blank", "");
-            }
-        });
+        if (helpUrl != null) {
+            Window.open(helpUrl, "_blank", "");
+            return;
+        }
     }
 }

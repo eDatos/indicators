@@ -52,7 +52,7 @@ public class ApplicationStartup extends InternalApplicationStartupListener {
         // OTHERS
         checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         checkRequiredProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
-        checkRequiredProperty(IndicatorsConfigurationConstants.HELP_URL);
+        checkOptionalProperty(IndicatorsConfigurationConstants.HELP_URL);
 
         checkRequiredProperty(IndicatorsConfigurationConstants.CRON_EXPRESSION_FOR_CATEGORY_CACHE_REFRESH);
     }
