@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.server.handlers;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ import es.gobcan.istac.indicators.web.shared.GetHelpUrlResult;
 
 @Component
 public class GetHelpUrlActionHandler extends SecurityActionHandler<GetHelpUrlAction, GetHelpUrlResult> {
+
+    private static final Logger log = LoggerFactory.getLogger(GetHelpUrlActionHandler.class);
 
     @Autowired
     private IndicatorsConfigurationService configurationService = null;
@@ -27,7 +31,8 @@ public class GetHelpUrlActionHandler extends SecurityActionHandler<GetHelpUrlAct
         try {
             return new GetHelpUrlResult(configurationService.retrieveHelpUrl());
         } catch (MetamacException e) {
-            throw WebExceptionUtils.createMetamacWebException(e);
+            log.debug("Error retrieving application indicators OPTIONAL help url", e);
+            return new GetHelpUrlResult("");
         }
     }
 }
