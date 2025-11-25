@@ -132,6 +132,11 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
      ***************************************************/
 
     @Override
+    public IndicatorsMasterHead getIndicatorsMasterHead() {
+        return masterHead;
+    }
+
+    @Override
     public void showMessage(Throwable throwable, String message, MessageTypeEnum type) {
         // Hide messages before showing the new ones
         messagePanel.showMessage(throwable, message, type);
