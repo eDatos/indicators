@@ -100,8 +100,7 @@
             'MORE': 'més indicadors',
             'CREDITS': 'widget facilitat per',
             'HELP': 'Selecciona, còpia i pega aquest codi en la teva pàgina',
-            'EXAMPLE': "Exemple d'ús",
-            'ADD_TO_NETVIBES': 'Afegir a Netvibes'
+            'EXAMPLE': "Exemple d'ús"
         },
         'MEASURE': {
             'ABSOLUTE': 'Dada',
@@ -152,9 +151,6 @@
                     'Dg', 'Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds'
                 ]
             }
-        },
-        'CAPTCHA': {
-            'LABEL': "Escriu el valor de la imatge que es mostra a dalt"
         },
         'CONNECTOR': {
             'OF': ' de ',

@@ -100,8 +100,7 @@
             'MORE': 'más indicadores',
             'CREDITS': 'widget facilitado por',
             'HELP': 'Selecciona, copia y pega este código en tu página',
-            'EXAMPLE': 'Ejemplo de uso',
-            'ADD_TO_NETVIBES': 'Añadir a Netvibes'
+            'EXAMPLE': 'Ejemplo de uso'
         },
         'MEASURE': {
             'ABSOLUTE': 'Dato',

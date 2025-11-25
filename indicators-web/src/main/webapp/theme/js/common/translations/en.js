@@ -100,8 +100,7 @@
             'MORE': 'more indicators',
             'CREDITS': 'widget provided by',
             'HELP': 'Select, copy and paste this code on your webpage',
-            'EXAMPLE': 'Use example',
-            'ADD_TO_NETVIBES': 'Add to Netvibes'
+            'EXAMPLE': 'Use example'
         },
         'MEASURE': {
             'ABSOLUTE': 'Absolute',
