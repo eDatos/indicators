@@ -152,9 +152,6 @@
                 ]
             }
         },
-        'CAPTCHA': {
-            'LABEL': "Escriba el valor de la imagen mostrada encima"
-        },
         'CONNECTOR': {
             'OF': ' de ',
             'CONTRACTED_OF': ' de '

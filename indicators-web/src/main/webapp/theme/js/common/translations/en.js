@@ -135,9 +135,6 @@
             'MOVE_ALL_TO_FIRST_LIST': 'Remove all indicators from the widget',
             'MOVE_SELECTED_TO_SECOND_LIST': 'Add the selected indicators to the widget'
         },
-        'CAPTCHA': {
-            'LABEL': "Write the value of the image shown above"
-        },
         'CONNECTOR': {
             'OF': ' of ',
             'CONTRACTED_OF': ' of '
