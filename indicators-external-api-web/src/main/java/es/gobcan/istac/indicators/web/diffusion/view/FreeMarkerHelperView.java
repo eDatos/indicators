@@ -40,7 +40,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
         model.put("indicatorsExternalApiUrlBase", WebUtils.normalizeUrl(indicatorsExternalApiUrlBase));
         model.put("indicatorsExternalApiUrlBaseSwagger", SwaggerUtils.normalizeUrlForSwagger(indicatorsExternalApiUrlBase));
         model.put("organisation", getConfigurationService().retrieveOrganisation());
-        model.put("faviconUrl", WebUtils.getFavicon());
         model.put("internationalizationUrlParamId", getConfigurationService().retrieveInternationalizationCookieId());
         Locale currentLocale = getCurrentLocale(request);
         model.put("locale", currentLocale.getLanguage());
