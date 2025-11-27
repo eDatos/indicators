@@ -70,7 +70,6 @@ public class FreeMarkerHelperView extends FreeMarkerView {
             logger.debug("The captcha will not be operational because the property 'captchaExternalApiUrlBase' could not be initialized.");
         }
         model.put("organisation", getConfigurationService().retrieveOrganisation());
-        model.put("faviconUrl", getConfigurationService().retrieveAppStyleFaviconUrl());
         model.put("defaultLocale", getMetadataProperties().getDefaultInternationalizationLanguage());
 
         addStatisticalVisualizerUtils(model);
