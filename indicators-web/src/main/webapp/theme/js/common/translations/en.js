@@ -100,8 +100,7 @@
             'MORE': 'more indicators',
             'CREDITS': 'widget provided by',
             'HELP': 'Select, copy and paste this code on your webpage',
-            'EXAMPLE': 'Use example',
-            'ADD_TO_NETVIBES': 'Add to Netvibes'
+            'EXAMPLE': 'Use example'
         },
         'MEASURE': {
             'ABSOLUTE': 'Absolute',
@@ -135,9 +134,6 @@
             'MOVE_SELECTED_TO_FIRST_LIST': 'Remove the selected indicators from the widget',
             'MOVE_ALL_TO_FIRST_LIST': 'Remove all indicators from the widget',
             'MOVE_SELECTED_TO_SECOND_LIST': 'Add the selected indicators to the widget'
-        },
-        'CAPTCHA': {
-            'LABEL': "Write the value of the image shown above"
         },
         'CONNECTOR': {
             'OF': ' of ',
