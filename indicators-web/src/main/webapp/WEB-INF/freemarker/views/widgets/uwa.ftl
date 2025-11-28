@@ -20,7 +20,6 @@
     <link rel="stylesheet" type="text/css"
           href="//uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
     <title>${organisation} | [@apph.messageEscape 'page.widgets.title' /]</title>
-    <link rel="icon" href="${faviconUrl}"/>
 
     <!-- Add your UWA preferences as needed -->
     <widget:preferences>

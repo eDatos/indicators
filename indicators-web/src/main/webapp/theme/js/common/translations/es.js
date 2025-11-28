@@ -100,8 +100,7 @@
             'MORE': 'más indicadores',
             'CREDITS': 'widget facilitado por',
             'HELP': 'Selecciona, copia y pega este código en tu página',
-            'EXAMPLE': 'Ejemplo de uso',
-            'ADD_TO_NETVIBES': 'Añadir a Netvibes'
+            'EXAMPLE': 'Ejemplo de uso'
         },
         'MEASURE': {
             'ABSOLUTE': 'Dato',
@@ -152,9 +151,6 @@
                     'Dom', 'Lun', 'Mar', 'Miérc', 'Juev', 'Vier', 'Sáb'
                 ]
             }
-        },
-        'CAPTCHA': {
-            'LABEL': "Escriba el valor de la imagen mostrada encima"
         },
         'CONNECTOR': {
             'OF': ' de ',
