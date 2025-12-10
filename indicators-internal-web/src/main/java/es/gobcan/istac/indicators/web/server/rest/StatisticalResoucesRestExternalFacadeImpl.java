@@ -87,7 +87,7 @@ public class StatisticalResoucesRestExternalFacadeImpl implements StatisticalRes
             String languageDefault = configurationService.retrieveLanguageDefault();
             Dataset dataset = statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(datasetUrn, Arrays.asList(languageDefault),
                     StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDatasetDto(dataset, srmRestInternalService);
+            DataStructureDto dataStructureDto = es.gobcan.istac.indicators.web.server.utils.DtoUtils.createDataStructureDatasetDto(dataset, srmRestInternalService, languageDefault);
             return dataStructureDto;
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);
