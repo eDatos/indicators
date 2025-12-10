@@ -84,6 +84,18 @@ public abstract class CommonMetamacUtils {
         return null;
     }
 
+    public static String extractValueForDefaultLanguage(InternationalString internationalString, String languageDefault) {
+        if (internationalString == null) {
+            return null;
+        }
+        for (LocalisedString localisedString : internationalString.getTexts()) {
+            if (localisedString.getLang().equals(languageDefault)) {
+                return localisedString.getValue();
+            }
+        }
+        return null;
+    }
+
     public static List<String> extractVariablesFromDimensions(Dimensions dimensions) {
         List<String> result = new ArrayList<String>();
         for (Dimension dimension : dimensions.getDimensions()) {
@@ -92,6 +104,7 @@ public abstract class CommonMetamacUtils {
 
         return result;
     }
+
 
     public static List<String> extractCodeUrnOfSpecificTypeAttribute(Attributes attributes, DataAttributes dataAttributes, ComponentType componentType) {
         List<String> spatialValues = new ArrayList<String>();

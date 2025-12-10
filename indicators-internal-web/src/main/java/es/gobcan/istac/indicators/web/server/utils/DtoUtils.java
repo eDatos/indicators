@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ProcStatus;
@@ -25,6 +27,7 @@ import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
 import es.gobcan.istac.indicators.core.serviceimpl.util.CommonMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DatasetMetamacUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.QueryMetamacUtils;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
@@ -341,7 +344,7 @@ public class DtoUtils {
         return params[1];
     }
 
-    public static DataStructureDto createDataStructureDatasetDto(Dataset dataset, SrmRestInternalService srmRestInternalService) throws MetamacException {
+    public static DataStructureDto createDataStructureDatasetDto(Dataset dataset, SrmRestInternalService srmRestInternalService, String languageDefault) throws MetamacException {
         if (dataset == null) {
             return null;
         }
@@ -354,7 +357,7 @@ public class DtoUtils {
         dataStructureDto.setUuid(datasetUrn);
 
         // Title
-        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(dataset.getName()));
+        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(dataset.getName(), languageDefault));
 
         // PX Uri
         dataStructureDto.setQueryUrn(datasetUrn);
@@ -367,11 +370,11 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName(), languageDefault));
 
         // Maintainer
         Resource maintainer = dataset.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName(), languageDefault);
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
         } else {
