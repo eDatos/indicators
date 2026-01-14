@@ -167,6 +167,15 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
+    public void createUpdateIndicatorsDataErrorFromKafkaMessageNotification(List<IndicatorVersion> failedPopulationIndicators, String urn) {
+        List<IndicatorVersion> notifiableIndicators = getIndicatorsWithNotifyPopulationErrors(failedPopulationIndicators);
+        if (!notifiableIndicators.isEmpty()) {
+            createBackgroundNotification(ServiceNoticeAction.INDICATOR_POPULATION_ERROR_FROM_KAFKA_MESSAGES, ServiceNoticeMessage.INDICATOR_POPULATION_ERROR_FROM_KAFKA_MESSAGES,
+                    notifiableIndicators, urn);
+        }
+    }
+
+    @Override
     public void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId) {
         if (checkIfNotifyPopulationErrors(failedIndicator)) {
             createBackgroundNotification(ServiceNoticeAction.INDICATOR_DELETE_DATASET_ERROR, ServiceNoticeMessage.INDICATOR_DELETE_DATASET_ERROR, Arrays.asList(failedIndicator), oldDatasetId);

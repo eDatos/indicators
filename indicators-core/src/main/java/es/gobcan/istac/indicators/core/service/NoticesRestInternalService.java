@@ -17,6 +17,7 @@ public interface NoticesRestInternalService {
     void createCreateReplaceDatasetErrorBackgroundNotification(IndicatorVersion indicatorVersion);
     void createAssignRolePermissionsDatasetErrorBackgroundNotification(String dataViewsRole, String viewCode);
     void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators);
+    void createUpdateIndicatorsDataErrorFromKafkaMessageNotification(List<IndicatorVersion> failedPopulationIndicators, String urn);
     void createDeleteDatasetErrorBackgroundNotification(IndicatorVersion failedIndicator, String oldDatasetId);
     public void createConsumerFromKafkaErrorBackgroundNotification(String keyMessage);
     void createMaximumVersionReachedBackgroundNotification(IndicatorVersion indicatorVersion, VersionTypeEnum versionTypeEnum);
