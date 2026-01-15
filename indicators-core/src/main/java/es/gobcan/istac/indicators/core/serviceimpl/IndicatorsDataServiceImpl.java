@@ -377,17 +377,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Finds the intersection between two lists of IndicatorVersion.
      * Returns indicators that appear in both lists (matched by UUID).
      */
-    private List<IndicatorVersion> findIndicatorsLinkToSourceUrn(List<IndicatorVersion> indicatorsVersion1, List<IndicatorVersion> indicatorsVersion2) {
+    private List<IndicatorVersion> findIndicatorsLinkToSourceUrn(List<IndicatorVersion> indicatorsToFilter, List<IndicatorVersion> referenceIndicators) {
         List<IndicatorVersion> intersection = new ArrayList<>();
 
-        // Create Set of UUIDs from indicatorsVersion2 for efficient O(1) lookup
+        // Create Set of UUIDs from referenceIndicators for efficient O(1) lookup
         Set<String> list2Uuids = new HashSet<>();
-        for (IndicatorVersion iv : indicatorsVersion2) {
+        for (IndicatorVersion iv : referenceIndicators) {
             list2Uuids.add(iv.getUuid());
         }
 
-        // Find indicators from indicatorsVersion1 that are also in list2
-        for (IndicatorVersion iv : indicatorsVersion1) {
+        // Find indicators from indicatorsToFilter that are also in referenceIndicators
+        for (IndicatorVersion iv : indicatorsToFilter) {
             if (list2Uuids.contains(iv.getUuid())) {
                 intersection.add(iv);
             }
