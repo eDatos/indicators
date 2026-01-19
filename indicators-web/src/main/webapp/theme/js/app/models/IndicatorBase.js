@@ -44,7 +44,12 @@
             var dimension = this.get("dimension");
             return dimension.TIME.granularity;
         },
-        
+
+        getMeasureRepresentations : function () {
+            var dimension = this.get("dimension");
+            return dimension.MEASURE.representation;
+        },
+
         removeProtocol: function (url) {
         	return url.replace("https:","").replace("http:","");
         }

@@ -24,13 +24,13 @@
             this.timeGranularities = new App.collections.TimeGranularities();
 
             this.model.on('change:indicatorSystem', this._fetchIndicatorInstances, this);
-            this.model.on('change:instances', this._fetchGeographicalValuesAndTimeGranularities, this);
+            this.model.on('change:instances', this._fetchGeographicalValuesAndTimeGranularitiesAndMeasures, this);
             
             this.model.on('change:geographicalValues', this.updatePreview, this);
             this.model.on('change:timeGranularities', this.updatePreview, this);
             this.model.on('change:indicators', this.updatePreview, this);
+            this.model.on('change:measures', this.updatePreview, this);
 
-            this.measures.resetDefaults();
             this.systems.fetchWithoutLimit();
         },
 
@@ -43,13 +43,15 @@
             }
         },
 
-        _fetchGeographicalValuesAndTimeGranularities : function () {
+        _fetchGeographicalValuesAndTimeGranularitiesAndMeasures: function () {
             var self = this;
 
             this.geographicalValues.reset([]);
             this.model.set("geographicalValues", []);
             this.timeGranularities.reset([]);
             this.model.set("timeGranularities", []);
+            this.measures.reset([]);
+            this.model.set("measures", []);
 
             var instances = this.model.get('instances');
             if (instances.length > 0) {
@@ -58,9 +60,11 @@
                 var req = instanceModel.fetch();
                 this.geographicalValues.trigger('syncStart', this.geographicalValues);
                 this.timeGranularities.trigger("syncStart", this.getTimeGranularities);
+                this.measures.trigger("syncStart", this.getTimeGranularities);
                 req.success(function () {
                     self.geographicalValues.reset(instanceModel.getGeographicalValues());
                     self.timeGranularities.reset(instanceModel.getTimeGranularities(), {parse : true});
+                    self.measures.resetFromRepresentations(instanceModel.getMeasureRepresentations());
                 });
             }
         },
@@ -77,7 +81,7 @@
             });
 
             measuresView.on('change', function (measure) {
-                this.model.set('measures', [measure.id]);
+                this.model.set('measures', measure ? [measure.id] : "");
             }, this);
         },
 
@@ -153,11 +157,11 @@
             this.$el.html(this.template());
 
             // Bind select elements
-            this._renderMeasures();
             this._renderSystems();
             this._renderInstances();
             this._renderGeographicalValues();
             this._renderTimeGranularities();
+            this._renderMeasures();
 
             return this;
         }
