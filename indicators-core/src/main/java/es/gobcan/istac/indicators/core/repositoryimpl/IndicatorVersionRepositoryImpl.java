@@ -116,30 +116,6 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         return null;
     }
 
-    @Override
-    public List<IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException {
-        return new ListBlockIterator<String, IndicatorVersion>(dataGpeUuids, ServiceUtils.SIZE_IN_MAX).iterate(new ListBlockIteratorFn<String, IndicatorVersion>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public List<IndicatorVersion> apply(List<String> sublist) {
-                StringBuilder querySql = new StringBuilder();
-                if (sublist == null || sublist.size() == 0) {
-                    return new ArrayList<IndicatorVersion>();
-                }
-
-                querySql.append("select indV ");
-                querySql.append("from IndicatorVersion as indV ");
-                querySql.append("inner join indV.dataSources as ds ");
-                querySql.append("where ds.queryUuid in (:dataGpeUuids)");
-
-                Query query = getEntityManager().createQuery(querySql.toString());
-                query.setParameter(DATA_GPE_UUIDS, sublist);
-                return query.getResultList();
-            }
-        });
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException {

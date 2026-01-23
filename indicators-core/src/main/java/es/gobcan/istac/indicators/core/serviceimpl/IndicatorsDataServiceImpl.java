@@ -186,24 +186,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<String> retrieveDataDefinitionsOperationsCodes(ServiceContext ctx) throws MetamacException {
-        // Validation
-        InvocationValidator.checkRetrieveDataDefinitionsOperationsCodes(null);
-
-        // Find db
-        return getDataGpeRepository().findCurrentDataDefinitionsOperationsCodes();
-    }
-
-    @Override
-    public List<DataDefinition> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
-        // Validation
-        InvocationValidator.checkFindDataDefinitionsByOperationCode(operationCode, null);
-
-        // Find db
-        return getDataGpeRepository().findCurrentDataDefinitionsByOperationCode(operationCode);
-    }
-
-    @Override
     public DataStructure retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveDataStructure(uuid, null);
@@ -316,19 +298,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, indicatorUuid, indicatorVersionNumber);
         }
-    }
-
-    @Override
-    public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
-        LOG.info("Starting Indicators data update process (GPE DATA)");
-
-        // Validation
-        InvocationValidator.checkUpdateIndicatorsData(null);
-
-        Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
-
-        markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ctx, lastQueryDate);
-        return updateIndicatorsData(ctx);
     }
 
     @Override
@@ -1421,20 +1390,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    /* Mark only diffusionVersion */
-    private void markIndicatorsVersionWhichNeedsUpdateDueToGpeUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
-        Date newQueryDate = Calendar.getInstance().getTime();
-        List<String> dataDefinitionsUuids = null;
-        try {
-            dataDefinitionsUuids = getDataGpeRepository().findDataDefinitionsWithDataUpdatedAfter(lastQuery);
-        } catch (Exception e) {
-            throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
-        }
-
-        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
-        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
-    }
-
     private List<IndicatorVersion> markIndicatorsVersionWhichNeedsUpdateDueToJsonStatUpdate(ServiceContext ctx) throws MetamacException {
 
         List<String> dataDefinitionsUuids = new ArrayList<>();
@@ -1462,8 +1417,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
 
-        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
-
         return indicatorsVersionsFailed;
     }
 
@@ -1477,17 +1430,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, String urn) throws MetamacException {
         List<String> dataDefinitionsUuids = new ArrayList<>(1);
-
         if (!StringUtils.isEmpty(urn)) {
             dataDefinitionsUuids.add(urn);
         }
-
-        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
-    }
-
-    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, List<String> dataDefinitionsUuids) throws MetamacException {
-        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
-        markIndicatorsNeedsUpdateTransactional(pendingIndicators);
     }
 
     // No more inconsistent data, no more needs update, update last populate date
@@ -1646,16 +1591,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     JsonStatData jsonStatData = jsonToJsonStatData(json);
                     Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
                     data = JsonStatUtils.jsonStatDataToData(dataSource.getQueryUuid(), jsonStatData, variableElementsByCodesOfCodelist);
-                } else {
-
-                    // GPE-JAXI
-                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getQueryUuid());
-                    if (json == null) {
-                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getQueryUuid(), dataSource.getUuid());
-                    }
-                    Map<String, String> variableElementsByCodesOfCodelist = getVariableElementsIdByCodeOfCodelist();
-                    DataGpe dataGpe = GpeUtils.jsonGpeToData(json);
-                    data = GpeUtils.gpeDataToData(dataGpe, variableElementsByCodesOfCodelist);
                 }
                 dataCache.put(dataSource.getQueryUuid(), data);
             } catch (MetamacException e) {
@@ -1780,9 +1715,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private Map<String, String> getDimensionRepresentation(List<DataSource> dataSources) throws MetamacException {
         Map<String, String> dimensionRepresentation = new HashMap<>();
         if (dataSources != null && !dataSources.isEmpty()) {
-            if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment()) || QueryEnvironmentEnum.GPE.equals(dataSources.get(0).getQueryEnvironment())) {
-                // normalized codelist for jsonstat/gpe. It must be used to retrieve descriptions from variable_element. retrieveDefaultTerritoryCodelistForGpeJsonStat must not be used because is not
-                // normalized.
+            if (QueryEnvironmentEnum.JSON_STAT.equals(dataSources.get(0).getQueryEnvironment())) {
+                // normalized codelist for jsonstat. It must be used to retrieve descriptions from variable_element.
                 Codelist codelist = srmRestInternalService.retrieveCodelistLastVersion(configurationService.retrieveDefaultGeographicalCodeListUrn());
                 dimensionRepresentation.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), codelist.getUrn());
             } else if (QueryEnvironmentEnum.METAMAC.equals(dataSources.get(0).getQueryEnvironment())) {

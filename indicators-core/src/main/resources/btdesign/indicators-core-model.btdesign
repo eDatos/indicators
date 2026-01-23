@@ -181,13 +181,11 @@ Application Indicators {
     	Service IndicatorsDataService {
     		> @IndicatorsDataProviderService
     		> @IndicatorsCoverageService
-    		> @IndicatorsConfigurationService
     		> @IndicatorsSystemsService
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
     		> @IndicatorInstanceRepository
     		> @IndicatorsSystemVersionRepository
-    		> @DataGpeRepository
     		> @GeographicalGranularityRepository
     		> @GeographicalValueRepository
     		> @IndicatorInstanceRepository
@@ -200,10 +198,6 @@ Application Indicators {
         	> @TranslationRepository
         	> @TaskService
 
-			"Retrieves all Data definition's operations"
-	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-	    	"Find data By operation code"
-	    	List<@DataDefinition> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieves data info from JSON-stat from URL"
@@ -220,8 +214,6 @@ Application Indicators {
 	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Delete a dataset reposotory"
 	    	deleteDatasetRepository(String datasetRepositoryId) throws MetamacException;
-	    	"Updates data for all published indicators"
-	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
    	
 	    	"Exports dspl"
 	    	executeExportDSPL(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
@@ -364,14 +356,6 @@ Application Indicators {
     		String retrieveDataJson(String uuid) throws MetamacException;
     		"Retrieves JSON-stat"
 		    String retrieveJsonStat(String uuid) throws MetamacException;
-    	}
-    	
-    	"Provides access to indicators data from Jaxi"
-    	Service IndicatorsConfigurationService {
-    		> @ConfigurationRepository
-    		"Retrieves last successful query date to Gpe"
-		    DateTimestamp retrieveLastSuccessfulGpeQueryDate() throws MetamacException;
-		    setLastSuccessfulGpeQueryDate(DateTimestamp date) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -531,10 +515,6 @@ Application Indicators {
 	    	
 	
 	    	// DATA
-	    	"Retrieves all Data definition's operations"
-	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
-	    	"Find data By operation code"
-	    	List<@DataDefinitionDto> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieves the data from JSON-stat"
@@ -545,8 +525,6 @@ Application Indicators {
 	    	planifyPopulateIndicatorData(String indicatorUuid, boolean sendNotifications) throws MetamacException;
 	    	"Exports DSPL"
 	    	planifyExportsDsplJob(String indicatorUuid, String code, boolean mergeTimeGranularities, boolean isOperational) throws MetamacException;
-	    	"Update indicators data GPE"
-	    	List<@IndicatorVersion> updateIndicatorsDataFromGpe() throws MetamacException;
 	    	"Update indicators data JSON-stat"
             List<@IndicatorVersion> updateIndicatorsDataFromJsonStat() throws MetamacException;  
 	    	"Update indicators data METAMAC"
@@ -929,7 +907,6 @@ Application Indicators {
             	findByCondition(PagingParameter pagingParameter);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
-            	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
             	List<String> findCategoryElementsInIndicators() throws MetamacException;
@@ -1216,15 +1193,6 @@ Application Indicators {
 			DateTimestamp availableEndDate nullable databaseColumn="FECHA_DISPONIBLE_FIN";
 			"Metadata which contains a # separated list enumerating all publications where the query is being referenced"
 			Clob isPartOf nullable databaseColumn="IS_PART_OF";
-			
-       		Repository DataGpeRepository {
-       			protected List<@DataDefinition> findByQuery;
-            	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	List<String> findCurrentDataDefinitionsOperationsCodes;
-            	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
-            	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
-            	List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, DateTimestamp date);
-			}
         }
         
         "Table for improving access to last value given a geocode"
