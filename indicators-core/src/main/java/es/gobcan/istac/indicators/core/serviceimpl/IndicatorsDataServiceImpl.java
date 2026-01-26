@@ -357,10 +357,43 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return Collections.emptyList();
         }
 
-        LOG.info("Starting Indicators data update process (METAMAC DATA)");
+        // Get indicators associated with current URN before updating
+        List<String> dataDefinitionsUuids = new ArrayList<>(1);
+        dataDefinitionsUuids.add(urn);
+        List<IndicatorVersion> currentUrnIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
 
         markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, urn);
-        return updateIndicatorsData(ctx);
+        List<IndicatorVersion> allFailedIndicators = updateIndicatorsData(ctx);
+
+        List<IndicatorVersion> currentUrnFailedIndicators = findIndicatorsLinkToSourceUrn(currentUrnIndicators, allFailedIndicators);
+
+        // Send notification only for indicators from current URN that failed
+        createUpdateIndicatorsDataErrorFromKafkaMessageNotification(currentUrnFailedIndicators, urn);
+
+        return allFailedIndicators;
+    }
+
+    /**
+     * Finds the intersection between two lists of IndicatorVersion.
+     * Returns indicators that appear in both lists (matched by UUID).
+     */
+    private List<IndicatorVersion> findIndicatorsLinkToSourceUrn(List<IndicatorVersion> indicatorsToFilter, List<IndicatorVersion> referenceIndicators) {
+        List<IndicatorVersion> intersection = new ArrayList<>();
+
+        // Create Set of UUIDs from referenceIndicators for efficient O(1) lookup
+        Set<String> list2Uuids = new HashSet<>();
+        for (IndicatorVersion iv : referenceIndicators) {
+            list2Uuids.add(iv.getUuid());
+        }
+
+        // Find indicators from indicatorsToFilter that are also in referenceIndicators
+        for (IndicatorVersion iv : indicatorsToFilter) {
+            if (list2Uuids.contains(iv.getUuid())) {
+                intersection.add(iv);
+            }
+        }
+
+        return intersection;
     }
 
     private List<IndicatorVersion> updateIndicatorsData(ServiceContext ctx) throws MetamacException {
@@ -2332,6 +2365,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void createUpdateIndicatorsDataErrorBackgroundNotification(List<IndicatorVersion> failedPopulationIndicators) {
         if (!failedPopulationIndicators.isEmpty()) {
             getNoticesRestInternalService().createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
+        }
+    }
+
+    private void createUpdateIndicatorsDataErrorFromKafkaMessageNotification(List<IndicatorVersion> failedPopulationIndicators, String urn) {
+        if (!failedPopulationIndicators.isEmpty()) {
+            getNoticesRestInternalService().createUpdateIndicatorsDataErrorFromKafkaMessageNotification(failedPopulationIndicators, urn);
         }
     }
 

@@ -13,5 +13,6 @@ public class ServiceNoticeAction {
     public static final String STREAM_MESSAGE_SEND_ERROR                       = "notice_message.indicators.action.sent_via_kafka.error";
     public static final String INDICATOR_EXPORT_DSPL_SUCCESS                   = "notice_message.indicators.action.export_dspl.success";
     public static final String UPDATE_CATEGORY_CACHE_JOB                       = "notice_message.indicators.action.update_category_cache.error";
+    public static final String INDICATOR_POPULATION_ERROR_FROM_KAFKA_MESSAGES  = "notice_message.indicators.action.population.error.kafka_messages";
 
 }
