@@ -430,8 +430,7 @@
             if (requestUrl) {
                 var req = $.ajax({
                     url: requestUrl,
-                    dataType: 'jsonp',
-                    jsonp: "_callback"
+                    dataType: 'json'
                 });
 
                 this.requestInProgress = req;
