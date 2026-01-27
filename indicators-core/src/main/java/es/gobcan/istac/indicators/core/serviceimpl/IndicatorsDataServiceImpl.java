@@ -1416,6 +1416,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
             }
         }
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
 
         return indicatorsVersionsFailed;
     }
@@ -1430,9 +1431,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private void markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ServiceContext ctx, String urn) throws MetamacException {
         List<String> dataDefinitionsUuids = new ArrayList<>(1);
+
         if (!StringUtils.isEmpty(urn)) {
             dataDefinitionsUuids.add(urn);
         }
+        markIndicatorsVersionWhichNeedsUpdate(ctx, dataDefinitionsUuids);
+
+    }
+
+    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, List<String> dataDefinitionsUuids) throws MetamacException {
+        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataUuids(dataDefinitionsUuids);
+        markIndicatorsNeedsUpdateTransactional(pendingIndicators);
     }
 
     // No more inconsistent data, no more needs update, update last populate date

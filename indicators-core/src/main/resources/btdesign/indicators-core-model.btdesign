@@ -907,6 +907,7 @@ Application Indicators {
             	findByCondition(PagingParameter pagingParameter);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
+            	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
             	List<String> findCategoryElementsInIndicators() throws MetamacException;
