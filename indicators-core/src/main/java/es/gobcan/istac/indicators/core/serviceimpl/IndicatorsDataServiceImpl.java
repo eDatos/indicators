@@ -329,7 +329,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Get indicators associated with current URN before updating
         List<String> dataDefinitionsUuids = new ArrayList<>(1);
         dataDefinitionsUuids.add(urn);
-        List<IndicatorVersion> currentUrnIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
+        List<IndicatorVersion> currentUrnIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataUuids(dataDefinitionsUuids);
 
         markIndicatorsVersionWhichNeedsUpdateDueToMetamacUpdate(ctx, urn);
         List<IndicatorVersion> allFailedIndicators = updateIndicatorsData(ctx);
