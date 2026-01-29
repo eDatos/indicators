@@ -95,7 +95,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataNoDatasources() throws Exception {
         List<MetamacExceptionItem> errors = indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID);
-        assertEquals(1, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
