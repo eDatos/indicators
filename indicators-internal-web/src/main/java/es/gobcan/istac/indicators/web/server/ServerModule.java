@@ -31,9 +31,7 @@ import es.gobcan.istac.indicators.web.server.handlers.DisableNotifyPopulationErr
 import es.gobcan.istac.indicators.web.server.handlers.EnableNotifyPopulationErrorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ExportIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ExportSystemInDsplActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.FindDataDefinitionsByOperationCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.FindIndicatorsActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsOperationsCodesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
@@ -107,9 +105,7 @@ import es.gobcan.istac.indicators.web.shared.DisableNotifyPopulationErrorsAction
 import es.gobcan.istac.indicators.web.shared.EnableNotifyPopulationErrorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplAction;
-import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
-import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
@@ -263,8 +259,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetTimeValuesByGranularityInIndicatorAction.class, GetTimeValuesByGranularityInIndicatorActionHandler.class);
 
         // Data Sources
-        bindHandler(GetDataDefinitionsOperationsCodesAction.class, GetDataDefinitionsOperationsCodesActionHandler.class);
-        bindHandler(FindDataDefinitionsByOperationCodeAction.class, FindDataDefinitionsByOperationCodeActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
 
         bindHandler(GetIndicatorPreviewProductionUrlAction.class, GetIndicatorPreviewProductionUrlActionHandler.class);

@@ -591,7 +591,14 @@ public class DataSourcePanel extends VLayout {
 
         // Search data definition (query)
         RequiredSelectItem dataSourceQueryEnvironment = new RequiredSelectItem(DataSourceDS.QUERY_ENVIRONMENT, getConstants().dataSourceQueryEnvironment());
-        dataSourceQueryEnvironment.setValueMap(CommonUtils.getQueryEnvironmentEnumValueMap());
+        if (dataSourceDto != null && dataSourceDto.getUuid() != null) {
+            dataSourceQueryEnvironment.setValueMap(CommonUtils.getQueryEnvironmentEnumValueMap());
+        } else {
+            LinkedHashMap<String, String> filteredMap = CommonUtils.getQueryEnvironmentEnumValueMap();
+            filteredMap.remove(QueryEnvironmentEnum.GPE.toString());
+            dataSourceQueryEnvironment.setValueMap(filteredMap);
+        }
+
         dataSourceQueryEnvironment.addChangedHandler(new ChangedHandler() {
 
             @Override

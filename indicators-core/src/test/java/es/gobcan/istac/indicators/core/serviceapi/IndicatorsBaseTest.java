@@ -136,27 +136,15 @@ public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
     protected static String               GEOGRAPHICAL_GRANULARITY_1_CODE                  = "COUNTRIES";
 
     // Indicators
-    protected static final String         INDICATOR1_UUID                                  = "Indicator-1";
-    protected static final String         INDICATOR1_DS_GPE_UUID                           = "Indicator-1-v1-DataSource-1-GPE-TIME";
-    protected static final String         INDICATOR1_GPE_JSON_DATA                         = readFile("json/data_temporals_batch_update.json");
-    protected static final String         INDICATOR1_VERSION                               = IndicatorsDataBaseTest.INIT_VERSION_MINOR_INCREMENT;
 
     protected static String               INDICATOR_1                                      = "Indicator-1";
     protected static String               INDICATOR_1_V2                                   = IndicatorsDataBaseTest.SECOND_VERSION;
-    protected static String               INDICATOR_1_DS_GPE_UUID                          = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
-    protected static String               INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_1_CODE                                 = "CODE-1";
     protected static String               INDICATOR_2                                      = "Indicator-2";
     protected static String               INDICATOR_3                                      = "Indicator-3";
     protected static String               INDICATOR_3_VERSION                              = IndicatorsDataBaseTest.NOT_INITIAL_VERSION;
-    protected static String               INDICATOR_3_DS_GPE_UUID                          = "Indicator-3-v1-DataSource-1-GPE-GEO-TIME";
-    protected static String               INDICATOR_3_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_4                                      = "Indicator-4";
-    protected static String               INDICATOR_4_DS_GPE_UUID                          = "Indicator-4-v1-DataSource-1-GPE-GEO-TIME";
-    protected static String               INDICATOR_4_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_5                                      = "Indicator-5";
-    protected static String               INDICATOR_5_DS_GPE_UUID                          = "Indicator-5-v1-DataSource-1-GPE-GEO-TIME";
-    protected static String               INDICATOR_5_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     protected static String               INDICATOR_6                                      = "Indicator-6";
     protected static String               INDICATOR_7                                      = "Indicator-7";
     protected static String               INDICATOR_8                                      = "Indicator-8";

@@ -837,30 +837,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return do2DtoMapper.dataSourceDoToDto(dataSource);
     }
 
-    @Override
-    public List<String> retrieveDataDefinitionsOperationsCodes(ServiceContext ctx) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Service call
-        return getIndicatorsDataService().retrieveDataDefinitionsOperationsCodes(ctx);
-    }
-
-    @Override
-    public List<DataDefinitionDto> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Service call
-        List<DataDefinition> dataDefs = getIndicatorsDataService().findDataDefinitionsByOperationCode(ctx, operationCode);
-
-        // Transform
-        List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();
-        for (DataDefinition basic : dataDefs) {
-            dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
-        }
-        return dtos;
-    }
 
     @Override
     public DataStructureDto retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
@@ -888,13 +864,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return do2DtoMapper.dataStructureDoToDto(uuid, jsonStatDataStructure);
     }
 
-    @Override
-    public List<IndicatorVersion> updateIndicatorsDataFromGpe(ServiceContext ctx) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        return getIndicatorsDataService().updateIndicatorsDataFromGpe(ctx);
-    }
 
     @Override
     public List<IndicatorVersion> updateIndicatorsDataFromJsonStat(ServiceContext ctx) throws MetamacException {
