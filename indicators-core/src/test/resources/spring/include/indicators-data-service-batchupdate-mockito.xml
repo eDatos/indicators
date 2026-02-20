@@ -6,14 +6,6 @@
 	<bean id="indicatorsDataProviderService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService" />
 	</bean>
-	
-	<bean id="indicatorsConfigurationService" class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsConfigurationService" />
-	</bean>
-	
-	<bean id="dataGpeRepository" class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg value="es.gobcan.istac.indicators.core.domain.DataGpeRepository" />
-	</bean>
 
 <bean id="srmRestInternalService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg value="es.gobcan.istac.indicators.core.service.SrmRestInternalService" />

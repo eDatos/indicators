@@ -258,22 +258,6 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         fail("Should not allow major versioning when the indicator system version number rearches 99999.9");
     }
 
-    @Test
-    public void testPublishIndicatorsSystem() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-
-        String uuid = INDICATORS_SYSTEM_5;
-        String versionNumber = IndicatorsDataBaseTest.INIT_VERSION;
-
-        // Publish
-        indicatorsSystemService.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
-
-        // Validate properties are not in Dto
-        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
-        assertTrue(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
-    }
 
     @Test
     public void testArchiveIndicatorsSystem() throws Exception {
@@ -416,28 +400,6 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             assertEquals(1, indicatorsInstances.getValues().size());
 
             assertEquals(INDICATORS_SYSTEM_10_V2_IINSTANCE_1, indicatorsInstances.getValues().get(0).getUuid());
-        }
-    }
-
-    @Test
-    public void testFindIndicatorsSystemHistory() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-
-        String uuid = INDICATORS_SYSTEM_6;
-        {
-            // Check not empty history
-            List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
-            assertNotNull(history);
-            assertEquals(3, history.size());
-
-            assertEquals(uuid, history.get(0).getIndicatorsSystem().getUuid());
-            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_ANOTHER_HUGE_INCREMENT, history.get(0).getVersionNumber());
-            assertEquals(uuid, history.get(1).getIndicatorsSystem().getUuid());
-            assertEquals(IndicatorsDataBaseTest.INIT_VERSION_HUGE_INCREMENT, history.get(1).getVersionNumber());
-            assertEquals(uuid, history.get(2).getIndicatorsSystem().getUuid());
-            assertEquals(IndicatorsDataBaseTest.INIT_VERSION, history.get(2).getVersionNumber());
         }
     }
 
@@ -592,29 +554,6 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
         GeographicalValue geoValue = geographicalValueRepository.findGeographicalValueByCode(variableElementAvro.getCode());
         assertNull(geoValue);
-
-    }
-
-    @Test
-    @Transactional
-    public void testDeleteGeographicalValueBeingUsed() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-
-        VariableElementAvro variableElementAvro = IndicatorsMocks.mockVariableElementAvro(GEOGRAPHICAL_VALUE_CODE_1, VARIABLE_TERRITORY_CODE, GEOGRAPHICAL_GRANULARITY_1);
-        variableElementAvro.setValidTo(DatetimeAvro.newBuilder().setInstant((new DateTime()).getMillis()).build());
-
-        SpecificRecordBase message = variableElementAvro;
-
-        try {
-            // delete
-            indicatorsSystemService.updateGeopgraphicalValuesFromSrmVariableElements(getServiceContextAdministrador(), message);
-            fail("delete geographical value is being Used");
-        } catch (PersistenceException e) {
-            ConstraintViolationException exception = (ConstraintViolationException) e.getCause();
-            assertEquals("fk_tb_ind_version_geo_cov_geographical_value_fk", exception.getConstraintName());
-        }
 
     }
 

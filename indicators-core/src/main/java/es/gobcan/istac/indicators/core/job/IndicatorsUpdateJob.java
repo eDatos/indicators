@@ -53,7 +53,6 @@ public class IndicatorsUpdateJob implements Job {
 
         List<IndicatorVersion> failedPopulationIndicators = new ArrayList<>();
 
-        updateIndicatorsDataFromGpe(serviceContext, failedPopulationIndicators);
         updateIndicatorsDataFromJsonStat(serviceContext, failedPopulationIndicators);
 
         createUpdateIndicatorsDataErrorBackgroundNotification(failedPopulationIndicators);
@@ -65,14 +64,6 @@ public class IndicatorsUpdateJob implements Job {
         }
     }
 
-    private void updateIndicatorsDataFromGpe(ServiceContext serviceContext, List<IndicatorVersion> failedPopulationIndicators) {
-        try {
-            LOG.info("Updating indicators Data from GPE...");
-            failedPopulationIndicators.addAll(getIndicatorsServiceFacade().updateIndicatorsDataFromGpe(serviceContext));
-        } catch (MetamacException e) {
-            LOG.error("Error updating indicators Data from GPE", e);
-        }
-    }
 
     private void updateIndicatorsDataFromJsonStat(ServiceContext serviceContext, List<IndicatorVersion> failedPopulationIndicators) {
         try {
