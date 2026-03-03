@@ -31,9 +31,7 @@
                 Istac.widget.loader.js(true, Istac.widget.configuration['metamac.analytics.script.url'],
                     { type: 'application/javascript', appId : 'indicators-widget' });
 
-                if (!options.uwa) {
                     Istac.widget.loader.all(options.url);
-                }
 
                 var widget;
                 if (options.type === 'temporal') {
