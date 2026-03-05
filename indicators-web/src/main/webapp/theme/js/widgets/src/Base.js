@@ -56,7 +56,6 @@
             sparklineBarSpacing: 1,
             sparklineLineColor: "#0058B0",
             sparklineFillColor: null,
-            uwa: false,
             shadow: true,
             borderRadius: true,
             scale: "natural",
@@ -64,8 +63,6 @@
         },
 
         _containerTemplate: Handlebars.templates.container,
-
-        _uwaContainerTemplate: Handlebars.templates.uwaContainer,
 
         init: function (options) {
             this.options = _.extend({}, this._defaultOptions, options);
@@ -109,15 +106,11 @@
                 languageSelectorId: this.getLanguageSelectorId()
             };
 
-            if (this.options.uwa) {
-                this.el.html(this._uwaContainerTemplate(templateOptions));
-                this.titleText = $('');
-                this.titleContainer = $('');
-            } else {
-                this.el.html(this._containerTemplate(templateOptions));
+
+            this.el.html(this._containerTemplate(templateOptions));
                 this.titleText = this.el.find('.istac-widget-title-text');
                 this.titleContainer = this.el.find('.istac-widget-title');
-            }
+
 
             this.bodyContainer = this.el.find('.istac-widget-body');
             this.contentContainer = this.el.find('.istac-widget-content');
@@ -133,11 +126,9 @@
 
             // Initialize style
 
-            var realWidth = this.options.uwa ? "100%" : options.width;
+            var realWidth = options.width;
             var realHeight;
-            if (this.options.uwa) {
-                realHeight = 'auto';
-            } else if (options.height) {
+           if (options.height) {
                 realHeight = options.height;
             } else {
                 realHeight = this.options.type === 'temporal' ? '328px' : 'auto';
@@ -361,9 +352,7 @@
         },
 
         includeLogo: function () {
-            if (this.options.uwa) {
-                return true
-            } else if (window.location.href.indexOf(this.url) > -1) {
+            if (window.location.href.indexOf(this.url) > -1) {
                 // Si estoy mostrando el widget en la misma página donde está la API
                 // se muestra el logo para que el usuario lo vea igual que cuando
                 // lo va a incrustar
@@ -407,7 +396,7 @@
         },
 
         showEmbed: function () {
-            var filteredOptions = _.omit(this.options, ["el", "uwa", "afterRenderCallback", "width", "widgetWith"]);
+            var filteredOptions = _.omit(this.options, ["el", "afterRenderCallback", "width", "widgetWith"]);
 
             var closeScript = this.closeTag('script');
 

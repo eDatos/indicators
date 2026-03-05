@@ -13,7 +13,6 @@ public interface WebConstants {
 
     // Widgets
     public String VIEW_WIDGETS_EXAMPLE              = "widgets/example";
-    public String VIEW_WIDGETS_UWA                  = "widgets/uwa";
     public String VIEW_WIDGETS_CREATOR              = "widgets/creator";
 
     // Errors
