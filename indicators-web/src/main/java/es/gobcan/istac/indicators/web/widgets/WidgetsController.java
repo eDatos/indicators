@@ -101,14 +101,6 @@ public class WidgetsController extends BaseController {
         return removeLastSlashInUrl(configurationService.retrievePortalExternalWebApplicationUrlVisualizer());
     }
 
-    @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)
-    public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException, MetamacException {
-        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_WIDGETS_UWA);
-        modelAndView.addObject("permalinkId", permalinkId);
-
-        return modelAndView;
-    }
-
     @RequestMapping(value = "/widgets/example", method = RequestMethod.GET)
     public ModelAndView example(ServletRequest request) throws UnsupportedEncodingException {
         String options = new String(request.getParameter("options").getBytes(), "UTF-8");
