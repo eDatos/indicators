@@ -2267,6 +2267,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return new ArrayList<>();
         }
 
+        if (!hasValidStatisticalOperation(datasetAvro)) {
+            return new ArrayList<>();
+        }
+
         if (datasetAvro.getCode() != null) {
             datasetId = datasetAvro.getCode();
         } else {
@@ -2295,6 +2299,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         return failedPopulationIndicators;
 
+    }
+
+    private boolean hasValidStatisticalOperation(DatasetAvro datasetAvro) {
+        if (datasetAvro.getStatisticalOperation() == null || datasetAvro.getStatisticalOperation().getCode() == null) {
+            LOG.error("[indicators] Jaxi dataset with null statistical operation received from Kafka. Dataset URN: {}", datasetAvro.getUrn());
+            return false;
+        }
+        return true;
     }
 
     private List<IndicatorVersion> getJsonStatIndicatorsVersionsByResourceId(String resourceId) {
