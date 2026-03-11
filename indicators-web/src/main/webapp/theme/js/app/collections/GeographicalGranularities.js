@@ -27,6 +27,6 @@
 
     });
 
-    _.extend(App.collections.GeographicalGranularities.prototype, App.mixins.JsonpSync);
+    _.extend(App.collections.GeographicalGranularities.prototype, App.mixins.JsonSync);
 
 }(window._));

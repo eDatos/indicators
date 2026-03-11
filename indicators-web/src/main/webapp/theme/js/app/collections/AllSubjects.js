@@ -16,6 +16,6 @@
         },
     });
 
-    _.extend(App.collections.AllSubjects.prototype, App.mixins.JsonpSync);
+    _.extend(App.collections.AllSubjects.prototype, App.mixins.JsonSync);
 
 }(window._));
