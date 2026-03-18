@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
@@ -25,8 +26,9 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String>             dataMapAttributes    = new ArrayList<String>();
-    private List<String>             variablesInOrder     = new ArrayList<String>();
+    private List<String>             dataMapAttributes              = new ArrayList<String>();
+    private List<String>             variablesInOrder               = new ArrayList<String>();
+    private List<AttributeInstanceDto> datasetAndDimensionAttributes = new ArrayList<AttributeInstanceDto>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -108,6 +110,14 @@ public class Data extends DataStructure {
 
     public void setGeographicalValueDto(GeographicalValueDto geographicalValueDto) {
         this.geographicalValueDto = geographicalValueDto;
+    }
+
+    public List<AttributeInstanceDto> getDatasetAndDimensionAttributes() {
+        return datasetAndDimensionAttributes;
+    }
+
+    public void setDatasetAndDimensionAttributes(List<AttributeInstanceDto> datasetAndDimensionAttributes) {
+        this.datasetAndDimensionAttributes = datasetAndDimensionAttributes;
     }
 
     public List<String> getDataMapAttributes() {

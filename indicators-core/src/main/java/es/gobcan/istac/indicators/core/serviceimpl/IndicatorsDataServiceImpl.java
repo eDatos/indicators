@@ -52,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.edatos.dataset.repository.domain.AttributeAttachmentLevelEnum;
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
@@ -418,7 +419,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             // Transform list to process first load operations
             List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
 
-            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber, dataSources, getObservationsMapAttributes(dataCache, dataOps));
+            List<AttributeInstanceDto> datasetDimAttrs = collectDatasetAndDimensionAttributes(dataCache, dataOps);
+            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber, dataSources, getObservationsMapAttributes(dataCache, dataOps), datasetDimAttrs);
 
             // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
@@ -427,6 +429,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
                 LOG.info("dataoperation successfully created for gpe query with UUID " + dataOperation.getDataGpeUuid());
             }
+
+            // Persist DATASET-level and DIMENSION-level attribute instances extracted from the API.
+            // This is done after observations so the dataset repository entry already exists.
+            // Idempotency is guaranteed: setDatasetRepositoryDeleteOldOne cascades deletion of the
+            // previous dataset, so each populate starts from a clean slate.
+            if (!datasetDimAttrs.isEmpty()) {
+                try {
+                    datasetRepositoriesServiceFacade.createAttributesInstances(datasetRepoDto.getDatasetId(), datasetDimAttrs);
+                } catch (ApplicationException e) {
+                    throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersionNumber);
+                }
+            }
+
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
 
@@ -453,6 +468,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
         return new ArrayList<>(); // Devuelve una lista vacía si no se cumple la condición
+    }
+
+    private List<AttributeInstanceDto> collectDatasetAndDimensionAttributes(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+        if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
+            Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
+            if (data != null && data.getDatasetAndDimensionAttributes() != null) {
+                return data.getDatasetAndDimensionAttributes();
+            }
+        }
+        return new ArrayList<AttributeInstanceDto>();
     }
 
     @Override
@@ -1777,8 +1802,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     }
 
-    public DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion, List<DataSource> dataSources, List<String> observationsMapAttributes)
-            throws MetamacException {
+    public DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion, List<DataSource> dataSources, List<String> observationsMapAttributes,
+            List<AttributeInstanceDto> datasetAndDimensionInstances) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
@@ -1811,6 +1836,36 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepoDto.getAttributes().add(obsConfAux);
             }
         }
+
+        // Register DATASET-level and DIMENSION-level attribute definitions derived from the instances.
+        // We track already-registered attribute IDs to avoid duplicates (multiple instances of the
+        // same attribute, e.g. one per dimension value, still share a single AttributeDto definition).
+        if (datasetAndDimensionInstances != null) {
+            Set<String> registeredDataset = new HashSet<String>();
+            Set<String> registeredDimension = new HashSet<String>();
+            for (AttributeInstanceDto inst : datasetAndDimensionInstances) {
+                String attrId = inst.getAttributeId();
+                boolean hasDimCodes = inst.getCodesByDimension() != null && !inst.getCodesByDimension().isEmpty();
+                if (hasDimCodes) {
+                    if (!registeredDimension.contains(attrId)) {
+                        AttributeDto attr = new AttributeDto();
+                        attr.setAttributeId(attrId);
+                        attr.setAttachmentLevel(AttributeAttachmentLevelEnum.DIMENSION);
+                        datasetRepoDto.getAttributes().add(attr);
+                        registeredDimension.add(attrId);
+                    }
+                } else {
+                    if (!registeredDataset.contains(attrId)) {
+                        AttributeDto attr = new AttributeDto();
+                        attr.setAttributeId(attrId);
+                        attr.setAttachmentLevel(AttributeAttachmentLevelEnum.DATASET);
+                        datasetRepoDto.getAttributes().add(attr);
+                        registeredDataset.add(attrId);
+                    }
+                }
+            }
+        }
+
         List<String> languages = new ArrayList<String>();
         languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
