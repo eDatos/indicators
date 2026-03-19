@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,6 +13,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attribute;
+import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeDimension;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Attributes;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.CodeRepresentation;
@@ -221,12 +223,13 @@ public abstract class CommonMetamacDatasetAccess {
     }
 
     /**
-     * Extracts DATASET-level and DIMENSION-level attribute instances from the API response.
+     * Extracts DATASET-level, DIMENSION-level, and GROUP-level attribute instances from the API response.
      *
-     * <p>For each attribute in the metadata whose attachment level is DATASET or DIMENSION
-     * (single-dimension), an {@link AttributeInstanceDto} is built and added to the result list.
+     * <p>For each attribute in the metadata whose attachment level is DATASET or DIMENSION,
+     * an {@link AttributeInstanceDto} is built and added to the result list.
      * PRIMARY_MEASURE attributes are skipped (they are handled separately as observation attributes).
-     * Multi-dimension (GROUP) attributes are out of scope and are also skipped.</p>
+     * Multi-dimension (GROUP) attributes are supported when all their dimensions are mapped to
+     * indicator dimensions; otherwise the attribute is skipped.</p>
      *
      * <p>The {@code sourceDimToIndicatorDim} parameter maps each source API dimension ID to its
      * corresponding indicator dimension type name (e.g. "GEOGRAPHICAL", "TIME", "MEASURE").
@@ -234,7 +237,7 @@ public abstract class CommonMetamacDatasetAccess {
      * is skipped, because it cannot be mapped to an indicator dimension.</p>
      *
      * @param sourceDimToIndicatorDim mapping from source dimension ID to indicator dimension type name
-     * @return list of attribute instances; empty if there are no DATASET/DIMENSION attributes
+     * @return list of attribute instances; empty if there are no DATASET/DIMENSION/GROUP attributes
      */
     public List<AttributeInstanceDto> extractDatasetAndDimensionAttributeInstances(Map<String, String> sourceDimToIndicatorDim) {
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
@@ -261,16 +264,18 @@ public abstract class CommonMetamacDatasetAccess {
                     && metadataAttribute.getDimensions() != null
                     && !metadataAttribute.getDimensions().getDimensions().isEmpty();
 
-            // Skip GROUP / multi-dimension attributes (out of scope)
-            if (isDimension && metadataAttribute.getDimensions().getDimensions().size() > 1) {
-                continue;
-            }
-
             String attributeId = metadataAttribute.getId();
 
             // Try plain string attribute first, then international
             DataAttribute matchedDataAttr = findDataAttribute(dataAttributes, attributeId);
             DataInternationalAttribute matchedInternAttr = findDataInternationalAttribute(internationalAttributes, attributeId);
+
+            if (isDimension && metadataAttribute.getDimensions().getDimensions().size() > 1) {
+                List<AttributeInstanceDto> groupInstances = buildGroupLevelInstances(
+                        attributeId, metadataAttribute, sourceDimToIndicatorDim, matchedDataAttr, matchedInternAttr);
+                result.addAll(groupInstances);
+                continue;
+            }
 
             if (isDataset) {
                 List<AttributeInstanceDto> instances = buildDatasetLevelInstances(attributeId, matchedDataAttr, matchedInternAttr);
@@ -388,6 +393,129 @@ public abstract class CommonMetamacDatasetAccess {
             }
         }
         return dto;
+    }
+
+    /**
+     * Builds attribute instances for a GROUP-level attribute (multiple dimensions).
+     *
+     * <p>All dimensions declared in the attribute must be mapped in {@code sourceDimToIndicatorDim};
+     * if any dimension is unmapped the method returns an empty list and the attribute is skipped.</p>
+     *
+     * <p>Values are indexed as a flat array following the cartesian product of the group dimensions
+     * ordered by {@link #getDimensionsOrderedForData()} (first dimension varies slowest).</p>
+     *
+     * @param attributeId           attribute identifier
+     * @param metadataAttribute     metadata descriptor of the attribute
+     * @param sourceDimToIndicatorDim mapping from source dimension ID to indicator dimension type name
+     * @param dataAttr              plain-string data attribute (may be null)
+     * @param internAttr            international-string data attribute (may be null)
+     * @return list of attribute instances; empty if any group dimension is unmapped or there are no values
+     */
+    private List<AttributeInstanceDto> buildGroupLevelInstances(String attributeId, Attribute metadataAttribute,
+            Map<String, String> sourceDimToIndicatorDim, DataAttribute dataAttr, DataInternationalAttribute internAttr) {
+
+        // Collect all source dimension IDs declared in the group attribute
+        List<String> groupSourceDimIds = new ArrayList<String>();
+        for (AttributeDimension dim : metadataAttribute.getDimensions().getDimensions()) {
+            groupSourceDimIds.add(dim.getDimensionId());
+        }
+
+        // All dimensions must be mapped to an indicator dimension; skip otherwise
+        Map<String, String> groupDimMapping = new LinkedHashMap<String, String>();
+        for (String sourceDimId : groupSourceDimIds) {
+            String indicatorDimId = sourceDimToIndicatorDim.get(sourceDimId);
+            if (indicatorDimId == null) {
+                return new ArrayList<AttributeInstanceDto>();
+            }
+            groupDimMapping.put(sourceDimId, indicatorDimId);
+        }
+
+        // Order the group dimensions by global data dimension order (consistent with observation indexing)
+        List<String> orderedGroupDimIds = new ArrayList<String>();
+        for (String globalDimId : getDimensionsOrderedForData()) {
+            if (groupDimMapping.containsKey(globalDimId)) {
+                orderedGroupDimIds.add(globalDimId);
+            }
+        }
+
+        // Get the ordered code lists for each group dimension
+        List<List<String>> dimCodesList = new ArrayList<List<String>>();
+        for (String sourceDimId : orderedGroupDimIds) {
+            List<String> codes = getDimensionValuesOrderedForData(sourceDimId);
+            if (codes == null || codes.isEmpty()) {
+                return new ArrayList<AttributeInstanceDto>();
+            }
+            dimCodesList.add(codes);
+        }
+
+        // Compute total size and strides for cartesian-product flat indexing
+        int totalSize = 1;
+        for (List<String> codes : dimCodesList) {
+            totalSize *= codes.size();
+        }
+        int[] strides = new int[dimCodesList.size()];
+        strides[dimCodesList.size() - 1] = 1;
+        for (int k = dimCodesList.size() - 2; k >= 0; k--) {
+            strides[k] = strides[k + 1] * dimCodesList.get(k + 1).size();
+        }
+
+        List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
+
+        if (dataAttr != null && !StringUtils.isBlank(dataAttr.getValue())) {
+            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttr.getValue(), DATA_SEPARATOR);
+            for (int i = 0; i < values.length && i < totalSize; i++) {
+                if (!StringUtils.isBlank(values[i])) {
+                    InternationalStringDto value = new InternationalStringDto();
+                    value.addText(new LocalisedStringDto(IndicatorsConstants.DATASET_REPOSITORY_LOCALE, values[i]));
+                    AttributeInstanceDto instance = new AttributeInstanceDto();
+                    instance.setAttributeId(attributeId);
+                    instance.setValue(value);
+                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimIds, groupDimMapping, dimCodesList, strides));
+                    result.add(instance);
+                }
+            }
+        } else if (internAttr != null) {
+            List<InternationalString> internValues = internAttr.getValues();
+            for (int i = 0; i < internValues.size() && i < totalSize; i++) {
+                InternationalString apiInternationalString = internValues.get(i);
+                if (apiInternationalString != null) {
+                    InternationalStringDto value = toInternationalStringDto(apiInternationalString);
+                    AttributeInstanceDto instance = new AttributeInstanceDto();
+                    instance.setAttributeId(attributeId);
+                    instance.setValue(value);
+                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimIds, groupDimMapping, dimCodesList, strides));
+                    result.add(instance);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Builds the {@code codesByDimension} map for a single GROUP attribute value at flat index {@code flatIndex}.
+     *
+     * <p>Uses the stride array to decompose the flat index into per-dimension indices following the
+     * cartesian product ordering where the last dimension varies fastest.</p>
+     *
+     * @param flatIndex          position in the flat values array
+     * @param orderedGroupDimIds source dimension IDs ordered by global data dimension order
+     * @param groupDimMapping    mapping from source dimension ID to indicator dimension type name
+     * @param dimCodesList       ordered code lists, one per group dimension (same order as orderedGroupDimIds)
+     * @param strides            pre-computed strides for cartesian-product index decomposition
+     * @return map from indicator dimension type name to singleton list containing the resolved code
+     */
+    private Map<String, List<String>> buildGroupCodesByDimension(int flatIndex, List<String> orderedGroupDimIds,
+            Map<String, String> groupDimMapping, List<List<String>> dimCodesList, int[] strides) {
+        Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
+        for (int k = 0; k < orderedGroupDimIds.size(); k++) {
+            String sourceDimId = orderedGroupDimIds.get(k);
+            String indicatorDimId = groupDimMapping.get(sourceDimId);
+            int dimIndex = (flatIndex / strides[k]) % dimCodesList.get(k).size();
+            String code = dimCodesList.get(k).get(dimIndex);
+            codesByDimension.put(indicatorDimId, Arrays.asList(code));
+        }
+        return codesByDimension;
     }
 
     /**
