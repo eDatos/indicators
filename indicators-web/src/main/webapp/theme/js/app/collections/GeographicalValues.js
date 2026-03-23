@@ -43,6 +43,6 @@
 
     });
 
-    _.extend(App.collections.GeographicalValues.prototype, App.mixins.JsonpSync);
+    _.extend(App.collections.GeographicalValues.prototype, App.mixins.JsonSync);
 
 }(window._));

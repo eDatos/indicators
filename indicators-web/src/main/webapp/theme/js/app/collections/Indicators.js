@@ -36,6 +36,6 @@
 
     });
 
-    _.extend(App.collections.Indicators.prototype, App.mixins.JsonpSync);
+    _.extend(App.collections.Indicators.prototype, App.mixins.JsonSync);
 
 }(window._));

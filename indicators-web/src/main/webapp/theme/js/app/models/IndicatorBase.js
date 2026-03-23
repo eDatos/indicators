@@ -56,6 +56,6 @@
 
     });
 
-    _.extend(App.models.IndicatorBase.prototype, App.mixins.JsonpSync);
+    _.extend(App.models.IndicatorBase.prototype, App.mixins.JsonSync);
 
 }(window._));

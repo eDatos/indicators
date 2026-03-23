@@ -15,6 +15,6 @@
 
     });
 
-    _.extend(App.models.Subject.prototype, App.mixins.JsonpSync);
+    _.extend(App.models.Subject.prototype, App.mixins.JsonSync);
 
 }(window._));

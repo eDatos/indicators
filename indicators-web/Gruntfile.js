@@ -91,7 +91,7 @@ module.exports = function (grunt) {
         jsPath + '/app/helpers/HandlebarsHelpers.js',
 
         // Mixin
-        jsPath + '/app/mixins/JsonpSync.js',
+        jsPath + '/app/mixins/JsonSync.js',
 
 
         // Model

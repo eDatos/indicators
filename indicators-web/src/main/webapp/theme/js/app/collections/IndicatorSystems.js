@@ -27,7 +27,7 @@
 
     });
 
-    _.extend(App.collections.IndicatorSystems.prototype, App.mixins.JsonpSync);
+    _.extend(App.collections.IndicatorSystems.prototype, App.mixins.JsonSync);
 
 }(window._));
 
