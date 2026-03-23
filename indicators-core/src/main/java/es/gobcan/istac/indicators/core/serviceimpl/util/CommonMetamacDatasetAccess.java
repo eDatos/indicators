@@ -345,7 +345,7 @@ public abstract class CommonMetamacDatasetAccess {
         } else if (internAttr != null && !internAttr.getValues().isEmpty()) {
             InternationalString apiInternationalString = internAttr.getValues().get(0);
             if (apiInternationalString != null) {
-                InternationalStringDto value = toInternationalStringDto(apiInternationalString);
+                InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                 AttributeInstanceDto instance = new AttributeInstanceDto();
                 instance.setAttributeId(attributeId);
                 instance.setValue(value);
@@ -381,7 +381,7 @@ public abstract class CommonMetamacDatasetAccess {
             for (int i = 0; i < internValues.size() && i < dimCodes.size(); i++) {
                 InternationalString apiInternationalString = internValues.get(i);
                 if (apiInternationalString != null) {
-                    InternationalStringDto value = toInternationalStringDto(apiInternationalString);
+                    InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                     AttributeInstanceDto instance = new AttributeInstanceDto();
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
@@ -396,15 +396,6 @@ public abstract class CommonMetamacDatasetAccess {
         return result;
     }
 
-    private InternationalStringDto toInternationalStringDto(InternationalString apiInternationalString) {
-        InternationalStringDto dto = new InternationalStringDto();
-        for (LocalisedString localisedString : apiInternationalString.getTexts()) {
-            if (localisedString.getLang() != null && localisedString.getValue() != null) {
-                dto.addText(new LocalisedStringDto(localisedString.getLang(), localisedString.getValue()));
-            }
-        }
-        return dto;
-    }
 
     /**
      * Builds attribute instances for a GROUP-level attribute (multiple dimensions).
@@ -490,7 +481,7 @@ public abstract class CommonMetamacDatasetAccess {
             for (int i = 0; i < internValues.size() && i < totalSize; i++) {
                 InternationalString apiInternationalString = internValues.get(i);
                 if (apiInternationalString != null) {
-                    InternationalStringDto value = toInternationalStringDto(apiInternationalString);
+                    InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                     AttributeInstanceDto instance = new AttributeInstanceDto();
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
