@@ -70,6 +70,7 @@ import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataGpe;
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DataSourceAttributeMetadata;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -180,6 +181,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    private static final List<String>        ALL_LANGUAGES = Arrays.asList("es", "ca", "en");
 
     private final ObjectMapper               mapper = new ObjectMapper();
 
@@ -442,6 +445,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
             }
 
+            saveDataSourceAttributeMetadata(dataCache, dataOps);
+
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(ctx, indicatorVersion, datasetRepoDto);
 
@@ -474,10 +479,137 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (!dataCache.isEmpty() && !dataOps.isEmpty()) {
             Data data = dataCache.get(dataOps.get(0).getDataGpeUuid());
             if (data != null && data.getDatasetAndDimensionAttributes() != null) {
-                return data.getDatasetAndDimensionAttributes();
+                return translateMeasureCodes(data.getDatasetAndDimensionAttributes(), dataOps);
             }
         }
         return new ArrayList<AttributeInstanceDto>();
+    }
+
+    /**
+     * Translates source dataset measure codes in {@link AttributeInstanceDto#getCodesByDimension()}
+     * to indicator measure codes (ABSOLUTE, ANNUAL_PUNTUAL_RATE, etc.).
+     *
+     * <p>DIMENSION/GROUP attribute instances are stored during populate with the source dataset's
+     * original measure codes (e.g. "DIPUTADOS_DIPUTADAS_AUTONOMICOS"). The indicator's own MEASURE
+     * dimension uses internal codes (ABSOLUTE, ANNUAL_PUNTUAL_RATE, …). This method expands each
+     * instance whose MEASURE code is a source code into one instance per indicator measure code
+     * that maps to it via a LOAD-type DataOperation.</p>
+     *
+     * <p>DATASET-level instances (empty codesByDimension) and instances for other dimensions
+     * (GEOGRAPHICAL, TIME) are returned unchanged.</p>
+     */
+    private List<AttributeInstanceDto> translateMeasureCodes(List<AttributeInstanceDto> attrs, List<DataOperation> dataOps) {
+        Map<String, List<String>> sourceMeasureToIndicatorMeasures = buildSourceMeasureToIndicatorMeasureMap(dataOps);
+        if (sourceMeasureToIndicatorMeasures.isEmpty()) {
+            return attrs;
+        }
+
+        String measureDimKey = IndicatorDataDimensionTypeEnum.MEASURE.name();
+        List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
+
+        for (AttributeInstanceDto attr : attrs) {
+            Map<String, List<String>> codesByDim = attr.getCodesByDimension();
+            if (codesByDim == null || !codesByDim.containsKey(measureDimKey)) {
+                result.add(attr);
+                continue;
+            }
+
+            List<String> sourceCodes = codesByDim.get(measureDimKey);
+            if (sourceCodes == null || sourceCodes.isEmpty()) {
+                result.add(attr);
+                continue;
+            }
+
+            String sourceMeasureCode = sourceCodes.get(0);
+            List<String> indicatorMeasureCodes = sourceMeasureToIndicatorMeasures.get(sourceMeasureCode);
+            if (indicatorMeasureCodes == null || indicatorMeasureCodes.isEmpty()) {
+                // Source code not reachable from any indicator measure — skip
+                continue;
+            }
+
+            // Expand one source-coded instance into N indicator-coded instances
+            for (String indicatorMeasureCode : indicatorMeasureCodes) {
+                Map<String, List<String>> newCodes = new HashMap<String, List<String>>(codesByDim);
+                newCodes.put(measureDimKey, Arrays.asList(indicatorMeasureCode));
+                AttributeInstanceDto expanded = new AttributeInstanceDto();
+                expanded.setAttributeId(attr.getAttributeId());
+                expanded.setValue(attr.getValue());
+                expanded.setCodesByDimension(newCodes);
+                result.add(expanded);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Builds a map from source dataset measure code to the list of indicator measure codes
+     * (ABSOLUTE, ANNUAL_PUNTUAL_RATE, …) that load from it.
+     *
+     * <p>Only LOAD-type DataOperations are included. CALCULATE-type operations derive their
+     * value from a formula rather than directly from a source code, so they have no entry.</p>
+     */
+    private Map<String, List<String>> buildSourceMeasureToIndicatorMeasureMap(List<DataOperation> dataOps) {
+        Map<String, List<String>> result = new HashMap<String, List<String>>();
+        for (DataOperation dataOp : dataOps) {
+            if (RateDerivationMethodTypeEnum.LOAD.equals(dataOp.getMethodType())) {
+                String sourceCode = dataOp.getMethod();
+                if (sourceCode != null) {
+                    String indicatorMeasureCode = dataOp.getMeasureDimension().name();
+                    if (!result.containsKey(sourceCode)) {
+                        result.put(sourceCode, new ArrayList<String>());
+                    }
+                    result.get(sourceCode).add(indicatorMeasureCode);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Saves the multilingual attribute IDs for each unique DataSource in the given operations.
+     * Clears the existing {@link DataSourceAttributeMetadata} collection and replaces it with the
+     * IDs found in the corresponding {@link Data} object from the cache.
+     * Hibernate cascades the changes on transaction commit (no explicit repository save needed).
+     */
+    private void saveDataSourceAttributeMetadata(Map<String, Data> dataCache, List<DataOperation> dataOps) {
+        Set<String> processedQueryUuids = new HashSet<String>();
+        for (DataOperation dataOp : dataOps) {
+            String queryUuid = dataOp.getDataGpeUuid();
+            if (processedQueryUuids.contains(queryUuid)) {
+                continue; // Multiple DataOperations share the same DataSource — process only once
+            }
+            processedQueryUuids.add(queryUuid);
+
+            Data data = dataCache.get(queryUuid);
+            Set<String> multilingualIds = (data != null && data.getMultilingualAttributeIds() != null)
+                    ? data.getMultilingualAttributeIds() : new HashSet<String>();
+
+            DataSource dataSource = dataOp.getDataSource();
+            dataSource.getAttributeMetadata().clear();
+            for (String attrId : multilingualIds) {
+                DataSourceAttributeMetadata metadata = new DataSourceAttributeMetadata();
+                metadata.setAttributeId(attrId);
+                metadata.setMultilingual(Boolean.TRUE);
+                dataSource.getAttributeMetadata().add(metadata);
+            }
+        }
+    }
+
+    /**
+     * Loads the multilingual attribute IDs for an indicator version by aggregating the
+     * {@link DataSourceAttributeMetadata} collection from all its data sources.
+     */
+    private Set<String> loadMultilingualAttributeIds(IndicatorVersion indicatorVersion) {
+        Set<String> result = new HashSet<String>();
+        for (DataSource dataSource : indicatorVersion.getDataSources()) {
+            for (DataSourceAttributeMetadata metadata : dataSource.getAttributeMetadata()) {
+                if (Boolean.TRUE.equals(metadata.getMultilingual())) {
+                    result.add(metadata.getAttributeId());
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -654,7 +786,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_ERROR, indicatorVersion.getIndicator().getUuid());
         }
 
-        return buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations);
+        String datasetId = indicatorVersion.getDataRepositoryId();
+        List<AttributeInstanceDto> datasetAttrs;
+        List<AttributeInstanceDto> dimensionAttrs;
+        try {
+            datasetAttrs = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(datasetId, null);
+            // Pass null to retrieve ALL dimension/group attrs without code filtering — GROUP attrs
+            // with fewer attached dimensions than the 3 indicator dimensions would otherwise be excluded.
+            dimensionAttrs = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(datasetId, null, null);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_ERROR, indicatorVersion.getIndicator().getUuid());
+        }
+
+        List<AttributeInstanceDto> allAttrs = new ArrayList<AttributeInstanceDto>(datasetAttrs);
+        allAttrs.addAll(dimensionAttrs);
+
+        IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
+        vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
+        return vo;
     }
 
     @Override
@@ -829,16 +978,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
         }
 
-        return buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations);
+        String datasetId = indicatorVersion.getDataRepositoryId();
+        List<AttributeInstanceDto> datasetAttrs;
+        List<AttributeInstanceDto> dimensionAttrs;
+        try {
+            datasetAttrs = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(datasetId, null);
+            // Pass null to retrieve ALL dimension/group attrs without code filtering.
+            dimensionAttrs = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(datasetId, null, null);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorVersion.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE),
+                    indicatorVersion.getUuid(), indicatorInstance.getTitle().getLocalisedLabel(DATASET_REPOSITORY_LOCALE), indicatorInstance.getUuid());
+        }
+
+        List<AttributeInstanceDto> allAttrs = new ArrayList<AttributeInstanceDto>(datasetAttrs);
+        allAttrs.addAll(dimensionAttrs);
+
+        IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
+        vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
+        return vo;
     }
 
     protected IndicatorObservationsExtendedVO buildIndicatorsObservationsExtended(List<String> geoCodes, List<String> timeCodes, List<String> measureCodes,
-            Map<String, ObservationExtendedDto> observations) {
+            Map<String, ObservationExtendedDto> observations, List<AttributeInstanceDto> datasetAndDimensionAttributes) {
         IndicatorObservationsExtendedVO indicatorObservations = new IndicatorObservationsExtendedVO();
         indicatorObservations.setGeographicalCodes(geoCodes);
         indicatorObservations.setTimeCodes(timeCodes);
         indicatorObservations.setMeasureCodes(measureCodes);
         indicatorObservations.setObservations(observations);
+        indicatorObservations.setDatasetAndDimensionAttributes(datasetAndDimensionAttributes);
         return indicatorObservations;
     }
 
@@ -1640,15 +1807,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 // Recalculate
                 if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                    // Metamac QUERY
-                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
+                    // Metamac QUERY — fetch all languages so i18n attrs are fully populated
+                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(dataSource.getQueryUuid(), ALL_LANGUAGES,
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                     QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
                     data = queryMetamacUtils.queryMetamacToData();
 
                 } else if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
-                    // Metamac DATASET
-                    Dataset dataset = statisticalResoucesRestExternalService.retrieveDatasetByUrnInDefaultLang(dataSource.getQueryUuid(),
+                    // Metamac DATASET — fetch all languages so i18n attrs are fully populated
+                    Dataset dataset = statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(dataSource.getQueryUuid(), ALL_LANGUAGES,
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
                     DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
                     data = datasetMetamacUtils.datasetMetamacToData();

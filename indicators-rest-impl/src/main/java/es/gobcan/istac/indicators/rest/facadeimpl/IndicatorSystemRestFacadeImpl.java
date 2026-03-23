@@ -253,6 +253,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
             DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, instanceObservations.getGeographicalCodes(), instanceObservations.getTimeCodes(),
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
+            dataTypeRequest.setDatasetAndDimensionAttributes(instanceObservations.getDatasetAndDimensionAttributes());
+            dataTypeRequest.setMultilingualAttributeIds(instanceObservations.getMultilingualAttributeIds());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
 
             if (geographicalValuesCodes.isEmpty()) {

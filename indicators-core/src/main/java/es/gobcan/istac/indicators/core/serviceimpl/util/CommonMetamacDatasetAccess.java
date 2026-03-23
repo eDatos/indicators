@@ -3,10 +3,12 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -41,7 +43,8 @@ public abstract class CommonMetamacDatasetAccess {
     protected Map<String, List<String>> dimensionValuesOrderedForDataByDimensionId;
     protected List<String>              attributesMetadataMap;
 
-    public static final String          OBS_CONF_ATTRIBUTE = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String          OBS_CONF_ATTRIBUTE         = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    private Set<String>                 multilingualAttributeIds   = new HashSet<String>();
 
     protected abstract DimensionRepresentations getDimensions();
 
@@ -86,6 +89,10 @@ public abstract class CommonMetamacDatasetAccess {
 
     public List<String> getAttributesMetadataMap() {
         return attributesMetadataMap;
+    }
+
+    public Set<String> getMultilingualAttributeIds() {
+        return multilingualAttributeIds;
     }
 
     /**
@@ -269,6 +276,10 @@ public abstract class CommonMetamacDatasetAccess {
             // Try plain string attribute first, then international
             DataAttribute matchedDataAttr = findDataAttribute(dataAttributes, attributeId);
             DataInternationalAttribute matchedInternAttr = findDataInternationalAttribute(internationalAttributes, attributeId);
+
+            if (matchedInternAttr != null) {
+                multilingualAttributeIds.add(attributeId);
+            }
 
             if (isDimension && metadataAttribute.getDimensions().getDimensions().size() > 1) {
                 List<AttributeInstanceDto> groupInstances = buildGroupLevelInstances(

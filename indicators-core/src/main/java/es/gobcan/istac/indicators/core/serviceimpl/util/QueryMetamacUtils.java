@@ -114,6 +114,7 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         // values in the AttributeInstanceDto list.
         QueryMetamacDatasetAccess accessForAttributes = new QueryMetamacDatasetAccess(query, variableElementsByCode, target.getSpatialVariables());
         target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimToIndicatorDimMap()));
+        target.setMultilingualAttributeIds(accessForAttributes.getMultilingualAttributeIds());
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(query.getMetadata().getDimensions()));

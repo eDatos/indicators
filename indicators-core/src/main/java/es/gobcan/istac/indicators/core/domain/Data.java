@@ -2,9 +2,11 @@ package es.gobcan.istac.indicators.core.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -26,9 +28,10 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String>             dataMapAttributes              = new ArrayList<String>();
-    private List<String>             variablesInOrder               = new ArrayList<String>();
-    private List<AttributeInstanceDto> datasetAndDimensionAttributes = new ArrayList<AttributeInstanceDto>();
+    private List<String>               dataMapAttributes              = new ArrayList<String>();
+    private List<String>               variablesInOrder               = new ArrayList<String>();
+    private List<AttributeInstanceDto> datasetAndDimensionAttributes  = new ArrayList<AttributeInstanceDto>();
+    private Set<String>                multilingualAttributeIds       = new HashSet<String>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -118,6 +121,14 @@ public class Data extends DataStructure {
 
     public void setDatasetAndDimensionAttributes(List<AttributeInstanceDto> datasetAndDimensionAttributes) {
         this.datasetAndDimensionAttributes = datasetAndDimensionAttributes;
+    }
+
+    public Set<String> getMultilingualAttributeIds() {
+        return multilingualAttributeIds;
+    }
+
+    public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
+        this.multilingualAttributeIds = multilingualAttributeIds;
     }
 
     public List<String> getDataMapAttributes() {

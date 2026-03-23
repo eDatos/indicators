@@ -1,8 +1,12 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -18,6 +22,8 @@ public class DataTypeRequest {
     private List<String>                           measureCodes                          = null;
     private Map<String, ? extends ObservationDto>  observationMap                        = null;
     GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = null;
+    private List<AttributeInstanceDto>             datasetAndDimensionAttributes         = new ArrayList<AttributeInstanceDto>();
+    private Set<String>                            multilingualAttributeIds              = new HashSet<String>();
 
     public DataTypeRequest(IndicatorInstance indicatorInstance, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues,
             Map<String, ? extends ObservationDto> observationMap) {
@@ -96,6 +102,22 @@ public class DataTypeRequest {
             geoValuesOldVersionCompatibilityUtils.sortOriginalGeographicalValues(this.geographicalCodes);
         }
         this.geoValuesOldVersionCompatibilityUtils = geoValuesOldVersionCompatibilityUtils;
+    }
+
+    public List<AttributeInstanceDto> getDatasetAndDimensionAttributes() {
+        return datasetAndDimensionAttributes;
+    }
+
+    public void setDatasetAndDimensionAttributes(List<AttributeInstanceDto> datasetAndDimensionAttributes) {
+        this.datasetAndDimensionAttributes = datasetAndDimensionAttributes;
+    }
+
+    public Set<String> getMultilingualAttributeIds() {
+        return multilingualAttributeIds;
+    }
+
+    public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
+        this.multilingualAttributeIds = multilingualAttributeIds;
     }
 
 }

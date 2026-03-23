@@ -32,7 +32,8 @@
       "properties": {
         "attachmentLevel": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.attachmentLevel' /]",
-          "type": "string"
+          "type": "string",
+          "enum": ["OBSERVATION", "DATASET", "DIMENSION"]
         },
         "code": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.code' /]",
@@ -50,6 +51,20 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attribute' /]",
           "items": {
             "$ref": "#/definitions/DataAttributeMap"
+          },
+          "type": "array"
+        },
+        "datasetDimensionAttribute": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.datasetdimensionattribute' /]",
+          "items": {
+            "$ref": "#/definitions/DatasetDimensionAttribute"
+          },
+          "type": "array"
+        },
+        "internationalAttribute": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.internationalattribute' /]",
+          "items": {
+            "$ref": "#/definitions/InternationalDataAttribute"
           },
           "type": "array"
         },
@@ -140,6 +155,18 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionrepresentationindexmap.properties.category' /]",
           "format": "int32",
           "type": "integer"
+        }
+      }
+    },
+    "DatasetDimensionAttribute": {
+      "properties": {
+        "id": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datasetdimensionattribute.properties.id' /]",
+          "type": "string"
+        },
+        "value": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datasetdimensionattribute.properties.value' /]",
+          "type": "string"
         }
       }
     },
@@ -699,6 +726,10 @@
           "format": "int32",
           "type": "integer"
         },
+        "attribute": {
+          "$ref": "#/definitions/MetadataAttributeMap",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.attribute' /]"
+        },
         "dimension": {
           "$ref": "#/definitions/MetadataDimensionMap",
           "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.dimension' /]"
@@ -827,6 +858,24 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.total' /]",
           "format": "int32",
           "type": "integer"
+        }
+      }
+    },
+    "InternationalDataAttribute": {
+      "properties": {
+        "id": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.internationaldataattribute.properties.id' /]",
+          "type": "string"
+        },
+        "values": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.internationaldataattribute.properties.values' /]",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "type": "array"
         }
       }
     },

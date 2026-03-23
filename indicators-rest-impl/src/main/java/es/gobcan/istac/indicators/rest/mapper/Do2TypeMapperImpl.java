@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,8 +30,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
@@ -71,12 +75,14 @@ import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.DataAttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.InternationalDataAttributeType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
@@ -480,7 +486,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                                 // PRIMARY MEASURE
                                 observations.add(observationDto.getPrimaryMeasure());
 
-                                // ATTRIBUTES
+                                // OBS-level attributes only (DATASET/DIMENSION/GROUP handled separately below)
                                 if (includeObservationMetadata) {
                                     ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
                                     attributes.add(setObservationAttributes(observationExtendedDto));
@@ -507,6 +513,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataType.setObservation(observations);
             if (!attributes.isEmpty()) {
                 dataType.setAttribute(attributes);
+            }
+
+            if (includeObservationMetadata) {
+                List<AttributeInstanceDto> allDsAttrs = dataTypeRequest.getDatasetAndDimensionAttributes();
+                Set<String> multilingualIds = dataTypeRequest.getMultilingualAttributeIds();
+                if (allDsAttrs != null && !allDsAttrs.isEmpty()) {
+                    List<DataAttributeType> nonI18nList = new ArrayList<DataAttributeType>();
+                    List<InternationalDataAttributeType> i18nList = new ArrayList<InternationalDataAttributeType>();
+                    buildDatasetAndInternationalAttributeLists(allDsAttrs, multilingualIds, dataTypeRequest, nonI18nList, i18nList);
+                    if (!nonI18nList.isEmpty()) {
+                        dataType.setDatasetDimensionAttribute(nonI18nList);
+                    }
+                    if (!i18nList.isEmpty()) {
+                        dataType.setInternationalAttribute(i18nList);
+                    }
+                }
             }
 
             return dataType;
@@ -589,6 +611,219 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         attributeType.setCode(attributeDto.getAttributeId());
         attributeType.setValue(MapperUtil.getLocalisedLabel(attributeDto.getValue(), metadataProperties.getDefaultInternationalizationLanguage()));
         return attributeType;
+    }
+
+    private boolean isI18nAttr(String attrId, Set<String> multilingualIds) {
+        return multilingualIds != null && multilingualIds.contains(attrId);
+    }
+
+    private boolean isDatasetLevelAttr(List<AttributeInstanceDto> instances) {
+        for (AttributeInstanceDto instance : instances) {
+            if (instance.getCodesByDimension() != null && !instance.getCodesByDimension().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<String> getAttachedDimensions(List<AttributeInstanceDto> instances) {
+        boolean hasGeo = false;
+        boolean hasTime = false;
+        boolean hasMeasure = false;
+        for (AttributeInstanceDto instance : instances) {
+            Map<String, List<String>> codes = instance.getCodesByDimension();
+            if (codes != null) {
+                if (codes.containsKey(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name())) {
+                    hasGeo = true;
+                }
+                if (codes.containsKey(IndicatorDataDimensionTypeEnum.TIME.name())) {
+                    hasTime = true;
+                }
+                if (codes.containsKey(IndicatorDataDimensionTypeEnum.MEASURE.name())) {
+                    hasMeasure = true;
+                }
+            }
+        }
+        List<String> dims = new ArrayList<String>();
+        if (hasGeo) {
+            dims.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        }
+        if (hasTime) {
+            dims.add(IndicatorDataDimensionTypeEnum.TIME.name());
+        }
+        if (hasMeasure) {
+            dims.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
+        }
+        return dims;
+    }
+
+    private List<List<String>> getDimCodeLists(List<String> attachedDims, DataTypeRequest dataTypeRequest) {
+        List<List<String>> result = new ArrayList<List<String>>();
+        for (String dim : attachedDims) {
+            if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(dim)) {
+                result.add(dataTypeRequest.getGeographicalCodes());
+            } else if (IndicatorDataDimensionTypeEnum.TIME.name().equals(dim)) {
+                result.add(dataTypeRequest.getTimeCodes());
+            } else {
+                result.add(dataTypeRequest.getMeasureCodes());
+            }
+        }
+        return result;
+    }
+
+    private String buildDimLookupKey(AttributeInstanceDto instance, List<String> attachedDims) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < attachedDims.size(); i++) {
+            if (i > 0) {
+                sb.append("#");
+            }
+            String dim = attachedDims.get(i);
+            Map<String, List<String>> codes = instance.getCodesByDimension();
+            List<String> dimCodes = codes != null ? codes.get(dim) : null;
+            sb.append(dimCodes != null && !dimCodes.isEmpty() ? dimCodes.get(0) : "");
+        }
+        return sb.toString();
+    }
+
+    private String buildPositionKey(int pos, int[] strides, int[] sizes, List<List<String>> dimCodeLists) {
+        StringBuilder sb = new StringBuilder();
+        for (int d = 0; d < dimCodeLists.size(); d++) {
+            if (d > 0) {
+                sb.append("#");
+            }
+            int dimIdx = (pos / strides[d]) % sizes[d];
+            sb.append(dimCodeLists.get(d).get(dimIdx));
+        }
+        return sb.toString();
+    }
+
+    private String getSingleLabel(InternationalStringDto isDto) {
+        if (isDto == null || isDto.getTexts() == null || isDto.getTexts().isEmpty()) {
+            return "";
+        }
+        for (LocalisedStringDto lsd : isDto.getTexts()) {
+            if (IndicatorsConstants.DATASET_REPOSITORY_LOCALE.equals(lsd.getLocale())) {
+                return lsd.getLabel() != null ? lsd.getLabel() : "";
+            }
+        }
+        LocalisedStringDto first = isDto.getTexts().iterator().next();
+        return first.getLabel() != null ? first.getLabel() : "";
+    }
+
+    private Map<String, String> toLocaleMap(InternationalStringDto isDto) {
+        if (isDto == null || isDto.getTexts() == null || isDto.getTexts().isEmpty()) {
+            return null;
+        }
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        for (LocalisedStringDto lsd : isDto.getTexts()) {
+            if (lsd.getLocale() != null && lsd.getLabel() != null) {
+                result.put(lsd.getLocale(), lsd.getLabel());
+            }
+        }
+        return result.isEmpty() ? null : result;
+    }
+
+    private void buildDatasetAndInternationalAttributeLists(List<AttributeInstanceDto> allAttrs, Set<String> multilingualIds, DataTypeRequest dataTypeRequest,
+            List<DataAttributeType> outNonI18n, List<InternationalDataAttributeType> outI18n) {
+
+        // Group instances by attrId preserving insertion order
+        Map<String, List<AttributeInstanceDto>> byAttrId = new LinkedHashMap<String, List<AttributeInstanceDto>>();
+        for (AttributeInstanceDto attr : allAttrs) {
+            String attrId = attr.getAttributeId();
+            if (!byAttrId.containsKey(attrId)) {
+                byAttrId.put(attrId, new ArrayList<AttributeInstanceDto>());
+            }
+            byAttrId.get(attrId).add(attr);
+        }
+
+        for (Map.Entry<String, List<AttributeInstanceDto>> entry : byAttrId.entrySet()) {
+            String attrId = entry.getKey();
+            List<AttributeInstanceDto> instances = entry.getValue();
+            boolean i18n = isI18nAttr(attrId, multilingualIds);
+            boolean dataset = isDatasetLevelAttr(instances);
+
+            if (dataset) {
+                AttributeInstanceDto inst = instances.get(0);
+                if (i18n) {
+                    Map<String, String> localeMap = toLocaleMap(inst.getValue());
+                    if (localeMap != null) {
+                        List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+                        values.add(localeMap);
+                        InternationalDataAttributeType result = new InternationalDataAttributeType();
+                        result.setId(attrId);
+                        result.setValues(values);
+                        outI18n.add(result);
+                    }
+                } else {
+                    DataAttributeType result = new DataAttributeType();
+                    result.setId(attrId);
+                    result.setValue(getSingleLabel(inst.getValue()));
+                    outNonI18n.add(result);
+                }
+            } else {
+                // DIMENSION or GROUP — build dimensional matrix
+                List<String> attachedDims = getAttachedDimensions(instances);
+                List<List<String>> dimCodeLists = getDimCodeLists(attachedDims, dataTypeRequest);
+
+                if (attachedDims.isEmpty() || dimCodeLists.isEmpty()) {
+                    continue;
+                }
+
+                // Build lookup: position key → instance
+                Map<String, AttributeInstanceDto> lookup = new LinkedHashMap<String, AttributeInstanceDto>();
+                for (AttributeInstanceDto inst : instances) {
+                    String key = buildDimLookupKey(inst, attachedDims);
+                    lookup.put(key, inst);
+                }
+
+                // Compute sizes and strides for cartesian-product flat indexing (last dim varies fastest)
+                int totalSize = 1;
+                int[] sizes = new int[dimCodeLists.size()];
+                for (int i = 0; i < dimCodeLists.size(); i++) {
+                    sizes[i] = dimCodeLists.get(i).size();
+                    totalSize *= sizes[i];
+                }
+
+                if (totalSize == 0) {
+                    continue;
+                }
+
+                int[] strides = new int[dimCodeLists.size()];
+                strides[dimCodeLists.size() - 1] = 1;
+                for (int i = dimCodeLists.size() - 2; i >= 0; i--) {
+                    strides[i] = strides[i + 1] * sizes[i + 1];
+                }
+
+                if (i18n) {
+                    List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+                    for (int pos = 0; pos < totalSize; pos++) {
+                        String key = buildPositionKey(pos, strides, sizes, dimCodeLists);
+                        AttributeInstanceDto inst = lookup.get(key);
+                        values.add(inst != null ? toLocaleMap(inst.getValue()) : null);
+                    }
+                    InternationalDataAttributeType result = new InternationalDataAttributeType();
+                    result.setId(attrId);
+                    result.setValues(values);
+                    outI18n.add(result);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    for (int pos = 0; pos < totalSize; pos++) {
+                        if (pos > 0) {
+                            sb.append(" | ");
+                        }
+                        String key = buildPositionKey(pos, strides, sizes, dimCodeLists);
+                        AttributeInstanceDto inst = lookup.get(key);
+                        if (inst != null) {
+                            sb.append(getSingleLabel(inst.getValue()));
+                        }
+                    }
+                    DataAttributeType result = new DataAttributeType();
+                    result.setId(attrId);
+                    result.setValue(sb.toString());
+                    outNonI18n.add(result);
+                }
+            }
+        }
     }
 
     private QuantityType quantityDoToBaseType(final Quantity source, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {
@@ -812,10 +1047,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
                 if (metadataAttributes != null && metadataAttributesAux != null) {
                     for (Attribute metadataAttribute : metadataAttributesAux.getAttributes()) {
-                        if (AttributeAttachmentLevelType.PRIMARY_MEASURE.equals(metadataAttribute.getAttachmentLevel())) {
-                            MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
-                            metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
-                        }
+                        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(metadataAttribute);
+                        metadataAttributes.put(metadataAttribute.getId(), metadataAttributeUnit);
                     }
                 }
 
@@ -845,8 +1078,22 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 ? MapperUtil.getLocalisedLabel(translation.getTitle(), metadataProperties.getDefaultInternationalizationLanguage())
                 : MapperUtil.getLocalisedLabel(attribute.getName(), metadataProperties.getDefaultInternationalizationLanguage());
         metadataAttributeUnit.setTitle(localisedLabel);
-        metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
+        metadataAttributeUnit.setAttachmentLevel(toRestAttachmentLevel(attribute.getAttachmentLevel()));
         return metadataAttributeUnit;
+    }
+
+    /**
+     * Maps source StatisticalResources attachment level to the REST API enum.
+     * PRIMARY_MEASURE → OBSERVATION; DATASET → DATASET; DIMENSION → DIMENSION.
+     */
+    private AttributeAttachmentLevelEnumType toRestAttachmentLevel(AttributeAttachmentLevelType level) {
+        if (AttributeAttachmentLevelType.DATASET.equals(level)) {
+            return AttributeAttachmentLevelEnumType.DATASET;
+        }
+        if (AttributeAttachmentLevelType.DIMENSION.equals(level)) {
+            return AttributeAttachmentLevelEnumType.DIMENSION;
+        }
+        return AttributeAttachmentLevelEnumType.OBSERVATION;
     }
 
     private MetadataAttributeType createMetadataAttributeType(String code) {

@@ -1002,6 +1002,8 @@ Application Indicators {
 			String geographicalVariable nullable;
 			"Other variables fixing one category"
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
+			"Attribute metadata (multilingual flags per attribute ID)"
+			- Bag<@DataSourceAttributeMetadata> attributeMetadata cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			"Absolute method"
 			String absoluteMethod nullable;
 			"Source survey code"
@@ -1058,11 +1060,22 @@ Application Indicators {
         Entity DataSourceVariable {
         	databaseTable = "TB_DATA_SOURCES_VARIABLES"
         	hint="idSequence=DATA_SOURCES_VARIABLES"
-        	
+
 			"Variable"
 			String variable not nullable;
 			"Category"
 			String category not nullable;
+        }
+
+		"Attribute metadata for data source (multilingual flag per attribute ID)"
+        Entity DataSourceAttributeMetadata {
+        	databaseTable = "TB_DATASOURCE_ATTRIBUTE_METADATA"
+        	hint="idSequence=DATASOURCE_ATTRIBUTE_METADATA"
+
+			"Attribute ID in the source dataset"
+			String attributeId not nullable databaseColumn="ATTRIBUTE_ID";
+			"Whether the attribute is multilingual (i18n)"
+			Boolean multilingual not nullable databaseColumn="IS_MULTILINGUAL";
         }
          
         "Table values for geographical values"

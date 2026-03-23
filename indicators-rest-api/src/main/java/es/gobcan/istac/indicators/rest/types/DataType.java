@@ -6,18 +6,20 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"kind", "selfLink", "parentLink", "format", "dimension", "observation", "attribute"})
+@JsonPropertyOrder({"kind", "selfLink", "parentLink", "format", "dimension", "observation", "attribute", "datasetDimensionAttribute", "internationalAttribute"})
 public class DataType implements Serializable {
 
-    private static final long                serialVersionUID = 8269216607592124587L;
+    private static final long                    serialVersionUID           = 8269216607592124587L;
 
-    private String                           kind             = null;
-    private String                           selfLink         = null;
-    private LinkType                         parentLink       = null;
-    private List<String>                     format           = null;
-    private Map<String, DataDimensionType>   dimension        = null;
-    private List<String>                     observation      = null;
-    private List<Map<String, AttributeType>> attribute        = null;
+    private String                               kind                       = null;
+    private String                               selfLink                   = null;
+    private LinkType                             parentLink                 = null;
+    private List<String>                         format                     = null;
+    private Map<String, DataDimensionType>       dimension                  = null;
+    private List<String>                         observation                = null;
+    private List<Map<String, AttributeType>>     attribute                  = null;
+    private List<DataAttributeType>              datasetDimensionAttribute  = null;
+    private List<InternationalDataAttributeType> internationalAttribute     = null;
 
     public String getKind() {
         return kind;
@@ -73,6 +75,22 @@ public class DataType implements Serializable {
 
     public void setAttribute(List<Map<String, AttributeType>> attribute) {
         this.attribute = attribute;
+    }
+
+    public List<DataAttributeType> getDatasetDimensionAttribute() {
+        return datasetDimensionAttribute;
+    }
+
+    public void setDatasetDimensionAttribute(List<DataAttributeType> datasetDimensionAttribute) {
+        this.datasetDimensionAttribute = datasetDimensionAttribute;
+    }
+
+    public List<InternationalDataAttributeType> getInternationalAttribute() {
+        return internationalAttribute;
+    }
+
+    public void setInternationalAttribute(List<InternationalDataAttributeType> internationalAttribute) {
+        this.internationalAttribute = internationalAttribute;
     }
 
     public void addHeader(String selfLink, LinkType parentLink, String dataKind) {
