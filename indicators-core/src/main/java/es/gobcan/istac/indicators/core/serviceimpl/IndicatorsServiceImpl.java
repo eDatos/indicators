@@ -1539,7 +1539,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             for (DataSource dataSource : indicatorVersion.getDataSources()) {
                 Query query = statisticalResoucesRestExternalService.retrieveQueryByUrnInDefaultLang(dataSource.getQueryUuid(),
                         es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null, query);
+                QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(null, query, null);
                 String codelistUrn = queryMetamacUtils.extractGeographicalCodelistUrn();
                 dataSource.setGeographicalCodelistUrn(codelistUrn);
                 getDataSourceRepository().save(dataSource);

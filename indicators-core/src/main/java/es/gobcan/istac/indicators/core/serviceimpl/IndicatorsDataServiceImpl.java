@@ -182,8 +182,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private static final List<String>        ALL_LANGUAGES = Arrays.asList("es", "ca", "en");
-
     private final ObjectMapper               mapper = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
@@ -1807,17 +1805,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 // Recalculate
                 if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_QUERY_PREFIX)) {
-                    // Metamac QUERY — fetch all languages so i18n attrs are fully populated
-                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(dataSource.getQueryUuid(), ALL_LANGUAGES,
+                    // Fetch all languages: null lang parameter returns all available locales, needed for i18n attributes
+                    String languageDefault = configurationService.retrieveLanguageDefault();
+                    Query query = statisticalResoucesRestExternalService.retrieveQueryByUrn(dataSource.getQueryUuid(), null,
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
+                    QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query, languageDefault);
                     data = queryMetamacUtils.queryMetamacToData();
 
                 } else if (StringUtils.startsWithIgnoreCase(dataSource.getQueryUuid(), UrnUtils.URN_SIEMAC_CLASS_DATASET_PREFIX)) {
-                    // Metamac DATASET — fetch all languages so i18n attrs are fully populated
-                    Dataset dataset = statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(dataSource.getQueryUuid(), ALL_LANGUAGES,
+                    // Fetch all languages: null lang parameter returns all available locales, needed for i18n attributes
+                    String languageDefault = configurationService.retrieveLanguageDefault();
+                    Dataset dataset = statisticalResoucesRestExternalService.retrieveLastVersionDatasetByUrn(dataSource.getQueryUuid(), null,
                             es.gobcan.istac.indicators.core.service.StatisticalResoucesRestExternalService.QueryFetchEnum.ALL);
-                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
+                    DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset, languageDefault);
                     data = datasetMetamacUtils.datasetMetamacToData();
 
                 } else if (JsonStatUtils.checkUuidIsUrl(dataSource.getQueryUuid())) {

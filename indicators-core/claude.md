@@ -191,6 +191,26 @@ public class IndicatorsServiceImpl {
 }
 ```
 
+## Constantes y valores de configuración
+
+Antes de definir una constante en el código, revisar si ya existe como constante de base de datos en los servicios de configuración del proyecto. El orden de búsqueda es:
+
+1. **Librería común** — `org.siemac.metamac.core.common.conf.ConfigurationService`
+   Contiene constantes compartidas por todos los proyectos METAMAC: idioma por defecto, URLs de APIs internas, configuración de internacionalización, etc.
+
+2. **Clase de configuración del proyecto** — `es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService`
+   Contiene constantes específicas de indicadores: codelists geográficos por defecto, URLs propias, etc.
+
+### Regla estricta (código que no sea test)
+
+Si se necesita una constante asociada a un concepto de negocio o de configuración (idiomas, locales, URLs, codelists, roles, etc.) y **no se encuentra en ninguna de las dos clases anteriores**:
+
+- **No la hardcodees directamente.**
+- Añade un comentario `// FIXME: constante hardcodeada — verificar si debe venir de ConfigurationService` justo encima.
+- Avisa explícitamente al usuario antes de continuar.
+
+---
+
 ## Ejemplo de Código
 
 ### ✅ Service de Indicadores

@@ -29,9 +29,10 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
 
     protected Query query;
 
-    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService, Query query) {
+    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService, Query query, String languageDefault) {
         this.srmRestInternalService = srmRestInternalService;
         this.query = query;
+        this.languageDefault = languageDefault;
     }
 
     public es.gobcan.istac.indicators.core.domain.Data queryMetamacToData() throws IOException, MetamacException {
@@ -50,7 +51,7 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.setUuid(query.getUrn());
 
         // Title
-        target.setTitle(extractValueForDefaultLanguage(query.getName()));
+        target.setTitle(extractValueForDefaultLanguage(query.getName(), languageDefault));
 
         // PX Uri
         target.setPxUri(query.getUrn());
@@ -89,11 +90,11 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        target.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName()));
+        target.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName(), languageDefault));
 
         // Publishers
         Resource maintainer = query.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = extractValueForDefaultLanguage(maintainer.getName(), languageDefault);
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             target.setPublishers(Collections.emptyList());
         } else {
