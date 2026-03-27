@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
-import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -107,7 +107,7 @@ public class Do2JsonStatMapperUtil {
         return jsonStatDimensionsMap;
     }
 
-    private JsonStatDimensionType createGeographicalDimension(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) {
+    private JsonStatDimensionType createGeographicalDimension(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) throws MetamacException {
         JsonStatDimensionType geographicalDimension = new JsonStatDimensionType();
         String dimensionLabel = translations.get(Translations.DIMENSIONS_GEOGRAPHIC_NAME);
         geographicalDimension.setLabel(dimensionLabel);
@@ -115,17 +115,12 @@ public class Do2JsonStatMapperUtil {
         return geographicalDimension;
     }
 
-    private JsonStatCategoryType createGeographicalCategory(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) {
+    private JsonStatCategoryType createGeographicalCategory(List<GeographicalValueVO> geographicalValues, List<String> filterGeographicalCodes) throws MetamacException {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
 
-        Map<String, String> geographicalValuesCodes = new HashMap<>();
-        try {
-            geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-        } catch (MetamacException e) {
-            throw new RuntimeException(e);
-        }
+        Map<String, String> geographicalValuesCodes = srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
 
         JsonStatCategoryType category = new JsonStatCategoryType();
         int i = 0;
@@ -339,7 +334,7 @@ public class Do2JsonStatMapperUtil {
     }
 
     public List<String> toJsonStatNotes(InternationalString existingNotes, IndicatorObservationsExtendedVO observations,
-            Map<String, JsonStatDimensionType> dimensions) {
+            Map<String, JsonStatDimensionType> dimensions) throws MetamacException {
         List<String> notes = new ArrayList<String>();
 
         // 1. Existing indicator notes (preserve current behavior)
@@ -366,12 +361,8 @@ public class Do2JsonStatMapperUtil {
         return notes.isEmpty() ? null : notes;
     }
 
-    private Map<String, String> buildGeoElementIdToCodelistCodeMap() {
-        try {
-            return srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
-        } catch (MetamacException e) {
-            throw new RuntimeException(e);
-        }
+    private Map<String, String> buildGeoElementIdToCodelistCodeMap() throws MetamacException {
+        return srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
     }
 
     private String buildAttributeNote(AttributeInstanceDto instance, String defaultLang,
@@ -381,7 +372,7 @@ public class Do2JsonStatMapperUtil {
         if (value == null) {
             return null;
         }
-        String valueText = extractLocalisedText(value, defaultLang);
+        String valueText = MapperUtil.getDefaultLabel(value, defaultLang);
         if (valueText == null || valueText.trim().isEmpty()) {
             return null;
         }
@@ -402,7 +393,7 @@ public class Do2JsonStatMapperUtil {
                 allLabels.add(label);
             }
         }
-        return org.apache.commons.lang.StringUtils.join(allLabels, ", ") + ". " + valueText;
+        return StringUtils.join(allLabels, ", ") + ". " + valueText;
     }
 
     private String resolveDimensionCodeToLabel(String dimKey, String code, Map<String, JsonStatDimensionType> dimensions,
@@ -428,20 +419,4 @@ public class Do2JsonStatMapperUtil {
         return code;
     }
 
-    private String extractLocalisedText(InternationalStringDto value, String defaultLang) {
-        if (value == null || value.getTexts() == null) {
-            return null;
-        }
-        // Try exact match for default language
-        for (LocalisedStringDto text : value.getTexts()) {
-            if (defaultLang.equals(text.getLocale())) {
-                return text.getLabel();
-            }
-        }
-        // Fallback: return first available locale
-        if (!value.getTexts().isEmpty()) {
-            return value.getTexts().iterator().next().getLabel();
-        }
-        return null;
-    }
 }
