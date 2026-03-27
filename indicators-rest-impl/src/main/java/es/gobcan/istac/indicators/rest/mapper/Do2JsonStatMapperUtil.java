@@ -21,6 +21,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 import es.gobcan.istac.indicators.core.conf.MetadataProperties;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -333,5 +336,109 @@ public class Do2JsonStatMapperUtil {
         role.put(TIME_ROLE, Collections.singletonList(IndicatorDataDimensionTypeEnum.TIME.name()));
         role.put(METRIC_ROLE, Collections.singletonList(IndicatorDataDimensionTypeEnum.MEASURE.name()));
         return role;
+    }
+
+    public List<String> toJsonStatNotes(InternationalString existingNotes, IndicatorObservationsExtendedVO observations,
+            Map<String, JsonStatDimensionType> dimensions) {
+        List<String> notes = new ArrayList<String>();
+
+        // 1. Existing indicator notes (preserve current behavior)
+        String indicatorNoteText = MapperUtil.getDefaultValue(existingNotes, metadataProperties.getDefaultInternationalizationLanguage());
+        if (indicatorNoteText != null) {
+            notes.add(indicatorNoteText);
+        }
+
+        // 2. DATASET/DIMENSION/GROUP attribute notes
+        String defaultLang = metadataProperties.getDefaultInternationalizationLanguage();
+        List<AttributeInstanceDto> attrInstances = observations.getDatasetAndDimensionAttributes();
+        if (attrInstances != null) {
+            // Pre-compute geo element ID → codelist code map once (for resolving GEO codes to labels)
+            Map<String, String> geoElementToCodelistCode = buildGeoElementIdToCodelistCodeMap();
+            for (AttributeInstanceDto instance : attrInstances) {
+                String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode);
+                if (noteText != null && !noteText.trim().isEmpty()) {
+                    notes.add(noteText);
+                }
+            }
+        }
+
+        return notes.isEmpty() ? null : notes;
+    }
+
+    private Map<String, String> buildGeoElementIdToCodelistCodeMap() {
+        try {
+            return srmRestInternalFacade.retrieveGeographicalElementsIdByCodesOfCodelists(metadataProperties.getDefaultGeographicalCodeListUrn());
+        } catch (MetamacException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String buildAttributeNote(AttributeInstanceDto instance, String defaultLang,
+            Map<String, JsonStatDimensionType> dimensions, Map<String, String> geoElementToCodelistCode) {
+        InternationalStringDto value = instance.getValue();
+        if (value == null) {
+            return null;
+        }
+        String valueText = extractLocalisedText(value, defaultLang);
+        if (valueText == null || valueText.trim().isEmpty()) {
+            return null;
+        }
+
+        Map<String, List<String>> codesByDimension = instance.getCodesByDimension();
+        if (codesByDimension == null || codesByDimension.isEmpty()) {
+            // DATASET level: plain value
+            return valueText;
+        }
+
+        // DIMENSION/GROUP level: "label1, label2. value"
+        List<String> allLabels = new ArrayList<String>();
+        for (Map.Entry<String, List<String>> entry : codesByDimension.entrySet()) {
+            String dimKey = entry.getKey();
+            for (String code : entry.getValue()) {
+                String label = resolveDimensionCodeToLabel(dimKey, code, dimensions, geoElementToCodelistCode);
+                allLabels.add(label);
+            }
+        }
+        return org.apache.commons.lang.StringUtils.join(allLabels, ", ") + ". " + valueText;
+    }
+
+    private String resolveDimensionCodeToLabel(String dimKey, String code, Map<String, JsonStatDimensionType> dimensions,
+            Map<String, String> geoElementToCodelistCode) {
+        JsonStatDimensionType dimension = dimensions != null ? dimensions.get(dimKey) : null;
+        if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(dimKey)) {
+            // code is element ID (e.g. MUN_GARAFIA); bridge via codelist code to label
+            String codelistCode = geoElementToCodelistCode.get(code);
+            if (codelistCode != null && dimension != null && dimension.getCategory() != null) {
+                String label = dimension.getCategory().getLabel().get(codelistCode);
+                if (label != null) {
+                    return label;
+                }
+            }
+        } else if (dimension != null && dimension.getCategory() != null) {
+            // MEASURE and TIME: code is a direct key in category.label
+            String label = dimension.getCategory().getLabel().get(code);
+            if (label != null) {
+                return label;
+            }
+        }
+        // Fallback: return raw code
+        return code;
+    }
+
+    private String extractLocalisedText(InternationalStringDto value, String defaultLang) {
+        if (value == null || value.getTexts() == null) {
+            return null;
+        }
+        // Try exact match for default language
+        for (LocalisedStringDto text : value.getTexts()) {
+            if (defaultLang.equals(text.getLocale())) {
+                return text.getLabel();
+            }
+        }
+        // Fallback: return first available locale
+        if (!value.getTexts().isEmpty()) {
+            return value.getTexts().iterator().next().getLabel();
+        }
+        return null;
     }
 }

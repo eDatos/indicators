@@ -90,6 +90,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.JsonStatDataType;
+import es.gobcan.istac.indicators.rest.types.JsonStatDimensionType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
 import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
@@ -250,11 +251,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
-            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion, observations));
+            Map<String, JsonStatDimensionType> dimensions = do2JsonStatMapperUtil.toJsonStatDimensions(source, indicatorVersion, observations);
+            target.setDimension(dimensions);
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(indicatorVersion.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
+            target.setNote(do2JsonStatMapperUtil.toJsonStatNotes(indicatorVersion.getNotes(), observations, dimensions));
 
             return target;
         } catch (Exception e) {
@@ -284,11 +286,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setId(do2JsonStatMapperUtil.createJsonStatId());
             target.setRole(do2JsonStatMapperUtil.createJsonStatRole());
             target.setSize(do2JsonStatMapperUtil.toJsonStatSize(observations));
-            target.setDimension(do2JsonStatMapperUtil.toJsonStatDimensions(source, observations));
+            Map<String, JsonStatDimensionType> dimensions = do2JsonStatMapperUtil.toJsonStatDimensions(source, observations);
+            target.setDimension(dimensions);
             target.setExtension(do2JsonStatMapperUtil.toJsonStatExtension(source));
             target.setValue(do2JsonStatMapperUtil.toJsonStatValue(observations));
             target.setUpdated(source.getLastUpdated().toString());
-            target.setNote(Collections.singletonList(MapperUtil.getDefaultValue(source.getNotes(), metadataProperties.getDefaultInternationalizationLanguage())));
+            target.setNote(do2JsonStatMapperUtil.toJsonStatNotes(source.getNotes(), observations, dimensions));
 
             return target;
         } catch (Exception e) {
