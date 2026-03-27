@@ -32,6 +32,7 @@ public class Data extends DataStructure {
     private List<String>               variablesInOrder               = new ArrayList<String>();
     private List<AttributeInstanceDto> datasetAndDimensionAttributes  = new ArrayList<AttributeInstanceDto>();
     private Set<String>                multilingualAttributeIds       = new HashSet<String>();
+    private Map<String, String>        enumLabelByAttributeId         = new HashMap<String, String>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -129,6 +130,14 @@ public class Data extends DataStructure {
 
     public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
         this.multilingualAttributeIds = multilingualAttributeIds;
+    }
+
+    public Map<String, String> getEnumLabelByAttributeId() {
+        return enumLabelByAttributeId;
+    }
+
+    public void setEnumLabelByAttributeId(Map<String, String> enumLabelByAttributeId) {
+        this.enumLabelByAttributeId = enumLabelByAttributeId;
     }
 
     public List<String> getDataMapAttributes() {

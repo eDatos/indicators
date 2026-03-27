@@ -582,13 +582,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             Data data = dataCache.get(queryUuid);
             Set<String> multilingualIds = (data != null && data.getMultilingualAttributeIds() != null)
                     ? data.getMultilingualAttributeIds() : new HashSet<String>();
+            Map<String, String> enumLabels = (data != null && data.getEnumLabelByAttributeId() != null)
+                    ? data.getEnumLabelByAttributeId() : new HashMap<String, String>();
+
+            Set<String> allAttributeIds = new HashSet<String>(multilingualIds);
+            allAttributeIds.addAll(enumLabels.keySet());
 
             DataSource dataSource = dataOp.getDataSource();
             dataSource.getAttributeMetadata().clear();
-            for (String attrId : multilingualIds) {
+            for (String attrId : allAttributeIds) {
                 DataSourceAttributeMetadata metadata = new DataSourceAttributeMetadata();
                 metadata.setAttributeId(attrId);
-                metadata.setMultilingual(Boolean.TRUE);
+                metadata.setMultilingual(multilingualIds.contains(attrId));
+                metadata.setEnumLabel(enumLabels.get(attrId));
                 dataSource.getAttributeMetadata().add(metadata);
             }
         }
@@ -604,6 +610,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (DataSourceAttributeMetadata metadata : dataSource.getAttributeMetadata()) {
                 if (Boolean.TRUE.equals(metadata.getMultilingual())) {
                     result.add(metadata.getAttributeId());
+                }
+            }
+        }
+        return result;
+    }
+
+    private Map<String, String> loadDatasetEnumLabels(IndicatorVersion indicatorVersion) {
+        Map<String, String> result = new HashMap<String, String>();
+        for (DataSource dataSource : indicatorVersion.getDataSources()) {
+            for (DataSourceAttributeMetadata metadata : dataSource.getAttributeMetadata()) {
+                if (metadata.getEnumLabel() != null) {
+                    result.put(metadata.getAttributeId(), metadata.getEnumLabel());
                 }
             }
         }
@@ -801,6 +819,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
         vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
+        vo.setDatasetEnumLabels(loadDatasetEnumLabels(indicatorVersion));
         return vo;
     }
 
@@ -993,6 +1012,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
         vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
+        vo.setDatasetEnumLabels(loadDatasetEnumLabels(indicatorVersion));
         return vo;
     }
 

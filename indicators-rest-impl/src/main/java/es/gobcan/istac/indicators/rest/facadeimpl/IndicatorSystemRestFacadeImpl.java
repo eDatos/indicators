@@ -255,6 +255,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
                     instanceObservations.getMeasureCodes(), instanceObservations.getObservations());
             dataTypeRequest.setDatasetAndDimensionAttributes(instanceObservations.getDatasetAndDimensionAttributes());
             dataTypeRequest.setMultilingualAttributeIds(instanceObservations.getMultilingualAttributeIds());
+            dataTypeRequest.setDatasetEnumLabels(instanceObservations.getDatasetEnumLabels());
             dataTypeRequest.setGeoValuesOldVersionCompatibilityUtils(geoValuesOldVersionCompatibilityUtils);
 
             if (geographicalValuesCodes.isEmpty()) {

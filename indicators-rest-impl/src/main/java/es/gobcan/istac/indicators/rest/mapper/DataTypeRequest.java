@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class DataTypeRequest {
     GeographicalValuesOldVersionCompatibilityUtils geoValuesOldVersionCompatibilityUtils = null;
     private List<AttributeInstanceDto>             datasetAndDimensionAttributes         = new ArrayList<AttributeInstanceDto>();
     private Set<String>                            multilingualAttributeIds              = new HashSet<String>();
+    private Map<String, String>                    datasetEnumLabels                     = new HashMap<String, String>();
 
     public DataTypeRequest(IndicatorInstance indicatorInstance, List<String> geographicalCodes, List<String> timeValues, List<String> measureValues,
             Map<String, ? extends ObservationDto> observationMap) {
@@ -118,6 +120,14 @@ public class DataTypeRequest {
 
     public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
         this.multilingualAttributeIds = multilingualAttributeIds;
+    }
+
+    public Map<String, String> getDatasetEnumLabels() {
+        return datasetEnumLabels;
+    }
+
+    public void setDatasetEnumLabels(Map<String, String> datasetEnumLabels) {
+        this.datasetEnumLabels = datasetEnumLabels;
     }
 
 }

@@ -1,8 +1,10 @@
 package es.gobcan.istac.indicators.core.vo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
@@ -14,6 +16,7 @@ public class IndicatorObservationsBaseVO {
     private List<String>               measureCodes;
     private List<AttributeInstanceDto> datasetAndDimensionAttributes = new ArrayList<AttributeInstanceDto>();
     private Set<String>                multilingualAttributeIds      = new HashSet<String>();
+    private Map<String, String>        datasetEnumLabels             = new HashMap<String, String>();
 
     public List<String> getGeographicalCodes() {
         return geographicalCodes;
@@ -53,6 +56,14 @@ public class IndicatorObservationsBaseVO {
 
     public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
         this.multilingualAttributeIds = multilingualAttributeIds;
+    }
+
+    public Map<String, String> getDatasetEnumLabels() {
+        return datasetEnumLabels;
+    }
+
+    public void setDatasetEnumLabels(Map<String, String> datasetEnumLabels) {
+        this.datasetEnumLabels = datasetEnumLabels;
     }
 
 }

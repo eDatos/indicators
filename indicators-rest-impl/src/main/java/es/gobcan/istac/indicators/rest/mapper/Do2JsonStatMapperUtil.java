@@ -354,8 +354,9 @@ public class Do2JsonStatMapperUtil {
         if (attrInstances != null) {
             // Pre-compute geo element ID → codelist code map once (for resolving GEO codes to labels)
             Map<String, String> geoElementToCodelistCode = buildGeoElementIdToCodelistCodeMap();
+            Map<String, String> datasetEnumLabels = observations.getDatasetEnumLabels();
             for (AttributeInstanceDto instance : attrInstances) {
-                String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode);
+                String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode, datasetEnumLabels);
                 if (noteText != null && !noteText.trim().isEmpty()) {
                     notes.add(noteText);
                 }
@@ -374,7 +375,8 @@ public class Do2JsonStatMapperUtil {
     }
 
     private String buildAttributeNote(AttributeInstanceDto instance, String defaultLang,
-            Map<String, JsonStatDimensionType> dimensions, Map<String, String> geoElementToCodelistCode) {
+            Map<String, JsonStatDimensionType> dimensions, Map<String, String> geoElementToCodelistCode,
+            Map<String, String> datasetEnumLabels) {
         InternationalStringDto value = instance.getValue();
         if (value == null) {
             return null;
@@ -386,8 +388,9 @@ public class Do2JsonStatMapperUtil {
 
         Map<String, List<String>> codesByDimension = instance.getCodesByDimension();
         if (codesByDimension == null || codesByDimension.isEmpty()) {
-            // DATASET level: plain value
-            return valueText;
+            // DATASET level: usar etiqueta resuelta si disponible, fallback al valor raw
+            String label = (datasetEnumLabels != null) ? datasetEnumLabels.get(instance.getAttributeId()) : null;
+            return label != null ? label : valueText;
         }
 
         // DIMENSION/GROUP level: "label1, label2. value"

@@ -45,6 +45,7 @@ public abstract class CommonMetamacDatasetAccess {
 
     public static final String          OBS_CONF_ATTRIBUTE         = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
     private Set<String>                 multilingualAttributeIds   = new HashSet<String>();
+    private Map<String, String>         enumLabelByAttributeId     = new HashMap<String, String>();
 
     protected abstract DimensionRepresentations getDimensions();
 
@@ -93,6 +94,10 @@ public abstract class CommonMetamacDatasetAccess {
 
     public Set<String> getMultilingualAttributeIds() {
         return multilingualAttributeIds;
+    }
+
+    public Map<String, String> getEnumLabelByAttributeId() {
+        return enumLabelByAttributeId;
     }
 
     /**
@@ -289,6 +294,15 @@ public abstract class CommonMetamacDatasetAccess {
             }
 
             if (isDataset) {
+                if (matchedDataAttr != null
+                        && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+                    String label = resolveEnumeratedLabel(
+                            (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
+                            matchedDataAttr.getValue());
+                    if (label != null) {
+                        enumLabelByAttributeId.put(attributeId, label);
+                    }
+                }
                 List<AttributeInstanceDto> instances = buildDatasetLevelInstances(attributeId, matchedDataAttr, matchedInternAttr);
                 result.addAll(instances);
 
@@ -518,6 +532,15 @@ public abstract class CommonMetamacDatasetAccess {
             codesByDimension.put(indicatorDimId, Arrays.asList(code));
         }
         return codesByDimension;
+    }
+
+    private String resolveEnumeratedLabel(EnumeratedAttributeValues enumValues, String rawCode) {
+        for (EnumeratedAttributeValue enumValue : enumValues.getValues()) {
+            if (Objects.equals(enumValue.getId(), rawCode)) {
+                return getLocalizedValue(enumValue);
+            }
+        }
+        return null;
     }
 
     /**
