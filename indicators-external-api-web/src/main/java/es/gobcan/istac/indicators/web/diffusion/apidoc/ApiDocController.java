@@ -61,4 +61,9 @@ public class ApiDocController {
         return new ModelAndView("apidocs/v1.0/swagger", new HashMap<String, String>());
     }
 
+    @RequestMapping(value = "/api-docs")
+    public String apiDocs() {
+        return "forward:/api/indicators/v1.0/docs";
+    }
+
 }
