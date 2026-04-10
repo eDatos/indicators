@@ -39,7 +39,7 @@
           //this removes everything after the last slash in the path
           baseUrl = baseUrl.substring(0, (baseUrl.lastIndexOf("/") == -1) ? baseUrl.length : baseUrl.lastIndexOf("/"));
 
-          url = baseUrl + "/docs";
+          url = baseUrl + "/api-docs";
       }
 
       // Pre load translate...
