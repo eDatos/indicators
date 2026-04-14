@@ -54,7 +54,7 @@ public class ApiDocController {
         return new ModelAndView("apidocs/index", new HashMap<String, String>());
     }
 
-    @RequestMapping(value = "/api/indicators/v1.0/docs", produces = "application/json")
+    @RequestMapping(value = "/api/indicators/v1.0/api-docs", produces = "application/json")
     public ModelAndView indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
 
