@@ -152,3 +152,9 @@ indicators-web/.vscode
 indicators-web/node
 /bin/
 /indicators-parent/.idea
+
+######################
+# Claude Code
+######################
+.claude
+**/CLAUDE.local.md
