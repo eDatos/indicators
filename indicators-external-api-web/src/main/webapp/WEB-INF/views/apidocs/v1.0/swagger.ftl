@@ -19,7 +19,7 @@
       "description" : ""
     },
     {
-      "name" : "[@messageEscape 'api.doc.swagger.tags.indicatorssistem' /]",
+      "name" : "[@messageEscape 'api.doc.swagger.tags.indicatorssystem' /]",
       "description" : ""
     },
     {
