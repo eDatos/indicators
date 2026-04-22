@@ -96,7 +96,7 @@
 		<logback.version>0.9.29</logback.version>
 
 		<!-- REST -->
-		<cxf.version>2.6.0</cxf.version>
+		<cxf.version>2.6.7</cxf.version>
 
 		<!-- MISCELLANEOUS -->
 		<jsr250-api.version>1.0</jsr250-api.version>
