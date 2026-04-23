@@ -710,8 +710,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private Map<String, String> buildDefaultOnlyMap(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
         Map<String, String> map = new LinkedHashMap<String, String>();
-        map.put(DEFAULT, value != null ? value : "");
+        map.put(DEFAULT, value);
         return map;
     }
 
@@ -723,7 +726,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             boolean i18n = isI18nAttr(attrId, multilingualIds);
 
             List<Map<String, String>> values = isDatasetLevelAttr(instances)
-                    ? buildDatasetValues(attrId, instances.get(0), i18n, dataTypeRequest, languageDefault)
+                    ? buildDatasetValues(instances.get(0), i18n, languageDefault)
                     : buildDimensionalValues(instances, i18n, dataTypeRequest, languageDefault);
 
             if (values.isEmpty()) {
@@ -748,18 +751,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return byAttrId;
     }
 
-    private List<Map<String, String>> buildDatasetValues(String attrId, AttributeInstanceDto inst, boolean i18n, DataTypeRequest dataTypeRequest, String languageDefault) {
-        Map<String, String> valueMap;
-        if (i18n) {
-            valueMap = MapperUtil.getLocalisedLabel(inst.getValue(), languageDefault);
-        } else {
-            String label = getSingleLabel(inst.getValue());
-            Map<String, String> enumLabels = dataTypeRequest.getDatasetEnumLabels();
-            if (enumLabels != null && enumLabels.containsKey(attrId)) {
-                label = enumLabels.get(attrId);
-            }
-            valueMap = buildDefaultOnlyMap(label);
-        }
+    private List<Map<String, String>> buildDatasetValues(AttributeInstanceDto inst, boolean i18n, String languageDefault) {
+        Map<String, String> valueMap = i18n
+                ? MapperUtil.getLocalisedLabel(inst.getValue(), languageDefault)
+                : buildDefaultOnlyMap(getSingleLabel(inst.getValue()));
         if (valueMap == null) {
             return Collections.emptyList();
         }

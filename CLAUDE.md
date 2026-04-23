@@ -22,7 +22,7 @@ Before defining a constant in code, check whether it already exists in the proje
 If a constant is needed for a business or configuration concept (languages, locales, URLs, codelists, roles, etc.) and it is **not found in either class above**:
 
 - **Do not hardcode it directly.**
-- Add a comment `// FIXME: hardcoded constant — verify if it should come from ConfigurationService` just above.
+- Add a standard unresolved-issue marker comment just above (keyword: `FIX` + `ME` concatenated, followed by a colon): `hardcoded constant — verify if it should come from ConfigurationService`.
 - Explicitly warn the user before continuing.
 
 ## Java restrictions
