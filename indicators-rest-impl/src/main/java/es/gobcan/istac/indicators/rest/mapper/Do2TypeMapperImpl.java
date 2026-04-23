@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.DEFAULT;
 import static es.gobcan.istac.indicators.rest.constants.IndicatorsRestApiConstants.PROP_ATTRIBUTE_OBS_CONF;
 
 import java.util.ArrayList;
@@ -75,7 +76,6 @@ import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
-import es.gobcan.istac.indicators.rest.types.DataAttributeType;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.DataType;
@@ -522,14 +522,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 List<AttributeInstanceDto> allDsAttrs = dataTypeRequest.getDatasetAndDimensionAttributes();
                 Set<String> multilingualIds = dataTypeRequest.getMultilingualAttributeIds();
                 if (allDsAttrs != null && !allDsAttrs.isEmpty()) {
-                    List<DataAttributeType> nonI18nList = new ArrayList<DataAttributeType>();
-                    List<InternationalDataAttributeType> i18nList = new ArrayList<InternationalDataAttributeType>();
-                    buildDatasetAndInternationalAttributeLists(allDsAttrs, multilingualIds, dataTypeRequest, nonI18nList, i18nList);
-                    if (!nonI18nList.isEmpty()) {
-                        dataType.setDatasetDimensionAttribute(nonI18nList);
-                    }
-                    if (!i18nList.isEmpty()) {
-                        dataType.setInternationalAttribute(i18nList);
+                    String languageDefault = metadataProperties.getDefaultInternationalizationLanguage();
+                    List<InternationalDataAttributeType> attributesList = buildAttributes(allDsAttrs, multilingualIds, dataTypeRequest, languageDefault);
+                    if (!attributesList.isEmpty()) {
+                        dataType.setAttributes(attributesList);
                     }
                 }
             }
@@ -713,120 +709,116 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return first.getLabel() != null ? first.getLabel() : "";
     }
 
-    private Map<String, String> toLocaleMap(InternationalStringDto isDto) {
-        if (isDto == null || isDto.getTexts() == null || isDto.getTexts().isEmpty()) {
-            return null;
-        }
-        Map<String, String> result = new LinkedHashMap<String, String>();
-        for (LocalisedStringDto lsd : isDto.getTexts()) {
-            if (lsd.getLocale() != null && lsd.getLabel() != null) {
-                result.put(lsd.getLocale(), lsd.getLabel());
-            }
-        }
-        return result.isEmpty() ? null : result;
+    private Map<String, String> buildDefaultOnlyMap(String value) {
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put(DEFAULT, value != null ? value : "");
+        return map;
     }
 
-    private void buildDatasetAndInternationalAttributeLists(List<AttributeInstanceDto> allAttrs, Set<String> multilingualIds, DataTypeRequest dataTypeRequest,
-            List<DataAttributeType> outNonI18n, List<InternationalDataAttributeType> outI18n) {
-
-        // Group instances by attrId preserving insertion order
-        Map<String, List<AttributeInstanceDto>> byAttrId = new LinkedHashMap<String, List<AttributeInstanceDto>>();
-        for (AttributeInstanceDto attr : allAttrs) {
-            String attrId = attr.getAttributeId();
-            if (!byAttrId.containsKey(attrId)) {
-                byAttrId.put(attrId, new ArrayList<AttributeInstanceDto>());
-            }
-            byAttrId.get(attrId).add(attr);
-        }
-
-        for (Map.Entry<String, List<AttributeInstanceDto>> entry : byAttrId.entrySet()) {
+    private List<InternationalDataAttributeType> buildAttributes(List<AttributeInstanceDto> allAttrs, Set<String> multilingualIds, DataTypeRequest dataTypeRequest, String languageDefault) {
+        List<InternationalDataAttributeType> resultList = new ArrayList<>();
+        for (Map.Entry<String, List<AttributeInstanceDto>> entry : groupByAttrId(allAttrs).entrySet()) {
             String attrId = entry.getKey();
             List<AttributeInstanceDto> instances = entry.getValue();
             boolean i18n = isI18nAttr(attrId, multilingualIds);
-            boolean dataset = isDatasetLevelAttr(instances);
 
-            if (dataset) {
-                AttributeInstanceDto inst = instances.get(0);
-                if (i18n) {
-                    Map<String, String> localeMap = toLocaleMap(inst.getValue());
-                    if (localeMap != null) {
-                        List<Map<String, String>> values = new ArrayList<Map<String, String>>();
-                        values.add(localeMap);
-                        InternationalDataAttributeType result = new InternationalDataAttributeType();
-                        result.setId(attrId);
-                        result.setValues(values);
-                        outI18n.add(result);
-                    }
-                } else {
-                    DataAttributeType result = new DataAttributeType();
-                    result.setId(attrId);
-                    result.setValue(getSingleLabel(inst.getValue()));
-                    outNonI18n.add(result);
-                }
-            } else {
-                // DIMENSION or GROUP — build dimensional matrix
-                List<String> attachedDims = getAttachedDimensions(instances);
-                List<List<String>> dimCodeLists = getDimCodeLists(attachedDims, dataTypeRequest);
+            List<Map<String, String>> values = isDatasetLevelAttr(instances)
+                    ? buildDatasetValues(attrId, instances.get(0), i18n, dataTypeRequest, languageDefault)
+                    : buildDimensionalValues(instances, i18n, dataTypeRequest, languageDefault);
 
-                if (attachedDims.isEmpty() || dimCodeLists.isEmpty()) {
-                    continue;
-                }
-
-                // Build lookup: position key → instance
-                Map<String, AttributeInstanceDto> lookup = new LinkedHashMap<String, AttributeInstanceDto>();
-                for (AttributeInstanceDto inst : instances) {
-                    String key = buildDimLookupKey(inst, attachedDims);
-                    lookup.put(key, inst);
-                }
-
-                // Compute sizes and strides for cartesian-product flat indexing (last dim varies fastest)
-                int totalSize = 1;
-                int[] sizes = new int[dimCodeLists.size()];
-                for (int i = 0; i < dimCodeLists.size(); i++) {
-                    sizes[i] = dimCodeLists.get(i).size();
-                    totalSize *= sizes[i];
-                }
-
-                if (totalSize == 0) {
-                    continue;
-                }
-
-                int[] strides = new int[dimCodeLists.size()];
-                strides[dimCodeLists.size() - 1] = 1;
-                for (int i = dimCodeLists.size() - 2; i >= 0; i--) {
-                    strides[i] = strides[i + 1] * sizes[i + 1];
-                }
-
-                if (i18n) {
-                    List<Map<String, String>> values = new ArrayList<Map<String, String>>();
-                    for (int pos = 0; pos < totalSize; pos++) {
-                        String key = buildPositionKey(pos, strides, sizes, dimCodeLists);
-                        AttributeInstanceDto inst = lookup.get(key);
-                        values.add(inst != null ? toLocaleMap(inst.getValue()) : null);
-                    }
-                    InternationalDataAttributeType result = new InternationalDataAttributeType();
-                    result.setId(attrId);
-                    result.setValues(values);
-                    outI18n.add(result);
-                } else {
-                    StringBuilder sb = new StringBuilder();
-                    for (int pos = 0; pos < totalSize; pos++) {
-                        if (pos > 0) {
-                            sb.append(" | ");
-                        }
-                        String key = buildPositionKey(pos, strides, sizes, dimCodeLists);
-                        AttributeInstanceDto inst = lookup.get(key);
-                        if (inst != null) {
-                            sb.append(getSingleLabel(inst.getValue()));
-                        }
-                    }
-                    DataAttributeType result = new DataAttributeType();
-                    result.setId(attrId);
-                    result.setValue(sb.toString());
-                    outNonI18n.add(result);
-                }
+            if (values.isEmpty()) {
+                continue;
             }
+            InternationalDataAttributeType attr = new InternationalDataAttributeType();
+            attr.setId(attrId);
+            attr.setValue(values);
+            resultList.add(attr);
         }
+        return resultList;
+    }
+
+    private Map<String, List<AttributeInstanceDto>> groupByAttrId(List<AttributeInstanceDto> allAttrs) {
+        Map<String, List<AttributeInstanceDto>> byAttrId = new LinkedHashMap<>();
+        for (AttributeInstanceDto attr : allAttrs) {
+            if (!byAttrId.containsKey(attr.getAttributeId())) {
+                byAttrId.put(attr.getAttributeId(), new ArrayList<>());
+            }
+            byAttrId.get(attr.getAttributeId()).add(attr);
+        }
+        return byAttrId;
+    }
+
+    private List<Map<String, String>> buildDatasetValues(String attrId, AttributeInstanceDto inst, boolean i18n, DataTypeRequest dataTypeRequest, String languageDefault) {
+        Map<String, String> valueMap;
+        if (i18n) {
+            valueMap = MapperUtil.getLocalisedLabel(inst.getValue(), languageDefault);
+        } else {
+            String label = getSingleLabel(inst.getValue());
+            Map<String, String> enumLabels = dataTypeRequest.getDatasetEnumLabels();
+            if (enumLabels != null && enumLabels.containsKey(attrId)) {
+                label = enumLabels.get(attrId);
+            }
+            valueMap = buildDefaultOnlyMap(label);
+        }
+        if (valueMap == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(valueMap);
+    }
+
+    private List<Map<String, String>> buildDimensionalValues(List<AttributeInstanceDto> instances, boolean i18n, DataTypeRequest dataTypeRequest, String languageDefault) {
+        List<String> attachedDims = getAttachedDimensions(instances);
+        List<List<String>> dimCodeLists = getDimCodeLists(attachedDims, dataTypeRequest);
+        if (attachedDims.isEmpty() || dimCodeLists.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Map<String, AttributeInstanceDto> lookup = buildDimLookup(instances, attachedDims);
+
+        int[] sizes = new int[dimCodeLists.size()];
+        int totalSize = 1;
+        for (int i = 0; i < dimCodeLists.size(); i++) {
+            sizes[i] = dimCodeLists.get(i).size();
+            totalSize *= sizes[i];
+        }
+        if (totalSize == 0) {
+            return Collections.emptyList();
+        }
+
+        int[] strides = new int[dimCodeLists.size()];
+        strides[dimCodeLists.size() - 1] = 1;
+        for (int i = dimCodeLists.size() - 2; i >= 0; i--) {
+            strides[i] = strides[i + 1] * sizes[i + 1];
+        }
+
+        return buildCartesianValues(lookup, dimCodeLists, strides, sizes, totalSize, i18n, languageDefault);
+    }
+
+    private Map<String, AttributeInstanceDto> buildDimLookup(List<AttributeInstanceDto> instances, List<String> attachedDims) {
+        Map<String, AttributeInstanceDto> lookup = new LinkedHashMap<>();
+        for (AttributeInstanceDto inst : instances) {
+            lookup.put(buildDimLookupKey(inst, attachedDims), inst);
+        }
+        return lookup;
+    }
+
+    private List<Map<String, String>> buildCartesianValues(Map<String, AttributeInstanceDto> lookup, List<List<String>> dimCodeLists, int[] strides, int[] sizes, int totalSize, boolean i18n,
+            String languageDefault) {
+        List<Map<String, String>> values = new ArrayList<>();
+        for (int pos = 0; pos < totalSize; pos++) {
+            values.add(resolvePositionValue(lookup.get(buildPositionKey(pos, strides, sizes, dimCodeLists)), i18n, languageDefault));
+        }
+        return values;
+    }
+
+    // Null is intentional: a null entry in the value[] array signals "no value at this dimension position"
+    // in the JSON response. An empty map {} would be a different (incorrect) semantic.
+    @SuppressWarnings("java:S1168")
+    private Map<String, String> resolvePositionValue(AttributeInstanceDto inst, boolean i18n, String languageDefault) {
+        if (inst == null) {
+            return null;
+        }
+        return i18n ? MapperUtil.getLocalisedLabel(inst.getValue(), languageDefault) : buildDefaultOnlyMap(getSingleLabel(inst.getValue()));
     }
 
     private QuantityType quantityDoToBaseType(final Quantity source, SrmRestObjectsMapper srmRestObjectsMapper) throws MetamacException {

@@ -54,17 +54,10 @@
           },
           "type": "array"
         },
-        "datasetDimensionAttribute": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.datasetdimensionattribute' /]",
+        "attributes": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attributes' /]",
           "items": {
-            "$ref": "#/definitions/DatasetDimensionAttribute"
-          },
-          "type": "array"
-        },
-        "internationalAttribute": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.internationalattribute' /]",
-          "items": {
-            "$ref": "#/definitions/InternationalDataAttribute"
+            "$ref": "#/definitions/AttributeEntry"
           },
           "type": "array"
         },
@@ -158,15 +151,21 @@
         }
       }
     },
-    "DatasetDimensionAttribute": {
+    "AttributeEntry": {
       "properties": {
         "id": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.datasetdimensionattribute.properties.id' /]",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attributeentry.properties.id' /]",
           "type": "string"
         },
         "value": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.datasetdimensionattribute.properties.value' /]",
-          "type": "string"
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attributeentry.properties.value' /]",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "type": "array"
         }
       }
     },
@@ -858,24 +857,6 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.instancepagination.properties.total' /]",
           "format": "int32",
           "type": "integer"
-        }
-      }
-    },
-    "InternationalDataAttribute": {
-      "properties": {
-        "id": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.internationaldataattribute.properties.id' /]",
-          "type": "string"
-        },
-        "values": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.internationaldataattribute.properties.values' /]",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "type": "array"
         }
       }
     },

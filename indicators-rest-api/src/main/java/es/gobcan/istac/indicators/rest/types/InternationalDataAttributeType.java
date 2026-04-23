@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "values"})
+@JsonPropertyOrder({"id", "value"})
 public class InternationalDataAttributeType implements Serializable {
 
     private static final long            serialVersionUID = 1L;
 
     private String                       id;
-    private List<Map<String, String>>    values;
+    private List<Map<String, String>>    value;
 
     public String getId() {
         return id;
@@ -22,11 +22,11 @@ public class InternationalDataAttributeType implements Serializable {
         this.id = id;
     }
 
-    public List<Map<String, String>> getValues() {
-        return values;
+    public List<Map<String, String>> getValue() {
+        return value;
     }
 
-    public void setValues(List<Map<String, String>> values) {
-        this.values = values;
+    public void setValue(List<Map<String, String>> value) {
+        this.value = value;
     }
 }
