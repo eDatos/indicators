@@ -127,6 +127,9 @@ public class Do2JsonStatMapperUtil {
         for (GeographicalValueVO geographicalValue : geographicalValues) {
             String categoryCode = geographicalValue.getCode();
             String codeId = geographicalValuesCodes.get(categoryCode);
+            if (codeId == null) {
+                codeId = categoryCode;
+            }
             if (filterGeographicalCodes.contains(categoryCode)) {
                 category.getIndex().put(codeId, (long) i);
                 category.getLabel().put(codeId, MapperUtil.getDefaultValue(geographicalValue.getTitle(), metadataProperties.getDefaultInternationalizationLanguage()));
