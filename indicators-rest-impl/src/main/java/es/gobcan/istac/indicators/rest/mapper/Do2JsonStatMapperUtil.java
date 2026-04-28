@@ -353,8 +353,9 @@ public class Do2JsonStatMapperUtil {
             // Pre-compute geo element ID → codelist code map once (for resolving GEO codes to labels)
             Map<String, String> geoElementToCodelistCode = buildGeoElementIdToCodelistCodeMap();
             Map<String, String> datasetEnumLabels = observations.getDatasetEnumLabels();
+            Map<String, Map<String, String>> dimensionEnumLabelMaps = observations.getDimensionEnumLabelMaps();
             for (AttributeInstanceDto instance : attrInstances) {
-                String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode, datasetEnumLabels);
+                String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode, datasetEnumLabels, dimensionEnumLabelMaps);
                 if (noteText != null && !noteText.trim().isEmpty()) {
                     notes.add(noteText);
                 }
@@ -370,7 +371,7 @@ public class Do2JsonStatMapperUtil {
 
     private String buildAttributeNote(AttributeInstanceDto instance, String defaultLang,
             Map<String, JsonStatDimensionType> dimensions, Map<String, String> geoElementToCodelistCode,
-            Map<String, String> datasetEnumLabels) {
+            Map<String, String> datasetEnumLabels, Map<String, Map<String, String>> dimensionEnumLabelMaps) {
         InternationalStringDto value = instance.getValue();
         if (value == null) {
             return null;
@@ -385,6 +386,17 @@ public class Do2JsonStatMapperUtil {
             // DATASET level: usar etiqueta resuelta si disponible, fallback al valor raw
             String label = (datasetEnumLabels != null) ? datasetEnumLabels.get(instance.getAttributeId()) : null;
             return label != null ? label : valueText;
+        }
+
+        // DIMENSION/GROUP level: resolve enum code to label if map is available
+        if (dimensionEnumLabelMaps != null) {
+            Map<String, String> labelMap = dimensionEnumLabelMaps.get(instance.getAttributeId());
+            if (labelMap != null) {
+                String resolved = labelMap.get(valueText);
+                if (resolved != null) {
+                    valueText = resolved;
+                }
+            }
         }
 
         // DIMENSION/GROUP level: "label1, label2. value"

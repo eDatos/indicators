@@ -44,8 +44,9 @@ public abstract class CommonMetamacDatasetAccess {
     protected List<String>              attributesMetadataMap;
 
     public static final String          OBS_CONF_ATTRIBUTE         = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    private Set<String>                 multilingualAttributeIds   = new HashSet<String>();
-    private Map<String, String>         enumLabelByAttributeId     = new HashMap<String, String>();
+    private Set<String>                              multilingualAttributeIds              = new HashSet<String>();
+    private Map<String, String>                      enumLabelByAttributeId                = new HashMap<String, String>();
+    private Map<String, Map<String, String>>         dimensionEnumLabelMapByAttributeId    = new HashMap<String, Map<String, String>>();
 
     protected abstract DimensionRepresentations getDimensions();
 
@@ -98,6 +99,10 @@ public abstract class CommonMetamacDatasetAccess {
 
     public Map<String, String> getEnumLabelByAttributeId() {
         return enumLabelByAttributeId;
+    }
+
+    public Map<String, Map<String, String>> getDimensionEnumLabelMapByAttributeId() {
+        return dimensionEnumLabelMapByAttributeId;
     }
 
     /**
@@ -287,6 +292,14 @@ public abstract class CommonMetamacDatasetAccess {
             }
 
             if (isDimension && metadataAttribute.getDimensions().getDimensions().size() > 1) {
+                if (matchedDataAttr != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+                    Map<String, String> labelMap = buildEnumCodeToLabelMap(
+                            (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
+                            matchedDataAttr.getValue());
+                    if (!labelMap.isEmpty()) {
+                        dimensionEnumLabelMapByAttributeId.put(attributeId, labelMap);
+                    }
+                }
                 List<AttributeInstanceDto> groupInstances = buildGroupLevelInstances(
                         attributeId, metadataAttribute, sourceDimToIndicatorDim, matchedDataAttr, matchedInternAttr);
                 result.addAll(groupInstances);
@@ -316,6 +329,14 @@ public abstract class CommonMetamacDatasetAccess {
                 List<String> dimCodes = getDimensionValuesOrderedForData(sourceDimId);
                 if (dimCodes == null || dimCodes.isEmpty()) {
                     continue;
+                }
+                if (matchedDataAttr != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+                    Map<String, String> labelMap = buildEnumCodeToLabelMap(
+                            (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
+                            matchedDataAttr.getValue());
+                    if (!labelMap.isEmpty()) {
+                        dimensionEnumLabelMapByAttributeId.put(attributeId, labelMap);
+                    }
                 }
                 List<AttributeInstanceDto> instances = buildDimensionLevelInstances(attributeId, indicatorDimId, dimCodes, matchedDataAttr, matchedInternAttr);
                 result.addAll(instances);
@@ -532,6 +553,23 @@ public abstract class CommonMetamacDatasetAccess {
             codesByDimension.put(indicatorDimId, Arrays.asList(code));
         }
         return codesByDimension;
+    }
+
+    private Map<String, String> buildEnumCodeToLabelMap(EnumeratedAttributeValues enumValues, String rawValues) {
+        Map<String, String> labelMap = new LinkedHashMap<String, String>();
+        if (rawValues == null) {
+            return labelMap;
+        }
+        String[] codes = StringUtils.splitByWholeSeparatorPreserveAllTokens(rawValues, DATA_SEPARATOR);
+        for (String code : codes) {
+            if (!StringUtils.isBlank(code) && !labelMap.containsKey(code)) {
+                String label = resolveEnumeratedLabel(enumValues, code);
+                if (label != null) {
+                    labelMap.put(code, label);
+                }
+            }
+        }
+        return labelMap;
     }
 
     private String resolveEnumeratedLabel(EnumeratedAttributeValues enumValues, String rawCode) {

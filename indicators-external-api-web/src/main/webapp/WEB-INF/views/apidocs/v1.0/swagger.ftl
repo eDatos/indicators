@@ -96,7 +96,7 @@
     "DataMetadata": {
       "properties": {
         "attribute": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attribute' /]",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.datametadata.properties.attribute' /]",
           "items": {
             "$ref": "#/definitions/DataAttributeMap"
           },

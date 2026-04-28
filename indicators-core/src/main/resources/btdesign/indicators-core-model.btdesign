@@ -1078,6 +1078,8 @@ Application Indicators {
 			Boolean multilingual not nullable databaseColumn="IS_MULTILINGUAL";
 			"Resolved label for enumerated DATASET attribute (null for non-enumerated or dimension-level)"
 			String enumLabel nullable databaseColumn="ENUM_LABEL" length="4000";
+			"Serialized JSON map {code -> label} for enumerated DIMENSION/GROUP attributes (null for dataset-level or non-enumerated)"
+			String enumLabelMap nullable databaseColumn="ENUM_LABEL_MAP";
         }
          
         "Table values for geographical values"

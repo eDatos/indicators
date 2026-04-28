@@ -117,6 +117,7 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimToIndicatorDimMap()));
         target.setMultilingualAttributeIds(accessForAttributes.getMultilingualAttributeIds());
         target.setEnumLabelByAttributeId(accessForAttributes.getEnumLabelByAttributeId());
+        target.setDimensionEnumLabelMapByAttributeId(accessForAttributes.getDimensionEnumLabelMapByAttributeId());
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(query.getMetadata().getDimensions()));

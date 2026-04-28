@@ -23,6 +23,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -584,9 +585,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     ? data.getMultilingualAttributeIds() : new HashSet<String>();
             Map<String, String> enumLabels = (data != null && data.getEnumLabelByAttributeId() != null)
                     ? data.getEnumLabelByAttributeId() : new HashMap<String, String>();
+            Map<String, Map<String, String>> dimEnumMaps = (data != null && data.getDimensionEnumLabelMapByAttributeId() != null)
+                    ? data.getDimensionEnumLabelMapByAttributeId() : new HashMap<String, Map<String, String>>();
 
             Set<String> allAttributeIds = new HashSet<String>(multilingualIds);
             allAttributeIds.addAll(enumLabels.keySet());
+            allAttributeIds.addAll(dimEnumMaps.keySet());
 
             DataSource dataSource = dataOp.getDataSource();
             dataSource.getAttributeMetadata().clear();
@@ -595,6 +599,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 metadata.setAttributeId(attrId);
                 metadata.setMultilingual(multilingualIds.contains(attrId));
                 metadata.setEnumLabel(enumLabels.get(attrId));
+                Map<String, String> dimLabelMap = dimEnumMaps.get(attrId);
+                if (dimLabelMap != null && !dimLabelMap.isEmpty()) {
+                    try {
+                        metadata.setEnumLabelMap(mapper.writeValueAsString(dimLabelMap));
+                    } catch (IOException e) {
+                        LOG.warn("Could not serialize enumLabelMap for attribute {}", attrId);
+                    }
+                }
                 dataSource.getAttributeMetadata().add(metadata);
             }
         }
@@ -622,6 +634,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (DataSourceAttributeMetadata metadata : dataSource.getAttributeMetadata()) {
                 if (metadata.getEnumLabel() != null) {
                     result.put(metadata.getAttributeId(), metadata.getEnumLabel());
+                }
+            }
+        }
+        return result;
+    }
+
+    private Map<String, Map<String, String>> loadDimensionEnumLabelMaps(IndicatorVersion indicatorVersion) {
+        Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
+        for (DataSource dataSource : indicatorVersion.getDataSources()) {
+            for (DataSourceAttributeMetadata metadata : dataSource.getAttributeMetadata()) {
+                if (metadata.getEnumLabelMap() != null) {
+                    try {
+                        Map<String, String> labelMap = mapper.readValue(metadata.getEnumLabelMap(),
+                                new TypeReference<Map<String, String>>() {});
+                        result.put(metadata.getAttributeId(), labelMap);
+                    } catch (IOException e) {
+                        LOG.warn("Could not deserialize enumLabelMap for attribute {}", metadata.getAttributeId());
+                    }
                 }
             }
         }
@@ -820,6 +850,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
         vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
         vo.setDatasetEnumLabels(loadDatasetEnumLabels(indicatorVersion));
+        vo.setDimensionEnumLabelMaps(loadDimensionEnumLabelMaps(indicatorVersion));
         return vo;
     }
 
@@ -1013,6 +1044,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorObservationsExtendedVO vo = buildIndicatorsObservationsExtended(geoCodes, timeCodes, measureCodes, observations, allAttrs);
         vo.setMultilingualAttributeIds(loadMultilingualAttributeIds(indicatorVersion));
         vo.setDatasetEnumLabels(loadDatasetEnumLabels(indicatorVersion));
+        vo.setDimensionEnumLabelMaps(loadDimensionEnumLabelMaps(indicatorVersion));
         return vo;
     }
 

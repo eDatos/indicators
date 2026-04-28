@@ -14,9 +14,10 @@ public class IndicatorObservationsBaseVO {
     private List<String>               geographicalCodes;
     private List<String>               timeCodes;
     private List<String>               measureCodes;
-    private List<AttributeInstanceDto> datasetAndDimensionAttributes = new ArrayList<AttributeInstanceDto>();
-    private Set<String>                multilingualAttributeIds      = new HashSet<String>();
-    private Map<String, String>        datasetEnumLabels             = new HashMap<String, String>();
+    private List<AttributeInstanceDto>           datasetAndDimensionAttributes  = new ArrayList<AttributeInstanceDto>();
+    private Set<String>                          multilingualAttributeIds       = new HashSet<String>();
+    private Map<String, String>                  datasetEnumLabels              = new HashMap<String, String>();
+    private Map<String, Map<String, String>>     dimensionEnumLabelMaps         = new HashMap<String, Map<String, String>>();
 
     public List<String> getGeographicalCodes() {
         return geographicalCodes;
@@ -64,6 +65,14 @@ public class IndicatorObservationsBaseVO {
 
     public void setDatasetEnumLabels(Map<String, String> datasetEnumLabels) {
         this.datasetEnumLabels = datasetEnumLabels;
+    }
+
+    public Map<String, Map<String, String>> getDimensionEnumLabelMaps() {
+        return dimensionEnumLabelMaps;
+    }
+
+    public void setDimensionEnumLabelMaps(Map<String, Map<String, String>> dimensionEnumLabelMaps) {
+        this.dimensionEnumLabelMaps = dimensionEnumLabelMaps;
     }
 
 }

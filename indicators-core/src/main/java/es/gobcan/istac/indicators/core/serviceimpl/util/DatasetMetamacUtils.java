@@ -118,6 +118,7 @@ public class DatasetMetamacUtils extends CommonMetamacUtils {
         target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimToIndicatorDimMap()));
         target.setMultilingualAttributeIds(accessForAttributes.getMultilingualAttributeIds());
         target.setEnumLabelByAttributeId(accessForAttributes.getEnumLabelByAttributeId());
+        target.setDimensionEnumLabelMapByAttributeId(accessForAttributes.getDimensionEnumLabelMapByAttributeId());
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(dataset.getMetadata().getDimensions()));

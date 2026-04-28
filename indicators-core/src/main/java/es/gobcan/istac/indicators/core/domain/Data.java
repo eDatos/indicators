@@ -28,11 +28,12 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String>               dataMapAttributes              = new ArrayList<String>();
-    private List<String>               variablesInOrder               = new ArrayList<String>();
-    private List<AttributeInstanceDto> datasetAndDimensionAttributes  = new ArrayList<AttributeInstanceDto>();
-    private Set<String>                multilingualAttributeIds       = new HashSet<String>();
-    private Map<String, String>        enumLabelByAttributeId         = new HashMap<String, String>();
+    private List<String>                         dataMapAttributes                   = new ArrayList<String>();
+    private List<String>                         variablesInOrder                    = new ArrayList<String>();
+    private List<AttributeInstanceDto>           datasetAndDimensionAttributes       = new ArrayList<AttributeInstanceDto>();
+    private Set<String>                          multilingualAttributeIds            = new HashSet<String>();
+    private Map<String, String>                  enumLabelByAttributeId              = new HashMap<String, String>();
+    private Map<String, Map<String, String>>     dimensionEnumLabelMapByAttributeId  = new HashMap<String, Map<String, String>>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -138,6 +139,14 @@ public class Data extends DataStructure {
 
     public void setEnumLabelByAttributeId(Map<String, String> enumLabelByAttributeId) {
         this.enumLabelByAttributeId = enumLabelByAttributeId;
+    }
+
+    public Map<String, Map<String, String>> getDimensionEnumLabelMapByAttributeId() {
+        return dimensionEnumLabelMapByAttributeId;
+    }
+
+    public void setDimensionEnumLabelMapByAttributeId(Map<String, Map<String, String>> dimensionEnumLabelMapByAttributeId) {
+        this.dimensionEnumLabelMapByAttributeId = dimensionEnumLabelMapByAttributeId;
     }
 
     public List<String> getDataMapAttributes() {
