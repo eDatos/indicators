@@ -93,47 +93,6 @@
         }
       }
     },
-    "DataMetadata": {
-      "properties": {
-        "attribute": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.datametadata.properties.attribute' /]",
-          "items": {
-            "$ref": "#/definitions/DataAttributeMap"
-          },
-          "type": "array"
-        },
-        "dimension": {
-          "$ref": "#/definitions/DataDimensionMap",
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.dimension' /]"
-        },
-        "format": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.format' /]",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "kind": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.kind' /]",
-          "type": "string"
-        },
-        "observation": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.observation' /]",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "parentLink": {
-          "$ref": "#/definitions/Link",
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.parentlink' /]"
-        },
-        "selfLink": {
-          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.selflink' /]",
-          "type": "string"
-        }
-      }
-    },
     "DataAttribute": {
       "properties": {
         "code": {
@@ -201,10 +160,7 @@
         "value": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.attributeentry.properties.value' /]",
           "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
+            "$ref": "#/definitions/InternationalString"
           },
           "type": "array"
         }
@@ -482,7 +438,7 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.conceptdescription' /]"
         },
         "data": {
-          "$ref": "#/definitions/DataMetadata",
+          "$ref": "#/definitions/Data",
           "description": "[@messageEscape 'api.doc.swagger.definitions.indicatorbase.properties.data' /]"
         },
         "id": {
@@ -815,7 +771,7 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.conceptdescription' /]"
         },
         "data": {
-          "$ref": "#/definitions/DataMetadata",
+          "$ref": "#/definitions/Data",
           "description": "[@messageEscape 'api.doc.swagger.definitions.instancebase.properties.data' /]"
         },
         "id": {
