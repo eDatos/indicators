@@ -53,7 +53,7 @@
             }
 
             var tree = [];
-            var indicatorsGroupedBySubjectCode = _.groupBy(this.collection.toJSON(), "subjectCode");
+            var indicatorsGroupedBySubjectCode = _.groupBy(_.filter(this.collection.toJSON(), indicator => !!indicator.subjectCode), "subjectCode");
             var subjects = this._getAllSubjects();
 
             var self = this;
