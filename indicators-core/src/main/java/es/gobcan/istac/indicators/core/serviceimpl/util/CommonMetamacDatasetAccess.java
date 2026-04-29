@@ -248,15 +248,15 @@ public abstract class CommonMetamacDatasetAccess {
      * Multi-dimension (GROUP) attributes are supported when all their dimensions are mapped to
      * indicator dimensions; otherwise the attribute is skipped.</p>
      *
-     * <p>The {@code sourceDimToIndicatorDim} parameter maps each source API dimension ID to its
+     * <p>The {@code sourceDimensionToIndicatorDimension} parameter maps each source API dimension ID to its
      * corresponding indicator dimension type name (e.g. "GEOGRAPHICAL", "TIME", "MEASURE").
      * For DIMENSION attributes, if the attached dimension is not present in this map the attribute
      * is skipped, because it cannot be mapped to an indicator dimension.</p>
      *
-     * @param sourceDimToIndicatorDim mapping from source dimension ID to indicator dimension type name
+     * @param sourceDimensionToIndicatorDimension mapping from source dimension ID to indicator dimension type name
      * @return list of attribute instances; empty if there are no DATASET/DIMENSION/GROUP attributes
      */
-    public List<AttributeInstanceDto> extractDatasetAndDimensionAttributeInstances(Map<String, String> sourceDimToIndicatorDim) {
+    public List<AttributeInstanceDto> extractDatasetAndDimensionAttributeInstances(Map<String, String> sourceDimensionToIndicatorDimension) {
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
 
         if (getData() == null || getData().getAttributes() == null) {
@@ -284,61 +284,61 @@ public abstract class CommonMetamacDatasetAccess {
             String attributeId = metadataAttribute.getId();
 
             // Try plain string attribute first, then international
-            DataAttribute matchedDataAttr = findDataAttribute(dataAttributes, attributeId);
-            DataInternationalAttribute matchedInternAttr = findDataInternationalAttribute(internationalAttributes, attributeId);
+            DataAttribute matchedDataAttribute = findDataAttribute(dataAttributes, attributeId);
+            DataInternationalAttribute matchedInternationalAttribute = findDataInternationalAttribute(internationalAttributes, attributeId);
 
-            if (matchedInternAttr != null) {
+            if (matchedInternationalAttribute != null) {
                 multilingualAttributeIds.add(attributeId);
             }
 
             if (isDimension && metadataAttribute.getDimensions().getDimensions().size() > 1) {
-                if (matchedDataAttr != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+                if (matchedDataAttribute != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
                     Map<String, String> labelMap = buildEnumCodeToLabelMap(
                             (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
-                            matchedDataAttr.getValue());
+                            matchedDataAttribute.getValue());
                     if (!labelMap.isEmpty()) {
                         dimensionEnumLabelMapByAttributeId.put(attributeId, labelMap);
                     }
                 }
                 List<AttributeInstanceDto> groupInstances = buildGroupLevelInstances(
-                        attributeId, metadataAttribute, sourceDimToIndicatorDim, matchedDataAttr, matchedInternAttr);
+                        attributeId, metadataAttribute, sourceDimensionToIndicatorDimension, matchedDataAttribute, matchedInternationalAttribute);
                 result.addAll(groupInstances);
                 continue;
             }
 
             if (isDataset) {
-                if (matchedDataAttr != null
+                if (matchedDataAttribute != null
                         && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
                     String label = resolveEnumeratedLabel(
                             (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
-                            matchedDataAttr.getValue());
+                            matchedDataAttribute.getValue());
                     if (label != null) {
                         enumLabelByAttributeId.put(attributeId, label);
                     }
                 }
-                List<AttributeInstanceDto> instances = buildDatasetLevelInstances(attributeId, matchedDataAttr, matchedInternAttr);
+                List<AttributeInstanceDto> instances = buildDatasetLevelInstances(attributeId, matchedDataAttribute, matchedInternationalAttribute);
                 result.addAll(instances);
 
             } else if (isDimension) {
-                String sourceDimId = metadataAttribute.getDimensions().getDimensions().get(0).getDimensionId();
-                String indicatorDimId = sourceDimToIndicatorDim.get(sourceDimId);
-                if (indicatorDimId == null) {
+                String sourceDimensionId = metadataAttribute.getDimensions().getDimensions().get(0).getDimensionId();
+                String indicatorDimensionId = sourceDimensionToIndicatorDimension.get(sourceDimensionId);
+                if (indicatorDimensionId == null) {
                     // Dimension not mapped to any indicator dimension type — skip
                     continue;
                 }
-                List<String> dimCodes = getDimensionValuesOrderedForData(sourceDimId);
-                if (dimCodes == null || dimCodes.isEmpty()) {
+                List<String> dimensionCodes = getDimensionValuesOrderedForData(sourceDimensionId);
+                if (dimensionCodes == null || dimensionCodes.isEmpty()) {
                     continue;
                 }
-                if (matchedDataAttr != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
+                if (matchedDataAttribute != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
                     Map<String, String> labelMap = buildEnumCodeToLabelMap(
                             (EnumeratedAttributeValues) metadataAttribute.getAttributeValues(),
-                            matchedDataAttr.getValue());
+                            matchedDataAttribute.getValue());
                     if (!labelMap.isEmpty()) {
                         dimensionEnumLabelMapByAttributeId.put(attributeId, labelMap);
                     }
                 }
-                List<AttributeInstanceDto> instances = buildDimensionLevelInstances(attributeId, indicatorDimId, dimCodes, matchedDataAttr, matchedInternAttr);
+                List<AttributeInstanceDto> instances = buildDimensionLevelInstances(attributeId, indicatorDimensionId, dimensionCodes, matchedDataAttribute, matchedInternationalAttribute);
                 result.addAll(instances);
             }
         }
@@ -356,29 +356,29 @@ public abstract class CommonMetamacDatasetAccess {
     }
 
     private DataInternationalAttribute findDataInternationalAttribute(List<DataInternationalAttribute> internationalAttributes, String attributeId) {
-        for (DataInternationalAttribute internAttr : internationalAttributes) {
-            if (attributeId.equals(internAttr.getId())) {
-                return internAttr;
+        for (DataInternationalAttribute internationalAttribute : internationalAttributes) {
+            if (attributeId.equals(internationalAttribute.getId())) {
+                return internationalAttribute;
             }
         }
         return null;
     }
 
-    private List<AttributeInstanceDto> buildDatasetLevelInstances(String attributeId, DataAttribute dataAttr, DataInternationalAttribute internAttr) {
+    private List<AttributeInstanceDto> buildDatasetLevelInstances(String attributeId, DataAttribute dataAttribute, DataInternationalAttribute internationalAttribute) {
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
         Map<String, List<String>> emptyCodes = new HashMap<String, List<String>>();
 
-        if (dataAttr != null && !StringUtils.isBlank(dataAttr.getValue())) {
+        if (dataAttribute != null && !StringUtils.isBlank(dataAttribute.getValue())) {
             InternationalStringDto value = new InternationalStringDto();
-            value.addText(new LocalisedStringDto(IndicatorsConstants.DATASET_REPOSITORY_LOCALE, dataAttr.getValue()));
+            value.addText(new LocalisedStringDto(IndicatorsConstants.DATASET_REPOSITORY_LOCALE, dataAttribute.getValue()));
             AttributeInstanceDto instance = new AttributeInstanceDto();
             instance.setAttributeId(attributeId);
             instance.setValue(value);
             instance.setCodesByDimension(emptyCodes);
             result.add(instance);
 
-        } else if (internAttr != null && !internAttr.getValues().isEmpty()) {
-            InternationalString apiInternationalString = internAttr.getValues().get(0);
+        } else if (internationalAttribute != null && !internationalAttribute.getValues().isEmpty()) {
+            InternationalString apiInternationalString = internationalAttribute.getValues().get(0);
             if (apiInternationalString != null) {
                 InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                 AttributeInstanceDto instance = new AttributeInstanceDto();
@@ -392,12 +392,12 @@ public abstract class CommonMetamacDatasetAccess {
         return result;
     }
 
-    private List<AttributeInstanceDto> buildDimensionLevelInstances(String attributeId, String indicatorDimId, List<String> dimCodes, DataAttribute dataAttr, DataInternationalAttribute internAttr) {
+    private List<AttributeInstanceDto> buildDimensionLevelInstances(String attributeId, String indicatorDimensionId, List<String> dimensionCodes, DataAttribute dataAttribute, DataInternationalAttribute internationalAttribute) {
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
 
-        if (dataAttr != null && !StringUtils.isBlank(dataAttr.getValue())) {
-            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttr.getValue(), DATA_SEPARATOR);
-            for (int i = 0; i < values.length && i < dimCodes.size(); i++) {
+        if (dataAttribute != null && !StringUtils.isBlank(dataAttribute.getValue())) {
+            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttribute.getValue(), DATA_SEPARATOR);
+            for (int i = 0; i < values.length && i < dimensionCodes.size(); i++) {
                 if (!StringUtils.isBlank(values[i])) {
                     InternationalStringDto value = new InternationalStringDto();
                     value.addText(new LocalisedStringDto(IndicatorsConstants.DATASET_REPOSITORY_LOCALE, values[i]));
@@ -405,23 +405,23 @@ public abstract class CommonMetamacDatasetAccess {
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
                     Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
-                    codesByDimension.put(indicatorDimId, Arrays.asList(dimCodes.get(i)));
+                    codesByDimension.put(indicatorDimensionId, Arrays.asList(dimensionCodes.get(i)));
                     instance.setCodesByDimension(codesByDimension);
                     result.add(instance);
                 }
             }
 
-        } else if (internAttr != null) {
-            List<InternationalString> internValues = internAttr.getValues();
-            for (int i = 0; i < internValues.size() && i < dimCodes.size(); i++) {
-                InternationalString apiInternationalString = internValues.get(i);
+        } else if (internationalAttribute != null) {
+            List<InternationalString> internationalValues = internationalAttribute.getValues();
+            for (int i = 0; i < internationalValues.size() && i < dimensionCodes.size(); i++) {
+                InternationalString apiInternationalString = internationalValues.get(i);
                 if (apiInternationalString != null) {
                     InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                     AttributeInstanceDto instance = new AttributeInstanceDto();
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
                     Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
-                    codesByDimension.put(indicatorDimId, Arrays.asList(dimCodes.get(i)));
+                    codesByDimension.put(indicatorDimensionId, Arrays.asList(dimensionCodes.get(i)));
                     instance.setCodesByDimension(codesByDimension);
                     result.add(instance);
                 }
@@ -435,7 +435,7 @@ public abstract class CommonMetamacDatasetAccess {
     /**
      * Builds attribute instances for a GROUP-level attribute (multiple dimensions).
      *
-     * <p>All dimensions declared in the attribute must be mapped in {@code sourceDimToIndicatorDim};
+     * <p>All dimensions declared in the attribute must be mapped in {@code sourceDimensionToIndicatorDimension};
      * if any dimension is unmapped the method returns an empty list and the attribute is skipped.</p>
      *
      * <p>Values are indexed as a flat array following the cartesian product of the group dimensions
@@ -443,63 +443,63 @@ public abstract class CommonMetamacDatasetAccess {
      *
      * @param attributeId           attribute identifier
      * @param metadataAttribute     metadata descriptor of the attribute
-     * @param sourceDimToIndicatorDim mapping from source dimension ID to indicator dimension type name
-     * @param dataAttr              plain-string data attribute (may be null)
-     * @param internAttr            international-string data attribute (may be null)
+     * @param sourceDimensionToIndicatorDimension mapping from source dimension ID to indicator dimension type name
+     * @param dataAttribute              plain-string data attribute (may be null)
+     * @param internationalAttribute            international-string data attribute (may be null)
      * @return list of attribute instances; empty if any group dimension is unmapped or there are no values
      */
     private List<AttributeInstanceDto> buildGroupLevelInstances(String attributeId, Attribute metadataAttribute,
-            Map<String, String> sourceDimToIndicatorDim, DataAttribute dataAttr, DataInternationalAttribute internAttr) {
+            Map<String, String> sourceDimensionToIndicatorDimension, DataAttribute dataAttribute, DataInternationalAttribute internationalAttribute) {
 
         // Collect all source dimension IDs declared in the group attribute
-        List<String> groupSourceDimIds = new ArrayList<String>();
-        for (AttributeDimension dim : metadataAttribute.getDimensions().getDimensions()) {
-            groupSourceDimIds.add(dim.getDimensionId());
+        List<String> groupSourceDimensionIds = new ArrayList<String>();
+        for (AttributeDimension attributeDimension : metadataAttribute.getDimensions().getDimensions()) {
+            groupSourceDimensionIds.add(attributeDimension.getDimensionId());
         }
 
         // All dimensions must be mapped to an indicator dimension; skip otherwise
-        Map<String, String> groupDimMapping = new LinkedHashMap<String, String>();
-        for (String sourceDimId : groupSourceDimIds) {
-            String indicatorDimId = sourceDimToIndicatorDim.get(sourceDimId);
-            if (indicatorDimId == null) {
+        Map<String, String> groupDimensionMapping = new LinkedHashMap<String, String>();
+        for (String sourceDimensionId : groupSourceDimensionIds) {
+            String indicatorDimensionId = sourceDimensionToIndicatorDimension.get(sourceDimensionId);
+            if (indicatorDimensionId == null) {
                 return new ArrayList<AttributeInstanceDto>();
             }
-            groupDimMapping.put(sourceDimId, indicatorDimId);
+            groupDimensionMapping.put(sourceDimensionId, indicatorDimensionId);
         }
 
         // Order the group dimensions by global data dimension order (consistent with observation indexing)
-        List<String> orderedGroupDimIds = new ArrayList<String>();
-        for (String globalDimId : getDimensionsOrderedForData()) {
-            if (groupDimMapping.containsKey(globalDimId)) {
-                orderedGroupDimIds.add(globalDimId);
+        List<String> orderedGroupDimensionIds = new ArrayList<String>();
+        for (String globalDimensionId : getDimensionsOrderedForData()) {
+            if (groupDimensionMapping.containsKey(globalDimensionId)) {
+                orderedGroupDimensionIds.add(globalDimensionId);
             }
         }
 
         // Get the ordered code lists for each group dimension
-        List<List<String>> dimCodesList = new ArrayList<List<String>>();
-        for (String sourceDimId : orderedGroupDimIds) {
-            List<String> codes = getDimensionValuesOrderedForData(sourceDimId);
+        List<List<String>> dimensionCodesList = new ArrayList<List<String>>();
+        for (String sourceDimensionId : orderedGroupDimensionIds) {
+            List<String> codes = getDimensionValuesOrderedForData(sourceDimensionId);
             if (codes == null || codes.isEmpty()) {
                 return new ArrayList<AttributeInstanceDto>();
             }
-            dimCodesList.add(codes);
+            dimensionCodesList.add(codes);
         }
 
         // Compute total size and strides for cartesian-product flat indexing
         int totalSize = 1;
-        for (List<String> codes : dimCodesList) {
+        for (List<String> codes : dimensionCodesList) {
             totalSize *= codes.size();
         }
-        int[] strides = new int[dimCodesList.size()];
-        strides[dimCodesList.size() - 1] = 1;
-        for (int k = dimCodesList.size() - 2; k >= 0; k--) {
-            strides[k] = strides[k + 1] * dimCodesList.get(k + 1).size();
+        int[] strides = new int[dimensionCodesList.size()];
+        strides[dimensionCodesList.size() - 1] = 1;
+        for (int k = dimensionCodesList.size() - 2; k >= 0; k--) {
+            strides[k] = strides[k + 1] * dimensionCodesList.get(k + 1).size();
         }
 
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
 
-        if (dataAttr != null && !StringUtils.isBlank(dataAttr.getValue())) {
-            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttr.getValue(), DATA_SEPARATOR);
+        if (dataAttribute != null && !StringUtils.isBlank(dataAttribute.getValue())) {
+            String[] values = StringUtils.splitByWholeSeparatorPreserveAllTokens(dataAttribute.getValue(), DATA_SEPARATOR);
             for (int i = 0; i < values.length && i < totalSize; i++) {
                 if (!StringUtils.isBlank(values[i])) {
                     InternationalStringDto value = new InternationalStringDto();
@@ -507,20 +507,20 @@ public abstract class CommonMetamacDatasetAccess {
                     AttributeInstanceDto instance = new AttributeInstanceDto();
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
-                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimIds, groupDimMapping, dimCodesList, strides));
+                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimensionIds, groupDimensionMapping, dimensionCodesList, strides));
                     result.add(instance);
                 }
             }
-        } else if (internAttr != null) {
-            List<InternationalString> internValues = internAttr.getValues();
-            for (int i = 0; i < internValues.size() && i < totalSize; i++) {
-                InternationalString apiInternationalString = internValues.get(i);
+        } else if (internationalAttribute != null) {
+            List<InternationalString> internationalValues = internationalAttribute.getValues();
+            for (int i = 0; i < internationalValues.size() && i < totalSize; i++) {
+                InternationalString apiInternationalString = internationalValues.get(i);
                 if (apiInternationalString != null) {
                     InternationalStringDto value = InternationalStringUtils.buildDatasetRepositoryInternationalStringDtoFromCommonInternationalStringDto(apiInternationalString);
                     AttributeInstanceDto instance = new AttributeInstanceDto();
                     instance.setAttributeId(attributeId);
                     instance.setValue(value);
-                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimIds, groupDimMapping, dimCodesList, strides));
+                    instance.setCodesByDimension(buildGroupCodesByDimension(i, orderedGroupDimensionIds, groupDimensionMapping, dimensionCodesList, strides));
                     result.add(instance);
                 }
             }
@@ -536,21 +536,21 @@ public abstract class CommonMetamacDatasetAccess {
      * cartesian product ordering where the last dimension varies fastest.</p>
      *
      * @param flatIndex          position in the flat values array
-     * @param orderedGroupDimIds source dimension IDs ordered by global data dimension order
-     * @param groupDimMapping    mapping from source dimension ID to indicator dimension type name
-     * @param dimCodesList       ordered code lists, one per group dimension (same order as orderedGroupDimIds)
+     * @param orderedGroupDimensionIds source dimension IDs ordered by global data dimension order
+     * @param groupDimensionMapping    mapping from source dimension ID to indicator dimension type name
+     * @param dimensionCodesList       ordered code lists, one per group dimension (same order as orderedGroupDimensionIds)
      * @param strides            pre-computed strides for cartesian-product index decomposition
      * @return map from indicator dimension type name to singleton list containing the resolved code
      */
-    private Map<String, List<String>> buildGroupCodesByDimension(int flatIndex, List<String> orderedGroupDimIds,
-            Map<String, String> groupDimMapping, List<List<String>> dimCodesList, int[] strides) {
+    private Map<String, List<String>> buildGroupCodesByDimension(int flatIndex, List<String> orderedGroupDimensionIds,
+            Map<String, String> groupDimensionMapping, List<List<String>> dimensionCodesList, int[] strides) {
         Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
-        for (int k = 0; k < orderedGroupDimIds.size(); k++) {
-            String sourceDimId = orderedGroupDimIds.get(k);
-            String indicatorDimId = groupDimMapping.get(sourceDimId);
-            int dimIndex = (flatIndex / strides[k]) % dimCodesList.get(k).size();
-            String code = dimCodesList.get(k).get(dimIndex);
-            codesByDimension.put(indicatorDimId, Arrays.asList(code));
+        for (int k = 0; k < orderedGroupDimensionIds.size(); k++) {
+            String sourceDimensionId = orderedGroupDimensionIds.get(k);
+            String indicatorDimensionId = groupDimensionMapping.get(sourceDimensionId);
+            int dimensionIndex = (flatIndex / strides[k]) % dimensionCodesList.get(k).size();
+            String code = dimensionCodesList.get(k).get(dimensionIndex);
+            codesByDimension.put(indicatorDimensionId, Arrays.asList(code));
         }
         return codesByDimension;
     }

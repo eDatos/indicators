@@ -497,25 +497,25 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * <p>DATASET-level instances (empty codesByDimension) and instances for other dimensions
      * (GEOGRAPHICAL, TIME) are returned unchanged.</p>
      */
-    private List<AttributeInstanceDto> translateMeasureCodes(List<AttributeInstanceDto> attrs, List<DataOperation> dataOps) {
+    private List<AttributeInstanceDto> translateMeasureCodes(List<AttributeInstanceDto> attributeInstances, List<DataOperation> dataOps) {
         Map<String, List<String>> sourceMeasureToIndicatorMeasures = buildSourceMeasureToIndicatorMeasureMap(dataOps);
         if (sourceMeasureToIndicatorMeasures.isEmpty()) {
-            return attrs;
+            return attributeInstances;
         }
 
         String measureDimKey = IndicatorDataDimensionTypeEnum.MEASURE.name();
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
 
-        for (AttributeInstanceDto attr : attrs) {
-            Map<String, List<String>> codesByDim = attr.getCodesByDimension();
-            if (codesByDim == null || !codesByDim.containsKey(measureDimKey)) {
-                result.add(attr);
+        for (AttributeInstanceDto attributeInstance : attributeInstances) {
+            Map<String, List<String>> codesByDimension = attributeInstance.getCodesByDimension();
+            if (codesByDimension == null || !codesByDimension.containsKey(measureDimKey)) {
+                result.add(attributeInstance);
                 continue;
             }
 
-            List<String> sourceCodes = codesByDim.get(measureDimKey);
+            List<String> sourceCodes = codesByDimension.get(measureDimKey);
             if (sourceCodes == null || sourceCodes.isEmpty()) {
-                result.add(attr);
+                result.add(attributeInstance);
                 continue;
             }
 
@@ -528,11 +528,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
             // Expand one source-coded instance into N indicator-coded instances
             for (String indicatorMeasureCode : indicatorMeasureCodes) {
-                Map<String, List<String>> newCodes = new HashMap<String, List<String>>(codesByDim);
+                Map<String, List<String>> newCodes = new HashMap<String, List<String>>(codesByDimension);
                 newCodes.put(measureDimKey, Arrays.asList(indicatorMeasureCode));
                 AttributeInstanceDto expanded = new AttributeInstanceDto();
-                expanded.setAttributeId(attr.getAttributeId());
-                expanded.setValue(attr.getValue());
+                expanded.setAttributeId(attributeInstance.getAttributeId());
+                expanded.setValue(attributeInstance.getValue());
                 expanded.setCodesByDimension(newCodes);
                 result.add(expanded);
             }
@@ -594,17 +594,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
             DataSource dataSource = dataOp.getDataSource();
             dataSource.getAttributeMetadata().clear();
-            for (String attrId : allAttributeIds) {
+            for (String attributeId : allAttributeIds) {
                 DataSourceAttributeMetadata metadata = new DataSourceAttributeMetadata();
-                metadata.setAttributeId(attrId);
-                metadata.setMultilingual(multilingualIds.contains(attrId));
-                metadata.setEnumLabel(enumLabels.get(attrId));
-                Map<String, String> dimLabelMap = dimEnumMaps.get(attrId);
-                if (dimLabelMap != null && !dimLabelMap.isEmpty()) {
+                metadata.setAttributeId(attributeId);
+                metadata.setMultilingual(multilingualIds.contains(attributeId));
+                metadata.setEnumLabel(enumLabels.get(attributeId));
+                Map<String, String> dimensionLabelMap = dimEnumMaps.get(attributeId);
+                if (dimensionLabelMap != null && !dimensionLabelMap.isEmpty()) {
                     try {
-                        metadata.setEnumLabelMap(mapper.writeValueAsString(dimLabelMap));
+                        metadata.setEnumLabelMap(mapper.writeValueAsString(dimensionLabelMap));
                     } catch (IOException e) {
-                        LOG.warn("Could not serialize enumLabelMap for attribute {}", attrId);
+                        LOG.warn("Could not serialize enumLabelMap for attribute {}", attributeId);
                     }
                 }
                 dataSource.getAttributeMetadata().add(metadata);
@@ -2062,24 +2062,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (datasetAndDimensionInstances != null) {
             Set<String> registeredDataset = new HashSet<String>();
             Set<String> registeredDimension = new HashSet<String>();
-            for (AttributeInstanceDto inst : datasetAndDimensionInstances) {
-                String attrId = inst.getAttributeId();
-                boolean hasDimCodes = inst.getCodesByDimension() != null && !inst.getCodesByDimension().isEmpty();
-                if (hasDimCodes) {
-                    if (!registeredDimension.contains(attrId)) {
-                        AttributeDto attr = new AttributeDto();
-                        attr.setAttributeId(attrId);
-                        attr.setAttachmentLevel(AttributeAttachmentLevelEnum.DIMENSION);
-                        datasetRepoDto.getAttributes().add(attr);
-                        registeredDimension.add(attrId);
+            for (AttributeInstanceDto attributeInstance : datasetAndDimensionInstances) {
+                String attributeId = attributeInstance.getAttributeId();
+                boolean hasDimensionCodes = attributeInstance.getCodesByDimension() != null && !attributeInstance.getCodesByDimension().isEmpty();
+                if (hasDimensionCodes) {
+                    if (!registeredDimension.contains(attributeId)) {
+                        AttributeDto attributeDto = new AttributeDto();
+                        attributeDto.setAttributeId(attributeId);
+                        attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DIMENSION);
+                        datasetRepoDto.getAttributes().add(attributeDto);
+                        registeredDimension.add(attributeId);
                     }
                 } else {
-                    if (!registeredDataset.contains(attrId)) {
-                        AttributeDto attr = new AttributeDto();
-                        attr.setAttributeId(attrId);
-                        attr.setAttachmentLevel(AttributeAttachmentLevelEnum.DATASET);
-                        datasetRepoDto.getAttributes().add(attr);
-                        registeredDataset.add(attrId);
+                    if (!registeredDataset.contains(attributeId)) {
+                        AttributeDto attributeDto = new AttributeDto();
+                        attributeDto.setAttributeId(attributeId);
+                        attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DATASET);
+                        datasetRepoDto.getAttributes().add(attributeDto);
+                        registeredDataset.add(attributeId);
                     }
                 }
             }

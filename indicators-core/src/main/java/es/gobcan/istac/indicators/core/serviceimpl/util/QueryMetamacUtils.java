@@ -110,11 +110,11 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         // Dataset/Dimension attributes.
         // A separate access object initialized with the spatial dimensions is required so that
         // geographical codes are remapped to variable element IDs, consistent with how observation
-        // dim-codes are stored. The outer queryMetamacDatasetAccess was created with null spatial
-        // dims and therefore stores raw geo codes, which would produce inconsistent codesByDimension
+        // dimension-codes are stored. The outer queryMetamacDatasetAccess was created with null spatial
+        // dimensions and therefore stores raw geo codes, which would produce inconsistent codesByDimension
         // values in the AttributeInstanceDto list.
         QueryMetamacDatasetAccess accessForAttributes = new QueryMetamacDatasetAccess(query, variableElementsByCode, target.getSpatialVariables());
-        target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimToIndicatorDimMap()));
+        target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimensionToIndicatorDimensionMap()));
         target.setMultilingualAttributeIds(accessForAttributes.getMultilingualAttributeIds());
         target.setEnumLabelByAttributeId(accessForAttributes.getEnumLabelByAttributeId());
         target.setDimensionEnumLabelMapByAttributeId(accessForAttributes.getDimensionEnumLabelMapByAttributeId());
@@ -177,19 +177,19 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
      * type name (GEOGRAPHICAL, TIME, MEASURE). Used to translate source dimension IDs when
      * building DIMENSION-level {@link AttributeInstanceDto} instances.
      */
-    private Map<String, String> buildSourceDimToIndicatorDimMap() {
+    private Map<String, String> buildSourceDimensionToIndicatorDimensionMap() {
         Map<String, String> map = new HashMap<String, String>();
         List<String> spatials = extractSpatialVariableList();
-        for (String spatialDim : spatials) {
-            map.put(spatialDim, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        for (String spatialDimensionId : spatials) {
+            map.put(spatialDimensionId, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         }
-        String temporalDim = extractTemporalVariable();
-        if (temporalDim != null) {
-            map.put(temporalDim, IndicatorDataDimensionTypeEnum.TIME.name());
+        String temporalDimensionId = extractTemporalVariable();
+        if (temporalDimensionId != null) {
+            map.put(temporalDimensionId, IndicatorDataDimensionTypeEnum.TIME.name());
         }
-        String measDim = extractContVariable();
-        if (measDim != null) {
-            map.put(measDim, IndicatorDataDimensionTypeEnum.MEASURE.name());
+        String measureDimensionId = extractContVariable();
+        if (measureDimensionId != null) {
+            map.put(measureDimensionId, IndicatorDataDimensionTypeEnum.MEASURE.name());
         }
         return map;
     }

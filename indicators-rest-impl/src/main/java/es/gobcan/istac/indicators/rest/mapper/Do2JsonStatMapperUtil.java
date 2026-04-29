@@ -348,13 +348,13 @@ public class Do2JsonStatMapperUtil {
 
         // 2. DATASET/DIMENSION/GROUP attribute notes
         String defaultLang = metadataProperties.getDefaultInternationalizationLanguage();
-        List<AttributeInstanceDto> attrInstances = observations.getDatasetAndDimensionAttributes();
-        if (attrInstances != null) {
+        List<AttributeInstanceDto> attributeInstances = observations.getDatasetAndDimensionAttributes();
+        if (attributeInstances != null) {
             // Pre-compute geo element ID → codelist code map once (for resolving GEO codes to labels)
             Map<String, String> geoElementToCodelistCode = buildGeoElementIdToCodelistCodeMap();
             Map<String, String> datasetEnumLabels = observations.getDatasetEnumLabels();
             Map<String, Map<String, String>> dimensionEnumLabelMaps = observations.getDimensionEnumLabelMaps();
-            for (AttributeInstanceDto instance : attrInstances) {
+            for (AttributeInstanceDto instance : attributeInstances) {
                 String noteText = buildAttributeNote(instance, defaultLang, dimensions, geoElementToCodelistCode, datasetEnumLabels, dimensionEnumLabelMaps);
                 if (noteText != null && !noteText.trim().isEmpty()) {
                     notes.add(noteText);
@@ -402,19 +402,19 @@ public class Do2JsonStatMapperUtil {
         // DIMENSION/GROUP level: "label1, label2. value"
         List<String> allLabels = new ArrayList<String>();
         for (Map.Entry<String, List<String>> entry : codesByDimension.entrySet()) {
-            String dimKey = entry.getKey();
+            String dimensionKey = entry.getKey();
             for (String code : entry.getValue()) {
-                String label = resolveDimensionCodeToLabel(dimKey, code, dimensions, geoElementToCodelistCode);
+                String label = resolveDimensionCodeToLabel(dimensionKey, code, dimensions, geoElementToCodelistCode);
                 allLabels.add(label);
             }
         }
         return StringUtils.join(allLabels, ", ") + ". " + valueText;
     }
 
-    private String resolveDimensionCodeToLabel(String dimKey, String code, Map<String, JsonStatDimensionType> dimensions,
+    private String resolveDimensionCodeToLabel(String dimensionKey, String code, Map<String, JsonStatDimensionType> dimensions,
             Map<String, String> geoElementToCodelistCode) {
-        JsonStatDimensionType dimension = dimensions != null ? dimensions.get(dimKey) : null;
-        if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(dimKey)) {
+        JsonStatDimensionType dimension = dimensions != null ? dimensions.get(dimensionKey) : null;
+        if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(dimensionKey)) {
             // code is element ID (e.g. MUN_GARAFIA); bridge via codelist code to label
             String codelistCode = geoElementToCodelistCode.get(code);
             if (codelistCode != null && dimension != null && dimension.getCategory() != null) {
