@@ -31,9 +31,9 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.QueryMet
  *
  * <p>All methods are static so they can be imported and called without instantiation.</p>
  */
-public class MetamacDatasetAccessBuilder {
+public class DatasetAccessBuilder {
 
-    private MetamacDatasetAccessBuilder() {
+    private DatasetAccessBuilder() {
     }
 
     // =========================================================================
@@ -205,11 +205,11 @@ public class MetamacDatasetAccessBuilder {
     }
 
     // =========================================================================
-    // sourceDimToIndicatorDim map builder
+    // sourceDimensionToIndicatorDimension map builder
     // =========================================================================
 
     /**
-     * Builds a {@code sourceDimToIndicatorDim} map from alternating key-value pairs.
+     * Builds a {@code sourceDimensionToIndicatorDimension} map from alternating key-value pairs.
      * Example: {@code dimMap("DIM_GEO", "GEOGRAPHICAL", "DIM_TIME", "TIME")}
      */
     public static Map<String, String> dimMap(String... keyValuePairs) {

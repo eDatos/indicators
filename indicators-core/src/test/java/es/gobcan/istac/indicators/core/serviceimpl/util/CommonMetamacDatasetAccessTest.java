@@ -2,22 +2,22 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import static es.gobcan.istac.indicators.core.serviceimpl.util.AttributeInstanceDtoAsserts.assertSingleDimInstance;
 import static es.gobcan.istac.indicators.core.serviceimpl.util.AttributeInstanceDtoAsserts.assertTwoDimInstance;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.apiInternString;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.buildAccess;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.buildQueryNoDataAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dataAttr;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dataAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.datasetAttr;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dim;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dimMap;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dimensionAttr;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.dims;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.internDataAttr;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.internDataAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.metaAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.noDataAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.noInternDataAttrs;
-import static es.gobcan.istac.indicators.core.serviceimpl.util.MetamacDatasetAccessBuilder.primaryMeasureAttr;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.apiInternString;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.buildAccess;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.buildQueryNoDataAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dataAttr;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dataAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.datasetAttr;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dim;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dimMap;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dimensionAttr;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.dims;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.internDataAttr;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.internDataAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.metaAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.noDataAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.noInternDataAttrs;
+import static es.gobcan.istac.indicators.core.serviceimpl.util.DatasetAccessBuilder.primaryMeasureAttr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -36,7 +36,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
  *
  * <p>Uses {@link QueryMetamacDatasetAccess} as the concrete subclass.
  * No Spring context or DBUnit — JAXB objects are built programmatically via
- * {@link MetamacDatasetAccessBuilder}.</p>
+ * {@link DatasetAccessBuilder}.</p>
  */
 public class CommonMetamacDatasetAccessTest {
 
