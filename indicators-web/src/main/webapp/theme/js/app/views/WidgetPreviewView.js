@@ -90,7 +90,9 @@
         	// and there are no problems with the event ordering
         	this.model.trigger('change', this.model);
         	
-            this.widget.reloadData();            
+            if (this.widget) {
+                this.widget.reloadData();
+            }
         }
 
     });
