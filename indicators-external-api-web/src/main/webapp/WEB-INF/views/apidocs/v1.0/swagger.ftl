@@ -32,7 +32,8 @@
       "properties": {
         "attachmentLevel": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.attachmentLevel' /]",
-          "type": "string"
+          "type": "string",
+          "enum": ["OBSERVATION", "DATASET", "DIMENSION"]
         },
         "code": {
           "description": "[@messageEscape 'api.doc.swagger.definitions.attribute.properties.code' /]",
@@ -50,6 +51,13 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attribute' /]",
           "items": {
             "$ref": "#/definitions/DataAttributeMap"
+          },
+          "type": "array"
+        },
+        "attributes": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.data.properties.attributes' /]",
+          "items": {
+            "$ref": "#/definitions/AttributeEntry"
           },
           "type": "array"
         },
@@ -140,6 +148,21 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.datadimensionrepresentationindexmap.properties.category' /]",
           "format": "int32",
           "type": "integer"
+        }
+      }
+    },
+    "AttributeEntry": {
+      "properties": {
+        "id": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attributeentry.properties.id' /]",
+          "type": "string"
+        },
+        "value": {
+          "description": "[@messageEscape 'api.doc.swagger.definitions.attributeentry.properties.value' /]",
+          "items": {
+            "$ref": "#/definitions/InternationalString"
+          },
+          "type": "array"
         }
       }
     },
@@ -698,6 +721,10 @@
           "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.decimalplaces' /]",
           "format": "int32",
           "type": "integer"
+        },
+        "attribute": {
+          "$ref": "#/definitions/MetadataAttributeMap",
+          "description": "[@messageEscape 'api.doc.swagger.definitions.instance.properties.attribute' /]"
         },
         "dimension": {
           "$ref": "#/definitions/MetadataDimensionMap",

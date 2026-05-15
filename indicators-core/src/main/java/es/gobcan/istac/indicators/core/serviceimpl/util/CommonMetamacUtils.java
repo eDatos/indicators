@@ -49,6 +49,7 @@ public abstract class CommonMetamacUtils {
     public Map<String, String>    variableElementsByCode = new HashMap<String, String>();
 
     public SrmRestInternalService srmRestInternalService;
+    protected String              languageDefault;
 
     protected abstract Dimensions getDimensions();
 
@@ -88,12 +89,16 @@ public abstract class CommonMetamacUtils {
         if (internationalString == null) {
             return null;
         }
+        String firstValue = null;
         for (LocalisedString localisedString : internationalString.getTexts()) {
+            if (firstValue == null) {
+                firstValue = localisedString.getValue();
+            }
             if (localisedString.getLang().equals(languageDefault)) {
                 return localisedString.getValue();
             }
         }
-        return null;
+        return firstValue;
     }
 
     public static List<String> extractVariablesFromDimensions(Dimensions dimensions) {
@@ -191,7 +196,7 @@ public abstract class CommonMetamacUtils {
                 for (NonEnumeratedDimensionValue nonEnumeratedDimensionValue : values) {
                     String extractValue;
                     if (trylabels) {
-                        extractValue = extractValueForDefaultLanguage(nonEnumeratedDimensionValue.getName());
+                        extractValue = extractValueForDefaultLanguage(nonEnumeratedDimensionValue.getName(), languageDefault);
                         valuesResult.add(extractValue);
                     } else {
                         extractValue = nonEnumeratedDimensionValue.getId();
@@ -217,7 +222,7 @@ public abstract class CommonMetamacUtils {
                     }
 
                     if (trylabels) {
-                        extractValue = extractValueForDefaultLanguage(name);
+                        extractValue = extractValueForDefaultLanguage(name, languageDefault);
                     } else {
                         extractValue = valueId;
                     }

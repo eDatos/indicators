@@ -67,6 +67,21 @@ public class MapperUtil {
         return labels;
     }
 
+    public static String getDefaultLabel(InternationalStringDto internationalString, String defaultLanguage) {
+        if (internationalString == null || internationalString.getTexts() == null) {
+            return null;
+        }
+        for (LocalisedStringDto text : internationalString.getTexts()) {
+            if (defaultLanguage.equals(text.getLocale())) {
+                return text.getLabel();
+            }
+        }
+        if (!internationalString.getTexts().isEmpty()) {
+            return internationalString.getTexts().iterator().next().getLabel();
+        }
+        return null;
+    }
+
     public static Map<String, String> getLocalisedLabel(InternationalStringDto internationalString, String defaultLanguage) {
         if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
             return null;

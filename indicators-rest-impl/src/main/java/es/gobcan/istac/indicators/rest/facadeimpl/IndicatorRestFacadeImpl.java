@@ -228,6 +228,9 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
             dataTypeRequest = new DataTypeRequest(indicatorVersion, indicatorObservationsExtended.getGeographicalCodes(), indicatorObservationsExtended.getTimeCodes(),
                     indicatorObservationsExtended.getMeasureCodes(), indicatorObservationsExtended.getObservations());
+            dataTypeRequest.setDatasetAndDimensionAttributes(indicatorObservationsExtended.getDatasetAndDimensionAttributes());
+            dataTypeRequest.setMultilingualAttributeIds(indicatorObservationsExtended.getMultilingualAttributeIds());
+            dataTypeRequest.setDatasetEnumLabels(indicatorObservationsExtended.getDatasetEnumLabels());
 
         } else {
             IndicatorObservationsVO indicatorObservations = indicatorsApiService.findObservationsInIndicator(indicatorVersion.getIndicator().getUuid(), dataFilter);
