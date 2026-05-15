@@ -2,14 +2,17 @@ package es.gobcan.istac.indicators.core.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
@@ -25,8 +28,12 @@ public class Data extends DataStructure {
     private GeographicalValueDto     geographicalValueDto = null;
     private Map<String, DataContent> data;
 
-    private List<String>             dataMapAttributes    = new ArrayList<String>();
-    private List<String>             variablesInOrder     = new ArrayList<String>();
+    private List<String>                         dataMapAttributes                   = new ArrayList<String>();
+    private List<String>                         variablesInOrder                    = new ArrayList<String>();
+    private List<AttributeInstanceDto>           datasetAndDimensionAttributes       = new ArrayList<AttributeInstanceDto>();
+    private Set<String>                          multilingualAttributeIds            = new HashSet<String>();
+    private Map<String, String>                  enumLabelByAttributeId              = new HashMap<String, String>();
+    private Map<String, Map<String, String>>     dimensionEnumLabelMapByAttributeId  = new HashMap<String, Map<String, String>>();
 
     public Map<String, DataContent> getData() {
         return data;
@@ -108,6 +115,38 @@ public class Data extends DataStructure {
 
     public void setGeographicalValueDto(GeographicalValueDto geographicalValueDto) {
         this.geographicalValueDto = geographicalValueDto;
+    }
+
+    public List<AttributeInstanceDto> getDatasetAndDimensionAttributes() {
+        return datasetAndDimensionAttributes;
+    }
+
+    public void setDatasetAndDimensionAttributes(List<AttributeInstanceDto> datasetAndDimensionAttributes) {
+        this.datasetAndDimensionAttributes = datasetAndDimensionAttributes;
+    }
+
+    public Set<String> getMultilingualAttributeIds() {
+        return multilingualAttributeIds;
+    }
+
+    public void setMultilingualAttributeIds(Set<String> multilingualAttributeIds) {
+        this.multilingualAttributeIds = multilingualAttributeIds;
+    }
+
+    public Map<String, String> getEnumLabelByAttributeId() {
+        return enumLabelByAttributeId;
+    }
+
+    public void setEnumLabelByAttributeId(Map<String, String> enumLabelByAttributeId) {
+        this.enumLabelByAttributeId = enumLabelByAttributeId;
+    }
+
+    public Map<String, Map<String, String>> getDimensionEnumLabelMapByAttributeId() {
+        return dimensionEnumLabelMapByAttributeId;
+    }
+
+    public void setDimensionEnumLabelMapByAttributeId(Map<String, Map<String, String>> dimensionEnumLabelMapByAttributeId) {
+        this.dimensionEnumLabelMapByAttributeId = dimensionEnumLabelMapByAttributeId;
     }
 
     public List<String> getDataMapAttributes() {

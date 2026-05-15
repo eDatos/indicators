@@ -3,8 +3,10 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +18,9 @@ import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Data;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.statistical_resources.rest.common.v1_0.domain.Dimensions;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 import es.gobcan.istac.indicators.core.domain.DataContent;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MetamacSelectionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QueryEnvironmentEnum;
 import es.gobcan.istac.indicators.core.service.SrmRestInternalService;
@@ -25,9 +29,10 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
 
     protected Query query;
 
-    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService, Query query) {
+    public QueryMetamacUtils(SrmRestInternalService srmRestInternalService, Query query, String languageDefault) {
         this.srmRestInternalService = srmRestInternalService;
         this.query = query;
+        this.languageDefault = languageDefault;
     }
 
     public es.gobcan.istac.indicators.core.domain.Data queryMetamacToData() throws IOException, MetamacException {
@@ -46,7 +51,7 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.setUuid(query.getUrn());
 
         // Title
-        target.setTitle(extractValueForDefaultLanguage(query.getName()));
+        target.setTitle(extractValueForDefaultLanguage(query.getName(), languageDefault));
 
         // PX Uri
         target.setPxUri(query.getUrn());
@@ -85,11 +90,11 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        target.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName()));
+        target.setSurveyTitle(extractValueForDefaultLanguage(statisticalOperation.getName(), languageDefault));
 
         // Publishers
         Resource maintainer = query.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = extractValueForDefaultLanguage(maintainer.getName(), languageDefault);
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             target.setPublishers(Collections.emptyList());
         } else {
@@ -101,6 +106,18 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         target.processData(extractData(query, target.getSpatialVariables(), queryMetamacDatasetAccess));
 
         target.processObservationsAttributesMap(queryMetamacDatasetAccess.getAttributesMetadataMap());
+
+        // Dataset/Dimension attributes.
+        // A separate access object initialized with the spatial dimensions is required so that
+        // geographical codes are remapped to variable element IDs, consistent with how observation
+        // dimension-codes are stored. The outer queryMetamacDatasetAccess was created with null spatial
+        // dimensions and therefore stores raw geo codes, which would produce inconsistent codesByDimension
+        // values in the AttributeInstanceDto list.
+        QueryMetamacDatasetAccess accessForAttributes = new QueryMetamacDatasetAccess(query, variableElementsByCode, target.getSpatialVariables());
+        target.setDatasetAndDimensionAttributes(accessForAttributes.extractDatasetAndDimensionAttributeInstances(buildSourceDimensionToIndicatorDimensionMap()));
+        target.setMultilingualAttributeIds(accessForAttributes.getMultilingualAttributeIds());
+        target.setEnumLabelByAttributeId(accessForAttributes.getEnumLabelByAttributeId());
+        target.setDimensionEnumLabelMapByAttributeId(accessForAttributes.getDimensionEnumLabelMapByAttributeId());
 
         // VariablesInOrder
         target.setVariablesInOrder(extractVariablesFromDimensions(query.getMetadata().getDimensions()));
@@ -153,6 +170,28 @@ public class QueryMetamacUtils extends CommonMetamacUtils {
         }
 
         return result;
+    }
+
+    /**
+     * Builds a mapping from each source API dimension ID to its corresponding indicator dimension
+     * type name (GEOGRAPHICAL, TIME, MEASURE). Used to translate source dimension IDs when
+     * building DIMENSION-level {@link AttributeInstanceDto} instances.
+     */
+    private Map<String, String> buildSourceDimensionToIndicatorDimensionMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        List<String> spatials = extractSpatialVariableList();
+        for (String spatialDimensionId : spatials) {
+            map.put(spatialDimensionId, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        }
+        String temporalDimensionId = extractTemporalVariable();
+        if (temporalDimensionId != null) {
+            map.put(temporalDimensionId, IndicatorDataDimensionTypeEnum.TIME.name());
+        }
+        String measureDimensionId = extractContVariable();
+        if (measureDimensionId != null) {
+            map.put(measureDimensionId, IndicatorDataDimensionTypeEnum.MEASURE.name());
+        }
+        return map;
     }
 
     @Override

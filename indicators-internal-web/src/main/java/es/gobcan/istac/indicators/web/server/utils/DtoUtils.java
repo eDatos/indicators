@@ -255,18 +255,18 @@ public class DtoUtils {
      * @return
      * @throws MetamacException
      */
-    public static DataStructureDto createDataStructureDto(Query query, SrmRestInternalService srmRestInternalService) throws MetamacException {
+    public static DataStructureDto createDataStructureDto(Query query, SrmRestInternalService srmRestInternalService, String languageDefault) throws MetamacException {
         if (query == null) {
             return null;
         }
-        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query);
+        QueryMetamacUtils queryMetamacUtils = new QueryMetamacUtils(srmRestInternalService, query, languageDefault);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         // UUid
         dataStructureDto.setUuid(query.getUrn());
 
         // Title
-        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(query.getName()));
+        dataStructureDto.setTitle(CommonMetamacUtils.extractValueForDefaultLanguage(query.getName(), languageDefault));
 
         // PX Uri
         dataStructureDto.setQueryUrn(query.getUrn());
@@ -279,11 +279,11 @@ public class DtoUtils {
         dataStructureDto.setSurveyCode(statisticalOperation.getId());
 
         // Survey Title
-        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName()));
+        dataStructureDto.setSurveyTitle(CommonMetamacUtils.extractValueForDefaultLanguage(statisticalOperation.getName(), languageDefault));
 
         // Maintainer
         Resource maintainer = query.getMetadata().getMaintainer();
-        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName());
+        String extractValueForDefaultLanguage = CommonMetamacUtils.extractValueForDefaultLanguage(maintainer.getName(), languageDefault);
         if (StringUtils.isEmpty(extractValueForDefaultLanguage)) {
             dataStructureDto.setPublishers(Collections.emptyList());
         } else {
@@ -348,7 +348,7 @@ public class DtoUtils {
         if (dataset == null) {
             return null;
         }
-        DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset);
+        DatasetMetamacUtils datasetMetamacUtils = new DatasetMetamacUtils(srmRestInternalService, dataset, languageDefault);
         DataStructureDto dataStructureDto = new DataStructureDto();
 
         String datasetUrn = getUrnWithoutVersion(dataset.getUrn());
