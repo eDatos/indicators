@@ -11,7 +11,7 @@
 ## 12.2.0 a 12.2.1-SNAPSHOT
 
 - Se han realizado cambios en la base de datos **indicators_data**, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
-  Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.1.2/db/indicators_data/postgresql/](etc/changes-from-release/12.1.2/db/indicators_data/postgresql)
+  Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.2.0/db/indicators_data/postgresql/](etc/changes-from-release/12.2.0/db/indicators_data/postgresql)
 
 ## 12.1.2 a 12.2.0
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
