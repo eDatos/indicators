@@ -60,3 +60,16 @@ LOG.info("msg {} {} {}", new Object[]{param1, param2, param3});
 Always populate **three languages**: Catalan (`_ca`), Spanish (`_es`), English (`_en`). Default (`_default`) = same as English.
 
 Always warn the user to review Catalan translations at https://www.softcatala.org/traductor/
+
+### Catalan properties — apostrophe escaping
+
+`MessageFormat.format()` treats `'` as an escape character (consumed, not displayed).
+Rule depends on which code processes the template:
+
+| Key prefix | Processing path | Use |
+|---|---|---|
+| `notice_message.*`, `stream_message.*` with `{N}` | `NoticesRestInternalServiceImpl` → `MessageFormat.format()` direct | `''` |
+| `exception.*` in `messages-*_ca.properties` | GWT Path B: `WebTranslateExceptions` → plain `String.replace()` | `'` |
+| `*Messages_ca.properties` in `src/main/java/` | GWT `@Messages` interface — MessageFormat always applied | `''` |
+
+Example: `S''ha publicat {0}` (notice_message) vs `S'ha produït {0}` (exception).
