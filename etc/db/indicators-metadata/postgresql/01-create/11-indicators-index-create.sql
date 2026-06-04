@@ -17,4 +17,7 @@ CREATE INDEX pk_tb_indic_systems_versions_objective_fk ON tb_indic_systems_versi
 
 -- Data source index for searchings
  CREATE INDEX IX_TB_DATA_SOURCES_RESOURCE_ID ON TB_DATA_SOURCES(RESOURCE_ID);
+CREATE INDEX IX_TB_DATA_SOURCES_GEOGRAPHICAL_CODELIST_URN_FK ON TB_DATA_SOURCES(GEOGRAPHICAL_CODELIST_URN);
+
+CREATE INDEX tb_localised_strings_international_string_fk ON tb_localised_strings (international_string_fk);
 
