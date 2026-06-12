@@ -63,7 +63,8 @@ CREATE TABLE TB_DATASET_DIMENSIONS (
   COLUMN_NAME VARCHAR(100) NOT NULL,
   UUID VARCHAR(36) NOT NULL,
   VERSION BIGINT NOT NULL,
-  DATASET_FK BIGINT NOT NULL
+  DATASET_FK BIGINT NOT NULL,
+  SOURCE_URN VARCHAR(4000)
 );
 
 
@@ -241,7 +242,9 @@ CREATE INDEX idx_tb_external_items_urn ON tb_external_items (urn);
 
 CREATE INDEX idx_tb_datasets_dataset_id ON tb_datasets(dataset_id);
 CREATE INDEX idx_tb_dataset_dimensions_fk_col ON tb_dataset_dimensions(dataset_fk, column_name);
+CREATE INDEX tb_dataset_dimensiones_source_urn ON tb_dataset_dimensions (source_urn);
 CREATE INDEX idx_tb_external_items_codes_fk_code ON tb_external_items_codes(external_item_fk, code);
+CREATE INDEX idx_tb_external_items_codes_title_fk ON tb_external_items_codes (title_fk);
 CREATE UNIQUE INDEX tb_localised_strings_international_string_fk_locale ON tb_localised_strings (international_string_fk, locale);
 
     
