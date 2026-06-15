@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 12.2.1 a 12.2.2-SNAPSHOT
+## 12.2.1 a 12.2.2
 
 - Se han realizado cambios en la base de datos **indicators_data**, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
   Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.2.1/db/indicators_data/postgresql/](etc/changes-from-release/12.2.1/db/indicators_data/postgresql)
