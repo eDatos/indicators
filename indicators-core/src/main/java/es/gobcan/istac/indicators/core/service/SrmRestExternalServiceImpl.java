@@ -14,6 +14,11 @@ public class SrmRestExternalServiceImpl implements SrmRestExternalService {
 
     @Override
     public Codes retrieveCodesFromCodelist(String codelistUrn, boolean retrieveLastVersion) {
+        return retrieveCodesFromCodelistByOrder(codelistUrn, retrieveLastVersion, null);
+    }
+
+    @Override
+    public Codes retrieveCodesFromCodelistByOrder(String codelistUrn, boolean retrieveLastVersion, String order) {
 
         String[] params = splitUrnItemScheme(codelistUrn);
         String agencyId = params[0];
@@ -23,7 +28,7 @@ public class SrmRestExternalServiceImpl implements SrmRestExternalService {
             version = "~latest";
         }
 
-        return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, null, null, null);
+        return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, order, null, null, null, null);
 
     }
 

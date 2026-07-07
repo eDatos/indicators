@@ -30,4 +30,5 @@ public interface NoticesRestInternalService {
     void createUpdateCategoryCacheErrorNotification(String user, String actionCode, MetamacException exception);
     void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception);
     void updateGeopgraphicalValuesFromSrmVariableElementsErrorNotification(String actionCode, String messageParams, MetamacException exception);
+    void updateGeographicalGranularitiesVisualisationOrderNotFoundErrorNotification(String codelistUrn, String visualisationOrder);
 }

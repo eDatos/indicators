@@ -154,4 +154,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
         return retrieveProperty(IndicatorsConfigurationConstants.INDICATOR_DEFAULT_CODELIST_URN_MEASURE_VALUES);
     }
 
+    @Override
+    public String retrieveVisualisationOrderForGeographicGranularity() throws MetamacException {
+        return retrieveProperty(IndicatorsConfigurationConstants.GEOGRAPHICAL_GRANULARITY_DEFAULT_VISUALISATION_ORDER);
+    }
+
 }

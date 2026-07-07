@@ -23,10 +23,17 @@ public class VariableElementAvro2DoMapperImpl implements VariableElementAvro2DoM
         geographicalValue.setLatitude(variableElementAvro.getLatitud());
         geographicalValue.setLongitude(variableElementAvro.getLongitud());
         geographicalValue.setTitle(RestMapper.getInternationalStringFromInternationalStringAvro(variableElementAvro.getShortName()));
-        geographicalValue.setOrder(variableElementAvro.getCode());
+        geographicalValue.setOrder(buildGlobalOrder(geographicalGranularity, variableElementAvro.getCode()));
         geographicalValue.setVersion(0L);
 
         return geographicalValue;
+    }
+
+    static String buildGlobalOrder(GeographicalGranularity granularity, String code) {
+        if (granularity == null || granularity.getGranularityOrder() == null) {
+            return code;
+        }
+        return String.format("%05d_%s", granularity.getGranularityOrder(), code);
     }
 
     @Override
