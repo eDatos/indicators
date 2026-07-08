@@ -67,20 +67,24 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
             // @formatter:off
             try {
                 String externalDatasetTopic = getExternalDatasetPublicationTopic();
-                try {
-                    KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
-                } catch (Exception e) {
-                    // Topics likely already exist, or Kafka is temporarily unavailable.
-                    // Log the warning and continue: consumers must start regardless so that
-                    // KeepAliveKafkaThread can recover once Kafka becomes available.
-                    LOGGER.warn("Could not initialize Kafka topics on startup. Consumers will start anyway.", e);
-                }
+                initializeKafkaTopics(externalDatasetTopic);
                 prepareFailedMessageCache();
                 startConsumers(ac, externalDatasetTopic);
             } catch (Exception e) {
                 LOGGER.error(e, e.getCause());
             }
             // @formatter:on
+        }
+    }
+
+    // Topics likely already exist after first deploy, or Kafka may be temporarily unavailable at startup.
+    // Failure here must not abort consumer startup: KeepAliveKafkaThread needs to be running so it can
+    // recover automatically once Kafka becomes available.
+    private void initializeKafkaTopics(String externalDatasetTopic) {
+        try {
+            KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
+        } catch (Exception e) {
+            LOGGER.warn("Could not initialize Kafka topics on startup. Consumers will start anyway.", e);
         }
     }
 
@@ -285,6 +289,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 Thread.sleep(timeout);
             } catch (InterruptedException e) {
                 LOGGER.error(e);
+                // Restore the interrupt flag so callers (e.g. ThreadPoolTaskExecutor on undeploy)
+                // can detect the interruption and release the thread cleanly.
                 Thread.currentThread().interrupt();
                 return false;
             }

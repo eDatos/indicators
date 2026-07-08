@@ -1705,11 +1705,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             return;
         }
 
-        String visualisationOrder = configurationService.retrieveVisualisationOrderForGeographicGranularity();
+        String visualisationOrder = null;
         Codes granularityCodes = null;
         boolean orderedByVisualisation = false;
 
         try {
+            visualisationOrder = configurationService.retrieveVisualisationOrderForGeographicGranularity();
             granularityCodes = srmRestExternalService.retrieveCodesFromCodelistByOrder(codelistAvro.getUrn(), true, visualisationOrder);
             orderedByVisualisation = true;
         } catch (Exception e) {

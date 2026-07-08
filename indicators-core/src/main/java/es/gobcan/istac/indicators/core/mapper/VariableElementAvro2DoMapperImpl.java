@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.invocation.utils.RestMapper;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 @Component
 public class VariableElementAvro2DoMapperImpl implements VariableElementAvro2DoMapper {
@@ -33,7 +34,7 @@ public class VariableElementAvro2DoMapperImpl implements VariableElementAvro2DoM
         if (granularity == null || granularity.getGranularityOrder() == null) {
             return code;
         }
-        return String.format("%05d_%s", granularity.getGranularityOrder(), code);
+        return ServiceUtils.buildGlobalOrderPrefix(granularity.getGranularityOrder()) + code;
     }
 
     @Override

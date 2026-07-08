@@ -211,6 +211,8 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             LOGGER.error(e);
+            // Restore the interrupt flag so callers (e.g. ThreadPoolTaskExecutor on undeploy)
+            // can detect the interruption and release the thread cleanly.
             Thread.currentThread().interrupt();
             return false;
         }

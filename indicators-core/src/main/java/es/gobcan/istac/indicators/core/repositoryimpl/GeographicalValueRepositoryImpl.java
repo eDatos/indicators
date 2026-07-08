@@ -76,7 +76,7 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
     // This method is called only from the CodelistAvro Kafka consumer for granularity codelist (administrative, infrequent event).
     @Override
     public void updateGlobalOrderByGranularity(Long granularityId, Integer granularityOrder) {
-        String globalOrderPrefix = String.format("%05d_", granularityOrder);
+        String globalOrderPrefix = ServiceUtils.buildGlobalOrderPrefix(granularityOrder);
         String sql = "UPDATE TB_LIS_GEOGR_VALUES ";
         sql += "SET GLOBAL_ORDER = :prefix || CODE, ";
         sql += "VERSION = VERSION + 1 ";
