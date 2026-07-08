@@ -12,7 +12,7 @@
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
   Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.x.x/db/indicators/postgresql/](etc/changes-from-release/12.x.x/db/indicators/postgresql)
 * Ejecutar en el siguiente orden los scripts necesarios para tarea EDATOS-5725:
-  */indicators/etc/changes-from-release/12.x.x/db/common-metadata/postgresql/20260607_insert_table_tb_data_configurations.sql
+  * /indicators/etc/changes-from-release/12.x.x/db/common-metadata/postgresql/20260607_insert_table_tb_data_configurations.sql
   * /indicators/etc/changes-from-release/12.x.x/db/indicators/postgresql/1-20260607_update_indicators_tables.sql
   * A partir de este punto, debe estar desplegada la release para permitir rellenar tabla "TB_LIS_GEOGR_VALUES" con el nuevo GLOBAL_ORDER
   * Ejecutar el siguiente script siguiendo los pasos que se indican para realizar la adecuación de datos del nuevo campo de orden de granularidad:
