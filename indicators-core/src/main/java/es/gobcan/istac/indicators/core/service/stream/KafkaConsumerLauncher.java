@@ -66,13 +66,17 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         if (ac.getParent() == null) {
             // @formatter:off
             try {
-                
                 String externalDatasetTopic = getExternalDatasetPublicationTopic();
-                KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
+                try {
+                    KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
+                } catch (Exception e) {
+                    // Topics likely already exist, or Kafka is temporarily unavailable.
+                    // Log the warning and continue: consumers must start regardless so that
+                    // KeepAliveKafkaThread can recover once Kafka becomes available.
+                    LOGGER.warn("Could not initialize Kafka topics on startup. Consumers will start anyway.", e);
+                }
                 prepareFailedMessageCache();
-
-               startConsumers(ac, externalDatasetTopic);
-                
+                startConsumers(ac, externalDatasetTopic);
             } catch (Exception e) {
                 LOGGER.error(e, e.getCause());
             }
@@ -281,6 +285,8 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 Thread.sleep(timeout);
             } catch (InterruptedException e) {
                 LOGGER.error(e);
+                Thread.currentThread().interrupt();
+                return false;
             }
             return true;
         }

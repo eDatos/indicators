@@ -211,6 +211,8 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             LOGGER.error(e);
+            Thread.currentThread().interrupt();
+            return false;
         }
         return true;
     }
