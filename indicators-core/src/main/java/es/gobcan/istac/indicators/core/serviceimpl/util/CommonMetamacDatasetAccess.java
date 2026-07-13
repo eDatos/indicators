@@ -32,6 +32,7 @@ import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public abstract class CommonMetamacDatasetAccess {
@@ -256,7 +257,7 @@ public abstract class CommonMetamacDatasetAccess {
      * @param sourceDimensionToIndicatorDimension mapping from source dimension ID to indicator dimension type name
      * @return list of attribute instances; empty if there are no DATASET/DIMENSION/GROUP attributes
      */
-    public List<AttributeInstanceDto> extractDatasetAndDimensionAttributeInstances(Map<String, String> sourceDimensionToIndicatorDimension) {
+    public List<AttributeInstanceDto> extractDatasetAndDimensionAttributeInstances(Map<String, String> sourceDimensionToIndicatorDimension) throws MetamacException {
         List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
 
         if (getData() == null || getData().getAttributes() == null) {
@@ -329,6 +330,11 @@ public abstract class CommonMetamacDatasetAccess {
                 List<String> dimensionCodes = getDimensionValuesOrderedForData(sourceDimensionId);
                 if (dimensionCodes == null || dimensionCodes.isEmpty()) {
                     continue;
+                }
+                // Normalize TIME codes from statistical-resources format (e.g. "2023-M01") to
+                // indicators-data format (e.g. "2023-01"), matching how observation codes are stored.
+                if (IndicatorDataDimensionTypeEnum.TIME.name().equals(indicatorDimensionId)) {
+                    dimensionCodes = MetamacTimeUtils.normalizeToMetamacTimeValues(dimensionCodes);
                 }
                 if (matchedDataAttribute != null && metadataAttribute.getAttributeValues() instanceof EnumeratedAttributeValues) {
                     Map<String, String> labelMap = buildEnumCodeToLabelMap(
@@ -449,7 +455,7 @@ public abstract class CommonMetamacDatasetAccess {
      * @return list of attribute instances; empty if any group dimension is unmapped or there are no values
      */
     private List<AttributeInstanceDto> buildGroupLevelInstances(String attributeId, Attribute metadataAttribute,
-            Map<String, String> sourceDimensionToIndicatorDimension, DataAttribute dataAttribute, DataInternationalAttribute internationalAttribute) {
+            Map<String, String> sourceDimensionToIndicatorDimension, DataAttribute dataAttribute, DataInternationalAttribute internationalAttribute) throws MetamacException {
 
         // Collect all source dimension IDs declared in the group attribute
         List<String> groupSourceDimensionIds = new ArrayList<String>();
@@ -481,6 +487,11 @@ public abstract class CommonMetamacDatasetAccess {
             List<String> codes = getDimensionValuesOrderedForData(sourceDimensionId);
             if (codes == null || codes.isEmpty()) {
                 return new ArrayList<AttributeInstanceDto>();
+            }
+            // Normalize TIME codes from statistical-resources format (e.g. "2023-M01") to
+            // indicators-data format (e.g. "2023-01"), matching how observation codes are stored.
+            if (IndicatorDataDimensionTypeEnum.TIME.name().equals(groupDimensionMapping.get(sourceDimensionId))) {
+                codes = MetamacTimeUtils.normalizeToMetamacTimeValues(codes);
             }
             dimensionCodesList.add(codes);
         }
