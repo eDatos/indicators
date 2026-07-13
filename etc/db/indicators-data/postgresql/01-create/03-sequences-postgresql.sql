@@ -7,3 +7,5 @@ create sequence SEQ_I18NSTRS;
 create sequence SEQ_L10NSTRS;
 create sequence SEQ_EXTERNAL_ITEMS;
 create sequence SEQ_EXTERNAL_ITEMS_CODES;
+create sequence SEQ_GRANULARITY_ATTRIBUTES;
+create sequence SEQ_GRANULARITY_ATTRIBUTE_DIMENSIONS;
