@@ -42,6 +42,10 @@ public class ServiceUtils {
         return getInternationalStringFactoryBean().getInternationalStringInDefaultLocales(label);
     }
 
+    public static String buildGlobalOrderPrefix(Integer granularityOrder) {
+        return String.format("%05d_", granularityOrder);
+    }
+
     public static void sortGeographicalValuesList(List<GeographicalValue> geographicalValues) {
         Collections.sort(geographicalValues, new Comparator<GeographicalValue>() {
 

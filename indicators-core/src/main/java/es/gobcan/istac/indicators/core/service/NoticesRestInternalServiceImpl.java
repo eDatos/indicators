@@ -454,4 +454,15 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     public void createUpdateCategoryCacheDuplicateCategoryElementErrorNotification(String user, String actionCode, MetamacException exception) {
         createErrorBackgroundNotification(actionCode, null, exception);
     }
+
+    @Override
+    public void updateGeographicalGranularitiesVisualisationOrderNotFoundErrorNotification(String codelistUrn, String visualisationOrder) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            String messageBody = getMessageForCodeWithParams(ServiceNoticeMessage.GEOGRAPHICAL_GRANULARITY_VISUALISATION_ORDER_NOT_FOUND, locale, codelistUrn, visualisationOrder);
+            createBackgroundNotificationWithoutResources(ServiceNoticeAction.GEOGRAPHICAL_GRANULARITY_VISUALISATION_ORDER_NOT_FOUND, messageBody, null);
+        } catch (MetamacException e) {
+            logger.error("Error creating updateGeographicalGranularitiesVisualisationOrderNotFoundErrorNotification:", e);
+        }
+    }
 }

@@ -19,4 +19,8 @@
         <constructor-arg value="es.gobcan.istac.indicators.core.service.SrmRestInternalService"/>
     </bean>
 
+    <bean id="srmRestExternalService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="es.gobcan.istac.indicators.core.service.SrmRestExternalService"/>
+    </bean>
+
 </beans>

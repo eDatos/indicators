@@ -54,6 +54,7 @@ public class IndicatorVersionGeoCoverageRepositoryImpl extends IndicatorVersionG
         sql += "where geocov.indicator_version_fk = " + indicatorVersion.getId() + " ";
         sql += "and geoVal.id = geocov.geographical_value_fk ";
         sql += "and geoval.granularity_fk = geoGra.id ";
+        sql += "order by geoval.global_order ";
 
         Query query = getEntityManager().createNativeQuery(sql);
 

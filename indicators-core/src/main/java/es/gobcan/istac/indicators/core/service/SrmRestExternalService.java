@@ -8,4 +8,6 @@ public interface SrmRestExternalService {
 
     public Codes retrieveCodesFromCodelist(String codelistUrn, boolean retrieveLastVersion);
 
+    public Codes retrieveCodesFromCodelistByOrder(String codelistUrn, boolean retrieveLastVersion, String order);
+
 }

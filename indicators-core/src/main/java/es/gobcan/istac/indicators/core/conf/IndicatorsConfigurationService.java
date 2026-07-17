@@ -58,4 +58,6 @@ public interface IndicatorsConfigurationService extends ConfigurationService {
     String retrieveIndicatorsWebRestApiKey() throws MetamacException;
 
     String retrieveDefaultCodelistMeasureDimensionValues() throws MetamacException;
+
+    String retrieveVisualisationOrderForGeographicGranularity() throws MetamacException;
 }

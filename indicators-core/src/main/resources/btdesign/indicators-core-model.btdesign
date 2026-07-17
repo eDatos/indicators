@@ -1112,6 +1112,7 @@ Application Indicators {
             	@GeographicalValue findGeographicalValueByCode(String code);
             	List<@GeographicalValue> findGeographicalValuesByCodes(List<String> codes);
             	List<@GeographicalValue> findGeographicalValuesByGranularity(String granularityCode);
+            	void updateGlobalOrderByGranularity(Long granularityId, Integer granularityOrder);
             	findByCondition(PagingParameter pagingParameter);
             	save;
             	delete;
@@ -1123,9 +1124,11 @@ Application Indicators {
         	databaseTable = "TB_LIS_GEOGR_GRANULARITIES"
         	hint="idSequence=GEOGR_GRANULARITIES"
 			gap
-			
+
 			"Code"
 			String code not nullable;
+			"Visualisation order for this granularity (used to build GLOBAL_ORDER of geographical values)"
+			Integer granularityOrder nullable databaseColumn="GRANULARITY_ORDER";
        		"Title"
        		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
        		"Last update to optimistic locking"
