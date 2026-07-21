@@ -17,6 +17,9 @@
   * A partir de este punto, debe estar desplegada la release para permitir rellenar tabla "TB_LIS_GEOGR_VALUES" con el nuevo GLOBAL_ORDER
   * Ejecutar el siguiente script siguiendo los pasos que se indican para realizar la adecuación de datos del nuevo campo de orden de granularidad:
   * /indicators/etc/changes-from-release/12.4.0/db/indicators/postgresql/2-20260706_backfill_global_order.sql
+- Se han realizado cambios en la base de datos de indicators-data, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
+  Ejecutar los scripts de la siguiente ruta en el esquema correspondiente (Base de datos INDICATORS_DATA): [etc/changes-from-release/12.4.0/db/indicators_data/postgresql/](etc/changes-from-release/12.4.0/db/indicators_data/postgresql)
+
 
 ## 12.1.2 a 12.2.0
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
