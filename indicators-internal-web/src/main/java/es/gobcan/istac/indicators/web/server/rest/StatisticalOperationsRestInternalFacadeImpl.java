@@ -39,7 +39,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     @Override
     public Operation retrieveOperation(ServiceContext serviceContext, String operationCode) throws MetamacWebException {
         try {
-            return restApiLocator.getStatisticalOperationsRestFacadeV10().retrieveOperationById(operationCode);
+            return restApiLocator.getStatisticalOperationsRestFacadeV10().retrieveOperationById(operationCode, null);
         } catch (Exception e) {
             throw manageSrmInternalRestException(serviceContext, e);
         }
