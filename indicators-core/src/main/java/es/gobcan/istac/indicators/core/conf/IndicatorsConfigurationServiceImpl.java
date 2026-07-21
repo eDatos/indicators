@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.conf;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationServiceImpl;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -85,8 +86,9 @@ public class IndicatorsConfigurationServiceImpl extends ConfigurationServiceImpl
     }
 
     @Override
-    public String retrieveDefaultTerritoryCodelistForGpeJsonStat() throws MetamacException {
-        return retrieveProperty(IndicatorsConfigurationConstants.DEFAULT_TERRITORY_CODELIST_GPE_JSONSTAT);
+    public String retrieveDefaultTerritoryCodelistForJsonStat() throws MetamacException {
+        String value = findProperty(IndicatorsConfigurationConstants.INDICATORS_DEFAULT_TERRITORY_CODELIST_JSONSTAT);
+        return StringUtils.isEmpty(value) ? null : value;
     }
 
     @Override

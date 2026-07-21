@@ -442,7 +442,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSpatialVariables(source.getSpatialVariables());
 
         if (source.getSpatialVariables() != null && !source.getSpatialVariables().isEmpty()) {
-            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForJsonStat());
         }
 
         if (source.getValueCodes() != null) {
@@ -488,7 +488,7 @@ public class Do2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Do2DtoMa
         target.setSpatialVariables(JsonStatUtils.toList(jsonStatData.getSpatialVariable()));
 
         if (target.getSpatialVariables() != null && !target.getSpatialVariables().isEmpty()) {
-            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+            target.setGeographicalCodelistUrn(configurationService.retrieveDefaultTerritoryCodelistForJsonStat());
         }
 
         // GPE: categories - variable -> JSON-stat: dimension - label
