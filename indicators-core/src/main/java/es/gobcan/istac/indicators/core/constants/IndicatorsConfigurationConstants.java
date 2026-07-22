@@ -45,7 +45,8 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     public static final String ANALYTICS_SCRIPT_URL                          = "metamac.analytics.script.url";
 
-    public static final String DEFAULT_GEOGRAPHICAL_CODELIST_URN             = "indicators.geographical_values.code_list.urn";
+    public static final String DEFAULT_GEOGRAPHICAL_CODELIST_URN                        = "indicators.geographical_values.code_list.urn";
+    public static final String GEOGRAPHICAL_GRANULARITY_DEFAULT_VISUALISATION_ORDER     = "indicators.geographical_granularity.default_visualisation_order";
 
     // if it is only necessary to reload jaxi messages for e-catalogo it is better to disabled this consumer to avoid bad performance.
     public static final String DISABLED_JAXI_PUBLICATIONS_CONSUMER           = "metamac.indicators.kafka.jaxi_publication_consumer_disabled";

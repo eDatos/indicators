@@ -66,17 +66,25 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
         if (ac.getParent() == null) {
             // @formatter:off
             try {
-                
                 String externalDatasetTopic = getExternalDatasetPublicationTopic();
-                KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
+                initializeKafkaTopics(externalDatasetTopic);
                 prepareFailedMessageCache();
-
-               startConsumers(ac, externalDatasetTopic);
-                
+                startConsumers(ac, externalDatasetTopic);
             } catch (Exception e) {
                 LOGGER.error(e, e.getCause());
             }
             // @formatter:on
+        }
+    }
+
+    // Topics likely already exist after first deploy, or Kafka may be temporarily unavailable at startup.
+    // Failure here must not abort consumer startup: KeepAliveKafkaThread needs to be running so it can
+    // recover automatically once Kafka becomes available.
+    private void initializeKafkaTopics(String externalDatasetTopic) {
+        try {
+            KafkaInitializeTopics.propagateCreationOfTopics(configurationService, externalDatasetTopic);
+        } catch (Exception e) {
+            LOGGER.warn("Could not initialize Kafka topics on startup. Consumers will start anyway.", e);
         }
     }
 
@@ -281,6 +289,10 @@ public class KafkaConsumerLauncher implements ApplicationListener<ContextRefresh
                 Thread.sleep(timeout);
             } catch (InterruptedException e) {
                 LOGGER.error(e);
+                // Restore the interrupt flag so callers (e.g. ThreadPoolTaskExecutor on undeploy)
+                // can detect the interruption and release the thread cleanly.
+                Thread.currentThread().interrupt();
+                return false;
             }
             return true;
         }

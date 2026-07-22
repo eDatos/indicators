@@ -21,6 +21,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
@@ -45,6 +47,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularityProperties;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.GeographicalValueProperties;
+import es.gobcan.istac.indicators.core.domain.GeographicalValueRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -65,6 +68,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.InternationalString2InternationalStringMapper;
 import es.gobcan.istac.indicators.core.mapper.VariableElementAvro2DoMapper;
+import es.gobcan.istac.indicators.core.service.NoticesRestInternalService;
 import es.gobcan.istac.indicators.core.service.SrmRestExternalService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService;
 import es.gobcan.istac.indicators.core.serviceapi.StreamMessagingService.StreamMessagingCallback;
@@ -79,6 +83,8 @@ import es.gobcan.istac.indicators.core.util.IndicatorsVersionUtils;
  */
 @Service("indicatorsSystemService")
 public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorsSystemsServiceImpl.class);
 
     @Autowired
     private IndicatorsConfigurationService                         configurationService;
@@ -95,6 +101,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Autowired
     private SrmRestExternalService                                 srmRestExternalService;
+
+    @Autowired
+    private NoticesRestInternalService                             noticesRestInternalService;
+
+    @Autowired
+    private GeographicalValueRepository                            geographicalValueRepository;
 
     @Autowired
     InternationalString2InternationalStringMapper                  internationalString2InternationalStringMapper;
@@ -1693,16 +1705,39 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             return;
         }
 
-        Codes granularityCodes = srmRestExternalService.retrieveCodesFromCodelist(codelistAvro.getUrn(), true);
+        String visualisationOrder = null;
+        Codes granularityCodes = null;
+        boolean orderedByVisualisation = false;
 
+        try {
+            visualisationOrder = configurationService.retrieveVisualisationOrderForGeographicGranularity();
+            granularityCodes = srmRestExternalService.retrieveCodesFromCodelistByOrder(codelistAvro.getUrn(), true, visualisationOrder);
+            orderedByVisualisation = true;
+        } catch (Exception e) {
+            LOG.warn("Could not retrieve geographical granularity codelist {} by visualisation order '{}'. Falling back to default order.", new Object[]{codelistAvro.getUrn(), visualisationOrder, e});
+            noticesRestInternalService.updateGeographicalGranularitiesVisualisationOrderNotFoundErrorNotification(codelistAvro.getUrn(), visualisationOrder);
+            granularityCodes = srmRestExternalService.retrieveCodesFromCodelist(codelistAvro.getUrn(), true);
+        }
+
+        int position = 1;
         for (CodeResource granularityCode : granularityCodes.getCodes()) {
             GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().findGeographicalGranularityByCode(granularityCode.getId());
 
             if (geographicalGranularity != null) {
                 geographicalGranularity.setTitle(internationalString2InternationalStringMapper.internationalString2InternationalString((granularityCode.getName())));
+
+                if (orderedByVisualisation) {
+                    Integer previousOrder = geographicalGranularity.getGranularityOrder();
+                    if (previousOrder == null || previousOrder.intValue() != position) {
+                        geographicalGranularity.setGranularityOrder(position);
+                        geographicalValueRepository.updateGlobalOrderByGranularity(geographicalGranularity.getId(), position);
+                    }
+                }
+
                 updateGeographicalGranularity(ctx, geographicalGranularity);
             }
 
+            position++;
         }
 
     }
@@ -1730,7 +1765,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         geographicalValue.setLongitude(geographicalValueSource.getLongitude());
         geographicalValue.setLatitude(geographicalValueSource.getLatitude());
         geographicalValue.setTitle(geographicalValueSource.getTitle());
-        geographicalValue.setOrder(geographicalValueSource.getCode());
+        geographicalValue.setOrder(geographicalValueSource.getOrder());
         geographicalValue.setUpdateDate(new DateTime());
         geographicalValue.setGranularity(geographicalValueSource.getGranularity());
 

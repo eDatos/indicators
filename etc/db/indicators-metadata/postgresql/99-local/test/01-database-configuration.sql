@@ -59,5 +59,6 @@ Insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDAT
 INSERT INTO TB_DATA_CONFIGURATIONS (ID, VERSION, SYSTEM_PROPERTY, CONF_KEY, CONF_VALUE, EXTERNALLY_PUBLISHED) SELECT COALESCE(MAX(ID), 0) + 1, 1, true, 'indicators.geographical_values.code_list.urn', 'FILL_ME', false FROM tb_data_configurations;
 insert into TB_DATA_CONFIGURATIONS (ID,CONF_KEY,CONF_VALUE,SYSTEM_PROPERTY,UPDATE_DATE_TZ,UPDATE_DATE,CREATED_DATE_TZ,CREATED_DATE,CREATED_BY,LAST_UPDATED_TZ,LAST_UPDATED,LAST_UPDATED_BY,VERSION,EXTERNALLY_PUBLISHED) values ('45','metamac.indicators.rest.api_key','niQPxZJ656do4NhiptWLsz1DFFzyKvSAbamyrWsq8FC',true,null,null,null,null,null,null,null,null,'1',false);
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE,EXTERNALLY_PUBLISHED) values(46,1,false,'metamac.indicators.measure_values.default_codelist_urn','FILL_ME',false);
+insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE,EXTERNALLY_PUBLISHED) values(47,1,true,'indicators.geographical_granularity.default_visualisation_order','CUSTOM',false);
 
 

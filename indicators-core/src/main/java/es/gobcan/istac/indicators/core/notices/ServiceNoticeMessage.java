@@ -12,5 +12,6 @@ public class ServiceNoticeMessage {
     public static final String INDICATOR_POPULATION_DATA_ERROR                 = "notice_message.indicators.message.population_data.error";
     public static final String STREAM_MESSAGE_SEND_ERROR                       = "notice_message.indicators.message.sent_via_kafka.error";
     public static final String INDICATOR_EXPORT_DSPL_SUCCESS                   = "notice_message.indicators.message.export_dspl.success";
-    public static final String INDICATOR_POPULATION_ERROR_FROM_KAFKA_MESSAGES  = "notice_message.indicators.message.population.error.kafka_messages";
+    public static final String INDICATOR_POPULATION_ERROR_FROM_KAFKA_MESSAGES          = "notice_message.indicators.message.population.error.kafka_messages";
+    public static final String GEOGRAPHICAL_GRANULARITY_VISUALISATION_ORDER_NOT_FOUND = "notice_message.indicators.message.geographical_granularity.visualisation_order_not_found.error";
 }
