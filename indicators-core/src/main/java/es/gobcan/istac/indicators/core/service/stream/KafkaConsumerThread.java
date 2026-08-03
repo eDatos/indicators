@@ -147,7 +147,24 @@ public class KafkaConsumerThread<T extends SpecificRecordBase> implements Runnab
     }
 
     public void updateIndicatorsFromKafkaMessage(ServiceContext ctx, SpecificRecordBase message, String recordKey) throws MetamacException {
-        if (message instanceof QueryVersionAvro || message instanceof DatasetVersionAvro) {
+        if (message instanceof DatasetVersionAvro) {
+            DatasetVersionAvro datasetVersion = (DatasetVersionAvro) message;
+            if (datasetVersion.getSiemacMetadataStatisticalResource() != null
+                    && datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource() != null
+                    && datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource() != null
+                    && datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getReload()) {
+                LOGGER.info("Indicators. Ignoring DatasetVersionAvro reload message (reload=true). Key: " + recordKey);
+                return;
+            }
+            indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
+        } else if (message instanceof QueryVersionAvro) {
+            QueryVersionAvro queryVersion = (QueryVersionAvro) message;
+            if (queryVersion.getLifecycleStatisticalResource() != null
+                    && queryVersion.getLifecycleStatisticalResource().getVersionableStatisticalResource() != null
+                    && queryVersion.getLifecycleStatisticalResource().getVersionableStatisticalResource().getReload()) {
+                LOGGER.info("Indicators. Ignoring QueryVersionAvro reload message (reload=true). Key: " + recordKey);
+                return;
+            }
             indicatorsServiceFacade.updateIndicatorsDataFromMetamac(ctx, message);
         } else if (message instanceof VariableElementAvro) {
             updateIndicatorsFromKafkaVariableElementMessage(ctx, message, recordKey);
