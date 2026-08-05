@@ -8,11 +8,15 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 12.6.0 a 12.6.1-SNAPSHOT
+- Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
+  Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.6.0/db/indicators/postgresql/](etc/changes-from-release/12.6.0/db/indicators/postgresql)
+  - Si en algún entorno se necesita que esté a nulo, habría que actualizar la nueva constante "indicators.default.jsonstat.codelist.urn" y ponerle el valor NULL. Por ejemplo en CLMA no hay JSONSTAT y se puso codelist ficticio "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NONE:NONE(01.000)"  que con esta modificación ya se podría poner un NULO si así se desea.
+
+
 ## 12.4.0 a 12.5.0
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
   Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.4.0/db/indicators/postgresql/](etc/changes-from-release/12.4.0/db/indicators/postgresql)
-  - Si en algún entorno se necesita que esté a nulo, habría que actualizar la nueva constante "indicators.default.jsonstat.codelist.urn" y ponerle el valor NULL. Por ejemplo en CLMA no hay JSONSTAT y se puso codelist ficticio "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NONE:NONE(01.000)"  que con esta modificación ya se podría poner un NULO si así se desea.
-
 * Ejecutar en el siguiente orden los scripts necesarios para tarea EDATOS-5725:
   * /indicators/etc/changes-from-release/12.4.0/db/common-metadata/postgresql/20260607_insert_table_tb_data_configurations.sql
   * /indicators/etc/changes-from-release/12.4.0/db/indicators/postgresql/1-20260607_update_indicators_tables.sql
@@ -21,7 +25,6 @@
   * /indicators/etc/changes-from-release/12.4.0/db/indicators/postgresql/2-20260706_backfill_global_order.sql
 - Se han realizado cambios en la base de datos de indicators-data, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
   Ejecutar los scripts de la siguiente ruta en el esquema correspondiente (Base de datos INDICATORS_DATA): [etc/changes-from-release/12.4.0/db/indicators_data/postgresql/](etc/changes-from-release/12.4.0/db/indicators_data/postgresql)
-- Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
 
 ## 12.1.2 a 12.2.0
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
