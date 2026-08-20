@@ -37,9 +37,6 @@ If a constant is needed for a business or configuration concept (languages, loca
 
 **Do:**
 - Respect legacy library versions — do not update dependencies without consulting
-- Follow existing package structure
-- Use SLF4J for logging
-- Configure via properties or XML as the module requires
 
 **Avoid:**
 - Breaking backward compatibility with existing REST APIs
