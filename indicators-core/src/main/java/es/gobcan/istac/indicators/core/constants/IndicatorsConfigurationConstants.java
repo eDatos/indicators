@@ -56,4 +56,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
 
     public static final String INDICATOR_DEFAULT_CODELIST_URN_MEASURE_VALUES = "metamac.indicators.measure_values.default_codelist_urn";
 
+    public static final String INDICATORS_DEFAULT_TERRITORY_CODELIST_JSONSTAT            = "indicators.default.jsonstat.codelist.urn";
+
 }

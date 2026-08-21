@@ -2507,7 +2507,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(statisticalOperationsApiUrlBase,
                     StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread
 
-            Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code);
+            Operation operation = statisticalOperationsRestInternalFacadeV10.retrieveOperationById(code, null);
             title = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getName());
             description = internationalString2InternationalStringMapper.internationalString2InternationalString(operation.getDescription());
 
@@ -2525,7 +2525,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private Map<String, String> getVariableElementsIdByCodeOfCodelist() throws MetamacException {
-        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(configurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat());
+        String codelistUrn = configurationService.retrieveDefaultTerritoryCodelistForJsonStat();
+        if (codelistUrn == null) {
+            return Collections.emptyMap();
+        }
+        return srmRestInternalService.retrieveVariableElementsIdByCodesOfCodelists(codelistUrn);
     }
 
     @Override

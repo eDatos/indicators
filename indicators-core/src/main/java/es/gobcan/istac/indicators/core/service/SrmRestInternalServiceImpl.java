@@ -230,7 +230,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         String agencyId = params[0];
         String resourceId = params[1];
         String version = params[2];
-        return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, null, null, null, null, null);
+        return restApiLocator.getSrmRestInternalFacadeV10().findConcepts(agencyId, resourceId, version, null, null, null, null, null, null);
 
     }
 

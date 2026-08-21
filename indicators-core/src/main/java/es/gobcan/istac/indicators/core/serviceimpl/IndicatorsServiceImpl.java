@@ -1422,7 +1422,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         if (checkIsDefaultTerritoryVariable(codelistAvro.getVariable().getUrn())) {
-            if (checkIsDefaultCodelistForGpeJsonStat(codelistAvro.getUrn())) {
+            if (checkIsDefaultCodelistForJsonStat(codelistAvro.getUrn())) {
                 return retrieveIndicatorsGpeOrJsonStatEnvironment();
             } else {
                 return retrieveIndicatorsByGeographicalCodelist(codelistAvro.getUrn());
@@ -1486,8 +1486,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     }
 
-    private boolean checkIsDefaultCodelistForGpeJsonStat(String codelistUrn) throws MetamacException {
-        String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForGpeJsonStat();
+    private boolean checkIsDefaultCodelistForJsonStat(String codelistUrn) throws MetamacException {
+        String codelistDefault = indicatorsConfigurationService.retrieveDefaultTerritoryCodelistForJsonStat();
+
+        if (codelistDefault == null) {
+            return false;
+        }
 
         String[] defaultParams = splitUrnItemScheme(codelistDefault);
         String defaultAgencyId = defaultParams[0];

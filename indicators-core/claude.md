@@ -1,26 +1,10 @@
 # Backend Specialist — INDICATORS-CORE
 
-Expert module for statistical indicator business logic: indicators, indicator systems, dimensions, and their calculation.
+Module for statistical indicator business logic: indicators, indicator systems, dimensions, and calculation.
 
-## Tech Stack
+## Key versions
 
-- **Hibernate**: 3.3.2.GA / **JPA**: 1.0
-- **Spring Framework**: 3.1.1.RELEASE (Core, Context, AOP, TX, ORM)
-- **Sculptor Framework**: 2.0.0 (DDD code generation)
-- **Joda Time**: 1.6.2 / **AspectJ**: 1.8.14
-- **Commons Lang**: 2.6 / **Commons Collections**: 3.2.1 / **Commons IO**: 2.11.0
-- **Jersey Client**: 1.12 / **Jackson**: 1.9.4 / **Apache CXF**: 2.6.0
-- **Quartz**: 2.1.2 / **Kafka**: 6.1.5-ccs / **EhCache**: 2.4.3 / **Freemarker**: 2.3.18
-- **JUnit**: 4.10 / **DBUnit**: 2.4.8 / **Mockito**: 1.9.0
-
-## Business Domain
-
-- **Indicator**: code, multilingual info (title, description), formula, status (draft/published), metadata
-- **IndicatorsSystem**: grouping of indicators, hierarchy, versioning, publication
-- **Dimension**: geographical (country/region/municipality), temporal (year/quarter/month), measure (absolute/rate)
-- **DataSource**: connection to external datasets (GPE), queries, transformations, update frequency
-- **GeographicalValue**: granularities, multilingual codes/names, territorial hierarchies
-- **TimeValue**: temporal granularities, period conversion
+- **Hibernate**: 3.3.2.GA / **JPA**: 1.0 / **Spring**: 3.1.1.RELEASE / **JUnit**: 4.10 / **DBUnit**: 2.4.8
 
 ## Module Structure
 
@@ -69,13 +53,6 @@ Service IndicatorsService {
   Map<String, String> map = new LinkedHashMap<>();  // OK in core
   ```
 
-### Joda Time
-
-```java
-DateTime now = new DateTime();
-DateTime tomorrow = now.plusDays(1);
-```
-
 ### Spring Transactions
 
 ```java
@@ -105,15 +82,8 @@ public class IndicatorsServiceImpl implements IndicatorsService {
 
     @Override
     public IndicatorDto createIndicator(IndicatorDto dto) throws MetamacException {
-        LOG.info("Creating indicator: {}", dto.getCode());
-
-        Indicator indicator = new Indicator();
-        indicator.setCode(dto.getCode());
-        indicator.setTitle(dto.getTitle());
-        indicator.setCreatedDate(new DateTime());
-
+        // business logic
         Indicator created = indicatorRepository.save(indicator);
-        LOG.info("Indicator created with ID: {}", created.getId());
         return toDto(created);
     }
 
@@ -134,11 +104,3 @@ public class IndicatorsServiceImpl implements IndicatorsService {
 - JUnit 4 + DBUnit + HSQLDB (in-memory)
 - `@RunWith(SpringJUnit4ClassRunner.class)` with `@ContextConfiguration`
 - Test data loaded via DBUnit XML datasets in `src/test/resources/`
-
-## Goal
-
-Robust and efficient code for statistical indicators. Priorities:
-1. **Accuracy** — calculations must be exact and traceable
-2. **Performance** — optimized queries for large data volumes
-3. **Compatibility** — Java 7, legacy stack
-4. **Auditability** — log calculation and publication operations
