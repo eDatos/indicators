@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 12.6.0 a 12.6.1-SNAPSHOT
+## 12.6.0 a 12.7.0
 - Se han realizado cambios en la base de datos, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión.
   Ejecutar los scripts de la siguiente ruta en el esquema correspondiente: [etc/changes-from-release/12.6.0/db/indicators/postgresql/](etc/changes-from-release/12.6.0/db/indicators/postgresql)
   - Si en algún entorno se necesita que esté a nulo, habría que actualizar la nueva constante "indicators.default.jsonstat.codelist.urn" y ponerle el valor NULL. Por ejemplo en CLMA no hay JSONSTAT y se puso codelist ficticio "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=NONE:NONE(01.000)"  que con esta modificación ya se podría poner un NULO si así se desea.
